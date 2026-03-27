@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 18, "column": 0}, "map": {"version":3,"sources":["file:///Users/caiobueno/Developer/foody/web/constants/colors.ts"],"sourcesContent":["const colors = {\n  brandBg: '#142826',\n  bg: '#ffffff',\n  lightBg: '#E7E9E9',\n  font: '#0C0C0C',\n  lightFont: '#555555'\n}\n\nexport default colors\n"],"names":[],"mappings":";;;;AAAA,MAAM,SAAS;IACb,SAAS;IACT,IAAI;IACJ,SAAS;IACT,MAAM;IACN,WAAW;AACb;uCAEe"}},
+    {"offset": {"line": 34, "column": 0}, "map": {"version":3,"sources":["file:///Users/caiobueno/Developer/foody/web/app/menu/page.tsx"],"sourcesContent":["import colors from \"@/constants/colors\"\n\nconst Menu = () => {\n  return (\n    <div className={`bg-[${colors.brandBg}]`}>\n      Menu\n    </div>\n  )\n}\n\nexport default Menu\n"],"names":[],"mappings":";;;;;AAAA;;;AAEA,MAAM,OAAO;IACX,qBACE,8OAAC;QAAI,WAAW,CAAC,IAAI,EAAE,qIAAM,CAAC,OAAO,CAAC,CAAC,CAAC;kBAAE;;;;;;AAI9C;uCAEe"}}]
+}
