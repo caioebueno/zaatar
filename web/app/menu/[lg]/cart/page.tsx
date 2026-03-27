@@ -1,6 +1,6 @@
 import { NextPage } from "next";
 import { Montserrat } from "next/font/google";
-import getProducts from "../../../../../src/getProducts";
+import getProducts from "../../../../src/getProducts";
 import { CartList } from "@/app/components/Price";
 
 const montserrat = Montserrat({
@@ -9,13 +9,13 @@ const montserrat = Montserrat({
 });
 
 const Cart: NextPage = async () => {
-  const data = await getProducts()
+  const data = await getProducts();
 
   return (
     <div className={`${montserrat.className}`}>
-        <CartList data={data} />
-      </div>
-  )
-}
+      <CartList data={data} />
+    </div>
+  );
+};
 
-export default Cart
+export default Cart;

@@ -1,9 +1,9 @@
-import { TProgressiveDiscountStep } from "../../src/types/progressiveDiscount";
+import { TProgressiveDiscountStep } from "../src/types/progressiveDiscount";
 
 export function getProgressiveDiscountStepProgress(
   currentStep: TProgressiveDiscountStep,
   allSteps: TProgressiveDiscountStep[],
-  price: number
+  price: number,
 ): number {
   if (typeof currentStep.amount !== "number" || currentStep.amount <= 0) {
     return 0;

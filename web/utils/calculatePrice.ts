@@ -1,9 +1,9 @@
 import TCart from "@/types/cart";
-import TCategory from "../../src/types/category";
+import TCategory from "../src/types/category";
 import TProgressiveDiscount, {
   TProgressiveDiscountStep,
-} from "../../src/types/progressiveDiscount";
-import TProduct from "../../src/types/product";
+} from "../src/types/progressiveDiscount";
+import TProduct from "../src/types/product";
 
 type TResult = {
   fullPrice: number;
@@ -15,7 +15,7 @@ type TResult = {
 export function calculateCartWithProgressiveDiscount(
   categories: TCategory[],
   cart: TCart,
-  progressiveDiscount: TProgressiveDiscount | null
+  progressiveDiscount: TProgressiveDiscount | null,
 ): TResult {
   const productMap = new Map<string, TProduct>();
 
@@ -32,7 +32,10 @@ export function calculateCartWithProgressiveDiscount(
     const product = productMap.get(item.productId);
     if (!product) continue;
 
-    const quantity = typeof item.quantity === "number" && item.quantity > 0 ? item.quantity : 0;
+    const quantity =
+      typeof item.quantity === "number" && item.quantity > 0
+        ? item.quantity
+        : 0;
 
     const price = typeof product.price === "number" ? product.price : 0;
 
@@ -57,7 +60,7 @@ export function calculateCartWithProgressiveDiscount(
           (step) =>
             step.type === "PERCENTAGEDISCOUNT" &&
             typeof step.amount === "number" &&
-            fullPrice >= step.amount
+            fullPrice >= step.amount,
         )
         .sort((a, b) => (b.amount ?? 0) - (a.amount ?? 0))[0] ?? null;
   }

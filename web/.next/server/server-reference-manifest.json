@@ -1,0 +1,66 @@
+{
+  "node": {
+    "405bc4318550317e069aa945205fab9df8e4ba201a": {
+      "workers": {
+        "app/menu/[lg]/cart/page": {
+          "moduleId": 94485,
+          "async": false,
+          "exportedName": "default",
+          "filename": "web/src/getCustomerData.ts"
+        }
+      },
+      "layer": {
+        "app/menu/[lg]/cart/page": "action-browser"
+      },
+      "filename": "web/src/getCustomerData.ts",
+      "exportedName": "default"
+    },
+    "4089b7e33a9563aa897f751fc5bc520a6865b6d809": {
+      "workers": {
+        "app/menu/[lg]/cart/page": {
+          "moduleId": 94485,
+          "async": false,
+          "exportedName": "default",
+          "filename": "web/src/addNewDeliveryAddress.ts"
+        }
+      },
+      "layer": {
+        "app/menu/[lg]/cart/page": "action-browser"
+      },
+      "filename": "web/src/addNewDeliveryAddress.ts",
+      "exportedName": "default"
+    },
+    "40e047878d95ed47a88bb3de704e645f2d1684be88": {
+      "workers": {
+        "app/menu/[lg]/cart/page": {
+          "moduleId": 94485,
+          "async": false,
+          "exportedName": "default",
+          "filename": "web/src/updateCustomerName.ts"
+        }
+      },
+      "layer": {
+        "app/menu/[lg]/cart/page": "action-browser"
+      },
+      "filename": "web/src/updateCustomerName.ts",
+      "exportedName": "default"
+    },
+    "406df36ffebf0cf8bb45039a016c761f961b0a74f8": {
+      "workers": {
+        "app/menu/[lg]/cart/page": {
+          "moduleId": 94485,
+          "async": false,
+          "exportedName": "default",
+          "filename": "web/src/createOrder.ts"
+        }
+      },
+      "layer": {
+        "app/menu/[lg]/cart/page": "action-browser"
+      },
+      "filename": "web/src/createOrder.ts",
+      "exportedName": "default"
+    }
+  },
+  "edge": {},
+  "encryptionKey": "7a/AukS9VcamWYJQ/nq4c4PCO78HCFeVIH+NIFXj8F0="
+}

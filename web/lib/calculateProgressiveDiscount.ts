@@ -1,5 +1,7 @@
 import TCart from "@/types/cart";
-import TProgressiveDiscount, { TProgressiveDiscountStep } from "../../src/types/progressiveDiscount";
+import TProgressiveDiscount, {
+  TProgressiveDiscountStep,
+} from "../src/types/progressiveDiscount";
 
 type TCalculateProgressiveDiscountInput = {
   cart: TCart;
@@ -34,7 +36,9 @@ export function calculateProgressiveDiscount({
   // Find the best eligible step based on highest amount requirement met
   const appliedStep =
     progressiveDiscount.steps
-      .filter((step) => typeof step.amount === "number" && quantity >= step.amount)
+      .filter(
+        (step) => typeof step.amount === "number" && quantity >= step.amount,
+      )
       .sort((a, b) => (b.amount ?? 0) - (a.amount ?? 0))[0] ?? null;
 
   if (!appliedStep) {

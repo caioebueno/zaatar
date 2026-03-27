@@ -42,21 +42,12 @@ type CountryOption = {
   flag: string;
 };
 
-const PRIORITY_COUNTRIES: CountryCode[] = [
-  "US",
-  "BR",
-  "CA",
-  "GB",
-  "MX",
-  "CO",
-];
+const PRIORITY_COUNTRIES: CountryCode[] = ["US", "BR", "CA", "GB", "MX", "CO"];
 
 function getFlagEmoji(countryCode: string) {
   return countryCode
     .toUpperCase()
-    .replace(/./g, (char) =>
-      String.fromCodePoint(127397 + char.charCodeAt(0))
-    );
+    .replace(/./g, (char) => String.fromCodePoint(127397 + char.charCodeAt(0)));
 }
 
 function getCountryName(code: CountryCode) {
@@ -114,7 +105,7 @@ function sortCountries(countries: CountryOption[]) {
   const prioritySet = new Set(PRIORITY_COUNTRIES);
 
   const priority = PRIORITY_COUNTRIES.map((code) =>
-    countries.find((country) => country.code === code)
+    countries.find((country) => country.code === code),
   ).filter(Boolean) as CountryOption[];
 
   const rest = countries
@@ -132,7 +123,7 @@ export default function PhoneInput({
   disabled = false,
   className = "",
   block,
-  onClear
+  onClear,
 }: PhoneInputProps) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -156,7 +147,7 @@ export default function PhoneInput({
 
   const phoneValue = useMemo(
     () => buildPhoneValue(digits, country),
-    [digits, country]
+    [digits, country],
   );
 
   const filteredCountries = useMemo(() => {
@@ -211,7 +202,7 @@ export default function PhoneInput({
       }
     }
 
-    function handleEscape(event: KeyboardEvent) {
+    function handleEscape(event: globalThis.KeyboardEvent) {
       if (event.key === "Escape") {
         setIsOpen(false);
       }
@@ -231,7 +222,7 @@ export default function PhoneInput({
     const nextDigits = getDigits(input.value);
     const digitCursor = countDigitsBeforeCursor(
       input.value,
-      input.selectionStart ?? input.value.length
+      input.selectionStart ?? input.value.length,
     );
 
     setDigits(nextDigits);
@@ -273,7 +264,7 @@ export default function PhoneInput({
           const nextFormatted = formatPhone(nextDigits, country);
           const nextCursor = getCursorFromDigitIndex(
             nextFormatted,
-            digitIndex - 1
+            digitIndex - 1,
           );
           input.setSelectionRange(nextCursor, nextCursor);
         });
@@ -343,7 +334,10 @@ export default function PhoneInput({
           className="w-full px-3 py-2 disabled:opacity-50 disabled:rounded-r-none outline-none bg-foreground border-2 rounded-r-xl border-foreground focus:border-brandBackground transition text-lg"
         />
         {block && (
-          <div onClick={() => onClear && onClear()} className="px-3 py-2 bg-foreground flex items-center justify-center rounded-r-xl">
+          <div
+            onClick={() => onClear && onClear()}
+            className="px-3 py-2 bg-foreground flex items-center justify-center rounded-r-xl"
+          >
             <FiX size={18}></FiX>
           </div>
         )}

@@ -1,12 +1,12 @@
 import TCart from "@/types/cart";
-import { TProgressiveDiscountStep } from "../../src/types/progressiveDiscount";
-import TCategory from "../../src/types/category";
-import TProduct from "../../src/types/product";
+import { TProgressiveDiscountStep } from "../src/types/progressiveDiscount";
+import TCategory from "../src/types/category";
+import TProduct from "../src/types/product";
 
 export function isProgressiveDiscountStepMet(
   step: TProgressiveDiscountStep,
   cart: TCart,
-  categories: TCategory[]
+  categories: TCategory[],
 ): boolean {
   if (typeof step.amount !== "number") {
     return false;
@@ -35,8 +35,8 @@ export function isProgressiveDiscountStepMet(
       typeof product.comparedAtPrice === "number"
         ? product.comparedAtPrice
         : typeof product.price === "number"
-        ? product.price
-        : 0;
+          ? product.price
+          : 0;
 
     cartTotal += price * quantity;
   }

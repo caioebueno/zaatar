@@ -1,5 +1,5 @@
 import { Montserrat } from "next/font/google";
-import getProducts from '../../../../src/getProducts'
+import getProducts from "../../../src/getProducts";
 import MenuPage from "@/app/components/MenuPage";
 
 const montserrat = Montserrat({
@@ -8,14 +8,15 @@ const montserrat = Montserrat({
 });
 
 const Menu = async () => {
-  const categories = await getProducts()
+  const categories = await getProducts();
 
   return (
-    <div className={`h-dvh flex flex-col items-center text-text ${montserrat.className} relative`}>
+    <div
+      className={`h-dvh flex flex-col items-center text-text ${montserrat.className} relative`}
+    >
       <MenuPage data={categories} />
     </div>
-  )
-}
+  );
+};
 
-
-export default Menu
+export default Menu;
