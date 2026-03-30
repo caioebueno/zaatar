@@ -9,7 +9,9 @@ import { useState } from "react";
 import CartBar from "./CartBar";
 import ProductModal from "./ProductModal";
 import { useCart } from "./CartContext";
-import TCart from "@/types/cart";
+import TCart, { TSelectedModifier } from "@/types/cart";
+import { Button } from "@/components/ui/button";
+import { FiInfo, FiMapPin } from "react-icons/fi";
 
 export function findProductById(
   categories: TCategory[],
@@ -39,16 +41,42 @@ const MenuPage: React.FC<TMenuPage> = ({ data }) => {
     ? findProductById(data.categories, selectedProductId)
     : null;
 
-  const addProduct = (productId: string, quantity: number) => {
+  const addProduct = (
+    productId: string,
+    quantity: number,
+    selectedModifiers: TSelectedModifier[],
+    description?: string,
+  ) => {
     addItem({
       productId,
       quantity,
+      modifiers: selectedModifiers,
+      description: description,
     });
     setSelectedProductId(null);
   };
 
   return (
     <>
+      <div className="flex flex-col items-center">
+        <img src="/pizza.png" className="h-[200px] w-full " alt="" />
+        <div className="rounded-xl border-[3px] border-white overflow-hidden w-fit  mt-[-60px] z-10">
+          <img src="/logo.png" className="w-[100px] h-[100px]" alt="" />
+        </div>
+        <div className="flex flex-col gap-4 pt-4 w-full items-center p-4">
+          <h1 className="text-[32px] font-bold">Zaatar Grill & Pizza</h1>
+          <div className="flex flex-row w-full gap-3">
+            <Button className="flex-1 bg-foreground border-[#B0B7B6] border text-lightText text-sm py-2.5 font-semibold h-[36px]">
+              <FiInfo />
+              Information
+            </Button>
+            <Button className="flex-1 bg-foreground border-[#B0B7B6] border text-lightText text-sm py-2.5 font-semibold h-[36px]">
+              <FiMapPin />
+              Address
+            </Button>
+          </div>
+        </div>
+      </div>
       <CategoryBar categories={data.categories} />
       <div className="px-4 pb-55 flex flex-col">
         {data.categories.map((category) => (

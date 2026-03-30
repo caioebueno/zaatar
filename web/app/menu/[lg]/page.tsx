@@ -9,7 +9,7 @@ const montserrat = Montserrat({
 
 const Menu = async () => {
   const categories = await getProducts();
-
+  console.log(categories);
   return (
     <div
       className={`h-dvh flex flex-col items-center text-text ${montserrat.className} relative`}

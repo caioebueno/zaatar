@@ -7,6 +7,7 @@ import formatCurrency from "@/utils/formatCurrecy";
 import { useState } from "react";
 import Link from "next/link";
 import { useLayoutEffect } from "radix-ui/internal";
+import { getCartTotalQuantity } from "@/utils/getCartTotalQuantity";
 
 type TCartBar = {
   data: TGetProductsResponse;
@@ -77,7 +78,8 @@ const CartBar: React.FC<TCartBar> = ({ data }) => {
         <div>
           <Link href="/menu/en/cart">
             <Button className="py-3 px-8 bg-brandBackground text-[16px]">
-              My Cart {cart.items.length > 0 ? `(${cart.items.length})` : null}
+              My Cart{" "}
+              {cart.items.length > 0 ? `(${getCartTotalQuantity(cart)})` : null}
             </Button>
           </Link>
         </div>

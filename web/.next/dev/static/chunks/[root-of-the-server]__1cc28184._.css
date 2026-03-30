@@ -609,6 +609,18 @@
     margin-top: calc(var(--spacing) * 2);
   }
 
+  .mt-\[-60px\] {
+    margin-top: -60px;
+  }
+
+  .mt-\[-70px\] {
+    margin-top: -70px;
+  }
+
+  .mt-\[-100px\] {
+    margin-top: -100px;
+  }
+
   .mr-2 {
     margin-right: calc(var(--spacing) * 2);
   }
@@ -717,8 +729,24 @@
     height: calc(var(--spacing) * 100);
   }
 
+  .h-\[36px\] {
+    height: 36px;
+  }
+
+  .h-\[100px\] {
+    height: 100px;
+  }
+
+  .h-\[200px\] {
+    height: 200px;
+  }
+
   .h-dvh {
     height: 100dvh;
+  }
+
+  .h-fit {
+    height: fit-content;
   }
 
   .h-full {
@@ -753,8 +781,16 @@
     width: calc(var(--spacing) * 20);
   }
 
+  .w-\[100px\] {
+    width: 100px;
+  }
+
   .w-dvw {
     width: 100dvw;
+  }
+
+  .w-fit {
+    width: fit-content;
   }
 
   .w-full {
@@ -926,7 +962,7 @@
     border-bottom-left-radius: var(--radius-xl);
   }
 
-  .border {
+  .border, .border-1 {
     border-style: var(--tw-border-style);
     border-width: 1px;
   }
@@ -934,6 +970,11 @@
   .border-2 {
     border-style: var(--tw-border-style);
     border-width: 2px;
+  }
+
+  .border-\[3px\] {
+    border-style: var(--tw-border-style);
+    border-width: 3px;
   }
 
   .border-t {
@@ -946,12 +987,20 @@
     border-bottom-width: 1px;
   }
 
+  .border-\[\#B0B7B6\] {
+    border-color: #b0b7b6;
+  }
+
   .border-\[\#B9BFBF\] {
     border-color: #b9bfbf;
   }
 
   .border-\[\#CCD0D0\] {
     border-color: #ccd0d0;
+  }
+
+  .border-background {
+    border-color: var(--color-background);
   }
 
   .border-brandBackground {
@@ -986,12 +1035,32 @@
     border-color: #0000;
   }
 
+  .border-white {
+    border-color: var(--color-white);
+  }
+
+  .bg-\[\#25d366\] {
+    background-color: #25d366;
+  }
+
+  .bg-\[\#075e54\] {
+    background-color: #075e54;
+  }
+
+  .bg-\[\#128c7e\] {
+    background-color: #128c7e;
+  }
+
   .bg-\[\#CCD0D0\] {
     background-color: #ccd0d0;
   }
 
   .bg-background {
     background-color: var(--color-background);
+  }
+
+  .bg-background\! {
+    background-color: var(--color-background) !important;
   }
 
   .bg-black\/50 {
@@ -1030,6 +1099,10 @@
 
   .bg-clip-padding {
     background-clip: padding-box;
+  }
+
+  .fill-white {
+    fill: var(--color-white);
   }
 
   .object-cover {
@@ -1144,8 +1217,24 @@
     padding-block: calc(var(--spacing) * 6);
   }
 
+  .py-8 {
+    padding-block: calc(var(--spacing) * 8);
+  }
+
   .py-10 {
     padding-block: calc(var(--spacing) * 10);
+  }
+
+  .py-12 {
+    padding-block: calc(var(--spacing) * 12);
+  }
+
+  .pt-1 {
+    padding-top: calc(var(--spacing) * 1);
+  }
+
+  .pt-3 {
+    padding-top: calc(var(--spacing) * 3);
   }
 
   .pt-4 {
@@ -1164,6 +1253,10 @@
     padding-top: calc(var(--spacing) * 9);
   }
 
+  .pt-12 {
+    padding-top: calc(var(--spacing) * 12);
+  }
+
   .pb-6 {
     padding-bottom: calc(var(--spacing) * 6);
   }
@@ -1178,6 +1271,10 @@
 
   .pb-55 {
     padding-bottom: calc(var(--spacing) * 55);
+  }
+
+  .pb-\[220px\] {
+    padding-bottom: 220px;
   }
 
   .text-center {
@@ -1242,6 +1339,29 @@
     font-size: 22px;
   }
 
+  .text-\[30px\] {
+    font-size: 30px;
+  }
+
+  .text-\[32px\] {
+    font-size: 32px;
+  }
+
+  .leading-1 {
+    --tw-leading: calc(var(--spacing) * 1);
+    line-height: calc(var(--spacing) * 1);
+  }
+
+  .leading-1\.5 {
+    --tw-leading: calc(var(--spacing) * 1.5);
+    line-height: calc(var(--spacing) * 1.5);
+  }
+
+  .leading-2 {
+    --tw-leading: calc(var(--spacing) * 2);
+    line-height: calc(var(--spacing) * 2);
+  }
+
   .leading-4 {
     --tw-leading: calc(var(--spacing) * 4);
     line-height: calc(var(--spacing) * 4);
@@ -1250,6 +1370,11 @@
   .leading-5 {
     --tw-leading: calc(var(--spacing) * 5);
     line-height: calc(var(--spacing) * 5);
+  }
+
+  .leading-6 {
+    --tw-leading: calc(var(--spacing) * 6);
+    line-height: calc(var(--spacing) * 6);
   }
 
   .leading-none {
@@ -1517,6 +1642,11 @@
   .focus\:ring-offset-2:focus {
     --tw-ring-offset-width: 2px;
     --tw-ring-offset-shadow: var(--tw-ring-inset, ) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+  }
+
+  .focus\:outline-0:focus {
+    outline-style: var(--tw-outline-style);
+    outline-width: 0;
   }
 
   .focus\:outline-none:focus {

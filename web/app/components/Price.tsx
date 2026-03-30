@@ -4,7 +4,7 @@ import { calculateCartWithProgressiveDiscount } from "@/utils/calculatePrice";
 import { useCart } from "./CartContext";
 import formatCurrency from "@/utils/formatCurrecy";
 import { TGetProductsResponse } from "../../src/getProducts";
-import TCart from "@/types/cart";
+import TCart, { TCartItem } from "@/types/cart";
 import Button from "./Button";
 import {
   FiArrowLeft,
@@ -30,6 +30,8 @@ import TAddress from "../../src/types/address";
 import updateCustomerName from "../../src/updateCustomerName";
 import { TOrderType, TPaymentMethod } from "../../src/types/order";
 import createOrder from "../../src/createOrder";
+import Link from "next/link";
+import { TModifierGroup } from "@/src/types/product";
 
 type TPrice = {
   data: TGetProductsResponse;
@@ -45,7 +47,7 @@ const Price: React.FC<TPrice> = ({ data, cart }) => {
   const router = useRouter();
 
   return (
-    <div className="bg-foreground p-4 border-[#B9BFBF] border-b flex flex-row justify-between">
+    <div className="bg-foreground p-4 border-[#B9BFBF] border-b flex flex-row justify-between sticky top-0">
       <Button
         onClick={() => router.back()}
         className="p-0! text-[16px] font-semibold text-text! bg-transparent flex flex-row gap-2 items-center"
@@ -106,6 +108,7 @@ const CartList: React.FC<TCartProduct> = ({ data }) => {
   const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
   const [customer, setCustomer] = useState<TCustomer | null>(null);
   const [loading, setLoading] = useState(false);
+  const [name, setName] = useState<null | string>(null);
 
   const router = useRouter();
 
@@ -131,8 +134,9 @@ const CartList: React.FC<TCartProduct> = ({ data }) => {
         tipAmount: Number(selectedTip || 0),
       });
       setLoading(false);
-      router.push(`/menu/en/cart/confirmation/${order.id}`);
+      router.push(`/menu/en/confirmation/${order.id}`);
     } catch (err) {
+      console.log(err);
       setLoading(false);
     }
   };
@@ -220,40 +224,54 @@ const CartList: React.FC<TCartProduct> = ({ data }) => {
         setSelectedAddress={setSelectedAddress}
         onBack={() => setStep(1)}
         onNext={() => setStep(3)}
+        name={name}
+        setName={setName}
+        orderType={orderType}
       />
     );
 
   return (
     <div>
       <Price cart={cart} data={data} />
-      <div className="py-6 px-4 flex flex-col gap-4">
-        {cart.items.map((item) => (
-          <CartListItem
-            quantity={item.quantity}
-            key={item.productId}
-            data={data}
-            cart={cart}
-            productId={item.productId}
-          />
-        ))}
+      <div className="py-6 px-4 flex flex-col gap-4 pb-[220px]">
+        {cart.items.length > 0 ? (
+          cart.items.map((item) => (
+            <CartListItem
+              quantity={item.quantity}
+              key={item.productId}
+              data={data}
+              cart={cart}
+              cartItem={item}
+            />
+          ))
+        ) : (
+          <div className="flex flex-col gap-4 items-center py-12">
+            <span className="text-lg font-semibold">Your cart is empty</span>
+            <Link href="/menu/en">
+              <Button className="w-fit bg-brandBackground">Back to menu</Button>
+            </Link>
+          </div>
+        )}
       </div>
-      <div className="bg-foreground pt-4 pb-8 px-4 border-[#B9BFBF] border-t fixed bottom-0 w-full flex flex-col items-center gap-2.5">
-        <span className="font-bold text-lg">Select service type</span>
-        <Button
-          className="bg-brandBackground w-full py-2! gap-3"
-          onClick={() => {
-            setStep(2);
-            setOrderType("DELIVERY");
-          }}
-        >
-          <FiTruck size={22} />
-          <span className="text-lg">Delivery</span>
-        </Button>
-        <Button className="bg-brandBackground w-full py-2! gap-3">
-          <FiShoppingBag size={22} />
-          <span className="text-lg">Take Away</span>
-        </Button>
-      </div>
+      {cart.items.length > 0 && (
+        <div className="bg-foreground pt-4 pb-8 px-4 border-[#B9BFBF] border-t fixed bottom-0 w-full flex flex-col items-center gap-2.5">
+          <span className="font-bold text-lg">Select service type</span>
+          <Button
+            className="bg-brandBackground w-full py-2! gap-3"
+            onClick={() => {
+              setStep(2);
+              setOrderType("DELIVERY");
+            }}
+          >
+            <FiTruck size={22} />
+            <span className="text-lg">Delivery</span>
+          </Button>
+          <Button className="bg-brandBackground w-full py-2! gap-3">
+            <FiShoppingBag size={22} />
+            <span className="text-lg">Take Away</span>
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
@@ -265,6 +283,9 @@ type TAddressStep = {
   setSelectedAddress: (value: string) => void;
   customer: TCustomer | null;
   setCustomer: (data: TCustomer | null) => void;
+  name: string | null;
+  setName: (value: string | null) => void;
+  orderType: TOrderType | null;
 };
 
 export type TInputError = {
@@ -279,8 +300,10 @@ const AddressStep: React.FC<TAddressStep> = ({
   setSelectedAddress,
   customer,
   setCustomer,
+  name,
+  setName,
+  orderType,
 }) => {
-  const [name, setName] = useState<null | string>(null);
   const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
   const [openAddress, setOpenAddress] = useState(false);
@@ -301,6 +324,13 @@ const AddressStep: React.FC<TAddressStep> = ({
           field: "name",
           message: "Insert you name",
         });
+      if (orderType === "DELIVERY") {
+        if (!selectedAddress)
+          return setError({
+            field: "address",
+            message: "Select an address",
+          });
+      }
       if (!customer.name || customer.name.length === 0) {
         setLoading(true);
         await updateCustomerName({
@@ -309,29 +339,35 @@ const AddressStep: React.FC<TAddressStep> = ({
         });
         setLoading(false);
       }
+
       onNext();
     }
   };
 
-  const handleConfirmAddress = async (data: TAddressReturn) => {
-    if (!data.address.raw.address?.house_number || !customer) return;
-    await addNewDeliveryAddress({
-      address: {
-        id: "",
-        city: data.address.city,
-        description: data.address.raw.display_name,
-        lat: data.address.lat.toString(),
-        lng: data.address.lon.toString(),
-        number: data.address.raw.address?.house_number,
-        state: data.address.state,
-        street: data.address.street1,
-        zipCode: data.address.zip,
-        numberComplement: data.number || undefined,
-        complement: data.complement || undefined,
-        createdAt: "",
-        customerId: customer.id,
-      },
+  const handleConfirmAddress = async (data: TAddress) => {
+    const customer = await getCustomerData({
+      phone: phone,
     });
+    setCustomer(customer);
+    setSelectedAddress(data.id);
+    // if (!data.address.raw.address?.house_number || !customer) return;
+    // await addNewDeliveryAddress({
+    //   address: {
+    //     id: "",
+    //     city: data.address.city,
+    //     description: data.address.raw.display_name,
+    //     lat: data.address.lat.toString(),
+    //     lng: data.address.lon.toString(),
+    //     number: data.address.raw.address?.house_number,
+    //     state: data.address.state,
+    //     street: data.address.street1,
+    //     zipCode: data.address.zip,
+    //     numberComplement: data.number || undefined,
+    //     complement: data.complement || undefined,
+    //     createdAt: "",
+    //     customerId: customer.id,
+    //   },
+    // });
   };
 
   return (
@@ -393,6 +429,9 @@ const AddressStep: React.FC<TAddressStep> = ({
                 <FiPlus size={18} />
                 Add new address
               </Button>
+              {error && error.field === "address" && (
+                <span className="text-lg text-red-600">{error.message}</span>
+              )}
             </div>
           </>
         )}
@@ -410,6 +449,7 @@ const AddressStep: React.FC<TAddressStep> = ({
         onConfirm={handleConfirmAddress}
         onOpenChange={setOpenAddress}
         open={openAddress}
+        custumerId={customer?.id}
       />
     </div>
   );
@@ -515,14 +555,19 @@ const AddressSelector: React.FC<TAddressSelector> = ({
   selectedAddress,
 }) => {
   return (
-    <div>
+    <div className="flex flex-col gap-2">
       {addresses.map((address) => (
         <div
           onClick={() => onSelect(address.id)}
           key={address.id}
           className={`px-3 py-3 rounded-xl bg-foreground font-medium text-[16px] flex flex-row justify-between items-center border-2 transition ${selectedAddress === address.id ? "border-brandBackground" : "border-foreground"}`}
         >
-          <span className="flex-1">{`${address.street}, ${address.city}`}</span>
+          <div className="flex flex-col">
+            <span className="flex-1">{`${address.street}, ${address.city}`}</span>
+            {address.complement && (
+              <div className="text-sm text-lightText">{address.complement}</div>
+            )}
+          </div>
           <div
             className={`h-5 w-5 flex items-center justify-center ${address.id === selectedAddress ? "border-brandBackground" : "border-[#CCD0D0]"} border-2 rounded-full`}
           >
@@ -539,34 +584,47 @@ const AddressSelector: React.FC<TAddressSelector> = ({
 type TFindAddressModal = {
   open: boolean;
   onOpenChange: (value: boolean) => void;
-  onConfirm: (data: TAddressReturn) => void;
-};
-
-export type TAddressReturn = {
-  address: TAddressValue;
-  number?: string | null;
-  complement?: string | null;
+  onConfirm: (data: TAddress) => Promise<void>;
+  custumerId?: string;
 };
 
 const FindAddressModal: React.FC<TFindAddressModal> = ({
   onOpenChange,
   open,
   onConfirm,
+  custumerId,
 }) => {
   const [selectedAddress, setSelectedAddress] = useState<TAddressValue | null>(
     null,
   );
+  const [loading, setLoading] = useState(false);
   const [number, setNumber] = useState("");
   const [complement, setComplement] = useState("");
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     if (!selectedAddress) return;
-    console.log(selectedAddress);
-    onConfirm({
-      address: selectedAddress,
-      complement,
-      number,
+    if (!selectedAddress.raw.address?.house_number) return;
+    setLoading(true);
+    const address = await addNewDeliveryAddress({
+      address: {
+        id: "",
+        city: selectedAddress.city,
+        description: selectedAddress.raw.display_name,
+        lat: selectedAddress.lat.toString(),
+        lng: selectedAddress.lon.toString(),
+        number: selectedAddress.raw.address?.house_number,
+        state: selectedAddress.state,
+        street: selectedAddress.street1,
+        zipCode: selectedAddress.zip,
+        numberComplement: number || undefined,
+        complement: complement || undefined,
+        createdAt: "",
+        customerId: custumerId,
+      },
     });
+    await onConfirm(address);
+    setLoading(false);
+    onOpenChange(false);
   };
 
   return (
@@ -606,11 +664,11 @@ const FindAddressModal: React.FC<TFindAddressModal> = ({
         </div>
         <div className="bottom-0 bg-foreground pt-4 px-4 pb-8 w-full fixed border-t border-[#CCD0D0]">
           <Button
-            disabled={selectedAddress === null}
+            disabled={selectedAddress === null || loading}
             onClick={() => handleConfirm()}
             className="bg-brandBackground w-full disabled:opacity-50"
           >
-            Confirm address
+            {loading ? "Loading..." : "Confirm address"}
           </Button>
         </div>
       </Dialog.Content>
@@ -620,37 +678,52 @@ const FindAddressModal: React.FC<TFindAddressModal> = ({
 
 type TCartListItem = {
   data: TGetProductsResponse;
-  productId: string;
+  cartItem: TCartItem;
   quantity: number;
   cart: TCart;
 };
 
 const CartListItem: React.FC<TCartListItem> = ({
   data,
-  productId,
+  cartItem,
   cart,
   quantity,
 }) => {
   // const [quantity, setQuantity] = useState(cart.quantity)
   const { updateItemQuantity } = useCart();
   const price = calculateProductPriceWithProgressiveDiscount(
-    productId,
+    cartItem.productId,
     data.progressiveDiscount,
     cart,
     data.categories,
   );
 
-  const findProduct = findProductById(data.categories, productId);
+  const findProduct = findProductById(data.categories, cartItem.productId);
   const image = findProduct?.photos ? findProduct.photos[0]?.url : null;
+  const selectedModifiers = findProduct?.modifierGroups?.filter((item) =>
+    cartItem.modifiers?.find((modifier) => modifier.modifierId === item.id),
+  );
 
   return (
     <div className="flex flex-row items-center justify-between w-full">
       <div className="flex flex-row gap-3 items-center">
         <img src={image} className="h-20 w-20 rounded-lg" />
         <div className="flex flex-col gap-1.5">
-          <span className="font-semibold">{findProduct?.name}</span>
+          <span className="font-semibold ">{findProduct?.name}</span>
+          {cartItem.modifiers?.map((item) => (
+            <ModifierItem
+              key={item.modifierItemId}
+              modifiers={findProduct?.modifierGroups || []}
+              modifierItemId={item.modifierItemId}
+            />
+          ))}
+          {cartItem.description && (
+            <p className="text-sm text-lightText font-medium">
+              {cartItem.description}
+            </p>
+          )}
           <div>
-            <div className={`flex flex-row items-center gap-2`}>
+            <div className={`flex flex-row items-center gap-2 pt-1`}>
               <div>
                 <div className="bg-[#CCD0D0] rounded-md">
                   {price && Math.floor(price.discountAmount / 100) !== 0 && (
@@ -675,11 +748,31 @@ const CartListItem: React.FC<TCartListItem> = ({
       <div>
         <QuantitySelector
           value={quantity}
-          onChange={(value) => updateItemQuantity(productId, value)}
+          onChange={(value) => updateItemQuantity(cartItem.productId, value)}
           small
+          min={0}
         />
       </div>
     </div>
+  );
+};
+
+const ModifierItem: React.FC<{
+  modifierItemId: string;
+  modifiers: TModifierGroup[];
+}> = ({ modifierItemId, modifiers }) => {
+  const findModifier = modifiers.find((item) =>
+    item.items.find((modifier) => modifier.id === modifierItemId),
+  );
+  const findModifierItem = findModifier?.items.find(
+    (modifier) => modifier.id === modifierItemId,
+  );
+  return (
+    <span>
+      <span className="text-sm font-medium text-lightText">
+        {findModifierItem?.name}
+      </span>
+    </span>
   );
 };
 

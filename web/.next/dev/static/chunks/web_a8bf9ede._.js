@@ -40,30 +40,13 @@ function updateItemQuantityInCart(cart, productId, newQuantity) {
             items: cart.items.filter((item)=>item.productId !== productId)
         };
     }
-    const currentQuantity = cart.items.filter((item)=>item.productId === productId).length;
-    if (currentQuantity === newQuantity) {
-        return cart;
-    }
-    if (newQuantity > currentQuantity) {
-        return {
-            items: cart.items.map((item)=>{
-                if (item.productId === productId) return {
-                    ...item,
-                    quantity: newQuantity
-                };
-                return item;
-            })
-        };
-    }
-    const quantityToRemove = currentQuantity - newQuantity;
-    let removed = 0;
     return {
-        items: cart.items.filter((item)=>{
-            if (item.productId === productId && removed < quantityToRemove) {
-                removed += 1;
-                return false;
-            }
-            return true;
+        items: cart.items.map((item)=>{
+            if (item.productId === productId) return {
+                ...item,
+                quantity: newQuantity
+            };
+            return item;
         })
     };
 }
@@ -133,7 +116,7 @@ function CartProvider({ children }) {
         children: children
     }, void 0, false, {
         fileName: "[project]/web/app/components/CartContext.tsx",
-        lineNumber: 153,
+        lineNumber: 130,
         columnNumber: 5
     }, this);
 }

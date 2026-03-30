@@ -1148,12 +1148,18 @@ function QuantitySelector({ value, onChange, min = 1, max, step = 1, disabled = 
                 onClick: decrease,
                 disabled: disabled || value <= min,
                 className: `flex ${small ? "p-1 bg-transparent" : "py-2.5 px-3.5 bg-brandBackground text-white"} rounded-xl  items-center justify-center text-lg disabled:opacity-40`,
-                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$react$2d$icons$2f$fi$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FiMinus"], {
+                children: value === 1 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$react$2d$icons$2f$fi$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FiTrash2"], {
                     size: small ? 18 : 22
                 }, void 0, false, {
                     fileName: "[project]/web/app/components/ProductModal.tsx",
-                    lineNumber: 111,
-                    columnNumber: 9
+                    lineNumber: 112,
+                    columnNumber: 11
+                }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$react$2d$icons$2f$fi$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FiMinus"], {
+                    size: small ? 18 : 22
+                }, void 0, false, {
+                    fileName: "[project]/web/app/components/ProductModal.tsx",
+                    lineNumber: 114,
+                    columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/web/app/components/ProductModal.tsx",
@@ -1165,7 +1171,7 @@ function QuantitySelector({ value, onChange, min = 1, max, step = 1, disabled = 
                 children: value
             }, void 0, false, {
                 fileName: "[project]/web/app/components/ProductModal.tsx",
-                lineNumber: 114,
+                lineNumber: 118,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1177,12 +1183,12 @@ function QuantitySelector({ value, onChange, min = 1, max, step = 1, disabled = 
                     size: small ? 18 : 22
                 }, void 0, false, {
                     fileName: "[project]/web/app/components/ProductModal.tsx",
-                    lineNumber: 126,
+                    lineNumber: 130,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/web/app/components/ProductModal.tsx",
-                lineNumber: 120,
+                lineNumber: 124,
                 columnNumber: 7
             }, this)
         ]

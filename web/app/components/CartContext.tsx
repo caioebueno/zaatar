@@ -37,7 +37,7 @@ function removeItemFromCart(cart: TCart, productId: string): TCart {
 function updateItemQuantityInCart(
   cart: TCart,
   productId: string,
-  newQuantity: number
+  newQuantity: number,
 ): TCart {
   if (newQuantity <= 0) {
     return {
@@ -45,37 +45,14 @@ function updateItemQuantityInCart(
     };
   }
 
-  const currentQuantity = cart.items.filter(
-    (item) => item.productId === productId
-  ).length;
-
-  if (currentQuantity === newQuantity) {
-    return cart;
-  }
-
-  if (newQuantity > currentQuantity) {
-    return {
-      items: cart.items.map(item => {
-        if(item.productId === productId) return ({
-          ...item,
-          quantity: newQuantity
-        })
-          return item
-      }),
-    };
-  }
-
-  const quantityToRemove = currentQuantity - newQuantity;
-  let removed = 0;
-
   return {
-    items: cart.items.filter((item) => {
-      if (item.productId === productId && removed < quantityToRemove) {
-        removed += 1;
-        return false;
-      }
-
-      return true;
+    items: cart.items.map((item) => {
+      if (item.productId === productId)
+        return {
+          ...item,
+          quantity: newQuantity,
+        };
+      return item;
     }),
   };
 }

@@ -8,6 +8,7 @@ require("dotenv").config({
 const nextConfig: NextConfig = {
   /* config options here */
   outputFileTracingRoot: path.join(__dirname, ".."),
+  devIndicators: false,
 };
 
 export default nextConfig;

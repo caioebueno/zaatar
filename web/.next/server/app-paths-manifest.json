@@ -4,6 +4,7 @@
   "/api/address-search/route": "app/api/address-search/route.js",
   "/favicon.ico/route": "app/favicon.ico/route.js",
   "/menu/[lg]/cart/page": "app/menu/[lg]/cart/page.js",
+  "/menu/[lg]/confirmation/[orderId]/page": "app/menu/[lg]/confirmation/[orderId]/page.js",
   "/menu/[lg]/page": "app/menu/[lg]/page.js",
   "/menu/page": "app/menu/page.js",
   "/page": "app/page.js"

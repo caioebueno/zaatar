@@ -36,6 +36,15 @@
         "nxtPlg": "nxtPlg"
       },
       "namedRegex": "^/menu/(?<nxtPlg>[^/]+?)/cart(?:/)?$"
+    },
+    {
+      "page": "/menu/[lg]/confirmation/[orderId]",
+      "regex": "^/menu/([^/]+?)/confirmation/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPlg": "nxtPlg",
+        "nxtPorderId": "nxtPorderId"
+      },
+      "namedRegex": "^/menu/(?<nxtPlg>[^/]+?)/confirmation/(?<nxtPorderId>[^/]+?)(?:/)?$"
     }
   ],
   "staticRoutes": [

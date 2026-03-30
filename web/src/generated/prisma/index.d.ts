@@ -3,7 +3,7 @@
  * Client
 **/
 
-import * as runtime from './runtime/library.js';
+import * as runtime from './runtime/client.js';
 import $Types = runtime.Types // general types
 import $Public = runtime.Types.Public
 import $Utils = runtime.Types.Utils
@@ -33,6 +33,11 @@ export type File = $Result.DefaultSelection<Prisma.$FilePayload>
  * 
  */
 export type ModifierGroup = $Result.DefaultSelection<Prisma.$ModifierGroupPayload>
+/**
+ * Model ModifierGroupItem
+ * 
+ */
+export type ModifierGroupItem = $Result.DefaultSelection<Prisma.$ModifierGroupItemPayload>
 /**
  * Model Business
  * 
@@ -154,17 +159,19 @@ export const OrderType: typeof $Enums.OrderType
  * Type-safe database client for TypeScript & Node.js
  * @example
  * ```
- * const prisma = new PrismaClient()
+ * const prisma = new PrismaClient({
+ *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
+ * })
  * // Fetch zero or more ProgressiveDiscounts
  * const progressiveDiscounts = await prisma.progressiveDiscount.findMany()
  * ```
  *
  *
- * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client).
+ * Read more in our [docs](https://pris.ly/d/client).
  */
 export class PrismaClient<
   ClientOptions extends Prisma.PrismaClientOptions = Prisma.PrismaClientOptions,
-  U = 'log' extends keyof ClientOptions ? ClientOptions['log'] extends Array<Prisma.LogLevel | Prisma.LogDefinition> ? Prisma.GetEvents<ClientOptions['log']> : never : never,
+  const U = 'log' extends keyof ClientOptions ? ClientOptions['log'] extends Array<Prisma.LogLevel | Prisma.LogDefinition> ? Prisma.GetEvents<ClientOptions['log']> : never : never,
   ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs
 > {
   [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['other'] }
@@ -175,13 +182,15 @@ export class PrismaClient<
    * Type-safe database client for TypeScript & Node.js
    * @example
    * ```
-   * const prisma = new PrismaClient()
+   * const prisma = new PrismaClient({
+   *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
+   * })
    * // Fetch zero or more ProgressiveDiscounts
    * const progressiveDiscounts = await prisma.progressiveDiscount.findMany()
    * ```
    *
    *
-   * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client).
+   * Read more in our [docs](https://pris.ly/d/client).
    */
 
   constructor(optionsArg ?: Prisma.Subset<ClientOptions, Prisma.PrismaClientOptions>);
@@ -197,13 +206,6 @@ export class PrismaClient<
    */
   $disconnect(): $Utils.JsPromise<void>;
 
-  /**
-   * Add a middleware
-   * @deprecated since 4.16.0. For new code, prefer client extensions instead.
-   * @see https://pris.ly/d/extensions
-   */
-  $use(cb: Prisma.Middleware): void
-
 /**
    * Executes a prepared raw query and returns the number of affected rows.
    * @example
@@ -211,7 +213,7 @@ export class PrismaClient<
    * const result = await prisma.$executeRaw`UPDATE User SET cool = ${true} WHERE email = ${'user@email.com'};`
    * ```
    *
-   * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/raw-database-access).
+   * Read more in our [docs](https://pris.ly/d/raw-queries).
    */
   $executeRaw<T = unknown>(query: TemplateStringsArray | Prisma.Sql, ...values: any[]): Prisma.PrismaPromise<number>;
 
@@ -223,7 +225,7 @@ export class PrismaClient<
    * const result = await prisma.$executeRawUnsafe('UPDATE User SET cool = $1 WHERE email = $2 ;', true, 'user@email.com')
    * ```
    *
-   * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/raw-database-access).
+   * Read more in our [docs](https://pris.ly/d/raw-queries).
    */
   $executeRawUnsafe<T = unknown>(query: string, ...values: any[]): Prisma.PrismaPromise<number>;
 
@@ -234,7 +236,7 @@ export class PrismaClient<
    * const result = await prisma.$queryRaw`SELECT * FROM User WHERE id = ${1} OR email = ${'user@email.com'};`
    * ```
    *
-   * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/raw-database-access).
+   * Read more in our [docs](https://pris.ly/d/raw-queries).
    */
   $queryRaw<T = unknown>(query: TemplateStringsArray | Prisma.Sql, ...values: any[]): Prisma.PrismaPromise<T>;
 
@@ -246,7 +248,7 @@ export class PrismaClient<
    * const result = await prisma.$queryRawUnsafe('SELECT * FROM User WHERE id = $1 OR email = $2;', 1, 'user@email.com')
    * ```
    *
-   * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/raw-database-access).
+   * Read more in our [docs](https://pris.ly/d/raw-queries).
    */
   $queryRawUnsafe<T = unknown>(query: string, ...values: any[]): Prisma.PrismaPromise<T>;
 
@@ -262,12 +264,11 @@ export class PrismaClient<
    * ])
    * ```
    * 
-   * Read more in our [docs](https://www.prisma.io/docs/concepts/components/prisma-client/transactions).
+   * Read more in our [docs](https://www.prisma.io/docs/orm/prisma-client/queries/transactions).
    */
   $transaction<P extends Prisma.PrismaPromise<any>[]>(arg: [...P], options?: { isolationLevel?: Prisma.TransactionIsolationLevel }): $Utils.JsPromise<runtime.Types.Utils.UnwrapTuple<P>>
 
   $transaction<R>(fn: (prisma: Omit<PrismaClient, runtime.ITXClientDenyList>) => $Utils.JsPromise<R>, options?: { maxWait?: number, timeout?: number, isolationLevel?: Prisma.TransactionIsolationLevel }): $Utils.JsPromise<R>
-
 
   $extends: $Extensions.ExtendsHook<"extends", Prisma.TypeMapCb<ClientOptions>, ExtArgs, $Utils.Call<Prisma.TypeMapCb<ClientOptions>, {
     extArgs: ExtArgs
@@ -312,6 +313,16 @@ export class PrismaClient<
     * ```
     */
   get modifierGroup(): Prisma.ModifierGroupDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.modifierGroupItem`: Exposes CRUD operations for the **ModifierGroupItem** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ModifierGroupItems
+    * const modifierGroupItems = await prisma.modifierGroupItem.findMany()
+    * ```
+    */
+  get modifierGroupItem(): Prisma.ModifierGroupItemDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.business`: Exposes CRUD operations for the **Business** model.
@@ -472,14 +483,6 @@ export namespace Prisma {
   export type DecimalJsLike = runtime.DecimalJsLike
 
   /**
-   * Metrics
-   */
-  export type Metrics = runtime.Metrics
-  export type Metric<T> = runtime.Metric<T>
-  export type MetricHistogram = runtime.MetricHistogram
-  export type MetricHistogramBucket = runtime.MetricHistogramBucket
-
-  /**
   * Extensions
   */
   export import Extension = $Extensions.UserArgs
@@ -490,11 +493,12 @@ export namespace Prisma {
   export import Exact = $Public.Exact
 
   /**
-   * Prisma Client JS version: 6.12.0
-   * Query Engine version: 8047c96bbd92db98a2abc7c9323ce77c02c89dbc
+   * Prisma Client JS version: 7.6.0
+   * Query Engine version: 75cbdc1eb7150937890ad5465d861175c6624711
    */
   export type PrismaVersion = {
     client: string
+    engine: string
   }
 
   export const prismaVersion: PrismaVersion
@@ -504,6 +508,7 @@ export namespace Prisma {
    */
 
 
+  export import Bytes = runtime.Bytes
   export import JsonObject = runtime.JsonObject
   export import JsonArray = runtime.JsonArray
   export import JsonValue = runtime.JsonValue
@@ -876,6 +881,7 @@ export namespace Prisma {
     ProgressiveDiscountStep: 'ProgressiveDiscountStep',
     File: 'File',
     ModifierGroup: 'ModifierGroup',
+    ModifierGroupItem: 'ModifierGroupItem',
     Business: 'Business',
     Branch: 'Branch',
     Address: 'Address',
@@ -893,9 +899,6 @@ export namespace Prisma {
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
 
 
-  export type Datasources = {
-    db?: Datasource
-  }
 
   interface TypeMapCb<ClientOptions = {}> extends $Utils.Fn<{extArgs: $Extensions.InternalArgs }, $Utils.Record<string, any>> {
     returns: Prisma.TypeMap<this['params']['extArgs'], ClientOptions extends { omit: infer OmitOptions } ? OmitOptions : {}>
@@ -906,7 +909,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "progressiveDiscount" | "progressiveDiscountStep" | "file" | "modifierGroup" | "business" | "branch" | "address" | "product" | "category" | "campaign" | "customer" | "deliveryAddress" | "message" | "promotialMessage" | "order" | "orderProducts"
+      modelProps: "progressiveDiscount" | "progressiveDiscountStep" | "file" | "modifierGroup" | "modifierGroupItem" | "business" | "branch" | "address" | "product" | "category" | "campaign" | "customer" | "deliveryAddress" | "message" | "promotialMessage" | "order" | "orderProducts"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1203,6 +1206,80 @@ export namespace Prisma {
           count: {
             args: Prisma.ModifierGroupCountArgs<ExtArgs>
             result: $Utils.Optional<ModifierGroupCountAggregateOutputType> | number
+          }
+        }
+      }
+      ModifierGroupItem: {
+        payload: Prisma.$ModifierGroupItemPayload<ExtArgs>
+        fields: Prisma.ModifierGroupItemFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ModifierGroupItemFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ModifierGroupItemPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ModifierGroupItemFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ModifierGroupItemPayload>
+          }
+          findFirst: {
+            args: Prisma.ModifierGroupItemFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ModifierGroupItemPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ModifierGroupItemFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ModifierGroupItemPayload>
+          }
+          findMany: {
+            args: Prisma.ModifierGroupItemFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ModifierGroupItemPayload>[]
+          }
+          create: {
+            args: Prisma.ModifierGroupItemCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ModifierGroupItemPayload>
+          }
+          createMany: {
+            args: Prisma.ModifierGroupItemCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ModifierGroupItemCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ModifierGroupItemPayload>[]
+          }
+          delete: {
+            args: Prisma.ModifierGroupItemDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ModifierGroupItemPayload>
+          }
+          update: {
+            args: Prisma.ModifierGroupItemUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ModifierGroupItemPayload>
+          }
+          deleteMany: {
+            args: Prisma.ModifierGroupItemDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ModifierGroupItemUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ModifierGroupItemUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ModifierGroupItemPayload>[]
+          }
+          upsert: {
+            args: Prisma.ModifierGroupItemUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ModifierGroupItemPayload>
+          }
+          aggregate: {
+            args: Prisma.ModifierGroupItemAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateModifierGroupItem>
+          }
+          groupBy: {
+            args: Prisma.ModifierGroupItemGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ModifierGroupItemGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ModifierGroupItemCountArgs<ExtArgs>
+            result: $Utils.Optional<ModifierGroupItemCountAggregateOutputType> | number
           }
         }
       }
@@ -2123,32 +2200,32 @@ export namespace Prisma {
   export type ErrorFormat = 'pretty' | 'colorless' | 'minimal'
   export interface PrismaClientOptions {
     /**
-     * Overwrites the datasource url from your schema.prisma file
-     */
-    datasources?: Datasources
-    /**
-     * Overwrites the datasource url from your schema.prisma file
-     */
-    datasourceUrl?: string
-    /**
      * @default "colorless"
      */
     errorFormat?: ErrorFormat
     /**
      * @example
      * ```
-     * // Defaults to stdout
+     * // Shorthand for `emit: 'stdout'`
      * log: ['query', 'info', 'warn', 'error']
      * 
-     * // Emit as events
+     * // Emit as events only
      * log: [
-     *   { emit: 'stdout', level: 'query' },
-     *   { emit: 'stdout', level: 'info' },
-     *   { emit: 'stdout', level: 'warn' }
-     *   { emit: 'stdout', level: 'error' }
+     *   { emit: 'event', level: 'query' },
+     *   { emit: 'event', level: 'info' },
+     *   { emit: 'event', level: 'warn' }
+     *   { emit: 'event', level: 'error' }
      * ]
+     * 
+     * / Emit as events and log to stdout
+     * og: [
+     *  { emit: 'stdout', level: 'query' },
+     *  { emit: 'stdout', level: 'info' },
+     *  { emit: 'stdout', level: 'warn' }
+     *  { emit: 'stdout', level: 'error' }
+     * 
      * ```
-     * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/logging#the-log-option).
+     * Read more in our [docs](https://pris.ly/d/logging).
      */
     log?: (LogLevel | LogDefinition)[]
     /**
@@ -2161,6 +2238,14 @@ export namespace Prisma {
       timeout?: number
       isolationLevel?: Prisma.TransactionIsolationLevel
     }
+    /**
+     * Instance of a Driver Adapter, e.g., like one provided by `@prisma/adapter-planetscale`
+     */
+    adapter?: runtime.SqlDriverAdapterFactory
+    /**
+     * Prisma Accelerate URL allowing the client to connect through Accelerate instead of a direct database.
+     */
+    accelerateUrl?: string
     /**
      * Global configuration for omitting model fields by default.
      * 
@@ -2176,12 +2261,29 @@ export namespace Prisma {
      * ```
      */
     omit?: Prisma.GlobalOmitConfig
+    /**
+     * SQL commenter plugins that add metadata to SQL queries as comments.
+     * Comments follow the sqlcommenter format: https://google.github.io/sqlcommenter/
+     * 
+     * @example
+     * ```
+     * const prisma = new PrismaClient({
+     *   adapter,
+     *   comments: [
+     *     traceContext(),
+     *     queryInsights(),
+     *   ],
+     * })
+     * ```
+     */
+    comments?: runtime.SqlCommenterPlugin[]
   }
   export type GlobalOmitConfig = {
     progressiveDiscount?: ProgressiveDiscountOmit
     progressiveDiscountStep?: ProgressiveDiscountStepOmit
     file?: FileOmit
     modifierGroup?: ModifierGroupOmit
+    modifierGroupItem?: ModifierGroupItemOmit
     business?: BusinessOmit
     branch?: BranchOmit
     address?: AddressOmit
@@ -2203,10 +2305,15 @@ export namespace Prisma {
     emit: 'stdout' | 'event'
   }
 
-  export type GetLogType<T extends LogLevel | LogDefinition> = T extends LogDefinition ? T['emit'] extends 'event' ? T['level'] : never : never
-  export type GetEvents<T extends any> = T extends Array<LogLevel | LogDefinition> ?
-    GetLogType<T[0]> | GetLogType<T[1]> | GetLogType<T[2]> | GetLogType<T[3]>
-    : never
+  export type CheckIsLogLevel<T> = T extends LogLevel ? T : never;
+
+  export type GetLogType<T> = CheckIsLogLevel<
+    T extends LogDefinition ? T['level'] : T
+  >;
+
+  export type GetEvents<T extends any[]> = T extends Array<LogLevel | LogDefinition>
+    ? GetLogType<T[number]>
+    : never;
 
   export type QueryEvent = {
     timestamp: Date
@@ -2246,25 +2353,6 @@ export namespace Prisma {
     | 'runCommandRaw'
     | 'findRaw'
     | 'groupBy'
-
-  /**
-   * These options are being passed into the middleware as "params"
-   */
-  export type MiddlewareParams = {
-    model?: ModelName
-    action: PrismaAction
-    args: any
-    dataPath: string[]
-    runInTransaction: boolean
-  }
-
-  /**
-   * The `T` type makes sure, that the `return proceed` is not forgotten in the middleware implementation
-   */
-  export type Middleware<T = any> = (
-    params: MiddlewareParams,
-    next: (params: MiddlewareParams) => $Utils.JsPromise<T>,
-  ) => $Utils.JsPromise<T>
 
   // tested in getLogLevel.test.ts
   export function getLogLevel(log: Array<LogLevel | LogDefinition>): LogLevel | undefined;
@@ -2311,6 +2399,77 @@ export namespace Prisma {
    */
   export type ProgressiveDiscountCountOutputTypeCountStepsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ProgressiveDiscountStepWhereInput
+  }
+
+
+  /**
+   * Count Type FileCountOutputType
+   */
+
+  export type FileCountOutputType = {
+    modifierGroupItems: number
+  }
+
+  export type FileCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    modifierGroupItems?: boolean | FileCountOutputTypeCountModifierGroupItemsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * FileCountOutputType without action
+   */
+  export type FileCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FileCountOutputType
+     */
+    select?: FileCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * FileCountOutputType without action
+   */
+  export type FileCountOutputTypeCountModifierGroupItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ModifierGroupItemWhereInput
+  }
+
+
+  /**
+   * Count Type ModifierGroupCountOutputType
+   */
+
+  export type ModifierGroupCountOutputType = {
+    products: number
+    items: number
+  }
+
+  export type ModifierGroupCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    products?: boolean | ModifierGroupCountOutputTypeCountProductsArgs
+    items?: boolean | ModifierGroupCountOutputTypeCountItemsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * ModifierGroupCountOutputType without action
+   */
+  export type ModifierGroupCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ModifierGroupCountOutputType
+     */
+    select?: ModifierGroupCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ModifierGroupCountOutputType without action
+   */
+  export type ModifierGroupCountOutputTypeCountProductsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProductWhereInput
+  }
+
+  /**
+   * ModifierGroupCountOutputType without action
+   */
+  export type ModifierGroupCountOutputTypeCountItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ModifierGroupItemWhereInput
   }
 
 
@@ -2533,6 +2692,37 @@ export namespace Prisma {
    */
   export type CustomerCountOutputTypeCountAddressesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: DeliveryAddressWhereInput
+  }
+
+
+  /**
+   * Count Type DeliveryAddressCountOutputType
+   */
+
+  export type DeliveryAddressCountOutputType = {
+    orders: number
+  }
+
+  export type DeliveryAddressCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    orders?: boolean | DeliveryAddressCountOutputTypeCountOrdersArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * DeliveryAddressCountOutputType without action
+   */
+  export type DeliveryAddressCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DeliveryAddressCountOutputType
+     */
+    select?: DeliveryAddressCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * DeliveryAddressCountOutputType without action
+   */
+  export type DeliveryAddressCountOutputTypeCountOrdersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OrderWhereInput
   }
 
 
@@ -3399,6 +3589,11 @@ export namespace Prisma {
      * Skip the first `n` ProgressiveDiscounts.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ProgressiveDiscounts.
+     */
     distinct?: ProgressiveDiscountScalarFieldEnum | ProgressiveDiscountScalarFieldEnum[]
   }
 
@@ -4524,6 +4719,11 @@ export namespace Prisma {
      * Skip the first `n` ProgressiveDiscountSteps.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ProgressiveDiscountSteps.
+     */
     distinct?: ProgressiveDiscountStepScalarFieldEnum | ProgressiveDiscountStepScalarFieldEnum[]
   }
 
@@ -4949,6 +5149,8 @@ export namespace Prisma {
     size?: boolean
     productId?: boolean
     product?: boolean | File$productArgs<ExtArgs>
+    modifierGroupItems?: boolean | File$modifierGroupItemsArgs<ExtArgs>
+    _count?: boolean | FileCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["file"]>
 
   export type FileSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -4983,6 +5185,8 @@ export namespace Prisma {
   export type FileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "name" | "url" | "size" | "productId", ExtArgs["result"]["file"]>
   export type FileInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     product?: boolean | File$productArgs<ExtArgs>
+    modifierGroupItems?: boolean | File$modifierGroupItemsArgs<ExtArgs>
+    _count?: boolean | FileCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type FileIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     product?: boolean | File$productArgs<ExtArgs>
@@ -4995,6 +5199,7 @@ export namespace Prisma {
     name: "File"
     objects: {
       product: Prisma.$ProductPayload<ExtArgs> | null
+      modifierGroupItems: Prisma.$ModifierGroupItemPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -5398,6 +5603,7 @@ export namespace Prisma {
   export interface Prisma__FileClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     product<T extends File$productArgs<ExtArgs> = {}>(args?: Subset<T, File$productArgs<ExtArgs>>): Prisma__ProductClient<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    modifierGroupItems<T extends File$modifierGroupItemsArgs<ExtArgs> = {}>(args?: Subset<T, File$modifierGroupItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ModifierGroupItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5629,6 +5835,11 @@ export namespace Prisma {
      * Skip the first `n` Files.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Files.
+     */
     distinct?: FileScalarFieldEnum | FileScalarFieldEnum[]
   }
 
@@ -5848,6 +6059,30 @@ export namespace Prisma {
   }
 
   /**
+   * File.modifierGroupItems
+   */
+  export type File$modifierGroupItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ModifierGroupItem
+     */
+    select?: ModifierGroupItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ModifierGroupItem
+     */
+    omit?: ModifierGroupItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ModifierGroupItemInclude<ExtArgs> | null
+    where?: ModifierGroupItemWhereInput
+    orderBy?: ModifierGroupItemOrderByWithRelationInput | ModifierGroupItemOrderByWithRelationInput[]
+    cursor?: ModifierGroupItemWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ModifierGroupItemScalarFieldEnum | ModifierGroupItemScalarFieldEnum[]
+  }
+
+  /**
    * File without action
    */
   export type FileDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5894,7 +6129,6 @@ export namespace Prisma {
     title: string | null
     required: boolean | null
     type: $Enums.ModifierGroupType | null
-    productId: string | null
     minSelection: number | null
     maxSelection: number | null
   }
@@ -5905,7 +6139,6 @@ export namespace Prisma {
     title: string | null
     required: boolean | null
     type: $Enums.ModifierGroupType | null
-    productId: string | null
     minSelection: number | null
     maxSelection: number | null
   }
@@ -5916,7 +6149,6 @@ export namespace Prisma {
     title: number
     required: number
     type: number
-    productId: number
     minSelection: number
     maxSelection: number
     _all: number
@@ -5939,7 +6171,6 @@ export namespace Prisma {
     title?: true
     required?: true
     type?: true
-    productId?: true
     minSelection?: true
     maxSelection?: true
   }
@@ -5950,7 +6181,6 @@ export namespace Prisma {
     title?: true
     required?: true
     type?: true
-    productId?: true
     minSelection?: true
     maxSelection?: true
   }
@@ -5961,7 +6191,6 @@ export namespace Prisma {
     title?: true
     required?: true
     type?: true
-    productId?: true
     minSelection?: true
     maxSelection?: true
     _all?: true
@@ -6059,7 +6288,6 @@ export namespace Prisma {
     title: string
     required: boolean
     type: $Enums.ModifierGroupType | null
-    productId: string | null
     minSelection: number | null
     maxSelection: number | null
     _count: ModifierGroupCountAggregateOutputType | null
@@ -6089,10 +6317,11 @@ export namespace Prisma {
     title?: boolean
     required?: boolean
     type?: boolean
-    productId?: boolean
     minSelection?: boolean
     maxSelection?: boolean
-    product?: boolean | ModifierGroup$productArgs<ExtArgs>
+    products?: boolean | ModifierGroup$productsArgs<ExtArgs>
+    items?: boolean | ModifierGroup$itemsArgs<ExtArgs>
+    _count?: boolean | ModifierGroupCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["modifierGroup"]>
 
   export type ModifierGroupSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -6101,10 +6330,8 @@ export namespace Prisma {
     title?: boolean
     required?: boolean
     type?: boolean
-    productId?: boolean
     minSelection?: boolean
     maxSelection?: boolean
-    product?: boolean | ModifierGroup$productArgs<ExtArgs>
   }, ExtArgs["result"]["modifierGroup"]>
 
   export type ModifierGroupSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -6113,10 +6340,8 @@ export namespace Prisma {
     title?: boolean
     required?: boolean
     type?: boolean
-    productId?: boolean
     minSelection?: boolean
     maxSelection?: boolean
-    product?: boolean | ModifierGroup$productArgs<ExtArgs>
   }, ExtArgs["result"]["modifierGroup"]>
 
   export type ModifierGroupSelectScalar = {
@@ -6125,26 +6350,24 @@ export namespace Prisma {
     title?: boolean
     required?: boolean
     type?: boolean
-    productId?: boolean
     minSelection?: boolean
     maxSelection?: boolean
   }
 
-  export type ModifierGroupOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "title" | "required" | "type" | "productId" | "minSelection" | "maxSelection", ExtArgs["result"]["modifierGroup"]>
+  export type ModifierGroupOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "title" | "required" | "type" | "minSelection" | "maxSelection", ExtArgs["result"]["modifierGroup"]>
   export type ModifierGroupInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    product?: boolean | ModifierGroup$productArgs<ExtArgs>
+    products?: boolean | ModifierGroup$productsArgs<ExtArgs>
+    items?: boolean | ModifierGroup$itemsArgs<ExtArgs>
+    _count?: boolean | ModifierGroupCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type ModifierGroupIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    product?: boolean | ModifierGroup$productArgs<ExtArgs>
-  }
-  export type ModifierGroupIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    product?: boolean | ModifierGroup$productArgs<ExtArgs>
-  }
+  export type ModifierGroupIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type ModifierGroupIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
 
   export type $ModifierGroupPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "ModifierGroup"
     objects: {
-      product: Prisma.$ProductPayload<ExtArgs> | null
+      products: Prisma.$ProductPayload<ExtArgs>[]
+      items: Prisma.$ModifierGroupItemPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -6152,7 +6375,6 @@ export namespace Prisma {
       title: string
       required: boolean
       type: $Enums.ModifierGroupType | null
-      productId: string | null
       minSelection: number | null
       maxSelection: number | null
     }, ExtArgs["result"]["modifierGroup"]>
@@ -6549,7 +6771,8 @@ export namespace Prisma {
    */
   export interface Prisma__ModifierGroupClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    product<T extends ModifierGroup$productArgs<ExtArgs> = {}>(args?: Subset<T, ModifierGroup$productArgs<ExtArgs>>): Prisma__ProductClient<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    products<T extends ModifierGroup$productsArgs<ExtArgs> = {}>(args?: Subset<T, ModifierGroup$productsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    items<T extends ModifierGroup$itemsArgs<ExtArgs> = {}>(args?: Subset<T, ModifierGroup$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ModifierGroupItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6584,7 +6807,6 @@ export namespace Prisma {
     readonly title: FieldRef<"ModifierGroup", 'String'>
     readonly required: FieldRef<"ModifierGroup", 'Boolean'>
     readonly type: FieldRef<"ModifierGroup", 'ModifierGroupType'>
-    readonly productId: FieldRef<"ModifierGroup", 'String'>
     readonly minSelection: FieldRef<"ModifierGroup", 'Int'>
     readonly maxSelection: FieldRef<"ModifierGroup", 'Int'>
   }
@@ -6783,6 +7005,11 @@ export namespace Prisma {
      * Skip the first `n` ModifierGroups.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ModifierGroups.
+     */
     distinct?: ModifierGroupScalarFieldEnum | ModifierGroupScalarFieldEnum[]
   }
 
@@ -6836,10 +7063,6 @@ export namespace Prisma {
      */
     data: ModifierGroupCreateManyInput | ModifierGroupCreateManyInput[]
     skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ModifierGroupIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -6910,10 +7133,6 @@ export namespace Prisma {
      * Limit how many ModifierGroups to update.
      */
     limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ModifierGroupIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -6983,9 +7202,9 @@ export namespace Prisma {
   }
 
   /**
-   * ModifierGroup.product
+   * ModifierGroup.products
    */
-  export type ModifierGroup$productArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ModifierGroup$productsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Product
      */
@@ -6999,6 +7218,35 @@ export namespace Prisma {
      */
     include?: ProductInclude<ExtArgs> | null
     where?: ProductWhereInput
+    orderBy?: ProductOrderByWithRelationInput | ProductOrderByWithRelationInput[]
+    cursor?: ProductWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProductScalarFieldEnum | ProductScalarFieldEnum[]
+  }
+
+  /**
+   * ModifierGroup.items
+   */
+  export type ModifierGroup$itemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ModifierGroupItem
+     */
+    select?: ModifierGroupItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ModifierGroupItem
+     */
+    omit?: ModifierGroupItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ModifierGroupItemInclude<ExtArgs> | null
+    where?: ModifierGroupItemWhereInput
+    orderBy?: ModifierGroupItemOrderByWithRelationInput | ModifierGroupItemOrderByWithRelationInput[]
+    cursor?: ModifierGroupItemWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ModifierGroupItemScalarFieldEnum | ModifierGroupItemScalarFieldEnum[]
   }
 
   /**
@@ -7017,6 +7265,1162 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: ModifierGroupInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ModifierGroupItem
+   */
+
+  export type AggregateModifierGroupItem = {
+    _count: ModifierGroupItemCountAggregateOutputType | null
+    _avg: ModifierGroupItemAvgAggregateOutputType | null
+    _sum: ModifierGroupItemSumAggregateOutputType | null
+    _min: ModifierGroupItemMinAggregateOutputType | null
+    _max: ModifierGroupItemMaxAggregateOutputType | null
+  }
+
+  export type ModifierGroupItemAvgAggregateOutputType = {
+    price: number | null
+  }
+
+  export type ModifierGroupItemSumAggregateOutputType = {
+    price: number | null
+  }
+
+  export type ModifierGroupItemMinAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    name: string | null
+    price: number | null
+    modifierGroupId: string | null
+    fileId: string | null
+  }
+
+  export type ModifierGroupItemMaxAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    name: string | null
+    price: number | null
+    modifierGroupId: string | null
+    fileId: string | null
+  }
+
+  export type ModifierGroupItemCountAggregateOutputType = {
+    id: number
+    createdAt: number
+    name: number
+    price: number
+    modifierGroupId: number
+    fileId: number
+    _all: number
+  }
+
+
+  export type ModifierGroupItemAvgAggregateInputType = {
+    price?: true
+  }
+
+  export type ModifierGroupItemSumAggregateInputType = {
+    price?: true
+  }
+
+  export type ModifierGroupItemMinAggregateInputType = {
+    id?: true
+    createdAt?: true
+    name?: true
+    price?: true
+    modifierGroupId?: true
+    fileId?: true
+  }
+
+  export type ModifierGroupItemMaxAggregateInputType = {
+    id?: true
+    createdAt?: true
+    name?: true
+    price?: true
+    modifierGroupId?: true
+    fileId?: true
+  }
+
+  export type ModifierGroupItemCountAggregateInputType = {
+    id?: true
+    createdAt?: true
+    name?: true
+    price?: true
+    modifierGroupId?: true
+    fileId?: true
+    _all?: true
+  }
+
+  export type ModifierGroupItemAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ModifierGroupItem to aggregate.
+     */
+    where?: ModifierGroupItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ModifierGroupItems to fetch.
+     */
+    orderBy?: ModifierGroupItemOrderByWithRelationInput | ModifierGroupItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ModifierGroupItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ModifierGroupItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ModifierGroupItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ModifierGroupItems
+    **/
+    _count?: true | ModifierGroupItemCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ModifierGroupItemAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ModifierGroupItemSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ModifierGroupItemMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ModifierGroupItemMaxAggregateInputType
+  }
+
+  export type GetModifierGroupItemAggregateType<T extends ModifierGroupItemAggregateArgs> = {
+        [P in keyof T & keyof AggregateModifierGroupItem]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateModifierGroupItem[P]>
+      : GetScalarType<T[P], AggregateModifierGroupItem[P]>
+  }
+
+
+
+
+  export type ModifierGroupItemGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ModifierGroupItemWhereInput
+    orderBy?: ModifierGroupItemOrderByWithAggregationInput | ModifierGroupItemOrderByWithAggregationInput[]
+    by: ModifierGroupItemScalarFieldEnum[] | ModifierGroupItemScalarFieldEnum
+    having?: ModifierGroupItemScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ModifierGroupItemCountAggregateInputType | true
+    _avg?: ModifierGroupItemAvgAggregateInputType
+    _sum?: ModifierGroupItemSumAggregateInputType
+    _min?: ModifierGroupItemMinAggregateInputType
+    _max?: ModifierGroupItemMaxAggregateInputType
+  }
+
+  export type ModifierGroupItemGroupByOutputType = {
+    id: string
+    createdAt: Date
+    name: string
+    price: number
+    modifierGroupId: string | null
+    fileId: string | null
+    _count: ModifierGroupItemCountAggregateOutputType | null
+    _avg: ModifierGroupItemAvgAggregateOutputType | null
+    _sum: ModifierGroupItemSumAggregateOutputType | null
+    _min: ModifierGroupItemMinAggregateOutputType | null
+    _max: ModifierGroupItemMaxAggregateOutputType | null
+  }
+
+  type GetModifierGroupItemGroupByPayload<T extends ModifierGroupItemGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ModifierGroupItemGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ModifierGroupItemGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ModifierGroupItemGroupByOutputType[P]>
+            : GetScalarType<T[P], ModifierGroupItemGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ModifierGroupItemSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    name?: boolean
+    price?: boolean
+    modifierGroupId?: boolean
+    fileId?: boolean
+    photo?: boolean | ModifierGroupItem$photoArgs<ExtArgs>
+    modifierGroup?: boolean | ModifierGroupItem$modifierGroupArgs<ExtArgs>
+  }, ExtArgs["result"]["modifierGroupItem"]>
+
+  export type ModifierGroupItemSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    name?: boolean
+    price?: boolean
+    modifierGroupId?: boolean
+    fileId?: boolean
+    photo?: boolean | ModifierGroupItem$photoArgs<ExtArgs>
+    modifierGroup?: boolean | ModifierGroupItem$modifierGroupArgs<ExtArgs>
+  }, ExtArgs["result"]["modifierGroupItem"]>
+
+  export type ModifierGroupItemSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    name?: boolean
+    price?: boolean
+    modifierGroupId?: boolean
+    fileId?: boolean
+    photo?: boolean | ModifierGroupItem$photoArgs<ExtArgs>
+    modifierGroup?: boolean | ModifierGroupItem$modifierGroupArgs<ExtArgs>
+  }, ExtArgs["result"]["modifierGroupItem"]>
+
+  export type ModifierGroupItemSelectScalar = {
+    id?: boolean
+    createdAt?: boolean
+    name?: boolean
+    price?: boolean
+    modifierGroupId?: boolean
+    fileId?: boolean
+  }
+
+  export type ModifierGroupItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "name" | "price" | "modifierGroupId" | "fileId", ExtArgs["result"]["modifierGroupItem"]>
+  export type ModifierGroupItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    photo?: boolean | ModifierGroupItem$photoArgs<ExtArgs>
+    modifierGroup?: boolean | ModifierGroupItem$modifierGroupArgs<ExtArgs>
+  }
+  export type ModifierGroupItemIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    photo?: boolean | ModifierGroupItem$photoArgs<ExtArgs>
+    modifierGroup?: boolean | ModifierGroupItem$modifierGroupArgs<ExtArgs>
+  }
+  export type ModifierGroupItemIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    photo?: boolean | ModifierGroupItem$photoArgs<ExtArgs>
+    modifierGroup?: boolean | ModifierGroupItem$modifierGroupArgs<ExtArgs>
+  }
+
+  export type $ModifierGroupItemPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ModifierGroupItem"
+    objects: {
+      photo: Prisma.$FilePayload<ExtArgs> | null
+      modifierGroup: Prisma.$ModifierGroupPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      createdAt: Date
+      name: string
+      price: number
+      modifierGroupId: string | null
+      fileId: string | null
+    }, ExtArgs["result"]["modifierGroupItem"]>
+    composites: {}
+  }
+
+  type ModifierGroupItemGetPayload<S extends boolean | null | undefined | ModifierGroupItemDefaultArgs> = $Result.GetResult<Prisma.$ModifierGroupItemPayload, S>
+
+  type ModifierGroupItemCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ModifierGroupItemFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ModifierGroupItemCountAggregateInputType | true
+    }
+
+  export interface ModifierGroupItemDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ModifierGroupItem'], meta: { name: 'ModifierGroupItem' } }
+    /**
+     * Find zero or one ModifierGroupItem that matches the filter.
+     * @param {ModifierGroupItemFindUniqueArgs} args - Arguments to find a ModifierGroupItem
+     * @example
+     * // Get one ModifierGroupItem
+     * const modifierGroupItem = await prisma.modifierGroupItem.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ModifierGroupItemFindUniqueArgs>(args: SelectSubset<T, ModifierGroupItemFindUniqueArgs<ExtArgs>>): Prisma__ModifierGroupItemClient<$Result.GetResult<Prisma.$ModifierGroupItemPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ModifierGroupItem that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ModifierGroupItemFindUniqueOrThrowArgs} args - Arguments to find a ModifierGroupItem
+     * @example
+     * // Get one ModifierGroupItem
+     * const modifierGroupItem = await prisma.modifierGroupItem.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ModifierGroupItemFindUniqueOrThrowArgs>(args: SelectSubset<T, ModifierGroupItemFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ModifierGroupItemClient<$Result.GetResult<Prisma.$ModifierGroupItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ModifierGroupItem that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ModifierGroupItemFindFirstArgs} args - Arguments to find a ModifierGroupItem
+     * @example
+     * // Get one ModifierGroupItem
+     * const modifierGroupItem = await prisma.modifierGroupItem.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ModifierGroupItemFindFirstArgs>(args?: SelectSubset<T, ModifierGroupItemFindFirstArgs<ExtArgs>>): Prisma__ModifierGroupItemClient<$Result.GetResult<Prisma.$ModifierGroupItemPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ModifierGroupItem that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ModifierGroupItemFindFirstOrThrowArgs} args - Arguments to find a ModifierGroupItem
+     * @example
+     * // Get one ModifierGroupItem
+     * const modifierGroupItem = await prisma.modifierGroupItem.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ModifierGroupItemFindFirstOrThrowArgs>(args?: SelectSubset<T, ModifierGroupItemFindFirstOrThrowArgs<ExtArgs>>): Prisma__ModifierGroupItemClient<$Result.GetResult<Prisma.$ModifierGroupItemPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ModifierGroupItems that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ModifierGroupItemFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ModifierGroupItems
+     * const modifierGroupItems = await prisma.modifierGroupItem.findMany()
+     * 
+     * // Get first 10 ModifierGroupItems
+     * const modifierGroupItems = await prisma.modifierGroupItem.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const modifierGroupItemWithIdOnly = await prisma.modifierGroupItem.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ModifierGroupItemFindManyArgs>(args?: SelectSubset<T, ModifierGroupItemFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ModifierGroupItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ModifierGroupItem.
+     * @param {ModifierGroupItemCreateArgs} args - Arguments to create a ModifierGroupItem.
+     * @example
+     * // Create one ModifierGroupItem
+     * const ModifierGroupItem = await prisma.modifierGroupItem.create({
+     *   data: {
+     *     // ... data to create a ModifierGroupItem
+     *   }
+     * })
+     * 
+     */
+    create<T extends ModifierGroupItemCreateArgs>(args: SelectSubset<T, ModifierGroupItemCreateArgs<ExtArgs>>): Prisma__ModifierGroupItemClient<$Result.GetResult<Prisma.$ModifierGroupItemPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ModifierGroupItems.
+     * @param {ModifierGroupItemCreateManyArgs} args - Arguments to create many ModifierGroupItems.
+     * @example
+     * // Create many ModifierGroupItems
+     * const modifierGroupItem = await prisma.modifierGroupItem.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ModifierGroupItemCreateManyArgs>(args?: SelectSubset<T, ModifierGroupItemCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ModifierGroupItems and returns the data saved in the database.
+     * @param {ModifierGroupItemCreateManyAndReturnArgs} args - Arguments to create many ModifierGroupItems.
+     * @example
+     * // Create many ModifierGroupItems
+     * const modifierGroupItem = await prisma.modifierGroupItem.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ModifierGroupItems and only return the `id`
+     * const modifierGroupItemWithIdOnly = await prisma.modifierGroupItem.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ModifierGroupItemCreateManyAndReturnArgs>(args?: SelectSubset<T, ModifierGroupItemCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ModifierGroupItemPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ModifierGroupItem.
+     * @param {ModifierGroupItemDeleteArgs} args - Arguments to delete one ModifierGroupItem.
+     * @example
+     * // Delete one ModifierGroupItem
+     * const ModifierGroupItem = await prisma.modifierGroupItem.delete({
+     *   where: {
+     *     // ... filter to delete one ModifierGroupItem
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ModifierGroupItemDeleteArgs>(args: SelectSubset<T, ModifierGroupItemDeleteArgs<ExtArgs>>): Prisma__ModifierGroupItemClient<$Result.GetResult<Prisma.$ModifierGroupItemPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ModifierGroupItem.
+     * @param {ModifierGroupItemUpdateArgs} args - Arguments to update one ModifierGroupItem.
+     * @example
+     * // Update one ModifierGroupItem
+     * const modifierGroupItem = await prisma.modifierGroupItem.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ModifierGroupItemUpdateArgs>(args: SelectSubset<T, ModifierGroupItemUpdateArgs<ExtArgs>>): Prisma__ModifierGroupItemClient<$Result.GetResult<Prisma.$ModifierGroupItemPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ModifierGroupItems.
+     * @param {ModifierGroupItemDeleteManyArgs} args - Arguments to filter ModifierGroupItems to delete.
+     * @example
+     * // Delete a few ModifierGroupItems
+     * const { count } = await prisma.modifierGroupItem.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ModifierGroupItemDeleteManyArgs>(args?: SelectSubset<T, ModifierGroupItemDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ModifierGroupItems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ModifierGroupItemUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ModifierGroupItems
+     * const modifierGroupItem = await prisma.modifierGroupItem.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ModifierGroupItemUpdateManyArgs>(args: SelectSubset<T, ModifierGroupItemUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ModifierGroupItems and returns the data updated in the database.
+     * @param {ModifierGroupItemUpdateManyAndReturnArgs} args - Arguments to update many ModifierGroupItems.
+     * @example
+     * // Update many ModifierGroupItems
+     * const modifierGroupItem = await prisma.modifierGroupItem.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ModifierGroupItems and only return the `id`
+     * const modifierGroupItemWithIdOnly = await prisma.modifierGroupItem.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ModifierGroupItemUpdateManyAndReturnArgs>(args: SelectSubset<T, ModifierGroupItemUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ModifierGroupItemPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ModifierGroupItem.
+     * @param {ModifierGroupItemUpsertArgs} args - Arguments to update or create a ModifierGroupItem.
+     * @example
+     * // Update or create a ModifierGroupItem
+     * const modifierGroupItem = await prisma.modifierGroupItem.upsert({
+     *   create: {
+     *     // ... data to create a ModifierGroupItem
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ModifierGroupItem we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ModifierGroupItemUpsertArgs>(args: SelectSubset<T, ModifierGroupItemUpsertArgs<ExtArgs>>): Prisma__ModifierGroupItemClient<$Result.GetResult<Prisma.$ModifierGroupItemPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ModifierGroupItems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ModifierGroupItemCountArgs} args - Arguments to filter ModifierGroupItems to count.
+     * @example
+     * // Count the number of ModifierGroupItems
+     * const count = await prisma.modifierGroupItem.count({
+     *   where: {
+     *     // ... the filter for the ModifierGroupItems we want to count
+     *   }
+     * })
+    **/
+    count<T extends ModifierGroupItemCountArgs>(
+      args?: Subset<T, ModifierGroupItemCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ModifierGroupItemCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ModifierGroupItem.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ModifierGroupItemAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ModifierGroupItemAggregateArgs>(args: Subset<T, ModifierGroupItemAggregateArgs>): Prisma.PrismaPromise<GetModifierGroupItemAggregateType<T>>
+
+    /**
+     * Group by ModifierGroupItem.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ModifierGroupItemGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ModifierGroupItemGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ModifierGroupItemGroupByArgs['orderBy'] }
+        : { orderBy?: ModifierGroupItemGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ModifierGroupItemGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetModifierGroupItemGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ModifierGroupItem model
+   */
+  readonly fields: ModifierGroupItemFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ModifierGroupItem.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ModifierGroupItemClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    photo<T extends ModifierGroupItem$photoArgs<ExtArgs> = {}>(args?: Subset<T, ModifierGroupItem$photoArgs<ExtArgs>>): Prisma__FileClient<$Result.GetResult<Prisma.$FilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    modifierGroup<T extends ModifierGroupItem$modifierGroupArgs<ExtArgs> = {}>(args?: Subset<T, ModifierGroupItem$modifierGroupArgs<ExtArgs>>): Prisma__ModifierGroupClient<$Result.GetResult<Prisma.$ModifierGroupPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ModifierGroupItem model
+   */
+  interface ModifierGroupItemFieldRefs {
+    readonly id: FieldRef<"ModifierGroupItem", 'String'>
+    readonly createdAt: FieldRef<"ModifierGroupItem", 'DateTime'>
+    readonly name: FieldRef<"ModifierGroupItem", 'String'>
+    readonly price: FieldRef<"ModifierGroupItem", 'Int'>
+    readonly modifierGroupId: FieldRef<"ModifierGroupItem", 'String'>
+    readonly fileId: FieldRef<"ModifierGroupItem", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ModifierGroupItem findUnique
+   */
+  export type ModifierGroupItemFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ModifierGroupItem
+     */
+    select?: ModifierGroupItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ModifierGroupItem
+     */
+    omit?: ModifierGroupItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ModifierGroupItemInclude<ExtArgs> | null
+    /**
+     * Filter, which ModifierGroupItem to fetch.
+     */
+    where: ModifierGroupItemWhereUniqueInput
+  }
+
+  /**
+   * ModifierGroupItem findUniqueOrThrow
+   */
+  export type ModifierGroupItemFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ModifierGroupItem
+     */
+    select?: ModifierGroupItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ModifierGroupItem
+     */
+    omit?: ModifierGroupItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ModifierGroupItemInclude<ExtArgs> | null
+    /**
+     * Filter, which ModifierGroupItem to fetch.
+     */
+    where: ModifierGroupItemWhereUniqueInput
+  }
+
+  /**
+   * ModifierGroupItem findFirst
+   */
+  export type ModifierGroupItemFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ModifierGroupItem
+     */
+    select?: ModifierGroupItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ModifierGroupItem
+     */
+    omit?: ModifierGroupItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ModifierGroupItemInclude<ExtArgs> | null
+    /**
+     * Filter, which ModifierGroupItem to fetch.
+     */
+    where?: ModifierGroupItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ModifierGroupItems to fetch.
+     */
+    orderBy?: ModifierGroupItemOrderByWithRelationInput | ModifierGroupItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ModifierGroupItems.
+     */
+    cursor?: ModifierGroupItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ModifierGroupItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ModifierGroupItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ModifierGroupItems.
+     */
+    distinct?: ModifierGroupItemScalarFieldEnum | ModifierGroupItemScalarFieldEnum[]
+  }
+
+  /**
+   * ModifierGroupItem findFirstOrThrow
+   */
+  export type ModifierGroupItemFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ModifierGroupItem
+     */
+    select?: ModifierGroupItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ModifierGroupItem
+     */
+    omit?: ModifierGroupItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ModifierGroupItemInclude<ExtArgs> | null
+    /**
+     * Filter, which ModifierGroupItem to fetch.
+     */
+    where?: ModifierGroupItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ModifierGroupItems to fetch.
+     */
+    orderBy?: ModifierGroupItemOrderByWithRelationInput | ModifierGroupItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ModifierGroupItems.
+     */
+    cursor?: ModifierGroupItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ModifierGroupItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ModifierGroupItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ModifierGroupItems.
+     */
+    distinct?: ModifierGroupItemScalarFieldEnum | ModifierGroupItemScalarFieldEnum[]
+  }
+
+  /**
+   * ModifierGroupItem findMany
+   */
+  export type ModifierGroupItemFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ModifierGroupItem
+     */
+    select?: ModifierGroupItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ModifierGroupItem
+     */
+    omit?: ModifierGroupItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ModifierGroupItemInclude<ExtArgs> | null
+    /**
+     * Filter, which ModifierGroupItems to fetch.
+     */
+    where?: ModifierGroupItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ModifierGroupItems to fetch.
+     */
+    orderBy?: ModifierGroupItemOrderByWithRelationInput | ModifierGroupItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ModifierGroupItems.
+     */
+    cursor?: ModifierGroupItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ModifierGroupItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ModifierGroupItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ModifierGroupItems.
+     */
+    distinct?: ModifierGroupItemScalarFieldEnum | ModifierGroupItemScalarFieldEnum[]
+  }
+
+  /**
+   * ModifierGroupItem create
+   */
+  export type ModifierGroupItemCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ModifierGroupItem
+     */
+    select?: ModifierGroupItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ModifierGroupItem
+     */
+    omit?: ModifierGroupItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ModifierGroupItemInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ModifierGroupItem.
+     */
+    data: XOR<ModifierGroupItemCreateInput, ModifierGroupItemUncheckedCreateInput>
+  }
+
+  /**
+   * ModifierGroupItem createMany
+   */
+  export type ModifierGroupItemCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ModifierGroupItems.
+     */
+    data: ModifierGroupItemCreateManyInput | ModifierGroupItemCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ModifierGroupItem createManyAndReturn
+   */
+  export type ModifierGroupItemCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ModifierGroupItem
+     */
+    select?: ModifierGroupItemSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ModifierGroupItem
+     */
+    omit?: ModifierGroupItemOmit<ExtArgs> | null
+    /**
+     * The data used to create many ModifierGroupItems.
+     */
+    data: ModifierGroupItemCreateManyInput | ModifierGroupItemCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ModifierGroupItemIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ModifierGroupItem update
+   */
+  export type ModifierGroupItemUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ModifierGroupItem
+     */
+    select?: ModifierGroupItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ModifierGroupItem
+     */
+    omit?: ModifierGroupItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ModifierGroupItemInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ModifierGroupItem.
+     */
+    data: XOR<ModifierGroupItemUpdateInput, ModifierGroupItemUncheckedUpdateInput>
+    /**
+     * Choose, which ModifierGroupItem to update.
+     */
+    where: ModifierGroupItemWhereUniqueInput
+  }
+
+  /**
+   * ModifierGroupItem updateMany
+   */
+  export type ModifierGroupItemUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ModifierGroupItems.
+     */
+    data: XOR<ModifierGroupItemUpdateManyMutationInput, ModifierGroupItemUncheckedUpdateManyInput>
+    /**
+     * Filter which ModifierGroupItems to update
+     */
+    where?: ModifierGroupItemWhereInput
+    /**
+     * Limit how many ModifierGroupItems to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ModifierGroupItem updateManyAndReturn
+   */
+  export type ModifierGroupItemUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ModifierGroupItem
+     */
+    select?: ModifierGroupItemSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ModifierGroupItem
+     */
+    omit?: ModifierGroupItemOmit<ExtArgs> | null
+    /**
+     * The data used to update ModifierGroupItems.
+     */
+    data: XOR<ModifierGroupItemUpdateManyMutationInput, ModifierGroupItemUncheckedUpdateManyInput>
+    /**
+     * Filter which ModifierGroupItems to update
+     */
+    where?: ModifierGroupItemWhereInput
+    /**
+     * Limit how many ModifierGroupItems to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ModifierGroupItemIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ModifierGroupItem upsert
+   */
+  export type ModifierGroupItemUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ModifierGroupItem
+     */
+    select?: ModifierGroupItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ModifierGroupItem
+     */
+    omit?: ModifierGroupItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ModifierGroupItemInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ModifierGroupItem to update in case it exists.
+     */
+    where: ModifierGroupItemWhereUniqueInput
+    /**
+     * In case the ModifierGroupItem found by the `where` argument doesn't exist, create a new ModifierGroupItem with this data.
+     */
+    create: XOR<ModifierGroupItemCreateInput, ModifierGroupItemUncheckedCreateInput>
+    /**
+     * In case the ModifierGroupItem was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ModifierGroupItemUpdateInput, ModifierGroupItemUncheckedUpdateInput>
+  }
+
+  /**
+   * ModifierGroupItem delete
+   */
+  export type ModifierGroupItemDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ModifierGroupItem
+     */
+    select?: ModifierGroupItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ModifierGroupItem
+     */
+    omit?: ModifierGroupItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ModifierGroupItemInclude<ExtArgs> | null
+    /**
+     * Filter which ModifierGroupItem to delete.
+     */
+    where: ModifierGroupItemWhereUniqueInput
+  }
+
+  /**
+   * ModifierGroupItem deleteMany
+   */
+  export type ModifierGroupItemDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ModifierGroupItems to delete
+     */
+    where?: ModifierGroupItemWhereInput
+    /**
+     * Limit how many ModifierGroupItems to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ModifierGroupItem.photo
+   */
+  export type ModifierGroupItem$photoArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the File
+     */
+    select?: FileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the File
+     */
+    omit?: FileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FileInclude<ExtArgs> | null
+    where?: FileWhereInput
+  }
+
+  /**
+   * ModifierGroupItem.modifierGroup
+   */
+  export type ModifierGroupItem$modifierGroupArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ModifierGroup
+     */
+    select?: ModifierGroupSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ModifierGroup
+     */
+    omit?: ModifierGroupOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ModifierGroupInclude<ExtArgs> | null
+    where?: ModifierGroupWhereInput
+  }
+
+  /**
+   * ModifierGroupItem without action
+   */
+  export type ModifierGroupItemDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ModifierGroupItem
+     */
+    select?: ModifierGroupItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ModifierGroupItem
+     */
+    omit?: ModifierGroupItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ModifierGroupItemInclude<ExtArgs> | null
   }
 
 
@@ -7830,6 +9234,11 @@ export namespace Prisma {
      * Skip the first `n` Businesses.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Businesses.
+     */
     distinct?: BusinessScalarFieldEnum | BusinessScalarFieldEnum[]
   }
 
@@ -8912,6 +10321,11 @@ export namespace Prisma {
      * Skip the first `n` Branches.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Branches.
+     */
     distinct?: BranchScalarFieldEnum | BranchScalarFieldEnum[]
   }
 
@@ -9995,6 +11409,11 @@ export namespace Prisma {
      * Skip the first `n` Addresses.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Addresses.
+     */
     distinct?: AddressScalarFieldEnum | AddressScalarFieldEnum[]
   }
 
@@ -11166,6 +12585,11 @@ export namespace Prisma {
      * Skip the first `n` Products.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Products.
+     */
     distinct?: ProductScalarFieldEnum | ProductScalarFieldEnum[]
   }
 
@@ -12285,6 +13709,11 @@ export namespace Prisma {
      * Skip the first `n` Categories.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Categories.
+     */
     distinct?: CategoryScalarFieldEnum | CategoryScalarFieldEnum[]
   }
 
@@ -13329,6 +14758,11 @@ export namespace Prisma {
      * Skip the first `n` Campaigns.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Campaigns.
+     */
     distinct?: CampaignScalarFieldEnum | CampaignScalarFieldEnum[]
   }
 
@@ -14433,6 +15867,11 @@ export namespace Prisma {
      * Skip the first `n` Customers.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Customers.
+     */
     distinct?: CustomerScalarFieldEnum | CustomerScalarFieldEnum[]
   }
 
@@ -14944,6 +16383,8 @@ export namespace Prisma {
     numberComplement?: boolean
     customerId?: boolean
     customer?: boolean | DeliveryAddress$customerArgs<ExtArgs>
+    orders?: boolean | DeliveryAddress$ordersArgs<ExtArgs>
+    _count?: boolean | DeliveryAddressCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["deliveryAddress"]>
 
   export type DeliveryAddressSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -14999,6 +16440,8 @@ export namespace Prisma {
   export type DeliveryAddressOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "lat" | "lng" | "city" | "zipCode" | "State" | "street" | "number" | "description" | "complement" | "numberComplement" | "customerId", ExtArgs["result"]["deliveryAddress"]>
   export type DeliveryAddressInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     customer?: boolean | DeliveryAddress$customerArgs<ExtArgs>
+    orders?: boolean | DeliveryAddress$ordersArgs<ExtArgs>
+    _count?: boolean | DeliveryAddressCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type DeliveryAddressIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     customer?: boolean | DeliveryAddress$customerArgs<ExtArgs>
@@ -15011,6 +16454,7 @@ export namespace Prisma {
     name: "DeliveryAddress"
     objects: {
       customer: Prisma.$CustomerPayload<ExtArgs> | null
+      orders: Prisma.$OrderPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -15421,6 +16865,7 @@ export namespace Prisma {
   export interface Prisma__DeliveryAddressClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     customer<T extends DeliveryAddress$customerArgs<ExtArgs> = {}>(args?: Subset<T, DeliveryAddress$customerArgs<ExtArgs>>): Prisma__CustomerClient<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    orders<T extends DeliveryAddress$ordersArgs<ExtArgs> = {}>(args?: Subset<T, DeliveryAddress$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -15659,6 +17104,11 @@ export namespace Prisma {
      * Skip the first `n` DeliveryAddresses.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DeliveryAddresses.
+     */
     distinct?: DeliveryAddressScalarFieldEnum | DeliveryAddressScalarFieldEnum[]
   }
 
@@ -15875,6 +17325,30 @@ export namespace Prisma {
      */
     include?: CustomerInclude<ExtArgs> | null
     where?: CustomerWhereInput
+  }
+
+  /**
+   * DeliveryAddress.orders
+   */
+  export type DeliveryAddress$ordersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Order
+     */
+    select?: OrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Order
+     */
+    omit?: OrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderInclude<ExtArgs> | null
+    where?: OrderWhereInput
+    orderBy?: OrderOrderByWithRelationInput | OrderOrderByWithRelationInput[]
+    cursor?: OrderWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: OrderScalarFieldEnum | OrderScalarFieldEnum[]
   }
 
   /**
@@ -16732,6 +18206,11 @@ export namespace Prisma {
      * Skip the first `n` Messages.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Messages.
+     */
     distinct?: MessageScalarFieldEnum | MessageScalarFieldEnum[]
   }
 
@@ -17822,6 +19301,11 @@ export namespace Prisma {
      * Skip the first `n` PromotialMessages.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PromotialMessages.
+     */
     distinct?: PromotialMessageScalarFieldEnum | PromotialMessageScalarFieldEnum[]
   }
 
@@ -18083,6 +19567,7 @@ export namespace Prisma {
 
   export type OrderMinAggregateOutputType = {
     id: string | null
+    number: string | null
     createdAt: Date | null
     amount: number | null
     type: $Enums.OrderType | null
@@ -18091,10 +19576,12 @@ export namespace Prisma {
     customerId: string | null
     externalId: string | null
     addressId: string | null
+    deliveryAddressId: string | null
   }
 
   export type OrderMaxAggregateOutputType = {
     id: string | null
+    number: string | null
     createdAt: Date | null
     amount: number | null
     type: $Enums.OrderType | null
@@ -18103,10 +19590,12 @@ export namespace Prisma {
     customerId: string | null
     externalId: string | null
     addressId: string | null
+    deliveryAddressId: string | null
   }
 
   export type OrderCountAggregateOutputType = {
     id: number
+    number: number
     createdAt: number
     amount: number
     type: number
@@ -18115,6 +19604,7 @@ export namespace Prisma {
     customerId: number
     externalId: number
     addressId: number
+    deliveryAddressId: number
     _all: number
   }
 
@@ -18131,6 +19621,7 @@ export namespace Prisma {
 
   export type OrderMinAggregateInputType = {
     id?: true
+    number?: true
     createdAt?: true
     amount?: true
     type?: true
@@ -18139,10 +19630,12 @@ export namespace Prisma {
     customerId?: true
     externalId?: true
     addressId?: true
+    deliveryAddressId?: true
   }
 
   export type OrderMaxAggregateInputType = {
     id?: true
+    number?: true
     createdAt?: true
     amount?: true
     type?: true
@@ -18151,10 +19644,12 @@ export namespace Prisma {
     customerId?: true
     externalId?: true
     addressId?: true
+    deliveryAddressId?: true
   }
 
   export type OrderCountAggregateInputType = {
     id?: true
+    number?: true
     createdAt?: true
     amount?: true
     type?: true
@@ -18163,6 +19658,7 @@ export namespace Prisma {
     customerId?: true
     externalId?: true
     addressId?: true
+    deliveryAddressId?: true
     _all?: true
   }
 
@@ -18254,6 +19750,7 @@ export namespace Prisma {
 
   export type OrderGroupByOutputType = {
     id: string
+    number: string | null
     createdAt: Date
     amount: number
     type: $Enums.OrderType
@@ -18262,6 +19759,7 @@ export namespace Prisma {
     customerId: string
     externalId: string | null
     addressId: string | null
+    deliveryAddressId: string | null
     _count: OrderCountAggregateOutputType | null
     _avg: OrderAvgAggregateOutputType | null
     _sum: OrderSumAggregateOutputType | null
@@ -18285,6 +19783,7 @@ export namespace Prisma {
 
   export type OrderSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    number?: boolean
     createdAt?: boolean
     amount?: boolean
     type?: boolean
@@ -18293,14 +19792,17 @@ export namespace Prisma {
     customerId?: boolean
     externalId?: boolean
     addressId?: boolean
+    deliveryAddressId?: boolean
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
     address?: boolean | Order$addressArgs<ExtArgs>
+    deliveryAddress?: boolean | Order$deliveryAddressArgs<ExtArgs>
     orderProducts?: boolean | Order$orderProductsArgs<ExtArgs>
     _count?: boolean | OrderCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["order"]>
 
   export type OrderSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    number?: boolean
     createdAt?: boolean
     amount?: boolean
     type?: boolean
@@ -18309,12 +19811,15 @@ export namespace Prisma {
     customerId?: boolean
     externalId?: boolean
     addressId?: boolean
+    deliveryAddressId?: boolean
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
     address?: boolean | Order$addressArgs<ExtArgs>
+    deliveryAddress?: boolean | Order$deliveryAddressArgs<ExtArgs>
   }, ExtArgs["result"]["order"]>
 
   export type OrderSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    number?: boolean
     createdAt?: boolean
     amount?: boolean
     type?: boolean
@@ -18323,12 +19828,15 @@ export namespace Prisma {
     customerId?: boolean
     externalId?: boolean
     addressId?: boolean
+    deliveryAddressId?: boolean
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
     address?: boolean | Order$addressArgs<ExtArgs>
+    deliveryAddress?: boolean | Order$deliveryAddressArgs<ExtArgs>
   }, ExtArgs["result"]["order"]>
 
   export type OrderSelectScalar = {
     id?: boolean
+    number?: boolean
     createdAt?: boolean
     amount?: boolean
     type?: boolean
@@ -18337,22 +19845,26 @@ export namespace Prisma {
     customerId?: boolean
     externalId?: boolean
     addressId?: boolean
+    deliveryAddressId?: boolean
   }
 
-  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "amount" | "type" | "paymentMethod" | "tipAmount" | "customerId" | "externalId" | "addressId", ExtArgs["result"]["order"]>
+  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "number" | "createdAt" | "amount" | "type" | "paymentMethod" | "tipAmount" | "customerId" | "externalId" | "addressId" | "deliveryAddressId", ExtArgs["result"]["order"]>
   export type OrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
     address?: boolean | Order$addressArgs<ExtArgs>
+    deliveryAddress?: boolean | Order$deliveryAddressArgs<ExtArgs>
     orderProducts?: boolean | Order$orderProductsArgs<ExtArgs>
     _count?: boolean | OrderCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type OrderIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
     address?: boolean | Order$addressArgs<ExtArgs>
+    deliveryAddress?: boolean | Order$deliveryAddressArgs<ExtArgs>
   }
   export type OrderIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
     address?: boolean | Order$addressArgs<ExtArgs>
+    deliveryAddress?: boolean | Order$deliveryAddressArgs<ExtArgs>
   }
 
   export type $OrderPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -18360,10 +19872,12 @@ export namespace Prisma {
     objects: {
       customer: Prisma.$CustomerPayload<ExtArgs>
       address: Prisma.$AddressPayload<ExtArgs> | null
+      deliveryAddress: Prisma.$DeliveryAddressPayload<ExtArgs> | null
       orderProducts: Prisma.$OrderProductsPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
+      number: string | null
       createdAt: Date
       amount: number
       type: $Enums.OrderType
@@ -18372,6 +19886,7 @@ export namespace Prisma {
       customerId: string
       externalId: string | null
       addressId: string | null
+      deliveryAddressId: string | null
     }, ExtArgs["result"]["order"]>
     composites: {}
   }
@@ -18768,6 +20283,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     customer<T extends CustomerDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CustomerDefaultArgs<ExtArgs>>): Prisma__CustomerClient<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     address<T extends Order$addressArgs<ExtArgs> = {}>(args?: Subset<T, Order$addressArgs<ExtArgs>>): Prisma__AddressClient<$Result.GetResult<Prisma.$AddressPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    deliveryAddress<T extends Order$deliveryAddressArgs<ExtArgs> = {}>(args?: Subset<T, Order$deliveryAddressArgs<ExtArgs>>): Prisma__DeliveryAddressClient<$Result.GetResult<Prisma.$DeliveryAddressPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     orderProducts<T extends Order$orderProductsArgs<ExtArgs> = {}>(args?: Subset<T, Order$orderProductsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderProductsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -18799,6 +20315,7 @@ export namespace Prisma {
    */
   interface OrderFieldRefs {
     readonly id: FieldRef<"Order", 'String'>
+    readonly number: FieldRef<"Order", 'String'>
     readonly createdAt: FieldRef<"Order", 'DateTime'>
     readonly amount: FieldRef<"Order", 'Int'>
     readonly type: FieldRef<"Order", 'OrderType'>
@@ -18807,6 +20324,7 @@ export namespace Prisma {
     readonly customerId: FieldRef<"Order", 'String'>
     readonly externalId: FieldRef<"Order", 'String'>
     readonly addressId: FieldRef<"Order", 'String'>
+    readonly deliveryAddressId: FieldRef<"Order", 'String'>
   }
     
 
@@ -19003,6 +20521,11 @@ export namespace Prisma {
      * Skip the first `n` Orders.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Orders.
+     */
     distinct?: OrderScalarFieldEnum | OrderScalarFieldEnum[]
   }
 
@@ -19219,6 +20742,25 @@ export namespace Prisma {
      */
     include?: AddressInclude<ExtArgs> | null
     where?: AddressWhereInput
+  }
+
+  /**
+   * Order.deliveryAddress
+   */
+  export type Order$deliveryAddressArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DeliveryAddress
+     */
+    select?: DeliveryAddressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DeliveryAddress
+     */
+    omit?: DeliveryAddressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DeliveryAddressInclude<ExtArgs> | null
+    where?: DeliveryAddressWhereInput
   }
 
   /**
@@ -20180,6 +21722,11 @@ export namespace Prisma {
      * Skip the first `n` OrderProducts.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of OrderProducts.
+     */
     distinct?: OrderProductsScalarFieldEnum | OrderProductsScalarFieldEnum[]
   }
 
@@ -20469,12 +22016,23 @@ export namespace Prisma {
     title: 'title',
     required: 'required',
     type: 'type',
-    productId: 'productId',
     minSelection: 'minSelection',
     maxSelection: 'maxSelection'
   };
 
   export type ModifierGroupScalarFieldEnum = (typeof ModifierGroupScalarFieldEnum)[keyof typeof ModifierGroupScalarFieldEnum]
+
+
+  export const ModifierGroupItemScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    name: 'name',
+    price: 'price',
+    modifierGroupId: 'modifierGroupId',
+    fileId: 'fileId'
+  };
+
+  export type ModifierGroupItemScalarFieldEnum = (typeof ModifierGroupItemScalarFieldEnum)[keyof typeof ModifierGroupItemScalarFieldEnum]
 
 
   export const BusinessScalarFieldEnum: {
@@ -20594,6 +22152,7 @@ export namespace Prisma {
 
   export const OrderScalarFieldEnum: {
     id: 'id',
+    number: 'number',
     createdAt: 'createdAt',
     amount: 'amount',
     type: 'type',
@@ -20601,7 +22160,8 @@ export namespace Prisma {
     tipAmount: 'tipAmount',
     customerId: 'customerId',
     externalId: 'externalId',
-    addressId: 'addressId'
+    addressId: 'addressId',
+    deliveryAddressId: 'deliveryAddressId'
   };
 
   export type OrderScalarFieldEnum = (typeof OrderScalarFieldEnum)[keyof typeof OrderScalarFieldEnum]
@@ -20884,6 +22444,7 @@ export namespace Prisma {
     size?: IntFilter<"File"> | number
     productId?: StringNullableFilter<"File"> | string | null
     product?: XOR<ProductNullableScalarRelationFilter, ProductWhereInput> | null
+    modifierGroupItems?: ModifierGroupItemListRelationFilter
   }
 
   export type FileOrderByWithRelationInput = {
@@ -20894,6 +22455,7 @@ export namespace Prisma {
     size?: SortOrder
     productId?: SortOrderInput | SortOrder
     product?: ProductOrderByWithRelationInput
+    modifierGroupItems?: ModifierGroupItemOrderByRelationAggregateInput
   }
 
   export type FileWhereUniqueInput = Prisma.AtLeast<{
@@ -20907,6 +22469,7 @@ export namespace Prisma {
     size?: IntFilter<"File"> | number
     productId?: StringNullableFilter<"File"> | string | null
     product?: XOR<ProductNullableScalarRelationFilter, ProductWhereInput> | null
+    modifierGroupItems?: ModifierGroupItemListRelationFilter
   }, "id">
 
   export type FileOrderByWithAggregationInput = {
@@ -20944,10 +22507,10 @@ export namespace Prisma {
     title?: StringFilter<"ModifierGroup"> | string
     required?: BoolFilter<"ModifierGroup"> | boolean
     type?: EnumModifierGroupTypeNullableFilter<"ModifierGroup"> | $Enums.ModifierGroupType | null
-    productId?: StringNullableFilter<"ModifierGroup"> | string | null
     minSelection?: IntNullableFilter<"ModifierGroup"> | number | null
     maxSelection?: IntNullableFilter<"ModifierGroup"> | number | null
-    product?: XOR<ProductNullableScalarRelationFilter, ProductWhereInput> | null
+    products?: ProductListRelationFilter
+    items?: ModifierGroupItemListRelationFilter
   }
 
   export type ModifierGroupOrderByWithRelationInput = {
@@ -20956,10 +22519,10 @@ export namespace Prisma {
     title?: SortOrder
     required?: SortOrder
     type?: SortOrderInput | SortOrder
-    productId?: SortOrderInput | SortOrder
     minSelection?: SortOrderInput | SortOrder
     maxSelection?: SortOrderInput | SortOrder
-    product?: ProductOrderByWithRelationInput
+    products?: ProductOrderByRelationAggregateInput
+    items?: ModifierGroupItemOrderByRelationAggregateInput
   }
 
   export type ModifierGroupWhereUniqueInput = Prisma.AtLeast<{
@@ -20971,10 +22534,10 @@ export namespace Prisma {
     title?: StringFilter<"ModifierGroup"> | string
     required?: BoolFilter<"ModifierGroup"> | boolean
     type?: EnumModifierGroupTypeNullableFilter<"ModifierGroup"> | $Enums.ModifierGroupType | null
-    productId?: StringNullableFilter<"ModifierGroup"> | string | null
     minSelection?: IntNullableFilter<"ModifierGroup"> | number | null
     maxSelection?: IntNullableFilter<"ModifierGroup"> | number | null
-    product?: XOR<ProductNullableScalarRelationFilter, ProductWhereInput> | null
+    products?: ProductListRelationFilter
+    items?: ModifierGroupItemListRelationFilter
   }, "id">
 
   export type ModifierGroupOrderByWithAggregationInput = {
@@ -20983,7 +22546,6 @@ export namespace Prisma {
     title?: SortOrder
     required?: SortOrder
     type?: SortOrderInput | SortOrder
-    productId?: SortOrderInput | SortOrder
     minSelection?: SortOrderInput | SortOrder
     maxSelection?: SortOrderInput | SortOrder
     _count?: ModifierGroupCountOrderByAggregateInput
@@ -21002,9 +22564,73 @@ export namespace Prisma {
     title?: StringWithAggregatesFilter<"ModifierGroup"> | string
     required?: BoolWithAggregatesFilter<"ModifierGroup"> | boolean
     type?: EnumModifierGroupTypeNullableWithAggregatesFilter<"ModifierGroup"> | $Enums.ModifierGroupType | null
-    productId?: StringNullableWithAggregatesFilter<"ModifierGroup"> | string | null
     minSelection?: IntNullableWithAggregatesFilter<"ModifierGroup"> | number | null
     maxSelection?: IntNullableWithAggregatesFilter<"ModifierGroup"> | number | null
+  }
+
+  export type ModifierGroupItemWhereInput = {
+    AND?: ModifierGroupItemWhereInput | ModifierGroupItemWhereInput[]
+    OR?: ModifierGroupItemWhereInput[]
+    NOT?: ModifierGroupItemWhereInput | ModifierGroupItemWhereInput[]
+    id?: StringFilter<"ModifierGroupItem"> | string
+    createdAt?: DateTimeFilter<"ModifierGroupItem"> | Date | string
+    name?: StringFilter<"ModifierGroupItem"> | string
+    price?: IntFilter<"ModifierGroupItem"> | number
+    modifierGroupId?: StringNullableFilter<"ModifierGroupItem"> | string | null
+    fileId?: StringNullableFilter<"ModifierGroupItem"> | string | null
+    photo?: XOR<FileNullableScalarRelationFilter, FileWhereInput> | null
+    modifierGroup?: XOR<ModifierGroupNullableScalarRelationFilter, ModifierGroupWhereInput> | null
+  }
+
+  export type ModifierGroupItemOrderByWithRelationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    name?: SortOrder
+    price?: SortOrder
+    modifierGroupId?: SortOrderInput | SortOrder
+    fileId?: SortOrderInput | SortOrder
+    photo?: FileOrderByWithRelationInput
+    modifierGroup?: ModifierGroupOrderByWithRelationInput
+  }
+
+  export type ModifierGroupItemWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ModifierGroupItemWhereInput | ModifierGroupItemWhereInput[]
+    OR?: ModifierGroupItemWhereInput[]
+    NOT?: ModifierGroupItemWhereInput | ModifierGroupItemWhereInput[]
+    createdAt?: DateTimeFilter<"ModifierGroupItem"> | Date | string
+    name?: StringFilter<"ModifierGroupItem"> | string
+    price?: IntFilter<"ModifierGroupItem"> | number
+    modifierGroupId?: StringNullableFilter<"ModifierGroupItem"> | string | null
+    fileId?: StringNullableFilter<"ModifierGroupItem"> | string | null
+    photo?: XOR<FileNullableScalarRelationFilter, FileWhereInput> | null
+    modifierGroup?: XOR<ModifierGroupNullableScalarRelationFilter, ModifierGroupWhereInput> | null
+  }, "id">
+
+  export type ModifierGroupItemOrderByWithAggregationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    name?: SortOrder
+    price?: SortOrder
+    modifierGroupId?: SortOrderInput | SortOrder
+    fileId?: SortOrderInput | SortOrder
+    _count?: ModifierGroupItemCountOrderByAggregateInput
+    _avg?: ModifierGroupItemAvgOrderByAggregateInput
+    _max?: ModifierGroupItemMaxOrderByAggregateInput
+    _min?: ModifierGroupItemMinOrderByAggregateInput
+    _sum?: ModifierGroupItemSumOrderByAggregateInput
+  }
+
+  export type ModifierGroupItemScalarWhereWithAggregatesInput = {
+    AND?: ModifierGroupItemScalarWhereWithAggregatesInput | ModifierGroupItemScalarWhereWithAggregatesInput[]
+    OR?: ModifierGroupItemScalarWhereWithAggregatesInput[]
+    NOT?: ModifierGroupItemScalarWhereWithAggregatesInput | ModifierGroupItemScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ModifierGroupItem"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"ModifierGroupItem"> | Date | string
+    name?: StringWithAggregatesFilter<"ModifierGroupItem"> | string
+    price?: IntWithAggregatesFilter<"ModifierGroupItem"> | number
+    modifierGroupId?: StringNullableWithAggregatesFilter<"ModifierGroupItem"> | string | null
+    fileId?: StringNullableWithAggregatesFilter<"ModifierGroupItem"> | string | null
   }
 
   export type BusinessWhereInput = {
@@ -21418,6 +23044,7 @@ export namespace Prisma {
     numberComplement?: StringNullableFilter<"DeliveryAddress"> | string | null
     customerId?: StringNullableFilter<"DeliveryAddress"> | string | null
     customer?: XOR<CustomerNullableScalarRelationFilter, CustomerWhereInput> | null
+    orders?: OrderListRelationFilter
   }
 
   export type DeliveryAddressOrderByWithRelationInput = {
@@ -21435,6 +23062,7 @@ export namespace Prisma {
     numberComplement?: SortOrderInput | SortOrder
     customerId?: SortOrderInput | SortOrder
     customer?: CustomerOrderByWithRelationInput
+    orders?: OrderOrderByRelationAggregateInput
   }
 
   export type DeliveryAddressWhereUniqueInput = Prisma.AtLeast<{
@@ -21455,6 +23083,7 @@ export namespace Prisma {
     numberComplement?: StringNullableFilter<"DeliveryAddress"> | string | null
     customerId?: StringNullableFilter<"DeliveryAddress"> | string | null
     customer?: XOR<CustomerNullableScalarRelationFilter, CustomerWhereInput> | null
+    orders?: OrderListRelationFilter
   }, "id">
 
   export type DeliveryAddressOrderByWithAggregationInput = {
@@ -21616,6 +23245,7 @@ export namespace Prisma {
     OR?: OrderWhereInput[]
     NOT?: OrderWhereInput | OrderWhereInput[]
     id?: StringFilter<"Order"> | string
+    number?: StringNullableFilter<"Order"> | string | null
     createdAt?: DateTimeFilter<"Order"> | Date | string
     amount?: IntFilter<"Order"> | number
     type?: EnumOrderTypeFilter<"Order"> | $Enums.OrderType
@@ -21624,13 +23254,16 @@ export namespace Prisma {
     customerId?: StringFilter<"Order"> | string
     externalId?: StringNullableFilter<"Order"> | string | null
     addressId?: StringNullableFilter<"Order"> | string | null
+    deliveryAddressId?: StringNullableFilter<"Order"> | string | null
     customer?: XOR<CustomerScalarRelationFilter, CustomerWhereInput>
     address?: XOR<AddressNullableScalarRelationFilter, AddressWhereInput> | null
+    deliveryAddress?: XOR<DeliveryAddressNullableScalarRelationFilter, DeliveryAddressWhereInput> | null
     orderProducts?: OrderProductsListRelationFilter
   }
 
   export type OrderOrderByWithRelationInput = {
     id?: SortOrder
+    number?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     amount?: SortOrder
     type?: SortOrder
@@ -21639,8 +23272,10 @@ export namespace Prisma {
     customerId?: SortOrder
     externalId?: SortOrderInput | SortOrder
     addressId?: SortOrderInput | SortOrder
+    deliveryAddressId?: SortOrderInput | SortOrder
     customer?: CustomerOrderByWithRelationInput
     address?: AddressOrderByWithRelationInput
+    deliveryAddress?: DeliveryAddressOrderByWithRelationInput
     orderProducts?: OrderProductsOrderByRelationAggregateInput
   }
 
@@ -21649,6 +23284,7 @@ export namespace Prisma {
     AND?: OrderWhereInput | OrderWhereInput[]
     OR?: OrderWhereInput[]
     NOT?: OrderWhereInput | OrderWhereInput[]
+    number?: StringNullableFilter<"Order"> | string | null
     createdAt?: DateTimeFilter<"Order"> | Date | string
     amount?: IntFilter<"Order"> | number
     type?: EnumOrderTypeFilter<"Order"> | $Enums.OrderType
@@ -21657,13 +23293,16 @@ export namespace Prisma {
     customerId?: StringFilter<"Order"> | string
     externalId?: StringNullableFilter<"Order"> | string | null
     addressId?: StringNullableFilter<"Order"> | string | null
+    deliveryAddressId?: StringNullableFilter<"Order"> | string | null
     customer?: XOR<CustomerScalarRelationFilter, CustomerWhereInput>
     address?: XOR<AddressNullableScalarRelationFilter, AddressWhereInput> | null
+    deliveryAddress?: XOR<DeliveryAddressNullableScalarRelationFilter, DeliveryAddressWhereInput> | null
     orderProducts?: OrderProductsListRelationFilter
   }, "id">
 
   export type OrderOrderByWithAggregationInput = {
     id?: SortOrder
+    number?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     amount?: SortOrder
     type?: SortOrder
@@ -21672,6 +23311,7 @@ export namespace Prisma {
     customerId?: SortOrder
     externalId?: SortOrderInput | SortOrder
     addressId?: SortOrderInput | SortOrder
+    deliveryAddressId?: SortOrderInput | SortOrder
     _count?: OrderCountOrderByAggregateInput
     _avg?: OrderAvgOrderByAggregateInput
     _max?: OrderMaxOrderByAggregateInput
@@ -21684,6 +23324,7 @@ export namespace Prisma {
     OR?: OrderScalarWhereWithAggregatesInput[]
     NOT?: OrderScalarWhereWithAggregatesInput | OrderScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Order"> | string
+    number?: StringNullableWithAggregatesFilter<"Order"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Order"> | Date | string
     amount?: IntWithAggregatesFilter<"Order"> | number
     type?: EnumOrderTypeWithAggregatesFilter<"Order"> | $Enums.OrderType
@@ -21692,6 +23333,7 @@ export namespace Prisma {
     customerId?: StringWithAggregatesFilter<"Order"> | string
     externalId?: StringNullableWithAggregatesFilter<"Order"> | string | null
     addressId?: StringNullableWithAggregatesFilter<"Order"> | string | null
+    deliveryAddressId?: StringNullableWithAggregatesFilter<"Order"> | string | null
   }
 
   export type OrderProductsWhereInput = {
@@ -21872,6 +23514,7 @@ export namespace Prisma {
     url: string
     size: number
     product?: ProductCreateNestedOneWithoutPhotosInput
+    modifierGroupItems?: ModifierGroupItemCreateNestedManyWithoutPhotoInput
   }
 
   export type FileUncheckedCreateInput = {
@@ -21881,6 +23524,7 @@ export namespace Prisma {
     url: string
     size: number
     productId?: string | null
+    modifierGroupItems?: ModifierGroupItemUncheckedCreateNestedManyWithoutPhotoInput
   }
 
   export type FileUpdateInput = {
@@ -21890,6 +23534,7 @@ export namespace Prisma {
     url?: StringFieldUpdateOperationsInput | string
     size?: IntFieldUpdateOperationsInput | number
     product?: ProductUpdateOneWithoutPhotosNestedInput
+    modifierGroupItems?: ModifierGroupItemUpdateManyWithoutPhotoNestedInput
   }
 
   export type FileUncheckedUpdateInput = {
@@ -21899,6 +23544,7 @@ export namespace Prisma {
     url?: StringFieldUpdateOperationsInput | string
     size?: IntFieldUpdateOperationsInput | number
     productId?: NullableStringFieldUpdateOperationsInput | string | null
+    modifierGroupItems?: ModifierGroupItemUncheckedUpdateManyWithoutPhotoNestedInput
   }
 
   export type FileCreateManyInput = {
@@ -21935,7 +23581,8 @@ export namespace Prisma {
     type?: $Enums.ModifierGroupType | null
     minSelection?: number | null
     maxSelection?: number | null
-    product?: ProductCreateNestedOneWithoutModifierGroupsInput
+    products?: ProductCreateNestedManyWithoutModifierGroupsInput
+    items?: ModifierGroupItemCreateNestedManyWithoutModifierGroupInput
   }
 
   export type ModifierGroupUncheckedCreateInput = {
@@ -21944,9 +23591,10 @@ export namespace Prisma {
     title: string
     required?: boolean
     type?: $Enums.ModifierGroupType | null
-    productId?: string | null
     minSelection?: number | null
     maxSelection?: number | null
+    products?: ProductUncheckedCreateNestedManyWithoutModifierGroupsInput
+    items?: ModifierGroupItemUncheckedCreateNestedManyWithoutModifierGroupInput
   }
 
   export type ModifierGroupUpdateInput = {
@@ -21957,7 +23605,8 @@ export namespace Prisma {
     type?: NullableEnumModifierGroupTypeFieldUpdateOperationsInput | $Enums.ModifierGroupType | null
     minSelection?: NullableIntFieldUpdateOperationsInput | number | null
     maxSelection?: NullableIntFieldUpdateOperationsInput | number | null
-    product?: ProductUpdateOneWithoutModifierGroupsNestedInput
+    products?: ProductUpdateManyWithoutModifierGroupsNestedInput
+    items?: ModifierGroupItemUpdateManyWithoutModifierGroupNestedInput
   }
 
   export type ModifierGroupUncheckedUpdateInput = {
@@ -21966,9 +23615,10 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     required?: BoolFieldUpdateOperationsInput | boolean
     type?: NullableEnumModifierGroupTypeFieldUpdateOperationsInput | $Enums.ModifierGroupType | null
-    productId?: NullableStringFieldUpdateOperationsInput | string | null
     minSelection?: NullableIntFieldUpdateOperationsInput | number | null
     maxSelection?: NullableIntFieldUpdateOperationsInput | number | null
+    products?: ProductUncheckedUpdateManyWithoutModifierGroupsNestedInput
+    items?: ModifierGroupItemUncheckedUpdateManyWithoutModifierGroupNestedInput
   }
 
   export type ModifierGroupCreateManyInput = {
@@ -21977,7 +23627,6 @@ export namespace Prisma {
     title: string
     required?: boolean
     type?: $Enums.ModifierGroupType | null
-    productId?: string | null
     minSelection?: number | null
     maxSelection?: number | null
   }
@@ -21998,9 +23647,69 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     required?: BoolFieldUpdateOperationsInput | boolean
     type?: NullableEnumModifierGroupTypeFieldUpdateOperationsInput | $Enums.ModifierGroupType | null
-    productId?: NullableStringFieldUpdateOperationsInput | string | null
     minSelection?: NullableIntFieldUpdateOperationsInput | number | null
     maxSelection?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type ModifierGroupItemCreateInput = {
+    id: string
+    createdAt?: Date | string
+    name: string
+    price: number
+    photo?: FileCreateNestedOneWithoutModifierGroupItemsInput
+    modifierGroup?: ModifierGroupCreateNestedOneWithoutItemsInput
+  }
+
+  export type ModifierGroupItemUncheckedCreateInput = {
+    id: string
+    createdAt?: Date | string
+    name: string
+    price: number
+    modifierGroupId?: string | null
+    fileId?: string | null
+  }
+
+  export type ModifierGroupItemUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    price?: IntFieldUpdateOperationsInput | number
+    photo?: FileUpdateOneWithoutModifierGroupItemsNestedInput
+    modifierGroup?: ModifierGroupUpdateOneWithoutItemsNestedInput
+  }
+
+  export type ModifierGroupItemUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    price?: IntFieldUpdateOperationsInput | number
+    modifierGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    fileId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ModifierGroupItemCreateManyInput = {
+    id: string
+    createdAt?: Date | string
+    name: string
+    price: number
+    modifierGroupId?: string | null
+    fileId?: string | null
+  }
+
+  export type ModifierGroupItemUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    price?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ModifierGroupItemUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    price?: IntFieldUpdateOperationsInput | number
+    modifierGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    fileId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type BusinessCreateInput = {
@@ -22168,7 +23877,7 @@ export namespace Prisma {
     price?: number | null
     comparedAtPrice?: number | null
     photos?: FileCreateNestedManyWithoutProductInput
-    modifierGroups?: ModifierGroupCreateNestedManyWithoutProductInput
+    modifierGroups?: ModifierGroupCreateNestedManyWithoutProductsInput
     category?: CategoryCreateNestedOneWithoutProductsInput
     OrderProducts?: OrderProductsCreateNestedManyWithoutProductInput
   }
@@ -22182,7 +23891,7 @@ export namespace Prisma {
     comparedAtPrice?: number | null
     categoryId?: string | null
     photos?: FileUncheckedCreateNestedManyWithoutProductInput
-    modifierGroups?: ModifierGroupUncheckedCreateNestedManyWithoutProductInput
+    modifierGroups?: ModifierGroupUncheckedCreateNestedManyWithoutProductsInput
     OrderProducts?: OrderProductsUncheckedCreateNestedManyWithoutProductInput
   }
 
@@ -22194,7 +23903,7 @@ export namespace Prisma {
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
     photos?: FileUpdateManyWithoutProductNestedInput
-    modifierGroups?: ModifierGroupUpdateManyWithoutProductNestedInput
+    modifierGroups?: ModifierGroupUpdateManyWithoutProductsNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
     OrderProducts?: OrderProductsUpdateManyWithoutProductNestedInput
   }
@@ -22208,7 +23917,7 @@ export namespace Prisma {
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     photos?: FileUncheckedUpdateManyWithoutProductNestedInput
-    modifierGroups?: ModifierGroupUncheckedUpdateManyWithoutProductNestedInput
+    modifierGroups?: ModifierGroupUncheckedUpdateManyWithoutProductsNestedInput
     OrderProducts?: OrderProductsUncheckedUpdateManyWithoutProductNestedInput
   }
 
@@ -22429,6 +24138,7 @@ export namespace Prisma {
     complement?: string | null
     numberComplement?: string | null
     customer?: CustomerCreateNestedOneWithoutAddressesInput
+    orders?: OrderCreateNestedManyWithoutDeliveryAddressInput
   }
 
   export type DeliveryAddressUncheckedCreateInput = {
@@ -22445,6 +24155,7 @@ export namespace Prisma {
     complement?: string | null
     numberComplement?: string | null
     customerId?: string | null
+    orders?: OrderUncheckedCreateNestedManyWithoutDeliveryAddressInput
   }
 
   export type DeliveryAddressUpdateInput = {
@@ -22461,6 +24172,7 @@ export namespace Prisma {
     complement?: NullableStringFieldUpdateOperationsInput | string | null
     numberComplement?: NullableStringFieldUpdateOperationsInput | string | null
     customer?: CustomerUpdateOneWithoutAddressesNestedInput
+    orders?: OrderUpdateManyWithoutDeliveryAddressNestedInput
   }
 
   export type DeliveryAddressUncheckedUpdateInput = {
@@ -22477,6 +24189,7 @@ export namespace Prisma {
     complement?: NullableStringFieldUpdateOperationsInput | string | null
     numberComplement?: NullableStringFieldUpdateOperationsInput | string | null
     customerId?: NullableStringFieldUpdateOperationsInput | string | null
+    orders?: OrderUncheckedUpdateManyWithoutDeliveryAddressNestedInput
   }
 
   export type DeliveryAddressCreateManyInput = {
@@ -22641,6 +24354,7 @@ export namespace Prisma {
 
   export type OrderCreateInput = {
     id: string
+    number?: string | null
     createdAt?: Date | string
     amount: number
     type?: $Enums.OrderType
@@ -22649,11 +24363,13 @@ export namespace Prisma {
     externalId?: string | null
     customer: CustomerCreateNestedOneWithoutOrdersInput
     address?: AddressCreateNestedOneWithoutOrdersInput
+    deliveryAddress?: DeliveryAddressCreateNestedOneWithoutOrdersInput
     orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
   }
 
   export type OrderUncheckedCreateInput = {
     id: string
+    number?: string | null
     createdAt?: Date | string
     amount: number
     type?: $Enums.OrderType
@@ -22662,11 +24378,13 @@ export namespace Prisma {
     customerId: string
     externalId?: string | null
     addressId?: string | null
+    deliveryAddressId?: string | null
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
   }
 
   export type OrderUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    number?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     amount?: IntFieldUpdateOperationsInput | number
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
@@ -22675,11 +24393,13 @@ export namespace Prisma {
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
     customer?: CustomerUpdateOneRequiredWithoutOrdersNestedInput
     address?: AddressUpdateOneWithoutOrdersNestedInput
+    deliveryAddress?: DeliveryAddressUpdateOneWithoutOrdersNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    number?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     amount?: IntFieldUpdateOperationsInput | number
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
@@ -22688,11 +24408,13 @@ export namespace Prisma {
     customerId?: StringFieldUpdateOperationsInput | string
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderCreateManyInput = {
     id: string
+    number?: string | null
     createdAt?: Date | string
     amount: number
     type?: $Enums.OrderType
@@ -22701,10 +24423,12 @@ export namespace Prisma {
     customerId: string
     externalId?: string | null
     addressId?: string | null
+    deliveryAddressId?: string | null
   }
 
   export type OrderUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    number?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     amount?: IntFieldUpdateOperationsInput | number
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
@@ -22715,6 +24439,7 @@ export namespace Prisma {
 
   export type OrderUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
+    number?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     amount?: IntFieldUpdateOperationsInput | number
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
@@ -22723,6 +24448,7 @@ export namespace Prisma {
     customerId?: StringFieldUpdateOperationsInput | string
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type OrderProductsCreateInput = {
@@ -23014,6 +24740,16 @@ export namespace Prisma {
     isNot?: ProductWhereInput | null
   }
 
+  export type ModifierGroupItemListRelationFilter = {
+    every?: ModifierGroupItemWhereInput
+    some?: ModifierGroupItemWhereInput
+    none?: ModifierGroupItemWhereInput
+  }
+
+  export type ModifierGroupItemOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type FileCountOrderByAggregateInput = {
     id?: SortOrder
     createdAt?: SortOrder
@@ -23079,13 +24815,22 @@ export namespace Prisma {
     not?: NestedEnumModifierGroupTypeNullableFilter<$PrismaModel> | $Enums.ModifierGroupType | null
   }
 
+  export type ProductListRelationFilter = {
+    every?: ProductWhereInput
+    some?: ProductWhereInput
+    none?: ProductWhereInput
+  }
+
+  export type ProductOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type ModifierGroupCountOrderByAggregateInput = {
     id?: SortOrder
     createdAt?: SortOrder
     title?: SortOrder
     required?: SortOrder
     type?: SortOrder
-    productId?: SortOrder
     minSelection?: SortOrder
     maxSelection?: SortOrder
   }
@@ -23101,7 +24846,6 @@ export namespace Prisma {
     title?: SortOrder
     required?: SortOrder
     type?: SortOrder
-    productId?: SortOrder
     minSelection?: SortOrder
     maxSelection?: SortOrder
   }
@@ -23112,7 +24856,6 @@ export namespace Prisma {
     title?: SortOrder
     required?: SortOrder
     type?: SortOrder
-    productId?: SortOrder
     minSelection?: SortOrder
     maxSelection?: SortOrder
   }
@@ -23138,6 +24881,51 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedEnumModifierGroupTypeNullableFilter<$PrismaModel>
     _max?: NestedEnumModifierGroupTypeNullableFilter<$PrismaModel>
+  }
+
+  export type FileNullableScalarRelationFilter = {
+    is?: FileWhereInput | null
+    isNot?: FileWhereInput | null
+  }
+
+  export type ModifierGroupNullableScalarRelationFilter = {
+    is?: ModifierGroupWhereInput | null
+    isNot?: ModifierGroupWhereInput | null
+  }
+
+  export type ModifierGroupItemCountOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    name?: SortOrder
+    price?: SortOrder
+    modifierGroupId?: SortOrder
+    fileId?: SortOrder
+  }
+
+  export type ModifierGroupItemAvgOrderByAggregateInput = {
+    price?: SortOrder
+  }
+
+  export type ModifierGroupItemMaxOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    name?: SortOrder
+    price?: SortOrder
+    modifierGroupId?: SortOrder
+    fileId?: SortOrder
+  }
+
+  export type ModifierGroupItemMinOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    name?: SortOrder
+    price?: SortOrder
+    modifierGroupId?: SortOrder
+    fileId?: SortOrder
+  }
+
+  export type ModifierGroupItemSumOrderByAggregateInput = {
+    price?: SortOrder
   }
 
   export type BranchListRelationFilter = {
@@ -23311,16 +25099,6 @@ export namespace Prisma {
   export type ProductSumOrderByAggregateInput = {
     price?: SortOrder
     comparedAtPrice?: SortOrder
-  }
-
-  export type ProductListRelationFilter = {
-    every?: ProductWhereInput
-    some?: ProductWhereInput
-    none?: ProductWhereInput
-  }
-
-  export type ProductOrderByRelationAggregateInput = {
-    _count?: SortOrder
   }
 
   export type CategoryCountOrderByAggregateInput = {
@@ -23564,8 +25342,14 @@ export namespace Prisma {
     not?: NestedEnumPaymentTypeFilter<$PrismaModel> | $Enums.PaymentType
   }
 
+  export type DeliveryAddressNullableScalarRelationFilter = {
+    is?: DeliveryAddressWhereInput | null
+    isNot?: DeliveryAddressWhereInput | null
+  }
+
   export type OrderCountOrderByAggregateInput = {
     id?: SortOrder
+    number?: SortOrder
     createdAt?: SortOrder
     amount?: SortOrder
     type?: SortOrder
@@ -23574,6 +25358,7 @@ export namespace Prisma {
     customerId?: SortOrder
     externalId?: SortOrder
     addressId?: SortOrder
+    deliveryAddressId?: SortOrder
   }
 
   export type OrderAvgOrderByAggregateInput = {
@@ -23583,6 +25368,7 @@ export namespace Prisma {
 
   export type OrderMaxOrderByAggregateInput = {
     id?: SortOrder
+    number?: SortOrder
     createdAt?: SortOrder
     amount?: SortOrder
     type?: SortOrder
@@ -23591,10 +25377,12 @@ export namespace Prisma {
     customerId?: SortOrder
     externalId?: SortOrder
     addressId?: SortOrder
+    deliveryAddressId?: SortOrder
   }
 
   export type OrderMinOrderByAggregateInput = {
     id?: SortOrder
+    number?: SortOrder
     createdAt?: SortOrder
     amount?: SortOrder
     type?: SortOrder
@@ -23603,6 +25391,7 @@ export namespace Prisma {
     customerId?: SortOrder
     externalId?: SortOrder
     addressId?: SortOrder
+    deliveryAddressId?: SortOrder
   }
 
   export type OrderSumOrderByAggregateInput = {
@@ -23772,6 +25561,20 @@ export namespace Prisma {
     connect?: ProductWhereUniqueInput
   }
 
+  export type ModifierGroupItemCreateNestedManyWithoutPhotoInput = {
+    create?: XOR<ModifierGroupItemCreateWithoutPhotoInput, ModifierGroupItemUncheckedCreateWithoutPhotoInput> | ModifierGroupItemCreateWithoutPhotoInput[] | ModifierGroupItemUncheckedCreateWithoutPhotoInput[]
+    connectOrCreate?: ModifierGroupItemCreateOrConnectWithoutPhotoInput | ModifierGroupItemCreateOrConnectWithoutPhotoInput[]
+    createMany?: ModifierGroupItemCreateManyPhotoInputEnvelope
+    connect?: ModifierGroupItemWhereUniqueInput | ModifierGroupItemWhereUniqueInput[]
+  }
+
+  export type ModifierGroupItemUncheckedCreateNestedManyWithoutPhotoInput = {
+    create?: XOR<ModifierGroupItemCreateWithoutPhotoInput, ModifierGroupItemUncheckedCreateWithoutPhotoInput> | ModifierGroupItemCreateWithoutPhotoInput[] | ModifierGroupItemUncheckedCreateWithoutPhotoInput[]
+    connectOrCreate?: ModifierGroupItemCreateOrConnectWithoutPhotoInput | ModifierGroupItemCreateOrConnectWithoutPhotoInput[]
+    createMany?: ModifierGroupItemCreateManyPhotoInputEnvelope
+    connect?: ModifierGroupItemWhereUniqueInput | ModifierGroupItemWhereUniqueInput[]
+  }
+
   export type ProductUpdateOneWithoutPhotosNestedInput = {
     create?: XOR<ProductCreateWithoutPhotosInput, ProductUncheckedCreateWithoutPhotosInput>
     connectOrCreate?: ProductCreateOrConnectWithoutPhotosInput
@@ -23782,14 +25585,62 @@ export namespace Prisma {
     update?: XOR<XOR<ProductUpdateToOneWithWhereWithoutPhotosInput, ProductUpdateWithoutPhotosInput>, ProductUncheckedUpdateWithoutPhotosInput>
   }
 
+  export type ModifierGroupItemUpdateManyWithoutPhotoNestedInput = {
+    create?: XOR<ModifierGroupItemCreateWithoutPhotoInput, ModifierGroupItemUncheckedCreateWithoutPhotoInput> | ModifierGroupItemCreateWithoutPhotoInput[] | ModifierGroupItemUncheckedCreateWithoutPhotoInput[]
+    connectOrCreate?: ModifierGroupItemCreateOrConnectWithoutPhotoInput | ModifierGroupItemCreateOrConnectWithoutPhotoInput[]
+    upsert?: ModifierGroupItemUpsertWithWhereUniqueWithoutPhotoInput | ModifierGroupItemUpsertWithWhereUniqueWithoutPhotoInput[]
+    createMany?: ModifierGroupItemCreateManyPhotoInputEnvelope
+    set?: ModifierGroupItemWhereUniqueInput | ModifierGroupItemWhereUniqueInput[]
+    disconnect?: ModifierGroupItemWhereUniqueInput | ModifierGroupItemWhereUniqueInput[]
+    delete?: ModifierGroupItemWhereUniqueInput | ModifierGroupItemWhereUniqueInput[]
+    connect?: ModifierGroupItemWhereUniqueInput | ModifierGroupItemWhereUniqueInput[]
+    update?: ModifierGroupItemUpdateWithWhereUniqueWithoutPhotoInput | ModifierGroupItemUpdateWithWhereUniqueWithoutPhotoInput[]
+    updateMany?: ModifierGroupItemUpdateManyWithWhereWithoutPhotoInput | ModifierGroupItemUpdateManyWithWhereWithoutPhotoInput[]
+    deleteMany?: ModifierGroupItemScalarWhereInput | ModifierGroupItemScalarWhereInput[]
+  }
+
   export type NullableStringFieldUpdateOperationsInput = {
     set?: string | null
   }
 
-  export type ProductCreateNestedOneWithoutModifierGroupsInput = {
-    create?: XOR<ProductCreateWithoutModifierGroupsInput, ProductUncheckedCreateWithoutModifierGroupsInput>
-    connectOrCreate?: ProductCreateOrConnectWithoutModifierGroupsInput
-    connect?: ProductWhereUniqueInput
+  export type ModifierGroupItemUncheckedUpdateManyWithoutPhotoNestedInput = {
+    create?: XOR<ModifierGroupItemCreateWithoutPhotoInput, ModifierGroupItemUncheckedCreateWithoutPhotoInput> | ModifierGroupItemCreateWithoutPhotoInput[] | ModifierGroupItemUncheckedCreateWithoutPhotoInput[]
+    connectOrCreate?: ModifierGroupItemCreateOrConnectWithoutPhotoInput | ModifierGroupItemCreateOrConnectWithoutPhotoInput[]
+    upsert?: ModifierGroupItemUpsertWithWhereUniqueWithoutPhotoInput | ModifierGroupItemUpsertWithWhereUniqueWithoutPhotoInput[]
+    createMany?: ModifierGroupItemCreateManyPhotoInputEnvelope
+    set?: ModifierGroupItemWhereUniqueInput | ModifierGroupItemWhereUniqueInput[]
+    disconnect?: ModifierGroupItemWhereUniqueInput | ModifierGroupItemWhereUniqueInput[]
+    delete?: ModifierGroupItemWhereUniqueInput | ModifierGroupItemWhereUniqueInput[]
+    connect?: ModifierGroupItemWhereUniqueInput | ModifierGroupItemWhereUniqueInput[]
+    update?: ModifierGroupItemUpdateWithWhereUniqueWithoutPhotoInput | ModifierGroupItemUpdateWithWhereUniqueWithoutPhotoInput[]
+    updateMany?: ModifierGroupItemUpdateManyWithWhereWithoutPhotoInput | ModifierGroupItemUpdateManyWithWhereWithoutPhotoInput[]
+    deleteMany?: ModifierGroupItemScalarWhereInput | ModifierGroupItemScalarWhereInput[]
+  }
+
+  export type ProductCreateNestedManyWithoutModifierGroupsInput = {
+    create?: XOR<ProductCreateWithoutModifierGroupsInput, ProductUncheckedCreateWithoutModifierGroupsInput> | ProductCreateWithoutModifierGroupsInput[] | ProductUncheckedCreateWithoutModifierGroupsInput[]
+    connectOrCreate?: ProductCreateOrConnectWithoutModifierGroupsInput | ProductCreateOrConnectWithoutModifierGroupsInput[]
+    connect?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+  }
+
+  export type ModifierGroupItemCreateNestedManyWithoutModifierGroupInput = {
+    create?: XOR<ModifierGroupItemCreateWithoutModifierGroupInput, ModifierGroupItemUncheckedCreateWithoutModifierGroupInput> | ModifierGroupItemCreateWithoutModifierGroupInput[] | ModifierGroupItemUncheckedCreateWithoutModifierGroupInput[]
+    connectOrCreate?: ModifierGroupItemCreateOrConnectWithoutModifierGroupInput | ModifierGroupItemCreateOrConnectWithoutModifierGroupInput[]
+    createMany?: ModifierGroupItemCreateManyModifierGroupInputEnvelope
+    connect?: ModifierGroupItemWhereUniqueInput | ModifierGroupItemWhereUniqueInput[]
+  }
+
+  export type ProductUncheckedCreateNestedManyWithoutModifierGroupsInput = {
+    create?: XOR<ProductCreateWithoutModifierGroupsInput, ProductUncheckedCreateWithoutModifierGroupsInput> | ProductCreateWithoutModifierGroupsInput[] | ProductUncheckedCreateWithoutModifierGroupsInput[]
+    connectOrCreate?: ProductCreateOrConnectWithoutModifierGroupsInput | ProductCreateOrConnectWithoutModifierGroupsInput[]
+    connect?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+  }
+
+  export type ModifierGroupItemUncheckedCreateNestedManyWithoutModifierGroupInput = {
+    create?: XOR<ModifierGroupItemCreateWithoutModifierGroupInput, ModifierGroupItemUncheckedCreateWithoutModifierGroupInput> | ModifierGroupItemCreateWithoutModifierGroupInput[] | ModifierGroupItemUncheckedCreateWithoutModifierGroupInput[]
+    connectOrCreate?: ModifierGroupItemCreateOrConnectWithoutModifierGroupInput | ModifierGroupItemCreateOrConnectWithoutModifierGroupInput[]
+    createMany?: ModifierGroupItemCreateManyModifierGroupInputEnvelope
+    connect?: ModifierGroupItemWhereUniqueInput | ModifierGroupItemWhereUniqueInput[]
   }
 
   export type BoolFieldUpdateOperationsInput = {
@@ -23800,14 +25651,90 @@ export namespace Prisma {
     set?: $Enums.ModifierGroupType | null
   }
 
-  export type ProductUpdateOneWithoutModifierGroupsNestedInput = {
-    create?: XOR<ProductCreateWithoutModifierGroupsInput, ProductUncheckedCreateWithoutModifierGroupsInput>
-    connectOrCreate?: ProductCreateOrConnectWithoutModifierGroupsInput
-    upsert?: ProductUpsertWithoutModifierGroupsInput
-    disconnect?: ProductWhereInput | boolean
-    delete?: ProductWhereInput | boolean
-    connect?: ProductWhereUniqueInput
-    update?: XOR<XOR<ProductUpdateToOneWithWhereWithoutModifierGroupsInput, ProductUpdateWithoutModifierGroupsInput>, ProductUncheckedUpdateWithoutModifierGroupsInput>
+  export type ProductUpdateManyWithoutModifierGroupsNestedInput = {
+    create?: XOR<ProductCreateWithoutModifierGroupsInput, ProductUncheckedCreateWithoutModifierGroupsInput> | ProductCreateWithoutModifierGroupsInput[] | ProductUncheckedCreateWithoutModifierGroupsInput[]
+    connectOrCreate?: ProductCreateOrConnectWithoutModifierGroupsInput | ProductCreateOrConnectWithoutModifierGroupsInput[]
+    upsert?: ProductUpsertWithWhereUniqueWithoutModifierGroupsInput | ProductUpsertWithWhereUniqueWithoutModifierGroupsInput[]
+    set?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+    disconnect?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+    delete?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+    connect?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+    update?: ProductUpdateWithWhereUniqueWithoutModifierGroupsInput | ProductUpdateWithWhereUniqueWithoutModifierGroupsInput[]
+    updateMany?: ProductUpdateManyWithWhereWithoutModifierGroupsInput | ProductUpdateManyWithWhereWithoutModifierGroupsInput[]
+    deleteMany?: ProductScalarWhereInput | ProductScalarWhereInput[]
+  }
+
+  export type ModifierGroupItemUpdateManyWithoutModifierGroupNestedInput = {
+    create?: XOR<ModifierGroupItemCreateWithoutModifierGroupInput, ModifierGroupItemUncheckedCreateWithoutModifierGroupInput> | ModifierGroupItemCreateWithoutModifierGroupInput[] | ModifierGroupItemUncheckedCreateWithoutModifierGroupInput[]
+    connectOrCreate?: ModifierGroupItemCreateOrConnectWithoutModifierGroupInput | ModifierGroupItemCreateOrConnectWithoutModifierGroupInput[]
+    upsert?: ModifierGroupItemUpsertWithWhereUniqueWithoutModifierGroupInput | ModifierGroupItemUpsertWithWhereUniqueWithoutModifierGroupInput[]
+    createMany?: ModifierGroupItemCreateManyModifierGroupInputEnvelope
+    set?: ModifierGroupItemWhereUniqueInput | ModifierGroupItemWhereUniqueInput[]
+    disconnect?: ModifierGroupItemWhereUniqueInput | ModifierGroupItemWhereUniqueInput[]
+    delete?: ModifierGroupItemWhereUniqueInput | ModifierGroupItemWhereUniqueInput[]
+    connect?: ModifierGroupItemWhereUniqueInput | ModifierGroupItemWhereUniqueInput[]
+    update?: ModifierGroupItemUpdateWithWhereUniqueWithoutModifierGroupInput | ModifierGroupItemUpdateWithWhereUniqueWithoutModifierGroupInput[]
+    updateMany?: ModifierGroupItemUpdateManyWithWhereWithoutModifierGroupInput | ModifierGroupItemUpdateManyWithWhereWithoutModifierGroupInput[]
+    deleteMany?: ModifierGroupItemScalarWhereInput | ModifierGroupItemScalarWhereInput[]
+  }
+
+  export type ProductUncheckedUpdateManyWithoutModifierGroupsNestedInput = {
+    create?: XOR<ProductCreateWithoutModifierGroupsInput, ProductUncheckedCreateWithoutModifierGroupsInput> | ProductCreateWithoutModifierGroupsInput[] | ProductUncheckedCreateWithoutModifierGroupsInput[]
+    connectOrCreate?: ProductCreateOrConnectWithoutModifierGroupsInput | ProductCreateOrConnectWithoutModifierGroupsInput[]
+    upsert?: ProductUpsertWithWhereUniqueWithoutModifierGroupsInput | ProductUpsertWithWhereUniqueWithoutModifierGroupsInput[]
+    set?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+    disconnect?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+    delete?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+    connect?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+    update?: ProductUpdateWithWhereUniqueWithoutModifierGroupsInput | ProductUpdateWithWhereUniqueWithoutModifierGroupsInput[]
+    updateMany?: ProductUpdateManyWithWhereWithoutModifierGroupsInput | ProductUpdateManyWithWhereWithoutModifierGroupsInput[]
+    deleteMany?: ProductScalarWhereInput | ProductScalarWhereInput[]
+  }
+
+  export type ModifierGroupItemUncheckedUpdateManyWithoutModifierGroupNestedInput = {
+    create?: XOR<ModifierGroupItemCreateWithoutModifierGroupInput, ModifierGroupItemUncheckedCreateWithoutModifierGroupInput> | ModifierGroupItemCreateWithoutModifierGroupInput[] | ModifierGroupItemUncheckedCreateWithoutModifierGroupInput[]
+    connectOrCreate?: ModifierGroupItemCreateOrConnectWithoutModifierGroupInput | ModifierGroupItemCreateOrConnectWithoutModifierGroupInput[]
+    upsert?: ModifierGroupItemUpsertWithWhereUniqueWithoutModifierGroupInput | ModifierGroupItemUpsertWithWhereUniqueWithoutModifierGroupInput[]
+    createMany?: ModifierGroupItemCreateManyModifierGroupInputEnvelope
+    set?: ModifierGroupItemWhereUniqueInput | ModifierGroupItemWhereUniqueInput[]
+    disconnect?: ModifierGroupItemWhereUniqueInput | ModifierGroupItemWhereUniqueInput[]
+    delete?: ModifierGroupItemWhereUniqueInput | ModifierGroupItemWhereUniqueInput[]
+    connect?: ModifierGroupItemWhereUniqueInput | ModifierGroupItemWhereUniqueInput[]
+    update?: ModifierGroupItemUpdateWithWhereUniqueWithoutModifierGroupInput | ModifierGroupItemUpdateWithWhereUniqueWithoutModifierGroupInput[]
+    updateMany?: ModifierGroupItemUpdateManyWithWhereWithoutModifierGroupInput | ModifierGroupItemUpdateManyWithWhereWithoutModifierGroupInput[]
+    deleteMany?: ModifierGroupItemScalarWhereInput | ModifierGroupItemScalarWhereInput[]
+  }
+
+  export type FileCreateNestedOneWithoutModifierGroupItemsInput = {
+    create?: XOR<FileCreateWithoutModifierGroupItemsInput, FileUncheckedCreateWithoutModifierGroupItemsInput>
+    connectOrCreate?: FileCreateOrConnectWithoutModifierGroupItemsInput
+    connect?: FileWhereUniqueInput
+  }
+
+  export type ModifierGroupCreateNestedOneWithoutItemsInput = {
+    create?: XOR<ModifierGroupCreateWithoutItemsInput, ModifierGroupUncheckedCreateWithoutItemsInput>
+    connectOrCreate?: ModifierGroupCreateOrConnectWithoutItemsInput
+    connect?: ModifierGroupWhereUniqueInput
+  }
+
+  export type FileUpdateOneWithoutModifierGroupItemsNestedInput = {
+    create?: XOR<FileCreateWithoutModifierGroupItemsInput, FileUncheckedCreateWithoutModifierGroupItemsInput>
+    connectOrCreate?: FileCreateOrConnectWithoutModifierGroupItemsInput
+    upsert?: FileUpsertWithoutModifierGroupItemsInput
+    disconnect?: FileWhereInput | boolean
+    delete?: FileWhereInput | boolean
+    connect?: FileWhereUniqueInput
+    update?: XOR<XOR<FileUpdateToOneWithWhereWithoutModifierGroupItemsInput, FileUpdateWithoutModifierGroupItemsInput>, FileUncheckedUpdateWithoutModifierGroupItemsInput>
+  }
+
+  export type ModifierGroupUpdateOneWithoutItemsNestedInput = {
+    create?: XOR<ModifierGroupCreateWithoutItemsInput, ModifierGroupUncheckedCreateWithoutItemsInput>
+    connectOrCreate?: ModifierGroupCreateOrConnectWithoutItemsInput
+    upsert?: ModifierGroupUpsertWithoutItemsInput
+    disconnect?: ModifierGroupWhereInput | boolean
+    delete?: ModifierGroupWhereInput | boolean
+    connect?: ModifierGroupWhereUniqueInput
+    update?: XOR<XOR<ModifierGroupUpdateToOneWithWhereWithoutItemsInput, ModifierGroupUpdateWithoutItemsInput>, ModifierGroupUncheckedUpdateWithoutItemsInput>
   }
 
   export type BranchCreateNestedManyWithoutBusinessInput = {
@@ -23965,10 +25892,9 @@ export namespace Prisma {
     connect?: FileWhereUniqueInput | FileWhereUniqueInput[]
   }
 
-  export type ModifierGroupCreateNestedManyWithoutProductInput = {
-    create?: XOR<ModifierGroupCreateWithoutProductInput, ModifierGroupUncheckedCreateWithoutProductInput> | ModifierGroupCreateWithoutProductInput[] | ModifierGroupUncheckedCreateWithoutProductInput[]
-    connectOrCreate?: ModifierGroupCreateOrConnectWithoutProductInput | ModifierGroupCreateOrConnectWithoutProductInput[]
-    createMany?: ModifierGroupCreateManyProductInputEnvelope
+  export type ModifierGroupCreateNestedManyWithoutProductsInput = {
+    create?: XOR<ModifierGroupCreateWithoutProductsInput, ModifierGroupUncheckedCreateWithoutProductsInput> | ModifierGroupCreateWithoutProductsInput[] | ModifierGroupUncheckedCreateWithoutProductsInput[]
+    connectOrCreate?: ModifierGroupCreateOrConnectWithoutProductsInput | ModifierGroupCreateOrConnectWithoutProductsInput[]
     connect?: ModifierGroupWhereUniqueInput | ModifierGroupWhereUniqueInput[]
   }
 
@@ -23992,10 +25918,9 @@ export namespace Prisma {
     connect?: FileWhereUniqueInput | FileWhereUniqueInput[]
   }
 
-  export type ModifierGroupUncheckedCreateNestedManyWithoutProductInput = {
-    create?: XOR<ModifierGroupCreateWithoutProductInput, ModifierGroupUncheckedCreateWithoutProductInput> | ModifierGroupCreateWithoutProductInput[] | ModifierGroupUncheckedCreateWithoutProductInput[]
-    connectOrCreate?: ModifierGroupCreateOrConnectWithoutProductInput | ModifierGroupCreateOrConnectWithoutProductInput[]
-    createMany?: ModifierGroupCreateManyProductInputEnvelope
+  export type ModifierGroupUncheckedCreateNestedManyWithoutProductsInput = {
+    create?: XOR<ModifierGroupCreateWithoutProductsInput, ModifierGroupUncheckedCreateWithoutProductsInput> | ModifierGroupCreateWithoutProductsInput[] | ModifierGroupUncheckedCreateWithoutProductsInput[]
+    connectOrCreate?: ModifierGroupCreateOrConnectWithoutProductsInput | ModifierGroupCreateOrConnectWithoutProductsInput[]
     connect?: ModifierGroupWhereUniqueInput | ModifierGroupWhereUniqueInput[]
   }
 
@@ -24020,17 +25945,16 @@ export namespace Prisma {
     deleteMany?: FileScalarWhereInput | FileScalarWhereInput[]
   }
 
-  export type ModifierGroupUpdateManyWithoutProductNestedInput = {
-    create?: XOR<ModifierGroupCreateWithoutProductInput, ModifierGroupUncheckedCreateWithoutProductInput> | ModifierGroupCreateWithoutProductInput[] | ModifierGroupUncheckedCreateWithoutProductInput[]
-    connectOrCreate?: ModifierGroupCreateOrConnectWithoutProductInput | ModifierGroupCreateOrConnectWithoutProductInput[]
-    upsert?: ModifierGroupUpsertWithWhereUniqueWithoutProductInput | ModifierGroupUpsertWithWhereUniqueWithoutProductInput[]
-    createMany?: ModifierGroupCreateManyProductInputEnvelope
+  export type ModifierGroupUpdateManyWithoutProductsNestedInput = {
+    create?: XOR<ModifierGroupCreateWithoutProductsInput, ModifierGroupUncheckedCreateWithoutProductsInput> | ModifierGroupCreateWithoutProductsInput[] | ModifierGroupUncheckedCreateWithoutProductsInput[]
+    connectOrCreate?: ModifierGroupCreateOrConnectWithoutProductsInput | ModifierGroupCreateOrConnectWithoutProductsInput[]
+    upsert?: ModifierGroupUpsertWithWhereUniqueWithoutProductsInput | ModifierGroupUpsertWithWhereUniqueWithoutProductsInput[]
     set?: ModifierGroupWhereUniqueInput | ModifierGroupWhereUniqueInput[]
     disconnect?: ModifierGroupWhereUniqueInput | ModifierGroupWhereUniqueInput[]
     delete?: ModifierGroupWhereUniqueInput | ModifierGroupWhereUniqueInput[]
     connect?: ModifierGroupWhereUniqueInput | ModifierGroupWhereUniqueInput[]
-    update?: ModifierGroupUpdateWithWhereUniqueWithoutProductInput | ModifierGroupUpdateWithWhereUniqueWithoutProductInput[]
-    updateMany?: ModifierGroupUpdateManyWithWhereWithoutProductInput | ModifierGroupUpdateManyWithWhereWithoutProductInput[]
+    update?: ModifierGroupUpdateWithWhereUniqueWithoutProductsInput | ModifierGroupUpdateWithWhereUniqueWithoutProductsInput[]
+    updateMany?: ModifierGroupUpdateManyWithWhereWithoutProductsInput | ModifierGroupUpdateManyWithWhereWithoutProductsInput[]
     deleteMany?: ModifierGroupScalarWhereInput | ModifierGroupScalarWhereInput[]
   }
 
@@ -24072,17 +25996,16 @@ export namespace Prisma {
     deleteMany?: FileScalarWhereInput | FileScalarWhereInput[]
   }
 
-  export type ModifierGroupUncheckedUpdateManyWithoutProductNestedInput = {
-    create?: XOR<ModifierGroupCreateWithoutProductInput, ModifierGroupUncheckedCreateWithoutProductInput> | ModifierGroupCreateWithoutProductInput[] | ModifierGroupUncheckedCreateWithoutProductInput[]
-    connectOrCreate?: ModifierGroupCreateOrConnectWithoutProductInput | ModifierGroupCreateOrConnectWithoutProductInput[]
-    upsert?: ModifierGroupUpsertWithWhereUniqueWithoutProductInput | ModifierGroupUpsertWithWhereUniqueWithoutProductInput[]
-    createMany?: ModifierGroupCreateManyProductInputEnvelope
+  export type ModifierGroupUncheckedUpdateManyWithoutProductsNestedInput = {
+    create?: XOR<ModifierGroupCreateWithoutProductsInput, ModifierGroupUncheckedCreateWithoutProductsInput> | ModifierGroupCreateWithoutProductsInput[] | ModifierGroupUncheckedCreateWithoutProductsInput[]
+    connectOrCreate?: ModifierGroupCreateOrConnectWithoutProductsInput | ModifierGroupCreateOrConnectWithoutProductsInput[]
+    upsert?: ModifierGroupUpsertWithWhereUniqueWithoutProductsInput | ModifierGroupUpsertWithWhereUniqueWithoutProductsInput[]
     set?: ModifierGroupWhereUniqueInput | ModifierGroupWhereUniqueInput[]
     disconnect?: ModifierGroupWhereUniqueInput | ModifierGroupWhereUniqueInput[]
     delete?: ModifierGroupWhereUniqueInput | ModifierGroupWhereUniqueInput[]
     connect?: ModifierGroupWhereUniqueInput | ModifierGroupWhereUniqueInput[]
-    update?: ModifierGroupUpdateWithWhereUniqueWithoutProductInput | ModifierGroupUpdateWithWhereUniqueWithoutProductInput[]
-    updateMany?: ModifierGroupUpdateManyWithWhereWithoutProductInput | ModifierGroupUpdateManyWithWhereWithoutProductInput[]
+    update?: ModifierGroupUpdateWithWhereUniqueWithoutProductsInput | ModifierGroupUpdateWithWhereUniqueWithoutProductsInput[]
+    updateMany?: ModifierGroupUpdateManyWithWhereWithoutProductsInput | ModifierGroupUpdateManyWithWhereWithoutProductsInput[]
     deleteMany?: ModifierGroupScalarWhereInput | ModifierGroupScalarWhereInput[]
   }
 
@@ -24320,6 +26243,20 @@ export namespace Prisma {
     connect?: CustomerWhereUniqueInput
   }
 
+  export type OrderCreateNestedManyWithoutDeliveryAddressInput = {
+    create?: XOR<OrderCreateWithoutDeliveryAddressInput, OrderUncheckedCreateWithoutDeliveryAddressInput> | OrderCreateWithoutDeliveryAddressInput[] | OrderUncheckedCreateWithoutDeliveryAddressInput[]
+    connectOrCreate?: OrderCreateOrConnectWithoutDeliveryAddressInput | OrderCreateOrConnectWithoutDeliveryAddressInput[]
+    createMany?: OrderCreateManyDeliveryAddressInputEnvelope
+    connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+  }
+
+  export type OrderUncheckedCreateNestedManyWithoutDeliveryAddressInput = {
+    create?: XOR<OrderCreateWithoutDeliveryAddressInput, OrderUncheckedCreateWithoutDeliveryAddressInput> | OrderCreateWithoutDeliveryAddressInput[] | OrderUncheckedCreateWithoutDeliveryAddressInput[]
+    connectOrCreate?: OrderCreateOrConnectWithoutDeliveryAddressInput | OrderCreateOrConnectWithoutDeliveryAddressInput[]
+    createMany?: OrderCreateManyDeliveryAddressInputEnvelope
+    connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+  }
+
   export type CustomerUpdateOneWithoutAddressesNestedInput = {
     create?: XOR<CustomerCreateWithoutAddressesInput, CustomerUncheckedCreateWithoutAddressesInput>
     connectOrCreate?: CustomerCreateOrConnectWithoutAddressesInput
@@ -24328,6 +26265,34 @@ export namespace Prisma {
     delete?: CustomerWhereInput | boolean
     connect?: CustomerWhereUniqueInput
     update?: XOR<XOR<CustomerUpdateToOneWithWhereWithoutAddressesInput, CustomerUpdateWithoutAddressesInput>, CustomerUncheckedUpdateWithoutAddressesInput>
+  }
+
+  export type OrderUpdateManyWithoutDeliveryAddressNestedInput = {
+    create?: XOR<OrderCreateWithoutDeliveryAddressInput, OrderUncheckedCreateWithoutDeliveryAddressInput> | OrderCreateWithoutDeliveryAddressInput[] | OrderUncheckedCreateWithoutDeliveryAddressInput[]
+    connectOrCreate?: OrderCreateOrConnectWithoutDeliveryAddressInput | OrderCreateOrConnectWithoutDeliveryAddressInput[]
+    upsert?: OrderUpsertWithWhereUniqueWithoutDeliveryAddressInput | OrderUpsertWithWhereUniqueWithoutDeliveryAddressInput[]
+    createMany?: OrderCreateManyDeliveryAddressInputEnvelope
+    set?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    disconnect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    delete?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    update?: OrderUpdateWithWhereUniqueWithoutDeliveryAddressInput | OrderUpdateWithWhereUniqueWithoutDeliveryAddressInput[]
+    updateMany?: OrderUpdateManyWithWhereWithoutDeliveryAddressInput | OrderUpdateManyWithWhereWithoutDeliveryAddressInput[]
+    deleteMany?: OrderScalarWhereInput | OrderScalarWhereInput[]
+  }
+
+  export type OrderUncheckedUpdateManyWithoutDeliveryAddressNestedInput = {
+    create?: XOR<OrderCreateWithoutDeliveryAddressInput, OrderUncheckedCreateWithoutDeliveryAddressInput> | OrderCreateWithoutDeliveryAddressInput[] | OrderUncheckedCreateWithoutDeliveryAddressInput[]
+    connectOrCreate?: OrderCreateOrConnectWithoutDeliveryAddressInput | OrderCreateOrConnectWithoutDeliveryAddressInput[]
+    upsert?: OrderUpsertWithWhereUniqueWithoutDeliveryAddressInput | OrderUpsertWithWhereUniqueWithoutDeliveryAddressInput[]
+    createMany?: OrderCreateManyDeliveryAddressInputEnvelope
+    set?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    disconnect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    delete?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    update?: OrderUpdateWithWhereUniqueWithoutDeliveryAddressInput | OrderUpdateWithWhereUniqueWithoutDeliveryAddressInput[]
+    updateMany?: OrderUpdateManyWithWhereWithoutDeliveryAddressInput | OrderUpdateManyWithWhereWithoutDeliveryAddressInput[]
+    deleteMany?: OrderScalarWhereInput | OrderScalarWhereInput[]
   }
 
   export type PromotialMessageCreateNestedManyWithoutMessageInput = {
@@ -24428,6 +26393,12 @@ export namespace Prisma {
     connect?: AddressWhereUniqueInput
   }
 
+  export type DeliveryAddressCreateNestedOneWithoutOrdersInput = {
+    create?: XOR<DeliveryAddressCreateWithoutOrdersInput, DeliveryAddressUncheckedCreateWithoutOrdersInput>
+    connectOrCreate?: DeliveryAddressCreateOrConnectWithoutOrdersInput
+    connect?: DeliveryAddressWhereUniqueInput
+  }
+
   export type OrderProductsCreateNestedManyWithoutOrderInput = {
     create?: XOR<OrderProductsCreateWithoutOrderInput, OrderProductsUncheckedCreateWithoutOrderInput> | OrderProductsCreateWithoutOrderInput[] | OrderProductsUncheckedCreateWithoutOrderInput[]
     connectOrCreate?: OrderProductsCreateOrConnectWithoutOrderInput | OrderProductsCreateOrConnectWithoutOrderInput[]
@@ -24466,6 +26437,16 @@ export namespace Prisma {
     delete?: AddressWhereInput | boolean
     connect?: AddressWhereUniqueInput
     update?: XOR<XOR<AddressUpdateToOneWithWhereWithoutOrdersInput, AddressUpdateWithoutOrdersInput>, AddressUncheckedUpdateWithoutOrdersInput>
+  }
+
+  export type DeliveryAddressUpdateOneWithoutOrdersNestedInput = {
+    create?: XOR<DeliveryAddressCreateWithoutOrdersInput, DeliveryAddressUncheckedCreateWithoutOrdersInput>
+    connectOrCreate?: DeliveryAddressCreateOrConnectWithoutOrdersInput
+    upsert?: DeliveryAddressUpsertWithoutOrdersInput
+    disconnect?: DeliveryAddressWhereInput | boolean
+    delete?: DeliveryAddressWhereInput | boolean
+    connect?: DeliveryAddressWhereUniqueInput
+    update?: XOR<XOR<DeliveryAddressUpdateToOneWithWhereWithoutOrdersInput, DeliveryAddressUpdateWithoutOrdersInput>, DeliveryAddressUncheckedUpdateWithoutOrdersInput>
   }
 
   export type OrderProductsUpdateManyWithoutOrderNestedInput = {
@@ -24892,7 +26873,7 @@ export namespace Prisma {
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
-    modifierGroups?: ModifierGroupCreateNestedManyWithoutProductInput
+    modifierGroups?: ModifierGroupCreateNestedManyWithoutProductsInput
     category?: CategoryCreateNestedOneWithoutProductsInput
     OrderProducts?: OrderProductsCreateNestedManyWithoutProductInput
   }
@@ -24905,13 +26886,39 @@ export namespace Prisma {
     price?: number | null
     comparedAtPrice?: number | null
     categoryId?: string | null
-    modifierGroups?: ModifierGroupUncheckedCreateNestedManyWithoutProductInput
+    modifierGroups?: ModifierGroupUncheckedCreateNestedManyWithoutProductsInput
     OrderProducts?: OrderProductsUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutPhotosInput = {
     where: ProductWhereUniqueInput
     create: XOR<ProductCreateWithoutPhotosInput, ProductUncheckedCreateWithoutPhotosInput>
+  }
+
+  export type ModifierGroupItemCreateWithoutPhotoInput = {
+    id: string
+    createdAt?: Date | string
+    name: string
+    price: number
+    modifierGroup?: ModifierGroupCreateNestedOneWithoutItemsInput
+  }
+
+  export type ModifierGroupItemUncheckedCreateWithoutPhotoInput = {
+    id: string
+    createdAt?: Date | string
+    name: string
+    price: number
+    modifierGroupId?: string | null
+  }
+
+  export type ModifierGroupItemCreateOrConnectWithoutPhotoInput = {
+    where: ModifierGroupItemWhereUniqueInput
+    create: XOR<ModifierGroupItemCreateWithoutPhotoInput, ModifierGroupItemUncheckedCreateWithoutPhotoInput>
+  }
+
+  export type ModifierGroupItemCreateManyPhotoInputEnvelope = {
+    data: ModifierGroupItemCreateManyPhotoInput | ModifierGroupItemCreateManyPhotoInput[]
+    skipDuplicates?: boolean
   }
 
   export type ProductUpsertWithoutPhotosInput = {
@@ -24932,7 +26939,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
-    modifierGroups?: ModifierGroupUpdateManyWithoutProductNestedInput
+    modifierGroups?: ModifierGroupUpdateManyWithoutProductsNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
     OrderProducts?: OrderProductsUpdateManyWithoutProductNestedInput
   }
@@ -24945,8 +26952,36 @@ export namespace Prisma {
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
-    modifierGroups?: ModifierGroupUncheckedUpdateManyWithoutProductNestedInput
+    modifierGroups?: ModifierGroupUncheckedUpdateManyWithoutProductsNestedInput
     OrderProducts?: OrderProductsUncheckedUpdateManyWithoutProductNestedInput
+  }
+
+  export type ModifierGroupItemUpsertWithWhereUniqueWithoutPhotoInput = {
+    where: ModifierGroupItemWhereUniqueInput
+    update: XOR<ModifierGroupItemUpdateWithoutPhotoInput, ModifierGroupItemUncheckedUpdateWithoutPhotoInput>
+    create: XOR<ModifierGroupItemCreateWithoutPhotoInput, ModifierGroupItemUncheckedCreateWithoutPhotoInput>
+  }
+
+  export type ModifierGroupItemUpdateWithWhereUniqueWithoutPhotoInput = {
+    where: ModifierGroupItemWhereUniqueInput
+    data: XOR<ModifierGroupItemUpdateWithoutPhotoInput, ModifierGroupItemUncheckedUpdateWithoutPhotoInput>
+  }
+
+  export type ModifierGroupItemUpdateManyWithWhereWithoutPhotoInput = {
+    where: ModifierGroupItemScalarWhereInput
+    data: XOR<ModifierGroupItemUpdateManyMutationInput, ModifierGroupItemUncheckedUpdateManyWithoutPhotoInput>
+  }
+
+  export type ModifierGroupItemScalarWhereInput = {
+    AND?: ModifierGroupItemScalarWhereInput | ModifierGroupItemScalarWhereInput[]
+    OR?: ModifierGroupItemScalarWhereInput[]
+    NOT?: ModifierGroupItemScalarWhereInput | ModifierGroupItemScalarWhereInput[]
+    id?: StringFilter<"ModifierGroupItem"> | string
+    createdAt?: DateTimeFilter<"ModifierGroupItem"> | Date | string
+    name?: StringFilter<"ModifierGroupItem"> | string
+    price?: IntFilter<"ModifierGroupItem"> | number
+    modifierGroupId?: StringNullableFilter<"ModifierGroupItem"> | string | null
+    fileId?: StringNullableFilter<"ModifierGroupItem"> | string | null
   }
 
   export type ProductCreateWithoutModifierGroupsInput = {
@@ -24978,39 +27013,187 @@ export namespace Prisma {
     create: XOR<ProductCreateWithoutModifierGroupsInput, ProductUncheckedCreateWithoutModifierGroupsInput>
   }
 
-  export type ProductUpsertWithoutModifierGroupsInput = {
-    update: XOR<ProductUpdateWithoutModifierGroupsInput, ProductUncheckedUpdateWithoutModifierGroupsInput>
-    create: XOR<ProductCreateWithoutModifierGroupsInput, ProductUncheckedCreateWithoutModifierGroupsInput>
-    where?: ProductWhereInput
+  export type ModifierGroupItemCreateWithoutModifierGroupInput = {
+    id: string
+    createdAt?: Date | string
+    name: string
+    price: number
+    photo?: FileCreateNestedOneWithoutModifierGroupItemsInput
   }
 
-  export type ProductUpdateToOneWithWhereWithoutModifierGroupsInput = {
-    where?: ProductWhereInput
+  export type ModifierGroupItemUncheckedCreateWithoutModifierGroupInput = {
+    id: string
+    createdAt?: Date | string
+    name: string
+    price: number
+    fileId?: string | null
+  }
+
+  export type ModifierGroupItemCreateOrConnectWithoutModifierGroupInput = {
+    where: ModifierGroupItemWhereUniqueInput
+    create: XOR<ModifierGroupItemCreateWithoutModifierGroupInput, ModifierGroupItemUncheckedCreateWithoutModifierGroupInput>
+  }
+
+  export type ModifierGroupItemCreateManyModifierGroupInputEnvelope = {
+    data: ModifierGroupItemCreateManyModifierGroupInput | ModifierGroupItemCreateManyModifierGroupInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ProductUpsertWithWhereUniqueWithoutModifierGroupsInput = {
+    where: ProductWhereUniqueInput
+    update: XOR<ProductUpdateWithoutModifierGroupsInput, ProductUncheckedUpdateWithoutModifierGroupsInput>
+    create: XOR<ProductCreateWithoutModifierGroupsInput, ProductUncheckedCreateWithoutModifierGroupsInput>
+  }
+
+  export type ProductUpdateWithWhereUniqueWithoutModifierGroupsInput = {
+    where: ProductWhereUniqueInput
     data: XOR<ProductUpdateWithoutModifierGroupsInput, ProductUncheckedUpdateWithoutModifierGroupsInput>
   }
 
-  export type ProductUpdateWithoutModifierGroupsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    name?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    price?: NullableIntFieldUpdateOperationsInput | number | null
-    comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
-    photos?: FileUpdateManyWithoutProductNestedInput
-    category?: CategoryUpdateOneWithoutProductsNestedInput
-    OrderProducts?: OrderProductsUpdateManyWithoutProductNestedInput
+  export type ProductUpdateManyWithWhereWithoutModifierGroupsInput = {
+    where: ProductScalarWhereInput
+    data: XOR<ProductUpdateManyMutationInput, ProductUncheckedUpdateManyWithoutModifierGroupsInput>
   }
 
-  export type ProductUncheckedUpdateWithoutModifierGroupsInput = {
+  export type ProductScalarWhereInput = {
+    AND?: ProductScalarWhereInput | ProductScalarWhereInput[]
+    OR?: ProductScalarWhereInput[]
+    NOT?: ProductScalarWhereInput | ProductScalarWhereInput[]
+    id?: StringFilter<"Product"> | string
+    createdAt?: DateTimeFilter<"Product"> | Date | string
+    name?: StringFilter<"Product"> | string
+    description?: StringNullableFilter<"Product"> | string | null
+    price?: IntNullableFilter<"Product"> | number | null
+    comparedAtPrice?: IntNullableFilter<"Product"> | number | null
+    categoryId?: StringNullableFilter<"Product"> | string | null
+  }
+
+  export type ModifierGroupItemUpsertWithWhereUniqueWithoutModifierGroupInput = {
+    where: ModifierGroupItemWhereUniqueInput
+    update: XOR<ModifierGroupItemUpdateWithoutModifierGroupInput, ModifierGroupItemUncheckedUpdateWithoutModifierGroupInput>
+    create: XOR<ModifierGroupItemCreateWithoutModifierGroupInput, ModifierGroupItemUncheckedCreateWithoutModifierGroupInput>
+  }
+
+  export type ModifierGroupItemUpdateWithWhereUniqueWithoutModifierGroupInput = {
+    where: ModifierGroupItemWhereUniqueInput
+    data: XOR<ModifierGroupItemUpdateWithoutModifierGroupInput, ModifierGroupItemUncheckedUpdateWithoutModifierGroupInput>
+  }
+
+  export type ModifierGroupItemUpdateManyWithWhereWithoutModifierGroupInput = {
+    where: ModifierGroupItemScalarWhereInput
+    data: XOR<ModifierGroupItemUpdateManyMutationInput, ModifierGroupItemUncheckedUpdateManyWithoutModifierGroupInput>
+  }
+
+  export type FileCreateWithoutModifierGroupItemsInput = {
+    id: string
+    createdAt?: Date | string
+    name: string
+    url: string
+    size: number
+    product?: ProductCreateNestedOneWithoutPhotosInput
+  }
+
+  export type FileUncheckedCreateWithoutModifierGroupItemsInput = {
+    id: string
+    createdAt?: Date | string
+    name: string
+    url: string
+    size: number
+    productId?: string | null
+  }
+
+  export type FileCreateOrConnectWithoutModifierGroupItemsInput = {
+    where: FileWhereUniqueInput
+    create: XOR<FileCreateWithoutModifierGroupItemsInput, FileUncheckedCreateWithoutModifierGroupItemsInput>
+  }
+
+  export type ModifierGroupCreateWithoutItemsInput = {
+    id: string
+    createdAt?: Date | string
+    title: string
+    required?: boolean
+    type?: $Enums.ModifierGroupType | null
+    minSelection?: number | null
+    maxSelection?: number | null
+    products?: ProductCreateNestedManyWithoutModifierGroupsInput
+  }
+
+  export type ModifierGroupUncheckedCreateWithoutItemsInput = {
+    id: string
+    createdAt?: Date | string
+    title: string
+    required?: boolean
+    type?: $Enums.ModifierGroupType | null
+    minSelection?: number | null
+    maxSelection?: number | null
+    products?: ProductUncheckedCreateNestedManyWithoutModifierGroupsInput
+  }
+
+  export type ModifierGroupCreateOrConnectWithoutItemsInput = {
+    where: ModifierGroupWhereUniqueInput
+    create: XOR<ModifierGroupCreateWithoutItemsInput, ModifierGroupUncheckedCreateWithoutItemsInput>
+  }
+
+  export type FileUpsertWithoutModifierGroupItemsInput = {
+    update: XOR<FileUpdateWithoutModifierGroupItemsInput, FileUncheckedUpdateWithoutModifierGroupItemsInput>
+    create: XOR<FileCreateWithoutModifierGroupItemsInput, FileUncheckedCreateWithoutModifierGroupItemsInput>
+    where?: FileWhereInput
+  }
+
+  export type FileUpdateToOneWithWhereWithoutModifierGroupItemsInput = {
+    where?: FileWhereInput
+    data: XOR<FileUpdateWithoutModifierGroupItemsInput, FileUncheckedUpdateWithoutModifierGroupItemsInput>
+  }
+
+  export type FileUpdateWithoutModifierGroupItemsInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    price?: NullableIntFieldUpdateOperationsInput | number | null
-    comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
-    categoryId?: NullableStringFieldUpdateOperationsInput | string | null
-    photos?: FileUncheckedUpdateManyWithoutProductNestedInput
-    OrderProducts?: OrderProductsUncheckedUpdateManyWithoutProductNestedInput
+    url?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    product?: ProductUpdateOneWithoutPhotosNestedInput
+  }
+
+  export type FileUncheckedUpdateWithoutModifierGroupItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    productId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ModifierGroupUpsertWithoutItemsInput = {
+    update: XOR<ModifierGroupUpdateWithoutItemsInput, ModifierGroupUncheckedUpdateWithoutItemsInput>
+    create: XOR<ModifierGroupCreateWithoutItemsInput, ModifierGroupUncheckedCreateWithoutItemsInput>
+    where?: ModifierGroupWhereInput
+  }
+
+  export type ModifierGroupUpdateToOneWithWhereWithoutItemsInput = {
+    where?: ModifierGroupWhereInput
+    data: XOR<ModifierGroupUpdateWithoutItemsInput, ModifierGroupUncheckedUpdateWithoutItemsInput>
+  }
+
+  export type ModifierGroupUpdateWithoutItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    title?: StringFieldUpdateOperationsInput | string
+    required?: BoolFieldUpdateOperationsInput | boolean
+    type?: NullableEnumModifierGroupTypeFieldUpdateOperationsInput | $Enums.ModifierGroupType | null
+    minSelection?: NullableIntFieldUpdateOperationsInput | number | null
+    maxSelection?: NullableIntFieldUpdateOperationsInput | number | null
+    products?: ProductUpdateManyWithoutModifierGroupsNestedInput
+  }
+
+  export type ModifierGroupUncheckedUpdateWithoutItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    title?: StringFieldUpdateOperationsInput | string
+    required?: BoolFieldUpdateOperationsInput | boolean
+    type?: NullableEnumModifierGroupTypeFieldUpdateOperationsInput | $Enums.ModifierGroupType | null
+    minSelection?: NullableIntFieldUpdateOperationsInput | number | null
+    maxSelection?: NullableIntFieldUpdateOperationsInput | number | null
+    products?: ProductUncheckedUpdateManyWithoutModifierGroupsNestedInput
   }
 
   export type BranchCreateWithoutBusinessInput = {
@@ -25173,6 +27356,7 @@ export namespace Prisma {
 
   export type OrderCreateWithoutAddressInput = {
     id: string
+    number?: string | null
     createdAt?: Date | string
     amount: number
     type?: $Enums.OrderType
@@ -25180,11 +27364,13 @@ export namespace Prisma {
     tipAmount?: number | null
     externalId?: string | null
     customer: CustomerCreateNestedOneWithoutOrdersInput
+    deliveryAddress?: DeliveryAddressCreateNestedOneWithoutOrdersInput
     orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
   }
 
   export type OrderUncheckedCreateWithoutAddressInput = {
     id: string
+    number?: string | null
     createdAt?: Date | string
     amount: number
     type?: $Enums.OrderType
@@ -25192,6 +27378,7 @@ export namespace Prisma {
     tipAmount?: number | null
     customerId: string
     externalId?: string | null
+    deliveryAddressId?: string | null
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
   }
 
@@ -25251,6 +27438,7 @@ export namespace Prisma {
     OR?: OrderScalarWhereInput[]
     NOT?: OrderScalarWhereInput | OrderScalarWhereInput[]
     id?: StringFilter<"Order"> | string
+    number?: StringNullableFilter<"Order"> | string | null
     createdAt?: DateTimeFilter<"Order"> | Date | string
     amount?: IntFilter<"Order"> | number
     type?: EnumOrderTypeFilter<"Order"> | $Enums.OrderType
@@ -25259,6 +27447,7 @@ export namespace Prisma {
     customerId?: StringFilter<"Order"> | string
     externalId?: StringNullableFilter<"Order"> | string | null
     addressId?: StringNullableFilter<"Order"> | string | null
+    deliveryAddressId?: StringNullableFilter<"Order"> | string | null
   }
 
   export type FileCreateWithoutProductInput = {
@@ -25267,6 +27456,7 @@ export namespace Prisma {
     name: string
     url: string
     size: number
+    modifierGroupItems?: ModifierGroupItemCreateNestedManyWithoutPhotoInput
   }
 
   export type FileUncheckedCreateWithoutProductInput = {
@@ -25275,6 +27465,7 @@ export namespace Prisma {
     name: string
     url: string
     size: number
+    modifierGroupItems?: ModifierGroupItemUncheckedCreateNestedManyWithoutPhotoInput
   }
 
   export type FileCreateOrConnectWithoutProductInput = {
@@ -25287,7 +27478,7 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type ModifierGroupCreateWithoutProductInput = {
+  export type ModifierGroupCreateWithoutProductsInput = {
     id: string
     createdAt?: Date | string
     title: string
@@ -25295,9 +27486,10 @@ export namespace Prisma {
     type?: $Enums.ModifierGroupType | null
     minSelection?: number | null
     maxSelection?: number | null
+    items?: ModifierGroupItemCreateNestedManyWithoutModifierGroupInput
   }
 
-  export type ModifierGroupUncheckedCreateWithoutProductInput = {
+  export type ModifierGroupUncheckedCreateWithoutProductsInput = {
     id: string
     createdAt?: Date | string
     title: string
@@ -25305,16 +27497,12 @@ export namespace Prisma {
     type?: $Enums.ModifierGroupType | null
     minSelection?: number | null
     maxSelection?: number | null
+    items?: ModifierGroupItemUncheckedCreateNestedManyWithoutModifierGroupInput
   }
 
-  export type ModifierGroupCreateOrConnectWithoutProductInput = {
+  export type ModifierGroupCreateOrConnectWithoutProductsInput = {
     where: ModifierGroupWhereUniqueInput
-    create: XOR<ModifierGroupCreateWithoutProductInput, ModifierGroupUncheckedCreateWithoutProductInput>
-  }
-
-  export type ModifierGroupCreateManyProductInputEnvelope = {
-    data: ModifierGroupCreateManyProductInput | ModifierGroupCreateManyProductInput[]
-    skipDuplicates?: boolean
+    create: XOR<ModifierGroupCreateWithoutProductsInput, ModifierGroupUncheckedCreateWithoutProductsInput>
   }
 
   export type CategoryCreateWithoutProductsInput = {
@@ -25390,20 +27578,20 @@ export namespace Prisma {
     productId?: StringNullableFilter<"File"> | string | null
   }
 
-  export type ModifierGroupUpsertWithWhereUniqueWithoutProductInput = {
+  export type ModifierGroupUpsertWithWhereUniqueWithoutProductsInput = {
     where: ModifierGroupWhereUniqueInput
-    update: XOR<ModifierGroupUpdateWithoutProductInput, ModifierGroupUncheckedUpdateWithoutProductInput>
-    create: XOR<ModifierGroupCreateWithoutProductInput, ModifierGroupUncheckedCreateWithoutProductInput>
+    update: XOR<ModifierGroupUpdateWithoutProductsInput, ModifierGroupUncheckedUpdateWithoutProductsInput>
+    create: XOR<ModifierGroupCreateWithoutProductsInput, ModifierGroupUncheckedCreateWithoutProductsInput>
   }
 
-  export type ModifierGroupUpdateWithWhereUniqueWithoutProductInput = {
+  export type ModifierGroupUpdateWithWhereUniqueWithoutProductsInput = {
     where: ModifierGroupWhereUniqueInput
-    data: XOR<ModifierGroupUpdateWithoutProductInput, ModifierGroupUncheckedUpdateWithoutProductInput>
+    data: XOR<ModifierGroupUpdateWithoutProductsInput, ModifierGroupUncheckedUpdateWithoutProductsInput>
   }
 
-  export type ModifierGroupUpdateManyWithWhereWithoutProductInput = {
+  export type ModifierGroupUpdateManyWithWhereWithoutProductsInput = {
     where: ModifierGroupScalarWhereInput
-    data: XOR<ModifierGroupUpdateManyMutationInput, ModifierGroupUncheckedUpdateManyWithoutProductInput>
+    data: XOR<ModifierGroupUpdateManyMutationInput, ModifierGroupUncheckedUpdateManyWithoutProductsInput>
   }
 
   export type ModifierGroupScalarWhereInput = {
@@ -25415,7 +27603,6 @@ export namespace Prisma {
     title?: StringFilter<"ModifierGroup"> | string
     required?: BoolFilter<"ModifierGroup"> | boolean
     type?: EnumModifierGroupTypeNullableFilter<"ModifierGroup"> | $Enums.ModifierGroupType | null
-    productId?: StringNullableFilter<"ModifierGroup"> | string | null
     minSelection?: IntNullableFilter<"ModifierGroup"> | number | null
     maxSelection?: IntNullableFilter<"ModifierGroup"> | number | null
   }
@@ -25480,7 +27667,7 @@ export namespace Prisma {
     price?: number | null
     comparedAtPrice?: number | null
     photos?: FileCreateNestedManyWithoutProductInput
-    modifierGroups?: ModifierGroupCreateNestedManyWithoutProductInput
+    modifierGroups?: ModifierGroupCreateNestedManyWithoutProductsInput
     OrderProducts?: OrderProductsCreateNestedManyWithoutProductInput
   }
 
@@ -25492,7 +27679,7 @@ export namespace Prisma {
     price?: number | null
     comparedAtPrice?: number | null
     photos?: FileUncheckedCreateNestedManyWithoutProductInput
-    modifierGroups?: ModifierGroupUncheckedCreateNestedManyWithoutProductInput
+    modifierGroups?: ModifierGroupUncheckedCreateNestedManyWithoutProductsInput
     OrderProducts?: OrderProductsUncheckedCreateNestedManyWithoutProductInput
   }
 
@@ -25520,19 +27707,6 @@ export namespace Prisma {
   export type ProductUpdateManyWithWhereWithoutCategoryInput = {
     where: ProductScalarWhereInput
     data: XOR<ProductUpdateManyMutationInput, ProductUncheckedUpdateManyWithoutCategoryInput>
-  }
-
-  export type ProductScalarWhereInput = {
-    AND?: ProductScalarWhereInput | ProductScalarWhereInput[]
-    OR?: ProductScalarWhereInput[]
-    NOT?: ProductScalarWhereInput | ProductScalarWhereInput[]
-    id?: StringFilter<"Product"> | string
-    createdAt?: DateTimeFilter<"Product"> | Date | string
-    name?: StringFilter<"Product"> | string
-    description?: StringNullableFilter<"Product"> | string | null
-    price?: IntNullableFilter<"Product"> | number | null
-    comparedAtPrice?: IntNullableFilter<"Product"> | number | null
-    categoryId?: StringNullableFilter<"Product"> | string | null
   }
 
   export type PromotialMessageCreateWithoutCampaignInput = {
@@ -25588,6 +27762,7 @@ export namespace Prisma {
 
   export type OrderCreateWithoutCustomerInput = {
     id: string
+    number?: string | null
     createdAt?: Date | string
     amount: number
     type?: $Enums.OrderType
@@ -25595,11 +27770,13 @@ export namespace Prisma {
     tipAmount?: number | null
     externalId?: string | null
     address?: AddressCreateNestedOneWithoutOrdersInput
+    deliveryAddress?: DeliveryAddressCreateNestedOneWithoutOrdersInput
     orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
   }
 
   export type OrderUncheckedCreateWithoutCustomerInput = {
     id: string
+    number?: string | null
     createdAt?: Date | string
     amount: number
     type?: $Enums.OrderType
@@ -25607,6 +27784,7 @@ export namespace Prisma {
     tipAmount?: number | null
     externalId?: string | null
     addressId?: string | null
+    deliveryAddressId?: string | null
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
   }
 
@@ -25657,6 +27835,7 @@ export namespace Prisma {
     description: string
     complement?: string | null
     numberComplement?: string | null
+    orders?: OrderCreateNestedManyWithoutDeliveryAddressInput
   }
 
   export type DeliveryAddressUncheckedCreateWithoutCustomerInput = {
@@ -25672,6 +27851,7 @@ export namespace Prisma {
     description: string
     complement?: string | null
     numberComplement?: string | null
+    orders?: OrderUncheckedCreateNestedManyWithoutDeliveryAddressInput
   }
 
   export type DeliveryAddressCreateOrConnectWithoutCustomerInput = {
@@ -25780,6 +27960,44 @@ export namespace Prisma {
     create: XOR<CustomerCreateWithoutAddressesInput, CustomerUncheckedCreateWithoutAddressesInput>
   }
 
+  export type OrderCreateWithoutDeliveryAddressInput = {
+    id: string
+    number?: string | null
+    createdAt?: Date | string
+    amount: number
+    type?: $Enums.OrderType
+    paymentMethod?: $Enums.PaymentType
+    tipAmount?: number | null
+    externalId?: string | null
+    customer: CustomerCreateNestedOneWithoutOrdersInput
+    address?: AddressCreateNestedOneWithoutOrdersInput
+    orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
+  }
+
+  export type OrderUncheckedCreateWithoutDeliveryAddressInput = {
+    id: string
+    number?: string | null
+    createdAt?: Date | string
+    amount: number
+    type?: $Enums.OrderType
+    paymentMethod?: $Enums.PaymentType
+    tipAmount?: number | null
+    customerId: string
+    externalId?: string | null
+    addressId?: string | null
+    orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
+  }
+
+  export type OrderCreateOrConnectWithoutDeliveryAddressInput = {
+    where: OrderWhereUniqueInput
+    create: XOR<OrderCreateWithoutDeliveryAddressInput, OrderUncheckedCreateWithoutDeliveryAddressInput>
+  }
+
+  export type OrderCreateManyDeliveryAddressInputEnvelope = {
+    data: OrderCreateManyDeliveryAddressInput | OrderCreateManyDeliveryAddressInput[]
+    skipDuplicates?: boolean
+  }
+
   export type CustomerUpsertWithoutAddressesInput = {
     update: XOR<CustomerUpdateWithoutAddressesInput, CustomerUncheckedUpdateWithoutAddressesInput>
     create: XOR<CustomerCreateWithoutAddressesInput, CustomerUncheckedCreateWithoutAddressesInput>
@@ -25813,6 +28031,22 @@ export namespace Prisma {
     lastMessageSent?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     orders?: OrderUncheckedUpdateManyWithoutCustomerNestedInput
     promotionalMessages?: PromotialMessageUncheckedUpdateManyWithoutCustomerNestedInput
+  }
+
+  export type OrderUpsertWithWhereUniqueWithoutDeliveryAddressInput = {
+    where: OrderWhereUniqueInput
+    update: XOR<OrderUpdateWithoutDeliveryAddressInput, OrderUncheckedUpdateWithoutDeliveryAddressInput>
+    create: XOR<OrderCreateWithoutDeliveryAddressInput, OrderUncheckedCreateWithoutDeliveryAddressInput>
+  }
+
+  export type OrderUpdateWithWhereUniqueWithoutDeliveryAddressInput = {
+    where: OrderWhereUniqueInput
+    data: XOR<OrderUpdateWithoutDeliveryAddressInput, OrderUncheckedUpdateWithoutDeliveryAddressInput>
+  }
+
+  export type OrderUpdateManyWithWhereWithoutDeliveryAddressInput = {
+    where: OrderScalarWhereInput
+    data: XOR<OrderUpdateManyMutationInput, OrderUncheckedUpdateManyWithoutDeliveryAddressInput>
   }
 
   export type PromotialMessageCreateWithoutMessageInput = {
@@ -26057,6 +28291,43 @@ export namespace Prisma {
     create: XOR<AddressCreateWithoutOrdersInput, AddressUncheckedCreateWithoutOrdersInput>
   }
 
+  export type DeliveryAddressCreateWithoutOrdersInput = {
+    id: string
+    createdAt?: Date | string
+    lat: string
+    lng: string
+    city: string
+    zipCode: string
+    State: string
+    street: string
+    number: string
+    description: string
+    complement?: string | null
+    numberComplement?: string | null
+    customer?: CustomerCreateNestedOneWithoutAddressesInput
+  }
+
+  export type DeliveryAddressUncheckedCreateWithoutOrdersInput = {
+    id: string
+    createdAt?: Date | string
+    lat: string
+    lng: string
+    city: string
+    zipCode: string
+    State: string
+    street: string
+    number: string
+    description: string
+    complement?: string | null
+    numberComplement?: string | null
+    customerId?: string | null
+  }
+
+  export type DeliveryAddressCreateOrConnectWithoutOrdersInput = {
+    where: DeliveryAddressWhereUniqueInput
+    create: XOR<DeliveryAddressCreateWithoutOrdersInput, DeliveryAddressUncheckedCreateWithoutOrdersInput>
+  }
+
   export type OrderProductsCreateWithoutOrderInput = {
     id: string
     createdAt?: Date | string
@@ -26147,6 +28418,49 @@ export namespace Prisma {
     branch?: BranchUncheckedUpdateOneWithoutAddressNestedInput
   }
 
+  export type DeliveryAddressUpsertWithoutOrdersInput = {
+    update: XOR<DeliveryAddressUpdateWithoutOrdersInput, DeliveryAddressUncheckedUpdateWithoutOrdersInput>
+    create: XOR<DeliveryAddressCreateWithoutOrdersInput, DeliveryAddressUncheckedCreateWithoutOrdersInput>
+    where?: DeliveryAddressWhereInput
+  }
+
+  export type DeliveryAddressUpdateToOneWithWhereWithoutOrdersInput = {
+    where?: DeliveryAddressWhereInput
+    data: XOR<DeliveryAddressUpdateWithoutOrdersInput, DeliveryAddressUncheckedUpdateWithoutOrdersInput>
+  }
+
+  export type DeliveryAddressUpdateWithoutOrdersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lat?: StringFieldUpdateOperationsInput | string
+    lng?: StringFieldUpdateOperationsInput | string
+    city?: StringFieldUpdateOperationsInput | string
+    zipCode?: StringFieldUpdateOperationsInput | string
+    State?: StringFieldUpdateOperationsInput | string
+    street?: StringFieldUpdateOperationsInput | string
+    number?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    complement?: NullableStringFieldUpdateOperationsInput | string | null
+    numberComplement?: NullableStringFieldUpdateOperationsInput | string | null
+    customer?: CustomerUpdateOneWithoutAddressesNestedInput
+  }
+
+  export type DeliveryAddressUncheckedUpdateWithoutOrdersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lat?: StringFieldUpdateOperationsInput | string
+    lng?: StringFieldUpdateOperationsInput | string
+    city?: StringFieldUpdateOperationsInput | string
+    zipCode?: StringFieldUpdateOperationsInput | string
+    State?: StringFieldUpdateOperationsInput | string
+    street?: StringFieldUpdateOperationsInput | string
+    number?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    complement?: NullableStringFieldUpdateOperationsInput | string | null
+    numberComplement?: NullableStringFieldUpdateOperationsInput | string | null
+    customerId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
   export type OrderProductsUpsertWithWhereUniqueWithoutOrderInput = {
     where: OrderProductsWhereUniqueInput
     update: XOR<OrderProductsUpdateWithoutOrderInput, OrderProductsUncheckedUpdateWithoutOrderInput>
@@ -26171,7 +28485,7 @@ export namespace Prisma {
     price?: number | null
     comparedAtPrice?: number | null
     photos?: FileCreateNestedManyWithoutProductInput
-    modifierGroups?: ModifierGroupCreateNestedManyWithoutProductInput
+    modifierGroups?: ModifierGroupCreateNestedManyWithoutProductsInput
     category?: CategoryCreateNestedOneWithoutProductsInput
   }
 
@@ -26184,7 +28498,7 @@ export namespace Prisma {
     comparedAtPrice?: number | null
     categoryId?: string | null
     photos?: FileUncheckedCreateNestedManyWithoutProductInput
-    modifierGroups?: ModifierGroupUncheckedCreateNestedManyWithoutProductInput
+    modifierGroups?: ModifierGroupUncheckedCreateNestedManyWithoutProductsInput
   }
 
   export type ProductCreateOrConnectWithoutOrderProductsInput = {
@@ -26194,6 +28508,7 @@ export namespace Prisma {
 
   export type OrderCreateWithoutOrderProductsInput = {
     id: string
+    number?: string | null
     createdAt?: Date | string
     amount: number
     type?: $Enums.OrderType
@@ -26202,10 +28517,12 @@ export namespace Prisma {
     externalId?: string | null
     customer: CustomerCreateNestedOneWithoutOrdersInput
     address?: AddressCreateNestedOneWithoutOrdersInput
+    deliveryAddress?: DeliveryAddressCreateNestedOneWithoutOrdersInput
   }
 
   export type OrderUncheckedCreateWithoutOrderProductsInput = {
     id: string
+    number?: string | null
     createdAt?: Date | string
     amount: number
     type?: $Enums.OrderType
@@ -26214,6 +28531,7 @@ export namespace Prisma {
     customerId: string
     externalId?: string | null
     addressId?: string | null
+    deliveryAddressId?: string | null
   }
 
   export type OrderCreateOrConnectWithoutOrderProductsInput = {
@@ -26240,7 +28558,7 @@ export namespace Prisma {
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
     photos?: FileUpdateManyWithoutProductNestedInput
-    modifierGroups?: ModifierGroupUpdateManyWithoutProductNestedInput
+    modifierGroups?: ModifierGroupUpdateManyWithoutProductsNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
   }
 
@@ -26253,7 +28571,7 @@ export namespace Prisma {
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     photos?: FileUncheckedUpdateManyWithoutProductNestedInput
-    modifierGroups?: ModifierGroupUncheckedUpdateManyWithoutProductNestedInput
+    modifierGroups?: ModifierGroupUncheckedUpdateManyWithoutProductsNestedInput
   }
 
   export type OrderUpsertWithoutOrderProductsInput = {
@@ -26269,6 +28587,7 @@ export namespace Prisma {
 
   export type OrderUpdateWithoutOrderProductsInput = {
     id?: StringFieldUpdateOperationsInput | string
+    number?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     amount?: IntFieldUpdateOperationsInput | number
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
@@ -26277,10 +28596,12 @@ export namespace Prisma {
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
     customer?: CustomerUpdateOneRequiredWithoutOrdersNestedInput
     address?: AddressUpdateOneWithoutOrdersNestedInput
+    deliveryAddress?: DeliveryAddressUpdateOneWithoutOrdersNestedInput
   }
 
   export type OrderUncheckedUpdateWithoutOrderProductsInput = {
     id?: StringFieldUpdateOperationsInput | string
+    number?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     amount?: IntFieldUpdateOperationsInput | number
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
@@ -26289,6 +28610,7 @@ export namespace Prisma {
     customerId?: StringFieldUpdateOperationsInput | string
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ProgressiveDiscountStepCreateManyProgressiveDiscountInput = {
@@ -26323,6 +28645,104 @@ export namespace Prisma {
     discountType?: EnumProgressiveDiscountStepTypeFieldUpdateOperationsInput | $Enums.ProgressiveDiscountStepType
   }
 
+  export type ModifierGroupItemCreateManyPhotoInput = {
+    id: string
+    createdAt?: Date | string
+    name: string
+    price: number
+    modifierGroupId?: string | null
+  }
+
+  export type ModifierGroupItemUpdateWithoutPhotoInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    price?: IntFieldUpdateOperationsInput | number
+    modifierGroup?: ModifierGroupUpdateOneWithoutItemsNestedInput
+  }
+
+  export type ModifierGroupItemUncheckedUpdateWithoutPhotoInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    price?: IntFieldUpdateOperationsInput | number
+    modifierGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ModifierGroupItemUncheckedUpdateManyWithoutPhotoInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    price?: IntFieldUpdateOperationsInput | number
+    modifierGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ModifierGroupItemCreateManyModifierGroupInput = {
+    id: string
+    createdAt?: Date | string
+    name: string
+    price: number
+    fileId?: string | null
+  }
+
+  export type ProductUpdateWithoutModifierGroupsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: NullableIntFieldUpdateOperationsInput | number | null
+    comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
+    photos?: FileUpdateManyWithoutProductNestedInput
+    category?: CategoryUpdateOneWithoutProductsNestedInput
+    OrderProducts?: OrderProductsUpdateManyWithoutProductNestedInput
+  }
+
+  export type ProductUncheckedUpdateWithoutModifierGroupsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: NullableIntFieldUpdateOperationsInput | number | null
+    comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
+    categoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    photos?: FileUncheckedUpdateManyWithoutProductNestedInput
+    OrderProducts?: OrderProductsUncheckedUpdateManyWithoutProductNestedInput
+  }
+
+  export type ProductUncheckedUpdateManyWithoutModifierGroupsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: NullableIntFieldUpdateOperationsInput | number | null
+    comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
+    categoryId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ModifierGroupItemUpdateWithoutModifierGroupInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    price?: IntFieldUpdateOperationsInput | number
+    photo?: FileUpdateOneWithoutModifierGroupItemsNestedInput
+  }
+
+  export type ModifierGroupItemUncheckedUpdateWithoutModifierGroupInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    price?: IntFieldUpdateOperationsInput | number
+    fileId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ModifierGroupItemUncheckedUpdateManyWithoutModifierGroupInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    price?: IntFieldUpdateOperationsInput | number
+    fileId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
   export type BranchCreateManyBusinessInput = {
     id: string
     createdAt?: Date | string
@@ -26353,6 +28773,7 @@ export namespace Prisma {
 
   export type OrderCreateManyAddressInput = {
     id: string
+    number?: string | null
     createdAt?: Date | string
     amount: number
     type?: $Enums.OrderType
@@ -26360,10 +28781,12 @@ export namespace Prisma {
     tipAmount?: number | null
     customerId: string
     externalId?: string | null
+    deliveryAddressId?: string | null
   }
 
   export type OrderUpdateWithoutAddressInput = {
     id?: StringFieldUpdateOperationsInput | string
+    number?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     amount?: IntFieldUpdateOperationsInput | number
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
@@ -26371,11 +28794,13 @@ export namespace Prisma {
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
     customer?: CustomerUpdateOneRequiredWithoutOrdersNestedInput
+    deliveryAddress?: DeliveryAddressUpdateOneWithoutOrdersNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderUncheckedUpdateWithoutAddressInput = {
     id?: StringFieldUpdateOperationsInput | string
+    number?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     amount?: IntFieldUpdateOperationsInput | number
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
@@ -26383,11 +28808,13 @@ export namespace Prisma {
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     customerId?: StringFieldUpdateOperationsInput | string
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderUncheckedUpdateManyWithoutAddressInput = {
     id?: StringFieldUpdateOperationsInput | string
+    number?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     amount?: IntFieldUpdateOperationsInput | number
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
@@ -26395,6 +28822,7 @@ export namespace Prisma {
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     customerId?: StringFieldUpdateOperationsInput | string
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type FileCreateManyProductInput = {
@@ -26403,16 +28831,6 @@ export namespace Prisma {
     name: string
     url: string
     size: number
-  }
-
-  export type ModifierGroupCreateManyProductInput = {
-    id: string
-    createdAt?: Date | string
-    title: string
-    required?: boolean
-    type?: $Enums.ModifierGroupType | null
-    minSelection?: number | null
-    maxSelection?: number | null
   }
 
   export type OrderProductsCreateManyProductInput = {
@@ -26430,6 +28848,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     url?: StringFieldUpdateOperationsInput | string
     size?: IntFieldUpdateOperationsInput | number
+    modifierGroupItems?: ModifierGroupItemUpdateManyWithoutPhotoNestedInput
   }
 
   export type FileUncheckedUpdateWithoutProductInput = {
@@ -26438,6 +28857,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     url?: StringFieldUpdateOperationsInput | string
     size?: IntFieldUpdateOperationsInput | number
+    modifierGroupItems?: ModifierGroupItemUncheckedUpdateManyWithoutPhotoNestedInput
   }
 
   export type FileUncheckedUpdateManyWithoutProductInput = {
@@ -26448,7 +28868,7 @@ export namespace Prisma {
     size?: IntFieldUpdateOperationsInput | number
   }
 
-  export type ModifierGroupUpdateWithoutProductInput = {
+  export type ModifierGroupUpdateWithoutProductsInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     title?: StringFieldUpdateOperationsInput | string
@@ -26456,9 +28876,10 @@ export namespace Prisma {
     type?: NullableEnumModifierGroupTypeFieldUpdateOperationsInput | $Enums.ModifierGroupType | null
     minSelection?: NullableIntFieldUpdateOperationsInput | number | null
     maxSelection?: NullableIntFieldUpdateOperationsInput | number | null
+    items?: ModifierGroupItemUpdateManyWithoutModifierGroupNestedInput
   }
 
-  export type ModifierGroupUncheckedUpdateWithoutProductInput = {
+  export type ModifierGroupUncheckedUpdateWithoutProductsInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     title?: StringFieldUpdateOperationsInput | string
@@ -26466,9 +28887,10 @@ export namespace Prisma {
     type?: NullableEnumModifierGroupTypeFieldUpdateOperationsInput | $Enums.ModifierGroupType | null
     minSelection?: NullableIntFieldUpdateOperationsInput | number | null
     maxSelection?: NullableIntFieldUpdateOperationsInput | number | null
+    items?: ModifierGroupItemUncheckedUpdateManyWithoutModifierGroupNestedInput
   }
 
-  export type ModifierGroupUncheckedUpdateManyWithoutProductInput = {
+  export type ModifierGroupUncheckedUpdateManyWithoutProductsInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     title?: StringFieldUpdateOperationsInput | string
@@ -26522,7 +28944,7 @@ export namespace Prisma {
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
     photos?: FileUpdateManyWithoutProductNestedInput
-    modifierGroups?: ModifierGroupUpdateManyWithoutProductNestedInput
+    modifierGroups?: ModifierGroupUpdateManyWithoutProductsNestedInput
     OrderProducts?: OrderProductsUpdateManyWithoutProductNestedInput
   }
 
@@ -26534,7 +28956,7 @@ export namespace Prisma {
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
     photos?: FileUncheckedUpdateManyWithoutProductNestedInput
-    modifierGroups?: ModifierGroupUncheckedUpdateManyWithoutProductNestedInput
+    modifierGroups?: ModifierGroupUncheckedUpdateManyWithoutProductsNestedInput
     OrderProducts?: OrderProductsUncheckedUpdateManyWithoutProductNestedInput
   }
 
@@ -26577,6 +28999,7 @@ export namespace Prisma {
 
   export type OrderCreateManyCustomerInput = {
     id: string
+    number?: string | null
     createdAt?: Date | string
     amount: number
     type?: $Enums.OrderType
@@ -26584,6 +29007,7 @@ export namespace Prisma {
     tipAmount?: number | null
     externalId?: string | null
     addressId?: string | null
+    deliveryAddressId?: string | null
   }
 
   export type PromotialMessageCreateManyCustomerInput = {
@@ -26610,6 +29034,7 @@ export namespace Prisma {
 
   export type OrderUpdateWithoutCustomerInput = {
     id?: StringFieldUpdateOperationsInput | string
+    number?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     amount?: IntFieldUpdateOperationsInput | number
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
@@ -26617,11 +29042,13 @@ export namespace Prisma {
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
     address?: AddressUpdateOneWithoutOrdersNestedInput
+    deliveryAddress?: DeliveryAddressUpdateOneWithoutOrdersNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderUncheckedUpdateWithoutCustomerInput = {
     id?: StringFieldUpdateOperationsInput | string
+    number?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     amount?: IntFieldUpdateOperationsInput | number
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
@@ -26629,11 +29056,13 @@ export namespace Prisma {
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderUncheckedUpdateManyWithoutCustomerInput = {
     id?: StringFieldUpdateOperationsInput | string
+    number?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     amount?: IntFieldUpdateOperationsInput | number
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
@@ -26641,6 +29070,7 @@ export namespace Prisma {
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type PromotialMessageUpdateWithoutCustomerInput = {
@@ -26677,6 +29107,7 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     complement?: NullableStringFieldUpdateOperationsInput | string | null
     numberComplement?: NullableStringFieldUpdateOperationsInput | string | null
+    orders?: OrderUpdateManyWithoutDeliveryAddressNestedInput
   }
 
   export type DeliveryAddressUncheckedUpdateWithoutCustomerInput = {
@@ -26692,6 +29123,7 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     complement?: NullableStringFieldUpdateOperationsInput | string | null
     numberComplement?: NullableStringFieldUpdateOperationsInput | string | null
+    orders?: OrderUncheckedUpdateManyWithoutDeliveryAddressNestedInput
   }
 
   export type DeliveryAddressUncheckedUpdateManyWithoutCustomerInput = {
@@ -26707,6 +29139,60 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     complement?: NullableStringFieldUpdateOperationsInput | string | null
     numberComplement?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type OrderCreateManyDeliveryAddressInput = {
+    id: string
+    number?: string | null
+    createdAt?: Date | string
+    amount: number
+    type?: $Enums.OrderType
+    paymentMethod?: $Enums.PaymentType
+    tipAmount?: number | null
+    customerId: string
+    externalId?: string | null
+    addressId?: string | null
+  }
+
+  export type OrderUpdateWithoutDeliveryAddressInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    number?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    amount?: IntFieldUpdateOperationsInput | number
+    type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+    paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
+    tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    customer?: CustomerUpdateOneRequiredWithoutOrdersNestedInput
+    address?: AddressUpdateOneWithoutOrdersNestedInput
+    orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
+  }
+
+  export type OrderUncheckedUpdateWithoutDeliveryAddressInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    number?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    amount?: IntFieldUpdateOperationsInput | number
+    type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+    paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
+    tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    customerId?: StringFieldUpdateOperationsInput | string
+    externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    addressId?: NullableStringFieldUpdateOperationsInput | string | null
+    orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
+  }
+
+  export type OrderUncheckedUpdateManyWithoutDeliveryAddressInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    number?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    amount?: IntFieldUpdateOperationsInput | number
+    type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+    paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
+    tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    customerId?: StringFieldUpdateOperationsInput | string
+    externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    addressId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type PromotialMessageCreateManyMessageInput = {

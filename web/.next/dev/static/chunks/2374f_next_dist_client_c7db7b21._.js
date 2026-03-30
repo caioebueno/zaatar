@@ -2711,15 +2711,8 @@ function handleAvailableHash(hash) {
     mostRecentCompilationHash = hash;
 }
 function handleStaticIndicator() {
-    if ("TURBOPACK compile-time truthy", 1) {
-        const routeInfo = window.next.router.components[window.next.router.pathname];
-        const pageComponent = routeInfo?.Component;
-        const appComponent = window.next.router.components['/_app']?.Component;
-        const isDynamicPage = Boolean(pageComponent?.getInitialProps) || Boolean(routeInfo?.__N_SSP);
-        const hasAppGetInitialProps = Boolean(appComponent?.getInitialProps) && appComponent?.getInitialProps !== appComponent?.origGetInitialProps;
-        const isPageStatic = isrManifest[window.location.pathname] || !isDynamicPage && !hasAppGetInitialProps;
-        _nextdevtools.dispatcher.onStaticIndicator(isPageStatic ? 'static' : 'dynamic');
-    }
+    if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
+    ;
 }
 /** Handles messages from the server for the Pages Router. */ function processMessage(message) {
     switch(message.type){

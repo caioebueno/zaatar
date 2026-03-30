@@ -1,10 +1,25 @@
 {
   "node": {
+    "00c9708a21409ded263d98ba89803c1b64ae512424": {
+      "workers": {
+        "app/menu/[lg]/cart/page": {
+          "moduleId": 81445,
+          "async": true,
+          "exportedName": "default",
+          "filename": "web/src/getProducts.ts"
+        }
+      },
+      "layer": {
+        "app/menu/[lg]/cart/page": "rsc"
+      },
+      "exportedName": "default",
+      "filename": "web/src/getProducts.ts"
+    },
     "405bc4318550317e069aa945205fab9df8e4ba201a": {
       "workers": {
         "app/menu/[lg]/cart/page": {
-          "moduleId": 94485,
-          "async": false,
+          "moduleId": 81445,
+          "async": true,
           "exportedName": "default",
           "filename": "web/src/getCustomerData.ts"
         }
@@ -18,8 +33,8 @@
     "4089b7e33a9563aa897f751fc5bc520a6865b6d809": {
       "workers": {
         "app/menu/[lg]/cart/page": {
-          "moduleId": 94485,
-          "async": false,
+          "moduleId": 81445,
+          "async": true,
           "exportedName": "default",
           "filename": "web/src/addNewDeliveryAddress.ts"
         }
@@ -33,8 +48,8 @@
     "40e047878d95ed47a88bb3de704e645f2d1684be88": {
       "workers": {
         "app/menu/[lg]/cart/page": {
-          "moduleId": 94485,
-          "async": false,
+          "moduleId": 81445,
+          "async": true,
           "exportedName": "default",
           "filename": "web/src/updateCustomerName.ts"
         }
@@ -48,8 +63,8 @@
     "406df36ffebf0cf8bb45039a016c761f961b0a74f8": {
       "workers": {
         "app/menu/[lg]/cart/page": {
-          "moduleId": 94485,
-          "async": false,
+          "moduleId": 81445,
+          "async": true,
           "exportedName": "default",
           "filename": "web/src/createOrder.ts"
         }

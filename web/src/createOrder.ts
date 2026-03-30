@@ -26,13 +26,32 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
         message: "DELIVERY_MUST_HAVE_ADDRESS",
       },
     };
+  const now = new Date();
+
+  const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+  const endOfDay = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate() + 1,
+  );
+
+  const todayOrders = await prisma.order.findMany({
+    where: {
+      createdAt: {
+        gte: startOfDay,
+        lt: endOfDay,
+      },
+    },
+  });
   const progressiveDiscount = await getProgressiveDiscount();
   const productData = await getProducts();
   const createdOrder = await prisma.order.create({
     data: {
       id: randomUUID(),
       amount: 0,
-      addressId: data.addressId,
+      number: (todayOrders.length + 1).toString(),
+      deliveryAddressId: data.addressId,
       customerId: data.customerId,
       paymentMethod: data.paymentMethod,
       tipAmount: data.tipAmount,

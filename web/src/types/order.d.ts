@@ -7,6 +7,7 @@ export type TOrderType = "DELIVERY" | "TAKEAWAY";
 export type TOrder = {
   id: string;
   createdAt: string;
+  number?: string;
   type: TOrderType;
   paymentMethod: TPaymentMethod;
   addressId?: string;

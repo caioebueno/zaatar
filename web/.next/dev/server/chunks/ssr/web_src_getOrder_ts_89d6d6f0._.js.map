@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 6, "column": 0}, "map": {"version":3,"sources":["file:///Users/caiobueno/Developer/foody/web/src/getOrder.ts"],"sourcesContent":["\"use server\";\n\nimport prisma from \"@/prisma\";\nimport { TOrder } from \"./types/order\";\n\nconst getOrder = async (orderId: string): Promise<TOrder> => {\n  const order = await prisma.order.findUnique({\n    where: {\n      id: orderId,\n    },\n  });\n  if (!order)\n    throw {\n      code: \"NOT_FOUND\",\n      details: {\n        service: \"ORDER\",\n        id: orderId,\n      },\n    };\n  return {\n    id: order.id,\n    createdAt: order.createdAt.toISOString(),\n    type: order.type,\n    number: order.number || undefined,\n    paymentMethod: order.paymentMethod,\n    orderProducts: [],\n  };\n};\n\nexport default getOrder;\n"],"names":[],"mappings":";;;;;AAEA;;;;;;;;AAGA,MAAM,WAAW,OAAO;IACtB,MAAM,QAAQ,MAAM,iIAAM,CAAC,KAAK,CAAC,UAAU,CAAC;QAC1C,OAAO;YACL,IAAI;QACN;IACF;IACA,IAAI,CAAC,OACH,MAAM;QACJ,MAAM;QACN,SAAS;YACP,SAAS;YACT,IAAI;QACN;IACF;IACF,OAAO;QACL,IAAI,MAAM,EAAE;QACZ,WAAW,MAAM,SAAS,CAAC,WAAW;QACtC,MAAM,MAAM,IAAI;QAChB,QAAQ,MAAM,MAAM,IAAI;QACxB,eAAe,MAAM,aAAa;QAClC,eAAe,EAAE;IACnB;AACF;uCAEe;;;IAxBT;;AAAA,sPAAA"}}]
+}

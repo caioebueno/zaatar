@@ -1,8 +1,10 @@
+"use server";
+
 import prisma from "../prisma";
 import TCategory from "./types/category";
 import TProgressiveDiscount from "./types/progressiveDiscount";
 
-type TGetProductsResponse = {
+export type TGetProductsResponse = {
   categories: TCategory[];
   progressiveDiscount: TProgressiveDiscount | null;
 };
@@ -15,6 +17,11 @@ const getProducts = async (): Promise<TGetProductsResponse> => {
       products: {
         include: {
           photos: true,
+          modifierGroups: {
+            include: {
+              items: true,
+            },
+          },
         },
       },
     },
@@ -51,6 +58,16 @@ const getProducts = async (): Promise<TGetProductsResponse> => {
         description: product.description || undefined,
         price: product.price || undefined,
         comparedAtPrice: product.comparedAtPrice || undefined,
+        modifierGroups: product.modifierGroups.map((item) => ({
+          id: item.id,
+          required: item.required,
+          title: item.title,
+          items: item.items.map((modifierItem) => ({
+            id: modifierItem.id,
+            name: modifierItem.name,
+            price: modifierItem.price,
+          })),
+        })),
         photos: product.photos?.map((photo) => ({
           id: photo.id,
           // name: photo.name,
@@ -62,4 +79,3 @@ const getProducts = async (): Promise<TGetProductsResponse> => {
 };
 
 export default getProducts;
-export type { TGetProductsResponse };
