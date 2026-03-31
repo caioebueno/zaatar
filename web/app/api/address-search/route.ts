@@ -20,8 +20,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json([]);
   }
 
-  const accessToken =
-    "pk.eyJ1IjoiY2Fpb2VidWVubyIsImEiOiJjbW5lcGs4NHQwMXVoMnBvbmQyMHRpNjdsIn0.2_7zwvhhSxx52vnuI56m2A";
+  const accessToken = process.env.MAPBOX_API;
 
   if (!accessToken) {
     return NextResponse.json(
