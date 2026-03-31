@@ -11717,6 +11717,7 @@ export namespace Prisma {
     price: number
     comparedAtPrice: number
     categoryId: number
+    translations: number
     _all: number
   }
 
@@ -11759,6 +11760,7 @@ export namespace Prisma {
     price?: true
     comparedAtPrice?: true
     categoryId?: true
+    translations?: true
     _all?: true
   }
 
@@ -11856,6 +11858,7 @@ export namespace Prisma {
     price: number | null
     comparedAtPrice: number | null
     categoryId: string | null
+    translations: JsonValue | null
     _count: ProductCountAggregateOutputType | null
     _avg: ProductAvgAggregateOutputType | null
     _sum: ProductSumAggregateOutputType | null
@@ -11885,6 +11888,7 @@ export namespace Prisma {
     price?: boolean
     comparedAtPrice?: boolean
     categoryId?: boolean
+    translations?: boolean
     photos?: boolean | Product$photosArgs<ExtArgs>
     modifierGroups?: boolean | Product$modifierGroupsArgs<ExtArgs>
     category?: boolean | Product$categoryArgs<ExtArgs>
@@ -11900,6 +11904,7 @@ export namespace Prisma {
     price?: boolean
     comparedAtPrice?: boolean
     categoryId?: boolean
+    translations?: boolean
     category?: boolean | Product$categoryArgs<ExtArgs>
   }, ExtArgs["result"]["product"]>
 
@@ -11911,6 +11916,7 @@ export namespace Prisma {
     price?: boolean
     comparedAtPrice?: boolean
     categoryId?: boolean
+    translations?: boolean
     category?: boolean | Product$categoryArgs<ExtArgs>
   }, ExtArgs["result"]["product"]>
 
@@ -11922,9 +11928,10 @@ export namespace Prisma {
     price?: boolean
     comparedAtPrice?: boolean
     categoryId?: boolean
+    translations?: boolean
   }
 
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "name" | "description" | "price" | "comparedAtPrice" | "categoryId", ExtArgs["result"]["product"]>
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "name" | "description" | "price" | "comparedAtPrice" | "categoryId" | "translations", ExtArgs["result"]["product"]>
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     photos?: boolean | Product$photosArgs<ExtArgs>
     modifierGroups?: boolean | Product$modifierGroupsArgs<ExtArgs>
@@ -11955,6 +11962,7 @@ export namespace Prisma {
       price: number | null
       comparedAtPrice: number | null
       categoryId: string | null
+      translations: Prisma.JsonValue | null
     }, ExtArgs["result"]["product"]>
     composites: {}
   }
@@ -12389,6 +12397,7 @@ export namespace Prisma {
     readonly price: FieldRef<"Product", 'Int'>
     readonly comparedAtPrice: FieldRef<"Product", 'Int'>
     readonly categoryId: FieldRef<"Product", 'String'>
+    readonly translations: FieldRef<"Product", 'Json'>
   }
     
 
@@ -22072,7 +22081,8 @@ export namespace Prisma {
     description: 'description',
     price: 'price',
     comparedAtPrice: 'comparedAtPrice',
-    categoryId: 'categoryId'
+    categoryId: 'categoryId',
+    translations: 'translations'
   };
 
   export type ProductScalarFieldEnum = (typeof ProductScalarFieldEnum)[keyof typeof ProductScalarFieldEnum]
@@ -22188,6 +22198,14 @@ export namespace Prisma {
   export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
+  export const NullableJsonNullValueInput: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull
+  };
+
+  export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
   export const QueryMode: {
     default: 'default',
     insensitive: 'insensitive'
@@ -22202,6 +22220,15 @@ export namespace Prisma {
   };
 
   export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+  export const JsonNullValueFilter: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull,
+    AnyNull: typeof AnyNull
+  };
+
+  export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
 
   /**
@@ -22283,6 +22310,20 @@ export namespace Prisma {
    * Reference to a field of type 'ModifierGroupType[]'
    */
   export type ListEnumModifierGroupTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ModifierGroupType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Json'
+   */
+  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+  /**
+   * Reference to a field of type 'QueryMode'
+   */
+  export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
 
 
@@ -22800,6 +22841,7 @@ export namespace Prisma {
     price?: IntNullableFilter<"Product"> | number | null
     comparedAtPrice?: IntNullableFilter<"Product"> | number | null
     categoryId?: StringNullableFilter<"Product"> | string | null
+    translations?: JsonNullableFilter<"Product">
     photos?: FileListRelationFilter
     modifierGroups?: ModifierGroupListRelationFilter
     category?: XOR<CategoryNullableScalarRelationFilter, CategoryWhereInput> | null
@@ -22814,6 +22856,7 @@ export namespace Prisma {
     price?: SortOrderInput | SortOrder
     comparedAtPrice?: SortOrderInput | SortOrder
     categoryId?: SortOrderInput | SortOrder
+    translations?: SortOrderInput | SortOrder
     photos?: FileOrderByRelationAggregateInput
     modifierGroups?: ModifierGroupOrderByRelationAggregateInput
     category?: CategoryOrderByWithRelationInput
@@ -22831,6 +22874,7 @@ export namespace Prisma {
     price?: IntNullableFilter<"Product"> | number | null
     comparedAtPrice?: IntNullableFilter<"Product"> | number | null
     categoryId?: StringNullableFilter<"Product"> | string | null
+    translations?: JsonNullableFilter<"Product">
     photos?: FileListRelationFilter
     modifierGroups?: ModifierGroupListRelationFilter
     category?: XOR<CategoryNullableScalarRelationFilter, CategoryWhereInput> | null
@@ -22845,6 +22889,7 @@ export namespace Prisma {
     price?: SortOrderInput | SortOrder
     comparedAtPrice?: SortOrderInput | SortOrder
     categoryId?: SortOrderInput | SortOrder
+    translations?: SortOrderInput | SortOrder
     _count?: ProductCountOrderByAggregateInput
     _avg?: ProductAvgOrderByAggregateInput
     _max?: ProductMaxOrderByAggregateInput
@@ -22863,6 +22908,7 @@ export namespace Prisma {
     price?: IntNullableWithAggregatesFilter<"Product"> | number | null
     comparedAtPrice?: IntNullableWithAggregatesFilter<"Product"> | number | null
     categoryId?: StringNullableWithAggregatesFilter<"Product"> | string | null
+    translations?: JsonNullableWithAggregatesFilter<"Product">
   }
 
   export type CategoryWhereInput = {
@@ -23876,6 +23922,7 @@ export namespace Prisma {
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
     photos?: FileCreateNestedManyWithoutProductInput
     modifierGroups?: ModifierGroupCreateNestedManyWithoutProductsInput
     category?: CategoryCreateNestedOneWithoutProductsInput
@@ -23890,6 +23937,7 @@ export namespace Prisma {
     price?: number | null
     comparedAtPrice?: number | null
     categoryId?: string | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
     photos?: FileUncheckedCreateNestedManyWithoutProductInput
     modifierGroups?: ModifierGroupUncheckedCreateNestedManyWithoutProductsInput
     OrderProducts?: OrderProductsUncheckedCreateNestedManyWithoutProductInput
@@ -23902,6 +23950,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
     photos?: FileUpdateManyWithoutProductNestedInput
     modifierGroups?: ModifierGroupUpdateManyWithoutProductsNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
@@ -23916,6 +23965,7 @@ export namespace Prisma {
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
     photos?: FileUncheckedUpdateManyWithoutProductNestedInput
     modifierGroups?: ModifierGroupUncheckedUpdateManyWithoutProductsNestedInput
     OrderProducts?: OrderProductsUncheckedUpdateManyWithoutProductNestedInput
@@ -23929,6 +23979,7 @@ export namespace Prisma {
     price?: number | null
     comparedAtPrice?: number | null
     categoryId?: string | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type ProductUpdateManyMutationInput = {
@@ -23938,6 +23989,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type ProductUncheckedUpdateManyInput = {
@@ -23948,6 +24000,7 @@ export namespace Prisma {
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type CategoryCreateInput = {
@@ -25025,6 +25078,29 @@ export namespace Prisma {
     description?: SortOrder
     googleMapsUrl?: SortOrder
   }
+  export type JsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
 
   export type FileListRelationFilter = {
     every?: FileWhereInput
@@ -25069,6 +25145,7 @@ export namespace Prisma {
     price?: SortOrder
     comparedAtPrice?: SortOrder
     categoryId?: SortOrder
+    translations?: SortOrder
   }
 
   export type ProductAvgOrderByAggregateInput = {
@@ -25099,6 +25176,32 @@ export namespace Prisma {
   export type ProductSumOrderByAggregateInput = {
     price?: SortOrder
     comparedAtPrice?: SortOrder
+  }
+  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedJsonNullableFilter<$PrismaModel>
+    _max?: NestedJsonNullableFilter<$PrismaModel>
   }
 
   export type CategoryCountOrderByAggregateInput = {
@@ -26716,6 +26819,29 @@ export namespace Prisma {
     _min?: NestedEnumModifierGroupTypeNullableFilter<$PrismaModel>
     _max?: NestedEnumModifierGroupTypeNullableFilter<$PrismaModel>
   }
+  export type NestedJsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
 
   export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
@@ -26873,6 +26999,7 @@ export namespace Prisma {
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
     modifierGroups?: ModifierGroupCreateNestedManyWithoutProductsInput
     category?: CategoryCreateNestedOneWithoutProductsInput
     OrderProducts?: OrderProductsCreateNestedManyWithoutProductInput
@@ -26886,6 +27013,7 @@ export namespace Prisma {
     price?: number | null
     comparedAtPrice?: number | null
     categoryId?: string | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
     modifierGroups?: ModifierGroupUncheckedCreateNestedManyWithoutProductsInput
     OrderProducts?: OrderProductsUncheckedCreateNestedManyWithoutProductInput
   }
@@ -26939,6 +27067,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
     modifierGroups?: ModifierGroupUpdateManyWithoutProductsNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
     OrderProducts?: OrderProductsUpdateManyWithoutProductNestedInput
@@ -26952,6 +27081,7 @@ export namespace Prisma {
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
     modifierGroups?: ModifierGroupUncheckedUpdateManyWithoutProductsNestedInput
     OrderProducts?: OrderProductsUncheckedUpdateManyWithoutProductNestedInput
   }
@@ -26991,6 +27121,7 @@ export namespace Prisma {
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
     photos?: FileCreateNestedManyWithoutProductInput
     category?: CategoryCreateNestedOneWithoutProductsInput
     OrderProducts?: OrderProductsCreateNestedManyWithoutProductInput
@@ -27004,6 +27135,7 @@ export namespace Prisma {
     price?: number | null
     comparedAtPrice?: number | null
     categoryId?: string | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
     photos?: FileUncheckedCreateNestedManyWithoutProductInput
     OrderProducts?: OrderProductsUncheckedCreateNestedManyWithoutProductInput
   }
@@ -27066,6 +27198,7 @@ export namespace Prisma {
     price?: IntNullableFilter<"Product"> | number | null
     comparedAtPrice?: IntNullableFilter<"Product"> | number | null
     categoryId?: StringNullableFilter<"Product"> | string | null
+    translations?: JsonNullableFilter<"Product">
   }
 
   export type ModifierGroupItemUpsertWithWhereUniqueWithoutModifierGroupInput = {
@@ -27666,6 +27799,7 @@ export namespace Prisma {
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
     photos?: FileCreateNestedManyWithoutProductInput
     modifierGroups?: ModifierGroupCreateNestedManyWithoutProductsInput
     OrderProducts?: OrderProductsCreateNestedManyWithoutProductInput
@@ -27678,6 +27812,7 @@ export namespace Prisma {
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
     photos?: FileUncheckedCreateNestedManyWithoutProductInput
     modifierGroups?: ModifierGroupUncheckedCreateNestedManyWithoutProductsInput
     OrderProducts?: OrderProductsUncheckedCreateNestedManyWithoutProductInput
@@ -28484,6 +28619,7 @@ export namespace Prisma {
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
     photos?: FileCreateNestedManyWithoutProductInput
     modifierGroups?: ModifierGroupCreateNestedManyWithoutProductsInput
     category?: CategoryCreateNestedOneWithoutProductsInput
@@ -28497,6 +28633,7 @@ export namespace Prisma {
     price?: number | null
     comparedAtPrice?: number | null
     categoryId?: string | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
     photos?: FileUncheckedCreateNestedManyWithoutProductInput
     modifierGroups?: ModifierGroupUncheckedCreateNestedManyWithoutProductsInput
   }
@@ -28557,6 +28694,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
     photos?: FileUpdateManyWithoutProductNestedInput
     modifierGroups?: ModifierGroupUpdateManyWithoutProductsNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
@@ -28570,6 +28708,7 @@ export namespace Prisma {
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
     photos?: FileUncheckedUpdateManyWithoutProductNestedInput
     modifierGroups?: ModifierGroupUncheckedUpdateManyWithoutProductsNestedInput
   }
@@ -28692,6 +28831,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
     photos?: FileUpdateManyWithoutProductNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
     OrderProducts?: OrderProductsUpdateManyWithoutProductNestedInput
@@ -28705,6 +28845,7 @@ export namespace Prisma {
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
     photos?: FileUncheckedUpdateManyWithoutProductNestedInput
     OrderProducts?: OrderProductsUncheckedUpdateManyWithoutProductNestedInput
   }
@@ -28717,6 +28858,7 @@ export namespace Prisma {
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type ModifierGroupItemUpdateWithoutModifierGroupInput = {
@@ -28934,6 +29076,7 @@ export namespace Prisma {
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type ProductUpdateWithoutCategoryInput = {
@@ -28943,6 +29086,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
     photos?: FileUpdateManyWithoutProductNestedInput
     modifierGroups?: ModifierGroupUpdateManyWithoutProductsNestedInput
     OrderProducts?: OrderProductsUpdateManyWithoutProductNestedInput
@@ -28955,6 +29099,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
     photos?: FileUncheckedUpdateManyWithoutProductNestedInput
     modifierGroups?: ModifierGroupUncheckedUpdateManyWithoutProductsNestedInput
     OrderProducts?: OrderProductsUncheckedUpdateManyWithoutProductNestedInput
@@ -28967,6 +29112,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type PromotialMessageCreateManyCampaignInput = {

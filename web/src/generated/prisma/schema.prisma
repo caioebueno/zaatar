@@ -112,6 +112,7 @@ model Product {
   category        Category?       @relation(fields: [categoryId], references: [id])
   categoryId      String?
   OrderProducts   OrderProducts[]
+  translations    Json?
 }
 
 model Category {

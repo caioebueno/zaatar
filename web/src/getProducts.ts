@@ -55,6 +55,11 @@ const getProducts = async (): Promise<TGetProductsResponse> => {
       products: category.products.map((product) => ({
         id: product.id,
         name: product.name,
+        translations: product.translations as {
+          [key: string]: {
+            [key: string]: string;
+          };
+        },
         description: product.description || undefined,
         price: product.price || undefined,
         comparedAtPrice: product.comparedAtPrice || undefined,

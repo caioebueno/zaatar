@@ -5,6 +5,7 @@ import { Montserrat } from "next/font/google";
 import Link from "next/link";
 import { FiArrowLeft, FiCheck } from "react-icons/fi";
 import { FaWhatsapp } from "react-icons/fa6";
+import text from "@/constants/text";
 
 const montserrat = Montserrat({
   variable: "--font-geist-mono",
@@ -14,9 +15,14 @@ const montserrat = Montserrat({
 const Confirmation: NextPage<{
   params: Promise<{
     orderId: string;
+    lg: string;
   }>;
 }> = async ({ params }) => {
-  const orderId = (await params).orderId;
+  const resultParams = await params;
+  const orderId = resultParams.orderId;
+  const lg = resultParams.lg;
+
+  const content = text[lg];
   const order = await getOrder(orderId);
 
   return (
@@ -27,7 +33,7 @@ const Confirmation: NextPage<{
           className="p-0! text-[16px] font-semibold text-text! bg-transparent flex flex-row gap-2 items-center"
         >
           <FiArrowLeft size={18} />
-          <span>Back</span>
+          <span>{content["back"]}</span>
         </Link>
         <a
           href={`https://wa.me/15551234567?text=Hi%20I%20want%20to%20know%20more%20about%20order%20${order.number}`}
@@ -36,7 +42,7 @@ const Confirmation: NextPage<{
           className="bg-[#25d366] px-3 py-2 rounded-lg text-white flex flex-row items-center gap-1 font-semibold text-sm"
         >
           <FaWhatsapp size={18} />
-          Chat on WhatsApp
+          {content["chatOnWhatsapp"]}
         </a>
       </div>
       <div
@@ -49,7 +55,7 @@ const Confirmation: NextPage<{
           <span className="text-[30px] text-lightText font-bold">
             #{order.number}
           </span>
-          <span className="text-2xl font-bold">Order received!</span>
+          <span className="text-2xl font-bold">{content["orderReceived"]}</span>
         </div>
       </div>
     </div>

@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 18, "column": 0}, "map": {"version":3,"sources":["file:///Users/caiobueno/Developer/foody/web/app/menu/%5Blg%5D/cart/page.tsx"],"sourcesContent":["import { NextPage } from \"next\";\n\nconst Cart: NextPage = () => {\n  return (\n    <div>\n      <div className=\"bg-foreground p-4 border-[#B9BFBF] border-b\">\n\n      </div>\n    </div>\n  )\n}\n\nexport default Cart\n"],"names":[],"mappings":";;;;;;AAEA,MAAM,OAAiB;IACrB,qBACE,8OAAC;kBACC,cAAA,8OAAC;YAAI,WAAU;;;;;;;;;;;AAKrB;uCAEe"}}]
-}

@@ -1,21 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 
-type TNominatimAddress = {
-  place_id: number;
-  lat: string;
-  lon: string;
-  display_name: string;
-  address?: {
-    house_number?: string;
-    road?: string;
-    city?: string;
-    town?: string;
-    village?: string;
-    state?: string;
-    postcode?: string;
-    country?: string;
-    country_code?: string;
-  };
+type TMapboxFeature = {
+  id: string;
+  place_name: string;
+  center: [number, number]; // [lng, lat]
+  address?: string;
+  text?: string;
+  context?: {
+    id: string;
+    text: string;
+    short_code?: string;
+  }[];
 };
 
 export async function GET(request: NextRequest) {
@@ -25,40 +20,68 @@ export async function GET(request: NextRequest) {
     return NextResponse.json([]);
   }
 
+  const accessToken =
+    "pk.eyJ1IjoiY2Fpb2VidWVubyIsImEiOiJjbW5lcGs4NHQwMXVoMnBvbmQyMHRpNjdsIn0.2_7zwvhhSxx52vnuI56m2A";
+
+  if (!accessToken) {
+    return NextResponse.json(
+      { error: "Missing MAPBOX_TOKEN" },
+      { status: 500 },
+    );
+  }
+
   const params = new URLSearchParams({
-    q: query,
-    format: "jsonv2",
-    addressdetails: "1",
+    access_token: accessToken,
+    country: "us",
     limit: "8",
-    countrycodes: "us",
+    types: "address", // only real addresses
+    autocomplete: "true",
   });
 
   const response = await fetch(
-    `https://nominatim.openstreetmap.org/search?${params.toString()}`,
+    `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
+      query,
+    )}.json?${params.toString()}`,
     {
-      headers: {
-        Accept: "application/json",
-        "Accept-Language": "en-US,en;q=0.9",
-        "User-Agent": "YourAppName/1.0 (your@email.com)",
-      },
       next: { revalidate: 60 },
-    }
+    },
   );
 
   if (!response.ok) {
     return NextResponse.json([], { status: 200 });
   }
 
-  const data = (await response.json()) as TNominatimAddress[];
+  const data = await response.json();
+  console.log(data);
+  const features = data.features as TMapboxFeature[];
 
-  // Keep only US addresses that have a house number
-  const filtered = data.filter((item) => {
-    return (
-      item.address?.country_code?.toLowerCase() === "us" &&
-      typeof item.address?.house_number === "string" &&
-      item.address.house_number.trim().length > 0
-    );
-  });
+  const results = features
+    .filter((item) => item.address !== undefined)
+    .map((item) => {
+      const context = item.context || [];
 
-  return NextResponse.json(filtered);
+      const getContext = (type: string) =>
+        context.find((c) => c.id.startsWith(type))?.text;
+
+      return {
+        id: item.id,
+        display_name: item.place_name,
+        lat: item.center[1],
+        lon: item.center[0],
+        address: {
+          house_number: item.address || null,
+          road: item.text,
+          city: getContext("place") || getContext("locality"),
+          state: getContext("region"),
+          postcode: getContext("postcode"),
+          country: getContext("country"),
+          country_code:
+            context
+              .find((c) => c.id.startsWith("country"))
+              ?.short_code?.toUpperCase() || "US",
+        },
+      };
+    });
+
+  return NextResponse.json(results);
 }

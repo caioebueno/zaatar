@@ -1,3 +1,0 @@
-module.exports=[93695,(a,b,c)=>{b.exports=a.x("next/dist/shared/lib/no-fallback-error.external.js",()=>require("next/dist/shared/lib/no-fallback-error.external.js"))},98556,a=>{a.n(a.i(74762))},21752,a=>{a.n(a.i(12632))},24128,a=>{a.n(a.i(89664))},8532,a=>{a.n(a.i(62647))},50918,a=>{a.n(a.i(58781))},58926,a=>{a.v({className:"montserrat_450387c4-module__dnHjia__className",variable:"montserrat_450387c4-module__dnHjia__variable"})},58810,a=>{"use strict";var b=a.i(58926);let c={className:b.default.className,style:{fontFamily:"'Montserrat', 'Montserrat Fallback'",fontStyle:"normal"}};null!=b.default.variable&&(c.variable=b.default.variable),a.s(["default",0,c])}];
-
-//# sourceMappingURL=%5Broot-of-the-server%5D__093ac687._.js.map

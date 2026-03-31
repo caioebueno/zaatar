@@ -1,4 +1,5 @@
 type TCartItem = {
+  cartId: string;
   productId: string;
   quantity: number;
   modifiers: TSelectedModifier[];

@@ -18,7 +18,7 @@ import { findProductById } from "./MenuPage";
 import { calculateProductPriceWithProgressiveDiscount } from "@/utils/calculateProductPriceWithProgressiveDiscount";
 import { QuantitySelector } from "./ProductModal";
 import { parseAsInteger, useQueryState } from "nuqs";
-import PhoneInput from "./PhoneInput";
+import PhoneInput, { PhoneValue } from "./PhoneInput";
 import getCustomerData from "../../src/getCustomerData";
 import { useState } from "react";
 import TCustomer from "../../src/types/customer";
@@ -32,13 +32,17 @@ import { TOrderType, TPaymentMethod } from "../../src/types/order";
 import createOrder from "../../src/createOrder";
 import Link from "next/link";
 import { TModifierGroup } from "@/src/types/product";
+import text from "@/constants/text";
 
 type TPrice = {
   data: TGetProductsResponse;
   cart: TCart;
+  content: {
+    [key: string]: string;
+  };
 };
 
-const Price: React.FC<TPrice> = ({ data, cart }) => {
+const Price: React.FC<TPrice> = ({ data, cart, content }) => {
   const price = calculateCartWithProgressiveDiscount(
     data.categories,
     cart,
@@ -53,14 +57,14 @@ const Price: React.FC<TPrice> = ({ data, cart }) => {
         className="p-0! text-[16px] font-semibold text-text! bg-transparent flex flex-row gap-2 items-center"
       >
         <FiArrowLeft size={18} />
-        <span>Back</span>
+        <span>{content["back"]}</span>
       </Button>
       <div className={`flex flex-row items-center gap-2.5`}>
         <div>
           <div className="bg-[#CCD0D0] rounded-md">
             {Math.floor(price.discountAmount / 100) !== 0 && (
               <span className="text-xs font-semibold text-brandBackground py-1 px-1.5">
-                Won ${Math.floor(price.discountAmount / 100)}
+                ${Math.floor(price.discountAmount / 100)} off
               </span>
             )}
           </div>
@@ -82,24 +86,10 @@ const Price: React.FC<TPrice> = ({ data, cart }) => {
 
 type TCartProduct = {
   data: TGetProductsResponse;
+  lg: string;
 };
 
-type TConfirmStep = {
-  onBack: () => void;
-};
-
-const ConfirmStep: React.FC<TConfirmStep> = ({ onBack }) => {
-  return (
-    <>
-      {/*<div className="bg-foreground p-4 border-[#B9BFBF] border-b flex flex-row justify-between">
-       <Button onClick={() => onBack()} className="p-0! text-[16px] font-semibold text-text! bg-transparent flex flex-row gap-2 items-center"><FiArrowLeft size={18} /><span>Back</span></Button>
-     </div>
-     <PaymentTypeSelector />*/}
-    </>
-  );
-};
-
-const CartList: React.FC<TCartProduct> = ({ data }) => {
+const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
   const { cart } = useCart();
   const [step, setStep] = useQueryState("step", parseAsInteger.withDefault(1));
   const [paymentType, setPaymentType] = useState<TPaymentMethod | null>("CARD");
@@ -111,6 +101,7 @@ const CartList: React.FC<TCartProduct> = ({ data }) => {
   const [name, setName] = useState<null | string>(null);
 
   const router = useRouter();
+  const content = text[lg];
 
   const price = calculateCartWithProgressiveDiscount(
     data.categories,
@@ -134,7 +125,7 @@ const CartList: React.FC<TCartProduct> = ({ data }) => {
         tipAmount: Number(selectedTip || 0),
       });
       setLoading(false);
-      router.push(`/menu/en/confirmation/${order.id}`);
+      router.push(`/menu/${lg}/confirmation/${order.id}`);
     } catch (err) {
       console.log(err);
       setLoading(false);
@@ -150,14 +141,14 @@ const CartList: React.FC<TCartProduct> = ({ data }) => {
             className="p-0! text-[16px] font-semibold text-text! bg-transparent flex flex-row gap-2 items-center"
           >
             <FiArrowLeft size={18} />
-            <span>Back</span>
+            <span>{content["back"]}</span>
           </Button>
         </div>
         <div className="py-6 px-4 flex flex-col gap-4">
           <div className="py-3 px-4 rounded-xl bg-foreground flex flex-row justify-between items-center mb-2">
             <div>
               <span className="font-semibold text-sm text-lightText">
-                Cart summary
+                {content["cartSummary"]}
               </span>
               <div>
                 <div className={`flex flex-row items-center gap-2.5`}>
@@ -185,17 +176,20 @@ const CartList: React.FC<TCartProduct> = ({ data }) => {
             </div>
             <div>
               <Button className="bg-brandBackground py-2! px-4 rounded-lg text-sm">
-                View
+                {content["view"]}
               </Button>
             </div>
           </div>
           <div className="flex flex-row items-end gap-1">
             <TextInput label="Cupom" placeholder="Insert cupom" />
-            <Button className="bg-brandBackground h-14">Verify</Button>
+            <Button className="bg-brandBackground h-14">
+              {content["verify"]}
+            </Button>
           </div>
           <PaymentTypeSelector
             selectedPaymentType={paymentType}
             onSelect={setPaymentType}
+            content={content}
           />
           <TipSelector onSelect={setSelectedTip} tipSelected={selectedTip} />
         </div>
@@ -207,8 +201,8 @@ const CartList: React.FC<TCartProduct> = ({ data }) => {
           >
             <span className="text-lg">
               {loading
-                ? "Loading..."
-                : `Confirm ${formatCurrency(priceWithTip)}`}
+                ? content["loading"]
+                : `${content["confirm"]} ${formatCurrency(priceWithTip)}`}
             </span>
           </Button>
         </div>
@@ -227,13 +221,14 @@ const CartList: React.FC<TCartProduct> = ({ data }) => {
         name={name}
         setName={setName}
         orderType={orderType}
+        content={content}
       />
     );
 
   return (
     <div>
-      <Price cart={cart} data={data} />
-      <div className="py-6 px-4 flex flex-col gap-4 pb-[220px]">
+      <Price cart={cart} data={data} content={content} />
+      <div className="py-6 px-4 flex flex-col gap-4 `pb-55">
         {cart.items.length > 0 ? (
           cart.items.map((item) => (
             <CartListItem
@@ -242,20 +237,23 @@ const CartList: React.FC<TCartProduct> = ({ data }) => {
               data={data}
               cart={cart}
               cartItem={item}
+              lg={lg}
             />
           ))
         ) : (
           <div className="flex flex-col gap-4 items-center py-12">
-            <span className="text-lg font-semibold">Your cart is empty</span>
+            <span className="text-lg font-semibold">{content["yourCart"]}</span>
             <Link href="/menu/en">
-              <Button className="w-fit bg-brandBackground">Back to menu</Button>
+              <Button className="w-fit bg-brandBackground">
+                {content["backToMenu"]}
+              </Button>
             </Link>
           </div>
         )}
       </div>
       {cart.items.length > 0 && (
         <div className="bg-foreground pt-4 pb-8 px-4 border-[#B9BFBF] border-t fixed bottom-0 w-full flex flex-col items-center gap-2.5">
-          <span className="font-bold text-lg">Select service type</span>
+          <span className="font-bold text-lg">{content["selectService"]}</span>
           <Button
             className="bg-brandBackground w-full py-2! gap-3"
             onClick={() => {
@@ -264,11 +262,11 @@ const CartList: React.FC<TCartProduct> = ({ data }) => {
             }}
           >
             <FiTruck size={22} />
-            <span className="text-lg">Delivery</span>
+            <span className="text-lg">{content["delivery"]}</span>
           </Button>
           <Button className="bg-brandBackground w-full py-2! gap-3">
             <FiShoppingBag size={22} />
-            <span className="text-lg">Take Away</span>
+            <span className="text-lg">{content["takeAway"]}</span>
           </Button>
         </div>
       )}
@@ -286,6 +284,9 @@ type TAddressStep = {
   name: string | null;
   setName: (value: string | null) => void;
   orderType: TOrderType | null;
+  content: {
+    [key: string]: string;
+  };
 };
 
 export type TInputError = {
@@ -303,17 +304,29 @@ const AddressStep: React.FC<TAddressStep> = ({
   name,
   setName,
   orderType,
+  content,
 }) => {
-  const [phone, setPhone] = useState("");
+  const [phoneData, setPhoneData] = useState<PhoneValue | null>(null);
   const [loading, setLoading] = useState(false);
   const [openAddress, setOpenAddress] = useState(false);
   const [error, setError] = useState<TInputError>(null);
 
   const handleConfirm = async () => {
+    if (phoneData === null)
+      return setError({
+        field: "phone",
+        message: content["validPhone"],
+      });
+    if (phoneData.isValid === false)
+      return setError({
+        field: "phone",
+        message: content["validPhone"],
+      });
+    setError(null);
     if (!customer) {
       setLoading(true);
       const customer = await getCustomerData({
-        phone: phone,
+        phone: phoneData.raw,
       });
       setName(customer.name);
       setCustomer(customer);
@@ -322,13 +335,13 @@ const AddressStep: React.FC<TAddressStep> = ({
       if (!name || name.length === 0)
         return setError({
           field: "name",
-          message: "Insert you name",
+          message: content["insertName"],
         });
       if (orderType === "DELIVERY") {
         if (!selectedAddress)
           return setError({
             field: "address",
-            message: "Select an address",
+            message: content["selectAddress"],
           });
       }
       if (!customer.name || customer.name.length === 0) {
@@ -345,8 +358,9 @@ const AddressStep: React.FC<TAddressStep> = ({
   };
 
   const handleConfirmAddress = async (data: TAddress) => {
+    if (!phoneData) return;
     const customer = await getCustomerData({
-      phone: phone,
+      phone: phoneData.raw,
     });
     setCustomer(customer);
     setSelectedAddress(data.id);
@@ -371,87 +385,99 @@ const AddressStep: React.FC<TAddressStep> = ({
   };
 
   return (
-    <div>
-      <div className="bg-foreground p-4 border-[#B9BFBF] border-b flex flex-row justify-between">
-        <Button
-          onClick={() => onBack()}
-          className="p-0! text-[16px] font-semibold text-text! bg-transparent flex flex-row gap-2 items-center"
-        >
-          <FiArrowLeft size={18} />
-          <span>Back</span>
-        </Button>
-      </div>
-      <div className="pt-6 px-4 flex flex-col gap-6">
-        <div className="flex flex-col gap-1.5">
-          <span className="font-semibold text-[16px]">Phone</span>
-          <PhoneInput
-            onClear={() => {
-              setCustomer(null);
-              setPhone("");
-            }}
-            value={phone}
-            onChange={(e) => setPhone(e.raw)}
-            block={customer !== null}
-          />
+    <>
+      <div className="flex flex-col h-dvh overflow-hidden">
+        <div className="bg-foreground p-4 border-[#B9BFBF] border-b flex flex-row justify-between">
+          <Button
+            onClick={() => onBack()}
+            className="p-0! text-[16px] font-semibold text-text! bg-transparent flex flex-row gap-2 items-center"
+          >
+            <FiArrowLeft size={18} />
+            <span>{content["back"]}</span>
+          </Button>
         </div>
-        {customer && (
-          <>
-            <TextInput
-              label="Name"
-              error={error?.field === "name" ? error.message : undefined}
-              placeholder="Your name"
-              disabled={customer.name !== null}
-              value={name || ""}
-              onChange={(e) => {
-                setError(null);
-                setName(e.target.value);
+        <div className="pt-6 px-4 flex flex-1 flex-col gap-6 overflow-y-auto">
+          <div className="flex flex-col gap-1.5">
+            <span className="font-semibold text-[16px]">
+              {content["phone"]}
+            </span>
+            <PhoneInput
+              onClear={() => {
+                setCustomer(null);
+                setPhoneData(null);
               }}
+              // value={phone}
+              onChange={setPhoneData}
+              block={customer !== null}
             />
-            <div className="flex flex-col gap-2">
-              <span className="font-semibold">Delivery address</span>
-              {!customer.addresses || customer.addresses.length === 0 ? (
-                <div className="py-2 flex flex-col items-center">
-                  <span className="font-medium text-lightText">
-                    No address added
-                  </span>
-                </div>
-              ) : (
-                <AddressSelector
-                  addresses={customer.addresses}
-                  onSelect={setSelectedAddress}
-                  selectedAddress={selectedAddress}
-                />
-              )}
-              <Button
-                onClick={() => setOpenAddress(true)}
-                className="text-[16px]! py-3  bg-brandBackground flex flex-row gap-2"
-              >
-                <FiPlus size={18} />
-                Add new address
-              </Button>
-              {error && error.field === "address" && (
-                <span className="text-lg text-red-600">{error.message}</span>
-              )}
-            </div>
-          </>
-        )}
+            {error?.field === "phone" && (
+              <span className="text-red-600 text-sm">{error.message}</span>
+            )}
+          </div>
+          {customer && (
+            <>
+              <TextInput
+                label="Name"
+                error={error?.field === "name" ? error.message : undefined}
+                placeholder={content["yourName"]}
+                disabled={customer.name !== null}
+                value={name || ""}
+                onChange={(e) => {
+                  setError(null);
+                  setName(e.target.value);
+                }}
+              />
+              <div className="flex flex-col gap-2">
+                <span className="font-semibold">
+                  {content["deliveryAddress"]}
+                </span>
+                {!customer.addresses || customer.addresses.length === 0 ? (
+                  <div className="py-2 flex flex-col items-center">
+                    <span className="font-medium text-lightText">
+                      {content["noAddress"]}
+                    </span>
+                  </div>
+                ) : (
+                  <AddressSelector
+                    addresses={customer.addresses}
+                    onSelect={setSelectedAddress}
+                    selectedAddress={selectedAddress}
+                  />
+                )}
+                <Button
+                  onClick={() => setOpenAddress(true)}
+                  className="text-[16px]! py-3  bg-brandBackground flex flex-row gap-2"
+                >
+                  <FiPlus size={18} />
+                  {content["addNew"]}
+                </Button>
+                {error && error.field === "address" && (
+                  <span className="text-lg text-red-600">{error.message}</span>
+                )}
+              </div>
+            </>
+          )}
+        </div>
+        <div className="bg-foreground pt-4 pb-8 px-4 border-[#B9BFBF] border-t w-full flex flex-col items-center gap-2.5">
+          <Button
+            onClick={handleConfirm}
+            disabled={loading}
+            className="bg-brandBackground w-full py-3 gap-3"
+          >
+            <span className="text-lg">
+              {loading ? content["loading"] : content["confirm"]}
+            </span>
+          </Button>
+        </div>
+        <FindAddressModal
+          onConfirm={handleConfirmAddress}
+          onOpenChange={setOpenAddress}
+          open={openAddress}
+          custumerId={customer?.id}
+          content={content}
+        />
       </div>
-      <div className="bg-foreground pt-4 pb-8 px-4 border-[#B9BFBF] border-t fixed bottom-0 w-full flex flex-col items-center gap-2.5">
-        <Button
-          onClick={handleConfirm}
-          disabled={loading}
-          className="bg-brandBackground w-full py-3 gap-3"
-        >
-          <span className="text-lg">{loading ? "Loading..." : "Confirm"}</span>
-        </Button>
-      </div>
-      <FindAddressModal
-        onConfirm={handleConfirmAddress}
-        onOpenChange={setOpenAddress}
-        open={openAddress}
-        custumerId={customer?.id}
-      />
-    </div>
+    </>
   );
 };
 
@@ -490,7 +516,15 @@ const TipSelector: React.FC<TTipSelector> = ({ onSelect, tipSelected }) => {
           </div>
         </div>
         <div>
-          <TextInput prefix="%" leftIcon="%" placeholder="Other" />
+          <TextInput
+            prefix="%"
+            type="number"
+            inputMode="numeric"
+            onChange={(e) => onSelect(e.target.value)}
+            // autoComplete=""
+            leftIcon="%"
+            placeholder="Other"
+          />
         </div>
       </div>
     </div>
@@ -500,21 +534,25 @@ const TipSelector: React.FC<TTipSelector> = ({ onSelect, tipSelected }) => {
 type TPaymentTypeSelector = {
   selectedPaymentType: TPaymentMethod | null;
   onSelect: (value: TPaymentMethod) => void;
+  content: {
+    [key: string]: string;
+  };
 };
 
 const PaymentTypeSelector: React.FC<TPaymentTypeSelector> = ({
   onSelect,
   selectedPaymentType,
+  content,
 }) => {
   return (
     <div className="flex flex-col gap-2">
-      <span className="font-semibold">Payment method</span>
+      <span className="font-semibold">{content["paymentMethod"]}</span>
       <div
         onClick={() => onSelect("CASH")}
         className={`px-3 py-3 rounded-xl bg-foreground font-medium text-lg flex flex-row justify-between items-center border-2 transition ${"CASH" === selectedPaymentType ? "border-brandBackground" : "border-foreground"}`}
       >
         <div>
-          <span className="flex-1">Cash</span>
+          <span className="flex-1">{content["cash"]}</span>
         </div>
         <div
           className={`h-5 w-5 flex items-center justify-center ${"CASH" === selectedPaymentType ? "border-brandBackground" : "border-[#CCD0D0]"} border-2 rounded-full`}
@@ -529,7 +567,7 @@ const PaymentTypeSelector: React.FC<TPaymentTypeSelector> = ({
         className={`px-3 py-3 rounded-xl bg-foreground font-medium text-lg flex flex-row justify-between items-center border-2 transition ${"CARD" === selectedPaymentType ? "border-brandBackground" : "border-foreground"}`}
       >
         <div>
-          <span className="flex-1">Card</span>
+          <span className="flex-1">{content["card"]}</span>
         </div>
         <div
           className={`h-5 w-5 flex items-center justify-center ${"CARD" === selectedPaymentType ? "border-brandBackground" : "border-[#CCD0D0]"} border-2 rounded-full`}
@@ -586,6 +624,9 @@ type TFindAddressModal = {
   onOpenChange: (value: boolean) => void;
   onConfirm: (data: TAddress) => Promise<void>;
   custumerId?: string;
+  content: {
+    [key: string]: string;
+  };
 };
 
 const FindAddressModal: React.FC<TFindAddressModal> = ({
@@ -593,6 +634,7 @@ const FindAddressModal: React.FC<TFindAddressModal> = ({
   open,
   onConfirm,
   custumerId,
+  content,
 }) => {
   const [selectedAddress, setSelectedAddress] = useState<TAddressValue | null>(
     null,
@@ -634,7 +676,7 @@ const FindAddressModal: React.FC<TFindAddressModal> = ({
           <Button className="p-2! bg-transparent text-text! opacity-0">
             <FiX />
           </Button>
-          <span className="font-semibold">Add address</span>
+          <span className="font-semibold">{content["addAddress"]}</span>
           <Button
             onClick={() => onOpenChange(false)}
             className="p-2! bg-transparent text-text!"
@@ -652,12 +694,12 @@ const FindAddressModal: React.FC<TFindAddressModal> = ({
               <TextInput
                 value={number}
                 onChange={(e) => setNumber(e.target.value)}
-                label="Number + Appartment"
+                label={content["numberAppartment"]}
               />
               <TextInput
                 value={complement}
                 onChange={(e) => setComplement(e.target.value)}
-                label="Reference"
+                label={content["reference"]}
               />
             </>
           )}
@@ -668,7 +710,7 @@ const FindAddressModal: React.FC<TFindAddressModal> = ({
             onClick={() => handleConfirm()}
             className="bg-brandBackground w-full disabled:opacity-50"
           >
-            {loading ? "Loading..." : "Confirm address"}
+            {loading ? content["loading"] : content["confirmAddress"]}
           </Button>
         </div>
       </Dialog.Content>
@@ -681,6 +723,7 @@ type TCartListItem = {
   cartItem: TCartItem;
   quantity: number;
   cart: TCart;
+  lg: string;
 };
 
 const CartListItem: React.FC<TCartListItem> = ({
@@ -688,6 +731,7 @@ const CartListItem: React.FC<TCartListItem> = ({
   cartItem,
   cart,
   quantity,
+  lg,
 }) => {
   // const [quantity, setQuantity] = useState(cart.quantity)
   const { updateItemQuantity } = useCart();
@@ -709,7 +753,11 @@ const CartListItem: React.FC<TCartListItem> = ({
       <div className="flex flex-row gap-3 items-center">
         <img src={image} className="h-20 w-20 rounded-lg" />
         <div className="flex flex-col gap-1.5">
-          <span className="font-semibold ">{findProduct?.name}</span>
+          <span className="font-semibold ">
+            {findProduct?.translations
+              ? findProduct?.translations[lg]["title"] || findProduct?.name
+              : findProduct?.name}
+          </span>
           {cartItem.modifiers?.map((item) => (
             <ModifierItem
               key={item.modifierItemId}
@@ -728,7 +776,7 @@ const CartListItem: React.FC<TCartListItem> = ({
                 <div className="bg-[#CCD0D0] rounded-md">
                   {price && Math.floor(price.discountAmount / 100) !== 0 && (
                     <span className="text-xs font-semibold text-brandBackground py-0.5 px-1">
-                      Won ${Math.floor(price.discountAmount / 100)}
+                      ${Math.floor(price.discountAmount / 100)} off
                     </span>
                   )}
                 </div>
@@ -748,7 +796,7 @@ const CartListItem: React.FC<TCartListItem> = ({
       <div>
         <QuantitySelector
           value={quantity}
-          onChange={(value) => updateItemQuantity(cartItem.productId, value)}
+          onChange={(value) => updateItemQuantity(cartItem.cartId, value)}
           small
           min={0}
         />

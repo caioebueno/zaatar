@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 20, "column": 0}, "map": {"version":3,"sources":["file:///Users/caiobueno/Developer/foody/web/app/menu/%5Blg%5D/confirmation/%5BorderId%5D/page.tsx"],"sourcesContent":["import getOrder from \"@/src/getOrder\";\nimport { NextPage } from \"next\";\n\nconst Confirmation: NextPage<{\n  params: Promise<{\n    orderId: string;\n  }>;\n}> = async ({ params }) => {\n  const orderId = (await params).orderId;\n  const order = await getOrder(orderId);\n  console.log(order);\n\n  return (\n    <div className=\"text-text\">\n      <div className=\"flex flex-col items-center\">\n        <span className=\"text-[30px] text-lightText font-bold\">\n          #{order.number}\n        </span>\n        <span className=\"text-2xl font-bold\">Order received!</span>\n      </div>\n    </div>\n  );\n};\n\nexport default Confirmation;\n"],"names":[],"mappings":";;;;;AAAA;;;;;;;AAGA,MAAM,eAID,OAAO,EAAE,MAAM,EAAE;IACpB,MAAM,UAAU,CAAC,MAAM,MAAM,EAAE,OAAO;IACtC,MAAM,QAAQ,MAAM,IAAA,iIAAQ,EAAC;IAC7B,QAAQ,GAAG,CAAC;IAEZ,qBACE,qPAAC;QAAI,WAAU;kBACb,cAAA,qPAAC;YAAI,WAAU;;8BACb,qPAAC;oBAAK,WAAU;;wBAAuC;wBACnD,MAAM,MAAM;;;;;;;8BAEhB,qPAAC;oBAAK,WAAU;8BAAqB;;;;;;;;;;;;;;;;;AAI7C;uCAEe"}}]
-}

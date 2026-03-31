@@ -8,12 +8,17 @@ const montserrat = Montserrat({
   subsets: ["latin"],
 });
 
-const Cart: NextPage = async () => {
+const Cart: NextPage<{
+  params: Promise<{
+    lg: string;
+  }>;
+}> = async ({ params }) => {
   const data = await getProducts();
+  const lg = (await params).lg;
 
   return (
-    <div className={`${montserrat.className}`}>
-      <CartList data={data} />
+    <div className={`${montserrat.className} h-full`}>
+      <CartList data={data} lg={lg} />
     </div>
   );
 };

@@ -11,9 +11,19 @@ import { getCartTotalQuantity } from "@/utils/getCartTotalQuantity";
 
 type TCartBar = {
   data: TGetProductsResponse;
+  onLearnMoreClick: () => void;
+  content: {
+    [key: string]: string;
+  };
+  lg: string;
 };
 
-const CartBar: React.FC<TCartBar> = ({ data }) => {
+const CartBar: React.FC<TCartBar> = ({
+  data,
+  onLearnMoreClick,
+  content,
+  lg,
+}) => {
   const { cart } = useCart();
   const price = calculateCartWithProgressiveDiscount(
     data.categories,
@@ -36,9 +46,14 @@ const CartBar: React.FC<TCartBar> = ({ data }) => {
   return (
     <div className="p-4 bg-foreground fixed bottom-0 w-full flex flex-col box-shadow">
       <div className="flex flex-row justify-between">
-        <span className="text-sm font-bold">Progressive Discount</span>
-        <span className="text- font-semibold underline text-sm text-lightText">
-          Learn more
+        <span className="text-sm font-bold">
+          {content["progressiveDiscount"]}
+        </span>
+        <span
+          onClick={onLearnMoreClick}
+          className="text- font-semibold underline text-sm text-lightText"
+        >
+          {content["learnMore"]}
         </span>
       </div>
       {data.progressiveDiscount && (
@@ -69,16 +84,16 @@ const CartBar: React.FC<TCartBar> = ({ data }) => {
             <div className="bg-[#CCD0D0] rounded-md">
               {Math.floor(price.discountAmount / 100) !== 0 && (
                 <span className="text-xs font-semibold text-brandBackground py-1 px-1.5">
-                  Won ${Math.floor(price.discountAmount / 100)}
+                  ${Math.floor(price.discountAmount / 100)} off
                 </span>
               )}
             </div>
           </div>
         </div>
         <div>
-          <Link href="/menu/en/cart">
+          <Link href={`/menu/${lg}/cart`}>
             <Button className="py-3 px-8 bg-brandBackground text-[16px]">
-              My Cart{" "}
+              {content["myCart"]}{" "}
               {cart.items.length > 0 ? `(${getCartTotalQuantity(cart)})` : null}
             </Button>
           </Link>

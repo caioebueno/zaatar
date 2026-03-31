@@ -16,7 +16,7 @@ import {
 } from "libphonenumber-js";
 import { FiX } from "react-icons/fi";
 
-type PhoneValue = {
+export type PhoneValue = {
   country: CountryCode;
   raw: string;
   formatted: string;
@@ -24,6 +24,15 @@ type PhoneValue = {
   isValid: boolean;
 };
 
+export function validatePhoneInternational(value: string) {
+  const parsed = parsePhoneNumberFromString(value);
+
+  return {
+    isValid: parsed?.isValid() ?? false,
+    e164: parsed?.isValid() ? parsed.number : null,
+    country: parsed?.country ?? null,
+  };
+}
 type PhoneInputProps = {
   defaultCountry?: CountryCode;
   value?: string;
@@ -217,6 +226,18 @@ export default function PhoneInput({
     };
   }, []);
 
+  const handleClear = () => {
+    setDigits("");
+
+    // notify parent (optional but you already pass it)
+    onClear?.();
+
+    // focus input again (nice UX)
+    requestAnimationFrame(() => {
+      inputRef.current?.focus();
+    });
+  };
+
   function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
     const input = e.target;
     const nextDigits = getDigits(input.value);
@@ -335,7 +356,7 @@ export default function PhoneInput({
         />
         {block && (
           <div
-            onClick={() => onClear && onClear()}
+            onClick={handleClear}
             className="px-3 py-2 bg-foreground flex items-center justify-center rounded-r-xl"
           >
             <FiX size={18}></FiX>

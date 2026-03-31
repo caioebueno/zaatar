@@ -1,6 +1,0 @@
-{
-  "/_not-found/page": "app/_not-found/page.js",
-  "/menu/[lg]/cart/page": "app/menu/[lg]/cart/page.js",
-  "/menu/[lg]/confirmation/[orderId]/page": "app/menu/[lg]/confirmation/[orderId]/page.js",
-  "/menu/[lg]/page": "app/menu/[lg]/page.js"
-}

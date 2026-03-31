@@ -18,12 +18,16 @@ type TDiscountModal = {
   progressiveDiscount: TProgressiveDiscount;
   open: boolean;
   onOpenChange: (value: boolean) => void;
+  content: {
+    [key: string]: string;
+  };
 };
 
 const DiscountModal: React.FC<TDiscountModal> = ({
   progressiveDiscount,
   onOpenChange,
   open,
+  content,
 }) => {
   // const [open, setOpen] = useState(false);
 
@@ -35,13 +39,14 @@ const DiscountModal: React.FC<TDiscountModal> = ({
     >
       <DialogContent className="sm:max-w-md">
         <DialogHeader className="gap-4">
-          <DialogTitle className="font-bold">Progressive Discount</DialogTitle>
+          <DialogTitle className="font-bold">
+            {content["progressiveDiscount"]}
+          </DialogTitle>
           <DialogDescription className="gap-2 flex flex-col">
-            <span className="text-[22px] font-bold">Buy More, Save More</span>
-            <span className="font-medium">
-              Add more pizzas, sfihas, or drinks to unlock better savings. Spend
-              $60 or more and get a special prize on us.
+            <span className="text-[22px] font-bold">
+              {content["progressiveDiscount"]}
             </span>
+            <span className="font-medium">{content["addMore"]}</span>
           </DialogDescription>
         </DialogHeader>
         <ProgressiveDiscountBar progressiveDiscount={progressiveDiscount} />
@@ -50,7 +55,7 @@ const DiscountModal: React.FC<TDiscountModal> = ({
             className="font-bold bg-brandBackground py-3 h-full text-background"
             onClick={() => onOpenChange(false)}
           >
-            Order Now!
+            {content["orderNow"]}
           </Button>
         </DialogFooter>
       </DialogContent>

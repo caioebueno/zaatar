@@ -15,9 +15,19 @@ type TProductModal = {
     selectedModifiers: TSelectedModifier[],
     description?: string,
   ) => void;
+  content: {
+    [key: string]: string;
+  };
+  lg: string;
 };
 
-const ProductModal: React.FC<TProductModal> = ({ product, onClose, onAdd }) => {
+const ProductModal: React.FC<TProductModal> = ({
+  product,
+  onClose,
+  onAdd,
+  content,
+  lg,
+}) => {
   const [quantity, setQuantity] = useState(1);
   const [selectedModifier, setSelectedModifier] = useState<null | string>(null);
   const [modifiers, setModifiers] = useState<TSelectedModifier[]>([]);
@@ -38,13 +48,19 @@ const ProductModal: React.FC<TProductModal> = ({ product, onClose, onAdd }) => {
     }
   };
 
+  const handleClose = () => {
+    setQuantity(1);
+    setDescription("");
+    onClose();
+  };
+
   const handleModifier = (modifier: TSelectedModifier) => {
     if (!product) return;
     onAdd(product.id, quantity, [modifier]);
   };
 
   return (
-    <Dialog open={product !== null} onOpenChange={onClose}>
+    <Dialog open={product !== null} onOpenChange={handleClose}>
       <DialogContent
         showCloseButton={false}
         className="w-full h-full p-0 bg-foreground transition-all"
@@ -64,8 +80,18 @@ const ProductModal: React.FC<TProductModal> = ({ product, onClose, onAdd }) => {
               )}
             </div>
             <div className="pt-6 px-4 flex flex-col gap-3 leading-4">
-              <span className="text-2xl font-bold">{product.name}</span>
-              <p className="text-lightText text-sm">{product.description}</p>
+              <span className="text-2xl font-bold">
+                {product.translations
+                  ? product.translations[lg]["title"] || product.name
+                  : product.name}
+              </span>
+              <p className="text-lightText text-sm">
+                {" "}
+                {product.translations
+                  ? product.translations[lg]["description"] ||
+                    product.description
+                  : product.description}
+              </p>
               <div className="flex flex-row gap-2 text-[20px]">
                 {product.price && (
                   <span className="font-extrabold">
@@ -79,11 +105,13 @@ const ProductModal: React.FC<TProductModal> = ({ product, onClose, onAdd }) => {
                 )}
               </div>
               <div className="flex flex-col gap-2 pt-3">
-                <span className="font-semibold text-[16px]">Comments</span>
+                <span className="font-semibold text-[16px]">
+                  {content["comments"]}
+                </span>
                 <textarea
                   className="bg-background rounded-lg text-[16px] py-3 px-3 border-2 border-background transition focus:border-brandBackground focus:outline-0"
                   rows={4}
-                  placeholder="Optional"
+                  placeholder={content["optional"]}
                   name=""
                   id=""
                   value={description}
@@ -95,12 +123,13 @@ const ProductModal: React.FC<TProductModal> = ({ product, onClose, onAdd }) => {
               <QuantitySelector
                 onChange={(value) => setQuantity(value)}
                 value={quantity}
+                noTrash
               />
               <Button
                 onClick={() => handleConfirm()}
                 className="text-[16px] font-bold bg-brandBackground py-3 px-8 leading-5"
               >
-                Add
+                {content["add"]}
               </Button>
             </div>
           </div>
@@ -216,6 +245,7 @@ type QuantitySelectorProps = {
   step?: number;
   disabled?: boolean;
   small?: boolean;
+  noTrash?: boolean;
 };
 
 function QuantitySelector({
@@ -226,6 +256,7 @@ function QuantitySelector({
   step = 1,
   disabled = false,
   small,
+  noTrash,
 }: QuantitySelectorProps) {
   const decrease = () => {
     const nextValue = value - step;
@@ -248,7 +279,11 @@ function QuantitySelector({
         className={`flex ${small ? "p-1 bg-transparent" : "py-2.5 px-3.5 bg-brandBackground text-white"} rounded-xl  items-center justify-center text-lg disabled:opacity-40`}
       >
         {value === 1 ? (
-          <FiTrash2 size={small ? 18 : 22} />
+          noTrash ? (
+            <FiMinus size={small ? 18 : 22} />
+          ) : (
+            <FiTrash2 size={small ? 18 : 22} />
+          )
         ) : (
           <FiMinus size={small ? 18 : 22} />
         )}

@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 6, "column": 0}, "map": {"version":3,"sources":["file:///Users/caiobueno/Developer/foody/web/prisma/index.ts"],"sourcesContent":["import { PrismaClient } from \"@/src/generated/prisma\";\nimport { PrismaPg } from \"@prisma/adapter-pg\";\n\nconst adapter = new PrismaPg({\n  connectionString: process.env.DATABASE_URL!,\n});\n\nconst prisma = new PrismaClient({ adapter });\nexport default prisma;\n"],"names":[],"mappings":";;;;AAAA;AACA;;;;;;;AAEA,MAAM,UAAU,IAAI,8KAAQ,CAAC;IAC3B,kBAAkB,QAAQ,GAAG,CAAC,YAAY;AAC5C;AAEA,MAAM,SAAS,IAAI,0JAAY,CAAC;IAAE;AAAQ;uCAC3B"}},
-    {"offset": {"line": 32, "column": 0}, "map": {"version":3,"sources":["file:///Users/caiobueno/Developer/foody/web/.next-internal/server/app/menu/%5Blg%5D/confirmation/%5BorderId%5D/page/actions.js%20%28server%20actions%20loader%29"],"sourcesContent":["export {default as '405f1af43e7a9db84b0c88d7719184a0dd6fd27f72'} from 'ACTIONS_MODULE0'\n"],"names":[],"mappings":";AAAA"}}]
-}
