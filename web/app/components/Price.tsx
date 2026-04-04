@@ -8,6 +8,7 @@ import { isOperationHoursOpenAt } from "@/src/modules/branch/domain/branch.types
 import { TGetProductsResponse } from "../../src/getProducts";
 import TCart, { TCartItem } from "@/types/cart";
 import Button from "./Button";
+import ProductImage from "./ProductImage";
 import {
   FiArrowLeft,
   FiCalendar,
@@ -1296,7 +1297,7 @@ const CartListItem: React.FC<TCartListItem> = ({
   );
 
   const findProduct = findProductById(data.categories, cartItem.productId);
-  const image = findProduct?.photos ? findProduct.photos[0]?.url : null;
+  const image = findProduct?.photos?.[0]?.url ?? null;
   const selectedModifiers = findProduct?.modifierGroups?.filter((item) =>
     cartItem.modifiers?.find((modifier) => modifier.modifierId === item.id),
   );
@@ -1304,7 +1305,12 @@ const CartListItem: React.FC<TCartListItem> = ({
   return (
     <div className="flex flex-row items-center justify-between w-full">
       <div className="flex flex-row gap-3 items-center">
-        <img src={image} className="h-20 w-20 rounded-lg" />
+        <ProductImage
+          src={image}
+          alt={findProduct?.name || "Product image"}
+          className="h-20 w-20 rounded-lg object-cover bg-foreground"
+          iconClassName="h-6 w-6"
+        />
         <div className="flex flex-col gap-1.5">
           <span className="font-semibold ">
             {findProduct?.translations

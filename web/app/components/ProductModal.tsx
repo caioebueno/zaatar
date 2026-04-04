@@ -2,6 +2,7 @@ import { Dialog, DialogClose, DialogContent } from "@/components/ui/dialog";
 import TProduct, { TModifierGroupItem } from "../../src/types/product";
 import formatCurrency from "@/utils/formatCurrecy";
 import Button from "./Button";
+import ProductImage from "./ProductImage";
 import { FiArrowLeft, FiMinus, FiPlus, FiTrash2 } from "react-icons/fi";
 import { useState } from "react";
 import { TSelectedModifier } from "@/types/cart";
@@ -64,6 +65,8 @@ const ProductModal: React.FC<TProductModal> = ({
     );
   };
 
+  const productImageUrl = product?.photos?.[0]?.url ?? null;
+
   return (
     <Dialog open={product !== null} onOpenChange={handleClose}>
       <DialogContent
@@ -77,13 +80,11 @@ const ProductModal: React.FC<TProductModal> = ({
               <DialogClose className="absolute top-4 left-4 p-3 rounded-full bg-background">
                 <FiArrowLeft size={18} />
               </DialogClose>
-              {product.photos && product.photos[0] && (
-                <img
-                  src={product.photos[0]?.url}
-                  alt={`${product.name} photo`}
-                  className="h-100 object-cover lg:w-full lg:h-auto lg:rounded-xl"
-                />
-              )}
+              <ProductImage
+                src={productImageUrl}
+                alt={`${product.name} photo`}
+                className="h-100 w-full object-cover bg-background lg:w-full lg:h-auto lg:rounded-xl"
+              />
             </div>
             <div className="pt-6 px-4 flex flex-col gap-3 leading-4 lg:flex-1 lg:pt-8">
               <span className="text-2xl font-bold">

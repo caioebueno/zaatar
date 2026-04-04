@@ -12,6 +12,7 @@ import TProgressiveDiscount from "../../src/types/progressiveDiscount";
 import DiscountModal from "./DiscountModal";
 import { forwardRef, useEffect, useRef, useState } from "react";
 import CartBar from "./CartBar";
+import ProductImage from "./ProductImage";
 import ProductModal from "./ProductModal";
 import { useCart } from "./CartContext";
 import TCart, { TSelectedModifier } from "@/types/cart";
@@ -278,7 +279,7 @@ const CategoryBar: React.FC<TCategoryBar> = ({
     <>
       <div
         ref={containerRef}
-        className="category-bar-scroll flex flex-row border-gray-300 border-b w-full sticky top-0 bg-background overflow-x-auto max-w-[900px]"
+        className="category-bar-scroll flex flex-row border-gray-300 border-b w-full sticky top-0 bg-background overflow-x-auto max-w-[900px] z-10"
       >
         {categories.map((category) => (
           <CategoryBarItem
@@ -390,8 +391,7 @@ const ProductItem: React.FC<TProductItem> = ({
   progressiveDiscount,
   lg,
 }) => {
-  const firstImage =
-    product.photos && product.photos[0] ? product.photos[0] : null;
+  const firstImageUrl = product.photos?.[0]?.url ?? null;
   const pricePreview = calculateProductPriceWithProgressiveDiscount(
     product.id,
     progressiveDiscount,
@@ -413,9 +413,13 @@ const ProductItem: React.FC<TProductItem> = ({
       className="flex flex-col gap-3"
       onClick={() => onProductSelect(product.id)}
     >
-      {firstImage && <img src={firstImage.url} className="rounded-2xl" />}
-      <div className="flex flex-col">
-        <span className="text-md font-semibold">
+      <ProductImage
+        src={firstImageUrl}
+        className="rounded-2xl aspect-[4/3] object-cover bg-foreground"
+        alt={product.name}
+      />
+      <div className="flex flex-col gap-1">
+        <span className="text-md font-semibold leading-4.5">
           {product.translations
             ? product.translations[lg]["title"] || product.name
             : product.name}
