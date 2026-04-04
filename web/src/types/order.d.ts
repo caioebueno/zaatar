@@ -1,4 +1,5 @@
 import TAddress from "./address";
+import TCustomer from "./customer";
 import TProduct from "./product";
 import { TPreparationStepCategory, TPreparationStepTrack } from "./station";
 
@@ -10,6 +11,8 @@ export type TOrder = {
   createdAt: string;
   number?: string;
   type: TOrderType;
+  costumerId?: string;
+  customer?: TCustomer;
   paymentMethod: TPaymentMethod;
   addressId?: string;
   address?: TAddress;
@@ -21,6 +24,8 @@ export type TOrderProduct = {
   id: string;
   productId: string;
   product?: TProduct;
+  comments?: string;
+  selectedModifierGroupItemIds?: string[];
   amount: number;
   fullAmount: number;
   quantity: number;

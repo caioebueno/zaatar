@@ -120,9 +120,51 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
+exports.Prisma.StationScalarFieldEnum = {
+  id: 'id',
+  name: 'name'
+};
+
+exports.Prisma.PreparationStepScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  name: 'name',
+  includeComments: 'includeComments',
+  includeModifiers: 'includeModifiers',
+  stationId: 'stationId'
+};
+
+exports.Prisma.PreparationStepCategoryScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  categoryId: 'categoryId',
+  completed: 'completed',
+  orderId: 'orderId'
+};
+
+exports.Prisma.PreparationStepTrackScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  completed: 'completed',
+  quantity: 'quantity',
+  comments: 'comments',
+  completedComments: 'completedComments',
+  preparationStepId: 'preparationStepId',
+  preparationStepCategoryId: 'preparationStepCategoryId'
+};
+
+exports.Prisma.PreparationStepModifierTrackScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  completed: 'completed',
+  modifierGroupItemId: 'modifierGroupItemId',
+  preparationStepTrackId: 'preparationStepTrackId'
+};
+
 exports.Prisma.ProgressiveDiscountScalarFieldEnum = {
   id: 'id',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  completed: 'completed'
 };
 
 exports.Prisma.ProgressiveDiscountStepScalarFieldEnum = {
@@ -158,6 +200,7 @@ exports.Prisma.ModifierGroupItemScalarFieldEnum = {
   createdAt: 'createdAt',
   name: 'name',
   price: 'price',
+  description: 'description',
   modifierGroupId: 'modifierGroupId',
   fileId: 'fileId'
 };
@@ -172,6 +215,7 @@ exports.Prisma.BranchScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
   name: 'name',
+  operationHours: 'operationHours',
   addressId: 'addressId',
   businessId: 'businessId'
 };
@@ -267,6 +311,7 @@ exports.Prisma.OrderProductsScalarFieldEnum = {
   createdAt: 'createdAt',
   productId: 'productId',
   quantity: 'quantity',
+  comments: 'comments',
   fullAmount: 'fullAmount',
   amount: 'amount',
   orderId: 'orderId'
@@ -319,6 +364,11 @@ exports.PaymentType = exports.$Enums.PaymentType = {
 };
 
 exports.Prisma.ModelName = {
+  Station: 'Station',
+  PreparationStep: 'PreparationStep',
+  PreparationStepCategory: 'PreparationStepCategory',
+  PreparationStepTrack: 'PreparationStepTrack',
+  PreparationStepModifierTrack: 'PreparationStepModifierTrack',
   ProgressiveDiscount: 'ProgressiveDiscount',
   ProgressiveDiscountStep: 'ProgressiveDiscountStep',
   File: 'File',

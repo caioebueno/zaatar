@@ -44,7 +44,7 @@ const CartBar: React.FC<TCartBar> = ({
   }, [price.discountedPrice]);
 
   return (
-    <div className="p-4 bg-foreground fixed bottom-0 w-full flex flex-col box-shadow">
+    <div className="p-4 bg-foreground fixed bottom-0 w-full flex flex-col box-shadow max-w-[900px] lg:bottom-6 lg:border-gray-300 lg:rounded-xl lg:border">
       <div className="flex flex-row justify-between">
         <span className="text-sm font-bold">
           {content["progressiveDiscount"]}

@@ -14,6 +14,31 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
 
 
 /**
+ * Model Station
+ * 
+ */
+export type Station = $Result.DefaultSelection<Prisma.$StationPayload>
+/**
+ * Model PreparationStep
+ * 
+ */
+export type PreparationStep = $Result.DefaultSelection<Prisma.$PreparationStepPayload>
+/**
+ * Model PreparationStepCategory
+ * 
+ */
+export type PreparationStepCategory = $Result.DefaultSelection<Prisma.$PreparationStepCategoryPayload>
+/**
+ * Model PreparationStepTrack
+ * 
+ */
+export type PreparationStepTrack = $Result.DefaultSelection<Prisma.$PreparationStepTrackPayload>
+/**
+ * Model PreparationStepModifierTrack
+ * 
+ */
+export type PreparationStepModifierTrack = $Result.DefaultSelection<Prisma.$PreparationStepModifierTrackPayload>
+/**
  * Model ProgressiveDiscount
  * 
  */
@@ -162,8 +187,8 @@ export const OrderType: typeof $Enums.OrderType
  * const prisma = new PrismaClient({
  *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
  * })
- * // Fetch zero or more ProgressiveDiscounts
- * const progressiveDiscounts = await prisma.progressiveDiscount.findMany()
+ * // Fetch zero or more Stations
+ * const stations = await prisma.station.findMany()
  * ```
  *
  *
@@ -185,8 +210,8 @@ export class PrismaClient<
    * const prisma = new PrismaClient({
    *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
    * })
-   * // Fetch zero or more ProgressiveDiscounts
-   * const progressiveDiscounts = await prisma.progressiveDiscount.findMany()
+   * // Fetch zero or more Stations
+   * const stations = await prisma.station.findMany()
    * ```
    *
    *
@@ -275,6 +300,56 @@ export class PrismaClient<
   }>>
 
       /**
+   * `prisma.station`: Exposes CRUD operations for the **Station** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Stations
+    * const stations = await prisma.station.findMany()
+    * ```
+    */
+  get station(): Prisma.StationDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.preparationStep`: Exposes CRUD operations for the **PreparationStep** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PreparationSteps
+    * const preparationSteps = await prisma.preparationStep.findMany()
+    * ```
+    */
+  get preparationStep(): Prisma.PreparationStepDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.preparationStepCategory`: Exposes CRUD operations for the **PreparationStepCategory** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PreparationStepCategories
+    * const preparationStepCategories = await prisma.preparationStepCategory.findMany()
+    * ```
+    */
+  get preparationStepCategory(): Prisma.PreparationStepCategoryDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.preparationStepTrack`: Exposes CRUD operations for the **PreparationStepTrack** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PreparationStepTracks
+    * const preparationStepTracks = await prisma.preparationStepTrack.findMany()
+    * ```
+    */
+  get preparationStepTrack(): Prisma.PreparationStepTrackDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.preparationStepModifierTrack`: Exposes CRUD operations for the **PreparationStepModifierTrack** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PreparationStepModifierTracks
+    * const preparationStepModifierTracks = await prisma.preparationStepModifierTrack.findMany()
+    * ```
+    */
+  get preparationStepModifierTrack(): Prisma.PreparationStepModifierTrackDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.progressiveDiscount`: Exposes CRUD operations for the **ProgressiveDiscount** model.
     * Example usage:
     * ```ts
@@ -877,6 +952,11 @@ export namespace Prisma {
 
 
   export const ModelName: {
+    Station: 'Station',
+    PreparationStep: 'PreparationStep',
+    PreparationStepCategory: 'PreparationStepCategory',
+    PreparationStepTrack: 'PreparationStepTrack',
+    PreparationStepModifierTrack: 'PreparationStepModifierTrack',
     ProgressiveDiscount: 'ProgressiveDiscount',
     ProgressiveDiscountStep: 'ProgressiveDiscountStep',
     File: 'File',
@@ -909,10 +989,380 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "progressiveDiscount" | "progressiveDiscountStep" | "file" | "modifierGroup" | "modifierGroupItem" | "business" | "branch" | "address" | "product" | "category" | "campaign" | "customer" | "deliveryAddress" | "message" | "promotialMessage" | "order" | "orderProducts"
+      modelProps: "station" | "preparationStep" | "preparationStepCategory" | "preparationStepTrack" | "preparationStepModifierTrack" | "progressiveDiscount" | "progressiveDiscountStep" | "file" | "modifierGroup" | "modifierGroupItem" | "business" | "branch" | "address" | "product" | "category" | "campaign" | "customer" | "deliveryAddress" | "message" | "promotialMessage" | "order" | "orderProducts"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
+      Station: {
+        payload: Prisma.$StationPayload<ExtArgs>
+        fields: Prisma.StationFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.StationFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StationPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.StationFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StationPayload>
+          }
+          findFirst: {
+            args: Prisma.StationFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StationPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.StationFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StationPayload>
+          }
+          findMany: {
+            args: Prisma.StationFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StationPayload>[]
+          }
+          create: {
+            args: Prisma.StationCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StationPayload>
+          }
+          createMany: {
+            args: Prisma.StationCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.StationCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StationPayload>[]
+          }
+          delete: {
+            args: Prisma.StationDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StationPayload>
+          }
+          update: {
+            args: Prisma.StationUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StationPayload>
+          }
+          deleteMany: {
+            args: Prisma.StationDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.StationUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.StationUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StationPayload>[]
+          }
+          upsert: {
+            args: Prisma.StationUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StationPayload>
+          }
+          aggregate: {
+            args: Prisma.StationAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateStation>
+          }
+          groupBy: {
+            args: Prisma.StationGroupByArgs<ExtArgs>
+            result: $Utils.Optional<StationGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.StationCountArgs<ExtArgs>
+            result: $Utils.Optional<StationCountAggregateOutputType> | number
+          }
+        }
+      }
+      PreparationStep: {
+        payload: Prisma.$PreparationStepPayload<ExtArgs>
+        fields: Prisma.PreparationStepFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PreparationStepFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PreparationStepPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PreparationStepFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PreparationStepPayload>
+          }
+          findFirst: {
+            args: Prisma.PreparationStepFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PreparationStepPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PreparationStepFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PreparationStepPayload>
+          }
+          findMany: {
+            args: Prisma.PreparationStepFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PreparationStepPayload>[]
+          }
+          create: {
+            args: Prisma.PreparationStepCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PreparationStepPayload>
+          }
+          createMany: {
+            args: Prisma.PreparationStepCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.PreparationStepCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PreparationStepPayload>[]
+          }
+          delete: {
+            args: Prisma.PreparationStepDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PreparationStepPayload>
+          }
+          update: {
+            args: Prisma.PreparationStepUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PreparationStepPayload>
+          }
+          deleteMany: {
+            args: Prisma.PreparationStepDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PreparationStepUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.PreparationStepUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PreparationStepPayload>[]
+          }
+          upsert: {
+            args: Prisma.PreparationStepUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PreparationStepPayload>
+          }
+          aggregate: {
+            args: Prisma.PreparationStepAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePreparationStep>
+          }
+          groupBy: {
+            args: Prisma.PreparationStepGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PreparationStepGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PreparationStepCountArgs<ExtArgs>
+            result: $Utils.Optional<PreparationStepCountAggregateOutputType> | number
+          }
+        }
+      }
+      PreparationStepCategory: {
+        payload: Prisma.$PreparationStepCategoryPayload<ExtArgs>
+        fields: Prisma.PreparationStepCategoryFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PreparationStepCategoryFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PreparationStepCategoryPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PreparationStepCategoryFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PreparationStepCategoryPayload>
+          }
+          findFirst: {
+            args: Prisma.PreparationStepCategoryFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PreparationStepCategoryPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PreparationStepCategoryFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PreparationStepCategoryPayload>
+          }
+          findMany: {
+            args: Prisma.PreparationStepCategoryFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PreparationStepCategoryPayload>[]
+          }
+          create: {
+            args: Prisma.PreparationStepCategoryCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PreparationStepCategoryPayload>
+          }
+          createMany: {
+            args: Prisma.PreparationStepCategoryCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.PreparationStepCategoryCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PreparationStepCategoryPayload>[]
+          }
+          delete: {
+            args: Prisma.PreparationStepCategoryDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PreparationStepCategoryPayload>
+          }
+          update: {
+            args: Prisma.PreparationStepCategoryUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PreparationStepCategoryPayload>
+          }
+          deleteMany: {
+            args: Prisma.PreparationStepCategoryDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PreparationStepCategoryUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.PreparationStepCategoryUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PreparationStepCategoryPayload>[]
+          }
+          upsert: {
+            args: Prisma.PreparationStepCategoryUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PreparationStepCategoryPayload>
+          }
+          aggregate: {
+            args: Prisma.PreparationStepCategoryAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePreparationStepCategory>
+          }
+          groupBy: {
+            args: Prisma.PreparationStepCategoryGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PreparationStepCategoryGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PreparationStepCategoryCountArgs<ExtArgs>
+            result: $Utils.Optional<PreparationStepCategoryCountAggregateOutputType> | number
+          }
+        }
+      }
+      PreparationStepTrack: {
+        payload: Prisma.$PreparationStepTrackPayload<ExtArgs>
+        fields: Prisma.PreparationStepTrackFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PreparationStepTrackFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PreparationStepTrackPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PreparationStepTrackFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PreparationStepTrackPayload>
+          }
+          findFirst: {
+            args: Prisma.PreparationStepTrackFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PreparationStepTrackPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PreparationStepTrackFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PreparationStepTrackPayload>
+          }
+          findMany: {
+            args: Prisma.PreparationStepTrackFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PreparationStepTrackPayload>[]
+          }
+          create: {
+            args: Prisma.PreparationStepTrackCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PreparationStepTrackPayload>
+          }
+          createMany: {
+            args: Prisma.PreparationStepTrackCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.PreparationStepTrackCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PreparationStepTrackPayload>[]
+          }
+          delete: {
+            args: Prisma.PreparationStepTrackDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PreparationStepTrackPayload>
+          }
+          update: {
+            args: Prisma.PreparationStepTrackUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PreparationStepTrackPayload>
+          }
+          deleteMany: {
+            args: Prisma.PreparationStepTrackDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PreparationStepTrackUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.PreparationStepTrackUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PreparationStepTrackPayload>[]
+          }
+          upsert: {
+            args: Prisma.PreparationStepTrackUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PreparationStepTrackPayload>
+          }
+          aggregate: {
+            args: Prisma.PreparationStepTrackAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePreparationStepTrack>
+          }
+          groupBy: {
+            args: Prisma.PreparationStepTrackGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PreparationStepTrackGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PreparationStepTrackCountArgs<ExtArgs>
+            result: $Utils.Optional<PreparationStepTrackCountAggregateOutputType> | number
+          }
+        }
+      }
+      PreparationStepModifierTrack: {
+        payload: Prisma.$PreparationStepModifierTrackPayload<ExtArgs>
+        fields: Prisma.PreparationStepModifierTrackFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PreparationStepModifierTrackFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PreparationStepModifierTrackPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PreparationStepModifierTrackFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PreparationStepModifierTrackPayload>
+          }
+          findFirst: {
+            args: Prisma.PreparationStepModifierTrackFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PreparationStepModifierTrackPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PreparationStepModifierTrackFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PreparationStepModifierTrackPayload>
+          }
+          findMany: {
+            args: Prisma.PreparationStepModifierTrackFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PreparationStepModifierTrackPayload>[]
+          }
+          create: {
+            args: Prisma.PreparationStepModifierTrackCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PreparationStepModifierTrackPayload>
+          }
+          createMany: {
+            args: Prisma.PreparationStepModifierTrackCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.PreparationStepModifierTrackCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PreparationStepModifierTrackPayload>[]
+          }
+          delete: {
+            args: Prisma.PreparationStepModifierTrackDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PreparationStepModifierTrackPayload>
+          }
+          update: {
+            args: Prisma.PreparationStepModifierTrackUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PreparationStepModifierTrackPayload>
+          }
+          deleteMany: {
+            args: Prisma.PreparationStepModifierTrackDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PreparationStepModifierTrackUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.PreparationStepModifierTrackUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PreparationStepModifierTrackPayload>[]
+          }
+          upsert: {
+            args: Prisma.PreparationStepModifierTrackUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PreparationStepModifierTrackPayload>
+          }
+          aggregate: {
+            args: Prisma.PreparationStepModifierTrackAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePreparationStepModifierTrack>
+          }
+          groupBy: {
+            args: Prisma.PreparationStepModifierTrackGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PreparationStepModifierTrackGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PreparationStepModifierTrackCountArgs<ExtArgs>
+            result: $Utils.Optional<PreparationStepModifierTrackCountAggregateOutputType> | number
+          }
+        }
+      }
       ProgressiveDiscount: {
         payload: Prisma.$ProgressiveDiscountPayload<ExtArgs>
         fields: Prisma.ProgressiveDiscountFieldRefs
@@ -2279,6 +2729,11 @@ export namespace Prisma {
     comments?: runtime.SqlCommenterPlugin[]
   }
   export type GlobalOmitConfig = {
+    station?: StationOmit
+    preparationStep?: PreparationStepOmit
+    preparationStepCategory?: PreparationStepCategoryOmit
+    preparationStepTrack?: PreparationStepTrackOmit
+    preparationStepModifierTrack?: PreparationStepModifierTrackOmit
     progressiveDiscount?: ProgressiveDiscountOmit
     progressiveDiscountStep?: ProgressiveDiscountStepOmit
     file?: FileOmit
@@ -2369,6 +2824,139 @@ export namespace Prisma {
   /**
    * Count Types
    */
+
+
+  /**
+   * Count Type StationCountOutputType
+   */
+
+  export type StationCountOutputType = {
+    preparationSteps: number
+  }
+
+  export type StationCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    preparationSteps?: boolean | StationCountOutputTypeCountPreparationStepsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * StationCountOutputType without action
+   */
+  export type StationCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StationCountOutputType
+     */
+    select?: StationCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * StationCountOutputType without action
+   */
+  export type StationCountOutputTypeCountPreparationStepsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PreparationStepWhereInput
+  }
+
+
+  /**
+   * Count Type PreparationStepCountOutputType
+   */
+
+  export type PreparationStepCountOutputType = {
+    products: number
+    preparationStepTracks: number
+  }
+
+  export type PreparationStepCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    products?: boolean | PreparationStepCountOutputTypeCountProductsArgs
+    preparationStepTracks?: boolean | PreparationStepCountOutputTypeCountPreparationStepTracksArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * PreparationStepCountOutputType without action
+   */
+  export type PreparationStepCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStepCountOutputType
+     */
+    select?: PreparationStepCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * PreparationStepCountOutputType without action
+   */
+  export type PreparationStepCountOutputTypeCountProductsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProductWhereInput
+  }
+
+  /**
+   * PreparationStepCountOutputType without action
+   */
+  export type PreparationStepCountOutputTypeCountPreparationStepTracksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PreparationStepTrackWhereInput
+  }
+
+
+  /**
+   * Count Type PreparationStepCategoryCountOutputType
+   */
+
+  export type PreparationStepCategoryCountOutputType = {
+    preparationStepTracks: number
+  }
+
+  export type PreparationStepCategoryCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    preparationStepTracks?: boolean | PreparationStepCategoryCountOutputTypeCountPreparationStepTracksArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * PreparationStepCategoryCountOutputType without action
+   */
+  export type PreparationStepCategoryCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStepCategoryCountOutputType
+     */
+    select?: PreparationStepCategoryCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * PreparationStepCategoryCountOutputType without action
+   */
+  export type PreparationStepCategoryCountOutputTypeCountPreparationStepTracksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PreparationStepTrackWhereInput
+  }
+
+
+  /**
+   * Count Type PreparationStepTrackCountOutputType
+   */
+
+  export type PreparationStepTrackCountOutputType = {
+    preparationStepModifierTracks: number
+  }
+
+  export type PreparationStepTrackCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    preparationStepModifierTracks?: boolean | PreparationStepTrackCountOutputTypeCountPreparationStepModifierTracksArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * PreparationStepTrackCountOutputType without action
+   */
+  export type PreparationStepTrackCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStepTrackCountOutputType
+     */
+    select?: PreparationStepTrackCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * PreparationStepTrackCountOutputType without action
+   */
+  export type PreparationStepTrackCountOutputTypeCountPreparationStepModifierTracksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PreparationStepModifierTrackWhereInput
+  }
 
 
   /**
@@ -2474,6 +3062,46 @@ export namespace Prisma {
 
 
   /**
+   * Count Type ModifierGroupItemCountOutputType
+   */
+
+  export type ModifierGroupItemCountOutputType = {
+    preparationStepModifierTracks: number
+    orderProducts: number
+  }
+
+  export type ModifierGroupItemCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    preparationStepModifierTracks?: boolean | ModifierGroupItemCountOutputTypeCountPreparationStepModifierTracksArgs
+    orderProducts?: boolean | ModifierGroupItemCountOutputTypeCountOrderProductsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * ModifierGroupItemCountOutputType without action
+   */
+  export type ModifierGroupItemCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ModifierGroupItemCountOutputType
+     */
+    select?: ModifierGroupItemCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ModifierGroupItemCountOutputType without action
+   */
+  export type ModifierGroupItemCountOutputTypeCountPreparationStepModifierTracksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PreparationStepModifierTrackWhereInput
+  }
+
+  /**
+   * ModifierGroupItemCountOutputType without action
+   */
+  export type ModifierGroupItemCountOutputTypeCountOrderProductsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OrderProductsWhereInput
+  }
+
+
+  /**
    * Count Type BusinessCountOutputType
    */
 
@@ -2543,12 +3171,14 @@ export namespace Prisma {
     photos: number
     modifierGroups: number
     OrderProducts: number
+    preparationSteps: number
   }
 
   export type ProductCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     photos?: boolean | ProductCountOutputTypeCountPhotosArgs
     modifierGroups?: boolean | ProductCountOutputTypeCountModifierGroupsArgs
     OrderProducts?: boolean | ProductCountOutputTypeCountOrderProductsArgs
+    preparationSteps?: boolean | ProductCountOutputTypeCountPreparationStepsArgs
   }
 
   // Custom InputTypes
@@ -2583,6 +3213,13 @@ export namespace Prisma {
     where?: OrderProductsWhereInput
   }
 
+  /**
+   * ProductCountOutputType without action
+   */
+  export type ProductCountOutputTypeCountPreparationStepsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PreparationStepWhereInput
+  }
+
 
   /**
    * Count Type CategoryCountOutputType
@@ -2590,10 +3227,12 @@ export namespace Prisma {
 
   export type CategoryCountOutputType = {
     products: number
+    preparationStepCategories: number
   }
 
   export type CategoryCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     products?: boolean | CategoryCountOutputTypeCountProductsArgs
+    preparationStepCategories?: boolean | CategoryCountOutputTypeCountPreparationStepCategoriesArgs
   }
 
   // Custom InputTypes
@@ -2612,6 +3251,13 @@ export namespace Prisma {
    */
   export type CategoryCountOutputTypeCountProductsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ProductWhereInput
+  }
+
+  /**
+   * CategoryCountOutputType without action
+   */
+  export type CategoryCountOutputTypeCountPreparationStepCategoriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PreparationStepCategoryWhereInput
   }
 
 
@@ -2763,10 +3409,12 @@ export namespace Prisma {
 
   export type OrderCountOutputType = {
     orderProducts: number
+    preparationStepCategories: number
   }
 
   export type OrderCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     orderProducts?: boolean | OrderCountOutputTypeCountOrderProductsArgs
+    preparationStepCategories?: boolean | OrderCountOutputTypeCountPreparationStepCategoriesArgs
   }
 
   // Custom InputTypes
@@ -2787,10 +3435,5564 @@ export namespace Prisma {
     where?: OrderProductsWhereInput
   }
 
+  /**
+   * OrderCountOutputType without action
+   */
+  export type OrderCountOutputTypeCountPreparationStepCategoriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PreparationStepCategoryWhereInput
+  }
+
+
+  /**
+   * Count Type OrderProductsCountOutputType
+   */
+
+  export type OrderProductsCountOutputType = {
+    modifierGroupItems: number
+  }
+
+  export type OrderProductsCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    modifierGroupItems?: boolean | OrderProductsCountOutputTypeCountModifierGroupItemsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * OrderProductsCountOutputType without action
+   */
+  export type OrderProductsCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderProductsCountOutputType
+     */
+    select?: OrderProductsCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * OrderProductsCountOutputType without action
+   */
+  export type OrderProductsCountOutputTypeCountModifierGroupItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ModifierGroupItemWhereInput
+  }
+
 
   /**
    * Models
    */
+
+  /**
+   * Model Station
+   */
+
+  export type AggregateStation = {
+    _count: StationCountAggregateOutputType | null
+    _min: StationMinAggregateOutputType | null
+    _max: StationMaxAggregateOutputType | null
+  }
+
+  export type StationMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+  }
+
+  export type StationMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+  }
+
+  export type StationCountAggregateOutputType = {
+    id: number
+    name: number
+    _all: number
+  }
+
+
+  export type StationMinAggregateInputType = {
+    id?: true
+    name?: true
+  }
+
+  export type StationMaxAggregateInputType = {
+    id?: true
+    name?: true
+  }
+
+  export type StationCountAggregateInputType = {
+    id?: true
+    name?: true
+    _all?: true
+  }
+
+  export type StationAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Station to aggregate.
+     */
+    where?: StationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Stations to fetch.
+     */
+    orderBy?: StationOrderByWithRelationInput | StationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: StationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Stations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Stations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Stations
+    **/
+    _count?: true | StationCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: StationMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: StationMaxAggregateInputType
+  }
+
+  export type GetStationAggregateType<T extends StationAggregateArgs> = {
+        [P in keyof T & keyof AggregateStation]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateStation[P]>
+      : GetScalarType<T[P], AggregateStation[P]>
+  }
+
+
+
+
+  export type StationGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StationWhereInput
+    orderBy?: StationOrderByWithAggregationInput | StationOrderByWithAggregationInput[]
+    by: StationScalarFieldEnum[] | StationScalarFieldEnum
+    having?: StationScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: StationCountAggregateInputType | true
+    _min?: StationMinAggregateInputType
+    _max?: StationMaxAggregateInputType
+  }
+
+  export type StationGroupByOutputType = {
+    id: string
+    name: string
+    _count: StationCountAggregateOutputType | null
+    _min: StationMinAggregateOutputType | null
+    _max: StationMaxAggregateOutputType | null
+  }
+
+  type GetStationGroupByPayload<T extends StationGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<StationGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof StationGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], StationGroupByOutputType[P]>
+            : GetScalarType<T[P], StationGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type StationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    preparationSteps?: boolean | Station$preparationStepsArgs<ExtArgs>
+    _count?: boolean | StationCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["station"]>
+
+  export type StationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+  }, ExtArgs["result"]["station"]>
+
+  export type StationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+  }, ExtArgs["result"]["station"]>
+
+  export type StationSelectScalar = {
+    id?: boolean
+    name?: boolean
+  }
+
+  export type StationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name", ExtArgs["result"]["station"]>
+  export type StationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    preparationSteps?: boolean | Station$preparationStepsArgs<ExtArgs>
+    _count?: boolean | StationCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type StationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type StationIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $StationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Station"
+    objects: {
+      preparationSteps: Prisma.$PreparationStepPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+    }, ExtArgs["result"]["station"]>
+    composites: {}
+  }
+
+  type StationGetPayload<S extends boolean | null | undefined | StationDefaultArgs> = $Result.GetResult<Prisma.$StationPayload, S>
+
+  type StationCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<StationFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: StationCountAggregateInputType | true
+    }
+
+  export interface StationDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Station'], meta: { name: 'Station' } }
+    /**
+     * Find zero or one Station that matches the filter.
+     * @param {StationFindUniqueArgs} args - Arguments to find a Station
+     * @example
+     * // Get one Station
+     * const station = await prisma.station.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends StationFindUniqueArgs>(args: SelectSubset<T, StationFindUniqueArgs<ExtArgs>>): Prisma__StationClient<$Result.GetResult<Prisma.$StationPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Station that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {StationFindUniqueOrThrowArgs} args - Arguments to find a Station
+     * @example
+     * // Get one Station
+     * const station = await prisma.station.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends StationFindUniqueOrThrowArgs>(args: SelectSubset<T, StationFindUniqueOrThrowArgs<ExtArgs>>): Prisma__StationClient<$Result.GetResult<Prisma.$StationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Station that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StationFindFirstArgs} args - Arguments to find a Station
+     * @example
+     * // Get one Station
+     * const station = await prisma.station.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends StationFindFirstArgs>(args?: SelectSubset<T, StationFindFirstArgs<ExtArgs>>): Prisma__StationClient<$Result.GetResult<Prisma.$StationPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Station that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StationFindFirstOrThrowArgs} args - Arguments to find a Station
+     * @example
+     * // Get one Station
+     * const station = await prisma.station.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends StationFindFirstOrThrowArgs>(args?: SelectSubset<T, StationFindFirstOrThrowArgs<ExtArgs>>): Prisma__StationClient<$Result.GetResult<Prisma.$StationPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Stations that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StationFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Stations
+     * const stations = await prisma.station.findMany()
+     * 
+     * // Get first 10 Stations
+     * const stations = await prisma.station.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const stationWithIdOnly = await prisma.station.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends StationFindManyArgs>(args?: SelectSubset<T, StationFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Station.
+     * @param {StationCreateArgs} args - Arguments to create a Station.
+     * @example
+     * // Create one Station
+     * const Station = await prisma.station.create({
+     *   data: {
+     *     // ... data to create a Station
+     *   }
+     * })
+     * 
+     */
+    create<T extends StationCreateArgs>(args: SelectSubset<T, StationCreateArgs<ExtArgs>>): Prisma__StationClient<$Result.GetResult<Prisma.$StationPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Stations.
+     * @param {StationCreateManyArgs} args - Arguments to create many Stations.
+     * @example
+     * // Create many Stations
+     * const station = await prisma.station.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends StationCreateManyArgs>(args?: SelectSubset<T, StationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Stations and returns the data saved in the database.
+     * @param {StationCreateManyAndReturnArgs} args - Arguments to create many Stations.
+     * @example
+     * // Create many Stations
+     * const station = await prisma.station.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Stations and only return the `id`
+     * const stationWithIdOnly = await prisma.station.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends StationCreateManyAndReturnArgs>(args?: SelectSubset<T, StationCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StationPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Station.
+     * @param {StationDeleteArgs} args - Arguments to delete one Station.
+     * @example
+     * // Delete one Station
+     * const Station = await prisma.station.delete({
+     *   where: {
+     *     // ... filter to delete one Station
+     *   }
+     * })
+     * 
+     */
+    delete<T extends StationDeleteArgs>(args: SelectSubset<T, StationDeleteArgs<ExtArgs>>): Prisma__StationClient<$Result.GetResult<Prisma.$StationPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Station.
+     * @param {StationUpdateArgs} args - Arguments to update one Station.
+     * @example
+     * // Update one Station
+     * const station = await prisma.station.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends StationUpdateArgs>(args: SelectSubset<T, StationUpdateArgs<ExtArgs>>): Prisma__StationClient<$Result.GetResult<Prisma.$StationPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Stations.
+     * @param {StationDeleteManyArgs} args - Arguments to filter Stations to delete.
+     * @example
+     * // Delete a few Stations
+     * const { count } = await prisma.station.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends StationDeleteManyArgs>(args?: SelectSubset<T, StationDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Stations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StationUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Stations
+     * const station = await prisma.station.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends StationUpdateManyArgs>(args: SelectSubset<T, StationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Stations and returns the data updated in the database.
+     * @param {StationUpdateManyAndReturnArgs} args - Arguments to update many Stations.
+     * @example
+     * // Update many Stations
+     * const station = await prisma.station.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Stations and only return the `id`
+     * const stationWithIdOnly = await prisma.station.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends StationUpdateManyAndReturnArgs>(args: SelectSubset<T, StationUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StationPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Station.
+     * @param {StationUpsertArgs} args - Arguments to update or create a Station.
+     * @example
+     * // Update or create a Station
+     * const station = await prisma.station.upsert({
+     *   create: {
+     *     // ... data to create a Station
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Station we want to update
+     *   }
+     * })
+     */
+    upsert<T extends StationUpsertArgs>(args: SelectSubset<T, StationUpsertArgs<ExtArgs>>): Prisma__StationClient<$Result.GetResult<Prisma.$StationPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Stations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StationCountArgs} args - Arguments to filter Stations to count.
+     * @example
+     * // Count the number of Stations
+     * const count = await prisma.station.count({
+     *   where: {
+     *     // ... the filter for the Stations we want to count
+     *   }
+     * })
+    **/
+    count<T extends StationCountArgs>(
+      args?: Subset<T, StationCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], StationCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Station.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends StationAggregateArgs>(args: Subset<T, StationAggregateArgs>): Prisma.PrismaPromise<GetStationAggregateType<T>>
+
+    /**
+     * Group by Station.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StationGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends StationGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: StationGroupByArgs['orderBy'] }
+        : { orderBy?: StationGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, StationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetStationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Station model
+   */
+  readonly fields: StationFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Station.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__StationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    preparationSteps<T extends Station$preparationStepsArgs<ExtArgs> = {}>(args?: Subset<T, Station$preparationStepsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PreparationStepPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Station model
+   */
+  interface StationFieldRefs {
+    readonly id: FieldRef<"Station", 'String'>
+    readonly name: FieldRef<"Station", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Station findUnique
+   */
+  export type StationFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Station
+     */
+    select?: StationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Station
+     */
+    omit?: StationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StationInclude<ExtArgs> | null
+    /**
+     * Filter, which Station to fetch.
+     */
+    where: StationWhereUniqueInput
+  }
+
+  /**
+   * Station findUniqueOrThrow
+   */
+  export type StationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Station
+     */
+    select?: StationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Station
+     */
+    omit?: StationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StationInclude<ExtArgs> | null
+    /**
+     * Filter, which Station to fetch.
+     */
+    where: StationWhereUniqueInput
+  }
+
+  /**
+   * Station findFirst
+   */
+  export type StationFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Station
+     */
+    select?: StationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Station
+     */
+    omit?: StationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StationInclude<ExtArgs> | null
+    /**
+     * Filter, which Station to fetch.
+     */
+    where?: StationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Stations to fetch.
+     */
+    orderBy?: StationOrderByWithRelationInput | StationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Stations.
+     */
+    cursor?: StationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Stations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Stations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Stations.
+     */
+    distinct?: StationScalarFieldEnum | StationScalarFieldEnum[]
+  }
+
+  /**
+   * Station findFirstOrThrow
+   */
+  export type StationFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Station
+     */
+    select?: StationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Station
+     */
+    omit?: StationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StationInclude<ExtArgs> | null
+    /**
+     * Filter, which Station to fetch.
+     */
+    where?: StationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Stations to fetch.
+     */
+    orderBy?: StationOrderByWithRelationInput | StationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Stations.
+     */
+    cursor?: StationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Stations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Stations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Stations.
+     */
+    distinct?: StationScalarFieldEnum | StationScalarFieldEnum[]
+  }
+
+  /**
+   * Station findMany
+   */
+  export type StationFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Station
+     */
+    select?: StationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Station
+     */
+    omit?: StationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StationInclude<ExtArgs> | null
+    /**
+     * Filter, which Stations to fetch.
+     */
+    where?: StationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Stations to fetch.
+     */
+    orderBy?: StationOrderByWithRelationInput | StationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Stations.
+     */
+    cursor?: StationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Stations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Stations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Stations.
+     */
+    distinct?: StationScalarFieldEnum | StationScalarFieldEnum[]
+  }
+
+  /**
+   * Station create
+   */
+  export type StationCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Station
+     */
+    select?: StationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Station
+     */
+    omit?: StationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StationInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Station.
+     */
+    data: XOR<StationCreateInput, StationUncheckedCreateInput>
+  }
+
+  /**
+   * Station createMany
+   */
+  export type StationCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Stations.
+     */
+    data: StationCreateManyInput | StationCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Station createManyAndReturn
+   */
+  export type StationCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Station
+     */
+    select?: StationSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Station
+     */
+    omit?: StationOmit<ExtArgs> | null
+    /**
+     * The data used to create many Stations.
+     */
+    data: StationCreateManyInput | StationCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Station update
+   */
+  export type StationUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Station
+     */
+    select?: StationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Station
+     */
+    omit?: StationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StationInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Station.
+     */
+    data: XOR<StationUpdateInput, StationUncheckedUpdateInput>
+    /**
+     * Choose, which Station to update.
+     */
+    where: StationWhereUniqueInput
+  }
+
+  /**
+   * Station updateMany
+   */
+  export type StationUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Stations.
+     */
+    data: XOR<StationUpdateManyMutationInput, StationUncheckedUpdateManyInput>
+    /**
+     * Filter which Stations to update
+     */
+    where?: StationWhereInput
+    /**
+     * Limit how many Stations to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Station updateManyAndReturn
+   */
+  export type StationUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Station
+     */
+    select?: StationSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Station
+     */
+    omit?: StationOmit<ExtArgs> | null
+    /**
+     * The data used to update Stations.
+     */
+    data: XOR<StationUpdateManyMutationInput, StationUncheckedUpdateManyInput>
+    /**
+     * Filter which Stations to update
+     */
+    where?: StationWhereInput
+    /**
+     * Limit how many Stations to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Station upsert
+   */
+  export type StationUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Station
+     */
+    select?: StationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Station
+     */
+    omit?: StationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StationInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Station to update in case it exists.
+     */
+    where: StationWhereUniqueInput
+    /**
+     * In case the Station found by the `where` argument doesn't exist, create a new Station with this data.
+     */
+    create: XOR<StationCreateInput, StationUncheckedCreateInput>
+    /**
+     * In case the Station was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<StationUpdateInput, StationUncheckedUpdateInput>
+  }
+
+  /**
+   * Station delete
+   */
+  export type StationDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Station
+     */
+    select?: StationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Station
+     */
+    omit?: StationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StationInclude<ExtArgs> | null
+    /**
+     * Filter which Station to delete.
+     */
+    where: StationWhereUniqueInput
+  }
+
+  /**
+   * Station deleteMany
+   */
+  export type StationDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Stations to delete
+     */
+    where?: StationWhereInput
+    /**
+     * Limit how many Stations to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Station.preparationSteps
+   */
+  export type Station$preparationStepsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStep
+     */
+    select?: PreparationStepSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStep
+     */
+    omit?: PreparationStepOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepInclude<ExtArgs> | null
+    where?: PreparationStepWhereInput
+    orderBy?: PreparationStepOrderByWithRelationInput | PreparationStepOrderByWithRelationInput[]
+    cursor?: PreparationStepWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PreparationStepScalarFieldEnum | PreparationStepScalarFieldEnum[]
+  }
+
+  /**
+   * Station without action
+   */
+  export type StationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Station
+     */
+    select?: StationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Station
+     */
+    omit?: StationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StationInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model PreparationStep
+   */
+
+  export type AggregatePreparationStep = {
+    _count: PreparationStepCountAggregateOutputType | null
+    _min: PreparationStepMinAggregateOutputType | null
+    _max: PreparationStepMaxAggregateOutputType | null
+  }
+
+  export type PreparationStepMinAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    name: string | null
+    includeComments: boolean | null
+    includeModifiers: boolean | null
+    stationId: string | null
+  }
+
+  export type PreparationStepMaxAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    name: string | null
+    includeComments: boolean | null
+    includeModifiers: boolean | null
+    stationId: string | null
+  }
+
+  export type PreparationStepCountAggregateOutputType = {
+    id: number
+    createdAt: number
+    name: number
+    includeComments: number
+    includeModifiers: number
+    stationId: number
+    _all: number
+  }
+
+
+  export type PreparationStepMinAggregateInputType = {
+    id?: true
+    createdAt?: true
+    name?: true
+    includeComments?: true
+    includeModifiers?: true
+    stationId?: true
+  }
+
+  export type PreparationStepMaxAggregateInputType = {
+    id?: true
+    createdAt?: true
+    name?: true
+    includeComments?: true
+    includeModifiers?: true
+    stationId?: true
+  }
+
+  export type PreparationStepCountAggregateInputType = {
+    id?: true
+    createdAt?: true
+    name?: true
+    includeComments?: true
+    includeModifiers?: true
+    stationId?: true
+    _all?: true
+  }
+
+  export type PreparationStepAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PreparationStep to aggregate.
+     */
+    where?: PreparationStepWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PreparationSteps to fetch.
+     */
+    orderBy?: PreparationStepOrderByWithRelationInput | PreparationStepOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PreparationStepWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PreparationSteps from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PreparationSteps.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned PreparationSteps
+    **/
+    _count?: true | PreparationStepCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PreparationStepMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PreparationStepMaxAggregateInputType
+  }
+
+  export type GetPreparationStepAggregateType<T extends PreparationStepAggregateArgs> = {
+        [P in keyof T & keyof AggregatePreparationStep]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePreparationStep[P]>
+      : GetScalarType<T[P], AggregatePreparationStep[P]>
+  }
+
+
+
+
+  export type PreparationStepGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PreparationStepWhereInput
+    orderBy?: PreparationStepOrderByWithAggregationInput | PreparationStepOrderByWithAggregationInput[]
+    by: PreparationStepScalarFieldEnum[] | PreparationStepScalarFieldEnum
+    having?: PreparationStepScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PreparationStepCountAggregateInputType | true
+    _min?: PreparationStepMinAggregateInputType
+    _max?: PreparationStepMaxAggregateInputType
+  }
+
+  export type PreparationStepGroupByOutputType = {
+    id: string
+    createdAt: Date
+    name: string
+    includeComments: boolean
+    includeModifiers: boolean
+    stationId: string
+    _count: PreparationStepCountAggregateOutputType | null
+    _min: PreparationStepMinAggregateOutputType | null
+    _max: PreparationStepMaxAggregateOutputType | null
+  }
+
+  type GetPreparationStepGroupByPayload<T extends PreparationStepGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PreparationStepGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PreparationStepGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PreparationStepGroupByOutputType[P]>
+            : GetScalarType<T[P], PreparationStepGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PreparationStepSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    name?: boolean
+    includeComments?: boolean
+    includeModifiers?: boolean
+    stationId?: boolean
+    products?: boolean | PreparationStep$productsArgs<ExtArgs>
+    station?: boolean | StationDefaultArgs<ExtArgs>
+    preparationStepTracks?: boolean | PreparationStep$preparationStepTracksArgs<ExtArgs>
+    _count?: boolean | PreparationStepCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["preparationStep"]>
+
+  export type PreparationStepSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    name?: boolean
+    includeComments?: boolean
+    includeModifiers?: boolean
+    stationId?: boolean
+    station?: boolean | StationDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["preparationStep"]>
+
+  export type PreparationStepSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    name?: boolean
+    includeComments?: boolean
+    includeModifiers?: boolean
+    stationId?: boolean
+    station?: boolean | StationDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["preparationStep"]>
+
+  export type PreparationStepSelectScalar = {
+    id?: boolean
+    createdAt?: boolean
+    name?: boolean
+    includeComments?: boolean
+    includeModifiers?: boolean
+    stationId?: boolean
+  }
+
+  export type PreparationStepOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "name" | "includeComments" | "includeModifiers" | "stationId", ExtArgs["result"]["preparationStep"]>
+  export type PreparationStepInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    products?: boolean | PreparationStep$productsArgs<ExtArgs>
+    station?: boolean | StationDefaultArgs<ExtArgs>
+    preparationStepTracks?: boolean | PreparationStep$preparationStepTracksArgs<ExtArgs>
+    _count?: boolean | PreparationStepCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type PreparationStepIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    station?: boolean | StationDefaultArgs<ExtArgs>
+  }
+  export type PreparationStepIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    station?: boolean | StationDefaultArgs<ExtArgs>
+  }
+
+  export type $PreparationStepPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PreparationStep"
+    objects: {
+      products: Prisma.$ProductPayload<ExtArgs>[]
+      station: Prisma.$StationPayload<ExtArgs>
+      preparationStepTracks: Prisma.$PreparationStepTrackPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      createdAt: Date
+      name: string
+      includeComments: boolean
+      includeModifiers: boolean
+      stationId: string
+    }, ExtArgs["result"]["preparationStep"]>
+    composites: {}
+  }
+
+  type PreparationStepGetPayload<S extends boolean | null | undefined | PreparationStepDefaultArgs> = $Result.GetResult<Prisma.$PreparationStepPayload, S>
+
+  type PreparationStepCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<PreparationStepFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PreparationStepCountAggregateInputType | true
+    }
+
+  export interface PreparationStepDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PreparationStep'], meta: { name: 'PreparationStep' } }
+    /**
+     * Find zero or one PreparationStep that matches the filter.
+     * @param {PreparationStepFindUniqueArgs} args - Arguments to find a PreparationStep
+     * @example
+     * // Get one PreparationStep
+     * const preparationStep = await prisma.preparationStep.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PreparationStepFindUniqueArgs>(args: SelectSubset<T, PreparationStepFindUniqueArgs<ExtArgs>>): Prisma__PreparationStepClient<$Result.GetResult<Prisma.$PreparationStepPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one PreparationStep that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {PreparationStepFindUniqueOrThrowArgs} args - Arguments to find a PreparationStep
+     * @example
+     * // Get one PreparationStep
+     * const preparationStep = await prisma.preparationStep.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PreparationStepFindUniqueOrThrowArgs>(args: SelectSubset<T, PreparationStepFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PreparationStepClient<$Result.GetResult<Prisma.$PreparationStepPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PreparationStep that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PreparationStepFindFirstArgs} args - Arguments to find a PreparationStep
+     * @example
+     * // Get one PreparationStep
+     * const preparationStep = await prisma.preparationStep.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PreparationStepFindFirstArgs>(args?: SelectSubset<T, PreparationStepFindFirstArgs<ExtArgs>>): Prisma__PreparationStepClient<$Result.GetResult<Prisma.$PreparationStepPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PreparationStep that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PreparationStepFindFirstOrThrowArgs} args - Arguments to find a PreparationStep
+     * @example
+     * // Get one PreparationStep
+     * const preparationStep = await prisma.preparationStep.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PreparationStepFindFirstOrThrowArgs>(args?: SelectSubset<T, PreparationStepFindFirstOrThrowArgs<ExtArgs>>): Prisma__PreparationStepClient<$Result.GetResult<Prisma.$PreparationStepPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more PreparationSteps that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PreparationStepFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all PreparationSteps
+     * const preparationSteps = await prisma.preparationStep.findMany()
+     * 
+     * // Get first 10 PreparationSteps
+     * const preparationSteps = await prisma.preparationStep.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const preparationStepWithIdOnly = await prisma.preparationStep.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PreparationStepFindManyArgs>(args?: SelectSubset<T, PreparationStepFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PreparationStepPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a PreparationStep.
+     * @param {PreparationStepCreateArgs} args - Arguments to create a PreparationStep.
+     * @example
+     * // Create one PreparationStep
+     * const PreparationStep = await prisma.preparationStep.create({
+     *   data: {
+     *     // ... data to create a PreparationStep
+     *   }
+     * })
+     * 
+     */
+    create<T extends PreparationStepCreateArgs>(args: SelectSubset<T, PreparationStepCreateArgs<ExtArgs>>): Prisma__PreparationStepClient<$Result.GetResult<Prisma.$PreparationStepPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many PreparationSteps.
+     * @param {PreparationStepCreateManyArgs} args - Arguments to create many PreparationSteps.
+     * @example
+     * // Create many PreparationSteps
+     * const preparationStep = await prisma.preparationStep.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PreparationStepCreateManyArgs>(args?: SelectSubset<T, PreparationStepCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many PreparationSteps and returns the data saved in the database.
+     * @param {PreparationStepCreateManyAndReturnArgs} args - Arguments to create many PreparationSteps.
+     * @example
+     * // Create many PreparationSteps
+     * const preparationStep = await prisma.preparationStep.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many PreparationSteps and only return the `id`
+     * const preparationStepWithIdOnly = await prisma.preparationStep.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends PreparationStepCreateManyAndReturnArgs>(args?: SelectSubset<T, PreparationStepCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PreparationStepPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a PreparationStep.
+     * @param {PreparationStepDeleteArgs} args - Arguments to delete one PreparationStep.
+     * @example
+     * // Delete one PreparationStep
+     * const PreparationStep = await prisma.preparationStep.delete({
+     *   where: {
+     *     // ... filter to delete one PreparationStep
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PreparationStepDeleteArgs>(args: SelectSubset<T, PreparationStepDeleteArgs<ExtArgs>>): Prisma__PreparationStepClient<$Result.GetResult<Prisma.$PreparationStepPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one PreparationStep.
+     * @param {PreparationStepUpdateArgs} args - Arguments to update one PreparationStep.
+     * @example
+     * // Update one PreparationStep
+     * const preparationStep = await prisma.preparationStep.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PreparationStepUpdateArgs>(args: SelectSubset<T, PreparationStepUpdateArgs<ExtArgs>>): Prisma__PreparationStepClient<$Result.GetResult<Prisma.$PreparationStepPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more PreparationSteps.
+     * @param {PreparationStepDeleteManyArgs} args - Arguments to filter PreparationSteps to delete.
+     * @example
+     * // Delete a few PreparationSteps
+     * const { count } = await prisma.preparationStep.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PreparationStepDeleteManyArgs>(args?: SelectSubset<T, PreparationStepDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PreparationSteps.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PreparationStepUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many PreparationSteps
+     * const preparationStep = await prisma.preparationStep.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PreparationStepUpdateManyArgs>(args: SelectSubset<T, PreparationStepUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PreparationSteps and returns the data updated in the database.
+     * @param {PreparationStepUpdateManyAndReturnArgs} args - Arguments to update many PreparationSteps.
+     * @example
+     * // Update many PreparationSteps
+     * const preparationStep = await prisma.preparationStep.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more PreparationSteps and only return the `id`
+     * const preparationStepWithIdOnly = await prisma.preparationStep.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends PreparationStepUpdateManyAndReturnArgs>(args: SelectSubset<T, PreparationStepUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PreparationStepPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one PreparationStep.
+     * @param {PreparationStepUpsertArgs} args - Arguments to update or create a PreparationStep.
+     * @example
+     * // Update or create a PreparationStep
+     * const preparationStep = await prisma.preparationStep.upsert({
+     *   create: {
+     *     // ... data to create a PreparationStep
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the PreparationStep we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PreparationStepUpsertArgs>(args: SelectSubset<T, PreparationStepUpsertArgs<ExtArgs>>): Prisma__PreparationStepClient<$Result.GetResult<Prisma.$PreparationStepPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of PreparationSteps.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PreparationStepCountArgs} args - Arguments to filter PreparationSteps to count.
+     * @example
+     * // Count the number of PreparationSteps
+     * const count = await prisma.preparationStep.count({
+     *   where: {
+     *     // ... the filter for the PreparationSteps we want to count
+     *   }
+     * })
+    **/
+    count<T extends PreparationStepCountArgs>(
+      args?: Subset<T, PreparationStepCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PreparationStepCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a PreparationStep.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PreparationStepAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PreparationStepAggregateArgs>(args: Subset<T, PreparationStepAggregateArgs>): Prisma.PrismaPromise<GetPreparationStepAggregateType<T>>
+
+    /**
+     * Group by PreparationStep.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PreparationStepGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PreparationStepGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PreparationStepGroupByArgs['orderBy'] }
+        : { orderBy?: PreparationStepGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PreparationStepGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPreparationStepGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the PreparationStep model
+   */
+  readonly fields: PreparationStepFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for PreparationStep.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PreparationStepClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    products<T extends PreparationStep$productsArgs<ExtArgs> = {}>(args?: Subset<T, PreparationStep$productsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    station<T extends StationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, StationDefaultArgs<ExtArgs>>): Prisma__StationClient<$Result.GetResult<Prisma.$StationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    preparationStepTracks<T extends PreparationStep$preparationStepTracksArgs<ExtArgs> = {}>(args?: Subset<T, PreparationStep$preparationStepTracksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PreparationStepTrackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the PreparationStep model
+   */
+  interface PreparationStepFieldRefs {
+    readonly id: FieldRef<"PreparationStep", 'String'>
+    readonly createdAt: FieldRef<"PreparationStep", 'DateTime'>
+    readonly name: FieldRef<"PreparationStep", 'String'>
+    readonly includeComments: FieldRef<"PreparationStep", 'Boolean'>
+    readonly includeModifiers: FieldRef<"PreparationStep", 'Boolean'>
+    readonly stationId: FieldRef<"PreparationStep", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * PreparationStep findUnique
+   */
+  export type PreparationStepFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStep
+     */
+    select?: PreparationStepSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStep
+     */
+    omit?: PreparationStepOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepInclude<ExtArgs> | null
+    /**
+     * Filter, which PreparationStep to fetch.
+     */
+    where: PreparationStepWhereUniqueInput
+  }
+
+  /**
+   * PreparationStep findUniqueOrThrow
+   */
+  export type PreparationStepFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStep
+     */
+    select?: PreparationStepSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStep
+     */
+    omit?: PreparationStepOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepInclude<ExtArgs> | null
+    /**
+     * Filter, which PreparationStep to fetch.
+     */
+    where: PreparationStepWhereUniqueInput
+  }
+
+  /**
+   * PreparationStep findFirst
+   */
+  export type PreparationStepFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStep
+     */
+    select?: PreparationStepSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStep
+     */
+    omit?: PreparationStepOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepInclude<ExtArgs> | null
+    /**
+     * Filter, which PreparationStep to fetch.
+     */
+    where?: PreparationStepWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PreparationSteps to fetch.
+     */
+    orderBy?: PreparationStepOrderByWithRelationInput | PreparationStepOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PreparationSteps.
+     */
+    cursor?: PreparationStepWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PreparationSteps from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PreparationSteps.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PreparationSteps.
+     */
+    distinct?: PreparationStepScalarFieldEnum | PreparationStepScalarFieldEnum[]
+  }
+
+  /**
+   * PreparationStep findFirstOrThrow
+   */
+  export type PreparationStepFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStep
+     */
+    select?: PreparationStepSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStep
+     */
+    omit?: PreparationStepOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepInclude<ExtArgs> | null
+    /**
+     * Filter, which PreparationStep to fetch.
+     */
+    where?: PreparationStepWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PreparationSteps to fetch.
+     */
+    orderBy?: PreparationStepOrderByWithRelationInput | PreparationStepOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PreparationSteps.
+     */
+    cursor?: PreparationStepWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PreparationSteps from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PreparationSteps.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PreparationSteps.
+     */
+    distinct?: PreparationStepScalarFieldEnum | PreparationStepScalarFieldEnum[]
+  }
+
+  /**
+   * PreparationStep findMany
+   */
+  export type PreparationStepFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStep
+     */
+    select?: PreparationStepSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStep
+     */
+    omit?: PreparationStepOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepInclude<ExtArgs> | null
+    /**
+     * Filter, which PreparationSteps to fetch.
+     */
+    where?: PreparationStepWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PreparationSteps to fetch.
+     */
+    orderBy?: PreparationStepOrderByWithRelationInput | PreparationStepOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PreparationSteps.
+     */
+    cursor?: PreparationStepWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PreparationSteps from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PreparationSteps.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PreparationSteps.
+     */
+    distinct?: PreparationStepScalarFieldEnum | PreparationStepScalarFieldEnum[]
+  }
+
+  /**
+   * PreparationStep create
+   */
+  export type PreparationStepCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStep
+     */
+    select?: PreparationStepSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStep
+     */
+    omit?: PreparationStepOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepInclude<ExtArgs> | null
+    /**
+     * The data needed to create a PreparationStep.
+     */
+    data: XOR<PreparationStepCreateInput, PreparationStepUncheckedCreateInput>
+  }
+
+  /**
+   * PreparationStep createMany
+   */
+  export type PreparationStepCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many PreparationSteps.
+     */
+    data: PreparationStepCreateManyInput | PreparationStepCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * PreparationStep createManyAndReturn
+   */
+  export type PreparationStepCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStep
+     */
+    select?: PreparationStepSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStep
+     */
+    omit?: PreparationStepOmit<ExtArgs> | null
+    /**
+     * The data used to create many PreparationSteps.
+     */
+    data: PreparationStepCreateManyInput | PreparationStepCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * PreparationStep update
+   */
+  export type PreparationStepUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStep
+     */
+    select?: PreparationStepSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStep
+     */
+    omit?: PreparationStepOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepInclude<ExtArgs> | null
+    /**
+     * The data needed to update a PreparationStep.
+     */
+    data: XOR<PreparationStepUpdateInput, PreparationStepUncheckedUpdateInput>
+    /**
+     * Choose, which PreparationStep to update.
+     */
+    where: PreparationStepWhereUniqueInput
+  }
+
+  /**
+   * PreparationStep updateMany
+   */
+  export type PreparationStepUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update PreparationSteps.
+     */
+    data: XOR<PreparationStepUpdateManyMutationInput, PreparationStepUncheckedUpdateManyInput>
+    /**
+     * Filter which PreparationSteps to update
+     */
+    where?: PreparationStepWhereInput
+    /**
+     * Limit how many PreparationSteps to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * PreparationStep updateManyAndReturn
+   */
+  export type PreparationStepUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStep
+     */
+    select?: PreparationStepSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStep
+     */
+    omit?: PreparationStepOmit<ExtArgs> | null
+    /**
+     * The data used to update PreparationSteps.
+     */
+    data: XOR<PreparationStepUpdateManyMutationInput, PreparationStepUncheckedUpdateManyInput>
+    /**
+     * Filter which PreparationSteps to update
+     */
+    where?: PreparationStepWhereInput
+    /**
+     * Limit how many PreparationSteps to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * PreparationStep upsert
+   */
+  export type PreparationStepUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStep
+     */
+    select?: PreparationStepSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStep
+     */
+    omit?: PreparationStepOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepInclude<ExtArgs> | null
+    /**
+     * The filter to search for the PreparationStep to update in case it exists.
+     */
+    where: PreparationStepWhereUniqueInput
+    /**
+     * In case the PreparationStep found by the `where` argument doesn't exist, create a new PreparationStep with this data.
+     */
+    create: XOR<PreparationStepCreateInput, PreparationStepUncheckedCreateInput>
+    /**
+     * In case the PreparationStep was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PreparationStepUpdateInput, PreparationStepUncheckedUpdateInput>
+  }
+
+  /**
+   * PreparationStep delete
+   */
+  export type PreparationStepDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStep
+     */
+    select?: PreparationStepSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStep
+     */
+    omit?: PreparationStepOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepInclude<ExtArgs> | null
+    /**
+     * Filter which PreparationStep to delete.
+     */
+    where: PreparationStepWhereUniqueInput
+  }
+
+  /**
+   * PreparationStep deleteMany
+   */
+  export type PreparationStepDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PreparationSteps to delete
+     */
+    where?: PreparationStepWhereInput
+    /**
+     * Limit how many PreparationSteps to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * PreparationStep.products
+   */
+  export type PreparationStep$productsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Product
+     */
+    select?: ProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Product
+     */
+    omit?: ProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductInclude<ExtArgs> | null
+    where?: ProductWhereInput
+    orderBy?: ProductOrderByWithRelationInput | ProductOrderByWithRelationInput[]
+    cursor?: ProductWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProductScalarFieldEnum | ProductScalarFieldEnum[]
+  }
+
+  /**
+   * PreparationStep.preparationStepTracks
+   */
+  export type PreparationStep$preparationStepTracksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStepTrack
+     */
+    select?: PreparationStepTrackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStepTrack
+     */
+    omit?: PreparationStepTrackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepTrackInclude<ExtArgs> | null
+    where?: PreparationStepTrackWhereInput
+    orderBy?: PreparationStepTrackOrderByWithRelationInput | PreparationStepTrackOrderByWithRelationInput[]
+    cursor?: PreparationStepTrackWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PreparationStepTrackScalarFieldEnum | PreparationStepTrackScalarFieldEnum[]
+  }
+
+  /**
+   * PreparationStep without action
+   */
+  export type PreparationStepDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStep
+     */
+    select?: PreparationStepSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStep
+     */
+    omit?: PreparationStepOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model PreparationStepCategory
+   */
+
+  export type AggregatePreparationStepCategory = {
+    _count: PreparationStepCategoryCountAggregateOutputType | null
+    _min: PreparationStepCategoryMinAggregateOutputType | null
+    _max: PreparationStepCategoryMaxAggregateOutputType | null
+  }
+
+  export type PreparationStepCategoryMinAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    categoryId: string | null
+    completed: boolean | null
+    orderId: string | null
+  }
+
+  export type PreparationStepCategoryMaxAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    categoryId: string | null
+    completed: boolean | null
+    orderId: string | null
+  }
+
+  export type PreparationStepCategoryCountAggregateOutputType = {
+    id: number
+    createdAt: number
+    categoryId: number
+    completed: number
+    orderId: number
+    _all: number
+  }
+
+
+  export type PreparationStepCategoryMinAggregateInputType = {
+    id?: true
+    createdAt?: true
+    categoryId?: true
+    completed?: true
+    orderId?: true
+  }
+
+  export type PreparationStepCategoryMaxAggregateInputType = {
+    id?: true
+    createdAt?: true
+    categoryId?: true
+    completed?: true
+    orderId?: true
+  }
+
+  export type PreparationStepCategoryCountAggregateInputType = {
+    id?: true
+    createdAt?: true
+    categoryId?: true
+    completed?: true
+    orderId?: true
+    _all?: true
+  }
+
+  export type PreparationStepCategoryAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PreparationStepCategory to aggregate.
+     */
+    where?: PreparationStepCategoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PreparationStepCategories to fetch.
+     */
+    orderBy?: PreparationStepCategoryOrderByWithRelationInput | PreparationStepCategoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PreparationStepCategoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PreparationStepCategories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PreparationStepCategories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned PreparationStepCategories
+    **/
+    _count?: true | PreparationStepCategoryCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PreparationStepCategoryMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PreparationStepCategoryMaxAggregateInputType
+  }
+
+  export type GetPreparationStepCategoryAggregateType<T extends PreparationStepCategoryAggregateArgs> = {
+        [P in keyof T & keyof AggregatePreparationStepCategory]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePreparationStepCategory[P]>
+      : GetScalarType<T[P], AggregatePreparationStepCategory[P]>
+  }
+
+
+
+
+  export type PreparationStepCategoryGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PreparationStepCategoryWhereInput
+    orderBy?: PreparationStepCategoryOrderByWithAggregationInput | PreparationStepCategoryOrderByWithAggregationInput[]
+    by: PreparationStepCategoryScalarFieldEnum[] | PreparationStepCategoryScalarFieldEnum
+    having?: PreparationStepCategoryScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PreparationStepCategoryCountAggregateInputType | true
+    _min?: PreparationStepCategoryMinAggregateInputType
+    _max?: PreparationStepCategoryMaxAggregateInputType
+  }
+
+  export type PreparationStepCategoryGroupByOutputType = {
+    id: string
+    createdAt: Date
+    categoryId: string
+    completed: boolean
+    orderId: string
+    _count: PreparationStepCategoryCountAggregateOutputType | null
+    _min: PreparationStepCategoryMinAggregateOutputType | null
+    _max: PreparationStepCategoryMaxAggregateOutputType | null
+  }
+
+  type GetPreparationStepCategoryGroupByPayload<T extends PreparationStepCategoryGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PreparationStepCategoryGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PreparationStepCategoryGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PreparationStepCategoryGroupByOutputType[P]>
+            : GetScalarType<T[P], PreparationStepCategoryGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PreparationStepCategorySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    categoryId?: boolean
+    completed?: boolean
+    orderId?: boolean
+    category?: boolean | CategoryDefaultArgs<ExtArgs>
+    order?: boolean | OrderDefaultArgs<ExtArgs>
+    preparationStepTracks?: boolean | PreparationStepCategory$preparationStepTracksArgs<ExtArgs>
+    _count?: boolean | PreparationStepCategoryCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["preparationStepCategory"]>
+
+  export type PreparationStepCategorySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    categoryId?: boolean
+    completed?: boolean
+    orderId?: boolean
+    category?: boolean | CategoryDefaultArgs<ExtArgs>
+    order?: boolean | OrderDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["preparationStepCategory"]>
+
+  export type PreparationStepCategorySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    categoryId?: boolean
+    completed?: boolean
+    orderId?: boolean
+    category?: boolean | CategoryDefaultArgs<ExtArgs>
+    order?: boolean | OrderDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["preparationStepCategory"]>
+
+  export type PreparationStepCategorySelectScalar = {
+    id?: boolean
+    createdAt?: boolean
+    categoryId?: boolean
+    completed?: boolean
+    orderId?: boolean
+  }
+
+  export type PreparationStepCategoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "categoryId" | "completed" | "orderId", ExtArgs["result"]["preparationStepCategory"]>
+  export type PreparationStepCategoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    category?: boolean | CategoryDefaultArgs<ExtArgs>
+    order?: boolean | OrderDefaultArgs<ExtArgs>
+    preparationStepTracks?: boolean | PreparationStepCategory$preparationStepTracksArgs<ExtArgs>
+    _count?: boolean | PreparationStepCategoryCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type PreparationStepCategoryIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    category?: boolean | CategoryDefaultArgs<ExtArgs>
+    order?: boolean | OrderDefaultArgs<ExtArgs>
+  }
+  export type PreparationStepCategoryIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    category?: boolean | CategoryDefaultArgs<ExtArgs>
+    order?: boolean | OrderDefaultArgs<ExtArgs>
+  }
+
+  export type $PreparationStepCategoryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PreparationStepCategory"
+    objects: {
+      category: Prisma.$CategoryPayload<ExtArgs>
+      order: Prisma.$OrderPayload<ExtArgs>
+      preparationStepTracks: Prisma.$PreparationStepTrackPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      createdAt: Date
+      categoryId: string
+      completed: boolean
+      orderId: string
+    }, ExtArgs["result"]["preparationStepCategory"]>
+    composites: {}
+  }
+
+  type PreparationStepCategoryGetPayload<S extends boolean | null | undefined | PreparationStepCategoryDefaultArgs> = $Result.GetResult<Prisma.$PreparationStepCategoryPayload, S>
+
+  type PreparationStepCategoryCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<PreparationStepCategoryFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PreparationStepCategoryCountAggregateInputType | true
+    }
+
+  export interface PreparationStepCategoryDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PreparationStepCategory'], meta: { name: 'PreparationStepCategory' } }
+    /**
+     * Find zero or one PreparationStepCategory that matches the filter.
+     * @param {PreparationStepCategoryFindUniqueArgs} args - Arguments to find a PreparationStepCategory
+     * @example
+     * // Get one PreparationStepCategory
+     * const preparationStepCategory = await prisma.preparationStepCategory.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PreparationStepCategoryFindUniqueArgs>(args: SelectSubset<T, PreparationStepCategoryFindUniqueArgs<ExtArgs>>): Prisma__PreparationStepCategoryClient<$Result.GetResult<Prisma.$PreparationStepCategoryPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one PreparationStepCategory that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {PreparationStepCategoryFindUniqueOrThrowArgs} args - Arguments to find a PreparationStepCategory
+     * @example
+     * // Get one PreparationStepCategory
+     * const preparationStepCategory = await prisma.preparationStepCategory.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PreparationStepCategoryFindUniqueOrThrowArgs>(args: SelectSubset<T, PreparationStepCategoryFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PreparationStepCategoryClient<$Result.GetResult<Prisma.$PreparationStepCategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PreparationStepCategory that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PreparationStepCategoryFindFirstArgs} args - Arguments to find a PreparationStepCategory
+     * @example
+     * // Get one PreparationStepCategory
+     * const preparationStepCategory = await prisma.preparationStepCategory.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PreparationStepCategoryFindFirstArgs>(args?: SelectSubset<T, PreparationStepCategoryFindFirstArgs<ExtArgs>>): Prisma__PreparationStepCategoryClient<$Result.GetResult<Prisma.$PreparationStepCategoryPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PreparationStepCategory that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PreparationStepCategoryFindFirstOrThrowArgs} args - Arguments to find a PreparationStepCategory
+     * @example
+     * // Get one PreparationStepCategory
+     * const preparationStepCategory = await prisma.preparationStepCategory.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PreparationStepCategoryFindFirstOrThrowArgs>(args?: SelectSubset<T, PreparationStepCategoryFindFirstOrThrowArgs<ExtArgs>>): Prisma__PreparationStepCategoryClient<$Result.GetResult<Prisma.$PreparationStepCategoryPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more PreparationStepCategories that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PreparationStepCategoryFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all PreparationStepCategories
+     * const preparationStepCategories = await prisma.preparationStepCategory.findMany()
+     * 
+     * // Get first 10 PreparationStepCategories
+     * const preparationStepCategories = await prisma.preparationStepCategory.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const preparationStepCategoryWithIdOnly = await prisma.preparationStepCategory.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PreparationStepCategoryFindManyArgs>(args?: SelectSubset<T, PreparationStepCategoryFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PreparationStepCategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a PreparationStepCategory.
+     * @param {PreparationStepCategoryCreateArgs} args - Arguments to create a PreparationStepCategory.
+     * @example
+     * // Create one PreparationStepCategory
+     * const PreparationStepCategory = await prisma.preparationStepCategory.create({
+     *   data: {
+     *     // ... data to create a PreparationStepCategory
+     *   }
+     * })
+     * 
+     */
+    create<T extends PreparationStepCategoryCreateArgs>(args: SelectSubset<T, PreparationStepCategoryCreateArgs<ExtArgs>>): Prisma__PreparationStepCategoryClient<$Result.GetResult<Prisma.$PreparationStepCategoryPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many PreparationStepCategories.
+     * @param {PreparationStepCategoryCreateManyArgs} args - Arguments to create many PreparationStepCategories.
+     * @example
+     * // Create many PreparationStepCategories
+     * const preparationStepCategory = await prisma.preparationStepCategory.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PreparationStepCategoryCreateManyArgs>(args?: SelectSubset<T, PreparationStepCategoryCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many PreparationStepCategories and returns the data saved in the database.
+     * @param {PreparationStepCategoryCreateManyAndReturnArgs} args - Arguments to create many PreparationStepCategories.
+     * @example
+     * // Create many PreparationStepCategories
+     * const preparationStepCategory = await prisma.preparationStepCategory.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many PreparationStepCategories and only return the `id`
+     * const preparationStepCategoryWithIdOnly = await prisma.preparationStepCategory.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends PreparationStepCategoryCreateManyAndReturnArgs>(args?: SelectSubset<T, PreparationStepCategoryCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PreparationStepCategoryPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a PreparationStepCategory.
+     * @param {PreparationStepCategoryDeleteArgs} args - Arguments to delete one PreparationStepCategory.
+     * @example
+     * // Delete one PreparationStepCategory
+     * const PreparationStepCategory = await prisma.preparationStepCategory.delete({
+     *   where: {
+     *     // ... filter to delete one PreparationStepCategory
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PreparationStepCategoryDeleteArgs>(args: SelectSubset<T, PreparationStepCategoryDeleteArgs<ExtArgs>>): Prisma__PreparationStepCategoryClient<$Result.GetResult<Prisma.$PreparationStepCategoryPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one PreparationStepCategory.
+     * @param {PreparationStepCategoryUpdateArgs} args - Arguments to update one PreparationStepCategory.
+     * @example
+     * // Update one PreparationStepCategory
+     * const preparationStepCategory = await prisma.preparationStepCategory.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PreparationStepCategoryUpdateArgs>(args: SelectSubset<T, PreparationStepCategoryUpdateArgs<ExtArgs>>): Prisma__PreparationStepCategoryClient<$Result.GetResult<Prisma.$PreparationStepCategoryPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more PreparationStepCategories.
+     * @param {PreparationStepCategoryDeleteManyArgs} args - Arguments to filter PreparationStepCategories to delete.
+     * @example
+     * // Delete a few PreparationStepCategories
+     * const { count } = await prisma.preparationStepCategory.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PreparationStepCategoryDeleteManyArgs>(args?: SelectSubset<T, PreparationStepCategoryDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PreparationStepCategories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PreparationStepCategoryUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many PreparationStepCategories
+     * const preparationStepCategory = await prisma.preparationStepCategory.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PreparationStepCategoryUpdateManyArgs>(args: SelectSubset<T, PreparationStepCategoryUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PreparationStepCategories and returns the data updated in the database.
+     * @param {PreparationStepCategoryUpdateManyAndReturnArgs} args - Arguments to update many PreparationStepCategories.
+     * @example
+     * // Update many PreparationStepCategories
+     * const preparationStepCategory = await prisma.preparationStepCategory.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more PreparationStepCategories and only return the `id`
+     * const preparationStepCategoryWithIdOnly = await prisma.preparationStepCategory.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends PreparationStepCategoryUpdateManyAndReturnArgs>(args: SelectSubset<T, PreparationStepCategoryUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PreparationStepCategoryPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one PreparationStepCategory.
+     * @param {PreparationStepCategoryUpsertArgs} args - Arguments to update or create a PreparationStepCategory.
+     * @example
+     * // Update or create a PreparationStepCategory
+     * const preparationStepCategory = await prisma.preparationStepCategory.upsert({
+     *   create: {
+     *     // ... data to create a PreparationStepCategory
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the PreparationStepCategory we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PreparationStepCategoryUpsertArgs>(args: SelectSubset<T, PreparationStepCategoryUpsertArgs<ExtArgs>>): Prisma__PreparationStepCategoryClient<$Result.GetResult<Prisma.$PreparationStepCategoryPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of PreparationStepCategories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PreparationStepCategoryCountArgs} args - Arguments to filter PreparationStepCategories to count.
+     * @example
+     * // Count the number of PreparationStepCategories
+     * const count = await prisma.preparationStepCategory.count({
+     *   where: {
+     *     // ... the filter for the PreparationStepCategories we want to count
+     *   }
+     * })
+    **/
+    count<T extends PreparationStepCategoryCountArgs>(
+      args?: Subset<T, PreparationStepCategoryCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PreparationStepCategoryCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a PreparationStepCategory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PreparationStepCategoryAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PreparationStepCategoryAggregateArgs>(args: Subset<T, PreparationStepCategoryAggregateArgs>): Prisma.PrismaPromise<GetPreparationStepCategoryAggregateType<T>>
+
+    /**
+     * Group by PreparationStepCategory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PreparationStepCategoryGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PreparationStepCategoryGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PreparationStepCategoryGroupByArgs['orderBy'] }
+        : { orderBy?: PreparationStepCategoryGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PreparationStepCategoryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPreparationStepCategoryGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the PreparationStepCategory model
+   */
+  readonly fields: PreparationStepCategoryFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for PreparationStepCategory.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PreparationStepCategoryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    category<T extends CategoryDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CategoryDefaultArgs<ExtArgs>>): Prisma__CategoryClient<$Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    order<T extends OrderDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrderDefaultArgs<ExtArgs>>): Prisma__OrderClient<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    preparationStepTracks<T extends PreparationStepCategory$preparationStepTracksArgs<ExtArgs> = {}>(args?: Subset<T, PreparationStepCategory$preparationStepTracksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PreparationStepTrackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the PreparationStepCategory model
+   */
+  interface PreparationStepCategoryFieldRefs {
+    readonly id: FieldRef<"PreparationStepCategory", 'String'>
+    readonly createdAt: FieldRef<"PreparationStepCategory", 'DateTime'>
+    readonly categoryId: FieldRef<"PreparationStepCategory", 'String'>
+    readonly completed: FieldRef<"PreparationStepCategory", 'Boolean'>
+    readonly orderId: FieldRef<"PreparationStepCategory", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * PreparationStepCategory findUnique
+   */
+  export type PreparationStepCategoryFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStepCategory
+     */
+    select?: PreparationStepCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStepCategory
+     */
+    omit?: PreparationStepCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepCategoryInclude<ExtArgs> | null
+    /**
+     * Filter, which PreparationStepCategory to fetch.
+     */
+    where: PreparationStepCategoryWhereUniqueInput
+  }
+
+  /**
+   * PreparationStepCategory findUniqueOrThrow
+   */
+  export type PreparationStepCategoryFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStepCategory
+     */
+    select?: PreparationStepCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStepCategory
+     */
+    omit?: PreparationStepCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepCategoryInclude<ExtArgs> | null
+    /**
+     * Filter, which PreparationStepCategory to fetch.
+     */
+    where: PreparationStepCategoryWhereUniqueInput
+  }
+
+  /**
+   * PreparationStepCategory findFirst
+   */
+  export type PreparationStepCategoryFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStepCategory
+     */
+    select?: PreparationStepCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStepCategory
+     */
+    omit?: PreparationStepCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepCategoryInclude<ExtArgs> | null
+    /**
+     * Filter, which PreparationStepCategory to fetch.
+     */
+    where?: PreparationStepCategoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PreparationStepCategories to fetch.
+     */
+    orderBy?: PreparationStepCategoryOrderByWithRelationInput | PreparationStepCategoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PreparationStepCategories.
+     */
+    cursor?: PreparationStepCategoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PreparationStepCategories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PreparationStepCategories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PreparationStepCategories.
+     */
+    distinct?: PreparationStepCategoryScalarFieldEnum | PreparationStepCategoryScalarFieldEnum[]
+  }
+
+  /**
+   * PreparationStepCategory findFirstOrThrow
+   */
+  export type PreparationStepCategoryFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStepCategory
+     */
+    select?: PreparationStepCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStepCategory
+     */
+    omit?: PreparationStepCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepCategoryInclude<ExtArgs> | null
+    /**
+     * Filter, which PreparationStepCategory to fetch.
+     */
+    where?: PreparationStepCategoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PreparationStepCategories to fetch.
+     */
+    orderBy?: PreparationStepCategoryOrderByWithRelationInput | PreparationStepCategoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PreparationStepCategories.
+     */
+    cursor?: PreparationStepCategoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PreparationStepCategories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PreparationStepCategories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PreparationStepCategories.
+     */
+    distinct?: PreparationStepCategoryScalarFieldEnum | PreparationStepCategoryScalarFieldEnum[]
+  }
+
+  /**
+   * PreparationStepCategory findMany
+   */
+  export type PreparationStepCategoryFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStepCategory
+     */
+    select?: PreparationStepCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStepCategory
+     */
+    omit?: PreparationStepCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepCategoryInclude<ExtArgs> | null
+    /**
+     * Filter, which PreparationStepCategories to fetch.
+     */
+    where?: PreparationStepCategoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PreparationStepCategories to fetch.
+     */
+    orderBy?: PreparationStepCategoryOrderByWithRelationInput | PreparationStepCategoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PreparationStepCategories.
+     */
+    cursor?: PreparationStepCategoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PreparationStepCategories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PreparationStepCategories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PreparationStepCategories.
+     */
+    distinct?: PreparationStepCategoryScalarFieldEnum | PreparationStepCategoryScalarFieldEnum[]
+  }
+
+  /**
+   * PreparationStepCategory create
+   */
+  export type PreparationStepCategoryCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStepCategory
+     */
+    select?: PreparationStepCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStepCategory
+     */
+    omit?: PreparationStepCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepCategoryInclude<ExtArgs> | null
+    /**
+     * The data needed to create a PreparationStepCategory.
+     */
+    data: XOR<PreparationStepCategoryCreateInput, PreparationStepCategoryUncheckedCreateInput>
+  }
+
+  /**
+   * PreparationStepCategory createMany
+   */
+  export type PreparationStepCategoryCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many PreparationStepCategories.
+     */
+    data: PreparationStepCategoryCreateManyInput | PreparationStepCategoryCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * PreparationStepCategory createManyAndReturn
+   */
+  export type PreparationStepCategoryCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStepCategory
+     */
+    select?: PreparationStepCategorySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStepCategory
+     */
+    omit?: PreparationStepCategoryOmit<ExtArgs> | null
+    /**
+     * The data used to create many PreparationStepCategories.
+     */
+    data: PreparationStepCategoryCreateManyInput | PreparationStepCategoryCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepCategoryIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * PreparationStepCategory update
+   */
+  export type PreparationStepCategoryUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStepCategory
+     */
+    select?: PreparationStepCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStepCategory
+     */
+    omit?: PreparationStepCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepCategoryInclude<ExtArgs> | null
+    /**
+     * The data needed to update a PreparationStepCategory.
+     */
+    data: XOR<PreparationStepCategoryUpdateInput, PreparationStepCategoryUncheckedUpdateInput>
+    /**
+     * Choose, which PreparationStepCategory to update.
+     */
+    where: PreparationStepCategoryWhereUniqueInput
+  }
+
+  /**
+   * PreparationStepCategory updateMany
+   */
+  export type PreparationStepCategoryUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update PreparationStepCategories.
+     */
+    data: XOR<PreparationStepCategoryUpdateManyMutationInput, PreparationStepCategoryUncheckedUpdateManyInput>
+    /**
+     * Filter which PreparationStepCategories to update
+     */
+    where?: PreparationStepCategoryWhereInput
+    /**
+     * Limit how many PreparationStepCategories to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * PreparationStepCategory updateManyAndReturn
+   */
+  export type PreparationStepCategoryUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStepCategory
+     */
+    select?: PreparationStepCategorySelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStepCategory
+     */
+    omit?: PreparationStepCategoryOmit<ExtArgs> | null
+    /**
+     * The data used to update PreparationStepCategories.
+     */
+    data: XOR<PreparationStepCategoryUpdateManyMutationInput, PreparationStepCategoryUncheckedUpdateManyInput>
+    /**
+     * Filter which PreparationStepCategories to update
+     */
+    where?: PreparationStepCategoryWhereInput
+    /**
+     * Limit how many PreparationStepCategories to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepCategoryIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * PreparationStepCategory upsert
+   */
+  export type PreparationStepCategoryUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStepCategory
+     */
+    select?: PreparationStepCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStepCategory
+     */
+    omit?: PreparationStepCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepCategoryInclude<ExtArgs> | null
+    /**
+     * The filter to search for the PreparationStepCategory to update in case it exists.
+     */
+    where: PreparationStepCategoryWhereUniqueInput
+    /**
+     * In case the PreparationStepCategory found by the `where` argument doesn't exist, create a new PreparationStepCategory with this data.
+     */
+    create: XOR<PreparationStepCategoryCreateInput, PreparationStepCategoryUncheckedCreateInput>
+    /**
+     * In case the PreparationStepCategory was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PreparationStepCategoryUpdateInput, PreparationStepCategoryUncheckedUpdateInput>
+  }
+
+  /**
+   * PreparationStepCategory delete
+   */
+  export type PreparationStepCategoryDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStepCategory
+     */
+    select?: PreparationStepCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStepCategory
+     */
+    omit?: PreparationStepCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepCategoryInclude<ExtArgs> | null
+    /**
+     * Filter which PreparationStepCategory to delete.
+     */
+    where: PreparationStepCategoryWhereUniqueInput
+  }
+
+  /**
+   * PreparationStepCategory deleteMany
+   */
+  export type PreparationStepCategoryDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PreparationStepCategories to delete
+     */
+    where?: PreparationStepCategoryWhereInput
+    /**
+     * Limit how many PreparationStepCategories to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * PreparationStepCategory.preparationStepTracks
+   */
+  export type PreparationStepCategory$preparationStepTracksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStepTrack
+     */
+    select?: PreparationStepTrackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStepTrack
+     */
+    omit?: PreparationStepTrackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepTrackInclude<ExtArgs> | null
+    where?: PreparationStepTrackWhereInput
+    orderBy?: PreparationStepTrackOrderByWithRelationInput | PreparationStepTrackOrderByWithRelationInput[]
+    cursor?: PreparationStepTrackWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PreparationStepTrackScalarFieldEnum | PreparationStepTrackScalarFieldEnum[]
+  }
+
+  /**
+   * PreparationStepCategory without action
+   */
+  export type PreparationStepCategoryDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStepCategory
+     */
+    select?: PreparationStepCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStepCategory
+     */
+    omit?: PreparationStepCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepCategoryInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model PreparationStepTrack
+   */
+
+  export type AggregatePreparationStepTrack = {
+    _count: PreparationStepTrackCountAggregateOutputType | null
+    _avg: PreparationStepTrackAvgAggregateOutputType | null
+    _sum: PreparationStepTrackSumAggregateOutputType | null
+    _min: PreparationStepTrackMinAggregateOutputType | null
+    _max: PreparationStepTrackMaxAggregateOutputType | null
+  }
+
+  export type PreparationStepTrackAvgAggregateOutputType = {
+    quantity: number | null
+  }
+
+  export type PreparationStepTrackSumAggregateOutputType = {
+    quantity: number | null
+  }
+
+  export type PreparationStepTrackMinAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    completed: boolean | null
+    quantity: number | null
+    comments: string | null
+    completedComments: boolean | null
+    preparationStepId: string | null
+    preparationStepCategoryId: string | null
+  }
+
+  export type PreparationStepTrackMaxAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    completed: boolean | null
+    quantity: number | null
+    comments: string | null
+    completedComments: boolean | null
+    preparationStepId: string | null
+    preparationStepCategoryId: string | null
+  }
+
+  export type PreparationStepTrackCountAggregateOutputType = {
+    id: number
+    createdAt: number
+    completed: number
+    quantity: number
+    comments: number
+    completedComments: number
+    preparationStepId: number
+    preparationStepCategoryId: number
+    _all: number
+  }
+
+
+  export type PreparationStepTrackAvgAggregateInputType = {
+    quantity?: true
+  }
+
+  export type PreparationStepTrackSumAggregateInputType = {
+    quantity?: true
+  }
+
+  export type PreparationStepTrackMinAggregateInputType = {
+    id?: true
+    createdAt?: true
+    completed?: true
+    quantity?: true
+    comments?: true
+    completedComments?: true
+    preparationStepId?: true
+    preparationStepCategoryId?: true
+  }
+
+  export type PreparationStepTrackMaxAggregateInputType = {
+    id?: true
+    createdAt?: true
+    completed?: true
+    quantity?: true
+    comments?: true
+    completedComments?: true
+    preparationStepId?: true
+    preparationStepCategoryId?: true
+  }
+
+  export type PreparationStepTrackCountAggregateInputType = {
+    id?: true
+    createdAt?: true
+    completed?: true
+    quantity?: true
+    comments?: true
+    completedComments?: true
+    preparationStepId?: true
+    preparationStepCategoryId?: true
+    _all?: true
+  }
+
+  export type PreparationStepTrackAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PreparationStepTrack to aggregate.
+     */
+    where?: PreparationStepTrackWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PreparationStepTracks to fetch.
+     */
+    orderBy?: PreparationStepTrackOrderByWithRelationInput | PreparationStepTrackOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PreparationStepTrackWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PreparationStepTracks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PreparationStepTracks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned PreparationStepTracks
+    **/
+    _count?: true | PreparationStepTrackCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: PreparationStepTrackAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: PreparationStepTrackSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PreparationStepTrackMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PreparationStepTrackMaxAggregateInputType
+  }
+
+  export type GetPreparationStepTrackAggregateType<T extends PreparationStepTrackAggregateArgs> = {
+        [P in keyof T & keyof AggregatePreparationStepTrack]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePreparationStepTrack[P]>
+      : GetScalarType<T[P], AggregatePreparationStepTrack[P]>
+  }
+
+
+
+
+  export type PreparationStepTrackGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PreparationStepTrackWhereInput
+    orderBy?: PreparationStepTrackOrderByWithAggregationInput | PreparationStepTrackOrderByWithAggregationInput[]
+    by: PreparationStepTrackScalarFieldEnum[] | PreparationStepTrackScalarFieldEnum
+    having?: PreparationStepTrackScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PreparationStepTrackCountAggregateInputType | true
+    _avg?: PreparationStepTrackAvgAggregateInputType
+    _sum?: PreparationStepTrackSumAggregateInputType
+    _min?: PreparationStepTrackMinAggregateInputType
+    _max?: PreparationStepTrackMaxAggregateInputType
+  }
+
+  export type PreparationStepTrackGroupByOutputType = {
+    id: string
+    createdAt: Date
+    completed: boolean
+    quantity: number | null
+    comments: string | null
+    completedComments: boolean
+    preparationStepId: string
+    preparationStepCategoryId: string
+    _count: PreparationStepTrackCountAggregateOutputType | null
+    _avg: PreparationStepTrackAvgAggregateOutputType | null
+    _sum: PreparationStepTrackSumAggregateOutputType | null
+    _min: PreparationStepTrackMinAggregateOutputType | null
+    _max: PreparationStepTrackMaxAggregateOutputType | null
+  }
+
+  type GetPreparationStepTrackGroupByPayload<T extends PreparationStepTrackGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PreparationStepTrackGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PreparationStepTrackGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PreparationStepTrackGroupByOutputType[P]>
+            : GetScalarType<T[P], PreparationStepTrackGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PreparationStepTrackSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    completed?: boolean
+    quantity?: boolean
+    comments?: boolean
+    completedComments?: boolean
+    preparationStepId?: boolean
+    preparationStepCategoryId?: boolean
+    preparationStepModifierTracks?: boolean | PreparationStepTrack$preparationStepModifierTracksArgs<ExtArgs>
+    preparationStep?: boolean | PreparationStepDefaultArgs<ExtArgs>
+    preparationStepCategory?: boolean | PreparationStepCategoryDefaultArgs<ExtArgs>
+    _count?: boolean | PreparationStepTrackCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["preparationStepTrack"]>
+
+  export type PreparationStepTrackSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    completed?: boolean
+    quantity?: boolean
+    comments?: boolean
+    completedComments?: boolean
+    preparationStepId?: boolean
+    preparationStepCategoryId?: boolean
+    preparationStep?: boolean | PreparationStepDefaultArgs<ExtArgs>
+    preparationStepCategory?: boolean | PreparationStepCategoryDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["preparationStepTrack"]>
+
+  export type PreparationStepTrackSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    completed?: boolean
+    quantity?: boolean
+    comments?: boolean
+    completedComments?: boolean
+    preparationStepId?: boolean
+    preparationStepCategoryId?: boolean
+    preparationStep?: boolean | PreparationStepDefaultArgs<ExtArgs>
+    preparationStepCategory?: boolean | PreparationStepCategoryDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["preparationStepTrack"]>
+
+  export type PreparationStepTrackSelectScalar = {
+    id?: boolean
+    createdAt?: boolean
+    completed?: boolean
+    quantity?: boolean
+    comments?: boolean
+    completedComments?: boolean
+    preparationStepId?: boolean
+    preparationStepCategoryId?: boolean
+  }
+
+  export type PreparationStepTrackOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "completed" | "quantity" | "comments" | "completedComments" | "preparationStepId" | "preparationStepCategoryId", ExtArgs["result"]["preparationStepTrack"]>
+  export type PreparationStepTrackInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    preparationStepModifierTracks?: boolean | PreparationStepTrack$preparationStepModifierTracksArgs<ExtArgs>
+    preparationStep?: boolean | PreparationStepDefaultArgs<ExtArgs>
+    preparationStepCategory?: boolean | PreparationStepCategoryDefaultArgs<ExtArgs>
+    _count?: boolean | PreparationStepTrackCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type PreparationStepTrackIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    preparationStep?: boolean | PreparationStepDefaultArgs<ExtArgs>
+    preparationStepCategory?: boolean | PreparationStepCategoryDefaultArgs<ExtArgs>
+  }
+  export type PreparationStepTrackIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    preparationStep?: boolean | PreparationStepDefaultArgs<ExtArgs>
+    preparationStepCategory?: boolean | PreparationStepCategoryDefaultArgs<ExtArgs>
+  }
+
+  export type $PreparationStepTrackPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PreparationStepTrack"
+    objects: {
+      preparationStepModifierTracks: Prisma.$PreparationStepModifierTrackPayload<ExtArgs>[]
+      preparationStep: Prisma.$PreparationStepPayload<ExtArgs>
+      preparationStepCategory: Prisma.$PreparationStepCategoryPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      createdAt: Date
+      completed: boolean
+      quantity: number | null
+      comments: string | null
+      completedComments: boolean
+      preparationStepId: string
+      preparationStepCategoryId: string
+    }, ExtArgs["result"]["preparationStepTrack"]>
+    composites: {}
+  }
+
+  type PreparationStepTrackGetPayload<S extends boolean | null | undefined | PreparationStepTrackDefaultArgs> = $Result.GetResult<Prisma.$PreparationStepTrackPayload, S>
+
+  type PreparationStepTrackCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<PreparationStepTrackFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PreparationStepTrackCountAggregateInputType | true
+    }
+
+  export interface PreparationStepTrackDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PreparationStepTrack'], meta: { name: 'PreparationStepTrack' } }
+    /**
+     * Find zero or one PreparationStepTrack that matches the filter.
+     * @param {PreparationStepTrackFindUniqueArgs} args - Arguments to find a PreparationStepTrack
+     * @example
+     * // Get one PreparationStepTrack
+     * const preparationStepTrack = await prisma.preparationStepTrack.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PreparationStepTrackFindUniqueArgs>(args: SelectSubset<T, PreparationStepTrackFindUniqueArgs<ExtArgs>>): Prisma__PreparationStepTrackClient<$Result.GetResult<Prisma.$PreparationStepTrackPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one PreparationStepTrack that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {PreparationStepTrackFindUniqueOrThrowArgs} args - Arguments to find a PreparationStepTrack
+     * @example
+     * // Get one PreparationStepTrack
+     * const preparationStepTrack = await prisma.preparationStepTrack.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PreparationStepTrackFindUniqueOrThrowArgs>(args: SelectSubset<T, PreparationStepTrackFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PreparationStepTrackClient<$Result.GetResult<Prisma.$PreparationStepTrackPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PreparationStepTrack that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PreparationStepTrackFindFirstArgs} args - Arguments to find a PreparationStepTrack
+     * @example
+     * // Get one PreparationStepTrack
+     * const preparationStepTrack = await prisma.preparationStepTrack.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PreparationStepTrackFindFirstArgs>(args?: SelectSubset<T, PreparationStepTrackFindFirstArgs<ExtArgs>>): Prisma__PreparationStepTrackClient<$Result.GetResult<Prisma.$PreparationStepTrackPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PreparationStepTrack that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PreparationStepTrackFindFirstOrThrowArgs} args - Arguments to find a PreparationStepTrack
+     * @example
+     * // Get one PreparationStepTrack
+     * const preparationStepTrack = await prisma.preparationStepTrack.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PreparationStepTrackFindFirstOrThrowArgs>(args?: SelectSubset<T, PreparationStepTrackFindFirstOrThrowArgs<ExtArgs>>): Prisma__PreparationStepTrackClient<$Result.GetResult<Prisma.$PreparationStepTrackPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more PreparationStepTracks that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PreparationStepTrackFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all PreparationStepTracks
+     * const preparationStepTracks = await prisma.preparationStepTrack.findMany()
+     * 
+     * // Get first 10 PreparationStepTracks
+     * const preparationStepTracks = await prisma.preparationStepTrack.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const preparationStepTrackWithIdOnly = await prisma.preparationStepTrack.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PreparationStepTrackFindManyArgs>(args?: SelectSubset<T, PreparationStepTrackFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PreparationStepTrackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a PreparationStepTrack.
+     * @param {PreparationStepTrackCreateArgs} args - Arguments to create a PreparationStepTrack.
+     * @example
+     * // Create one PreparationStepTrack
+     * const PreparationStepTrack = await prisma.preparationStepTrack.create({
+     *   data: {
+     *     // ... data to create a PreparationStepTrack
+     *   }
+     * })
+     * 
+     */
+    create<T extends PreparationStepTrackCreateArgs>(args: SelectSubset<T, PreparationStepTrackCreateArgs<ExtArgs>>): Prisma__PreparationStepTrackClient<$Result.GetResult<Prisma.$PreparationStepTrackPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many PreparationStepTracks.
+     * @param {PreparationStepTrackCreateManyArgs} args - Arguments to create many PreparationStepTracks.
+     * @example
+     * // Create many PreparationStepTracks
+     * const preparationStepTrack = await prisma.preparationStepTrack.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PreparationStepTrackCreateManyArgs>(args?: SelectSubset<T, PreparationStepTrackCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many PreparationStepTracks and returns the data saved in the database.
+     * @param {PreparationStepTrackCreateManyAndReturnArgs} args - Arguments to create many PreparationStepTracks.
+     * @example
+     * // Create many PreparationStepTracks
+     * const preparationStepTrack = await prisma.preparationStepTrack.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many PreparationStepTracks and only return the `id`
+     * const preparationStepTrackWithIdOnly = await prisma.preparationStepTrack.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends PreparationStepTrackCreateManyAndReturnArgs>(args?: SelectSubset<T, PreparationStepTrackCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PreparationStepTrackPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a PreparationStepTrack.
+     * @param {PreparationStepTrackDeleteArgs} args - Arguments to delete one PreparationStepTrack.
+     * @example
+     * // Delete one PreparationStepTrack
+     * const PreparationStepTrack = await prisma.preparationStepTrack.delete({
+     *   where: {
+     *     // ... filter to delete one PreparationStepTrack
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PreparationStepTrackDeleteArgs>(args: SelectSubset<T, PreparationStepTrackDeleteArgs<ExtArgs>>): Prisma__PreparationStepTrackClient<$Result.GetResult<Prisma.$PreparationStepTrackPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one PreparationStepTrack.
+     * @param {PreparationStepTrackUpdateArgs} args - Arguments to update one PreparationStepTrack.
+     * @example
+     * // Update one PreparationStepTrack
+     * const preparationStepTrack = await prisma.preparationStepTrack.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PreparationStepTrackUpdateArgs>(args: SelectSubset<T, PreparationStepTrackUpdateArgs<ExtArgs>>): Prisma__PreparationStepTrackClient<$Result.GetResult<Prisma.$PreparationStepTrackPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more PreparationStepTracks.
+     * @param {PreparationStepTrackDeleteManyArgs} args - Arguments to filter PreparationStepTracks to delete.
+     * @example
+     * // Delete a few PreparationStepTracks
+     * const { count } = await prisma.preparationStepTrack.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PreparationStepTrackDeleteManyArgs>(args?: SelectSubset<T, PreparationStepTrackDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PreparationStepTracks.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PreparationStepTrackUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many PreparationStepTracks
+     * const preparationStepTrack = await prisma.preparationStepTrack.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PreparationStepTrackUpdateManyArgs>(args: SelectSubset<T, PreparationStepTrackUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PreparationStepTracks and returns the data updated in the database.
+     * @param {PreparationStepTrackUpdateManyAndReturnArgs} args - Arguments to update many PreparationStepTracks.
+     * @example
+     * // Update many PreparationStepTracks
+     * const preparationStepTrack = await prisma.preparationStepTrack.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more PreparationStepTracks and only return the `id`
+     * const preparationStepTrackWithIdOnly = await prisma.preparationStepTrack.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends PreparationStepTrackUpdateManyAndReturnArgs>(args: SelectSubset<T, PreparationStepTrackUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PreparationStepTrackPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one PreparationStepTrack.
+     * @param {PreparationStepTrackUpsertArgs} args - Arguments to update or create a PreparationStepTrack.
+     * @example
+     * // Update or create a PreparationStepTrack
+     * const preparationStepTrack = await prisma.preparationStepTrack.upsert({
+     *   create: {
+     *     // ... data to create a PreparationStepTrack
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the PreparationStepTrack we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PreparationStepTrackUpsertArgs>(args: SelectSubset<T, PreparationStepTrackUpsertArgs<ExtArgs>>): Prisma__PreparationStepTrackClient<$Result.GetResult<Prisma.$PreparationStepTrackPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of PreparationStepTracks.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PreparationStepTrackCountArgs} args - Arguments to filter PreparationStepTracks to count.
+     * @example
+     * // Count the number of PreparationStepTracks
+     * const count = await prisma.preparationStepTrack.count({
+     *   where: {
+     *     // ... the filter for the PreparationStepTracks we want to count
+     *   }
+     * })
+    **/
+    count<T extends PreparationStepTrackCountArgs>(
+      args?: Subset<T, PreparationStepTrackCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PreparationStepTrackCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a PreparationStepTrack.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PreparationStepTrackAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PreparationStepTrackAggregateArgs>(args: Subset<T, PreparationStepTrackAggregateArgs>): Prisma.PrismaPromise<GetPreparationStepTrackAggregateType<T>>
+
+    /**
+     * Group by PreparationStepTrack.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PreparationStepTrackGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PreparationStepTrackGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PreparationStepTrackGroupByArgs['orderBy'] }
+        : { orderBy?: PreparationStepTrackGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PreparationStepTrackGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPreparationStepTrackGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the PreparationStepTrack model
+   */
+  readonly fields: PreparationStepTrackFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for PreparationStepTrack.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PreparationStepTrackClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    preparationStepModifierTracks<T extends PreparationStepTrack$preparationStepModifierTracksArgs<ExtArgs> = {}>(args?: Subset<T, PreparationStepTrack$preparationStepModifierTracksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PreparationStepModifierTrackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    preparationStep<T extends PreparationStepDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PreparationStepDefaultArgs<ExtArgs>>): Prisma__PreparationStepClient<$Result.GetResult<Prisma.$PreparationStepPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    preparationStepCategory<T extends PreparationStepCategoryDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PreparationStepCategoryDefaultArgs<ExtArgs>>): Prisma__PreparationStepCategoryClient<$Result.GetResult<Prisma.$PreparationStepCategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the PreparationStepTrack model
+   */
+  interface PreparationStepTrackFieldRefs {
+    readonly id: FieldRef<"PreparationStepTrack", 'String'>
+    readonly createdAt: FieldRef<"PreparationStepTrack", 'DateTime'>
+    readonly completed: FieldRef<"PreparationStepTrack", 'Boolean'>
+    readonly quantity: FieldRef<"PreparationStepTrack", 'Int'>
+    readonly comments: FieldRef<"PreparationStepTrack", 'String'>
+    readonly completedComments: FieldRef<"PreparationStepTrack", 'Boolean'>
+    readonly preparationStepId: FieldRef<"PreparationStepTrack", 'String'>
+    readonly preparationStepCategoryId: FieldRef<"PreparationStepTrack", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * PreparationStepTrack findUnique
+   */
+  export type PreparationStepTrackFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStepTrack
+     */
+    select?: PreparationStepTrackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStepTrack
+     */
+    omit?: PreparationStepTrackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepTrackInclude<ExtArgs> | null
+    /**
+     * Filter, which PreparationStepTrack to fetch.
+     */
+    where: PreparationStepTrackWhereUniqueInput
+  }
+
+  /**
+   * PreparationStepTrack findUniqueOrThrow
+   */
+  export type PreparationStepTrackFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStepTrack
+     */
+    select?: PreparationStepTrackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStepTrack
+     */
+    omit?: PreparationStepTrackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepTrackInclude<ExtArgs> | null
+    /**
+     * Filter, which PreparationStepTrack to fetch.
+     */
+    where: PreparationStepTrackWhereUniqueInput
+  }
+
+  /**
+   * PreparationStepTrack findFirst
+   */
+  export type PreparationStepTrackFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStepTrack
+     */
+    select?: PreparationStepTrackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStepTrack
+     */
+    omit?: PreparationStepTrackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepTrackInclude<ExtArgs> | null
+    /**
+     * Filter, which PreparationStepTrack to fetch.
+     */
+    where?: PreparationStepTrackWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PreparationStepTracks to fetch.
+     */
+    orderBy?: PreparationStepTrackOrderByWithRelationInput | PreparationStepTrackOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PreparationStepTracks.
+     */
+    cursor?: PreparationStepTrackWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PreparationStepTracks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PreparationStepTracks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PreparationStepTracks.
+     */
+    distinct?: PreparationStepTrackScalarFieldEnum | PreparationStepTrackScalarFieldEnum[]
+  }
+
+  /**
+   * PreparationStepTrack findFirstOrThrow
+   */
+  export type PreparationStepTrackFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStepTrack
+     */
+    select?: PreparationStepTrackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStepTrack
+     */
+    omit?: PreparationStepTrackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepTrackInclude<ExtArgs> | null
+    /**
+     * Filter, which PreparationStepTrack to fetch.
+     */
+    where?: PreparationStepTrackWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PreparationStepTracks to fetch.
+     */
+    orderBy?: PreparationStepTrackOrderByWithRelationInput | PreparationStepTrackOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PreparationStepTracks.
+     */
+    cursor?: PreparationStepTrackWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PreparationStepTracks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PreparationStepTracks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PreparationStepTracks.
+     */
+    distinct?: PreparationStepTrackScalarFieldEnum | PreparationStepTrackScalarFieldEnum[]
+  }
+
+  /**
+   * PreparationStepTrack findMany
+   */
+  export type PreparationStepTrackFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStepTrack
+     */
+    select?: PreparationStepTrackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStepTrack
+     */
+    omit?: PreparationStepTrackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepTrackInclude<ExtArgs> | null
+    /**
+     * Filter, which PreparationStepTracks to fetch.
+     */
+    where?: PreparationStepTrackWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PreparationStepTracks to fetch.
+     */
+    orderBy?: PreparationStepTrackOrderByWithRelationInput | PreparationStepTrackOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PreparationStepTracks.
+     */
+    cursor?: PreparationStepTrackWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PreparationStepTracks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PreparationStepTracks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PreparationStepTracks.
+     */
+    distinct?: PreparationStepTrackScalarFieldEnum | PreparationStepTrackScalarFieldEnum[]
+  }
+
+  /**
+   * PreparationStepTrack create
+   */
+  export type PreparationStepTrackCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStepTrack
+     */
+    select?: PreparationStepTrackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStepTrack
+     */
+    omit?: PreparationStepTrackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepTrackInclude<ExtArgs> | null
+    /**
+     * The data needed to create a PreparationStepTrack.
+     */
+    data: XOR<PreparationStepTrackCreateInput, PreparationStepTrackUncheckedCreateInput>
+  }
+
+  /**
+   * PreparationStepTrack createMany
+   */
+  export type PreparationStepTrackCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many PreparationStepTracks.
+     */
+    data: PreparationStepTrackCreateManyInput | PreparationStepTrackCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * PreparationStepTrack createManyAndReturn
+   */
+  export type PreparationStepTrackCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStepTrack
+     */
+    select?: PreparationStepTrackSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStepTrack
+     */
+    omit?: PreparationStepTrackOmit<ExtArgs> | null
+    /**
+     * The data used to create many PreparationStepTracks.
+     */
+    data: PreparationStepTrackCreateManyInput | PreparationStepTrackCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepTrackIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * PreparationStepTrack update
+   */
+  export type PreparationStepTrackUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStepTrack
+     */
+    select?: PreparationStepTrackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStepTrack
+     */
+    omit?: PreparationStepTrackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepTrackInclude<ExtArgs> | null
+    /**
+     * The data needed to update a PreparationStepTrack.
+     */
+    data: XOR<PreparationStepTrackUpdateInput, PreparationStepTrackUncheckedUpdateInput>
+    /**
+     * Choose, which PreparationStepTrack to update.
+     */
+    where: PreparationStepTrackWhereUniqueInput
+  }
+
+  /**
+   * PreparationStepTrack updateMany
+   */
+  export type PreparationStepTrackUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update PreparationStepTracks.
+     */
+    data: XOR<PreparationStepTrackUpdateManyMutationInput, PreparationStepTrackUncheckedUpdateManyInput>
+    /**
+     * Filter which PreparationStepTracks to update
+     */
+    where?: PreparationStepTrackWhereInput
+    /**
+     * Limit how many PreparationStepTracks to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * PreparationStepTrack updateManyAndReturn
+   */
+  export type PreparationStepTrackUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStepTrack
+     */
+    select?: PreparationStepTrackSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStepTrack
+     */
+    omit?: PreparationStepTrackOmit<ExtArgs> | null
+    /**
+     * The data used to update PreparationStepTracks.
+     */
+    data: XOR<PreparationStepTrackUpdateManyMutationInput, PreparationStepTrackUncheckedUpdateManyInput>
+    /**
+     * Filter which PreparationStepTracks to update
+     */
+    where?: PreparationStepTrackWhereInput
+    /**
+     * Limit how many PreparationStepTracks to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepTrackIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * PreparationStepTrack upsert
+   */
+  export type PreparationStepTrackUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStepTrack
+     */
+    select?: PreparationStepTrackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStepTrack
+     */
+    omit?: PreparationStepTrackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepTrackInclude<ExtArgs> | null
+    /**
+     * The filter to search for the PreparationStepTrack to update in case it exists.
+     */
+    where: PreparationStepTrackWhereUniqueInput
+    /**
+     * In case the PreparationStepTrack found by the `where` argument doesn't exist, create a new PreparationStepTrack with this data.
+     */
+    create: XOR<PreparationStepTrackCreateInput, PreparationStepTrackUncheckedCreateInput>
+    /**
+     * In case the PreparationStepTrack was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PreparationStepTrackUpdateInput, PreparationStepTrackUncheckedUpdateInput>
+  }
+
+  /**
+   * PreparationStepTrack delete
+   */
+  export type PreparationStepTrackDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStepTrack
+     */
+    select?: PreparationStepTrackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStepTrack
+     */
+    omit?: PreparationStepTrackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepTrackInclude<ExtArgs> | null
+    /**
+     * Filter which PreparationStepTrack to delete.
+     */
+    where: PreparationStepTrackWhereUniqueInput
+  }
+
+  /**
+   * PreparationStepTrack deleteMany
+   */
+  export type PreparationStepTrackDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PreparationStepTracks to delete
+     */
+    where?: PreparationStepTrackWhereInput
+    /**
+     * Limit how many PreparationStepTracks to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * PreparationStepTrack.preparationStepModifierTracks
+   */
+  export type PreparationStepTrack$preparationStepModifierTracksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStepModifierTrack
+     */
+    select?: PreparationStepModifierTrackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStepModifierTrack
+     */
+    omit?: PreparationStepModifierTrackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepModifierTrackInclude<ExtArgs> | null
+    where?: PreparationStepModifierTrackWhereInput
+    orderBy?: PreparationStepModifierTrackOrderByWithRelationInput | PreparationStepModifierTrackOrderByWithRelationInput[]
+    cursor?: PreparationStepModifierTrackWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PreparationStepModifierTrackScalarFieldEnum | PreparationStepModifierTrackScalarFieldEnum[]
+  }
+
+  /**
+   * PreparationStepTrack without action
+   */
+  export type PreparationStepTrackDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStepTrack
+     */
+    select?: PreparationStepTrackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStepTrack
+     */
+    omit?: PreparationStepTrackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepTrackInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model PreparationStepModifierTrack
+   */
+
+  export type AggregatePreparationStepModifierTrack = {
+    _count: PreparationStepModifierTrackCountAggregateOutputType | null
+    _min: PreparationStepModifierTrackMinAggregateOutputType | null
+    _max: PreparationStepModifierTrackMaxAggregateOutputType | null
+  }
+
+  export type PreparationStepModifierTrackMinAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    completed: boolean | null
+    modifierGroupItemId: string | null
+    preparationStepTrackId: string | null
+  }
+
+  export type PreparationStepModifierTrackMaxAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    completed: boolean | null
+    modifierGroupItemId: string | null
+    preparationStepTrackId: string | null
+  }
+
+  export type PreparationStepModifierTrackCountAggregateOutputType = {
+    id: number
+    createdAt: number
+    completed: number
+    modifierGroupItemId: number
+    preparationStepTrackId: number
+    _all: number
+  }
+
+
+  export type PreparationStepModifierTrackMinAggregateInputType = {
+    id?: true
+    createdAt?: true
+    completed?: true
+    modifierGroupItemId?: true
+    preparationStepTrackId?: true
+  }
+
+  export type PreparationStepModifierTrackMaxAggregateInputType = {
+    id?: true
+    createdAt?: true
+    completed?: true
+    modifierGroupItemId?: true
+    preparationStepTrackId?: true
+  }
+
+  export type PreparationStepModifierTrackCountAggregateInputType = {
+    id?: true
+    createdAt?: true
+    completed?: true
+    modifierGroupItemId?: true
+    preparationStepTrackId?: true
+    _all?: true
+  }
+
+  export type PreparationStepModifierTrackAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PreparationStepModifierTrack to aggregate.
+     */
+    where?: PreparationStepModifierTrackWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PreparationStepModifierTracks to fetch.
+     */
+    orderBy?: PreparationStepModifierTrackOrderByWithRelationInput | PreparationStepModifierTrackOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PreparationStepModifierTrackWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PreparationStepModifierTracks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PreparationStepModifierTracks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned PreparationStepModifierTracks
+    **/
+    _count?: true | PreparationStepModifierTrackCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PreparationStepModifierTrackMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PreparationStepModifierTrackMaxAggregateInputType
+  }
+
+  export type GetPreparationStepModifierTrackAggregateType<T extends PreparationStepModifierTrackAggregateArgs> = {
+        [P in keyof T & keyof AggregatePreparationStepModifierTrack]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePreparationStepModifierTrack[P]>
+      : GetScalarType<T[P], AggregatePreparationStepModifierTrack[P]>
+  }
+
+
+
+
+  export type PreparationStepModifierTrackGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PreparationStepModifierTrackWhereInput
+    orderBy?: PreparationStepModifierTrackOrderByWithAggregationInput | PreparationStepModifierTrackOrderByWithAggregationInput[]
+    by: PreparationStepModifierTrackScalarFieldEnum[] | PreparationStepModifierTrackScalarFieldEnum
+    having?: PreparationStepModifierTrackScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PreparationStepModifierTrackCountAggregateInputType | true
+    _min?: PreparationStepModifierTrackMinAggregateInputType
+    _max?: PreparationStepModifierTrackMaxAggregateInputType
+  }
+
+  export type PreparationStepModifierTrackGroupByOutputType = {
+    id: string
+    createdAt: Date
+    completed: boolean
+    modifierGroupItemId: string
+    preparationStepTrackId: string
+    _count: PreparationStepModifierTrackCountAggregateOutputType | null
+    _min: PreparationStepModifierTrackMinAggregateOutputType | null
+    _max: PreparationStepModifierTrackMaxAggregateOutputType | null
+  }
+
+  type GetPreparationStepModifierTrackGroupByPayload<T extends PreparationStepModifierTrackGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PreparationStepModifierTrackGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PreparationStepModifierTrackGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PreparationStepModifierTrackGroupByOutputType[P]>
+            : GetScalarType<T[P], PreparationStepModifierTrackGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PreparationStepModifierTrackSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    completed?: boolean
+    modifierGroupItemId?: boolean
+    preparationStepTrackId?: boolean
+    modifierGroupItem?: boolean | ModifierGroupItemDefaultArgs<ExtArgs>
+    preparationStepTrack?: boolean | PreparationStepTrackDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["preparationStepModifierTrack"]>
+
+  export type PreparationStepModifierTrackSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    completed?: boolean
+    modifierGroupItemId?: boolean
+    preparationStepTrackId?: boolean
+    modifierGroupItem?: boolean | ModifierGroupItemDefaultArgs<ExtArgs>
+    preparationStepTrack?: boolean | PreparationStepTrackDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["preparationStepModifierTrack"]>
+
+  export type PreparationStepModifierTrackSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    completed?: boolean
+    modifierGroupItemId?: boolean
+    preparationStepTrackId?: boolean
+    modifierGroupItem?: boolean | ModifierGroupItemDefaultArgs<ExtArgs>
+    preparationStepTrack?: boolean | PreparationStepTrackDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["preparationStepModifierTrack"]>
+
+  export type PreparationStepModifierTrackSelectScalar = {
+    id?: boolean
+    createdAt?: boolean
+    completed?: boolean
+    modifierGroupItemId?: boolean
+    preparationStepTrackId?: boolean
+  }
+
+  export type PreparationStepModifierTrackOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "completed" | "modifierGroupItemId" | "preparationStepTrackId", ExtArgs["result"]["preparationStepModifierTrack"]>
+  export type PreparationStepModifierTrackInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    modifierGroupItem?: boolean | ModifierGroupItemDefaultArgs<ExtArgs>
+    preparationStepTrack?: boolean | PreparationStepTrackDefaultArgs<ExtArgs>
+  }
+  export type PreparationStepModifierTrackIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    modifierGroupItem?: boolean | ModifierGroupItemDefaultArgs<ExtArgs>
+    preparationStepTrack?: boolean | PreparationStepTrackDefaultArgs<ExtArgs>
+  }
+  export type PreparationStepModifierTrackIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    modifierGroupItem?: boolean | ModifierGroupItemDefaultArgs<ExtArgs>
+    preparationStepTrack?: boolean | PreparationStepTrackDefaultArgs<ExtArgs>
+  }
+
+  export type $PreparationStepModifierTrackPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PreparationStepModifierTrack"
+    objects: {
+      modifierGroupItem: Prisma.$ModifierGroupItemPayload<ExtArgs>
+      preparationStepTrack: Prisma.$PreparationStepTrackPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      createdAt: Date
+      completed: boolean
+      modifierGroupItemId: string
+      preparationStepTrackId: string
+    }, ExtArgs["result"]["preparationStepModifierTrack"]>
+    composites: {}
+  }
+
+  type PreparationStepModifierTrackGetPayload<S extends boolean | null | undefined | PreparationStepModifierTrackDefaultArgs> = $Result.GetResult<Prisma.$PreparationStepModifierTrackPayload, S>
+
+  type PreparationStepModifierTrackCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<PreparationStepModifierTrackFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PreparationStepModifierTrackCountAggregateInputType | true
+    }
+
+  export interface PreparationStepModifierTrackDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PreparationStepModifierTrack'], meta: { name: 'PreparationStepModifierTrack' } }
+    /**
+     * Find zero or one PreparationStepModifierTrack that matches the filter.
+     * @param {PreparationStepModifierTrackFindUniqueArgs} args - Arguments to find a PreparationStepModifierTrack
+     * @example
+     * // Get one PreparationStepModifierTrack
+     * const preparationStepModifierTrack = await prisma.preparationStepModifierTrack.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PreparationStepModifierTrackFindUniqueArgs>(args: SelectSubset<T, PreparationStepModifierTrackFindUniqueArgs<ExtArgs>>): Prisma__PreparationStepModifierTrackClient<$Result.GetResult<Prisma.$PreparationStepModifierTrackPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one PreparationStepModifierTrack that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {PreparationStepModifierTrackFindUniqueOrThrowArgs} args - Arguments to find a PreparationStepModifierTrack
+     * @example
+     * // Get one PreparationStepModifierTrack
+     * const preparationStepModifierTrack = await prisma.preparationStepModifierTrack.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PreparationStepModifierTrackFindUniqueOrThrowArgs>(args: SelectSubset<T, PreparationStepModifierTrackFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PreparationStepModifierTrackClient<$Result.GetResult<Prisma.$PreparationStepModifierTrackPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PreparationStepModifierTrack that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PreparationStepModifierTrackFindFirstArgs} args - Arguments to find a PreparationStepModifierTrack
+     * @example
+     * // Get one PreparationStepModifierTrack
+     * const preparationStepModifierTrack = await prisma.preparationStepModifierTrack.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PreparationStepModifierTrackFindFirstArgs>(args?: SelectSubset<T, PreparationStepModifierTrackFindFirstArgs<ExtArgs>>): Prisma__PreparationStepModifierTrackClient<$Result.GetResult<Prisma.$PreparationStepModifierTrackPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PreparationStepModifierTrack that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PreparationStepModifierTrackFindFirstOrThrowArgs} args - Arguments to find a PreparationStepModifierTrack
+     * @example
+     * // Get one PreparationStepModifierTrack
+     * const preparationStepModifierTrack = await prisma.preparationStepModifierTrack.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PreparationStepModifierTrackFindFirstOrThrowArgs>(args?: SelectSubset<T, PreparationStepModifierTrackFindFirstOrThrowArgs<ExtArgs>>): Prisma__PreparationStepModifierTrackClient<$Result.GetResult<Prisma.$PreparationStepModifierTrackPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more PreparationStepModifierTracks that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PreparationStepModifierTrackFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all PreparationStepModifierTracks
+     * const preparationStepModifierTracks = await prisma.preparationStepModifierTrack.findMany()
+     * 
+     * // Get first 10 PreparationStepModifierTracks
+     * const preparationStepModifierTracks = await prisma.preparationStepModifierTrack.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const preparationStepModifierTrackWithIdOnly = await prisma.preparationStepModifierTrack.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PreparationStepModifierTrackFindManyArgs>(args?: SelectSubset<T, PreparationStepModifierTrackFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PreparationStepModifierTrackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a PreparationStepModifierTrack.
+     * @param {PreparationStepModifierTrackCreateArgs} args - Arguments to create a PreparationStepModifierTrack.
+     * @example
+     * // Create one PreparationStepModifierTrack
+     * const PreparationStepModifierTrack = await prisma.preparationStepModifierTrack.create({
+     *   data: {
+     *     // ... data to create a PreparationStepModifierTrack
+     *   }
+     * })
+     * 
+     */
+    create<T extends PreparationStepModifierTrackCreateArgs>(args: SelectSubset<T, PreparationStepModifierTrackCreateArgs<ExtArgs>>): Prisma__PreparationStepModifierTrackClient<$Result.GetResult<Prisma.$PreparationStepModifierTrackPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many PreparationStepModifierTracks.
+     * @param {PreparationStepModifierTrackCreateManyArgs} args - Arguments to create many PreparationStepModifierTracks.
+     * @example
+     * // Create many PreparationStepModifierTracks
+     * const preparationStepModifierTrack = await prisma.preparationStepModifierTrack.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PreparationStepModifierTrackCreateManyArgs>(args?: SelectSubset<T, PreparationStepModifierTrackCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many PreparationStepModifierTracks and returns the data saved in the database.
+     * @param {PreparationStepModifierTrackCreateManyAndReturnArgs} args - Arguments to create many PreparationStepModifierTracks.
+     * @example
+     * // Create many PreparationStepModifierTracks
+     * const preparationStepModifierTrack = await prisma.preparationStepModifierTrack.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many PreparationStepModifierTracks and only return the `id`
+     * const preparationStepModifierTrackWithIdOnly = await prisma.preparationStepModifierTrack.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends PreparationStepModifierTrackCreateManyAndReturnArgs>(args?: SelectSubset<T, PreparationStepModifierTrackCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PreparationStepModifierTrackPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a PreparationStepModifierTrack.
+     * @param {PreparationStepModifierTrackDeleteArgs} args - Arguments to delete one PreparationStepModifierTrack.
+     * @example
+     * // Delete one PreparationStepModifierTrack
+     * const PreparationStepModifierTrack = await prisma.preparationStepModifierTrack.delete({
+     *   where: {
+     *     // ... filter to delete one PreparationStepModifierTrack
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PreparationStepModifierTrackDeleteArgs>(args: SelectSubset<T, PreparationStepModifierTrackDeleteArgs<ExtArgs>>): Prisma__PreparationStepModifierTrackClient<$Result.GetResult<Prisma.$PreparationStepModifierTrackPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one PreparationStepModifierTrack.
+     * @param {PreparationStepModifierTrackUpdateArgs} args - Arguments to update one PreparationStepModifierTrack.
+     * @example
+     * // Update one PreparationStepModifierTrack
+     * const preparationStepModifierTrack = await prisma.preparationStepModifierTrack.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PreparationStepModifierTrackUpdateArgs>(args: SelectSubset<T, PreparationStepModifierTrackUpdateArgs<ExtArgs>>): Prisma__PreparationStepModifierTrackClient<$Result.GetResult<Prisma.$PreparationStepModifierTrackPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more PreparationStepModifierTracks.
+     * @param {PreparationStepModifierTrackDeleteManyArgs} args - Arguments to filter PreparationStepModifierTracks to delete.
+     * @example
+     * // Delete a few PreparationStepModifierTracks
+     * const { count } = await prisma.preparationStepModifierTrack.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PreparationStepModifierTrackDeleteManyArgs>(args?: SelectSubset<T, PreparationStepModifierTrackDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PreparationStepModifierTracks.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PreparationStepModifierTrackUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many PreparationStepModifierTracks
+     * const preparationStepModifierTrack = await prisma.preparationStepModifierTrack.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PreparationStepModifierTrackUpdateManyArgs>(args: SelectSubset<T, PreparationStepModifierTrackUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PreparationStepModifierTracks and returns the data updated in the database.
+     * @param {PreparationStepModifierTrackUpdateManyAndReturnArgs} args - Arguments to update many PreparationStepModifierTracks.
+     * @example
+     * // Update many PreparationStepModifierTracks
+     * const preparationStepModifierTrack = await prisma.preparationStepModifierTrack.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more PreparationStepModifierTracks and only return the `id`
+     * const preparationStepModifierTrackWithIdOnly = await prisma.preparationStepModifierTrack.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends PreparationStepModifierTrackUpdateManyAndReturnArgs>(args: SelectSubset<T, PreparationStepModifierTrackUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PreparationStepModifierTrackPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one PreparationStepModifierTrack.
+     * @param {PreparationStepModifierTrackUpsertArgs} args - Arguments to update or create a PreparationStepModifierTrack.
+     * @example
+     * // Update or create a PreparationStepModifierTrack
+     * const preparationStepModifierTrack = await prisma.preparationStepModifierTrack.upsert({
+     *   create: {
+     *     // ... data to create a PreparationStepModifierTrack
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the PreparationStepModifierTrack we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PreparationStepModifierTrackUpsertArgs>(args: SelectSubset<T, PreparationStepModifierTrackUpsertArgs<ExtArgs>>): Prisma__PreparationStepModifierTrackClient<$Result.GetResult<Prisma.$PreparationStepModifierTrackPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of PreparationStepModifierTracks.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PreparationStepModifierTrackCountArgs} args - Arguments to filter PreparationStepModifierTracks to count.
+     * @example
+     * // Count the number of PreparationStepModifierTracks
+     * const count = await prisma.preparationStepModifierTrack.count({
+     *   where: {
+     *     // ... the filter for the PreparationStepModifierTracks we want to count
+     *   }
+     * })
+    **/
+    count<T extends PreparationStepModifierTrackCountArgs>(
+      args?: Subset<T, PreparationStepModifierTrackCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PreparationStepModifierTrackCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a PreparationStepModifierTrack.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PreparationStepModifierTrackAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PreparationStepModifierTrackAggregateArgs>(args: Subset<T, PreparationStepModifierTrackAggregateArgs>): Prisma.PrismaPromise<GetPreparationStepModifierTrackAggregateType<T>>
+
+    /**
+     * Group by PreparationStepModifierTrack.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PreparationStepModifierTrackGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PreparationStepModifierTrackGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PreparationStepModifierTrackGroupByArgs['orderBy'] }
+        : { orderBy?: PreparationStepModifierTrackGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PreparationStepModifierTrackGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPreparationStepModifierTrackGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the PreparationStepModifierTrack model
+   */
+  readonly fields: PreparationStepModifierTrackFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for PreparationStepModifierTrack.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PreparationStepModifierTrackClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    modifierGroupItem<T extends ModifierGroupItemDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ModifierGroupItemDefaultArgs<ExtArgs>>): Prisma__ModifierGroupItemClient<$Result.GetResult<Prisma.$ModifierGroupItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    preparationStepTrack<T extends PreparationStepTrackDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PreparationStepTrackDefaultArgs<ExtArgs>>): Prisma__PreparationStepTrackClient<$Result.GetResult<Prisma.$PreparationStepTrackPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the PreparationStepModifierTrack model
+   */
+  interface PreparationStepModifierTrackFieldRefs {
+    readonly id: FieldRef<"PreparationStepModifierTrack", 'String'>
+    readonly createdAt: FieldRef<"PreparationStepModifierTrack", 'DateTime'>
+    readonly completed: FieldRef<"PreparationStepModifierTrack", 'Boolean'>
+    readonly modifierGroupItemId: FieldRef<"PreparationStepModifierTrack", 'String'>
+    readonly preparationStepTrackId: FieldRef<"PreparationStepModifierTrack", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * PreparationStepModifierTrack findUnique
+   */
+  export type PreparationStepModifierTrackFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStepModifierTrack
+     */
+    select?: PreparationStepModifierTrackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStepModifierTrack
+     */
+    omit?: PreparationStepModifierTrackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepModifierTrackInclude<ExtArgs> | null
+    /**
+     * Filter, which PreparationStepModifierTrack to fetch.
+     */
+    where: PreparationStepModifierTrackWhereUniqueInput
+  }
+
+  /**
+   * PreparationStepModifierTrack findUniqueOrThrow
+   */
+  export type PreparationStepModifierTrackFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStepModifierTrack
+     */
+    select?: PreparationStepModifierTrackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStepModifierTrack
+     */
+    omit?: PreparationStepModifierTrackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepModifierTrackInclude<ExtArgs> | null
+    /**
+     * Filter, which PreparationStepModifierTrack to fetch.
+     */
+    where: PreparationStepModifierTrackWhereUniqueInput
+  }
+
+  /**
+   * PreparationStepModifierTrack findFirst
+   */
+  export type PreparationStepModifierTrackFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStepModifierTrack
+     */
+    select?: PreparationStepModifierTrackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStepModifierTrack
+     */
+    omit?: PreparationStepModifierTrackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepModifierTrackInclude<ExtArgs> | null
+    /**
+     * Filter, which PreparationStepModifierTrack to fetch.
+     */
+    where?: PreparationStepModifierTrackWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PreparationStepModifierTracks to fetch.
+     */
+    orderBy?: PreparationStepModifierTrackOrderByWithRelationInput | PreparationStepModifierTrackOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PreparationStepModifierTracks.
+     */
+    cursor?: PreparationStepModifierTrackWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PreparationStepModifierTracks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PreparationStepModifierTracks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PreparationStepModifierTracks.
+     */
+    distinct?: PreparationStepModifierTrackScalarFieldEnum | PreparationStepModifierTrackScalarFieldEnum[]
+  }
+
+  /**
+   * PreparationStepModifierTrack findFirstOrThrow
+   */
+  export type PreparationStepModifierTrackFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStepModifierTrack
+     */
+    select?: PreparationStepModifierTrackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStepModifierTrack
+     */
+    omit?: PreparationStepModifierTrackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepModifierTrackInclude<ExtArgs> | null
+    /**
+     * Filter, which PreparationStepModifierTrack to fetch.
+     */
+    where?: PreparationStepModifierTrackWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PreparationStepModifierTracks to fetch.
+     */
+    orderBy?: PreparationStepModifierTrackOrderByWithRelationInput | PreparationStepModifierTrackOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PreparationStepModifierTracks.
+     */
+    cursor?: PreparationStepModifierTrackWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PreparationStepModifierTracks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PreparationStepModifierTracks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PreparationStepModifierTracks.
+     */
+    distinct?: PreparationStepModifierTrackScalarFieldEnum | PreparationStepModifierTrackScalarFieldEnum[]
+  }
+
+  /**
+   * PreparationStepModifierTrack findMany
+   */
+  export type PreparationStepModifierTrackFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStepModifierTrack
+     */
+    select?: PreparationStepModifierTrackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStepModifierTrack
+     */
+    omit?: PreparationStepModifierTrackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepModifierTrackInclude<ExtArgs> | null
+    /**
+     * Filter, which PreparationStepModifierTracks to fetch.
+     */
+    where?: PreparationStepModifierTrackWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PreparationStepModifierTracks to fetch.
+     */
+    orderBy?: PreparationStepModifierTrackOrderByWithRelationInput | PreparationStepModifierTrackOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PreparationStepModifierTracks.
+     */
+    cursor?: PreparationStepModifierTrackWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PreparationStepModifierTracks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PreparationStepModifierTracks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PreparationStepModifierTracks.
+     */
+    distinct?: PreparationStepModifierTrackScalarFieldEnum | PreparationStepModifierTrackScalarFieldEnum[]
+  }
+
+  /**
+   * PreparationStepModifierTrack create
+   */
+  export type PreparationStepModifierTrackCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStepModifierTrack
+     */
+    select?: PreparationStepModifierTrackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStepModifierTrack
+     */
+    omit?: PreparationStepModifierTrackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepModifierTrackInclude<ExtArgs> | null
+    /**
+     * The data needed to create a PreparationStepModifierTrack.
+     */
+    data: XOR<PreparationStepModifierTrackCreateInput, PreparationStepModifierTrackUncheckedCreateInput>
+  }
+
+  /**
+   * PreparationStepModifierTrack createMany
+   */
+  export type PreparationStepModifierTrackCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many PreparationStepModifierTracks.
+     */
+    data: PreparationStepModifierTrackCreateManyInput | PreparationStepModifierTrackCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * PreparationStepModifierTrack createManyAndReturn
+   */
+  export type PreparationStepModifierTrackCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStepModifierTrack
+     */
+    select?: PreparationStepModifierTrackSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStepModifierTrack
+     */
+    omit?: PreparationStepModifierTrackOmit<ExtArgs> | null
+    /**
+     * The data used to create many PreparationStepModifierTracks.
+     */
+    data: PreparationStepModifierTrackCreateManyInput | PreparationStepModifierTrackCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepModifierTrackIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * PreparationStepModifierTrack update
+   */
+  export type PreparationStepModifierTrackUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStepModifierTrack
+     */
+    select?: PreparationStepModifierTrackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStepModifierTrack
+     */
+    omit?: PreparationStepModifierTrackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepModifierTrackInclude<ExtArgs> | null
+    /**
+     * The data needed to update a PreparationStepModifierTrack.
+     */
+    data: XOR<PreparationStepModifierTrackUpdateInput, PreparationStepModifierTrackUncheckedUpdateInput>
+    /**
+     * Choose, which PreparationStepModifierTrack to update.
+     */
+    where: PreparationStepModifierTrackWhereUniqueInput
+  }
+
+  /**
+   * PreparationStepModifierTrack updateMany
+   */
+  export type PreparationStepModifierTrackUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update PreparationStepModifierTracks.
+     */
+    data: XOR<PreparationStepModifierTrackUpdateManyMutationInput, PreparationStepModifierTrackUncheckedUpdateManyInput>
+    /**
+     * Filter which PreparationStepModifierTracks to update
+     */
+    where?: PreparationStepModifierTrackWhereInput
+    /**
+     * Limit how many PreparationStepModifierTracks to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * PreparationStepModifierTrack updateManyAndReturn
+   */
+  export type PreparationStepModifierTrackUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStepModifierTrack
+     */
+    select?: PreparationStepModifierTrackSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStepModifierTrack
+     */
+    omit?: PreparationStepModifierTrackOmit<ExtArgs> | null
+    /**
+     * The data used to update PreparationStepModifierTracks.
+     */
+    data: XOR<PreparationStepModifierTrackUpdateManyMutationInput, PreparationStepModifierTrackUncheckedUpdateManyInput>
+    /**
+     * Filter which PreparationStepModifierTracks to update
+     */
+    where?: PreparationStepModifierTrackWhereInput
+    /**
+     * Limit how many PreparationStepModifierTracks to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepModifierTrackIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * PreparationStepModifierTrack upsert
+   */
+  export type PreparationStepModifierTrackUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStepModifierTrack
+     */
+    select?: PreparationStepModifierTrackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStepModifierTrack
+     */
+    omit?: PreparationStepModifierTrackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepModifierTrackInclude<ExtArgs> | null
+    /**
+     * The filter to search for the PreparationStepModifierTrack to update in case it exists.
+     */
+    where: PreparationStepModifierTrackWhereUniqueInput
+    /**
+     * In case the PreparationStepModifierTrack found by the `where` argument doesn't exist, create a new PreparationStepModifierTrack with this data.
+     */
+    create: XOR<PreparationStepModifierTrackCreateInput, PreparationStepModifierTrackUncheckedCreateInput>
+    /**
+     * In case the PreparationStepModifierTrack was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PreparationStepModifierTrackUpdateInput, PreparationStepModifierTrackUncheckedUpdateInput>
+  }
+
+  /**
+   * PreparationStepModifierTrack delete
+   */
+  export type PreparationStepModifierTrackDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStepModifierTrack
+     */
+    select?: PreparationStepModifierTrackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStepModifierTrack
+     */
+    omit?: PreparationStepModifierTrackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepModifierTrackInclude<ExtArgs> | null
+    /**
+     * Filter which PreparationStepModifierTrack to delete.
+     */
+    where: PreparationStepModifierTrackWhereUniqueInput
+  }
+
+  /**
+   * PreparationStepModifierTrack deleteMany
+   */
+  export type PreparationStepModifierTrackDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PreparationStepModifierTracks to delete
+     */
+    where?: PreparationStepModifierTrackWhereInput
+    /**
+     * Limit how many PreparationStepModifierTracks to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * PreparationStepModifierTrack without action
+   */
+  export type PreparationStepModifierTrackDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStepModifierTrack
+     */
+    select?: PreparationStepModifierTrackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStepModifierTrack
+     */
+    omit?: PreparationStepModifierTrackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepModifierTrackInclude<ExtArgs> | null
+  }
+
 
   /**
    * Model ProgressiveDiscount
@@ -2805,16 +9007,19 @@ export namespace Prisma {
   export type ProgressiveDiscountMinAggregateOutputType = {
     id: string | null
     createdAt: Date | null
+    completed: boolean | null
   }
 
   export type ProgressiveDiscountMaxAggregateOutputType = {
     id: string | null
     createdAt: Date | null
+    completed: boolean | null
   }
 
   export type ProgressiveDiscountCountAggregateOutputType = {
     id: number
     createdAt: number
+    completed: number
     _all: number
   }
 
@@ -2822,16 +9027,19 @@ export namespace Prisma {
   export type ProgressiveDiscountMinAggregateInputType = {
     id?: true
     createdAt?: true
+    completed?: true
   }
 
   export type ProgressiveDiscountMaxAggregateInputType = {
     id?: true
     createdAt?: true
+    completed?: true
   }
 
   export type ProgressiveDiscountCountAggregateInputType = {
     id?: true
     createdAt?: true
+    completed?: true
     _all?: true
   }
 
@@ -2910,6 +9118,7 @@ export namespace Prisma {
   export type ProgressiveDiscountGroupByOutputType = {
     id: string
     createdAt: Date
+    completed: boolean
     _count: ProgressiveDiscountCountAggregateOutputType | null
     _min: ProgressiveDiscountMinAggregateOutputType | null
     _max: ProgressiveDiscountMaxAggregateOutputType | null
@@ -2932,6 +9141,7 @@ export namespace Prisma {
   export type ProgressiveDiscountSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     createdAt?: boolean
+    completed?: boolean
     steps?: boolean | ProgressiveDiscount$stepsArgs<ExtArgs>
     _count?: boolean | ProgressiveDiscountCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["progressiveDiscount"]>
@@ -2939,19 +9149,22 @@ export namespace Prisma {
   export type ProgressiveDiscountSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     createdAt?: boolean
+    completed?: boolean
   }, ExtArgs["result"]["progressiveDiscount"]>
 
   export type ProgressiveDiscountSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     createdAt?: boolean
+    completed?: boolean
   }, ExtArgs["result"]["progressiveDiscount"]>
 
   export type ProgressiveDiscountSelectScalar = {
     id?: boolean
     createdAt?: boolean
+    completed?: boolean
   }
 
-  export type ProgressiveDiscountOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt", ExtArgs["result"]["progressiveDiscount"]>
+  export type ProgressiveDiscountOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "completed", ExtArgs["result"]["progressiveDiscount"]>
   export type ProgressiveDiscountInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     steps?: boolean | ProgressiveDiscount$stepsArgs<ExtArgs>
     _count?: boolean | ProgressiveDiscountCountOutputTypeDefaultArgs<ExtArgs>
@@ -2967,6 +9180,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       createdAt: Date
+      completed: boolean
     }, ExtArgs["result"]["progressiveDiscount"]>
     composites: {}
   }
@@ -3393,6 +9607,7 @@ export namespace Prisma {
   interface ProgressiveDiscountFieldRefs {
     readonly id: FieldRef<"ProgressiveDiscount", 'String'>
     readonly createdAt: FieldRef<"ProgressiveDiscount", 'DateTime'>
+    readonly completed: FieldRef<"ProgressiveDiscount", 'Boolean'>
   }
     
 
@@ -7293,6 +13508,7 @@ export namespace Prisma {
     createdAt: Date | null
     name: string | null
     price: number | null
+    description: string | null
     modifierGroupId: string | null
     fileId: string | null
   }
@@ -7302,6 +13518,7 @@ export namespace Prisma {
     createdAt: Date | null
     name: string | null
     price: number | null
+    description: string | null
     modifierGroupId: string | null
     fileId: string | null
   }
@@ -7311,6 +13528,7 @@ export namespace Prisma {
     createdAt: number
     name: number
     price: number
+    description: number
     modifierGroupId: number
     fileId: number
     _all: number
@@ -7330,6 +13548,7 @@ export namespace Prisma {
     createdAt?: true
     name?: true
     price?: true
+    description?: true
     modifierGroupId?: true
     fileId?: true
   }
@@ -7339,6 +13558,7 @@ export namespace Prisma {
     createdAt?: true
     name?: true
     price?: true
+    description?: true
     modifierGroupId?: true
     fileId?: true
   }
@@ -7348,6 +13568,7 @@ export namespace Prisma {
     createdAt?: true
     name?: true
     price?: true
+    description?: true
     modifierGroupId?: true
     fileId?: true
     _all?: true
@@ -7444,6 +13665,7 @@ export namespace Prisma {
     createdAt: Date
     name: string
     price: number
+    description: string | null
     modifierGroupId: string | null
     fileId: string | null
     _count: ModifierGroupItemCountAggregateOutputType | null
@@ -7472,10 +13694,14 @@ export namespace Prisma {
     createdAt?: boolean
     name?: boolean
     price?: boolean
+    description?: boolean
     modifierGroupId?: boolean
     fileId?: boolean
     photo?: boolean | ModifierGroupItem$photoArgs<ExtArgs>
     modifierGroup?: boolean | ModifierGroupItem$modifierGroupArgs<ExtArgs>
+    preparationStepModifierTracks?: boolean | ModifierGroupItem$preparationStepModifierTracksArgs<ExtArgs>
+    orderProducts?: boolean | ModifierGroupItem$orderProductsArgs<ExtArgs>
+    _count?: boolean | ModifierGroupItemCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["modifierGroupItem"]>
 
   export type ModifierGroupItemSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -7483,6 +13709,7 @@ export namespace Prisma {
     createdAt?: boolean
     name?: boolean
     price?: boolean
+    description?: boolean
     modifierGroupId?: boolean
     fileId?: boolean
     photo?: boolean | ModifierGroupItem$photoArgs<ExtArgs>
@@ -7494,6 +13721,7 @@ export namespace Prisma {
     createdAt?: boolean
     name?: boolean
     price?: boolean
+    description?: boolean
     modifierGroupId?: boolean
     fileId?: boolean
     photo?: boolean | ModifierGroupItem$photoArgs<ExtArgs>
@@ -7505,14 +13733,18 @@ export namespace Prisma {
     createdAt?: boolean
     name?: boolean
     price?: boolean
+    description?: boolean
     modifierGroupId?: boolean
     fileId?: boolean
   }
 
-  export type ModifierGroupItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "name" | "price" | "modifierGroupId" | "fileId", ExtArgs["result"]["modifierGroupItem"]>
+  export type ModifierGroupItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "name" | "price" | "description" | "modifierGroupId" | "fileId", ExtArgs["result"]["modifierGroupItem"]>
   export type ModifierGroupItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     photo?: boolean | ModifierGroupItem$photoArgs<ExtArgs>
     modifierGroup?: boolean | ModifierGroupItem$modifierGroupArgs<ExtArgs>
+    preparationStepModifierTracks?: boolean | ModifierGroupItem$preparationStepModifierTracksArgs<ExtArgs>
+    orderProducts?: boolean | ModifierGroupItem$orderProductsArgs<ExtArgs>
+    _count?: boolean | ModifierGroupItemCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ModifierGroupItemIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     photo?: boolean | ModifierGroupItem$photoArgs<ExtArgs>
@@ -7528,12 +13760,15 @@ export namespace Prisma {
     objects: {
       photo: Prisma.$FilePayload<ExtArgs> | null
       modifierGroup: Prisma.$ModifierGroupPayload<ExtArgs> | null
+      preparationStepModifierTracks: Prisma.$PreparationStepModifierTrackPayload<ExtArgs>[]
+      orderProducts: Prisma.$OrderProductsPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       createdAt: Date
       name: string
       price: number
+      description: string | null
       modifierGroupId: string | null
       fileId: string | null
     }, ExtArgs["result"]["modifierGroupItem"]>
@@ -7932,6 +14167,8 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     photo<T extends ModifierGroupItem$photoArgs<ExtArgs> = {}>(args?: Subset<T, ModifierGroupItem$photoArgs<ExtArgs>>): Prisma__FileClient<$Result.GetResult<Prisma.$FilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     modifierGroup<T extends ModifierGroupItem$modifierGroupArgs<ExtArgs> = {}>(args?: Subset<T, ModifierGroupItem$modifierGroupArgs<ExtArgs>>): Prisma__ModifierGroupClient<$Result.GetResult<Prisma.$ModifierGroupPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    preparationStepModifierTracks<T extends ModifierGroupItem$preparationStepModifierTracksArgs<ExtArgs> = {}>(args?: Subset<T, ModifierGroupItem$preparationStepModifierTracksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PreparationStepModifierTrackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    orderProducts<T extends ModifierGroupItem$orderProductsArgs<ExtArgs> = {}>(args?: Subset<T, ModifierGroupItem$orderProductsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderProductsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -7965,6 +14202,7 @@ export namespace Prisma {
     readonly createdAt: FieldRef<"ModifierGroupItem", 'DateTime'>
     readonly name: FieldRef<"ModifierGroupItem", 'String'>
     readonly price: FieldRef<"ModifierGroupItem", 'Int'>
+    readonly description: FieldRef<"ModifierGroupItem", 'String'>
     readonly modifierGroupId: FieldRef<"ModifierGroupItem", 'String'>
     readonly fileId: FieldRef<"ModifierGroupItem", 'String'>
   }
@@ -8403,6 +14641,54 @@ export namespace Prisma {
      */
     include?: ModifierGroupInclude<ExtArgs> | null
     where?: ModifierGroupWhereInput
+  }
+
+  /**
+   * ModifierGroupItem.preparationStepModifierTracks
+   */
+  export type ModifierGroupItem$preparationStepModifierTracksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStepModifierTrack
+     */
+    select?: PreparationStepModifierTrackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStepModifierTrack
+     */
+    omit?: PreparationStepModifierTrackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepModifierTrackInclude<ExtArgs> | null
+    where?: PreparationStepModifierTrackWhereInput
+    orderBy?: PreparationStepModifierTrackOrderByWithRelationInput | PreparationStepModifierTrackOrderByWithRelationInput[]
+    cursor?: PreparationStepModifierTrackWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PreparationStepModifierTrackScalarFieldEnum | PreparationStepModifierTrackScalarFieldEnum[]
+  }
+
+  /**
+   * ModifierGroupItem.orderProducts
+   */
+  export type ModifierGroupItem$orderProductsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderProducts
+     */
+    select?: OrderProductsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderProducts
+     */
+    omit?: OrderProductsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderProductsInclude<ExtArgs> | null
+    where?: OrderProductsWhereInput
+    orderBy?: OrderProductsOrderByWithRelationInput | OrderProductsOrderByWithRelationInput[]
+    cursor?: OrderProductsWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: OrderProductsScalarFieldEnum | OrderProductsScalarFieldEnum[]
   }
 
   /**
@@ -9487,6 +15773,7 @@ export namespace Prisma {
     id: string | null
     createdAt: Date | null
     name: string | null
+    operationHours: JsonValue | null
     addressId: string | null
     businessId: string | null
   }
@@ -9495,6 +15782,7 @@ export namespace Prisma {
     id: string | null
     createdAt: Date | null
     name: string | null
+    operationHours: JsonValue | null
     addressId: string | null
     businessId: string | null
   }
@@ -9503,6 +15791,7 @@ export namespace Prisma {
     id: number
     createdAt: number
     name: number
+    operationHours: number
     addressId: number
     businessId: number
     _all: number
@@ -9513,6 +15802,7 @@ export namespace Prisma {
     id?: true
     createdAt?: true
     name?: true
+    operationHours?: true
     addressId?: true
     businessId?: true
   }
@@ -9521,6 +15811,7 @@ export namespace Prisma {
     id?: true
     createdAt?: true
     name?: true
+    operationHours?: true
     addressId?: true
     businessId?: true
   }
@@ -9529,6 +15820,7 @@ export namespace Prisma {
     id?: true
     createdAt?: true
     name?: true
+    operationHours?: true
     addressId?: true
     businessId?: true
     _all?: true
@@ -9610,6 +15902,7 @@ export namespace Prisma {
     id: string
     createdAt: Date
     name: string
+    operationHours: JsonValue | null
     addressId: string | null
     businessId: string | null
     _count: BranchCountAggregateOutputType | null
@@ -9635,6 +15928,7 @@ export namespace Prisma {
     id?: boolean
     createdAt?: boolean
     name?: boolean
+    operationHours?: boolean
     addressId?: boolean
     businessId?: boolean
     address?: boolean | Branch$addressArgs<ExtArgs>
@@ -9645,6 +15939,7 @@ export namespace Prisma {
     id?: boolean
     createdAt?: boolean
     name?: boolean
+    operationHours?: boolean
     addressId?: boolean
     businessId?: boolean
     address?: boolean | Branch$addressArgs<ExtArgs>
@@ -9655,6 +15950,7 @@ export namespace Prisma {
     id?: boolean
     createdAt?: boolean
     name?: boolean
+    operationHours?: boolean
     addressId?: boolean
     businessId?: boolean
     address?: boolean | Branch$addressArgs<ExtArgs>
@@ -9665,11 +15961,12 @@ export namespace Prisma {
     id?: boolean
     createdAt?: boolean
     name?: boolean
+    operationHours?: boolean
     addressId?: boolean
     businessId?: boolean
   }
 
-  export type BranchOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "name" | "addressId" | "businessId", ExtArgs["result"]["branch"]>
+  export type BranchOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "name" | "operationHours" | "addressId" | "businessId", ExtArgs["result"]["branch"]>
   export type BranchInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     address?: boolean | Branch$addressArgs<ExtArgs>
     business?: boolean | Branch$businessArgs<ExtArgs>
@@ -9693,6 +15990,7 @@ export namespace Prisma {
       id: string
       createdAt: Date
       name: string
+      operationHours: Prisma.JsonValue | null
       addressId: string | null
       businessId: string | null
     }, ExtArgs["result"]["branch"]>
@@ -11893,6 +18191,7 @@ export namespace Prisma {
     modifierGroups?: boolean | Product$modifierGroupsArgs<ExtArgs>
     category?: boolean | Product$categoryArgs<ExtArgs>
     OrderProducts?: boolean | Product$OrderProductsArgs<ExtArgs>
+    preparationSteps?: boolean | Product$preparationStepsArgs<ExtArgs>
     _count?: boolean | ProductCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["product"]>
 
@@ -11937,6 +18236,7 @@ export namespace Prisma {
     modifierGroups?: boolean | Product$modifierGroupsArgs<ExtArgs>
     category?: boolean | Product$categoryArgs<ExtArgs>
     OrderProducts?: boolean | Product$OrderProductsArgs<ExtArgs>
+    preparationSteps?: boolean | Product$preparationStepsArgs<ExtArgs>
     _count?: boolean | ProductCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ProductIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -11953,6 +18253,7 @@ export namespace Prisma {
       modifierGroups: Prisma.$ModifierGroupPayload<ExtArgs>[]
       category: Prisma.$CategoryPayload<ExtArgs> | null
       OrderProducts: Prisma.$OrderProductsPayload<ExtArgs>[]
+      preparationSteps: Prisma.$PreparationStepPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -12361,6 +18662,7 @@ export namespace Prisma {
     modifierGroups<T extends Product$modifierGroupsArgs<ExtArgs> = {}>(args?: Subset<T, Product$modifierGroupsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ModifierGroupPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     category<T extends Product$categoryArgs<ExtArgs> = {}>(args?: Subset<T, Product$categoryArgs<ExtArgs>>): Prisma__CategoryClient<$Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     OrderProducts<T extends Product$OrderProductsArgs<ExtArgs> = {}>(args?: Subset<T, Product$OrderProductsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderProductsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    preparationSteps<T extends Product$preparationStepsArgs<ExtArgs> = {}>(args?: Subset<T, Product$preparationStepsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PreparationStepPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -12890,6 +19192,30 @@ export namespace Prisma {
   }
 
   /**
+   * Product.preparationSteps
+   */
+  export type Product$preparationStepsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStep
+     */
+    select?: PreparationStepSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStep
+     */
+    omit?: PreparationStepOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepInclude<ExtArgs> | null
+    where?: PreparationStepWhereInput
+    orderBy?: PreparationStepOrderByWithRelationInput | PreparationStepOrderByWithRelationInput[]
+    cursor?: PreparationStepWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PreparationStepScalarFieldEnum | PreparationStepScalarFieldEnum[]
+  }
+
+  /**
    * Product without action
    */
   export type ProductDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -13057,6 +19383,7 @@ export namespace Prisma {
     createdAt?: boolean
     name?: boolean
     products?: boolean | Category$productsArgs<ExtArgs>
+    preparationStepCategories?: boolean | Category$preparationStepCategoriesArgs<ExtArgs>
     _count?: boolean | CategoryCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["category"]>
 
@@ -13081,6 +19408,7 @@ export namespace Prisma {
   export type CategoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "name", ExtArgs["result"]["category"]>
   export type CategoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     products?: boolean | Category$productsArgs<ExtArgs>
+    preparationStepCategories?: boolean | Category$preparationStepCategoriesArgs<ExtArgs>
     _count?: boolean | CategoryCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type CategoryIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -13090,6 +19418,7 @@ export namespace Prisma {
     name: "Category"
     objects: {
       products: Prisma.$ProductPayload<ExtArgs>[]
+      preparationStepCategories: Prisma.$PreparationStepCategoryPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -13490,6 +19819,7 @@ export namespace Prisma {
   export interface Prisma__CategoryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     products<T extends Category$productsArgs<ExtArgs> = {}>(args?: Subset<T, Category$productsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    preparationStepCategories<T extends Category$preparationStepCategoriesArgs<ExtArgs> = {}>(args?: Subset<T, Category$preparationStepCategoriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PreparationStepCategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -13936,6 +20266,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ProductScalarFieldEnum | ProductScalarFieldEnum[]
+  }
+
+  /**
+   * Category.preparationStepCategories
+   */
+  export type Category$preparationStepCategoriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStepCategory
+     */
+    select?: PreparationStepCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStepCategory
+     */
+    omit?: PreparationStepCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepCategoryInclude<ExtArgs> | null
+    where?: PreparationStepCategoryWhereInput
+    orderBy?: PreparationStepCategoryOrderByWithRelationInput | PreparationStepCategoryOrderByWithRelationInput[]
+    cursor?: PreparationStepCategoryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PreparationStepCategoryScalarFieldEnum | PreparationStepCategoryScalarFieldEnum[]
   }
 
   /**
@@ -19806,6 +26160,7 @@ export namespace Prisma {
     address?: boolean | Order$addressArgs<ExtArgs>
     deliveryAddress?: boolean | Order$deliveryAddressArgs<ExtArgs>
     orderProducts?: boolean | Order$orderProductsArgs<ExtArgs>
+    preparationStepCategories?: boolean | Order$preparationStepCategoriesArgs<ExtArgs>
     _count?: boolean | OrderCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["order"]>
 
@@ -19863,6 +26218,7 @@ export namespace Prisma {
     address?: boolean | Order$addressArgs<ExtArgs>
     deliveryAddress?: boolean | Order$deliveryAddressArgs<ExtArgs>
     orderProducts?: boolean | Order$orderProductsArgs<ExtArgs>
+    preparationStepCategories?: boolean | Order$preparationStepCategoriesArgs<ExtArgs>
     _count?: boolean | OrderCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type OrderIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -19883,6 +26239,7 @@ export namespace Prisma {
       address: Prisma.$AddressPayload<ExtArgs> | null
       deliveryAddress: Prisma.$DeliveryAddressPayload<ExtArgs> | null
       orderProducts: Prisma.$OrderProductsPayload<ExtArgs>[]
+      preparationStepCategories: Prisma.$PreparationStepCategoryPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -20294,6 +26651,7 @@ export namespace Prisma {
     address<T extends Order$addressArgs<ExtArgs> = {}>(args?: Subset<T, Order$addressArgs<ExtArgs>>): Prisma__AddressClient<$Result.GetResult<Prisma.$AddressPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     deliveryAddress<T extends Order$deliveryAddressArgs<ExtArgs> = {}>(args?: Subset<T, Order$deliveryAddressArgs<ExtArgs>>): Prisma__DeliveryAddressClient<$Result.GetResult<Prisma.$DeliveryAddressPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     orderProducts<T extends Order$orderProductsArgs<ExtArgs> = {}>(args?: Subset<T, Order$orderProductsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderProductsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    preparationStepCategories<T extends Order$preparationStepCategoriesArgs<ExtArgs> = {}>(args?: Subset<T, Order$preparationStepCategoriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PreparationStepCategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -20797,6 +27155,30 @@ export namespace Prisma {
   }
 
   /**
+   * Order.preparationStepCategories
+   */
+  export type Order$preparationStepCategoriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PreparationStepCategory
+     */
+    select?: PreparationStepCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PreparationStepCategory
+     */
+    omit?: PreparationStepCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PreparationStepCategoryInclude<ExtArgs> | null
+    where?: PreparationStepCategoryWhereInput
+    orderBy?: PreparationStepCategoryOrderByWithRelationInput | PreparationStepCategoryOrderByWithRelationInput[]
+    cursor?: PreparationStepCategoryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PreparationStepCategoryScalarFieldEnum | PreparationStepCategoryScalarFieldEnum[]
+  }
+
+  /**
    * Order without action
    */
   export type OrderDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -20844,6 +27226,7 @@ export namespace Prisma {
     createdAt: Date | null
     productId: string | null
     quantity: number | null
+    comments: string | null
     fullAmount: number | null
     amount: number | null
     orderId: string | null
@@ -20854,6 +27237,7 @@ export namespace Prisma {
     createdAt: Date | null
     productId: string | null
     quantity: number | null
+    comments: string | null
     fullAmount: number | null
     amount: number | null
     orderId: string | null
@@ -20864,6 +27248,7 @@ export namespace Prisma {
     createdAt: number
     productId: number
     quantity: number
+    comments: number
     fullAmount: number
     amount: number
     orderId: number
@@ -20888,6 +27273,7 @@ export namespace Prisma {
     createdAt?: true
     productId?: true
     quantity?: true
+    comments?: true
     fullAmount?: true
     amount?: true
     orderId?: true
@@ -20898,6 +27284,7 @@ export namespace Prisma {
     createdAt?: true
     productId?: true
     quantity?: true
+    comments?: true
     fullAmount?: true
     amount?: true
     orderId?: true
@@ -20908,6 +27295,7 @@ export namespace Prisma {
     createdAt?: true
     productId?: true
     quantity?: true
+    comments?: true
     fullAmount?: true
     amount?: true
     orderId?: true
@@ -21005,6 +27393,7 @@ export namespace Prisma {
     createdAt: Date
     productId: string
     quantity: number
+    comments: string | null
     fullAmount: number
     amount: number
     orderId: string | null
@@ -21034,11 +27423,14 @@ export namespace Prisma {
     createdAt?: boolean
     productId?: boolean
     quantity?: boolean
+    comments?: boolean
     fullAmount?: boolean
     amount?: boolean
     orderId?: boolean
     product?: boolean | ProductDefaultArgs<ExtArgs>
+    modifierGroupItems?: boolean | OrderProducts$modifierGroupItemsArgs<ExtArgs>
     order?: boolean | OrderProducts$orderArgs<ExtArgs>
+    _count?: boolean | OrderProductsCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["orderProducts"]>
 
   export type OrderProductsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -21046,6 +27438,7 @@ export namespace Prisma {
     createdAt?: boolean
     productId?: boolean
     quantity?: boolean
+    comments?: boolean
     fullAmount?: boolean
     amount?: boolean
     orderId?: boolean
@@ -21058,6 +27451,7 @@ export namespace Prisma {
     createdAt?: boolean
     productId?: boolean
     quantity?: boolean
+    comments?: boolean
     fullAmount?: boolean
     amount?: boolean
     orderId?: boolean
@@ -21070,15 +27464,18 @@ export namespace Prisma {
     createdAt?: boolean
     productId?: boolean
     quantity?: boolean
+    comments?: boolean
     fullAmount?: boolean
     amount?: boolean
     orderId?: boolean
   }
 
-  export type OrderProductsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "productId" | "quantity" | "fullAmount" | "amount" | "orderId", ExtArgs["result"]["orderProducts"]>
+  export type OrderProductsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "productId" | "quantity" | "comments" | "fullAmount" | "amount" | "orderId", ExtArgs["result"]["orderProducts"]>
   export type OrderProductsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     product?: boolean | ProductDefaultArgs<ExtArgs>
+    modifierGroupItems?: boolean | OrderProducts$modifierGroupItemsArgs<ExtArgs>
     order?: boolean | OrderProducts$orderArgs<ExtArgs>
+    _count?: boolean | OrderProductsCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type OrderProductsIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     product?: boolean | ProductDefaultArgs<ExtArgs>
@@ -21093,6 +27490,7 @@ export namespace Prisma {
     name: "OrderProducts"
     objects: {
       product: Prisma.$ProductPayload<ExtArgs>
+      modifierGroupItems: Prisma.$ModifierGroupItemPayload<ExtArgs>[]
       order: Prisma.$OrderPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -21100,6 +27498,7 @@ export namespace Prisma {
       createdAt: Date
       productId: string
       quantity: number
+      comments: string | null
       fullAmount: number
       amount: number
       orderId: string | null
@@ -21498,6 +27897,7 @@ export namespace Prisma {
   export interface Prisma__OrderProductsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     product<T extends ProductDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProductDefaultArgs<ExtArgs>>): Prisma__ProductClient<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    modifierGroupItems<T extends OrderProducts$modifierGroupItemsArgs<ExtArgs> = {}>(args?: Subset<T, OrderProducts$modifierGroupItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ModifierGroupItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     order<T extends OrderProducts$orderArgs<ExtArgs> = {}>(args?: Subset<T, OrderProducts$orderArgs<ExtArgs>>): Prisma__OrderClient<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -21532,6 +27932,7 @@ export namespace Prisma {
     readonly createdAt: FieldRef<"OrderProducts", 'DateTime'>
     readonly productId: FieldRef<"OrderProducts", 'String'>
     readonly quantity: FieldRef<"OrderProducts", 'Int'>
+    readonly comments: FieldRef<"OrderProducts", 'String'>
     readonly fullAmount: FieldRef<"OrderProducts", 'Int'>
     readonly amount: FieldRef<"OrderProducts", 'Int'>
     readonly orderId: FieldRef<"OrderProducts", 'String'>
@@ -21936,6 +28337,30 @@ export namespace Prisma {
   }
 
   /**
+   * OrderProducts.modifierGroupItems
+   */
+  export type OrderProducts$modifierGroupItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ModifierGroupItem
+     */
+    select?: ModifierGroupItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ModifierGroupItem
+     */
+    omit?: ModifierGroupItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ModifierGroupItemInclude<ExtArgs> | null
+    where?: ModifierGroupItemWhereInput
+    orderBy?: ModifierGroupItemOrderByWithRelationInput | ModifierGroupItemOrderByWithRelationInput[]
+    cursor?: ModifierGroupItemWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ModifierGroupItemScalarFieldEnum | ModifierGroupItemScalarFieldEnum[]
+  }
+
+  /**
    * OrderProducts.order
    */
   export type OrderProducts$orderArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -21987,9 +28412,66 @@ export namespace Prisma {
   export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
+  export const StationScalarFieldEnum: {
+    id: 'id',
+    name: 'name'
+  };
+
+  export type StationScalarFieldEnum = (typeof StationScalarFieldEnum)[keyof typeof StationScalarFieldEnum]
+
+
+  export const PreparationStepScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    name: 'name',
+    includeComments: 'includeComments',
+    includeModifiers: 'includeModifiers',
+    stationId: 'stationId'
+  };
+
+  export type PreparationStepScalarFieldEnum = (typeof PreparationStepScalarFieldEnum)[keyof typeof PreparationStepScalarFieldEnum]
+
+
+  export const PreparationStepCategoryScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    categoryId: 'categoryId',
+    completed: 'completed',
+    orderId: 'orderId'
+  };
+
+  export type PreparationStepCategoryScalarFieldEnum = (typeof PreparationStepCategoryScalarFieldEnum)[keyof typeof PreparationStepCategoryScalarFieldEnum]
+
+
+  export const PreparationStepTrackScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    completed: 'completed',
+    quantity: 'quantity',
+    comments: 'comments',
+    completedComments: 'completedComments',
+    preparationStepId: 'preparationStepId',
+    preparationStepCategoryId: 'preparationStepCategoryId'
+  };
+
+  export type PreparationStepTrackScalarFieldEnum = (typeof PreparationStepTrackScalarFieldEnum)[keyof typeof PreparationStepTrackScalarFieldEnum]
+
+
+  export const PreparationStepModifierTrackScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    completed: 'completed',
+    modifierGroupItemId: 'modifierGroupItemId',
+    preparationStepTrackId: 'preparationStepTrackId'
+  };
+
+  export type PreparationStepModifierTrackScalarFieldEnum = (typeof PreparationStepModifierTrackScalarFieldEnum)[keyof typeof PreparationStepModifierTrackScalarFieldEnum]
+
+
   export const ProgressiveDiscountScalarFieldEnum: {
     id: 'id',
-    createdAt: 'createdAt'
+    createdAt: 'createdAt',
+    completed: 'completed'
   };
 
   export type ProgressiveDiscountScalarFieldEnum = (typeof ProgressiveDiscountScalarFieldEnum)[keyof typeof ProgressiveDiscountScalarFieldEnum]
@@ -22037,6 +28519,7 @@ export namespace Prisma {
     createdAt: 'createdAt',
     name: 'name',
     price: 'price',
+    description: 'description',
     modifierGroupId: 'modifierGroupId',
     fileId: 'fileId'
   };
@@ -22057,6 +28540,7 @@ export namespace Prisma {
     id: 'id',
     createdAt: 'createdAt',
     name: 'name',
+    operationHours: 'operationHours',
     addressId: 'addressId',
     businessId: 'businessId'
   };
@@ -22182,6 +28666,7 @@ export namespace Prisma {
     createdAt: 'createdAt',
     productId: 'productId',
     quantity: 'quantity',
+    comments: 'comments',
     fullAmount: 'fullAmount',
     amount: 'amount',
     orderId: 'orderId'
@@ -22265,6 +28750,13 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
    * Reference to a field of type 'Int'
    */
   export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -22289,13 +28781,6 @@ export namespace Prisma {
    * Reference to a field of type 'ProgressiveDiscountStepType[]'
    */
   export type ListEnumProgressiveDiscountStepTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProgressiveDiscountStepType[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'Boolean'
-   */
-  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -22372,18 +28857,323 @@ export namespace Prisma {
    */
 
 
+  export type StationWhereInput = {
+    AND?: StationWhereInput | StationWhereInput[]
+    OR?: StationWhereInput[]
+    NOT?: StationWhereInput | StationWhereInput[]
+    id?: StringFilter<"Station"> | string
+    name?: StringFilter<"Station"> | string
+    preparationSteps?: PreparationStepListRelationFilter
+  }
+
+  export type StationOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    preparationSteps?: PreparationStepOrderByRelationAggregateInput
+  }
+
+  export type StationWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: StationWhereInput | StationWhereInput[]
+    OR?: StationWhereInput[]
+    NOT?: StationWhereInput | StationWhereInput[]
+    name?: StringFilter<"Station"> | string
+    preparationSteps?: PreparationStepListRelationFilter
+  }, "id">
+
+  export type StationOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    _count?: StationCountOrderByAggregateInput
+    _max?: StationMaxOrderByAggregateInput
+    _min?: StationMinOrderByAggregateInput
+  }
+
+  export type StationScalarWhereWithAggregatesInput = {
+    AND?: StationScalarWhereWithAggregatesInput | StationScalarWhereWithAggregatesInput[]
+    OR?: StationScalarWhereWithAggregatesInput[]
+    NOT?: StationScalarWhereWithAggregatesInput | StationScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Station"> | string
+    name?: StringWithAggregatesFilter<"Station"> | string
+  }
+
+  export type PreparationStepWhereInput = {
+    AND?: PreparationStepWhereInput | PreparationStepWhereInput[]
+    OR?: PreparationStepWhereInput[]
+    NOT?: PreparationStepWhereInput | PreparationStepWhereInput[]
+    id?: StringFilter<"PreparationStep"> | string
+    createdAt?: DateTimeFilter<"PreparationStep"> | Date | string
+    name?: StringFilter<"PreparationStep"> | string
+    includeComments?: BoolFilter<"PreparationStep"> | boolean
+    includeModifiers?: BoolFilter<"PreparationStep"> | boolean
+    stationId?: StringFilter<"PreparationStep"> | string
+    products?: ProductListRelationFilter
+    station?: XOR<StationScalarRelationFilter, StationWhereInput>
+    preparationStepTracks?: PreparationStepTrackListRelationFilter
+  }
+
+  export type PreparationStepOrderByWithRelationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    name?: SortOrder
+    includeComments?: SortOrder
+    includeModifiers?: SortOrder
+    stationId?: SortOrder
+    products?: ProductOrderByRelationAggregateInput
+    station?: StationOrderByWithRelationInput
+    preparationStepTracks?: PreparationStepTrackOrderByRelationAggregateInput
+  }
+
+  export type PreparationStepWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: PreparationStepWhereInput | PreparationStepWhereInput[]
+    OR?: PreparationStepWhereInput[]
+    NOT?: PreparationStepWhereInput | PreparationStepWhereInput[]
+    createdAt?: DateTimeFilter<"PreparationStep"> | Date | string
+    name?: StringFilter<"PreparationStep"> | string
+    includeComments?: BoolFilter<"PreparationStep"> | boolean
+    includeModifiers?: BoolFilter<"PreparationStep"> | boolean
+    stationId?: StringFilter<"PreparationStep"> | string
+    products?: ProductListRelationFilter
+    station?: XOR<StationScalarRelationFilter, StationWhereInput>
+    preparationStepTracks?: PreparationStepTrackListRelationFilter
+  }, "id">
+
+  export type PreparationStepOrderByWithAggregationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    name?: SortOrder
+    includeComments?: SortOrder
+    includeModifiers?: SortOrder
+    stationId?: SortOrder
+    _count?: PreparationStepCountOrderByAggregateInput
+    _max?: PreparationStepMaxOrderByAggregateInput
+    _min?: PreparationStepMinOrderByAggregateInput
+  }
+
+  export type PreparationStepScalarWhereWithAggregatesInput = {
+    AND?: PreparationStepScalarWhereWithAggregatesInput | PreparationStepScalarWhereWithAggregatesInput[]
+    OR?: PreparationStepScalarWhereWithAggregatesInput[]
+    NOT?: PreparationStepScalarWhereWithAggregatesInput | PreparationStepScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"PreparationStep"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"PreparationStep"> | Date | string
+    name?: StringWithAggregatesFilter<"PreparationStep"> | string
+    includeComments?: BoolWithAggregatesFilter<"PreparationStep"> | boolean
+    includeModifiers?: BoolWithAggregatesFilter<"PreparationStep"> | boolean
+    stationId?: StringWithAggregatesFilter<"PreparationStep"> | string
+  }
+
+  export type PreparationStepCategoryWhereInput = {
+    AND?: PreparationStepCategoryWhereInput | PreparationStepCategoryWhereInput[]
+    OR?: PreparationStepCategoryWhereInput[]
+    NOT?: PreparationStepCategoryWhereInput | PreparationStepCategoryWhereInput[]
+    id?: StringFilter<"PreparationStepCategory"> | string
+    createdAt?: DateTimeFilter<"PreparationStepCategory"> | Date | string
+    categoryId?: StringFilter<"PreparationStepCategory"> | string
+    completed?: BoolFilter<"PreparationStepCategory"> | boolean
+    orderId?: StringFilter<"PreparationStepCategory"> | string
+    category?: XOR<CategoryScalarRelationFilter, CategoryWhereInput>
+    order?: XOR<OrderScalarRelationFilter, OrderWhereInput>
+    preparationStepTracks?: PreparationStepTrackListRelationFilter
+  }
+
+  export type PreparationStepCategoryOrderByWithRelationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    categoryId?: SortOrder
+    completed?: SortOrder
+    orderId?: SortOrder
+    category?: CategoryOrderByWithRelationInput
+    order?: OrderOrderByWithRelationInput
+    preparationStepTracks?: PreparationStepTrackOrderByRelationAggregateInput
+  }
+
+  export type PreparationStepCategoryWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: PreparationStepCategoryWhereInput | PreparationStepCategoryWhereInput[]
+    OR?: PreparationStepCategoryWhereInput[]
+    NOT?: PreparationStepCategoryWhereInput | PreparationStepCategoryWhereInput[]
+    createdAt?: DateTimeFilter<"PreparationStepCategory"> | Date | string
+    categoryId?: StringFilter<"PreparationStepCategory"> | string
+    completed?: BoolFilter<"PreparationStepCategory"> | boolean
+    orderId?: StringFilter<"PreparationStepCategory"> | string
+    category?: XOR<CategoryScalarRelationFilter, CategoryWhereInput>
+    order?: XOR<OrderScalarRelationFilter, OrderWhereInput>
+    preparationStepTracks?: PreparationStepTrackListRelationFilter
+  }, "id">
+
+  export type PreparationStepCategoryOrderByWithAggregationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    categoryId?: SortOrder
+    completed?: SortOrder
+    orderId?: SortOrder
+    _count?: PreparationStepCategoryCountOrderByAggregateInput
+    _max?: PreparationStepCategoryMaxOrderByAggregateInput
+    _min?: PreparationStepCategoryMinOrderByAggregateInput
+  }
+
+  export type PreparationStepCategoryScalarWhereWithAggregatesInput = {
+    AND?: PreparationStepCategoryScalarWhereWithAggregatesInput | PreparationStepCategoryScalarWhereWithAggregatesInput[]
+    OR?: PreparationStepCategoryScalarWhereWithAggregatesInput[]
+    NOT?: PreparationStepCategoryScalarWhereWithAggregatesInput | PreparationStepCategoryScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"PreparationStepCategory"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"PreparationStepCategory"> | Date | string
+    categoryId?: StringWithAggregatesFilter<"PreparationStepCategory"> | string
+    completed?: BoolWithAggregatesFilter<"PreparationStepCategory"> | boolean
+    orderId?: StringWithAggregatesFilter<"PreparationStepCategory"> | string
+  }
+
+  export type PreparationStepTrackWhereInput = {
+    AND?: PreparationStepTrackWhereInput | PreparationStepTrackWhereInput[]
+    OR?: PreparationStepTrackWhereInput[]
+    NOT?: PreparationStepTrackWhereInput | PreparationStepTrackWhereInput[]
+    id?: StringFilter<"PreparationStepTrack"> | string
+    createdAt?: DateTimeFilter<"PreparationStepTrack"> | Date | string
+    completed?: BoolFilter<"PreparationStepTrack"> | boolean
+    quantity?: IntNullableFilter<"PreparationStepTrack"> | number | null
+    comments?: StringNullableFilter<"PreparationStepTrack"> | string | null
+    completedComments?: BoolFilter<"PreparationStepTrack"> | boolean
+    preparationStepId?: StringFilter<"PreparationStepTrack"> | string
+    preparationStepCategoryId?: StringFilter<"PreparationStepTrack"> | string
+    preparationStepModifierTracks?: PreparationStepModifierTrackListRelationFilter
+    preparationStep?: XOR<PreparationStepScalarRelationFilter, PreparationStepWhereInput>
+    preparationStepCategory?: XOR<PreparationStepCategoryScalarRelationFilter, PreparationStepCategoryWhereInput>
+  }
+
+  export type PreparationStepTrackOrderByWithRelationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    completed?: SortOrder
+    quantity?: SortOrderInput | SortOrder
+    comments?: SortOrderInput | SortOrder
+    completedComments?: SortOrder
+    preparationStepId?: SortOrder
+    preparationStepCategoryId?: SortOrder
+    preparationStepModifierTracks?: PreparationStepModifierTrackOrderByRelationAggregateInput
+    preparationStep?: PreparationStepOrderByWithRelationInput
+    preparationStepCategory?: PreparationStepCategoryOrderByWithRelationInput
+  }
+
+  export type PreparationStepTrackWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: PreparationStepTrackWhereInput | PreparationStepTrackWhereInput[]
+    OR?: PreparationStepTrackWhereInput[]
+    NOT?: PreparationStepTrackWhereInput | PreparationStepTrackWhereInput[]
+    createdAt?: DateTimeFilter<"PreparationStepTrack"> | Date | string
+    completed?: BoolFilter<"PreparationStepTrack"> | boolean
+    quantity?: IntNullableFilter<"PreparationStepTrack"> | number | null
+    comments?: StringNullableFilter<"PreparationStepTrack"> | string | null
+    completedComments?: BoolFilter<"PreparationStepTrack"> | boolean
+    preparationStepId?: StringFilter<"PreparationStepTrack"> | string
+    preparationStepCategoryId?: StringFilter<"PreparationStepTrack"> | string
+    preparationStepModifierTracks?: PreparationStepModifierTrackListRelationFilter
+    preparationStep?: XOR<PreparationStepScalarRelationFilter, PreparationStepWhereInput>
+    preparationStepCategory?: XOR<PreparationStepCategoryScalarRelationFilter, PreparationStepCategoryWhereInput>
+  }, "id">
+
+  export type PreparationStepTrackOrderByWithAggregationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    completed?: SortOrder
+    quantity?: SortOrderInput | SortOrder
+    comments?: SortOrderInput | SortOrder
+    completedComments?: SortOrder
+    preparationStepId?: SortOrder
+    preparationStepCategoryId?: SortOrder
+    _count?: PreparationStepTrackCountOrderByAggregateInput
+    _avg?: PreparationStepTrackAvgOrderByAggregateInput
+    _max?: PreparationStepTrackMaxOrderByAggregateInput
+    _min?: PreparationStepTrackMinOrderByAggregateInput
+    _sum?: PreparationStepTrackSumOrderByAggregateInput
+  }
+
+  export type PreparationStepTrackScalarWhereWithAggregatesInput = {
+    AND?: PreparationStepTrackScalarWhereWithAggregatesInput | PreparationStepTrackScalarWhereWithAggregatesInput[]
+    OR?: PreparationStepTrackScalarWhereWithAggregatesInput[]
+    NOT?: PreparationStepTrackScalarWhereWithAggregatesInput | PreparationStepTrackScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"PreparationStepTrack"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"PreparationStepTrack"> | Date | string
+    completed?: BoolWithAggregatesFilter<"PreparationStepTrack"> | boolean
+    quantity?: IntNullableWithAggregatesFilter<"PreparationStepTrack"> | number | null
+    comments?: StringNullableWithAggregatesFilter<"PreparationStepTrack"> | string | null
+    completedComments?: BoolWithAggregatesFilter<"PreparationStepTrack"> | boolean
+    preparationStepId?: StringWithAggregatesFilter<"PreparationStepTrack"> | string
+    preparationStepCategoryId?: StringWithAggregatesFilter<"PreparationStepTrack"> | string
+  }
+
+  export type PreparationStepModifierTrackWhereInput = {
+    AND?: PreparationStepModifierTrackWhereInput | PreparationStepModifierTrackWhereInput[]
+    OR?: PreparationStepModifierTrackWhereInput[]
+    NOT?: PreparationStepModifierTrackWhereInput | PreparationStepModifierTrackWhereInput[]
+    id?: StringFilter<"PreparationStepModifierTrack"> | string
+    createdAt?: DateTimeFilter<"PreparationStepModifierTrack"> | Date | string
+    completed?: BoolFilter<"PreparationStepModifierTrack"> | boolean
+    modifierGroupItemId?: StringFilter<"PreparationStepModifierTrack"> | string
+    preparationStepTrackId?: StringFilter<"PreparationStepModifierTrack"> | string
+    modifierGroupItem?: XOR<ModifierGroupItemScalarRelationFilter, ModifierGroupItemWhereInput>
+    preparationStepTrack?: XOR<PreparationStepTrackScalarRelationFilter, PreparationStepTrackWhereInput>
+  }
+
+  export type PreparationStepModifierTrackOrderByWithRelationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    completed?: SortOrder
+    modifierGroupItemId?: SortOrder
+    preparationStepTrackId?: SortOrder
+    modifierGroupItem?: ModifierGroupItemOrderByWithRelationInput
+    preparationStepTrack?: PreparationStepTrackOrderByWithRelationInput
+  }
+
+  export type PreparationStepModifierTrackWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: PreparationStepModifierTrackWhereInput | PreparationStepModifierTrackWhereInput[]
+    OR?: PreparationStepModifierTrackWhereInput[]
+    NOT?: PreparationStepModifierTrackWhereInput | PreparationStepModifierTrackWhereInput[]
+    createdAt?: DateTimeFilter<"PreparationStepModifierTrack"> | Date | string
+    completed?: BoolFilter<"PreparationStepModifierTrack"> | boolean
+    modifierGroupItemId?: StringFilter<"PreparationStepModifierTrack"> | string
+    preparationStepTrackId?: StringFilter<"PreparationStepModifierTrack"> | string
+    modifierGroupItem?: XOR<ModifierGroupItemScalarRelationFilter, ModifierGroupItemWhereInput>
+    preparationStepTrack?: XOR<PreparationStepTrackScalarRelationFilter, PreparationStepTrackWhereInput>
+  }, "id">
+
+  export type PreparationStepModifierTrackOrderByWithAggregationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    completed?: SortOrder
+    modifierGroupItemId?: SortOrder
+    preparationStepTrackId?: SortOrder
+    _count?: PreparationStepModifierTrackCountOrderByAggregateInput
+    _max?: PreparationStepModifierTrackMaxOrderByAggregateInput
+    _min?: PreparationStepModifierTrackMinOrderByAggregateInput
+  }
+
+  export type PreparationStepModifierTrackScalarWhereWithAggregatesInput = {
+    AND?: PreparationStepModifierTrackScalarWhereWithAggregatesInput | PreparationStepModifierTrackScalarWhereWithAggregatesInput[]
+    OR?: PreparationStepModifierTrackScalarWhereWithAggregatesInput[]
+    NOT?: PreparationStepModifierTrackScalarWhereWithAggregatesInput | PreparationStepModifierTrackScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"PreparationStepModifierTrack"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"PreparationStepModifierTrack"> | Date | string
+    completed?: BoolWithAggregatesFilter<"PreparationStepModifierTrack"> | boolean
+    modifierGroupItemId?: StringWithAggregatesFilter<"PreparationStepModifierTrack"> | string
+    preparationStepTrackId?: StringWithAggregatesFilter<"PreparationStepModifierTrack"> | string
+  }
+
   export type ProgressiveDiscountWhereInput = {
     AND?: ProgressiveDiscountWhereInput | ProgressiveDiscountWhereInput[]
     OR?: ProgressiveDiscountWhereInput[]
     NOT?: ProgressiveDiscountWhereInput | ProgressiveDiscountWhereInput[]
     id?: StringFilter<"ProgressiveDiscount"> | string
     createdAt?: DateTimeFilter<"ProgressiveDiscount"> | Date | string
+    completed?: BoolFilter<"ProgressiveDiscount"> | boolean
     steps?: ProgressiveDiscountStepListRelationFilter
   }
 
   export type ProgressiveDiscountOrderByWithRelationInput = {
     id?: SortOrder
     createdAt?: SortOrder
+    completed?: SortOrder
     steps?: ProgressiveDiscountStepOrderByRelationAggregateInput
   }
 
@@ -22393,12 +29183,14 @@ export namespace Prisma {
     OR?: ProgressiveDiscountWhereInput[]
     NOT?: ProgressiveDiscountWhereInput | ProgressiveDiscountWhereInput[]
     createdAt?: DateTimeFilter<"ProgressiveDiscount"> | Date | string
+    completed?: BoolFilter<"ProgressiveDiscount"> | boolean
     steps?: ProgressiveDiscountStepListRelationFilter
   }, "id">
 
   export type ProgressiveDiscountOrderByWithAggregationInput = {
     id?: SortOrder
     createdAt?: SortOrder
+    completed?: SortOrder
     _count?: ProgressiveDiscountCountOrderByAggregateInput
     _max?: ProgressiveDiscountMaxOrderByAggregateInput
     _min?: ProgressiveDiscountMinOrderByAggregateInput
@@ -22410,6 +29202,7 @@ export namespace Prisma {
     NOT?: ProgressiveDiscountScalarWhereWithAggregatesInput | ProgressiveDiscountScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"ProgressiveDiscount"> | string
     createdAt?: DateTimeWithAggregatesFilter<"ProgressiveDiscount"> | Date | string
+    completed?: BoolWithAggregatesFilter<"ProgressiveDiscount"> | boolean
   }
 
   export type ProgressiveDiscountStepWhereInput = {
@@ -22617,10 +29410,13 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"ModifierGroupItem"> | Date | string
     name?: StringFilter<"ModifierGroupItem"> | string
     price?: IntFilter<"ModifierGroupItem"> | number
+    description?: StringNullableFilter<"ModifierGroupItem"> | string | null
     modifierGroupId?: StringNullableFilter<"ModifierGroupItem"> | string | null
     fileId?: StringNullableFilter<"ModifierGroupItem"> | string | null
     photo?: XOR<FileNullableScalarRelationFilter, FileWhereInput> | null
     modifierGroup?: XOR<ModifierGroupNullableScalarRelationFilter, ModifierGroupWhereInput> | null
+    preparationStepModifierTracks?: PreparationStepModifierTrackListRelationFilter
+    orderProducts?: OrderProductsListRelationFilter
   }
 
   export type ModifierGroupItemOrderByWithRelationInput = {
@@ -22628,10 +29424,13 @@ export namespace Prisma {
     createdAt?: SortOrder
     name?: SortOrder
     price?: SortOrder
+    description?: SortOrderInput | SortOrder
     modifierGroupId?: SortOrderInput | SortOrder
     fileId?: SortOrderInput | SortOrder
     photo?: FileOrderByWithRelationInput
     modifierGroup?: ModifierGroupOrderByWithRelationInput
+    preparationStepModifierTracks?: PreparationStepModifierTrackOrderByRelationAggregateInput
+    orderProducts?: OrderProductsOrderByRelationAggregateInput
   }
 
   export type ModifierGroupItemWhereUniqueInput = Prisma.AtLeast<{
@@ -22642,10 +29441,13 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"ModifierGroupItem"> | Date | string
     name?: StringFilter<"ModifierGroupItem"> | string
     price?: IntFilter<"ModifierGroupItem"> | number
+    description?: StringNullableFilter<"ModifierGroupItem"> | string | null
     modifierGroupId?: StringNullableFilter<"ModifierGroupItem"> | string | null
     fileId?: StringNullableFilter<"ModifierGroupItem"> | string | null
     photo?: XOR<FileNullableScalarRelationFilter, FileWhereInput> | null
     modifierGroup?: XOR<ModifierGroupNullableScalarRelationFilter, ModifierGroupWhereInput> | null
+    preparationStepModifierTracks?: PreparationStepModifierTrackListRelationFilter
+    orderProducts?: OrderProductsListRelationFilter
   }, "id">
 
   export type ModifierGroupItemOrderByWithAggregationInput = {
@@ -22653,6 +29455,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     name?: SortOrder
     price?: SortOrder
+    description?: SortOrderInput | SortOrder
     modifierGroupId?: SortOrderInput | SortOrder
     fileId?: SortOrderInput | SortOrder
     _count?: ModifierGroupItemCountOrderByAggregateInput
@@ -22670,6 +29473,7 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"ModifierGroupItem"> | Date | string
     name?: StringWithAggregatesFilter<"ModifierGroupItem"> | string
     price?: IntWithAggregatesFilter<"ModifierGroupItem"> | number
+    description?: StringNullableWithAggregatesFilter<"ModifierGroupItem"> | string | null
     modifierGroupId?: StringNullableWithAggregatesFilter<"ModifierGroupItem"> | string | null
     fileId?: StringNullableWithAggregatesFilter<"ModifierGroupItem"> | string | null
   }
@@ -22726,6 +29530,7 @@ export namespace Prisma {
     id?: StringFilter<"Branch"> | string
     createdAt?: DateTimeFilter<"Branch"> | Date | string
     name?: StringFilter<"Branch"> | string
+    operationHours?: JsonNullableFilter<"Branch">
     addressId?: StringNullableFilter<"Branch"> | string | null
     businessId?: StringNullableFilter<"Branch"> | string | null
     address?: XOR<AddressNullableScalarRelationFilter, AddressWhereInput> | null
@@ -22736,6 +29541,7 @@ export namespace Prisma {
     id?: SortOrder
     createdAt?: SortOrder
     name?: SortOrder
+    operationHours?: SortOrderInput | SortOrder
     addressId?: SortOrderInput | SortOrder
     businessId?: SortOrderInput | SortOrder
     address?: AddressOrderByWithRelationInput
@@ -22750,6 +29556,7 @@ export namespace Prisma {
     NOT?: BranchWhereInput | BranchWhereInput[]
     createdAt?: DateTimeFilter<"Branch"> | Date | string
     name?: StringFilter<"Branch"> | string
+    operationHours?: JsonNullableFilter<"Branch">
     businessId?: StringNullableFilter<"Branch"> | string | null
     address?: XOR<AddressNullableScalarRelationFilter, AddressWhereInput> | null
     business?: XOR<BusinessNullableScalarRelationFilter, BusinessWhereInput> | null
@@ -22759,6 +29566,7 @@ export namespace Prisma {
     id?: SortOrder
     createdAt?: SortOrder
     name?: SortOrder
+    operationHours?: SortOrderInput | SortOrder
     addressId?: SortOrderInput | SortOrder
     businessId?: SortOrderInput | SortOrder
     _count?: BranchCountOrderByAggregateInput
@@ -22773,6 +29581,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Branch"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Branch"> | Date | string
     name?: StringWithAggregatesFilter<"Branch"> | string
+    operationHours?: JsonNullableWithAggregatesFilter<"Branch">
     addressId?: StringNullableWithAggregatesFilter<"Branch"> | string | null
     businessId?: StringNullableWithAggregatesFilter<"Branch"> | string | null
   }
@@ -22846,6 +29655,7 @@ export namespace Prisma {
     modifierGroups?: ModifierGroupListRelationFilter
     category?: XOR<CategoryNullableScalarRelationFilter, CategoryWhereInput> | null
     OrderProducts?: OrderProductsListRelationFilter
+    preparationSteps?: PreparationStepListRelationFilter
   }
 
   export type ProductOrderByWithRelationInput = {
@@ -22861,6 +29671,7 @@ export namespace Prisma {
     modifierGroups?: ModifierGroupOrderByRelationAggregateInput
     category?: CategoryOrderByWithRelationInput
     OrderProducts?: OrderProductsOrderByRelationAggregateInput
+    preparationSteps?: PreparationStepOrderByRelationAggregateInput
   }
 
   export type ProductWhereUniqueInput = Prisma.AtLeast<{
@@ -22879,6 +29690,7 @@ export namespace Prisma {
     modifierGroups?: ModifierGroupListRelationFilter
     category?: XOR<CategoryNullableScalarRelationFilter, CategoryWhereInput> | null
     OrderProducts?: OrderProductsListRelationFilter
+    preparationSteps?: PreparationStepListRelationFilter
   }, "id">
 
   export type ProductOrderByWithAggregationInput = {
@@ -22919,6 +29731,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Category"> | Date | string
     name?: StringFilter<"Category"> | string
     products?: ProductListRelationFilter
+    preparationStepCategories?: PreparationStepCategoryListRelationFilter
   }
 
   export type CategoryOrderByWithRelationInput = {
@@ -22926,6 +29739,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     name?: SortOrder
     products?: ProductOrderByRelationAggregateInput
+    preparationStepCategories?: PreparationStepCategoryOrderByRelationAggregateInput
   }
 
   export type CategoryWhereUniqueInput = Prisma.AtLeast<{
@@ -22936,6 +29750,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Category"> | Date | string
     name?: StringFilter<"Category"> | string
     products?: ProductListRelationFilter
+    preparationStepCategories?: PreparationStepCategoryListRelationFilter
   }, "id">
 
   export type CategoryOrderByWithAggregationInput = {
@@ -23305,6 +30120,7 @@ export namespace Prisma {
     address?: XOR<AddressNullableScalarRelationFilter, AddressWhereInput> | null
     deliveryAddress?: XOR<DeliveryAddressNullableScalarRelationFilter, DeliveryAddressWhereInput> | null
     orderProducts?: OrderProductsListRelationFilter
+    preparationStepCategories?: PreparationStepCategoryListRelationFilter
   }
 
   export type OrderOrderByWithRelationInput = {
@@ -23323,6 +30139,7 @@ export namespace Prisma {
     address?: AddressOrderByWithRelationInput
     deliveryAddress?: DeliveryAddressOrderByWithRelationInput
     orderProducts?: OrderProductsOrderByRelationAggregateInput
+    preparationStepCategories?: PreparationStepCategoryOrderByRelationAggregateInput
   }
 
   export type OrderWhereUniqueInput = Prisma.AtLeast<{
@@ -23344,6 +30161,7 @@ export namespace Prisma {
     address?: XOR<AddressNullableScalarRelationFilter, AddressWhereInput> | null
     deliveryAddress?: XOR<DeliveryAddressNullableScalarRelationFilter, DeliveryAddressWhereInput> | null
     orderProducts?: OrderProductsListRelationFilter
+    preparationStepCategories?: PreparationStepCategoryListRelationFilter
   }, "id">
 
   export type OrderOrderByWithAggregationInput = {
@@ -23390,10 +30208,12 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"OrderProducts"> | Date | string
     productId?: StringFilter<"OrderProducts"> | string
     quantity?: IntFilter<"OrderProducts"> | number
+    comments?: StringNullableFilter<"OrderProducts"> | string | null
     fullAmount?: IntFilter<"OrderProducts"> | number
     amount?: IntFilter<"OrderProducts"> | number
     orderId?: StringNullableFilter<"OrderProducts"> | string | null
     product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
+    modifierGroupItems?: ModifierGroupItemListRelationFilter
     order?: XOR<OrderNullableScalarRelationFilter, OrderWhereInput> | null
   }
 
@@ -23402,10 +30222,12 @@ export namespace Prisma {
     createdAt?: SortOrder
     productId?: SortOrder
     quantity?: SortOrder
+    comments?: SortOrderInput | SortOrder
     fullAmount?: SortOrder
     amount?: SortOrder
     orderId?: SortOrderInput | SortOrder
     product?: ProductOrderByWithRelationInput
+    modifierGroupItems?: ModifierGroupItemOrderByRelationAggregateInput
     order?: OrderOrderByWithRelationInput
   }
 
@@ -23417,10 +30239,12 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"OrderProducts"> | Date | string
     productId?: StringFilter<"OrderProducts"> | string
     quantity?: IntFilter<"OrderProducts"> | number
+    comments?: StringNullableFilter<"OrderProducts"> | string | null
     fullAmount?: IntFilter<"OrderProducts"> | number
     amount?: IntFilter<"OrderProducts"> | number
     orderId?: StringNullableFilter<"OrderProducts"> | string | null
     product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
+    modifierGroupItems?: ModifierGroupItemListRelationFilter
     order?: XOR<OrderNullableScalarRelationFilter, OrderWhereInput> | null
   }, "id">
 
@@ -23429,6 +30253,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     productId?: SortOrder
     quantity?: SortOrder
+    comments?: SortOrderInput | SortOrder
     fullAmount?: SortOrder
     amount?: SortOrder
     orderId?: SortOrderInput | SortOrder
@@ -23447,48 +30272,356 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"OrderProducts"> | Date | string
     productId?: StringWithAggregatesFilter<"OrderProducts"> | string
     quantity?: IntWithAggregatesFilter<"OrderProducts"> | number
+    comments?: StringNullableWithAggregatesFilter<"OrderProducts"> | string | null
     fullAmount?: IntWithAggregatesFilter<"OrderProducts"> | number
     amount?: IntWithAggregatesFilter<"OrderProducts"> | number
     orderId?: StringNullableWithAggregatesFilter<"OrderProducts"> | string | null
   }
 
+  export type StationCreateInput = {
+    id: string
+    name: string
+    preparationSteps?: PreparationStepCreateNestedManyWithoutStationInput
+  }
+
+  export type StationUncheckedCreateInput = {
+    id: string
+    name: string
+    preparationSteps?: PreparationStepUncheckedCreateNestedManyWithoutStationInput
+  }
+
+  export type StationUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    preparationSteps?: PreparationStepUpdateManyWithoutStationNestedInput
+  }
+
+  export type StationUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    preparationSteps?: PreparationStepUncheckedUpdateManyWithoutStationNestedInput
+  }
+
+  export type StationCreateManyInput = {
+    id: string
+    name: string
+  }
+
+  export type StationUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type StationUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type PreparationStepCreateInput = {
+    id: string
+    createdAt?: Date | string
+    name: string
+    includeComments?: boolean
+    includeModifiers?: boolean
+    products?: ProductCreateNestedManyWithoutPreparationStepsInput
+    station: StationCreateNestedOneWithoutPreparationStepsInput
+    preparationStepTracks?: PreparationStepTrackCreateNestedManyWithoutPreparationStepInput
+  }
+
+  export type PreparationStepUncheckedCreateInput = {
+    id: string
+    createdAt?: Date | string
+    name: string
+    includeComments?: boolean
+    includeModifiers?: boolean
+    stationId: string
+    products?: ProductUncheckedCreateNestedManyWithoutPreparationStepsInput
+    preparationStepTracks?: PreparationStepTrackUncheckedCreateNestedManyWithoutPreparationStepInput
+  }
+
+  export type PreparationStepUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    includeComments?: BoolFieldUpdateOperationsInput | boolean
+    includeModifiers?: BoolFieldUpdateOperationsInput | boolean
+    products?: ProductUpdateManyWithoutPreparationStepsNestedInput
+    station?: StationUpdateOneRequiredWithoutPreparationStepsNestedInput
+    preparationStepTracks?: PreparationStepTrackUpdateManyWithoutPreparationStepNestedInput
+  }
+
+  export type PreparationStepUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    includeComments?: BoolFieldUpdateOperationsInput | boolean
+    includeModifiers?: BoolFieldUpdateOperationsInput | boolean
+    stationId?: StringFieldUpdateOperationsInput | string
+    products?: ProductUncheckedUpdateManyWithoutPreparationStepsNestedInput
+    preparationStepTracks?: PreparationStepTrackUncheckedUpdateManyWithoutPreparationStepNestedInput
+  }
+
+  export type PreparationStepCreateManyInput = {
+    id: string
+    createdAt?: Date | string
+    name: string
+    includeComments?: boolean
+    includeModifiers?: boolean
+    stationId: string
+  }
+
+  export type PreparationStepUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    includeComments?: BoolFieldUpdateOperationsInput | boolean
+    includeModifiers?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type PreparationStepUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    includeComments?: BoolFieldUpdateOperationsInput | boolean
+    includeModifiers?: BoolFieldUpdateOperationsInput | boolean
+    stationId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type PreparationStepCategoryCreateInput = {
+    id: string
+    createdAt?: Date | string
+    completed?: boolean
+    category: CategoryCreateNestedOneWithoutPreparationStepCategoriesInput
+    order: OrderCreateNestedOneWithoutPreparationStepCategoriesInput
+    preparationStepTracks?: PreparationStepTrackCreateNestedManyWithoutPreparationStepCategoryInput
+  }
+
+  export type PreparationStepCategoryUncheckedCreateInput = {
+    id: string
+    createdAt?: Date | string
+    categoryId: string
+    completed?: boolean
+    orderId: string
+    preparationStepTracks?: PreparationStepTrackUncheckedCreateNestedManyWithoutPreparationStepCategoryInput
+  }
+
+  export type PreparationStepCategoryUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completed?: BoolFieldUpdateOperationsInput | boolean
+    category?: CategoryUpdateOneRequiredWithoutPreparationStepCategoriesNestedInput
+    order?: OrderUpdateOneRequiredWithoutPreparationStepCategoriesNestedInput
+    preparationStepTracks?: PreparationStepTrackUpdateManyWithoutPreparationStepCategoryNestedInput
+  }
+
+  export type PreparationStepCategoryUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    categoryId?: StringFieldUpdateOperationsInput | string
+    completed?: BoolFieldUpdateOperationsInput | boolean
+    orderId?: StringFieldUpdateOperationsInput | string
+    preparationStepTracks?: PreparationStepTrackUncheckedUpdateManyWithoutPreparationStepCategoryNestedInput
+  }
+
+  export type PreparationStepCategoryCreateManyInput = {
+    id: string
+    createdAt?: Date | string
+    categoryId: string
+    completed?: boolean
+    orderId: string
+  }
+
+  export type PreparationStepCategoryUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completed?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type PreparationStepCategoryUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    categoryId?: StringFieldUpdateOperationsInput | string
+    completed?: BoolFieldUpdateOperationsInput | boolean
+    orderId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type PreparationStepTrackCreateInput = {
+    id: string
+    createdAt?: Date | string
+    completed?: boolean
+    quantity?: number | null
+    comments?: string | null
+    completedComments?: boolean
+    preparationStepModifierTracks?: PreparationStepModifierTrackCreateNestedManyWithoutPreparationStepTrackInput
+    preparationStep: PreparationStepCreateNestedOneWithoutPreparationStepTracksInput
+    preparationStepCategory: PreparationStepCategoryCreateNestedOneWithoutPreparationStepTracksInput
+  }
+
+  export type PreparationStepTrackUncheckedCreateInput = {
+    id: string
+    createdAt?: Date | string
+    completed?: boolean
+    quantity?: number | null
+    comments?: string | null
+    completedComments?: boolean
+    preparationStepId: string
+    preparationStepCategoryId: string
+    preparationStepModifierTracks?: PreparationStepModifierTrackUncheckedCreateNestedManyWithoutPreparationStepTrackInput
+  }
+
+  export type PreparationStepTrackUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completed?: BoolFieldUpdateOperationsInput | boolean
+    quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    comments?: NullableStringFieldUpdateOperationsInput | string | null
+    completedComments?: BoolFieldUpdateOperationsInput | boolean
+    preparationStepModifierTracks?: PreparationStepModifierTrackUpdateManyWithoutPreparationStepTrackNestedInput
+    preparationStep?: PreparationStepUpdateOneRequiredWithoutPreparationStepTracksNestedInput
+    preparationStepCategory?: PreparationStepCategoryUpdateOneRequiredWithoutPreparationStepTracksNestedInput
+  }
+
+  export type PreparationStepTrackUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completed?: BoolFieldUpdateOperationsInput | boolean
+    quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    comments?: NullableStringFieldUpdateOperationsInput | string | null
+    completedComments?: BoolFieldUpdateOperationsInput | boolean
+    preparationStepId?: StringFieldUpdateOperationsInput | string
+    preparationStepCategoryId?: StringFieldUpdateOperationsInput | string
+    preparationStepModifierTracks?: PreparationStepModifierTrackUncheckedUpdateManyWithoutPreparationStepTrackNestedInput
+  }
+
+  export type PreparationStepTrackCreateManyInput = {
+    id: string
+    createdAt?: Date | string
+    completed?: boolean
+    quantity?: number | null
+    comments?: string | null
+    completedComments?: boolean
+    preparationStepId: string
+    preparationStepCategoryId: string
+  }
+
+  export type PreparationStepTrackUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completed?: BoolFieldUpdateOperationsInput | boolean
+    quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    comments?: NullableStringFieldUpdateOperationsInput | string | null
+    completedComments?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type PreparationStepTrackUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completed?: BoolFieldUpdateOperationsInput | boolean
+    quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    comments?: NullableStringFieldUpdateOperationsInput | string | null
+    completedComments?: BoolFieldUpdateOperationsInput | boolean
+    preparationStepId?: StringFieldUpdateOperationsInput | string
+    preparationStepCategoryId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type PreparationStepModifierTrackCreateInput = {
+    id: string
+    createdAt?: Date | string
+    completed?: boolean
+    modifierGroupItem: ModifierGroupItemCreateNestedOneWithoutPreparationStepModifierTracksInput
+    preparationStepTrack: PreparationStepTrackCreateNestedOneWithoutPreparationStepModifierTracksInput
+  }
+
+  export type PreparationStepModifierTrackUncheckedCreateInput = {
+    id: string
+    createdAt?: Date | string
+    completed?: boolean
+    modifierGroupItemId: string
+    preparationStepTrackId: string
+  }
+
+  export type PreparationStepModifierTrackUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completed?: BoolFieldUpdateOperationsInput | boolean
+    modifierGroupItem?: ModifierGroupItemUpdateOneRequiredWithoutPreparationStepModifierTracksNestedInput
+    preparationStepTrack?: PreparationStepTrackUpdateOneRequiredWithoutPreparationStepModifierTracksNestedInput
+  }
+
+  export type PreparationStepModifierTrackUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completed?: BoolFieldUpdateOperationsInput | boolean
+    modifierGroupItemId?: StringFieldUpdateOperationsInput | string
+    preparationStepTrackId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type PreparationStepModifierTrackCreateManyInput = {
+    id: string
+    createdAt?: Date | string
+    completed?: boolean
+    modifierGroupItemId: string
+    preparationStepTrackId: string
+  }
+
+  export type PreparationStepModifierTrackUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completed?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type PreparationStepModifierTrackUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completed?: BoolFieldUpdateOperationsInput | boolean
+    modifierGroupItemId?: StringFieldUpdateOperationsInput | string
+    preparationStepTrackId?: StringFieldUpdateOperationsInput | string
+  }
+
   export type ProgressiveDiscountCreateInput = {
     id: string
     createdAt?: Date | string
+    completed?: boolean
     steps?: ProgressiveDiscountStepCreateNestedManyWithoutProgressiveDiscountInput
   }
 
   export type ProgressiveDiscountUncheckedCreateInput = {
     id: string
     createdAt?: Date | string
+    completed?: boolean
     steps?: ProgressiveDiscountStepUncheckedCreateNestedManyWithoutProgressiveDiscountInput
   }
 
   export type ProgressiveDiscountUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completed?: BoolFieldUpdateOperationsInput | boolean
     steps?: ProgressiveDiscountStepUpdateManyWithoutProgressiveDiscountNestedInput
   }
 
   export type ProgressiveDiscountUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completed?: BoolFieldUpdateOperationsInput | boolean
     steps?: ProgressiveDiscountStepUncheckedUpdateManyWithoutProgressiveDiscountNestedInput
   }
 
   export type ProgressiveDiscountCreateManyInput = {
     id: string
     createdAt?: Date | string
+    completed?: boolean
   }
 
   export type ProgressiveDiscountUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completed?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ProgressiveDiscountUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completed?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ProgressiveDiscountStepCreateInput = {
@@ -23702,8 +30835,11 @@ export namespace Prisma {
     createdAt?: Date | string
     name: string
     price: number
+    description?: string | null
     photo?: FileCreateNestedOneWithoutModifierGroupItemsInput
     modifierGroup?: ModifierGroupCreateNestedOneWithoutItemsInput
+    preparationStepModifierTracks?: PreparationStepModifierTrackCreateNestedManyWithoutModifierGroupItemInput
+    orderProducts?: OrderProductsCreateNestedManyWithoutModifierGroupItemsInput
   }
 
   export type ModifierGroupItemUncheckedCreateInput = {
@@ -23711,8 +30847,11 @@ export namespace Prisma {
     createdAt?: Date | string
     name: string
     price: number
+    description?: string | null
     modifierGroupId?: string | null
     fileId?: string | null
+    preparationStepModifierTracks?: PreparationStepModifierTrackUncheckedCreateNestedManyWithoutModifierGroupItemInput
+    orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutModifierGroupItemsInput
   }
 
   export type ModifierGroupItemUpdateInput = {
@@ -23720,8 +30859,11 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
     price?: IntFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     photo?: FileUpdateOneWithoutModifierGroupItemsNestedInput
     modifierGroup?: ModifierGroupUpdateOneWithoutItemsNestedInput
+    preparationStepModifierTracks?: PreparationStepModifierTrackUpdateManyWithoutModifierGroupItemNestedInput
+    orderProducts?: OrderProductsUpdateManyWithoutModifierGroupItemsNestedInput
   }
 
   export type ModifierGroupItemUncheckedUpdateInput = {
@@ -23729,8 +30871,11 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
     price?: IntFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     modifierGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     fileId?: NullableStringFieldUpdateOperationsInput | string | null
+    preparationStepModifierTracks?: PreparationStepModifierTrackUncheckedUpdateManyWithoutModifierGroupItemNestedInput
+    orderProducts?: OrderProductsUncheckedUpdateManyWithoutModifierGroupItemsNestedInput
   }
 
   export type ModifierGroupItemCreateManyInput = {
@@ -23738,6 +30883,7 @@ export namespace Prisma {
     createdAt?: Date | string
     name: string
     price: number
+    description?: string | null
     modifierGroupId?: string | null
     fileId?: string | null
   }
@@ -23747,6 +30893,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
     price?: IntFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ModifierGroupItemUncheckedUpdateManyInput = {
@@ -23754,6 +30901,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
     price?: IntFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     modifierGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     fileId?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -23808,6 +30956,7 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     name: string
+    operationHours?: NullableJsonNullValueInput | InputJsonValue
     address?: AddressCreateNestedOneWithoutBranchInput
     business?: BusinessCreateNestedOneWithoutBranchesInput
   }
@@ -23816,6 +30965,7 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     name: string
+    operationHours?: NullableJsonNullValueInput | InputJsonValue
     addressId?: string | null
     businessId?: string | null
   }
@@ -23824,6 +30974,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
+    operationHours?: NullableJsonNullValueInput | InputJsonValue
     address?: AddressUpdateOneWithoutBranchNestedInput
     business?: BusinessUpdateOneWithoutBranchesNestedInput
   }
@@ -23832,6 +30983,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
+    operationHours?: NullableJsonNullValueInput | InputJsonValue
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     businessId?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -23840,6 +30992,7 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     name: string
+    operationHours?: NullableJsonNullValueInput | InputJsonValue
     addressId?: string | null
     businessId?: string | null
   }
@@ -23848,12 +31001,14 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
+    operationHours?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type BranchUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
+    operationHours?: NullableJsonNullValueInput | InputJsonValue
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     businessId?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -23927,6 +31082,7 @@ export namespace Prisma {
     modifierGroups?: ModifierGroupCreateNestedManyWithoutProductsInput
     category?: CategoryCreateNestedOneWithoutProductsInput
     OrderProducts?: OrderProductsCreateNestedManyWithoutProductInput
+    preparationSteps?: PreparationStepCreateNestedManyWithoutProductsInput
   }
 
   export type ProductUncheckedCreateInput = {
@@ -23941,6 +31097,7 @@ export namespace Prisma {
     photos?: FileUncheckedCreateNestedManyWithoutProductInput
     modifierGroups?: ModifierGroupUncheckedCreateNestedManyWithoutProductsInput
     OrderProducts?: OrderProductsUncheckedCreateNestedManyWithoutProductInput
+    preparationSteps?: PreparationStepUncheckedCreateNestedManyWithoutProductsInput
   }
 
   export type ProductUpdateInput = {
@@ -23955,6 +31112,7 @@ export namespace Prisma {
     modifierGroups?: ModifierGroupUpdateManyWithoutProductsNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
     OrderProducts?: OrderProductsUpdateManyWithoutProductNestedInput
+    preparationSteps?: PreparationStepUpdateManyWithoutProductsNestedInput
   }
 
   export type ProductUncheckedUpdateInput = {
@@ -23969,6 +31127,7 @@ export namespace Prisma {
     photos?: FileUncheckedUpdateManyWithoutProductNestedInput
     modifierGroups?: ModifierGroupUncheckedUpdateManyWithoutProductsNestedInput
     OrderProducts?: OrderProductsUncheckedUpdateManyWithoutProductNestedInput
+    preparationSteps?: PreparationStepUncheckedUpdateManyWithoutProductsNestedInput
   }
 
   export type ProductCreateManyInput = {
@@ -24008,6 +31167,7 @@ export namespace Prisma {
     createdAt?: Date | string
     name: string
     products?: ProductCreateNestedManyWithoutCategoryInput
+    preparationStepCategories?: PreparationStepCategoryCreateNestedManyWithoutCategoryInput
   }
 
   export type CategoryUncheckedCreateInput = {
@@ -24015,6 +31175,7 @@ export namespace Prisma {
     createdAt?: Date | string
     name: string
     products?: ProductUncheckedCreateNestedManyWithoutCategoryInput
+    preparationStepCategories?: PreparationStepCategoryUncheckedCreateNestedManyWithoutCategoryInput
   }
 
   export type CategoryUpdateInput = {
@@ -24022,6 +31183,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
     products?: ProductUpdateManyWithoutCategoryNestedInput
+    preparationStepCategories?: PreparationStepCategoryUpdateManyWithoutCategoryNestedInput
   }
 
   export type CategoryUncheckedUpdateInput = {
@@ -24029,6 +31191,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
     products?: ProductUncheckedUpdateManyWithoutCategoryNestedInput
+    preparationStepCategories?: PreparationStepCategoryUncheckedUpdateManyWithoutCategoryNestedInput
   }
 
   export type CategoryCreateManyInput = {
@@ -24418,6 +31581,7 @@ export namespace Prisma {
     address?: AddressCreateNestedOneWithoutOrdersInput
     deliveryAddress?: DeliveryAddressCreateNestedOneWithoutOrdersInput
     orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
+    preparationStepCategories?: PreparationStepCategoryCreateNestedManyWithoutOrderInput
   }
 
   export type OrderUncheckedCreateInput = {
@@ -24433,6 +31597,7 @@ export namespace Prisma {
     addressId?: string | null
     deliveryAddressId?: string | null
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
+    preparationStepCategories?: PreparationStepCategoryUncheckedCreateNestedManyWithoutOrderInput
   }
 
   export type OrderUpdateInput = {
@@ -24448,6 +31613,7 @@ export namespace Prisma {
     address?: AddressUpdateOneWithoutOrdersNestedInput
     deliveryAddress?: DeliveryAddressUpdateOneWithoutOrdersNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
+    preparationStepCategories?: PreparationStepCategoryUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderUncheckedUpdateInput = {
@@ -24463,6 +31629,7 @@ export namespace Prisma {
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
+    preparationStepCategories?: PreparationStepCategoryUncheckedUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderCreateManyInput = {
@@ -24508,9 +31675,11 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     quantity: number
+    comments?: string | null
     fullAmount: number
     amount: number
     product: ProductCreateNestedOneWithoutOrderProductsInput
+    modifierGroupItems?: ModifierGroupItemCreateNestedManyWithoutOrderProductsInput
     order?: OrderCreateNestedOneWithoutOrderProductsInput
   }
 
@@ -24519,18 +31688,22 @@ export namespace Prisma {
     createdAt?: Date | string
     productId: string
     quantity: number
+    comments?: string | null
     fullAmount: number
     amount: number
     orderId?: string | null
+    modifierGroupItems?: ModifierGroupItemUncheckedCreateNestedManyWithoutOrderProductsInput
   }
 
   export type OrderProductsUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     quantity?: IntFieldUpdateOperationsInput | number
+    comments?: NullableStringFieldUpdateOperationsInput | string | null
     fullAmount?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
     product?: ProductUpdateOneRequiredWithoutOrderProductsNestedInput
+    modifierGroupItems?: ModifierGroupItemUpdateManyWithoutOrderProductsNestedInput
     order?: OrderUpdateOneWithoutOrderProductsNestedInput
   }
 
@@ -24539,9 +31712,11 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     productId?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
+    comments?: NullableStringFieldUpdateOperationsInput | string | null
     fullAmount?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
     orderId?: NullableStringFieldUpdateOperationsInput | string | null
+    modifierGroupItems?: ModifierGroupItemUncheckedUpdateManyWithoutOrderProductsNestedInput
   }
 
   export type OrderProductsCreateManyInput = {
@@ -24549,6 +31724,7 @@ export namespace Prisma {
     createdAt?: Date | string
     productId: string
     quantity: number
+    comments?: string | null
     fullAmount: number
     amount: number
     orderId?: string | null
@@ -24558,6 +31734,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     quantity?: IntFieldUpdateOperationsInput | number
+    comments?: NullableStringFieldUpdateOperationsInput | string | null
     fullAmount?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
   }
@@ -24567,6 +31744,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     productId?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
+    comments?: NullableStringFieldUpdateOperationsInput | string | null
     fullAmount?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
     orderId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -24587,40 +31765,29 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
-  export type DateTimeFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+  export type PreparationStepListRelationFilter = {
+    every?: PreparationStepWhereInput
+    some?: PreparationStepWhereInput
+    none?: PreparationStepWhereInput
   }
 
-  export type ProgressiveDiscountStepListRelationFilter = {
-    every?: ProgressiveDiscountStepWhereInput
-    some?: ProgressiveDiscountStepWhereInput
-    none?: ProgressiveDiscountStepWhereInput
-  }
-
-  export type ProgressiveDiscountStepOrderByRelationAggregateInput = {
+  export type PreparationStepOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
-  export type ProgressiveDiscountCountOrderByAggregateInput = {
+  export type StationCountOrderByAggregateInput = {
     id?: SortOrder
-    createdAt?: SortOrder
+    name?: SortOrder
   }
 
-  export type ProgressiveDiscountMaxOrderByAggregateInput = {
+  export type StationMaxOrderByAggregateInput = {
     id?: SortOrder
-    createdAt?: SortOrder
+    name?: SortOrder
   }
 
-  export type ProgressiveDiscountMinOrderByAggregateInput = {
+  export type StationMinOrderByAggregateInput = {
     id?: SortOrder
-    createdAt?: SortOrder
+    name?: SortOrder
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -24641,6 +31808,74 @@ export namespace Prisma {
     _max?: NestedStringFilter<$PrismaModel>
   }
 
+  export type DateTimeFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+  }
+
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type ProductListRelationFilter = {
+    every?: ProductWhereInput
+    some?: ProductWhereInput
+    none?: ProductWhereInput
+  }
+
+  export type StationScalarRelationFilter = {
+    is?: StationWhereInput
+    isNot?: StationWhereInput
+  }
+
+  export type PreparationStepTrackListRelationFilter = {
+    every?: PreparationStepTrackWhereInput
+    some?: PreparationStepTrackWhereInput
+    none?: PreparationStepTrackWhereInput
+  }
+
+  export type ProductOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type PreparationStepTrackOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type PreparationStepCountOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    name?: SortOrder
+    includeComments?: SortOrder
+    includeModifiers?: SortOrder
+    stationId?: SortOrder
+  }
+
+  export type PreparationStepMaxOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    name?: SortOrder
+    includeComments?: SortOrder
+    includeModifiers?: SortOrder
+    stationId?: SortOrder
+  }
+
+  export type PreparationStepMinOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    name?: SortOrder
+    includeComments?: SortOrder
+    includeModifiers?: SortOrder
+    stationId?: SortOrder
+  }
+
   export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -24655,15 +31890,46 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
-  export type IntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type CategoryScalarRelationFilter = {
+    is?: CategoryWhereInput
+    isNot?: CategoryWhereInput
+  }
+
+  export type OrderScalarRelationFilter = {
+    is?: OrderWhereInput
+    isNot?: OrderWhereInput
+  }
+
+  export type PreparationStepCategoryCountOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    categoryId?: SortOrder
+    completed?: SortOrder
+    orderId?: SortOrder
+  }
+
+  export type PreparationStepCategoryMaxOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    categoryId?: SortOrder
+    completed?: SortOrder
+    orderId?: SortOrder
+  }
+
+  export type PreparationStepCategoryMinOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    categoryId?: SortOrder
+    completed?: SortOrder
+    orderId?: SortOrder
   }
 
   export type IntNullableFilter<$PrismaModel = never> = {
@@ -24677,6 +31943,194 @@ export namespace Prisma {
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
+  export type StringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type PreparationStepModifierTrackListRelationFilter = {
+    every?: PreparationStepModifierTrackWhereInput
+    some?: PreparationStepModifierTrackWhereInput
+    none?: PreparationStepModifierTrackWhereInput
+  }
+
+  export type PreparationStepScalarRelationFilter = {
+    is?: PreparationStepWhereInput
+    isNot?: PreparationStepWhereInput
+  }
+
+  export type PreparationStepCategoryScalarRelationFilter = {
+    is?: PreparationStepCategoryWhereInput
+    isNot?: PreparationStepCategoryWhereInput
+  }
+
+  export type SortOrderInput = {
+    sort: SortOrder
+    nulls?: NullsOrder
+  }
+
+  export type PreparationStepModifierTrackOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type PreparationStepTrackCountOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    completed?: SortOrder
+    quantity?: SortOrder
+    comments?: SortOrder
+    completedComments?: SortOrder
+    preparationStepId?: SortOrder
+    preparationStepCategoryId?: SortOrder
+  }
+
+  export type PreparationStepTrackAvgOrderByAggregateInput = {
+    quantity?: SortOrder
+  }
+
+  export type PreparationStepTrackMaxOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    completed?: SortOrder
+    quantity?: SortOrder
+    comments?: SortOrder
+    completedComments?: SortOrder
+    preparationStepId?: SortOrder
+    preparationStepCategoryId?: SortOrder
+  }
+
+  export type PreparationStepTrackMinOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    completed?: SortOrder
+    quantity?: SortOrder
+    comments?: SortOrder
+    completedComments?: SortOrder
+    preparationStepId?: SortOrder
+    preparationStepCategoryId?: SortOrder
+  }
+
+  export type PreparationStepTrackSumOrderByAggregateInput = {
+    quantity?: SortOrder
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type ModifierGroupItemScalarRelationFilter = {
+    is?: ModifierGroupItemWhereInput
+    isNot?: ModifierGroupItemWhereInput
+  }
+
+  export type PreparationStepTrackScalarRelationFilter = {
+    is?: PreparationStepTrackWhereInput
+    isNot?: PreparationStepTrackWhereInput
+  }
+
+  export type PreparationStepModifierTrackCountOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    completed?: SortOrder
+    modifierGroupItemId?: SortOrder
+    preparationStepTrackId?: SortOrder
+  }
+
+  export type PreparationStepModifierTrackMaxOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    completed?: SortOrder
+    modifierGroupItemId?: SortOrder
+    preparationStepTrackId?: SortOrder
+  }
+
+  export type PreparationStepModifierTrackMinOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    completed?: SortOrder
+    modifierGroupItemId?: SortOrder
+    preparationStepTrackId?: SortOrder
+  }
+
+  export type ProgressiveDiscountStepListRelationFilter = {
+    every?: ProgressiveDiscountStepWhereInput
+    some?: ProgressiveDiscountStepWhereInput
+    none?: ProgressiveDiscountStepWhereInput
+  }
+
+  export type ProgressiveDiscountStepOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ProgressiveDiscountCountOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    completed?: SortOrder
+  }
+
+  export type ProgressiveDiscountMaxOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    completed?: SortOrder
+  }
+
+  export type ProgressiveDiscountMinOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    completed?: SortOrder
+  }
+
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
   export type EnumProgressiveDiscountStepTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.ProgressiveDiscountStepType | EnumProgressiveDiscountStepTypeFieldRefInput<$PrismaModel>
     in?: $Enums.ProgressiveDiscountStepType[] | ListEnumProgressiveDiscountStepTypeFieldRefInput<$PrismaModel>
@@ -24687,11 +32141,6 @@ export namespace Prisma {
   export type ProgressiveDiscountScalarRelationFilter = {
     is?: ProgressiveDiscountWhereInput
     isNot?: ProgressiveDiscountWhereInput
-  }
-
-  export type SortOrderInput = {
-    sort: SortOrder
-    nulls?: NullsOrder
   }
 
   export type ProgressiveDiscountStepCountOrderByAggregateInput = {
@@ -24747,22 +32196,6 @@ export namespace Prisma {
     _max?: NestedIntFilter<$PrismaModel>
   }
 
-  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
-  }
-
   export type EnumProgressiveDiscountStepTypeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.ProgressiveDiscountStepType | EnumProgressiveDiscountStepTypeFieldRefInput<$PrismaModel>
     in?: $Enums.ProgressiveDiscountStepType[] | ListEnumProgressiveDiscountStepTypeFieldRefInput<$PrismaModel>
@@ -24771,21 +32204,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumProgressiveDiscountStepTypeFilter<$PrismaModel>
     _max?: NestedEnumProgressiveDiscountStepTypeFilter<$PrismaModel>
-  }
-
-  export type StringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
   export type ProductNullableScalarRelationFilter = {
@@ -24838,44 +32256,11 @@ export namespace Prisma {
     size?: SortOrder
   }
 
-  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
-  }
-
-  export type BoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
   export type EnumModifierGroupTypeNullableFilter<$PrismaModel = never> = {
     equals?: $Enums.ModifierGroupType | EnumModifierGroupTypeFieldRefInput<$PrismaModel> | null
     in?: $Enums.ModifierGroupType[] | ListEnumModifierGroupTypeFieldRefInput<$PrismaModel> | null
     notIn?: $Enums.ModifierGroupType[] | ListEnumModifierGroupTypeFieldRefInput<$PrismaModel> | null
     not?: NestedEnumModifierGroupTypeNullableFilter<$PrismaModel> | $Enums.ModifierGroupType | null
-  }
-
-  export type ProductListRelationFilter = {
-    every?: ProductWhereInput
-    some?: ProductWhereInput
-    none?: ProductWhereInput
-  }
-
-  export type ProductOrderByRelationAggregateInput = {
-    _count?: SortOrder
   }
 
   export type ModifierGroupCountOrderByAggregateInput = {
@@ -24918,14 +32303,6 @@ export namespace Prisma {
     maxSelection?: SortOrder
   }
 
-  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
-  }
-
   export type EnumModifierGroupTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.ModifierGroupType | EnumModifierGroupTypeFieldRefInput<$PrismaModel> | null
     in?: $Enums.ModifierGroupType[] | ListEnumModifierGroupTypeFieldRefInput<$PrismaModel> | null
@@ -24946,11 +32323,22 @@ export namespace Prisma {
     isNot?: ModifierGroupWhereInput | null
   }
 
+  export type OrderProductsListRelationFilter = {
+    every?: OrderProductsWhereInput
+    some?: OrderProductsWhereInput
+    none?: OrderProductsWhereInput
+  }
+
+  export type OrderProductsOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type ModifierGroupItemCountOrderByAggregateInput = {
     id?: SortOrder
     createdAt?: SortOrder
     name?: SortOrder
     price?: SortOrder
+    description?: SortOrder
     modifierGroupId?: SortOrder
     fileId?: SortOrder
   }
@@ -24964,6 +32352,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     name?: SortOrder
     price?: SortOrder
+    description?: SortOrder
     modifierGroupId?: SortOrder
     fileId?: SortOrder
   }
@@ -24973,6 +32362,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     name?: SortOrder
     price?: SortOrder
+    description?: SortOrder
     modifierGroupId?: SortOrder
     fileId?: SortOrder
   }
@@ -25119,21 +32509,11 @@ export namespace Prisma {
     isNot?: CategoryWhereInput | null
   }
 
-  export type OrderProductsListRelationFilter = {
-    every?: OrderProductsWhereInput
-    some?: OrderProductsWhereInput
-    none?: OrderProductsWhereInput
-  }
-
   export type FileOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
   export type ModifierGroupOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type OrderProductsOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -25202,6 +32582,16 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedJsonNullableFilter<$PrismaModel>
     _max?: NestedJsonNullableFilter<$PrismaModel>
+  }
+
+  export type PreparationStepCategoryListRelationFilter = {
+    every?: PreparationStepCategoryWhereInput
+    some?: PreparationStepCategoryWhereInput
+    none?: PreparationStepCategoryWhereInput
+  }
+
+  export type PreparationStepCategoryOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type CategoryCountOrderByAggregateInput = {
@@ -25537,6 +32927,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     productId?: SortOrder
     quantity?: SortOrder
+    comments?: SortOrder
     fullAmount?: SortOrder
     amount?: SortOrder
     orderId?: SortOrder
@@ -25553,6 +32944,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     productId?: SortOrder
     quantity?: SortOrder
+    comments?: SortOrder
     fullAmount?: SortOrder
     amount?: SortOrder
     orderId?: SortOrder
@@ -25563,6 +32955,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     productId?: SortOrder
     quantity?: SortOrder
+    comments?: SortOrder
     fullAmount?: SortOrder
     amount?: SortOrder
     orderId?: SortOrder
@@ -25572,6 +32965,334 @@ export namespace Prisma {
     quantity?: SortOrder
     fullAmount?: SortOrder
     amount?: SortOrder
+  }
+
+  export type PreparationStepCreateNestedManyWithoutStationInput = {
+    create?: XOR<PreparationStepCreateWithoutStationInput, PreparationStepUncheckedCreateWithoutStationInput> | PreparationStepCreateWithoutStationInput[] | PreparationStepUncheckedCreateWithoutStationInput[]
+    connectOrCreate?: PreparationStepCreateOrConnectWithoutStationInput | PreparationStepCreateOrConnectWithoutStationInput[]
+    createMany?: PreparationStepCreateManyStationInputEnvelope
+    connect?: PreparationStepWhereUniqueInput | PreparationStepWhereUniqueInput[]
+  }
+
+  export type PreparationStepUncheckedCreateNestedManyWithoutStationInput = {
+    create?: XOR<PreparationStepCreateWithoutStationInput, PreparationStepUncheckedCreateWithoutStationInput> | PreparationStepCreateWithoutStationInput[] | PreparationStepUncheckedCreateWithoutStationInput[]
+    connectOrCreate?: PreparationStepCreateOrConnectWithoutStationInput | PreparationStepCreateOrConnectWithoutStationInput[]
+    createMany?: PreparationStepCreateManyStationInputEnvelope
+    connect?: PreparationStepWhereUniqueInput | PreparationStepWhereUniqueInput[]
+  }
+
+  export type StringFieldUpdateOperationsInput = {
+    set?: string
+  }
+
+  export type PreparationStepUpdateManyWithoutStationNestedInput = {
+    create?: XOR<PreparationStepCreateWithoutStationInput, PreparationStepUncheckedCreateWithoutStationInput> | PreparationStepCreateWithoutStationInput[] | PreparationStepUncheckedCreateWithoutStationInput[]
+    connectOrCreate?: PreparationStepCreateOrConnectWithoutStationInput | PreparationStepCreateOrConnectWithoutStationInput[]
+    upsert?: PreparationStepUpsertWithWhereUniqueWithoutStationInput | PreparationStepUpsertWithWhereUniqueWithoutStationInput[]
+    createMany?: PreparationStepCreateManyStationInputEnvelope
+    set?: PreparationStepWhereUniqueInput | PreparationStepWhereUniqueInput[]
+    disconnect?: PreparationStepWhereUniqueInput | PreparationStepWhereUniqueInput[]
+    delete?: PreparationStepWhereUniqueInput | PreparationStepWhereUniqueInput[]
+    connect?: PreparationStepWhereUniqueInput | PreparationStepWhereUniqueInput[]
+    update?: PreparationStepUpdateWithWhereUniqueWithoutStationInput | PreparationStepUpdateWithWhereUniqueWithoutStationInput[]
+    updateMany?: PreparationStepUpdateManyWithWhereWithoutStationInput | PreparationStepUpdateManyWithWhereWithoutStationInput[]
+    deleteMany?: PreparationStepScalarWhereInput | PreparationStepScalarWhereInput[]
+  }
+
+  export type PreparationStepUncheckedUpdateManyWithoutStationNestedInput = {
+    create?: XOR<PreparationStepCreateWithoutStationInput, PreparationStepUncheckedCreateWithoutStationInput> | PreparationStepCreateWithoutStationInput[] | PreparationStepUncheckedCreateWithoutStationInput[]
+    connectOrCreate?: PreparationStepCreateOrConnectWithoutStationInput | PreparationStepCreateOrConnectWithoutStationInput[]
+    upsert?: PreparationStepUpsertWithWhereUniqueWithoutStationInput | PreparationStepUpsertWithWhereUniqueWithoutStationInput[]
+    createMany?: PreparationStepCreateManyStationInputEnvelope
+    set?: PreparationStepWhereUniqueInput | PreparationStepWhereUniqueInput[]
+    disconnect?: PreparationStepWhereUniqueInput | PreparationStepWhereUniqueInput[]
+    delete?: PreparationStepWhereUniqueInput | PreparationStepWhereUniqueInput[]
+    connect?: PreparationStepWhereUniqueInput | PreparationStepWhereUniqueInput[]
+    update?: PreparationStepUpdateWithWhereUniqueWithoutStationInput | PreparationStepUpdateWithWhereUniqueWithoutStationInput[]
+    updateMany?: PreparationStepUpdateManyWithWhereWithoutStationInput | PreparationStepUpdateManyWithWhereWithoutStationInput[]
+    deleteMany?: PreparationStepScalarWhereInput | PreparationStepScalarWhereInput[]
+  }
+
+  export type ProductCreateNestedManyWithoutPreparationStepsInput = {
+    create?: XOR<ProductCreateWithoutPreparationStepsInput, ProductUncheckedCreateWithoutPreparationStepsInput> | ProductCreateWithoutPreparationStepsInput[] | ProductUncheckedCreateWithoutPreparationStepsInput[]
+    connectOrCreate?: ProductCreateOrConnectWithoutPreparationStepsInput | ProductCreateOrConnectWithoutPreparationStepsInput[]
+    connect?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+  }
+
+  export type StationCreateNestedOneWithoutPreparationStepsInput = {
+    create?: XOR<StationCreateWithoutPreparationStepsInput, StationUncheckedCreateWithoutPreparationStepsInput>
+    connectOrCreate?: StationCreateOrConnectWithoutPreparationStepsInput
+    connect?: StationWhereUniqueInput
+  }
+
+  export type PreparationStepTrackCreateNestedManyWithoutPreparationStepInput = {
+    create?: XOR<PreparationStepTrackCreateWithoutPreparationStepInput, PreparationStepTrackUncheckedCreateWithoutPreparationStepInput> | PreparationStepTrackCreateWithoutPreparationStepInput[] | PreparationStepTrackUncheckedCreateWithoutPreparationStepInput[]
+    connectOrCreate?: PreparationStepTrackCreateOrConnectWithoutPreparationStepInput | PreparationStepTrackCreateOrConnectWithoutPreparationStepInput[]
+    createMany?: PreparationStepTrackCreateManyPreparationStepInputEnvelope
+    connect?: PreparationStepTrackWhereUniqueInput | PreparationStepTrackWhereUniqueInput[]
+  }
+
+  export type ProductUncheckedCreateNestedManyWithoutPreparationStepsInput = {
+    create?: XOR<ProductCreateWithoutPreparationStepsInput, ProductUncheckedCreateWithoutPreparationStepsInput> | ProductCreateWithoutPreparationStepsInput[] | ProductUncheckedCreateWithoutPreparationStepsInput[]
+    connectOrCreate?: ProductCreateOrConnectWithoutPreparationStepsInput | ProductCreateOrConnectWithoutPreparationStepsInput[]
+    connect?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+  }
+
+  export type PreparationStepTrackUncheckedCreateNestedManyWithoutPreparationStepInput = {
+    create?: XOR<PreparationStepTrackCreateWithoutPreparationStepInput, PreparationStepTrackUncheckedCreateWithoutPreparationStepInput> | PreparationStepTrackCreateWithoutPreparationStepInput[] | PreparationStepTrackUncheckedCreateWithoutPreparationStepInput[]
+    connectOrCreate?: PreparationStepTrackCreateOrConnectWithoutPreparationStepInput | PreparationStepTrackCreateOrConnectWithoutPreparationStepInput[]
+    createMany?: PreparationStepTrackCreateManyPreparationStepInputEnvelope
+    connect?: PreparationStepTrackWhereUniqueInput | PreparationStepTrackWhereUniqueInput[]
+  }
+
+  export type DateTimeFieldUpdateOperationsInput = {
+    set?: Date | string
+  }
+
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
+  }
+
+  export type ProductUpdateManyWithoutPreparationStepsNestedInput = {
+    create?: XOR<ProductCreateWithoutPreparationStepsInput, ProductUncheckedCreateWithoutPreparationStepsInput> | ProductCreateWithoutPreparationStepsInput[] | ProductUncheckedCreateWithoutPreparationStepsInput[]
+    connectOrCreate?: ProductCreateOrConnectWithoutPreparationStepsInput | ProductCreateOrConnectWithoutPreparationStepsInput[]
+    upsert?: ProductUpsertWithWhereUniqueWithoutPreparationStepsInput | ProductUpsertWithWhereUniqueWithoutPreparationStepsInput[]
+    set?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+    disconnect?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+    delete?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+    connect?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+    update?: ProductUpdateWithWhereUniqueWithoutPreparationStepsInput | ProductUpdateWithWhereUniqueWithoutPreparationStepsInput[]
+    updateMany?: ProductUpdateManyWithWhereWithoutPreparationStepsInput | ProductUpdateManyWithWhereWithoutPreparationStepsInput[]
+    deleteMany?: ProductScalarWhereInput | ProductScalarWhereInput[]
+  }
+
+  export type StationUpdateOneRequiredWithoutPreparationStepsNestedInput = {
+    create?: XOR<StationCreateWithoutPreparationStepsInput, StationUncheckedCreateWithoutPreparationStepsInput>
+    connectOrCreate?: StationCreateOrConnectWithoutPreparationStepsInput
+    upsert?: StationUpsertWithoutPreparationStepsInput
+    connect?: StationWhereUniqueInput
+    update?: XOR<XOR<StationUpdateToOneWithWhereWithoutPreparationStepsInput, StationUpdateWithoutPreparationStepsInput>, StationUncheckedUpdateWithoutPreparationStepsInput>
+  }
+
+  export type PreparationStepTrackUpdateManyWithoutPreparationStepNestedInput = {
+    create?: XOR<PreparationStepTrackCreateWithoutPreparationStepInput, PreparationStepTrackUncheckedCreateWithoutPreparationStepInput> | PreparationStepTrackCreateWithoutPreparationStepInput[] | PreparationStepTrackUncheckedCreateWithoutPreparationStepInput[]
+    connectOrCreate?: PreparationStepTrackCreateOrConnectWithoutPreparationStepInput | PreparationStepTrackCreateOrConnectWithoutPreparationStepInput[]
+    upsert?: PreparationStepTrackUpsertWithWhereUniqueWithoutPreparationStepInput | PreparationStepTrackUpsertWithWhereUniqueWithoutPreparationStepInput[]
+    createMany?: PreparationStepTrackCreateManyPreparationStepInputEnvelope
+    set?: PreparationStepTrackWhereUniqueInput | PreparationStepTrackWhereUniqueInput[]
+    disconnect?: PreparationStepTrackWhereUniqueInput | PreparationStepTrackWhereUniqueInput[]
+    delete?: PreparationStepTrackWhereUniqueInput | PreparationStepTrackWhereUniqueInput[]
+    connect?: PreparationStepTrackWhereUniqueInput | PreparationStepTrackWhereUniqueInput[]
+    update?: PreparationStepTrackUpdateWithWhereUniqueWithoutPreparationStepInput | PreparationStepTrackUpdateWithWhereUniqueWithoutPreparationStepInput[]
+    updateMany?: PreparationStepTrackUpdateManyWithWhereWithoutPreparationStepInput | PreparationStepTrackUpdateManyWithWhereWithoutPreparationStepInput[]
+    deleteMany?: PreparationStepTrackScalarWhereInput | PreparationStepTrackScalarWhereInput[]
+  }
+
+  export type ProductUncheckedUpdateManyWithoutPreparationStepsNestedInput = {
+    create?: XOR<ProductCreateWithoutPreparationStepsInput, ProductUncheckedCreateWithoutPreparationStepsInput> | ProductCreateWithoutPreparationStepsInput[] | ProductUncheckedCreateWithoutPreparationStepsInput[]
+    connectOrCreate?: ProductCreateOrConnectWithoutPreparationStepsInput | ProductCreateOrConnectWithoutPreparationStepsInput[]
+    upsert?: ProductUpsertWithWhereUniqueWithoutPreparationStepsInput | ProductUpsertWithWhereUniqueWithoutPreparationStepsInput[]
+    set?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+    disconnect?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+    delete?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+    connect?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+    update?: ProductUpdateWithWhereUniqueWithoutPreparationStepsInput | ProductUpdateWithWhereUniqueWithoutPreparationStepsInput[]
+    updateMany?: ProductUpdateManyWithWhereWithoutPreparationStepsInput | ProductUpdateManyWithWhereWithoutPreparationStepsInput[]
+    deleteMany?: ProductScalarWhereInput | ProductScalarWhereInput[]
+  }
+
+  export type PreparationStepTrackUncheckedUpdateManyWithoutPreparationStepNestedInput = {
+    create?: XOR<PreparationStepTrackCreateWithoutPreparationStepInput, PreparationStepTrackUncheckedCreateWithoutPreparationStepInput> | PreparationStepTrackCreateWithoutPreparationStepInput[] | PreparationStepTrackUncheckedCreateWithoutPreparationStepInput[]
+    connectOrCreate?: PreparationStepTrackCreateOrConnectWithoutPreparationStepInput | PreparationStepTrackCreateOrConnectWithoutPreparationStepInput[]
+    upsert?: PreparationStepTrackUpsertWithWhereUniqueWithoutPreparationStepInput | PreparationStepTrackUpsertWithWhereUniqueWithoutPreparationStepInput[]
+    createMany?: PreparationStepTrackCreateManyPreparationStepInputEnvelope
+    set?: PreparationStepTrackWhereUniqueInput | PreparationStepTrackWhereUniqueInput[]
+    disconnect?: PreparationStepTrackWhereUniqueInput | PreparationStepTrackWhereUniqueInput[]
+    delete?: PreparationStepTrackWhereUniqueInput | PreparationStepTrackWhereUniqueInput[]
+    connect?: PreparationStepTrackWhereUniqueInput | PreparationStepTrackWhereUniqueInput[]
+    update?: PreparationStepTrackUpdateWithWhereUniqueWithoutPreparationStepInput | PreparationStepTrackUpdateWithWhereUniqueWithoutPreparationStepInput[]
+    updateMany?: PreparationStepTrackUpdateManyWithWhereWithoutPreparationStepInput | PreparationStepTrackUpdateManyWithWhereWithoutPreparationStepInput[]
+    deleteMany?: PreparationStepTrackScalarWhereInput | PreparationStepTrackScalarWhereInput[]
+  }
+
+  export type CategoryCreateNestedOneWithoutPreparationStepCategoriesInput = {
+    create?: XOR<CategoryCreateWithoutPreparationStepCategoriesInput, CategoryUncheckedCreateWithoutPreparationStepCategoriesInput>
+    connectOrCreate?: CategoryCreateOrConnectWithoutPreparationStepCategoriesInput
+    connect?: CategoryWhereUniqueInput
+  }
+
+  export type OrderCreateNestedOneWithoutPreparationStepCategoriesInput = {
+    create?: XOR<OrderCreateWithoutPreparationStepCategoriesInput, OrderUncheckedCreateWithoutPreparationStepCategoriesInput>
+    connectOrCreate?: OrderCreateOrConnectWithoutPreparationStepCategoriesInput
+    connect?: OrderWhereUniqueInput
+  }
+
+  export type PreparationStepTrackCreateNestedManyWithoutPreparationStepCategoryInput = {
+    create?: XOR<PreparationStepTrackCreateWithoutPreparationStepCategoryInput, PreparationStepTrackUncheckedCreateWithoutPreparationStepCategoryInput> | PreparationStepTrackCreateWithoutPreparationStepCategoryInput[] | PreparationStepTrackUncheckedCreateWithoutPreparationStepCategoryInput[]
+    connectOrCreate?: PreparationStepTrackCreateOrConnectWithoutPreparationStepCategoryInput | PreparationStepTrackCreateOrConnectWithoutPreparationStepCategoryInput[]
+    createMany?: PreparationStepTrackCreateManyPreparationStepCategoryInputEnvelope
+    connect?: PreparationStepTrackWhereUniqueInput | PreparationStepTrackWhereUniqueInput[]
+  }
+
+  export type PreparationStepTrackUncheckedCreateNestedManyWithoutPreparationStepCategoryInput = {
+    create?: XOR<PreparationStepTrackCreateWithoutPreparationStepCategoryInput, PreparationStepTrackUncheckedCreateWithoutPreparationStepCategoryInput> | PreparationStepTrackCreateWithoutPreparationStepCategoryInput[] | PreparationStepTrackUncheckedCreateWithoutPreparationStepCategoryInput[]
+    connectOrCreate?: PreparationStepTrackCreateOrConnectWithoutPreparationStepCategoryInput | PreparationStepTrackCreateOrConnectWithoutPreparationStepCategoryInput[]
+    createMany?: PreparationStepTrackCreateManyPreparationStepCategoryInputEnvelope
+    connect?: PreparationStepTrackWhereUniqueInput | PreparationStepTrackWhereUniqueInput[]
+  }
+
+  export type CategoryUpdateOneRequiredWithoutPreparationStepCategoriesNestedInput = {
+    create?: XOR<CategoryCreateWithoutPreparationStepCategoriesInput, CategoryUncheckedCreateWithoutPreparationStepCategoriesInput>
+    connectOrCreate?: CategoryCreateOrConnectWithoutPreparationStepCategoriesInput
+    upsert?: CategoryUpsertWithoutPreparationStepCategoriesInput
+    connect?: CategoryWhereUniqueInput
+    update?: XOR<XOR<CategoryUpdateToOneWithWhereWithoutPreparationStepCategoriesInput, CategoryUpdateWithoutPreparationStepCategoriesInput>, CategoryUncheckedUpdateWithoutPreparationStepCategoriesInput>
+  }
+
+  export type OrderUpdateOneRequiredWithoutPreparationStepCategoriesNestedInput = {
+    create?: XOR<OrderCreateWithoutPreparationStepCategoriesInput, OrderUncheckedCreateWithoutPreparationStepCategoriesInput>
+    connectOrCreate?: OrderCreateOrConnectWithoutPreparationStepCategoriesInput
+    upsert?: OrderUpsertWithoutPreparationStepCategoriesInput
+    connect?: OrderWhereUniqueInput
+    update?: XOR<XOR<OrderUpdateToOneWithWhereWithoutPreparationStepCategoriesInput, OrderUpdateWithoutPreparationStepCategoriesInput>, OrderUncheckedUpdateWithoutPreparationStepCategoriesInput>
+  }
+
+  export type PreparationStepTrackUpdateManyWithoutPreparationStepCategoryNestedInput = {
+    create?: XOR<PreparationStepTrackCreateWithoutPreparationStepCategoryInput, PreparationStepTrackUncheckedCreateWithoutPreparationStepCategoryInput> | PreparationStepTrackCreateWithoutPreparationStepCategoryInput[] | PreparationStepTrackUncheckedCreateWithoutPreparationStepCategoryInput[]
+    connectOrCreate?: PreparationStepTrackCreateOrConnectWithoutPreparationStepCategoryInput | PreparationStepTrackCreateOrConnectWithoutPreparationStepCategoryInput[]
+    upsert?: PreparationStepTrackUpsertWithWhereUniqueWithoutPreparationStepCategoryInput | PreparationStepTrackUpsertWithWhereUniqueWithoutPreparationStepCategoryInput[]
+    createMany?: PreparationStepTrackCreateManyPreparationStepCategoryInputEnvelope
+    set?: PreparationStepTrackWhereUniqueInput | PreparationStepTrackWhereUniqueInput[]
+    disconnect?: PreparationStepTrackWhereUniqueInput | PreparationStepTrackWhereUniqueInput[]
+    delete?: PreparationStepTrackWhereUniqueInput | PreparationStepTrackWhereUniqueInput[]
+    connect?: PreparationStepTrackWhereUniqueInput | PreparationStepTrackWhereUniqueInput[]
+    update?: PreparationStepTrackUpdateWithWhereUniqueWithoutPreparationStepCategoryInput | PreparationStepTrackUpdateWithWhereUniqueWithoutPreparationStepCategoryInput[]
+    updateMany?: PreparationStepTrackUpdateManyWithWhereWithoutPreparationStepCategoryInput | PreparationStepTrackUpdateManyWithWhereWithoutPreparationStepCategoryInput[]
+    deleteMany?: PreparationStepTrackScalarWhereInput | PreparationStepTrackScalarWhereInput[]
+  }
+
+  export type PreparationStepTrackUncheckedUpdateManyWithoutPreparationStepCategoryNestedInput = {
+    create?: XOR<PreparationStepTrackCreateWithoutPreparationStepCategoryInput, PreparationStepTrackUncheckedCreateWithoutPreparationStepCategoryInput> | PreparationStepTrackCreateWithoutPreparationStepCategoryInput[] | PreparationStepTrackUncheckedCreateWithoutPreparationStepCategoryInput[]
+    connectOrCreate?: PreparationStepTrackCreateOrConnectWithoutPreparationStepCategoryInput | PreparationStepTrackCreateOrConnectWithoutPreparationStepCategoryInput[]
+    upsert?: PreparationStepTrackUpsertWithWhereUniqueWithoutPreparationStepCategoryInput | PreparationStepTrackUpsertWithWhereUniqueWithoutPreparationStepCategoryInput[]
+    createMany?: PreparationStepTrackCreateManyPreparationStepCategoryInputEnvelope
+    set?: PreparationStepTrackWhereUniqueInput | PreparationStepTrackWhereUniqueInput[]
+    disconnect?: PreparationStepTrackWhereUniqueInput | PreparationStepTrackWhereUniqueInput[]
+    delete?: PreparationStepTrackWhereUniqueInput | PreparationStepTrackWhereUniqueInput[]
+    connect?: PreparationStepTrackWhereUniqueInput | PreparationStepTrackWhereUniqueInput[]
+    update?: PreparationStepTrackUpdateWithWhereUniqueWithoutPreparationStepCategoryInput | PreparationStepTrackUpdateWithWhereUniqueWithoutPreparationStepCategoryInput[]
+    updateMany?: PreparationStepTrackUpdateManyWithWhereWithoutPreparationStepCategoryInput | PreparationStepTrackUpdateManyWithWhereWithoutPreparationStepCategoryInput[]
+    deleteMany?: PreparationStepTrackScalarWhereInput | PreparationStepTrackScalarWhereInput[]
+  }
+
+  export type PreparationStepModifierTrackCreateNestedManyWithoutPreparationStepTrackInput = {
+    create?: XOR<PreparationStepModifierTrackCreateWithoutPreparationStepTrackInput, PreparationStepModifierTrackUncheckedCreateWithoutPreparationStepTrackInput> | PreparationStepModifierTrackCreateWithoutPreparationStepTrackInput[] | PreparationStepModifierTrackUncheckedCreateWithoutPreparationStepTrackInput[]
+    connectOrCreate?: PreparationStepModifierTrackCreateOrConnectWithoutPreparationStepTrackInput | PreparationStepModifierTrackCreateOrConnectWithoutPreparationStepTrackInput[]
+    createMany?: PreparationStepModifierTrackCreateManyPreparationStepTrackInputEnvelope
+    connect?: PreparationStepModifierTrackWhereUniqueInput | PreparationStepModifierTrackWhereUniqueInput[]
+  }
+
+  export type PreparationStepCreateNestedOneWithoutPreparationStepTracksInput = {
+    create?: XOR<PreparationStepCreateWithoutPreparationStepTracksInput, PreparationStepUncheckedCreateWithoutPreparationStepTracksInput>
+    connectOrCreate?: PreparationStepCreateOrConnectWithoutPreparationStepTracksInput
+    connect?: PreparationStepWhereUniqueInput
+  }
+
+  export type PreparationStepCategoryCreateNestedOneWithoutPreparationStepTracksInput = {
+    create?: XOR<PreparationStepCategoryCreateWithoutPreparationStepTracksInput, PreparationStepCategoryUncheckedCreateWithoutPreparationStepTracksInput>
+    connectOrCreate?: PreparationStepCategoryCreateOrConnectWithoutPreparationStepTracksInput
+    connect?: PreparationStepCategoryWhereUniqueInput
+  }
+
+  export type PreparationStepModifierTrackUncheckedCreateNestedManyWithoutPreparationStepTrackInput = {
+    create?: XOR<PreparationStepModifierTrackCreateWithoutPreparationStepTrackInput, PreparationStepModifierTrackUncheckedCreateWithoutPreparationStepTrackInput> | PreparationStepModifierTrackCreateWithoutPreparationStepTrackInput[] | PreparationStepModifierTrackUncheckedCreateWithoutPreparationStepTrackInput[]
+    connectOrCreate?: PreparationStepModifierTrackCreateOrConnectWithoutPreparationStepTrackInput | PreparationStepModifierTrackCreateOrConnectWithoutPreparationStepTrackInput[]
+    createMany?: PreparationStepModifierTrackCreateManyPreparationStepTrackInputEnvelope
+    connect?: PreparationStepModifierTrackWhereUniqueInput | PreparationStepModifierTrackWhereUniqueInput[]
+  }
+
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
+  }
+
+  export type PreparationStepModifierTrackUpdateManyWithoutPreparationStepTrackNestedInput = {
+    create?: XOR<PreparationStepModifierTrackCreateWithoutPreparationStepTrackInput, PreparationStepModifierTrackUncheckedCreateWithoutPreparationStepTrackInput> | PreparationStepModifierTrackCreateWithoutPreparationStepTrackInput[] | PreparationStepModifierTrackUncheckedCreateWithoutPreparationStepTrackInput[]
+    connectOrCreate?: PreparationStepModifierTrackCreateOrConnectWithoutPreparationStepTrackInput | PreparationStepModifierTrackCreateOrConnectWithoutPreparationStepTrackInput[]
+    upsert?: PreparationStepModifierTrackUpsertWithWhereUniqueWithoutPreparationStepTrackInput | PreparationStepModifierTrackUpsertWithWhereUniqueWithoutPreparationStepTrackInput[]
+    createMany?: PreparationStepModifierTrackCreateManyPreparationStepTrackInputEnvelope
+    set?: PreparationStepModifierTrackWhereUniqueInput | PreparationStepModifierTrackWhereUniqueInput[]
+    disconnect?: PreparationStepModifierTrackWhereUniqueInput | PreparationStepModifierTrackWhereUniqueInput[]
+    delete?: PreparationStepModifierTrackWhereUniqueInput | PreparationStepModifierTrackWhereUniqueInput[]
+    connect?: PreparationStepModifierTrackWhereUniqueInput | PreparationStepModifierTrackWhereUniqueInput[]
+    update?: PreparationStepModifierTrackUpdateWithWhereUniqueWithoutPreparationStepTrackInput | PreparationStepModifierTrackUpdateWithWhereUniqueWithoutPreparationStepTrackInput[]
+    updateMany?: PreparationStepModifierTrackUpdateManyWithWhereWithoutPreparationStepTrackInput | PreparationStepModifierTrackUpdateManyWithWhereWithoutPreparationStepTrackInput[]
+    deleteMany?: PreparationStepModifierTrackScalarWhereInput | PreparationStepModifierTrackScalarWhereInput[]
+  }
+
+  export type PreparationStepUpdateOneRequiredWithoutPreparationStepTracksNestedInput = {
+    create?: XOR<PreparationStepCreateWithoutPreparationStepTracksInput, PreparationStepUncheckedCreateWithoutPreparationStepTracksInput>
+    connectOrCreate?: PreparationStepCreateOrConnectWithoutPreparationStepTracksInput
+    upsert?: PreparationStepUpsertWithoutPreparationStepTracksInput
+    connect?: PreparationStepWhereUniqueInput
+    update?: XOR<XOR<PreparationStepUpdateToOneWithWhereWithoutPreparationStepTracksInput, PreparationStepUpdateWithoutPreparationStepTracksInput>, PreparationStepUncheckedUpdateWithoutPreparationStepTracksInput>
+  }
+
+  export type PreparationStepCategoryUpdateOneRequiredWithoutPreparationStepTracksNestedInput = {
+    create?: XOR<PreparationStepCategoryCreateWithoutPreparationStepTracksInput, PreparationStepCategoryUncheckedCreateWithoutPreparationStepTracksInput>
+    connectOrCreate?: PreparationStepCategoryCreateOrConnectWithoutPreparationStepTracksInput
+    upsert?: PreparationStepCategoryUpsertWithoutPreparationStepTracksInput
+    connect?: PreparationStepCategoryWhereUniqueInput
+    update?: XOR<XOR<PreparationStepCategoryUpdateToOneWithWhereWithoutPreparationStepTracksInput, PreparationStepCategoryUpdateWithoutPreparationStepTracksInput>, PreparationStepCategoryUncheckedUpdateWithoutPreparationStepTracksInput>
+  }
+
+  export type PreparationStepModifierTrackUncheckedUpdateManyWithoutPreparationStepTrackNestedInput = {
+    create?: XOR<PreparationStepModifierTrackCreateWithoutPreparationStepTrackInput, PreparationStepModifierTrackUncheckedCreateWithoutPreparationStepTrackInput> | PreparationStepModifierTrackCreateWithoutPreparationStepTrackInput[] | PreparationStepModifierTrackUncheckedCreateWithoutPreparationStepTrackInput[]
+    connectOrCreate?: PreparationStepModifierTrackCreateOrConnectWithoutPreparationStepTrackInput | PreparationStepModifierTrackCreateOrConnectWithoutPreparationStepTrackInput[]
+    upsert?: PreparationStepModifierTrackUpsertWithWhereUniqueWithoutPreparationStepTrackInput | PreparationStepModifierTrackUpsertWithWhereUniqueWithoutPreparationStepTrackInput[]
+    createMany?: PreparationStepModifierTrackCreateManyPreparationStepTrackInputEnvelope
+    set?: PreparationStepModifierTrackWhereUniqueInput | PreparationStepModifierTrackWhereUniqueInput[]
+    disconnect?: PreparationStepModifierTrackWhereUniqueInput | PreparationStepModifierTrackWhereUniqueInput[]
+    delete?: PreparationStepModifierTrackWhereUniqueInput | PreparationStepModifierTrackWhereUniqueInput[]
+    connect?: PreparationStepModifierTrackWhereUniqueInput | PreparationStepModifierTrackWhereUniqueInput[]
+    update?: PreparationStepModifierTrackUpdateWithWhereUniqueWithoutPreparationStepTrackInput | PreparationStepModifierTrackUpdateWithWhereUniqueWithoutPreparationStepTrackInput[]
+    updateMany?: PreparationStepModifierTrackUpdateManyWithWhereWithoutPreparationStepTrackInput | PreparationStepModifierTrackUpdateManyWithWhereWithoutPreparationStepTrackInput[]
+    deleteMany?: PreparationStepModifierTrackScalarWhereInput | PreparationStepModifierTrackScalarWhereInput[]
+  }
+
+  export type ModifierGroupItemCreateNestedOneWithoutPreparationStepModifierTracksInput = {
+    create?: XOR<ModifierGroupItemCreateWithoutPreparationStepModifierTracksInput, ModifierGroupItemUncheckedCreateWithoutPreparationStepModifierTracksInput>
+    connectOrCreate?: ModifierGroupItemCreateOrConnectWithoutPreparationStepModifierTracksInput
+    connect?: ModifierGroupItemWhereUniqueInput
+  }
+
+  export type PreparationStepTrackCreateNestedOneWithoutPreparationStepModifierTracksInput = {
+    create?: XOR<PreparationStepTrackCreateWithoutPreparationStepModifierTracksInput, PreparationStepTrackUncheckedCreateWithoutPreparationStepModifierTracksInput>
+    connectOrCreate?: PreparationStepTrackCreateOrConnectWithoutPreparationStepModifierTracksInput
+    connect?: PreparationStepTrackWhereUniqueInput
+  }
+
+  export type ModifierGroupItemUpdateOneRequiredWithoutPreparationStepModifierTracksNestedInput = {
+    create?: XOR<ModifierGroupItemCreateWithoutPreparationStepModifierTracksInput, ModifierGroupItemUncheckedCreateWithoutPreparationStepModifierTracksInput>
+    connectOrCreate?: ModifierGroupItemCreateOrConnectWithoutPreparationStepModifierTracksInput
+    upsert?: ModifierGroupItemUpsertWithoutPreparationStepModifierTracksInput
+    connect?: ModifierGroupItemWhereUniqueInput
+    update?: XOR<XOR<ModifierGroupItemUpdateToOneWithWhereWithoutPreparationStepModifierTracksInput, ModifierGroupItemUpdateWithoutPreparationStepModifierTracksInput>, ModifierGroupItemUncheckedUpdateWithoutPreparationStepModifierTracksInput>
+  }
+
+  export type PreparationStepTrackUpdateOneRequiredWithoutPreparationStepModifierTracksNestedInput = {
+    create?: XOR<PreparationStepTrackCreateWithoutPreparationStepModifierTracksInput, PreparationStepTrackUncheckedCreateWithoutPreparationStepModifierTracksInput>
+    connectOrCreate?: PreparationStepTrackCreateOrConnectWithoutPreparationStepModifierTracksInput
+    upsert?: PreparationStepTrackUpsertWithoutPreparationStepModifierTracksInput
+    connect?: PreparationStepTrackWhereUniqueInput
+    update?: XOR<XOR<PreparationStepTrackUpdateToOneWithWhereWithoutPreparationStepModifierTracksInput, PreparationStepTrackUpdateWithoutPreparationStepModifierTracksInput>, PreparationStepTrackUncheckedUpdateWithoutPreparationStepModifierTracksInput>
   }
 
   export type ProgressiveDiscountStepCreateNestedManyWithoutProgressiveDiscountInput = {
@@ -25586,14 +33307,6 @@ export namespace Prisma {
     connectOrCreate?: ProgressiveDiscountStepCreateOrConnectWithoutProgressiveDiscountInput | ProgressiveDiscountStepCreateOrConnectWithoutProgressiveDiscountInput[]
     createMany?: ProgressiveDiscountStepCreateManyProgressiveDiscountInputEnvelope
     connect?: ProgressiveDiscountStepWhereUniqueInput | ProgressiveDiscountStepWhereUniqueInput[]
-  }
-
-  export type StringFieldUpdateOperationsInput = {
-    set?: string
-  }
-
-  export type DateTimeFieldUpdateOperationsInput = {
-    set?: Date | string
   }
 
   export type ProgressiveDiscountStepUpdateManyWithoutProgressiveDiscountNestedInput = {
@@ -25632,14 +33345,6 @@ export namespace Prisma {
 
   export type IntFieldUpdateOperationsInput = {
     set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
-  }
-
-  export type NullableIntFieldUpdateOperationsInput = {
-    set?: number | null
     increment?: number
     decrement?: number
     multiply?: number
@@ -25702,10 +33407,6 @@ export namespace Prisma {
     deleteMany?: ModifierGroupItemScalarWhereInput | ModifierGroupItemScalarWhereInput[]
   }
 
-  export type NullableStringFieldUpdateOperationsInput = {
-    set?: string | null
-  }
-
   export type ModifierGroupItemUncheckedUpdateManyWithoutPhotoNestedInput = {
     create?: XOR<ModifierGroupItemCreateWithoutPhotoInput, ModifierGroupItemUncheckedCreateWithoutPhotoInput> | ModifierGroupItemCreateWithoutPhotoInput[] | ModifierGroupItemUncheckedCreateWithoutPhotoInput[]
     connectOrCreate?: ModifierGroupItemCreateOrConnectWithoutPhotoInput | ModifierGroupItemCreateOrConnectWithoutPhotoInput[]
@@ -25744,10 +33445,6 @@ export namespace Prisma {
     connectOrCreate?: ModifierGroupItemCreateOrConnectWithoutModifierGroupInput | ModifierGroupItemCreateOrConnectWithoutModifierGroupInput[]
     createMany?: ModifierGroupItemCreateManyModifierGroupInputEnvelope
     connect?: ModifierGroupItemWhereUniqueInput | ModifierGroupItemWhereUniqueInput[]
-  }
-
-  export type BoolFieldUpdateOperationsInput = {
-    set?: boolean
   }
 
   export type NullableEnumModifierGroupTypeFieldUpdateOperationsInput = {
@@ -25820,6 +33517,32 @@ export namespace Prisma {
     connect?: ModifierGroupWhereUniqueInput
   }
 
+  export type PreparationStepModifierTrackCreateNestedManyWithoutModifierGroupItemInput = {
+    create?: XOR<PreparationStepModifierTrackCreateWithoutModifierGroupItemInput, PreparationStepModifierTrackUncheckedCreateWithoutModifierGroupItemInput> | PreparationStepModifierTrackCreateWithoutModifierGroupItemInput[] | PreparationStepModifierTrackUncheckedCreateWithoutModifierGroupItemInput[]
+    connectOrCreate?: PreparationStepModifierTrackCreateOrConnectWithoutModifierGroupItemInput | PreparationStepModifierTrackCreateOrConnectWithoutModifierGroupItemInput[]
+    createMany?: PreparationStepModifierTrackCreateManyModifierGroupItemInputEnvelope
+    connect?: PreparationStepModifierTrackWhereUniqueInput | PreparationStepModifierTrackWhereUniqueInput[]
+  }
+
+  export type OrderProductsCreateNestedManyWithoutModifierGroupItemsInput = {
+    create?: XOR<OrderProductsCreateWithoutModifierGroupItemsInput, OrderProductsUncheckedCreateWithoutModifierGroupItemsInput> | OrderProductsCreateWithoutModifierGroupItemsInput[] | OrderProductsUncheckedCreateWithoutModifierGroupItemsInput[]
+    connectOrCreate?: OrderProductsCreateOrConnectWithoutModifierGroupItemsInput | OrderProductsCreateOrConnectWithoutModifierGroupItemsInput[]
+    connect?: OrderProductsWhereUniqueInput | OrderProductsWhereUniqueInput[]
+  }
+
+  export type PreparationStepModifierTrackUncheckedCreateNestedManyWithoutModifierGroupItemInput = {
+    create?: XOR<PreparationStepModifierTrackCreateWithoutModifierGroupItemInput, PreparationStepModifierTrackUncheckedCreateWithoutModifierGroupItemInput> | PreparationStepModifierTrackCreateWithoutModifierGroupItemInput[] | PreparationStepModifierTrackUncheckedCreateWithoutModifierGroupItemInput[]
+    connectOrCreate?: PreparationStepModifierTrackCreateOrConnectWithoutModifierGroupItemInput | PreparationStepModifierTrackCreateOrConnectWithoutModifierGroupItemInput[]
+    createMany?: PreparationStepModifierTrackCreateManyModifierGroupItemInputEnvelope
+    connect?: PreparationStepModifierTrackWhereUniqueInput | PreparationStepModifierTrackWhereUniqueInput[]
+  }
+
+  export type OrderProductsUncheckedCreateNestedManyWithoutModifierGroupItemsInput = {
+    create?: XOR<OrderProductsCreateWithoutModifierGroupItemsInput, OrderProductsUncheckedCreateWithoutModifierGroupItemsInput> | OrderProductsCreateWithoutModifierGroupItemsInput[] | OrderProductsUncheckedCreateWithoutModifierGroupItemsInput[]
+    connectOrCreate?: OrderProductsCreateOrConnectWithoutModifierGroupItemsInput | OrderProductsCreateOrConnectWithoutModifierGroupItemsInput[]
+    connect?: OrderProductsWhereUniqueInput | OrderProductsWhereUniqueInput[]
+  }
+
   export type FileUpdateOneWithoutModifierGroupItemsNestedInput = {
     create?: XOR<FileCreateWithoutModifierGroupItemsInput, FileUncheckedCreateWithoutModifierGroupItemsInput>
     connectOrCreate?: FileCreateOrConnectWithoutModifierGroupItemsInput
@@ -25838,6 +33561,60 @@ export namespace Prisma {
     delete?: ModifierGroupWhereInput | boolean
     connect?: ModifierGroupWhereUniqueInput
     update?: XOR<XOR<ModifierGroupUpdateToOneWithWhereWithoutItemsInput, ModifierGroupUpdateWithoutItemsInput>, ModifierGroupUncheckedUpdateWithoutItemsInput>
+  }
+
+  export type PreparationStepModifierTrackUpdateManyWithoutModifierGroupItemNestedInput = {
+    create?: XOR<PreparationStepModifierTrackCreateWithoutModifierGroupItemInput, PreparationStepModifierTrackUncheckedCreateWithoutModifierGroupItemInput> | PreparationStepModifierTrackCreateWithoutModifierGroupItemInput[] | PreparationStepModifierTrackUncheckedCreateWithoutModifierGroupItemInput[]
+    connectOrCreate?: PreparationStepModifierTrackCreateOrConnectWithoutModifierGroupItemInput | PreparationStepModifierTrackCreateOrConnectWithoutModifierGroupItemInput[]
+    upsert?: PreparationStepModifierTrackUpsertWithWhereUniqueWithoutModifierGroupItemInput | PreparationStepModifierTrackUpsertWithWhereUniqueWithoutModifierGroupItemInput[]
+    createMany?: PreparationStepModifierTrackCreateManyModifierGroupItemInputEnvelope
+    set?: PreparationStepModifierTrackWhereUniqueInput | PreparationStepModifierTrackWhereUniqueInput[]
+    disconnect?: PreparationStepModifierTrackWhereUniqueInput | PreparationStepModifierTrackWhereUniqueInput[]
+    delete?: PreparationStepModifierTrackWhereUniqueInput | PreparationStepModifierTrackWhereUniqueInput[]
+    connect?: PreparationStepModifierTrackWhereUniqueInput | PreparationStepModifierTrackWhereUniqueInput[]
+    update?: PreparationStepModifierTrackUpdateWithWhereUniqueWithoutModifierGroupItemInput | PreparationStepModifierTrackUpdateWithWhereUniqueWithoutModifierGroupItemInput[]
+    updateMany?: PreparationStepModifierTrackUpdateManyWithWhereWithoutModifierGroupItemInput | PreparationStepModifierTrackUpdateManyWithWhereWithoutModifierGroupItemInput[]
+    deleteMany?: PreparationStepModifierTrackScalarWhereInput | PreparationStepModifierTrackScalarWhereInput[]
+  }
+
+  export type OrderProductsUpdateManyWithoutModifierGroupItemsNestedInput = {
+    create?: XOR<OrderProductsCreateWithoutModifierGroupItemsInput, OrderProductsUncheckedCreateWithoutModifierGroupItemsInput> | OrderProductsCreateWithoutModifierGroupItemsInput[] | OrderProductsUncheckedCreateWithoutModifierGroupItemsInput[]
+    connectOrCreate?: OrderProductsCreateOrConnectWithoutModifierGroupItemsInput | OrderProductsCreateOrConnectWithoutModifierGroupItemsInput[]
+    upsert?: OrderProductsUpsertWithWhereUniqueWithoutModifierGroupItemsInput | OrderProductsUpsertWithWhereUniqueWithoutModifierGroupItemsInput[]
+    set?: OrderProductsWhereUniqueInput | OrderProductsWhereUniqueInput[]
+    disconnect?: OrderProductsWhereUniqueInput | OrderProductsWhereUniqueInput[]
+    delete?: OrderProductsWhereUniqueInput | OrderProductsWhereUniqueInput[]
+    connect?: OrderProductsWhereUniqueInput | OrderProductsWhereUniqueInput[]
+    update?: OrderProductsUpdateWithWhereUniqueWithoutModifierGroupItemsInput | OrderProductsUpdateWithWhereUniqueWithoutModifierGroupItemsInput[]
+    updateMany?: OrderProductsUpdateManyWithWhereWithoutModifierGroupItemsInput | OrderProductsUpdateManyWithWhereWithoutModifierGroupItemsInput[]
+    deleteMany?: OrderProductsScalarWhereInput | OrderProductsScalarWhereInput[]
+  }
+
+  export type PreparationStepModifierTrackUncheckedUpdateManyWithoutModifierGroupItemNestedInput = {
+    create?: XOR<PreparationStepModifierTrackCreateWithoutModifierGroupItemInput, PreparationStepModifierTrackUncheckedCreateWithoutModifierGroupItemInput> | PreparationStepModifierTrackCreateWithoutModifierGroupItemInput[] | PreparationStepModifierTrackUncheckedCreateWithoutModifierGroupItemInput[]
+    connectOrCreate?: PreparationStepModifierTrackCreateOrConnectWithoutModifierGroupItemInput | PreparationStepModifierTrackCreateOrConnectWithoutModifierGroupItemInput[]
+    upsert?: PreparationStepModifierTrackUpsertWithWhereUniqueWithoutModifierGroupItemInput | PreparationStepModifierTrackUpsertWithWhereUniqueWithoutModifierGroupItemInput[]
+    createMany?: PreparationStepModifierTrackCreateManyModifierGroupItemInputEnvelope
+    set?: PreparationStepModifierTrackWhereUniqueInput | PreparationStepModifierTrackWhereUniqueInput[]
+    disconnect?: PreparationStepModifierTrackWhereUniqueInput | PreparationStepModifierTrackWhereUniqueInput[]
+    delete?: PreparationStepModifierTrackWhereUniqueInput | PreparationStepModifierTrackWhereUniqueInput[]
+    connect?: PreparationStepModifierTrackWhereUniqueInput | PreparationStepModifierTrackWhereUniqueInput[]
+    update?: PreparationStepModifierTrackUpdateWithWhereUniqueWithoutModifierGroupItemInput | PreparationStepModifierTrackUpdateWithWhereUniqueWithoutModifierGroupItemInput[]
+    updateMany?: PreparationStepModifierTrackUpdateManyWithWhereWithoutModifierGroupItemInput | PreparationStepModifierTrackUpdateManyWithWhereWithoutModifierGroupItemInput[]
+    deleteMany?: PreparationStepModifierTrackScalarWhereInput | PreparationStepModifierTrackScalarWhereInput[]
+  }
+
+  export type OrderProductsUncheckedUpdateManyWithoutModifierGroupItemsNestedInput = {
+    create?: XOR<OrderProductsCreateWithoutModifierGroupItemsInput, OrderProductsUncheckedCreateWithoutModifierGroupItemsInput> | OrderProductsCreateWithoutModifierGroupItemsInput[] | OrderProductsUncheckedCreateWithoutModifierGroupItemsInput[]
+    connectOrCreate?: OrderProductsCreateOrConnectWithoutModifierGroupItemsInput | OrderProductsCreateOrConnectWithoutModifierGroupItemsInput[]
+    upsert?: OrderProductsUpsertWithWhereUniqueWithoutModifierGroupItemsInput | OrderProductsUpsertWithWhereUniqueWithoutModifierGroupItemsInput[]
+    set?: OrderProductsWhereUniqueInput | OrderProductsWhereUniqueInput[]
+    disconnect?: OrderProductsWhereUniqueInput | OrderProductsWhereUniqueInput[]
+    delete?: OrderProductsWhereUniqueInput | OrderProductsWhereUniqueInput[]
+    connect?: OrderProductsWhereUniqueInput | OrderProductsWhereUniqueInput[]
+    update?: OrderProductsUpdateWithWhereUniqueWithoutModifierGroupItemsInput | OrderProductsUpdateWithWhereUniqueWithoutModifierGroupItemsInput[]
+    updateMany?: OrderProductsUpdateManyWithWhereWithoutModifierGroupItemsInput | OrderProductsUpdateManyWithWhereWithoutModifierGroupItemsInput[]
+    deleteMany?: OrderProductsScalarWhereInput | OrderProductsScalarWhereInput[]
   }
 
   export type BranchCreateNestedManyWithoutBusinessInput = {
@@ -26014,6 +33791,12 @@ export namespace Prisma {
     connect?: OrderProductsWhereUniqueInput | OrderProductsWhereUniqueInput[]
   }
 
+  export type PreparationStepCreateNestedManyWithoutProductsInput = {
+    create?: XOR<PreparationStepCreateWithoutProductsInput, PreparationStepUncheckedCreateWithoutProductsInput> | PreparationStepCreateWithoutProductsInput[] | PreparationStepUncheckedCreateWithoutProductsInput[]
+    connectOrCreate?: PreparationStepCreateOrConnectWithoutProductsInput | PreparationStepCreateOrConnectWithoutProductsInput[]
+    connect?: PreparationStepWhereUniqueInput | PreparationStepWhereUniqueInput[]
+  }
+
   export type FileUncheckedCreateNestedManyWithoutProductInput = {
     create?: XOR<FileCreateWithoutProductInput, FileUncheckedCreateWithoutProductInput> | FileCreateWithoutProductInput[] | FileUncheckedCreateWithoutProductInput[]
     connectOrCreate?: FileCreateOrConnectWithoutProductInput | FileCreateOrConnectWithoutProductInput[]
@@ -26032,6 +33815,12 @@ export namespace Prisma {
     connectOrCreate?: OrderProductsCreateOrConnectWithoutProductInput | OrderProductsCreateOrConnectWithoutProductInput[]
     createMany?: OrderProductsCreateManyProductInputEnvelope
     connect?: OrderProductsWhereUniqueInput | OrderProductsWhereUniqueInput[]
+  }
+
+  export type PreparationStepUncheckedCreateNestedManyWithoutProductsInput = {
+    create?: XOR<PreparationStepCreateWithoutProductsInput, PreparationStepUncheckedCreateWithoutProductsInput> | PreparationStepCreateWithoutProductsInput[] | PreparationStepUncheckedCreateWithoutProductsInput[]
+    connectOrCreate?: PreparationStepCreateOrConnectWithoutProductsInput | PreparationStepCreateOrConnectWithoutProductsInput[]
+    connect?: PreparationStepWhereUniqueInput | PreparationStepWhereUniqueInput[]
   }
 
   export type FileUpdateManyWithoutProductNestedInput = {
@@ -26085,6 +33874,19 @@ export namespace Prisma {
     deleteMany?: OrderProductsScalarWhereInput | OrderProductsScalarWhereInput[]
   }
 
+  export type PreparationStepUpdateManyWithoutProductsNestedInput = {
+    create?: XOR<PreparationStepCreateWithoutProductsInput, PreparationStepUncheckedCreateWithoutProductsInput> | PreparationStepCreateWithoutProductsInput[] | PreparationStepUncheckedCreateWithoutProductsInput[]
+    connectOrCreate?: PreparationStepCreateOrConnectWithoutProductsInput | PreparationStepCreateOrConnectWithoutProductsInput[]
+    upsert?: PreparationStepUpsertWithWhereUniqueWithoutProductsInput | PreparationStepUpsertWithWhereUniqueWithoutProductsInput[]
+    set?: PreparationStepWhereUniqueInput | PreparationStepWhereUniqueInput[]
+    disconnect?: PreparationStepWhereUniqueInput | PreparationStepWhereUniqueInput[]
+    delete?: PreparationStepWhereUniqueInput | PreparationStepWhereUniqueInput[]
+    connect?: PreparationStepWhereUniqueInput | PreparationStepWhereUniqueInput[]
+    update?: PreparationStepUpdateWithWhereUniqueWithoutProductsInput | PreparationStepUpdateWithWhereUniqueWithoutProductsInput[]
+    updateMany?: PreparationStepUpdateManyWithWhereWithoutProductsInput | PreparationStepUpdateManyWithWhereWithoutProductsInput[]
+    deleteMany?: PreparationStepScalarWhereInput | PreparationStepScalarWhereInput[]
+  }
+
   export type FileUncheckedUpdateManyWithoutProductNestedInput = {
     create?: XOR<FileCreateWithoutProductInput, FileUncheckedCreateWithoutProductInput> | FileCreateWithoutProductInput[] | FileUncheckedCreateWithoutProductInput[]
     connectOrCreate?: FileCreateOrConnectWithoutProductInput | FileCreateOrConnectWithoutProductInput[]
@@ -26126,6 +33928,19 @@ export namespace Prisma {
     deleteMany?: OrderProductsScalarWhereInput | OrderProductsScalarWhereInput[]
   }
 
+  export type PreparationStepUncheckedUpdateManyWithoutProductsNestedInput = {
+    create?: XOR<PreparationStepCreateWithoutProductsInput, PreparationStepUncheckedCreateWithoutProductsInput> | PreparationStepCreateWithoutProductsInput[] | PreparationStepUncheckedCreateWithoutProductsInput[]
+    connectOrCreate?: PreparationStepCreateOrConnectWithoutProductsInput | PreparationStepCreateOrConnectWithoutProductsInput[]
+    upsert?: PreparationStepUpsertWithWhereUniqueWithoutProductsInput | PreparationStepUpsertWithWhereUniqueWithoutProductsInput[]
+    set?: PreparationStepWhereUniqueInput | PreparationStepWhereUniqueInput[]
+    disconnect?: PreparationStepWhereUniqueInput | PreparationStepWhereUniqueInput[]
+    delete?: PreparationStepWhereUniqueInput | PreparationStepWhereUniqueInput[]
+    connect?: PreparationStepWhereUniqueInput | PreparationStepWhereUniqueInput[]
+    update?: PreparationStepUpdateWithWhereUniqueWithoutProductsInput | PreparationStepUpdateWithWhereUniqueWithoutProductsInput[]
+    updateMany?: PreparationStepUpdateManyWithWhereWithoutProductsInput | PreparationStepUpdateManyWithWhereWithoutProductsInput[]
+    deleteMany?: PreparationStepScalarWhereInput | PreparationStepScalarWhereInput[]
+  }
+
   export type ProductCreateNestedManyWithoutCategoryInput = {
     create?: XOR<ProductCreateWithoutCategoryInput, ProductUncheckedCreateWithoutCategoryInput> | ProductCreateWithoutCategoryInput[] | ProductUncheckedCreateWithoutCategoryInput[]
     connectOrCreate?: ProductCreateOrConnectWithoutCategoryInput | ProductCreateOrConnectWithoutCategoryInput[]
@@ -26133,11 +33948,25 @@ export namespace Prisma {
     connect?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
   }
 
+  export type PreparationStepCategoryCreateNestedManyWithoutCategoryInput = {
+    create?: XOR<PreparationStepCategoryCreateWithoutCategoryInput, PreparationStepCategoryUncheckedCreateWithoutCategoryInput> | PreparationStepCategoryCreateWithoutCategoryInput[] | PreparationStepCategoryUncheckedCreateWithoutCategoryInput[]
+    connectOrCreate?: PreparationStepCategoryCreateOrConnectWithoutCategoryInput | PreparationStepCategoryCreateOrConnectWithoutCategoryInput[]
+    createMany?: PreparationStepCategoryCreateManyCategoryInputEnvelope
+    connect?: PreparationStepCategoryWhereUniqueInput | PreparationStepCategoryWhereUniqueInput[]
+  }
+
   export type ProductUncheckedCreateNestedManyWithoutCategoryInput = {
     create?: XOR<ProductCreateWithoutCategoryInput, ProductUncheckedCreateWithoutCategoryInput> | ProductCreateWithoutCategoryInput[] | ProductUncheckedCreateWithoutCategoryInput[]
     connectOrCreate?: ProductCreateOrConnectWithoutCategoryInput | ProductCreateOrConnectWithoutCategoryInput[]
     createMany?: ProductCreateManyCategoryInputEnvelope
     connect?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+  }
+
+  export type PreparationStepCategoryUncheckedCreateNestedManyWithoutCategoryInput = {
+    create?: XOR<PreparationStepCategoryCreateWithoutCategoryInput, PreparationStepCategoryUncheckedCreateWithoutCategoryInput> | PreparationStepCategoryCreateWithoutCategoryInput[] | PreparationStepCategoryUncheckedCreateWithoutCategoryInput[]
+    connectOrCreate?: PreparationStepCategoryCreateOrConnectWithoutCategoryInput | PreparationStepCategoryCreateOrConnectWithoutCategoryInput[]
+    createMany?: PreparationStepCategoryCreateManyCategoryInputEnvelope
+    connect?: PreparationStepCategoryWhereUniqueInput | PreparationStepCategoryWhereUniqueInput[]
   }
 
   export type ProductUpdateManyWithoutCategoryNestedInput = {
@@ -26154,6 +33983,20 @@ export namespace Prisma {
     deleteMany?: ProductScalarWhereInput | ProductScalarWhereInput[]
   }
 
+  export type PreparationStepCategoryUpdateManyWithoutCategoryNestedInput = {
+    create?: XOR<PreparationStepCategoryCreateWithoutCategoryInput, PreparationStepCategoryUncheckedCreateWithoutCategoryInput> | PreparationStepCategoryCreateWithoutCategoryInput[] | PreparationStepCategoryUncheckedCreateWithoutCategoryInput[]
+    connectOrCreate?: PreparationStepCategoryCreateOrConnectWithoutCategoryInput | PreparationStepCategoryCreateOrConnectWithoutCategoryInput[]
+    upsert?: PreparationStepCategoryUpsertWithWhereUniqueWithoutCategoryInput | PreparationStepCategoryUpsertWithWhereUniqueWithoutCategoryInput[]
+    createMany?: PreparationStepCategoryCreateManyCategoryInputEnvelope
+    set?: PreparationStepCategoryWhereUniqueInput | PreparationStepCategoryWhereUniqueInput[]
+    disconnect?: PreparationStepCategoryWhereUniqueInput | PreparationStepCategoryWhereUniqueInput[]
+    delete?: PreparationStepCategoryWhereUniqueInput | PreparationStepCategoryWhereUniqueInput[]
+    connect?: PreparationStepCategoryWhereUniqueInput | PreparationStepCategoryWhereUniqueInput[]
+    update?: PreparationStepCategoryUpdateWithWhereUniqueWithoutCategoryInput | PreparationStepCategoryUpdateWithWhereUniqueWithoutCategoryInput[]
+    updateMany?: PreparationStepCategoryUpdateManyWithWhereWithoutCategoryInput | PreparationStepCategoryUpdateManyWithWhereWithoutCategoryInput[]
+    deleteMany?: PreparationStepCategoryScalarWhereInput | PreparationStepCategoryScalarWhereInput[]
+  }
+
   export type ProductUncheckedUpdateManyWithoutCategoryNestedInput = {
     create?: XOR<ProductCreateWithoutCategoryInput, ProductUncheckedCreateWithoutCategoryInput> | ProductCreateWithoutCategoryInput[] | ProductUncheckedCreateWithoutCategoryInput[]
     connectOrCreate?: ProductCreateOrConnectWithoutCategoryInput | ProductCreateOrConnectWithoutCategoryInput[]
@@ -26166,6 +34009,20 @@ export namespace Prisma {
     update?: ProductUpdateWithWhereUniqueWithoutCategoryInput | ProductUpdateWithWhereUniqueWithoutCategoryInput[]
     updateMany?: ProductUpdateManyWithWhereWithoutCategoryInput | ProductUpdateManyWithWhereWithoutCategoryInput[]
     deleteMany?: ProductScalarWhereInput | ProductScalarWhereInput[]
+  }
+
+  export type PreparationStepCategoryUncheckedUpdateManyWithoutCategoryNestedInput = {
+    create?: XOR<PreparationStepCategoryCreateWithoutCategoryInput, PreparationStepCategoryUncheckedCreateWithoutCategoryInput> | PreparationStepCategoryCreateWithoutCategoryInput[] | PreparationStepCategoryUncheckedCreateWithoutCategoryInput[]
+    connectOrCreate?: PreparationStepCategoryCreateOrConnectWithoutCategoryInput | PreparationStepCategoryCreateOrConnectWithoutCategoryInput[]
+    upsert?: PreparationStepCategoryUpsertWithWhereUniqueWithoutCategoryInput | PreparationStepCategoryUpsertWithWhereUniqueWithoutCategoryInput[]
+    createMany?: PreparationStepCategoryCreateManyCategoryInputEnvelope
+    set?: PreparationStepCategoryWhereUniqueInput | PreparationStepCategoryWhereUniqueInput[]
+    disconnect?: PreparationStepCategoryWhereUniqueInput | PreparationStepCategoryWhereUniqueInput[]
+    delete?: PreparationStepCategoryWhereUniqueInput | PreparationStepCategoryWhereUniqueInput[]
+    connect?: PreparationStepCategoryWhereUniqueInput | PreparationStepCategoryWhereUniqueInput[]
+    update?: PreparationStepCategoryUpdateWithWhereUniqueWithoutCategoryInput | PreparationStepCategoryUpdateWithWhereUniqueWithoutCategoryInput[]
+    updateMany?: PreparationStepCategoryUpdateManyWithWhereWithoutCategoryInput | PreparationStepCategoryUpdateManyWithWhereWithoutCategoryInput[]
+    deleteMany?: PreparationStepCategoryScalarWhereInput | PreparationStepCategoryScalarWhereInput[]
   }
 
   export type PromotialMessageCreateNestedManyWithoutCampaignInput = {
@@ -26509,11 +34366,25 @@ export namespace Prisma {
     connect?: OrderProductsWhereUniqueInput | OrderProductsWhereUniqueInput[]
   }
 
+  export type PreparationStepCategoryCreateNestedManyWithoutOrderInput = {
+    create?: XOR<PreparationStepCategoryCreateWithoutOrderInput, PreparationStepCategoryUncheckedCreateWithoutOrderInput> | PreparationStepCategoryCreateWithoutOrderInput[] | PreparationStepCategoryUncheckedCreateWithoutOrderInput[]
+    connectOrCreate?: PreparationStepCategoryCreateOrConnectWithoutOrderInput | PreparationStepCategoryCreateOrConnectWithoutOrderInput[]
+    createMany?: PreparationStepCategoryCreateManyOrderInputEnvelope
+    connect?: PreparationStepCategoryWhereUniqueInput | PreparationStepCategoryWhereUniqueInput[]
+  }
+
   export type OrderProductsUncheckedCreateNestedManyWithoutOrderInput = {
     create?: XOR<OrderProductsCreateWithoutOrderInput, OrderProductsUncheckedCreateWithoutOrderInput> | OrderProductsCreateWithoutOrderInput[] | OrderProductsUncheckedCreateWithoutOrderInput[]
     connectOrCreate?: OrderProductsCreateOrConnectWithoutOrderInput | OrderProductsCreateOrConnectWithoutOrderInput[]
     createMany?: OrderProductsCreateManyOrderInputEnvelope
     connect?: OrderProductsWhereUniqueInput | OrderProductsWhereUniqueInput[]
+  }
+
+  export type PreparationStepCategoryUncheckedCreateNestedManyWithoutOrderInput = {
+    create?: XOR<PreparationStepCategoryCreateWithoutOrderInput, PreparationStepCategoryUncheckedCreateWithoutOrderInput> | PreparationStepCategoryCreateWithoutOrderInput[] | PreparationStepCategoryUncheckedCreateWithoutOrderInput[]
+    connectOrCreate?: PreparationStepCategoryCreateOrConnectWithoutOrderInput | PreparationStepCategoryCreateOrConnectWithoutOrderInput[]
+    createMany?: PreparationStepCategoryCreateManyOrderInputEnvelope
+    connect?: PreparationStepCategoryWhereUniqueInput | PreparationStepCategoryWhereUniqueInput[]
   }
 
   export type EnumOrderTypeFieldUpdateOperationsInput = {
@@ -26566,6 +34437,20 @@ export namespace Prisma {
     deleteMany?: OrderProductsScalarWhereInput | OrderProductsScalarWhereInput[]
   }
 
+  export type PreparationStepCategoryUpdateManyWithoutOrderNestedInput = {
+    create?: XOR<PreparationStepCategoryCreateWithoutOrderInput, PreparationStepCategoryUncheckedCreateWithoutOrderInput> | PreparationStepCategoryCreateWithoutOrderInput[] | PreparationStepCategoryUncheckedCreateWithoutOrderInput[]
+    connectOrCreate?: PreparationStepCategoryCreateOrConnectWithoutOrderInput | PreparationStepCategoryCreateOrConnectWithoutOrderInput[]
+    upsert?: PreparationStepCategoryUpsertWithWhereUniqueWithoutOrderInput | PreparationStepCategoryUpsertWithWhereUniqueWithoutOrderInput[]
+    createMany?: PreparationStepCategoryCreateManyOrderInputEnvelope
+    set?: PreparationStepCategoryWhereUniqueInput | PreparationStepCategoryWhereUniqueInput[]
+    disconnect?: PreparationStepCategoryWhereUniqueInput | PreparationStepCategoryWhereUniqueInput[]
+    delete?: PreparationStepCategoryWhereUniqueInput | PreparationStepCategoryWhereUniqueInput[]
+    connect?: PreparationStepCategoryWhereUniqueInput | PreparationStepCategoryWhereUniqueInput[]
+    update?: PreparationStepCategoryUpdateWithWhereUniqueWithoutOrderInput | PreparationStepCategoryUpdateWithWhereUniqueWithoutOrderInput[]
+    updateMany?: PreparationStepCategoryUpdateManyWithWhereWithoutOrderInput | PreparationStepCategoryUpdateManyWithWhereWithoutOrderInput[]
+    deleteMany?: PreparationStepCategoryScalarWhereInput | PreparationStepCategoryScalarWhereInput[]
+  }
+
   export type OrderProductsUncheckedUpdateManyWithoutOrderNestedInput = {
     create?: XOR<OrderProductsCreateWithoutOrderInput, OrderProductsUncheckedCreateWithoutOrderInput> | OrderProductsCreateWithoutOrderInput[] | OrderProductsUncheckedCreateWithoutOrderInput[]
     connectOrCreate?: OrderProductsCreateOrConnectWithoutOrderInput | OrderProductsCreateOrConnectWithoutOrderInput[]
@@ -26580,16 +34465,42 @@ export namespace Prisma {
     deleteMany?: OrderProductsScalarWhereInput | OrderProductsScalarWhereInput[]
   }
 
+  export type PreparationStepCategoryUncheckedUpdateManyWithoutOrderNestedInput = {
+    create?: XOR<PreparationStepCategoryCreateWithoutOrderInput, PreparationStepCategoryUncheckedCreateWithoutOrderInput> | PreparationStepCategoryCreateWithoutOrderInput[] | PreparationStepCategoryUncheckedCreateWithoutOrderInput[]
+    connectOrCreate?: PreparationStepCategoryCreateOrConnectWithoutOrderInput | PreparationStepCategoryCreateOrConnectWithoutOrderInput[]
+    upsert?: PreparationStepCategoryUpsertWithWhereUniqueWithoutOrderInput | PreparationStepCategoryUpsertWithWhereUniqueWithoutOrderInput[]
+    createMany?: PreparationStepCategoryCreateManyOrderInputEnvelope
+    set?: PreparationStepCategoryWhereUniqueInput | PreparationStepCategoryWhereUniqueInput[]
+    disconnect?: PreparationStepCategoryWhereUniqueInput | PreparationStepCategoryWhereUniqueInput[]
+    delete?: PreparationStepCategoryWhereUniqueInput | PreparationStepCategoryWhereUniqueInput[]
+    connect?: PreparationStepCategoryWhereUniqueInput | PreparationStepCategoryWhereUniqueInput[]
+    update?: PreparationStepCategoryUpdateWithWhereUniqueWithoutOrderInput | PreparationStepCategoryUpdateWithWhereUniqueWithoutOrderInput[]
+    updateMany?: PreparationStepCategoryUpdateManyWithWhereWithoutOrderInput | PreparationStepCategoryUpdateManyWithWhereWithoutOrderInput[]
+    deleteMany?: PreparationStepCategoryScalarWhereInput | PreparationStepCategoryScalarWhereInput[]
+  }
+
   export type ProductCreateNestedOneWithoutOrderProductsInput = {
     create?: XOR<ProductCreateWithoutOrderProductsInput, ProductUncheckedCreateWithoutOrderProductsInput>
     connectOrCreate?: ProductCreateOrConnectWithoutOrderProductsInput
     connect?: ProductWhereUniqueInput
   }
 
+  export type ModifierGroupItemCreateNestedManyWithoutOrderProductsInput = {
+    create?: XOR<ModifierGroupItemCreateWithoutOrderProductsInput, ModifierGroupItemUncheckedCreateWithoutOrderProductsInput> | ModifierGroupItemCreateWithoutOrderProductsInput[] | ModifierGroupItemUncheckedCreateWithoutOrderProductsInput[]
+    connectOrCreate?: ModifierGroupItemCreateOrConnectWithoutOrderProductsInput | ModifierGroupItemCreateOrConnectWithoutOrderProductsInput[]
+    connect?: ModifierGroupItemWhereUniqueInput | ModifierGroupItemWhereUniqueInput[]
+  }
+
   export type OrderCreateNestedOneWithoutOrderProductsInput = {
     create?: XOR<OrderCreateWithoutOrderProductsInput, OrderUncheckedCreateWithoutOrderProductsInput>
     connectOrCreate?: OrderCreateOrConnectWithoutOrderProductsInput
     connect?: OrderWhereUniqueInput
+  }
+
+  export type ModifierGroupItemUncheckedCreateNestedManyWithoutOrderProductsInput = {
+    create?: XOR<ModifierGroupItemCreateWithoutOrderProductsInput, ModifierGroupItemUncheckedCreateWithoutOrderProductsInput> | ModifierGroupItemCreateWithoutOrderProductsInput[] | ModifierGroupItemUncheckedCreateWithoutOrderProductsInput[]
+    connectOrCreate?: ModifierGroupItemCreateOrConnectWithoutOrderProductsInput | ModifierGroupItemCreateOrConnectWithoutOrderProductsInput[]
+    connect?: ModifierGroupItemWhereUniqueInput | ModifierGroupItemWhereUniqueInput[]
   }
 
   export type ProductUpdateOneRequiredWithoutOrderProductsNestedInput = {
@@ -26600,6 +34511,19 @@ export namespace Prisma {
     update?: XOR<XOR<ProductUpdateToOneWithWhereWithoutOrderProductsInput, ProductUpdateWithoutOrderProductsInput>, ProductUncheckedUpdateWithoutOrderProductsInput>
   }
 
+  export type ModifierGroupItemUpdateManyWithoutOrderProductsNestedInput = {
+    create?: XOR<ModifierGroupItemCreateWithoutOrderProductsInput, ModifierGroupItemUncheckedCreateWithoutOrderProductsInput> | ModifierGroupItemCreateWithoutOrderProductsInput[] | ModifierGroupItemUncheckedCreateWithoutOrderProductsInput[]
+    connectOrCreate?: ModifierGroupItemCreateOrConnectWithoutOrderProductsInput | ModifierGroupItemCreateOrConnectWithoutOrderProductsInput[]
+    upsert?: ModifierGroupItemUpsertWithWhereUniqueWithoutOrderProductsInput | ModifierGroupItemUpsertWithWhereUniqueWithoutOrderProductsInput[]
+    set?: ModifierGroupItemWhereUniqueInput | ModifierGroupItemWhereUniqueInput[]
+    disconnect?: ModifierGroupItemWhereUniqueInput | ModifierGroupItemWhereUniqueInput[]
+    delete?: ModifierGroupItemWhereUniqueInput | ModifierGroupItemWhereUniqueInput[]
+    connect?: ModifierGroupItemWhereUniqueInput | ModifierGroupItemWhereUniqueInput[]
+    update?: ModifierGroupItemUpdateWithWhereUniqueWithoutOrderProductsInput | ModifierGroupItemUpdateWithWhereUniqueWithoutOrderProductsInput[]
+    updateMany?: ModifierGroupItemUpdateManyWithWhereWithoutOrderProductsInput | ModifierGroupItemUpdateManyWithWhereWithoutOrderProductsInput[]
+    deleteMany?: ModifierGroupItemScalarWhereInput | ModifierGroupItemScalarWhereInput[]
+  }
+
   export type OrderUpdateOneWithoutOrderProductsNestedInput = {
     create?: XOR<OrderCreateWithoutOrderProductsInput, OrderUncheckedCreateWithoutOrderProductsInput>
     connectOrCreate?: OrderCreateOrConnectWithoutOrderProductsInput
@@ -26608,6 +34532,19 @@ export namespace Prisma {
     delete?: OrderWhereInput | boolean
     connect?: OrderWhereUniqueInput
     update?: XOR<XOR<OrderUpdateToOneWithWhereWithoutOrderProductsInput, OrderUpdateWithoutOrderProductsInput>, OrderUncheckedUpdateWithoutOrderProductsInput>
+  }
+
+  export type ModifierGroupItemUncheckedUpdateManyWithoutOrderProductsNestedInput = {
+    create?: XOR<ModifierGroupItemCreateWithoutOrderProductsInput, ModifierGroupItemUncheckedCreateWithoutOrderProductsInput> | ModifierGroupItemCreateWithoutOrderProductsInput[] | ModifierGroupItemUncheckedCreateWithoutOrderProductsInput[]
+    connectOrCreate?: ModifierGroupItemCreateOrConnectWithoutOrderProductsInput | ModifierGroupItemCreateOrConnectWithoutOrderProductsInput[]
+    upsert?: ModifierGroupItemUpsertWithWhereUniqueWithoutOrderProductsInput | ModifierGroupItemUpsertWithWhereUniqueWithoutOrderProductsInput[]
+    set?: ModifierGroupItemWhereUniqueInput | ModifierGroupItemWhereUniqueInput[]
+    disconnect?: ModifierGroupItemWhereUniqueInput | ModifierGroupItemWhereUniqueInput[]
+    delete?: ModifierGroupItemWhereUniqueInput | ModifierGroupItemWhereUniqueInput[]
+    connect?: ModifierGroupItemWhereUniqueInput | ModifierGroupItemWhereUniqueInput[]
+    update?: ModifierGroupItemUpdateWithWhereUniqueWithoutOrderProductsInput | ModifierGroupItemUpdateWithWhereUniqueWithoutOrderProductsInput[]
+    updateMany?: ModifierGroupItemUpdateManyWithWhereWithoutOrderProductsInput | ModifierGroupItemUpdateManyWithWhereWithoutOrderProductsInput[]
+    deleteMany?: ModifierGroupItemScalarWhereInput | ModifierGroupItemScalarWhereInput[]
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -26622,17 +34559,6 @@ export namespace Prisma {
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     not?: NestedStringFilter<$PrismaModel> | string
-  }
-
-  export type NestedDateTimeFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
   export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
@@ -26663,6 +34589,22 @@ export namespace Prisma {
     not?: NestedIntFilter<$PrismaModel> | number
   }
 
+  export type NestedDateTimeFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+  }
+
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -26677,6 +34619,14 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
   export type NestedIntNullableFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
     in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
@@ -26686,6 +34636,64 @@ export namespace Prisma {
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedStringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumProgressiveDiscountStepTypeFilter<$PrismaModel = never> = {
@@ -26722,33 +34730,6 @@ export namespace Prisma {
     not?: NestedFloatFilter<$PrismaModel> | number
   }
 
-  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
-  }
-
-  export type NestedFloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
-  }
-
   export type NestedEnumProgressiveDiscountStepTypeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.ProgressiveDiscountStepType | EnumProgressiveDiscountStepTypeFieldRefInput<$PrismaModel>
     in?: $Enums.ProgressiveDiscountStepType[] | ListEnumProgressiveDiscountStepTypeFieldRefInput<$PrismaModel>
@@ -26759,55 +34740,11 @@ export namespace Prisma {
     _max?: NestedEnumProgressiveDiscountStepTypeFilter<$PrismaModel>
   }
 
-  export type NestedStringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
-
-  export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
-  }
-
-  export type NestedBoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
   export type NestedEnumModifierGroupTypeNullableFilter<$PrismaModel = never> = {
     equals?: $Enums.ModifierGroupType | EnumModifierGroupTypeFieldRefInput<$PrismaModel> | null
     in?: $Enums.ModifierGroupType[] | ListEnumModifierGroupTypeFieldRefInput<$PrismaModel> | null
     notIn?: $Enums.ModifierGroupType[] | ListEnumModifierGroupTypeFieldRefInput<$PrismaModel> | null
     not?: NestedEnumModifierGroupTypeNullableFilter<$PrismaModel> | $Enums.ModifierGroupType | null
-  }
-
-  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type NestedEnumModifierGroupTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -26902,6 +34839,668 @@ export namespace Prisma {
     _max?: NestedEnumPaymentTypeFilter<$PrismaModel>
   }
 
+  export type PreparationStepCreateWithoutStationInput = {
+    id: string
+    createdAt?: Date | string
+    name: string
+    includeComments?: boolean
+    includeModifiers?: boolean
+    products?: ProductCreateNestedManyWithoutPreparationStepsInput
+    preparationStepTracks?: PreparationStepTrackCreateNestedManyWithoutPreparationStepInput
+  }
+
+  export type PreparationStepUncheckedCreateWithoutStationInput = {
+    id: string
+    createdAt?: Date | string
+    name: string
+    includeComments?: boolean
+    includeModifiers?: boolean
+    products?: ProductUncheckedCreateNestedManyWithoutPreparationStepsInput
+    preparationStepTracks?: PreparationStepTrackUncheckedCreateNestedManyWithoutPreparationStepInput
+  }
+
+  export type PreparationStepCreateOrConnectWithoutStationInput = {
+    where: PreparationStepWhereUniqueInput
+    create: XOR<PreparationStepCreateWithoutStationInput, PreparationStepUncheckedCreateWithoutStationInput>
+  }
+
+  export type PreparationStepCreateManyStationInputEnvelope = {
+    data: PreparationStepCreateManyStationInput | PreparationStepCreateManyStationInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type PreparationStepUpsertWithWhereUniqueWithoutStationInput = {
+    where: PreparationStepWhereUniqueInput
+    update: XOR<PreparationStepUpdateWithoutStationInput, PreparationStepUncheckedUpdateWithoutStationInput>
+    create: XOR<PreparationStepCreateWithoutStationInput, PreparationStepUncheckedCreateWithoutStationInput>
+  }
+
+  export type PreparationStepUpdateWithWhereUniqueWithoutStationInput = {
+    where: PreparationStepWhereUniqueInput
+    data: XOR<PreparationStepUpdateWithoutStationInput, PreparationStepUncheckedUpdateWithoutStationInput>
+  }
+
+  export type PreparationStepUpdateManyWithWhereWithoutStationInput = {
+    where: PreparationStepScalarWhereInput
+    data: XOR<PreparationStepUpdateManyMutationInput, PreparationStepUncheckedUpdateManyWithoutStationInput>
+  }
+
+  export type PreparationStepScalarWhereInput = {
+    AND?: PreparationStepScalarWhereInput | PreparationStepScalarWhereInput[]
+    OR?: PreparationStepScalarWhereInput[]
+    NOT?: PreparationStepScalarWhereInput | PreparationStepScalarWhereInput[]
+    id?: StringFilter<"PreparationStep"> | string
+    createdAt?: DateTimeFilter<"PreparationStep"> | Date | string
+    name?: StringFilter<"PreparationStep"> | string
+    includeComments?: BoolFilter<"PreparationStep"> | boolean
+    includeModifiers?: BoolFilter<"PreparationStep"> | boolean
+    stationId?: StringFilter<"PreparationStep"> | string
+  }
+
+  export type ProductCreateWithoutPreparationStepsInput = {
+    id: string
+    createdAt?: Date | string
+    name: string
+    description?: string | null
+    price?: number | null
+    comparedAtPrice?: number | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
+    photos?: FileCreateNestedManyWithoutProductInput
+    modifierGroups?: ModifierGroupCreateNestedManyWithoutProductsInput
+    category?: CategoryCreateNestedOneWithoutProductsInput
+    OrderProducts?: OrderProductsCreateNestedManyWithoutProductInput
+  }
+
+  export type ProductUncheckedCreateWithoutPreparationStepsInput = {
+    id: string
+    createdAt?: Date | string
+    name: string
+    description?: string | null
+    price?: number | null
+    comparedAtPrice?: number | null
+    categoryId?: string | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
+    photos?: FileUncheckedCreateNestedManyWithoutProductInput
+    modifierGroups?: ModifierGroupUncheckedCreateNestedManyWithoutProductsInput
+    OrderProducts?: OrderProductsUncheckedCreateNestedManyWithoutProductInput
+  }
+
+  export type ProductCreateOrConnectWithoutPreparationStepsInput = {
+    where: ProductWhereUniqueInput
+    create: XOR<ProductCreateWithoutPreparationStepsInput, ProductUncheckedCreateWithoutPreparationStepsInput>
+  }
+
+  export type StationCreateWithoutPreparationStepsInput = {
+    id: string
+    name: string
+  }
+
+  export type StationUncheckedCreateWithoutPreparationStepsInput = {
+    id: string
+    name: string
+  }
+
+  export type StationCreateOrConnectWithoutPreparationStepsInput = {
+    where: StationWhereUniqueInput
+    create: XOR<StationCreateWithoutPreparationStepsInput, StationUncheckedCreateWithoutPreparationStepsInput>
+  }
+
+  export type PreparationStepTrackCreateWithoutPreparationStepInput = {
+    id: string
+    createdAt?: Date | string
+    completed?: boolean
+    quantity?: number | null
+    comments?: string | null
+    completedComments?: boolean
+    preparationStepModifierTracks?: PreparationStepModifierTrackCreateNestedManyWithoutPreparationStepTrackInput
+    preparationStepCategory: PreparationStepCategoryCreateNestedOneWithoutPreparationStepTracksInput
+  }
+
+  export type PreparationStepTrackUncheckedCreateWithoutPreparationStepInput = {
+    id: string
+    createdAt?: Date | string
+    completed?: boolean
+    quantity?: number | null
+    comments?: string | null
+    completedComments?: boolean
+    preparationStepCategoryId: string
+    preparationStepModifierTracks?: PreparationStepModifierTrackUncheckedCreateNestedManyWithoutPreparationStepTrackInput
+  }
+
+  export type PreparationStepTrackCreateOrConnectWithoutPreparationStepInput = {
+    where: PreparationStepTrackWhereUniqueInput
+    create: XOR<PreparationStepTrackCreateWithoutPreparationStepInput, PreparationStepTrackUncheckedCreateWithoutPreparationStepInput>
+  }
+
+  export type PreparationStepTrackCreateManyPreparationStepInputEnvelope = {
+    data: PreparationStepTrackCreateManyPreparationStepInput | PreparationStepTrackCreateManyPreparationStepInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ProductUpsertWithWhereUniqueWithoutPreparationStepsInput = {
+    where: ProductWhereUniqueInput
+    update: XOR<ProductUpdateWithoutPreparationStepsInput, ProductUncheckedUpdateWithoutPreparationStepsInput>
+    create: XOR<ProductCreateWithoutPreparationStepsInput, ProductUncheckedCreateWithoutPreparationStepsInput>
+  }
+
+  export type ProductUpdateWithWhereUniqueWithoutPreparationStepsInput = {
+    where: ProductWhereUniqueInput
+    data: XOR<ProductUpdateWithoutPreparationStepsInput, ProductUncheckedUpdateWithoutPreparationStepsInput>
+  }
+
+  export type ProductUpdateManyWithWhereWithoutPreparationStepsInput = {
+    where: ProductScalarWhereInput
+    data: XOR<ProductUpdateManyMutationInput, ProductUncheckedUpdateManyWithoutPreparationStepsInput>
+  }
+
+  export type ProductScalarWhereInput = {
+    AND?: ProductScalarWhereInput | ProductScalarWhereInput[]
+    OR?: ProductScalarWhereInput[]
+    NOT?: ProductScalarWhereInput | ProductScalarWhereInput[]
+    id?: StringFilter<"Product"> | string
+    createdAt?: DateTimeFilter<"Product"> | Date | string
+    name?: StringFilter<"Product"> | string
+    description?: StringNullableFilter<"Product"> | string | null
+    price?: IntNullableFilter<"Product"> | number | null
+    comparedAtPrice?: IntNullableFilter<"Product"> | number | null
+    categoryId?: StringNullableFilter<"Product"> | string | null
+    translations?: JsonNullableFilter<"Product">
+  }
+
+  export type StationUpsertWithoutPreparationStepsInput = {
+    update: XOR<StationUpdateWithoutPreparationStepsInput, StationUncheckedUpdateWithoutPreparationStepsInput>
+    create: XOR<StationCreateWithoutPreparationStepsInput, StationUncheckedCreateWithoutPreparationStepsInput>
+    where?: StationWhereInput
+  }
+
+  export type StationUpdateToOneWithWhereWithoutPreparationStepsInput = {
+    where?: StationWhereInput
+    data: XOR<StationUpdateWithoutPreparationStepsInput, StationUncheckedUpdateWithoutPreparationStepsInput>
+  }
+
+  export type StationUpdateWithoutPreparationStepsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type StationUncheckedUpdateWithoutPreparationStepsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type PreparationStepTrackUpsertWithWhereUniqueWithoutPreparationStepInput = {
+    where: PreparationStepTrackWhereUniqueInput
+    update: XOR<PreparationStepTrackUpdateWithoutPreparationStepInput, PreparationStepTrackUncheckedUpdateWithoutPreparationStepInput>
+    create: XOR<PreparationStepTrackCreateWithoutPreparationStepInput, PreparationStepTrackUncheckedCreateWithoutPreparationStepInput>
+  }
+
+  export type PreparationStepTrackUpdateWithWhereUniqueWithoutPreparationStepInput = {
+    where: PreparationStepTrackWhereUniqueInput
+    data: XOR<PreparationStepTrackUpdateWithoutPreparationStepInput, PreparationStepTrackUncheckedUpdateWithoutPreparationStepInput>
+  }
+
+  export type PreparationStepTrackUpdateManyWithWhereWithoutPreparationStepInput = {
+    where: PreparationStepTrackScalarWhereInput
+    data: XOR<PreparationStepTrackUpdateManyMutationInput, PreparationStepTrackUncheckedUpdateManyWithoutPreparationStepInput>
+  }
+
+  export type PreparationStepTrackScalarWhereInput = {
+    AND?: PreparationStepTrackScalarWhereInput | PreparationStepTrackScalarWhereInput[]
+    OR?: PreparationStepTrackScalarWhereInput[]
+    NOT?: PreparationStepTrackScalarWhereInput | PreparationStepTrackScalarWhereInput[]
+    id?: StringFilter<"PreparationStepTrack"> | string
+    createdAt?: DateTimeFilter<"PreparationStepTrack"> | Date | string
+    completed?: BoolFilter<"PreparationStepTrack"> | boolean
+    quantity?: IntNullableFilter<"PreparationStepTrack"> | number | null
+    comments?: StringNullableFilter<"PreparationStepTrack"> | string | null
+    completedComments?: BoolFilter<"PreparationStepTrack"> | boolean
+    preparationStepId?: StringFilter<"PreparationStepTrack"> | string
+    preparationStepCategoryId?: StringFilter<"PreparationStepTrack"> | string
+  }
+
+  export type CategoryCreateWithoutPreparationStepCategoriesInput = {
+    id: string
+    createdAt?: Date | string
+    name: string
+    products?: ProductCreateNestedManyWithoutCategoryInput
+  }
+
+  export type CategoryUncheckedCreateWithoutPreparationStepCategoriesInput = {
+    id: string
+    createdAt?: Date | string
+    name: string
+    products?: ProductUncheckedCreateNestedManyWithoutCategoryInput
+  }
+
+  export type CategoryCreateOrConnectWithoutPreparationStepCategoriesInput = {
+    where: CategoryWhereUniqueInput
+    create: XOR<CategoryCreateWithoutPreparationStepCategoriesInput, CategoryUncheckedCreateWithoutPreparationStepCategoriesInput>
+  }
+
+  export type OrderCreateWithoutPreparationStepCategoriesInput = {
+    id: string
+    number?: string | null
+    createdAt?: Date | string
+    amount: number
+    type?: $Enums.OrderType
+    paymentMethod?: $Enums.PaymentType
+    tipAmount?: number | null
+    externalId?: string | null
+    customer: CustomerCreateNestedOneWithoutOrdersInput
+    address?: AddressCreateNestedOneWithoutOrdersInput
+    deliveryAddress?: DeliveryAddressCreateNestedOneWithoutOrdersInput
+    orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
+  }
+
+  export type OrderUncheckedCreateWithoutPreparationStepCategoriesInput = {
+    id: string
+    number?: string | null
+    createdAt?: Date | string
+    amount: number
+    type?: $Enums.OrderType
+    paymentMethod?: $Enums.PaymentType
+    tipAmount?: number | null
+    customerId: string
+    externalId?: string | null
+    addressId?: string | null
+    deliveryAddressId?: string | null
+    orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
+  }
+
+  export type OrderCreateOrConnectWithoutPreparationStepCategoriesInput = {
+    where: OrderWhereUniqueInput
+    create: XOR<OrderCreateWithoutPreparationStepCategoriesInput, OrderUncheckedCreateWithoutPreparationStepCategoriesInput>
+  }
+
+  export type PreparationStepTrackCreateWithoutPreparationStepCategoryInput = {
+    id: string
+    createdAt?: Date | string
+    completed?: boolean
+    quantity?: number | null
+    comments?: string | null
+    completedComments?: boolean
+    preparationStepModifierTracks?: PreparationStepModifierTrackCreateNestedManyWithoutPreparationStepTrackInput
+    preparationStep: PreparationStepCreateNestedOneWithoutPreparationStepTracksInput
+  }
+
+  export type PreparationStepTrackUncheckedCreateWithoutPreparationStepCategoryInput = {
+    id: string
+    createdAt?: Date | string
+    completed?: boolean
+    quantity?: number | null
+    comments?: string | null
+    completedComments?: boolean
+    preparationStepId: string
+    preparationStepModifierTracks?: PreparationStepModifierTrackUncheckedCreateNestedManyWithoutPreparationStepTrackInput
+  }
+
+  export type PreparationStepTrackCreateOrConnectWithoutPreparationStepCategoryInput = {
+    where: PreparationStepTrackWhereUniqueInput
+    create: XOR<PreparationStepTrackCreateWithoutPreparationStepCategoryInput, PreparationStepTrackUncheckedCreateWithoutPreparationStepCategoryInput>
+  }
+
+  export type PreparationStepTrackCreateManyPreparationStepCategoryInputEnvelope = {
+    data: PreparationStepTrackCreateManyPreparationStepCategoryInput | PreparationStepTrackCreateManyPreparationStepCategoryInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CategoryUpsertWithoutPreparationStepCategoriesInput = {
+    update: XOR<CategoryUpdateWithoutPreparationStepCategoriesInput, CategoryUncheckedUpdateWithoutPreparationStepCategoriesInput>
+    create: XOR<CategoryCreateWithoutPreparationStepCategoriesInput, CategoryUncheckedCreateWithoutPreparationStepCategoriesInput>
+    where?: CategoryWhereInput
+  }
+
+  export type CategoryUpdateToOneWithWhereWithoutPreparationStepCategoriesInput = {
+    where?: CategoryWhereInput
+    data: XOR<CategoryUpdateWithoutPreparationStepCategoriesInput, CategoryUncheckedUpdateWithoutPreparationStepCategoriesInput>
+  }
+
+  export type CategoryUpdateWithoutPreparationStepCategoriesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    products?: ProductUpdateManyWithoutCategoryNestedInput
+  }
+
+  export type CategoryUncheckedUpdateWithoutPreparationStepCategoriesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    products?: ProductUncheckedUpdateManyWithoutCategoryNestedInput
+  }
+
+  export type OrderUpsertWithoutPreparationStepCategoriesInput = {
+    update: XOR<OrderUpdateWithoutPreparationStepCategoriesInput, OrderUncheckedUpdateWithoutPreparationStepCategoriesInput>
+    create: XOR<OrderCreateWithoutPreparationStepCategoriesInput, OrderUncheckedCreateWithoutPreparationStepCategoriesInput>
+    where?: OrderWhereInput
+  }
+
+  export type OrderUpdateToOneWithWhereWithoutPreparationStepCategoriesInput = {
+    where?: OrderWhereInput
+    data: XOR<OrderUpdateWithoutPreparationStepCategoriesInput, OrderUncheckedUpdateWithoutPreparationStepCategoriesInput>
+  }
+
+  export type OrderUpdateWithoutPreparationStepCategoriesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    number?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    amount?: IntFieldUpdateOperationsInput | number
+    type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+    paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
+    tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    customer?: CustomerUpdateOneRequiredWithoutOrdersNestedInput
+    address?: AddressUpdateOneWithoutOrdersNestedInput
+    deliveryAddress?: DeliveryAddressUpdateOneWithoutOrdersNestedInput
+    orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
+  }
+
+  export type OrderUncheckedUpdateWithoutPreparationStepCategoriesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    number?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    amount?: IntFieldUpdateOperationsInput | number
+    type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+    paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
+    tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    customerId?: StringFieldUpdateOperationsInput | string
+    externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    addressId?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
+    orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
+  }
+
+  export type PreparationStepTrackUpsertWithWhereUniqueWithoutPreparationStepCategoryInput = {
+    where: PreparationStepTrackWhereUniqueInput
+    update: XOR<PreparationStepTrackUpdateWithoutPreparationStepCategoryInput, PreparationStepTrackUncheckedUpdateWithoutPreparationStepCategoryInput>
+    create: XOR<PreparationStepTrackCreateWithoutPreparationStepCategoryInput, PreparationStepTrackUncheckedCreateWithoutPreparationStepCategoryInput>
+  }
+
+  export type PreparationStepTrackUpdateWithWhereUniqueWithoutPreparationStepCategoryInput = {
+    where: PreparationStepTrackWhereUniqueInput
+    data: XOR<PreparationStepTrackUpdateWithoutPreparationStepCategoryInput, PreparationStepTrackUncheckedUpdateWithoutPreparationStepCategoryInput>
+  }
+
+  export type PreparationStepTrackUpdateManyWithWhereWithoutPreparationStepCategoryInput = {
+    where: PreparationStepTrackScalarWhereInput
+    data: XOR<PreparationStepTrackUpdateManyMutationInput, PreparationStepTrackUncheckedUpdateManyWithoutPreparationStepCategoryInput>
+  }
+
+  export type PreparationStepModifierTrackCreateWithoutPreparationStepTrackInput = {
+    id: string
+    createdAt?: Date | string
+    completed?: boolean
+    modifierGroupItem: ModifierGroupItemCreateNestedOneWithoutPreparationStepModifierTracksInput
+  }
+
+  export type PreparationStepModifierTrackUncheckedCreateWithoutPreparationStepTrackInput = {
+    id: string
+    createdAt?: Date | string
+    completed?: boolean
+    modifierGroupItemId: string
+  }
+
+  export type PreparationStepModifierTrackCreateOrConnectWithoutPreparationStepTrackInput = {
+    where: PreparationStepModifierTrackWhereUniqueInput
+    create: XOR<PreparationStepModifierTrackCreateWithoutPreparationStepTrackInput, PreparationStepModifierTrackUncheckedCreateWithoutPreparationStepTrackInput>
+  }
+
+  export type PreparationStepModifierTrackCreateManyPreparationStepTrackInputEnvelope = {
+    data: PreparationStepModifierTrackCreateManyPreparationStepTrackInput | PreparationStepModifierTrackCreateManyPreparationStepTrackInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type PreparationStepCreateWithoutPreparationStepTracksInput = {
+    id: string
+    createdAt?: Date | string
+    name: string
+    includeComments?: boolean
+    includeModifiers?: boolean
+    products?: ProductCreateNestedManyWithoutPreparationStepsInput
+    station: StationCreateNestedOneWithoutPreparationStepsInput
+  }
+
+  export type PreparationStepUncheckedCreateWithoutPreparationStepTracksInput = {
+    id: string
+    createdAt?: Date | string
+    name: string
+    includeComments?: boolean
+    includeModifiers?: boolean
+    stationId: string
+    products?: ProductUncheckedCreateNestedManyWithoutPreparationStepsInput
+  }
+
+  export type PreparationStepCreateOrConnectWithoutPreparationStepTracksInput = {
+    where: PreparationStepWhereUniqueInput
+    create: XOR<PreparationStepCreateWithoutPreparationStepTracksInput, PreparationStepUncheckedCreateWithoutPreparationStepTracksInput>
+  }
+
+  export type PreparationStepCategoryCreateWithoutPreparationStepTracksInput = {
+    id: string
+    createdAt?: Date | string
+    completed?: boolean
+    category: CategoryCreateNestedOneWithoutPreparationStepCategoriesInput
+    order: OrderCreateNestedOneWithoutPreparationStepCategoriesInput
+  }
+
+  export type PreparationStepCategoryUncheckedCreateWithoutPreparationStepTracksInput = {
+    id: string
+    createdAt?: Date | string
+    categoryId: string
+    completed?: boolean
+    orderId: string
+  }
+
+  export type PreparationStepCategoryCreateOrConnectWithoutPreparationStepTracksInput = {
+    where: PreparationStepCategoryWhereUniqueInput
+    create: XOR<PreparationStepCategoryCreateWithoutPreparationStepTracksInput, PreparationStepCategoryUncheckedCreateWithoutPreparationStepTracksInput>
+  }
+
+  export type PreparationStepModifierTrackUpsertWithWhereUniqueWithoutPreparationStepTrackInput = {
+    where: PreparationStepModifierTrackWhereUniqueInput
+    update: XOR<PreparationStepModifierTrackUpdateWithoutPreparationStepTrackInput, PreparationStepModifierTrackUncheckedUpdateWithoutPreparationStepTrackInput>
+    create: XOR<PreparationStepModifierTrackCreateWithoutPreparationStepTrackInput, PreparationStepModifierTrackUncheckedCreateWithoutPreparationStepTrackInput>
+  }
+
+  export type PreparationStepModifierTrackUpdateWithWhereUniqueWithoutPreparationStepTrackInput = {
+    where: PreparationStepModifierTrackWhereUniqueInput
+    data: XOR<PreparationStepModifierTrackUpdateWithoutPreparationStepTrackInput, PreparationStepModifierTrackUncheckedUpdateWithoutPreparationStepTrackInput>
+  }
+
+  export type PreparationStepModifierTrackUpdateManyWithWhereWithoutPreparationStepTrackInput = {
+    where: PreparationStepModifierTrackScalarWhereInput
+    data: XOR<PreparationStepModifierTrackUpdateManyMutationInput, PreparationStepModifierTrackUncheckedUpdateManyWithoutPreparationStepTrackInput>
+  }
+
+  export type PreparationStepModifierTrackScalarWhereInput = {
+    AND?: PreparationStepModifierTrackScalarWhereInput | PreparationStepModifierTrackScalarWhereInput[]
+    OR?: PreparationStepModifierTrackScalarWhereInput[]
+    NOT?: PreparationStepModifierTrackScalarWhereInput | PreparationStepModifierTrackScalarWhereInput[]
+    id?: StringFilter<"PreparationStepModifierTrack"> | string
+    createdAt?: DateTimeFilter<"PreparationStepModifierTrack"> | Date | string
+    completed?: BoolFilter<"PreparationStepModifierTrack"> | boolean
+    modifierGroupItemId?: StringFilter<"PreparationStepModifierTrack"> | string
+    preparationStepTrackId?: StringFilter<"PreparationStepModifierTrack"> | string
+  }
+
+  export type PreparationStepUpsertWithoutPreparationStepTracksInput = {
+    update: XOR<PreparationStepUpdateWithoutPreparationStepTracksInput, PreparationStepUncheckedUpdateWithoutPreparationStepTracksInput>
+    create: XOR<PreparationStepCreateWithoutPreparationStepTracksInput, PreparationStepUncheckedCreateWithoutPreparationStepTracksInput>
+    where?: PreparationStepWhereInput
+  }
+
+  export type PreparationStepUpdateToOneWithWhereWithoutPreparationStepTracksInput = {
+    where?: PreparationStepWhereInput
+    data: XOR<PreparationStepUpdateWithoutPreparationStepTracksInput, PreparationStepUncheckedUpdateWithoutPreparationStepTracksInput>
+  }
+
+  export type PreparationStepUpdateWithoutPreparationStepTracksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    includeComments?: BoolFieldUpdateOperationsInput | boolean
+    includeModifiers?: BoolFieldUpdateOperationsInput | boolean
+    products?: ProductUpdateManyWithoutPreparationStepsNestedInput
+    station?: StationUpdateOneRequiredWithoutPreparationStepsNestedInput
+  }
+
+  export type PreparationStepUncheckedUpdateWithoutPreparationStepTracksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    includeComments?: BoolFieldUpdateOperationsInput | boolean
+    includeModifiers?: BoolFieldUpdateOperationsInput | boolean
+    stationId?: StringFieldUpdateOperationsInput | string
+    products?: ProductUncheckedUpdateManyWithoutPreparationStepsNestedInput
+  }
+
+  export type PreparationStepCategoryUpsertWithoutPreparationStepTracksInput = {
+    update: XOR<PreparationStepCategoryUpdateWithoutPreparationStepTracksInput, PreparationStepCategoryUncheckedUpdateWithoutPreparationStepTracksInput>
+    create: XOR<PreparationStepCategoryCreateWithoutPreparationStepTracksInput, PreparationStepCategoryUncheckedCreateWithoutPreparationStepTracksInput>
+    where?: PreparationStepCategoryWhereInput
+  }
+
+  export type PreparationStepCategoryUpdateToOneWithWhereWithoutPreparationStepTracksInput = {
+    where?: PreparationStepCategoryWhereInput
+    data: XOR<PreparationStepCategoryUpdateWithoutPreparationStepTracksInput, PreparationStepCategoryUncheckedUpdateWithoutPreparationStepTracksInput>
+  }
+
+  export type PreparationStepCategoryUpdateWithoutPreparationStepTracksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completed?: BoolFieldUpdateOperationsInput | boolean
+    category?: CategoryUpdateOneRequiredWithoutPreparationStepCategoriesNestedInput
+    order?: OrderUpdateOneRequiredWithoutPreparationStepCategoriesNestedInput
+  }
+
+  export type PreparationStepCategoryUncheckedUpdateWithoutPreparationStepTracksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    categoryId?: StringFieldUpdateOperationsInput | string
+    completed?: BoolFieldUpdateOperationsInput | boolean
+    orderId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ModifierGroupItemCreateWithoutPreparationStepModifierTracksInput = {
+    id: string
+    createdAt?: Date | string
+    name: string
+    price: number
+    description?: string | null
+    photo?: FileCreateNestedOneWithoutModifierGroupItemsInput
+    modifierGroup?: ModifierGroupCreateNestedOneWithoutItemsInput
+    orderProducts?: OrderProductsCreateNestedManyWithoutModifierGroupItemsInput
+  }
+
+  export type ModifierGroupItemUncheckedCreateWithoutPreparationStepModifierTracksInput = {
+    id: string
+    createdAt?: Date | string
+    name: string
+    price: number
+    description?: string | null
+    modifierGroupId?: string | null
+    fileId?: string | null
+    orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutModifierGroupItemsInput
+  }
+
+  export type ModifierGroupItemCreateOrConnectWithoutPreparationStepModifierTracksInput = {
+    where: ModifierGroupItemWhereUniqueInput
+    create: XOR<ModifierGroupItemCreateWithoutPreparationStepModifierTracksInput, ModifierGroupItemUncheckedCreateWithoutPreparationStepModifierTracksInput>
+  }
+
+  export type PreparationStepTrackCreateWithoutPreparationStepModifierTracksInput = {
+    id: string
+    createdAt?: Date | string
+    completed?: boolean
+    quantity?: number | null
+    comments?: string | null
+    completedComments?: boolean
+    preparationStep: PreparationStepCreateNestedOneWithoutPreparationStepTracksInput
+    preparationStepCategory: PreparationStepCategoryCreateNestedOneWithoutPreparationStepTracksInput
+  }
+
+  export type PreparationStepTrackUncheckedCreateWithoutPreparationStepModifierTracksInput = {
+    id: string
+    createdAt?: Date | string
+    completed?: boolean
+    quantity?: number | null
+    comments?: string | null
+    completedComments?: boolean
+    preparationStepId: string
+    preparationStepCategoryId: string
+  }
+
+  export type PreparationStepTrackCreateOrConnectWithoutPreparationStepModifierTracksInput = {
+    where: PreparationStepTrackWhereUniqueInput
+    create: XOR<PreparationStepTrackCreateWithoutPreparationStepModifierTracksInput, PreparationStepTrackUncheckedCreateWithoutPreparationStepModifierTracksInput>
+  }
+
+  export type ModifierGroupItemUpsertWithoutPreparationStepModifierTracksInput = {
+    update: XOR<ModifierGroupItemUpdateWithoutPreparationStepModifierTracksInput, ModifierGroupItemUncheckedUpdateWithoutPreparationStepModifierTracksInput>
+    create: XOR<ModifierGroupItemCreateWithoutPreparationStepModifierTracksInput, ModifierGroupItemUncheckedCreateWithoutPreparationStepModifierTracksInput>
+    where?: ModifierGroupItemWhereInput
+  }
+
+  export type ModifierGroupItemUpdateToOneWithWhereWithoutPreparationStepModifierTracksInput = {
+    where?: ModifierGroupItemWhereInput
+    data: XOR<ModifierGroupItemUpdateWithoutPreparationStepModifierTracksInput, ModifierGroupItemUncheckedUpdateWithoutPreparationStepModifierTracksInput>
+  }
+
+  export type ModifierGroupItemUpdateWithoutPreparationStepModifierTracksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    price?: IntFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    photo?: FileUpdateOneWithoutModifierGroupItemsNestedInput
+    modifierGroup?: ModifierGroupUpdateOneWithoutItemsNestedInput
+    orderProducts?: OrderProductsUpdateManyWithoutModifierGroupItemsNestedInput
+  }
+
+  export type ModifierGroupItemUncheckedUpdateWithoutPreparationStepModifierTracksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    price?: IntFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    modifierGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    fileId?: NullableStringFieldUpdateOperationsInput | string | null
+    orderProducts?: OrderProductsUncheckedUpdateManyWithoutModifierGroupItemsNestedInput
+  }
+
+  export type PreparationStepTrackUpsertWithoutPreparationStepModifierTracksInput = {
+    update: XOR<PreparationStepTrackUpdateWithoutPreparationStepModifierTracksInput, PreparationStepTrackUncheckedUpdateWithoutPreparationStepModifierTracksInput>
+    create: XOR<PreparationStepTrackCreateWithoutPreparationStepModifierTracksInput, PreparationStepTrackUncheckedCreateWithoutPreparationStepModifierTracksInput>
+    where?: PreparationStepTrackWhereInput
+  }
+
+  export type PreparationStepTrackUpdateToOneWithWhereWithoutPreparationStepModifierTracksInput = {
+    where?: PreparationStepTrackWhereInput
+    data: XOR<PreparationStepTrackUpdateWithoutPreparationStepModifierTracksInput, PreparationStepTrackUncheckedUpdateWithoutPreparationStepModifierTracksInput>
+  }
+
+  export type PreparationStepTrackUpdateWithoutPreparationStepModifierTracksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completed?: BoolFieldUpdateOperationsInput | boolean
+    quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    comments?: NullableStringFieldUpdateOperationsInput | string | null
+    completedComments?: BoolFieldUpdateOperationsInput | boolean
+    preparationStep?: PreparationStepUpdateOneRequiredWithoutPreparationStepTracksNestedInput
+    preparationStepCategory?: PreparationStepCategoryUpdateOneRequiredWithoutPreparationStepTracksNestedInput
+  }
+
+  export type PreparationStepTrackUncheckedUpdateWithoutPreparationStepModifierTracksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completed?: BoolFieldUpdateOperationsInput | boolean
+    quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    comments?: NullableStringFieldUpdateOperationsInput | string | null
+    completedComments?: BoolFieldUpdateOperationsInput | boolean
+    preparationStepId?: StringFieldUpdateOperationsInput | string
+    preparationStepCategoryId?: StringFieldUpdateOperationsInput | string
+  }
+
   export type ProgressiveDiscountStepCreateWithoutProgressiveDiscountInput = {
     id: string
     createdAt?: Date | string
@@ -26959,11 +35558,13 @@ export namespace Prisma {
   export type ProgressiveDiscountCreateWithoutStepsInput = {
     id: string
     createdAt?: Date | string
+    completed?: boolean
   }
 
   export type ProgressiveDiscountUncheckedCreateWithoutStepsInput = {
     id: string
     createdAt?: Date | string
+    completed?: boolean
   }
 
   export type ProgressiveDiscountCreateOrConnectWithoutStepsInput = {
@@ -26985,11 +35586,13 @@ export namespace Prisma {
   export type ProgressiveDiscountUpdateWithoutStepsInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completed?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ProgressiveDiscountUncheckedUpdateWithoutStepsInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completed?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ProductCreateWithoutPhotosInput = {
@@ -27003,6 +35606,7 @@ export namespace Prisma {
     modifierGroups?: ModifierGroupCreateNestedManyWithoutProductsInput
     category?: CategoryCreateNestedOneWithoutProductsInput
     OrderProducts?: OrderProductsCreateNestedManyWithoutProductInput
+    preparationSteps?: PreparationStepCreateNestedManyWithoutProductsInput
   }
 
   export type ProductUncheckedCreateWithoutPhotosInput = {
@@ -27016,6 +35620,7 @@ export namespace Prisma {
     translations?: NullableJsonNullValueInput | InputJsonValue
     modifierGroups?: ModifierGroupUncheckedCreateNestedManyWithoutProductsInput
     OrderProducts?: OrderProductsUncheckedCreateNestedManyWithoutProductInput
+    preparationSteps?: PreparationStepUncheckedCreateNestedManyWithoutProductsInput
   }
 
   export type ProductCreateOrConnectWithoutPhotosInput = {
@@ -27028,7 +35633,10 @@ export namespace Prisma {
     createdAt?: Date | string
     name: string
     price: number
+    description?: string | null
     modifierGroup?: ModifierGroupCreateNestedOneWithoutItemsInput
+    preparationStepModifierTracks?: PreparationStepModifierTrackCreateNestedManyWithoutModifierGroupItemInput
+    orderProducts?: OrderProductsCreateNestedManyWithoutModifierGroupItemsInput
   }
 
   export type ModifierGroupItemUncheckedCreateWithoutPhotoInput = {
@@ -27036,7 +35644,10 @@ export namespace Prisma {
     createdAt?: Date | string
     name: string
     price: number
+    description?: string | null
     modifierGroupId?: string | null
+    preparationStepModifierTracks?: PreparationStepModifierTrackUncheckedCreateNestedManyWithoutModifierGroupItemInput
+    orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutModifierGroupItemsInput
   }
 
   export type ModifierGroupItemCreateOrConnectWithoutPhotoInput = {
@@ -27071,6 +35682,7 @@ export namespace Prisma {
     modifierGroups?: ModifierGroupUpdateManyWithoutProductsNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
     OrderProducts?: OrderProductsUpdateManyWithoutProductNestedInput
+    preparationSteps?: PreparationStepUpdateManyWithoutProductsNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutPhotosInput = {
@@ -27084,6 +35696,7 @@ export namespace Prisma {
     translations?: NullableJsonNullValueInput | InputJsonValue
     modifierGroups?: ModifierGroupUncheckedUpdateManyWithoutProductsNestedInput
     OrderProducts?: OrderProductsUncheckedUpdateManyWithoutProductNestedInput
+    preparationSteps?: PreparationStepUncheckedUpdateManyWithoutProductsNestedInput
   }
 
   export type ModifierGroupItemUpsertWithWhereUniqueWithoutPhotoInput = {
@@ -27110,6 +35723,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"ModifierGroupItem"> | Date | string
     name?: StringFilter<"ModifierGroupItem"> | string
     price?: IntFilter<"ModifierGroupItem"> | number
+    description?: StringNullableFilter<"ModifierGroupItem"> | string | null
     modifierGroupId?: StringNullableFilter<"ModifierGroupItem"> | string | null
     fileId?: StringNullableFilter<"ModifierGroupItem"> | string | null
   }
@@ -27125,6 +35739,7 @@ export namespace Prisma {
     photos?: FileCreateNestedManyWithoutProductInput
     category?: CategoryCreateNestedOneWithoutProductsInput
     OrderProducts?: OrderProductsCreateNestedManyWithoutProductInput
+    preparationSteps?: PreparationStepCreateNestedManyWithoutProductsInput
   }
 
   export type ProductUncheckedCreateWithoutModifierGroupsInput = {
@@ -27138,6 +35753,7 @@ export namespace Prisma {
     translations?: NullableJsonNullValueInput | InputJsonValue
     photos?: FileUncheckedCreateNestedManyWithoutProductInput
     OrderProducts?: OrderProductsUncheckedCreateNestedManyWithoutProductInput
+    preparationSteps?: PreparationStepUncheckedCreateNestedManyWithoutProductsInput
   }
 
   export type ProductCreateOrConnectWithoutModifierGroupsInput = {
@@ -27150,7 +35766,10 @@ export namespace Prisma {
     createdAt?: Date | string
     name: string
     price: number
+    description?: string | null
     photo?: FileCreateNestedOneWithoutModifierGroupItemsInput
+    preparationStepModifierTracks?: PreparationStepModifierTrackCreateNestedManyWithoutModifierGroupItemInput
+    orderProducts?: OrderProductsCreateNestedManyWithoutModifierGroupItemsInput
   }
 
   export type ModifierGroupItemUncheckedCreateWithoutModifierGroupInput = {
@@ -27158,7 +35777,10 @@ export namespace Prisma {
     createdAt?: Date | string
     name: string
     price: number
+    description?: string | null
     fileId?: string | null
+    preparationStepModifierTracks?: PreparationStepModifierTrackUncheckedCreateNestedManyWithoutModifierGroupItemInput
+    orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutModifierGroupItemsInput
   }
 
   export type ModifierGroupItemCreateOrConnectWithoutModifierGroupInput = {
@@ -27185,20 +35807,6 @@ export namespace Prisma {
   export type ProductUpdateManyWithWhereWithoutModifierGroupsInput = {
     where: ProductScalarWhereInput
     data: XOR<ProductUpdateManyMutationInput, ProductUncheckedUpdateManyWithoutModifierGroupsInput>
-  }
-
-  export type ProductScalarWhereInput = {
-    AND?: ProductScalarWhereInput | ProductScalarWhereInput[]
-    OR?: ProductScalarWhereInput[]
-    NOT?: ProductScalarWhereInput | ProductScalarWhereInput[]
-    id?: StringFilter<"Product"> | string
-    createdAt?: DateTimeFilter<"Product"> | Date | string
-    name?: StringFilter<"Product"> | string
-    description?: StringNullableFilter<"Product"> | string | null
-    price?: IntNullableFilter<"Product"> | number | null
-    comparedAtPrice?: IntNullableFilter<"Product"> | number | null
-    categoryId?: StringNullableFilter<"Product"> | string | null
-    translations?: JsonNullableFilter<"Product">
   }
 
   export type ModifierGroupItemUpsertWithWhereUniqueWithoutModifierGroupInput = {
@@ -27267,6 +35875,57 @@ export namespace Prisma {
     create: XOR<ModifierGroupCreateWithoutItemsInput, ModifierGroupUncheckedCreateWithoutItemsInput>
   }
 
+  export type PreparationStepModifierTrackCreateWithoutModifierGroupItemInput = {
+    id: string
+    createdAt?: Date | string
+    completed?: boolean
+    preparationStepTrack: PreparationStepTrackCreateNestedOneWithoutPreparationStepModifierTracksInput
+  }
+
+  export type PreparationStepModifierTrackUncheckedCreateWithoutModifierGroupItemInput = {
+    id: string
+    createdAt?: Date | string
+    completed?: boolean
+    preparationStepTrackId: string
+  }
+
+  export type PreparationStepModifierTrackCreateOrConnectWithoutModifierGroupItemInput = {
+    where: PreparationStepModifierTrackWhereUniqueInput
+    create: XOR<PreparationStepModifierTrackCreateWithoutModifierGroupItemInput, PreparationStepModifierTrackUncheckedCreateWithoutModifierGroupItemInput>
+  }
+
+  export type PreparationStepModifierTrackCreateManyModifierGroupItemInputEnvelope = {
+    data: PreparationStepModifierTrackCreateManyModifierGroupItemInput | PreparationStepModifierTrackCreateManyModifierGroupItemInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type OrderProductsCreateWithoutModifierGroupItemsInput = {
+    id: string
+    createdAt?: Date | string
+    quantity: number
+    comments?: string | null
+    fullAmount: number
+    amount: number
+    product: ProductCreateNestedOneWithoutOrderProductsInput
+    order?: OrderCreateNestedOneWithoutOrderProductsInput
+  }
+
+  export type OrderProductsUncheckedCreateWithoutModifierGroupItemsInput = {
+    id: string
+    createdAt?: Date | string
+    productId: string
+    quantity: number
+    comments?: string | null
+    fullAmount: number
+    amount: number
+    orderId?: string | null
+  }
+
+  export type OrderProductsCreateOrConnectWithoutModifierGroupItemsInput = {
+    where: OrderProductsWhereUniqueInput
+    create: XOR<OrderProductsCreateWithoutModifierGroupItemsInput, OrderProductsUncheckedCreateWithoutModifierGroupItemsInput>
+  }
+
   export type FileUpsertWithoutModifierGroupItemsInput = {
     update: XOR<FileUpdateWithoutModifierGroupItemsInput, FileUncheckedUpdateWithoutModifierGroupItemsInput>
     create: XOR<FileCreateWithoutModifierGroupItemsInput, FileUncheckedCreateWithoutModifierGroupItemsInput>
@@ -27327,6 +35986,52 @@ export namespace Prisma {
     minSelection?: NullableIntFieldUpdateOperationsInput | number | null
     maxSelection?: NullableIntFieldUpdateOperationsInput | number | null
     products?: ProductUncheckedUpdateManyWithoutModifierGroupsNestedInput
+  }
+
+  export type PreparationStepModifierTrackUpsertWithWhereUniqueWithoutModifierGroupItemInput = {
+    where: PreparationStepModifierTrackWhereUniqueInput
+    update: XOR<PreparationStepModifierTrackUpdateWithoutModifierGroupItemInput, PreparationStepModifierTrackUncheckedUpdateWithoutModifierGroupItemInput>
+    create: XOR<PreparationStepModifierTrackCreateWithoutModifierGroupItemInput, PreparationStepModifierTrackUncheckedCreateWithoutModifierGroupItemInput>
+  }
+
+  export type PreparationStepModifierTrackUpdateWithWhereUniqueWithoutModifierGroupItemInput = {
+    where: PreparationStepModifierTrackWhereUniqueInput
+    data: XOR<PreparationStepModifierTrackUpdateWithoutModifierGroupItemInput, PreparationStepModifierTrackUncheckedUpdateWithoutModifierGroupItemInput>
+  }
+
+  export type PreparationStepModifierTrackUpdateManyWithWhereWithoutModifierGroupItemInput = {
+    where: PreparationStepModifierTrackScalarWhereInput
+    data: XOR<PreparationStepModifierTrackUpdateManyMutationInput, PreparationStepModifierTrackUncheckedUpdateManyWithoutModifierGroupItemInput>
+  }
+
+  export type OrderProductsUpsertWithWhereUniqueWithoutModifierGroupItemsInput = {
+    where: OrderProductsWhereUniqueInput
+    update: XOR<OrderProductsUpdateWithoutModifierGroupItemsInput, OrderProductsUncheckedUpdateWithoutModifierGroupItemsInput>
+    create: XOR<OrderProductsCreateWithoutModifierGroupItemsInput, OrderProductsUncheckedCreateWithoutModifierGroupItemsInput>
+  }
+
+  export type OrderProductsUpdateWithWhereUniqueWithoutModifierGroupItemsInput = {
+    where: OrderProductsWhereUniqueInput
+    data: XOR<OrderProductsUpdateWithoutModifierGroupItemsInput, OrderProductsUncheckedUpdateWithoutModifierGroupItemsInput>
+  }
+
+  export type OrderProductsUpdateManyWithWhereWithoutModifierGroupItemsInput = {
+    where: OrderProductsScalarWhereInput
+    data: XOR<OrderProductsUpdateManyMutationInput, OrderProductsUncheckedUpdateManyWithoutModifierGroupItemsInput>
+  }
+
+  export type OrderProductsScalarWhereInput = {
+    AND?: OrderProductsScalarWhereInput | OrderProductsScalarWhereInput[]
+    OR?: OrderProductsScalarWhereInput[]
+    NOT?: OrderProductsScalarWhereInput | OrderProductsScalarWhereInput[]
+    id?: StringFilter<"OrderProducts"> | string
+    createdAt?: DateTimeFilter<"OrderProducts"> | Date | string
+    productId?: StringFilter<"OrderProducts"> | string
+    quantity?: IntFilter<"OrderProducts"> | number
+    comments?: StringNullableFilter<"OrderProducts"> | string | null
+    fullAmount?: IntFilter<"OrderProducts"> | number
+    amount?: IntFilter<"OrderProducts"> | number
+    orderId?: StringNullableFilter<"OrderProducts"> | string | null
   }
 
   export type BranchCreateWithoutBusinessInput = {
@@ -27499,6 +36204,7 @@ export namespace Prisma {
     customer: CustomerCreateNestedOneWithoutOrdersInput
     deliveryAddress?: DeliveryAddressCreateNestedOneWithoutOrdersInput
     orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
+    preparationStepCategories?: PreparationStepCategoryCreateNestedManyWithoutOrderInput
   }
 
   export type OrderUncheckedCreateWithoutAddressInput = {
@@ -27513,6 +36219,7 @@ export namespace Prisma {
     externalId?: string | null
     deliveryAddressId?: string | null
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
+    preparationStepCategories?: PreparationStepCategoryUncheckedCreateNestedManyWithoutOrderInput
   }
 
   export type OrderCreateOrConnectWithoutAddressInput = {
@@ -27642,12 +36349,14 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     name: string
+    preparationStepCategories?: PreparationStepCategoryCreateNestedManyWithoutCategoryInput
   }
 
   export type CategoryUncheckedCreateWithoutProductsInput = {
     id: string
     createdAt?: Date | string
     name: string
+    preparationStepCategories?: PreparationStepCategoryUncheckedCreateNestedManyWithoutCategoryInput
   }
 
   export type CategoryCreateOrConnectWithoutProductsInput = {
@@ -27659,8 +36368,10 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     quantity: number
+    comments?: string | null
     fullAmount: number
     amount: number
+    modifierGroupItems?: ModifierGroupItemCreateNestedManyWithoutOrderProductsInput
     order?: OrderCreateNestedOneWithoutOrderProductsInput
   }
 
@@ -27668,9 +36379,11 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     quantity: number
+    comments?: string | null
     fullAmount: number
     amount: number
     orderId?: string | null
+    modifierGroupItems?: ModifierGroupItemUncheckedCreateNestedManyWithoutOrderProductsInput
   }
 
   export type OrderProductsCreateOrConnectWithoutProductInput = {
@@ -27681,6 +36394,31 @@ export namespace Prisma {
   export type OrderProductsCreateManyProductInputEnvelope = {
     data: OrderProductsCreateManyProductInput | OrderProductsCreateManyProductInput[]
     skipDuplicates?: boolean
+  }
+
+  export type PreparationStepCreateWithoutProductsInput = {
+    id: string
+    createdAt?: Date | string
+    name: string
+    includeComments?: boolean
+    includeModifiers?: boolean
+    station: StationCreateNestedOneWithoutPreparationStepsInput
+    preparationStepTracks?: PreparationStepTrackCreateNestedManyWithoutPreparationStepInput
+  }
+
+  export type PreparationStepUncheckedCreateWithoutProductsInput = {
+    id: string
+    createdAt?: Date | string
+    name: string
+    includeComments?: boolean
+    includeModifiers?: boolean
+    stationId: string
+    preparationStepTracks?: PreparationStepTrackUncheckedCreateNestedManyWithoutPreparationStepInput
+  }
+
+  export type PreparationStepCreateOrConnectWithoutProductsInput = {
+    where: PreparationStepWhereUniqueInput
+    create: XOR<PreparationStepCreateWithoutProductsInput, PreparationStepUncheckedCreateWithoutProductsInput>
   }
 
   export type FileUpsertWithWhereUniqueWithoutProductInput = {
@@ -27755,12 +36493,14 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
+    preparationStepCategories?: PreparationStepCategoryUpdateManyWithoutCategoryNestedInput
   }
 
   export type CategoryUncheckedUpdateWithoutProductsInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
+    preparationStepCategories?: PreparationStepCategoryUncheckedUpdateManyWithoutCategoryNestedInput
   }
 
   export type OrderProductsUpsertWithWhereUniqueWithoutProductInput = {
@@ -27779,17 +36519,20 @@ export namespace Prisma {
     data: XOR<OrderProductsUpdateManyMutationInput, OrderProductsUncheckedUpdateManyWithoutProductInput>
   }
 
-  export type OrderProductsScalarWhereInput = {
-    AND?: OrderProductsScalarWhereInput | OrderProductsScalarWhereInput[]
-    OR?: OrderProductsScalarWhereInput[]
-    NOT?: OrderProductsScalarWhereInput | OrderProductsScalarWhereInput[]
-    id?: StringFilter<"OrderProducts"> | string
-    createdAt?: DateTimeFilter<"OrderProducts"> | Date | string
-    productId?: StringFilter<"OrderProducts"> | string
-    quantity?: IntFilter<"OrderProducts"> | number
-    fullAmount?: IntFilter<"OrderProducts"> | number
-    amount?: IntFilter<"OrderProducts"> | number
-    orderId?: StringNullableFilter<"OrderProducts"> | string | null
+  export type PreparationStepUpsertWithWhereUniqueWithoutProductsInput = {
+    where: PreparationStepWhereUniqueInput
+    update: XOR<PreparationStepUpdateWithoutProductsInput, PreparationStepUncheckedUpdateWithoutProductsInput>
+    create: XOR<PreparationStepCreateWithoutProductsInput, PreparationStepUncheckedCreateWithoutProductsInput>
+  }
+
+  export type PreparationStepUpdateWithWhereUniqueWithoutProductsInput = {
+    where: PreparationStepWhereUniqueInput
+    data: XOR<PreparationStepUpdateWithoutProductsInput, PreparationStepUncheckedUpdateWithoutProductsInput>
+  }
+
+  export type PreparationStepUpdateManyWithWhereWithoutProductsInput = {
+    where: PreparationStepScalarWhereInput
+    data: XOR<PreparationStepUpdateManyMutationInput, PreparationStepUncheckedUpdateManyWithoutProductsInput>
   }
 
   export type ProductCreateWithoutCategoryInput = {
@@ -27803,6 +36546,7 @@ export namespace Prisma {
     photos?: FileCreateNestedManyWithoutProductInput
     modifierGroups?: ModifierGroupCreateNestedManyWithoutProductsInput
     OrderProducts?: OrderProductsCreateNestedManyWithoutProductInput
+    preparationSteps?: PreparationStepCreateNestedManyWithoutProductsInput
   }
 
   export type ProductUncheckedCreateWithoutCategoryInput = {
@@ -27816,6 +36560,7 @@ export namespace Prisma {
     photos?: FileUncheckedCreateNestedManyWithoutProductInput
     modifierGroups?: ModifierGroupUncheckedCreateNestedManyWithoutProductsInput
     OrderProducts?: OrderProductsUncheckedCreateNestedManyWithoutProductInput
+    preparationSteps?: PreparationStepUncheckedCreateNestedManyWithoutProductsInput
   }
 
   export type ProductCreateOrConnectWithoutCategoryInput = {
@@ -27825,6 +36570,32 @@ export namespace Prisma {
 
   export type ProductCreateManyCategoryInputEnvelope = {
     data: ProductCreateManyCategoryInput | ProductCreateManyCategoryInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type PreparationStepCategoryCreateWithoutCategoryInput = {
+    id: string
+    createdAt?: Date | string
+    completed?: boolean
+    order: OrderCreateNestedOneWithoutPreparationStepCategoriesInput
+    preparationStepTracks?: PreparationStepTrackCreateNestedManyWithoutPreparationStepCategoryInput
+  }
+
+  export type PreparationStepCategoryUncheckedCreateWithoutCategoryInput = {
+    id: string
+    createdAt?: Date | string
+    completed?: boolean
+    orderId: string
+    preparationStepTracks?: PreparationStepTrackUncheckedCreateNestedManyWithoutPreparationStepCategoryInput
+  }
+
+  export type PreparationStepCategoryCreateOrConnectWithoutCategoryInput = {
+    where: PreparationStepCategoryWhereUniqueInput
+    create: XOR<PreparationStepCategoryCreateWithoutCategoryInput, PreparationStepCategoryUncheckedCreateWithoutCategoryInput>
+  }
+
+  export type PreparationStepCategoryCreateManyCategoryInputEnvelope = {
+    data: PreparationStepCategoryCreateManyCategoryInput | PreparationStepCategoryCreateManyCategoryInput[]
     skipDuplicates?: boolean
   }
 
@@ -27842,6 +36613,33 @@ export namespace Prisma {
   export type ProductUpdateManyWithWhereWithoutCategoryInput = {
     where: ProductScalarWhereInput
     data: XOR<ProductUpdateManyMutationInput, ProductUncheckedUpdateManyWithoutCategoryInput>
+  }
+
+  export type PreparationStepCategoryUpsertWithWhereUniqueWithoutCategoryInput = {
+    where: PreparationStepCategoryWhereUniqueInput
+    update: XOR<PreparationStepCategoryUpdateWithoutCategoryInput, PreparationStepCategoryUncheckedUpdateWithoutCategoryInput>
+    create: XOR<PreparationStepCategoryCreateWithoutCategoryInput, PreparationStepCategoryUncheckedCreateWithoutCategoryInput>
+  }
+
+  export type PreparationStepCategoryUpdateWithWhereUniqueWithoutCategoryInput = {
+    where: PreparationStepCategoryWhereUniqueInput
+    data: XOR<PreparationStepCategoryUpdateWithoutCategoryInput, PreparationStepCategoryUncheckedUpdateWithoutCategoryInput>
+  }
+
+  export type PreparationStepCategoryUpdateManyWithWhereWithoutCategoryInput = {
+    where: PreparationStepCategoryScalarWhereInput
+    data: XOR<PreparationStepCategoryUpdateManyMutationInput, PreparationStepCategoryUncheckedUpdateManyWithoutCategoryInput>
+  }
+
+  export type PreparationStepCategoryScalarWhereInput = {
+    AND?: PreparationStepCategoryScalarWhereInput | PreparationStepCategoryScalarWhereInput[]
+    OR?: PreparationStepCategoryScalarWhereInput[]
+    NOT?: PreparationStepCategoryScalarWhereInput | PreparationStepCategoryScalarWhereInput[]
+    id?: StringFilter<"PreparationStepCategory"> | string
+    createdAt?: DateTimeFilter<"PreparationStepCategory"> | Date | string
+    categoryId?: StringFilter<"PreparationStepCategory"> | string
+    completed?: BoolFilter<"PreparationStepCategory"> | boolean
+    orderId?: StringFilter<"PreparationStepCategory"> | string
   }
 
   export type PromotialMessageCreateWithoutCampaignInput = {
@@ -27907,6 +36705,7 @@ export namespace Prisma {
     address?: AddressCreateNestedOneWithoutOrdersInput
     deliveryAddress?: DeliveryAddressCreateNestedOneWithoutOrdersInput
     orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
+    preparationStepCategories?: PreparationStepCategoryCreateNestedManyWithoutOrderInput
   }
 
   export type OrderUncheckedCreateWithoutCustomerInput = {
@@ -27921,6 +36720,7 @@ export namespace Prisma {
     addressId?: string | null
     deliveryAddressId?: string | null
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
+    preparationStepCategories?: PreparationStepCategoryUncheckedCreateNestedManyWithoutOrderInput
   }
 
   export type OrderCreateOrConnectWithoutCustomerInput = {
@@ -28107,6 +36907,7 @@ export namespace Prisma {
     customer: CustomerCreateNestedOneWithoutOrdersInput
     address?: AddressCreateNestedOneWithoutOrdersInput
     orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
+    preparationStepCategories?: PreparationStepCategoryCreateNestedManyWithoutOrderInput
   }
 
   export type OrderUncheckedCreateWithoutDeliveryAddressInput = {
@@ -28121,6 +36922,7 @@ export namespace Prisma {
     externalId?: string | null
     addressId?: string | null
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
+    preparationStepCategories?: PreparationStepCategoryUncheckedCreateNestedManyWithoutOrderInput
   }
 
   export type OrderCreateOrConnectWithoutDeliveryAddressInput = {
@@ -28467,9 +37269,11 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     quantity: number
+    comments?: string | null
     fullAmount: number
     amount: number
     product: ProductCreateNestedOneWithoutOrderProductsInput
+    modifierGroupItems?: ModifierGroupItemCreateNestedManyWithoutOrderProductsInput
   }
 
   export type OrderProductsUncheckedCreateWithoutOrderInput = {
@@ -28477,8 +37281,10 @@ export namespace Prisma {
     createdAt?: Date | string
     productId: string
     quantity: number
+    comments?: string | null
     fullAmount: number
     amount: number
+    modifierGroupItems?: ModifierGroupItemUncheckedCreateNestedManyWithoutOrderProductsInput
   }
 
   export type OrderProductsCreateOrConnectWithoutOrderInput = {
@@ -28488,6 +37294,32 @@ export namespace Prisma {
 
   export type OrderProductsCreateManyOrderInputEnvelope = {
     data: OrderProductsCreateManyOrderInput | OrderProductsCreateManyOrderInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type PreparationStepCategoryCreateWithoutOrderInput = {
+    id: string
+    createdAt?: Date | string
+    completed?: boolean
+    category: CategoryCreateNestedOneWithoutPreparationStepCategoriesInput
+    preparationStepTracks?: PreparationStepTrackCreateNestedManyWithoutPreparationStepCategoryInput
+  }
+
+  export type PreparationStepCategoryUncheckedCreateWithoutOrderInput = {
+    id: string
+    createdAt?: Date | string
+    categoryId: string
+    completed?: boolean
+    preparationStepTracks?: PreparationStepTrackUncheckedCreateNestedManyWithoutPreparationStepCategoryInput
+  }
+
+  export type PreparationStepCategoryCreateOrConnectWithoutOrderInput = {
+    where: PreparationStepCategoryWhereUniqueInput
+    create: XOR<PreparationStepCategoryCreateWithoutOrderInput, PreparationStepCategoryUncheckedCreateWithoutOrderInput>
+  }
+
+  export type PreparationStepCategoryCreateManyOrderInputEnvelope = {
+    data: PreparationStepCategoryCreateManyOrderInput | PreparationStepCategoryCreateManyOrderInput[]
     skipDuplicates?: boolean
   }
 
@@ -28612,6 +37444,22 @@ export namespace Prisma {
     data: XOR<OrderProductsUpdateManyMutationInput, OrderProductsUncheckedUpdateManyWithoutOrderInput>
   }
 
+  export type PreparationStepCategoryUpsertWithWhereUniqueWithoutOrderInput = {
+    where: PreparationStepCategoryWhereUniqueInput
+    update: XOR<PreparationStepCategoryUpdateWithoutOrderInput, PreparationStepCategoryUncheckedUpdateWithoutOrderInput>
+    create: XOR<PreparationStepCategoryCreateWithoutOrderInput, PreparationStepCategoryUncheckedCreateWithoutOrderInput>
+  }
+
+  export type PreparationStepCategoryUpdateWithWhereUniqueWithoutOrderInput = {
+    where: PreparationStepCategoryWhereUniqueInput
+    data: XOR<PreparationStepCategoryUpdateWithoutOrderInput, PreparationStepCategoryUncheckedUpdateWithoutOrderInput>
+  }
+
+  export type PreparationStepCategoryUpdateManyWithWhereWithoutOrderInput = {
+    where: PreparationStepCategoryScalarWhereInput
+    data: XOR<PreparationStepCategoryUpdateManyMutationInput, PreparationStepCategoryUncheckedUpdateManyWithoutOrderInput>
+  }
+
   export type ProductCreateWithoutOrderProductsInput = {
     id: string
     createdAt?: Date | string
@@ -28623,6 +37471,7 @@ export namespace Prisma {
     photos?: FileCreateNestedManyWithoutProductInput
     modifierGroups?: ModifierGroupCreateNestedManyWithoutProductsInput
     category?: CategoryCreateNestedOneWithoutProductsInput
+    preparationSteps?: PreparationStepCreateNestedManyWithoutProductsInput
   }
 
   export type ProductUncheckedCreateWithoutOrderProductsInput = {
@@ -28636,11 +37485,39 @@ export namespace Prisma {
     translations?: NullableJsonNullValueInput | InputJsonValue
     photos?: FileUncheckedCreateNestedManyWithoutProductInput
     modifierGroups?: ModifierGroupUncheckedCreateNestedManyWithoutProductsInput
+    preparationSteps?: PreparationStepUncheckedCreateNestedManyWithoutProductsInput
   }
 
   export type ProductCreateOrConnectWithoutOrderProductsInput = {
     where: ProductWhereUniqueInput
     create: XOR<ProductCreateWithoutOrderProductsInput, ProductUncheckedCreateWithoutOrderProductsInput>
+  }
+
+  export type ModifierGroupItemCreateWithoutOrderProductsInput = {
+    id: string
+    createdAt?: Date | string
+    name: string
+    price: number
+    description?: string | null
+    photo?: FileCreateNestedOneWithoutModifierGroupItemsInput
+    modifierGroup?: ModifierGroupCreateNestedOneWithoutItemsInput
+    preparationStepModifierTracks?: PreparationStepModifierTrackCreateNestedManyWithoutModifierGroupItemInput
+  }
+
+  export type ModifierGroupItemUncheckedCreateWithoutOrderProductsInput = {
+    id: string
+    createdAt?: Date | string
+    name: string
+    price: number
+    description?: string | null
+    modifierGroupId?: string | null
+    fileId?: string | null
+    preparationStepModifierTracks?: PreparationStepModifierTrackUncheckedCreateNestedManyWithoutModifierGroupItemInput
+  }
+
+  export type ModifierGroupItemCreateOrConnectWithoutOrderProductsInput = {
+    where: ModifierGroupItemWhereUniqueInput
+    create: XOR<ModifierGroupItemCreateWithoutOrderProductsInput, ModifierGroupItemUncheckedCreateWithoutOrderProductsInput>
   }
 
   export type OrderCreateWithoutOrderProductsInput = {
@@ -28655,6 +37532,7 @@ export namespace Prisma {
     customer: CustomerCreateNestedOneWithoutOrdersInput
     address?: AddressCreateNestedOneWithoutOrdersInput
     deliveryAddress?: DeliveryAddressCreateNestedOneWithoutOrdersInput
+    preparationStepCategories?: PreparationStepCategoryCreateNestedManyWithoutOrderInput
   }
 
   export type OrderUncheckedCreateWithoutOrderProductsInput = {
@@ -28669,6 +37547,7 @@ export namespace Prisma {
     externalId?: string | null
     addressId?: string | null
     deliveryAddressId?: string | null
+    preparationStepCategories?: PreparationStepCategoryUncheckedCreateNestedManyWithoutOrderInput
   }
 
   export type OrderCreateOrConnectWithoutOrderProductsInput = {
@@ -28698,6 +37577,7 @@ export namespace Prisma {
     photos?: FileUpdateManyWithoutProductNestedInput
     modifierGroups?: ModifierGroupUpdateManyWithoutProductsNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
+    preparationSteps?: PreparationStepUpdateManyWithoutProductsNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutOrderProductsInput = {
@@ -28711,6 +37591,23 @@ export namespace Prisma {
     translations?: NullableJsonNullValueInput | InputJsonValue
     photos?: FileUncheckedUpdateManyWithoutProductNestedInput
     modifierGroups?: ModifierGroupUncheckedUpdateManyWithoutProductsNestedInput
+    preparationSteps?: PreparationStepUncheckedUpdateManyWithoutProductsNestedInput
+  }
+
+  export type ModifierGroupItemUpsertWithWhereUniqueWithoutOrderProductsInput = {
+    where: ModifierGroupItemWhereUniqueInput
+    update: XOR<ModifierGroupItemUpdateWithoutOrderProductsInput, ModifierGroupItemUncheckedUpdateWithoutOrderProductsInput>
+    create: XOR<ModifierGroupItemCreateWithoutOrderProductsInput, ModifierGroupItemUncheckedCreateWithoutOrderProductsInput>
+  }
+
+  export type ModifierGroupItemUpdateWithWhereUniqueWithoutOrderProductsInput = {
+    where: ModifierGroupItemWhereUniqueInput
+    data: XOR<ModifierGroupItemUpdateWithoutOrderProductsInput, ModifierGroupItemUncheckedUpdateWithoutOrderProductsInput>
+  }
+
+  export type ModifierGroupItemUpdateManyWithWhereWithoutOrderProductsInput = {
+    where: ModifierGroupItemScalarWhereInput
+    data: XOR<ModifierGroupItemUpdateManyMutationInput, ModifierGroupItemUncheckedUpdateManyWithoutOrderProductsInput>
   }
 
   export type OrderUpsertWithoutOrderProductsInput = {
@@ -28736,6 +37633,7 @@ export namespace Prisma {
     customer?: CustomerUpdateOneRequiredWithoutOrdersNestedInput
     address?: AddressUpdateOneWithoutOrdersNestedInput
     deliveryAddress?: DeliveryAddressUpdateOneWithoutOrdersNestedInput
+    preparationStepCategories?: PreparationStepCategoryUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderUncheckedUpdateWithoutOrderProductsInput = {
@@ -28750,6 +37648,194 @@ export namespace Prisma {
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
+    preparationStepCategories?: PreparationStepCategoryUncheckedUpdateManyWithoutOrderNestedInput
+  }
+
+  export type PreparationStepCreateManyStationInput = {
+    id: string
+    createdAt?: Date | string
+    name: string
+    includeComments?: boolean
+    includeModifiers?: boolean
+  }
+
+  export type PreparationStepUpdateWithoutStationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    includeComments?: BoolFieldUpdateOperationsInput | boolean
+    includeModifiers?: BoolFieldUpdateOperationsInput | boolean
+    products?: ProductUpdateManyWithoutPreparationStepsNestedInput
+    preparationStepTracks?: PreparationStepTrackUpdateManyWithoutPreparationStepNestedInput
+  }
+
+  export type PreparationStepUncheckedUpdateWithoutStationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    includeComments?: BoolFieldUpdateOperationsInput | boolean
+    includeModifiers?: BoolFieldUpdateOperationsInput | boolean
+    products?: ProductUncheckedUpdateManyWithoutPreparationStepsNestedInput
+    preparationStepTracks?: PreparationStepTrackUncheckedUpdateManyWithoutPreparationStepNestedInput
+  }
+
+  export type PreparationStepUncheckedUpdateManyWithoutStationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    includeComments?: BoolFieldUpdateOperationsInput | boolean
+    includeModifiers?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type PreparationStepTrackCreateManyPreparationStepInput = {
+    id: string
+    createdAt?: Date | string
+    completed?: boolean
+    quantity?: number | null
+    comments?: string | null
+    completedComments?: boolean
+    preparationStepCategoryId: string
+  }
+
+  export type ProductUpdateWithoutPreparationStepsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: NullableIntFieldUpdateOperationsInput | number | null
+    comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
+    photos?: FileUpdateManyWithoutProductNestedInput
+    modifierGroups?: ModifierGroupUpdateManyWithoutProductsNestedInput
+    category?: CategoryUpdateOneWithoutProductsNestedInput
+    OrderProducts?: OrderProductsUpdateManyWithoutProductNestedInput
+  }
+
+  export type ProductUncheckedUpdateWithoutPreparationStepsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: NullableIntFieldUpdateOperationsInput | number | null
+    comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
+    categoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
+    photos?: FileUncheckedUpdateManyWithoutProductNestedInput
+    modifierGroups?: ModifierGroupUncheckedUpdateManyWithoutProductsNestedInput
+    OrderProducts?: OrderProductsUncheckedUpdateManyWithoutProductNestedInput
+  }
+
+  export type ProductUncheckedUpdateManyWithoutPreparationStepsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: NullableIntFieldUpdateOperationsInput | number | null
+    comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
+    categoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type PreparationStepTrackUpdateWithoutPreparationStepInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completed?: BoolFieldUpdateOperationsInput | boolean
+    quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    comments?: NullableStringFieldUpdateOperationsInput | string | null
+    completedComments?: BoolFieldUpdateOperationsInput | boolean
+    preparationStepModifierTracks?: PreparationStepModifierTrackUpdateManyWithoutPreparationStepTrackNestedInput
+    preparationStepCategory?: PreparationStepCategoryUpdateOneRequiredWithoutPreparationStepTracksNestedInput
+  }
+
+  export type PreparationStepTrackUncheckedUpdateWithoutPreparationStepInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completed?: BoolFieldUpdateOperationsInput | boolean
+    quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    comments?: NullableStringFieldUpdateOperationsInput | string | null
+    completedComments?: BoolFieldUpdateOperationsInput | boolean
+    preparationStepCategoryId?: StringFieldUpdateOperationsInput | string
+    preparationStepModifierTracks?: PreparationStepModifierTrackUncheckedUpdateManyWithoutPreparationStepTrackNestedInput
+  }
+
+  export type PreparationStepTrackUncheckedUpdateManyWithoutPreparationStepInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completed?: BoolFieldUpdateOperationsInput | boolean
+    quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    comments?: NullableStringFieldUpdateOperationsInput | string | null
+    completedComments?: BoolFieldUpdateOperationsInput | boolean
+    preparationStepCategoryId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type PreparationStepTrackCreateManyPreparationStepCategoryInput = {
+    id: string
+    createdAt?: Date | string
+    completed?: boolean
+    quantity?: number | null
+    comments?: string | null
+    completedComments?: boolean
+    preparationStepId: string
+  }
+
+  export type PreparationStepTrackUpdateWithoutPreparationStepCategoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completed?: BoolFieldUpdateOperationsInput | boolean
+    quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    comments?: NullableStringFieldUpdateOperationsInput | string | null
+    completedComments?: BoolFieldUpdateOperationsInput | boolean
+    preparationStepModifierTracks?: PreparationStepModifierTrackUpdateManyWithoutPreparationStepTrackNestedInput
+    preparationStep?: PreparationStepUpdateOneRequiredWithoutPreparationStepTracksNestedInput
+  }
+
+  export type PreparationStepTrackUncheckedUpdateWithoutPreparationStepCategoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completed?: BoolFieldUpdateOperationsInput | boolean
+    quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    comments?: NullableStringFieldUpdateOperationsInput | string | null
+    completedComments?: BoolFieldUpdateOperationsInput | boolean
+    preparationStepId?: StringFieldUpdateOperationsInput | string
+    preparationStepModifierTracks?: PreparationStepModifierTrackUncheckedUpdateManyWithoutPreparationStepTrackNestedInput
+  }
+
+  export type PreparationStepTrackUncheckedUpdateManyWithoutPreparationStepCategoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completed?: BoolFieldUpdateOperationsInput | boolean
+    quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    comments?: NullableStringFieldUpdateOperationsInput | string | null
+    completedComments?: BoolFieldUpdateOperationsInput | boolean
+    preparationStepId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type PreparationStepModifierTrackCreateManyPreparationStepTrackInput = {
+    id: string
+    createdAt?: Date | string
+    completed?: boolean
+    modifierGroupItemId: string
+  }
+
+  export type PreparationStepModifierTrackUpdateWithoutPreparationStepTrackInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completed?: BoolFieldUpdateOperationsInput | boolean
+    modifierGroupItem?: ModifierGroupItemUpdateOneRequiredWithoutPreparationStepModifierTracksNestedInput
+  }
+
+  export type PreparationStepModifierTrackUncheckedUpdateWithoutPreparationStepTrackInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completed?: BoolFieldUpdateOperationsInput | boolean
+    modifierGroupItemId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type PreparationStepModifierTrackUncheckedUpdateManyWithoutPreparationStepTrackInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completed?: BoolFieldUpdateOperationsInput | boolean
+    modifierGroupItemId?: StringFieldUpdateOperationsInput | string
   }
 
   export type ProgressiveDiscountStepCreateManyProgressiveDiscountInput = {
@@ -28789,6 +37875,7 @@ export namespace Prisma {
     createdAt?: Date | string
     name: string
     price: number
+    description?: string | null
     modifierGroupId?: string | null
   }
 
@@ -28797,7 +37884,10 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
     price?: IntFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     modifierGroup?: ModifierGroupUpdateOneWithoutItemsNestedInput
+    preparationStepModifierTracks?: PreparationStepModifierTrackUpdateManyWithoutModifierGroupItemNestedInput
+    orderProducts?: OrderProductsUpdateManyWithoutModifierGroupItemsNestedInput
   }
 
   export type ModifierGroupItemUncheckedUpdateWithoutPhotoInput = {
@@ -28805,7 +37895,10 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
     price?: IntFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     modifierGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    preparationStepModifierTracks?: PreparationStepModifierTrackUncheckedUpdateManyWithoutModifierGroupItemNestedInput
+    orderProducts?: OrderProductsUncheckedUpdateManyWithoutModifierGroupItemsNestedInput
   }
 
   export type ModifierGroupItemUncheckedUpdateManyWithoutPhotoInput = {
@@ -28813,6 +37906,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
     price?: IntFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     modifierGroupId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -28821,6 +37915,7 @@ export namespace Prisma {
     createdAt?: Date | string
     name: string
     price: number
+    description?: string | null
     fileId?: string | null
   }
 
@@ -28835,6 +37930,7 @@ export namespace Prisma {
     photos?: FileUpdateManyWithoutProductNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
     OrderProducts?: OrderProductsUpdateManyWithoutProductNestedInput
+    preparationSteps?: PreparationStepUpdateManyWithoutProductsNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutModifierGroupsInput = {
@@ -28848,6 +37944,7 @@ export namespace Prisma {
     translations?: NullableJsonNullValueInput | InputJsonValue
     photos?: FileUncheckedUpdateManyWithoutProductNestedInput
     OrderProducts?: OrderProductsUncheckedUpdateManyWithoutProductNestedInput
+    preparationSteps?: PreparationStepUncheckedUpdateManyWithoutProductsNestedInput
   }
 
   export type ProductUncheckedUpdateManyWithoutModifierGroupsInput = {
@@ -28866,7 +37963,10 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
     price?: IntFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     photo?: FileUpdateOneWithoutModifierGroupItemsNestedInput
+    preparationStepModifierTracks?: PreparationStepModifierTrackUpdateManyWithoutModifierGroupItemNestedInput
+    orderProducts?: OrderProductsUpdateManyWithoutModifierGroupItemsNestedInput
   }
 
   export type ModifierGroupItemUncheckedUpdateWithoutModifierGroupInput = {
@@ -28874,7 +37974,10 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
     price?: IntFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     fileId?: NullableStringFieldUpdateOperationsInput | string | null
+    preparationStepModifierTracks?: PreparationStepModifierTrackUncheckedUpdateManyWithoutModifierGroupItemNestedInput
+    orderProducts?: OrderProductsUncheckedUpdateManyWithoutModifierGroupItemsNestedInput
   }
 
   export type ModifierGroupItemUncheckedUpdateManyWithoutModifierGroupInput = {
@@ -28882,7 +37985,69 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
     price?: IntFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     fileId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type PreparationStepModifierTrackCreateManyModifierGroupItemInput = {
+    id: string
+    createdAt?: Date | string
+    completed?: boolean
+    preparationStepTrackId: string
+  }
+
+  export type PreparationStepModifierTrackUpdateWithoutModifierGroupItemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completed?: BoolFieldUpdateOperationsInput | boolean
+    preparationStepTrack?: PreparationStepTrackUpdateOneRequiredWithoutPreparationStepModifierTracksNestedInput
+  }
+
+  export type PreparationStepModifierTrackUncheckedUpdateWithoutModifierGroupItemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completed?: BoolFieldUpdateOperationsInput | boolean
+    preparationStepTrackId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type PreparationStepModifierTrackUncheckedUpdateManyWithoutModifierGroupItemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completed?: BoolFieldUpdateOperationsInput | boolean
+    preparationStepTrackId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type OrderProductsUpdateWithoutModifierGroupItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    comments?: NullableStringFieldUpdateOperationsInput | string | null
+    fullAmount?: IntFieldUpdateOperationsInput | number
+    amount?: IntFieldUpdateOperationsInput | number
+    product?: ProductUpdateOneRequiredWithoutOrderProductsNestedInput
+    order?: OrderUpdateOneWithoutOrderProductsNestedInput
+  }
+
+  export type OrderProductsUncheckedUpdateWithoutModifierGroupItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    productId?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    comments?: NullableStringFieldUpdateOperationsInput | string | null
+    fullAmount?: IntFieldUpdateOperationsInput | number
+    amount?: IntFieldUpdateOperationsInput | number
+    orderId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type OrderProductsUncheckedUpdateManyWithoutModifierGroupItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    productId?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    comments?: NullableStringFieldUpdateOperationsInput | string | null
+    fullAmount?: IntFieldUpdateOperationsInput | number
+    amount?: IntFieldUpdateOperationsInput | number
+    orderId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type BranchCreateManyBusinessInput = {
@@ -28938,6 +38103,7 @@ export namespace Prisma {
     customer?: CustomerUpdateOneRequiredWithoutOrdersNestedInput
     deliveryAddress?: DeliveryAddressUpdateOneWithoutOrdersNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
+    preparationStepCategories?: PreparationStepCategoryUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderUncheckedUpdateWithoutAddressInput = {
@@ -28952,6 +38118,7 @@ export namespace Prisma {
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
+    preparationStepCategories?: PreparationStepCategoryUncheckedUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderUncheckedUpdateManyWithoutAddressInput = {
@@ -28979,6 +38146,7 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     quantity: number
+    comments?: string | null
     fullAmount: number
     amount: number
     orderId?: string | null
@@ -29046,8 +38214,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     quantity?: IntFieldUpdateOperationsInput | number
+    comments?: NullableStringFieldUpdateOperationsInput | string | null
     fullAmount?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
+    modifierGroupItems?: ModifierGroupItemUpdateManyWithoutOrderProductsNestedInput
     order?: OrderUpdateOneWithoutOrderProductsNestedInput
   }
 
@@ -29055,18 +38225,50 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     quantity?: IntFieldUpdateOperationsInput | number
+    comments?: NullableStringFieldUpdateOperationsInput | string | null
     fullAmount?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
     orderId?: NullableStringFieldUpdateOperationsInput | string | null
+    modifierGroupItems?: ModifierGroupItemUncheckedUpdateManyWithoutOrderProductsNestedInput
   }
 
   export type OrderProductsUncheckedUpdateManyWithoutProductInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     quantity?: IntFieldUpdateOperationsInput | number
+    comments?: NullableStringFieldUpdateOperationsInput | string | null
     fullAmount?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
     orderId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type PreparationStepUpdateWithoutProductsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    includeComments?: BoolFieldUpdateOperationsInput | boolean
+    includeModifiers?: BoolFieldUpdateOperationsInput | boolean
+    station?: StationUpdateOneRequiredWithoutPreparationStepsNestedInput
+    preparationStepTracks?: PreparationStepTrackUpdateManyWithoutPreparationStepNestedInput
+  }
+
+  export type PreparationStepUncheckedUpdateWithoutProductsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    includeComments?: BoolFieldUpdateOperationsInput | boolean
+    includeModifiers?: BoolFieldUpdateOperationsInput | boolean
+    stationId?: StringFieldUpdateOperationsInput | string
+    preparationStepTracks?: PreparationStepTrackUncheckedUpdateManyWithoutPreparationStepNestedInput
+  }
+
+  export type PreparationStepUncheckedUpdateManyWithoutProductsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    includeComments?: BoolFieldUpdateOperationsInput | boolean
+    includeModifiers?: BoolFieldUpdateOperationsInput | boolean
+    stationId?: StringFieldUpdateOperationsInput | string
   }
 
   export type ProductCreateManyCategoryInput = {
@@ -29077,6 +38279,13 @@ export namespace Prisma {
     price?: number | null
     comparedAtPrice?: number | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type PreparationStepCategoryCreateManyCategoryInput = {
+    id: string
+    createdAt?: Date | string
+    completed?: boolean
+    orderId: string
   }
 
   export type ProductUpdateWithoutCategoryInput = {
@@ -29090,6 +38299,7 @@ export namespace Prisma {
     photos?: FileUpdateManyWithoutProductNestedInput
     modifierGroups?: ModifierGroupUpdateManyWithoutProductsNestedInput
     OrderProducts?: OrderProductsUpdateManyWithoutProductNestedInput
+    preparationSteps?: PreparationStepUpdateManyWithoutProductsNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutCategoryInput = {
@@ -29103,6 +38313,7 @@ export namespace Prisma {
     photos?: FileUncheckedUpdateManyWithoutProductNestedInput
     modifierGroups?: ModifierGroupUncheckedUpdateManyWithoutProductsNestedInput
     OrderProducts?: OrderProductsUncheckedUpdateManyWithoutProductNestedInput
+    preparationSteps?: PreparationStepUncheckedUpdateManyWithoutProductsNestedInput
   }
 
   export type ProductUncheckedUpdateManyWithoutCategoryInput = {
@@ -29113,6 +38324,29 @@ export namespace Prisma {
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type PreparationStepCategoryUpdateWithoutCategoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completed?: BoolFieldUpdateOperationsInput | boolean
+    order?: OrderUpdateOneRequiredWithoutPreparationStepCategoriesNestedInput
+    preparationStepTracks?: PreparationStepTrackUpdateManyWithoutPreparationStepCategoryNestedInput
+  }
+
+  export type PreparationStepCategoryUncheckedUpdateWithoutCategoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completed?: BoolFieldUpdateOperationsInput | boolean
+    orderId?: StringFieldUpdateOperationsInput | string
+    preparationStepTracks?: PreparationStepTrackUncheckedUpdateManyWithoutPreparationStepCategoryNestedInput
+  }
+
+  export type PreparationStepCategoryUncheckedUpdateManyWithoutCategoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completed?: BoolFieldUpdateOperationsInput | boolean
+    orderId?: StringFieldUpdateOperationsInput | string
   }
 
   export type PromotialMessageCreateManyCampaignInput = {
@@ -29190,6 +38424,7 @@ export namespace Prisma {
     address?: AddressUpdateOneWithoutOrdersNestedInput
     deliveryAddress?: DeliveryAddressUpdateOneWithoutOrdersNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
+    preparationStepCategories?: PreparationStepCategoryUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderUncheckedUpdateWithoutCustomerInput = {
@@ -29204,6 +38439,7 @@ export namespace Prisma {
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
+    preparationStepCategories?: PreparationStepCategoryUncheckedUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderUncheckedUpdateManyWithoutCustomerInput = {
@@ -29312,6 +38548,7 @@ export namespace Prisma {
     customer?: CustomerUpdateOneRequiredWithoutOrdersNestedInput
     address?: AddressUpdateOneWithoutOrdersNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
+    preparationStepCategories?: PreparationStepCategoryUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderUncheckedUpdateWithoutDeliveryAddressInput = {
@@ -29326,6 +38563,7 @@ export namespace Prisma {
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
+    preparationStepCategories?: PreparationStepCategoryUncheckedUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderUncheckedUpdateManyWithoutDeliveryAddressInput = {
@@ -29374,17 +38612,27 @@ export namespace Prisma {
     createdAt?: Date | string
     productId: string
     quantity: number
+    comments?: string | null
     fullAmount: number
     amount: number
+  }
+
+  export type PreparationStepCategoryCreateManyOrderInput = {
+    id: string
+    createdAt?: Date | string
+    categoryId: string
+    completed?: boolean
   }
 
   export type OrderProductsUpdateWithoutOrderInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     quantity?: IntFieldUpdateOperationsInput | number
+    comments?: NullableStringFieldUpdateOperationsInput | string | null
     fullAmount?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
     product?: ProductUpdateOneRequiredWithoutOrderProductsNestedInput
+    modifierGroupItems?: ModifierGroupItemUpdateManyWithoutOrderProductsNestedInput
   }
 
   export type OrderProductsUncheckedUpdateWithoutOrderInput = {
@@ -29392,8 +38640,10 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     productId?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
+    comments?: NullableStringFieldUpdateOperationsInput | string | null
     fullAmount?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
+    modifierGroupItems?: ModifierGroupItemUncheckedUpdateManyWithoutOrderProductsNestedInput
   }
 
   export type OrderProductsUncheckedUpdateManyWithoutOrderInput = {
@@ -29401,8 +38651,64 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     productId?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
+    comments?: NullableStringFieldUpdateOperationsInput | string | null
     fullAmount?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type PreparationStepCategoryUpdateWithoutOrderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completed?: BoolFieldUpdateOperationsInput | boolean
+    category?: CategoryUpdateOneRequiredWithoutPreparationStepCategoriesNestedInput
+    preparationStepTracks?: PreparationStepTrackUpdateManyWithoutPreparationStepCategoryNestedInput
+  }
+
+  export type PreparationStepCategoryUncheckedUpdateWithoutOrderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    categoryId?: StringFieldUpdateOperationsInput | string
+    completed?: BoolFieldUpdateOperationsInput | boolean
+    preparationStepTracks?: PreparationStepTrackUncheckedUpdateManyWithoutPreparationStepCategoryNestedInput
+  }
+
+  export type PreparationStepCategoryUncheckedUpdateManyWithoutOrderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    categoryId?: StringFieldUpdateOperationsInput | string
+    completed?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type ModifierGroupItemUpdateWithoutOrderProductsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    price?: IntFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    photo?: FileUpdateOneWithoutModifierGroupItemsNestedInput
+    modifierGroup?: ModifierGroupUpdateOneWithoutItemsNestedInput
+    preparationStepModifierTracks?: PreparationStepModifierTrackUpdateManyWithoutModifierGroupItemNestedInput
+  }
+
+  export type ModifierGroupItemUncheckedUpdateWithoutOrderProductsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    price?: IntFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    modifierGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    fileId?: NullableStringFieldUpdateOperationsInput | string | null
+    preparationStepModifierTracks?: PreparationStepModifierTrackUncheckedUpdateManyWithoutModifierGroupItemNestedInput
+  }
+
+  export type ModifierGroupItemUncheckedUpdateManyWithoutOrderProductsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    price?: IntFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    modifierGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    fileId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
 

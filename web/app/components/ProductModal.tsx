@@ -56,7 +56,12 @@ const ProductModal: React.FC<TProductModal> = ({
 
   const handleModifier = (modifier: TSelectedModifier) => {
     if (!product) return;
-    onAdd(product.id, quantity, [modifier]);
+    onAdd(
+      product.id,
+      quantity,
+      [modifier],
+      description.length > 0 ? description : undefined,
+    );
   };
 
   return (
@@ -67,7 +72,8 @@ const ProductModal: React.FC<TProductModal> = ({
       >
         {product && (
           <div>
-            <div>
+            <div className="flex flex-col lg:flex-row">
+              <div className="lg:flex-1 lg:p-4">
               <DialogClose className="absolute top-4 left-4 p-3 rounded-full bg-background">
                 <FiArrowLeft size={18} />
               </DialogClose>
@@ -75,11 +81,11 @@ const ProductModal: React.FC<TProductModal> = ({
                 <img
                   src={product.photos[0]?.url}
                   alt={`${product.name} photo`}
-                  className="h-100 object-cover"
+                  className="h-100 object-cover lg:w-full lg:h-auto lg:rounded-xl"
                 />
               )}
             </div>
-            <div className="pt-6 px-4 flex flex-col gap-3 leading-4">
+            <div className="pt-6 px-4 flex flex-col gap-3 leading-4 lg:flex-1 lg:pt-8">
               <span className="text-2xl font-bold">
                 {product.translations
                   ? product.translations[lg]["title"] || product.name
@@ -119,7 +125,8 @@ const ProductModal: React.FC<TProductModal> = ({
                 ></textarea>
               </div>
             </div>
-            <div className="absolute bottom-0 py-5 px-4 bg-background w-full flex flex-row items-center justify-between">
+            </div>
+            <div className="absolute bottom-0 py-5 px-4 bg-background w-full flex flex-row items-center justify-between lg:justify-end lg:gap-4">
               <QuantitySelector
                 onChange={(value) => setQuantity(value)}
                 value={quantity}
@@ -127,7 +134,7 @@ const ProductModal: React.FC<TProductModal> = ({
               />
               <Button
                 onClick={() => handleConfirm()}
-                className="text-[16px] font-bold bg-brandBackground py-3 px-8 leading-5"
+                className="text-[16px] font-bold bg-brandBackground py-3 px-8 leading-5 lg:px-12"
               >
                 {content["add"]}
               </Button>

@@ -5,10 +5,10 @@ type TProduct = {
   id: string;
   name: string;
   photos?: Image[];
-  price?: number;
-  description?: string;
-  categoryId?: string;
-  comparedAtPrice?: number;
+  price?: number | null;
+  description?: string | null;
+  categoryId?: string | null;
+  comparedAtPrice?: number | null;
   modifierGroups?: TModifierGroup[];
   preparationStep?: TPreparationStep[];
   translations?: {
@@ -28,6 +28,7 @@ type TModifierGroup = {
 type TModifierGroupItem = {
   id: string;
   name: string;
+  description?: string;
   price: number;
 };
 

@@ -24,6 +24,7 @@ const getOrder = async (orderId: string): Promise<TOrder> => {
     number: order.number || undefined,
     paymentMethod: order.paymentMethod,
     orderProducts: [],
+    preparationStepCategory: [],
   };
 };
 

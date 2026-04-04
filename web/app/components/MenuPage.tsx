@@ -1,11 +1,16 @@
 "use client";
 
+import { DEFAULT_BRANCH_ID } from "@/constants/branch";
 import formatCurrency from "@/utils/formatCurrecy";
+import { calculateProductPriceWithProgressiveDiscount } from "@/utils/calculateProductPriceWithProgressiveDiscount";
+import { isOperationHoursOpenAt } from "@/src/modules/branch/domain/branch.types";
+import type { TOperationHours } from "@/src/types/operationHours";
 import { TGetProductsResponse } from "../../src/getProducts";
 import TProduct from "../../src/types/product";
 import TCategory from "../../src/types/category";
+import TProgressiveDiscount from "../../src/types/progressiveDiscount";
 import DiscountModal from "./DiscountModal";
-import { useState } from "react";
+import { forwardRef, useEffect, useRef, useState } from "react";
 import CartBar from "./CartBar";
 import ProductModal from "./ProductModal";
 import { useCart } from "./CartContext";
@@ -14,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { FiInfo, FiMapPin } from "react-icons/fi";
 import InformationModal from "./InformationModal";
 import text from "@/constants/text";
+import clsx from "clsx";
 
 export function findProductById(
   categories: TCategory[],
@@ -38,10 +44,85 @@ const MenuPage: React.FC<TMenuPage> = ({ data, lg }) => {
     null,
   );
   const [openInformationModal, setOpenInformationModal] = useState(false);
+  const [isBranchOpen, setIsBranchOpen] = useState<boolean | null>(null);
+  const [activeCategoryId, setActiveCategoryId] = useState<string | null>(
+    data.categories[0]?.id ?? null,
+  );
+  const categoryBarRef = useRef<HTMLDivElement | null>(null);
 
   const { addItem, cart } = useCart();
 
   const content = text[lg];
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    const loadOperationHours = async () => {
+      try {
+        const response = await fetch(
+          `/api/branches/${DEFAULT_BRANCH_ID}/working-hours`,
+          {
+            signal: controller.signal,
+          },
+        );
+
+        if (!response.ok) return;
+
+        const data = (await response.json()) as {
+          operationHours?: TOperationHours;
+        };
+
+        if (data.operationHours) {
+          setIsBranchOpen(isOperationHoursOpenAt(data.operationHours, new Date()));
+        }
+      } catch (error) {
+        if ((error as Error).name === "AbortError") return;
+      }
+    };
+
+    loadOperationHours();
+
+    return () => controller.abort();
+  }, []);
+
+  useEffect(() => {
+    if (data.categories.length === 0) return;
+
+    const updateActiveCategory = () => {
+      const viewportHeight = window.innerHeight;
+      const topInset = categoryBarRef.current?.getBoundingClientRect().bottom ?? 0;
+
+      let nextActiveCategoryId = data.categories[0]?.id ?? null;
+      let maxVisibleHeight = -1;
+
+      for (const category of data.categories) {
+        const element = document.getElementById(category.id);
+        if (!element) continue;
+
+        const rect = element.getBoundingClientRect();
+        const visibleHeight =
+          Math.min(rect.bottom, viewportHeight) - Math.max(rect.top, topInset);
+        const clampedVisibleHeight = Math.max(0, visibleHeight);
+
+        if (clampedVisibleHeight > maxVisibleHeight) {
+          maxVisibleHeight = clampedVisibleHeight;
+          nextActiveCategoryId = category.id;
+        }
+      }
+
+      setActiveCategoryId(nextActiveCategoryId);
+    };
+
+    updateActiveCategory();
+
+    window.addEventListener("scroll", updateActiveCategory, { passive: true });
+    window.addEventListener("resize", updateActiveCategory);
+
+    return () => {
+      window.removeEventListener("scroll", updateActiveCategory);
+      window.removeEventListener("resize", updateActiveCategory);
+    };
+  }, [data.categories]);
 
   const selectedProduct = selectedProductId
     ? findProductById(data.categories, selectedProductId)
@@ -69,12 +150,30 @@ const MenuPage: React.FC<TMenuPage> = ({ data, lg }) => {
         onOpenChange={setOpenInformationModal}
         content={content}
       />
-      <div className="flex flex-col items-center w-full">
-        <img
-          src="/pizza.png"
-          className="h-[160px] w-full object-cover"
-          alt=""
-        />
+      <div className="flex flex-col items-center w-full max-w-[900px]">
+        <div className="relative w-full">
+          <img
+            src="/pizza.png"
+            className="h-[160px] w-full object-cover"
+            alt=""
+          />
+          {isBranchOpen !== null && (
+            <div className="absolute left-4 top-4 flex flex-col gap-2">
+              <div
+                className={`w-fit rounded-full px-3 py-1 text-xs font-bold text-white shadow-sm ${
+                  isBranchOpen ? "bg-green-600" : "bg-red-600"
+                }`}
+              >
+                {isBranchOpen ? content["open"] : content["closed"]}
+              </div>
+              {isBranchOpen === false && (
+                <div className="w-fit rounded-full bg-black/65 px-3 py-1.5 text-xs font-semibold text-white">
+                  {content["orderForLater"]}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
         <div className="rounded-xl border-[3px] border-white overflow-hidden w-fit  mt-[-60px] z-10">
           <img src="/logo.png" className="w-[100px] h-[100px]" alt="" />
         </div>
@@ -95,14 +194,21 @@ const MenuPage: React.FC<TMenuPage> = ({ data, lg }) => {
           </div>
         </div>
       </div>
-      <CategoryBar categories={data.categories} />
-      <div className="px-4 pb-55 flex flex-col">
+      <CategoryBar
+        activeCategoryId={activeCategoryId}
+        categories={data.categories}
+        containerRef={categoryBarRef}
+        onCategorySelect={setActiveCategoryId}
+      />
+      <div className="px-4 pb-55 flex flex-col max-w-[900px] lg:px-0">
         {data.categories.map((category) => (
           <CategoryItem
             category={category}
             key={category.id}
             onProductSelect={setSelectedProductId}
             cart={cart}
+            categories={data.categories}
+            progressiveDiscount={data.progressiveDiscount}
             lg={lg}
           />
         ))}
@@ -133,38 +239,109 @@ const MenuPage: React.FC<TMenuPage> = ({ data, lg }) => {
 };
 
 type TCategoryBar = {
+  activeCategoryId: string | null;
   categories: TCategory[];
+  containerRef: React.RefObject<HTMLDivElement | null>;
+  onCategorySelect: (categoryId: string) => void;
 };
 
-const CategoryBar: React.FC<TCategoryBar> = ({ categories }) => {
+const CategoryBar: React.FC<TCategoryBar> = ({
+  activeCategoryId,
+  categories,
+  containerRef,
+  onCategorySelect,
+}) => {
+  const itemRefs = useRef<Record<string, HTMLAnchorElement | null>>({});
+
+  useEffect(() => {
+    if (!activeCategoryId) return;
+
+    const container = containerRef.current;
+    const activeItem = itemRefs.current[activeCategoryId];
+
+    if (!container || !activeItem) return;
+
+    const containerRect = container.getBoundingClientRect();
+    const itemRect = activeItem.getBoundingClientRect();
+    const nextScrollLeft =
+      container.scrollLeft +
+      (itemRect.left - containerRect.left) -
+      (containerRect.width / 2 - itemRect.width / 2);
+
+    container.scrollTo({
+      left: Math.max(0, nextScrollLeft),
+      behavior: "smooth",
+    });
+  }, [activeCategoryId, containerRef]);
+
   return (
-    <div className="flex flex-row border-gray-300 border-b w-full sticky top-0 bg-background overflow-x-auto">
-      {categories.map((category) => (
-        <CategoryBarItem key={category.id} category={category} />
-      ))}
-    </div>
+    <>
+      <div
+        ref={containerRef}
+        className="category-bar-scroll flex flex-row border-gray-300 border-b w-full sticky top-0 bg-background overflow-x-auto max-w-[900px]"
+      >
+        {categories.map((category) => (
+          <CategoryBarItem
+            active={activeCategoryId === category.id}
+            category={category}
+            key={category.id}
+            onSelect={onCategorySelect}
+            ref={(element) => {
+              itemRefs.current[category.id] = element;
+            }}
+          />
+        ))}
+      </div>
+      <style jsx>{`
+        @media (max-width: 1023px) {
+          .category-bar-scroll {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+          }
+
+          .category-bar-scroll::-webkit-scrollbar {
+            display: none;
+          }
+        }
+      `}</style>
+    </>
   );
 };
 
 type TCategoryBarItem = {
+  active: boolean;
   category: TCategory;
+  onSelect: (categoryId: string) => void;
 };
 
-const CategoryBarItem: React.FC<TCategoryBarItem> = ({ category }) => {
-  return (
-    <a
-      href={`#${category.id}`}
-      className="py-3 px-4 font-bold text-lightText whitespace-nowrap"
-    >
-      {category.title}
-    </a>
-  );
-};
+const CategoryBarItem = forwardRef<HTMLAnchorElement, TCategoryBarItem>(
+  ({ active, category, onSelect }, ref) => {
+    return (
+      <a
+        ref={ref}
+        href={`#${category.id}`}
+        onClick={() => onSelect(category.id)}
+        className={clsx(
+          "py-3 px-4 font-bold whitespace-nowrap border-b-2 transition-colors",
+          active
+            ? "text-brandBackground border-brandBackground"
+            : "text-lightText border-transparent",
+        )}
+      >
+        {category.title}
+      </a>
+    );
+  },
+);
+
+CategoryBarItem.displayName = "CategoryBarItem";
 
 type TCategoryItem = {
   category: TCategory;
   onProductSelect: (id: string) => void;
   cart: TCart;
+  categories: TCategory[];
+  progressiveDiscount: TProgressiveDiscount | null;
   lg: string;
 };
 
@@ -172,23 +349,27 @@ const CategoryItem: React.FC<TCategoryItem> = ({
   category,
   onProductSelect,
   cart,
+  categories,
+  progressiveDiscount,
   lg,
 }) => {
   return (
-    <a className="flex flex-col gap-4 pt-8" id={category.id}>
+    <section className="flex flex-col gap-4 pt-8" id={category.id}>
       <h2 className="text-[22px] font-bold">{category.title}</h2>
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
         {category.products.map((product) => (
           <ProductItem
             product={product}
             key={product.id}
             onProductSelect={onProductSelect}
             cart={cart}
+            categories={categories}
+            progressiveDiscount={progressiveDiscount}
             lg={lg}
           />
         ))}
       </div>
-    </a>
+    </section>
   );
 };
 
@@ -196,6 +377,8 @@ type TProductItem = {
   product: TProduct;
   onProductSelect: (id: string) => void;
   cart: TCart;
+  categories: TCategory[];
+  progressiveDiscount: TProgressiveDiscount | null;
   lg: string;
 };
 
@@ -203,10 +386,28 @@ const ProductItem: React.FC<TProductItem> = ({
   product,
   onProductSelect,
   cart,
+  categories,
+  progressiveDiscount,
   lg,
 }) => {
   const firstImage =
     product.photos && product.photos[0] ? product.photos[0] : null;
+  const pricePreview = calculateProductPriceWithProgressiveDiscount(
+    product.id,
+    progressiveDiscount,
+    cart,
+    categories,
+  );
+  const displayPrice =
+    pricePreview?.discountedPrice ??
+    (typeof product.price === "number" ? product.price : null);
+  const strikePrice =
+    pricePreview &&
+    typeof pricePreview.actualPrice === "number" &&
+    pricePreview.discountedPrice < pricePreview.actualPrice
+      ? pricePreview.actualPrice
+      : product.comparedAtPrice ?? null;
+
   return (
     <div
       className="flex flex-col gap-3"
@@ -220,14 +421,14 @@ const ProductItem: React.FC<TProductItem> = ({
             : product.name}
         </span>
         <div className="flex flex-row gap-2">
-          {product.price && (
+          {displayPrice !== null && (
             <span className="font-extrabold">
-              {formatCurrency(product.price)}
+              {formatCurrency(displayPrice)}
             </span>
           )}
-          {product.comparedAtPrice && (
+          {strikePrice !== null && strikePrice > displayPrice! && (
             <span className="font-semibold line-through">
-              {formatCurrency(product.comparedAtPrice)}
+              {formatCurrency(strikePrice)}
             </span>
           )}
         </div>

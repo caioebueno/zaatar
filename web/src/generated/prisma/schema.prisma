@@ -14,9 +14,63 @@ datasource db {
   // url      = env("DATABASE_URL")
 }
 
+model Station {
+  id               String            @id
+  name             String
+  preparationSteps PreparationStep[]
+}
+
+model PreparationStep {
+  id                    String                 @id
+  createdAt             DateTime               @default(now())
+  name                  String
+  includeComments       Boolean                @default(false)
+  includeModifiers      Boolean                @default(false)
+  products              Product[]
+  station               Station                @relation(fields: [stationId], references: [id])
+  stationId             String
+  preparationStepTracks PreparationStepTrack[]
+}
+
+model PreparationStepCategory {
+  id                    String                 @id
+  createdAt             DateTime               @default(now())
+  category              Category               @relation(fields: [categoryId], references: [id])
+  categoryId            String
+  completed             Boolean                @default(false)
+  order                 Order                  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId               String
+  preparationStepTracks PreparationStepTrack[]
+}
+
+model PreparationStepTrack {
+  id                            String                         @id
+  createdAt                     DateTime                       @default(now())
+  completed                     Boolean                        @default(false)
+  quantity                      Int?
+  comments                      String?
+  completedComments             Boolean                        @default(false)
+  preparationStepModifierTracks PreparationStepModifierTrack[]
+  preparationStep               PreparationStep                @relation(fields: [preparationStepId], references: [id])
+  preparationStepId             String
+  preparationStepCategory       PreparationStepCategory        @relation(fields: [preparationStepCategoryId], references: [id], onDelete: Cascade)
+  preparationStepCategoryId     String
+}
+
+model PreparationStepModifierTrack {
+  id                     String               @id
+  createdAt              DateTime             @default(now())
+  completed              Boolean              @default(false)
+  modifierGroupItem      ModifierGroupItem    @relation(fields: [modifierGroupItemId], references: [id])
+  modifierGroupItemId    String
+  preparationStepTrack   PreparationStepTrack @relation(fields: [preparationStepTrackId], references: [id], onDelete: Cascade)
+  preparationStepTrackId String
+}
+
 model ProgressiveDiscount {
   id        String                    @id
   createdAt DateTime                  @default(now())
+  completed Boolean                   @default(false)
   steps     ProgressiveDiscountStep[]
 }
 
@@ -59,14 +113,17 @@ model ModifierGroup {
 }
 
 model ModifierGroupItem {
-  id              String         @id
-  createdAt       DateTime       @default(now())
-  name            String
-  price           Int
-  photo           File?          @relation(fields: [fileId], references: [id])
-  modifierGroup   ModifierGroup? @relation(fields: [modifierGroupId], references: [id])
-  modifierGroupId String?
-  fileId          String?
+  id                            String                         @id
+  createdAt                     DateTime                       @default(now())
+  name                          String
+  price                         Int
+  description                   String?
+  photo                         File?                          @relation(fields: [fileId], references: [id])
+  modifierGroup                 ModifierGroup?                 @relation(fields: [modifierGroupId], references: [id])
+  modifierGroupId               String?
+  fileId                        String?
+  preparationStepModifierTracks PreparationStepModifierTrack[]
+  orderProducts                 OrderProducts[]
 }
 
 enum ModifierGroupType {
@@ -85,6 +142,7 @@ model Branch {
   id         String    @id
   createdAt  DateTime  @default(now())
   name       String
+  operationHours Json?
   address    Address?  @relation(fields: [addressId], references: [id])
   addressId  String?   @unique
   business   Business? @relation(fields: [businessId], references: [id])
@@ -101,25 +159,27 @@ model Address {
 }
 
 model Product {
-  id              String          @id
-  createdAt       DateTime        @default(now())
-  name            String
-  description     String?
-  price           Int?
-  comparedAtPrice Int?
-  photos          File[]
-  modifierGroups  ModifierGroup[]
-  category        Category?       @relation(fields: [categoryId], references: [id])
-  categoryId      String?
-  OrderProducts   OrderProducts[]
-  translations    Json?
+  id               String            @id
+  createdAt        DateTime          @default(now())
+  name             String
+  description      String?
+  price            Int?
+  comparedAtPrice  Int?
+  photos           File[]
+  modifierGroups   ModifierGroup[]
+  category         Category?         @relation(fields: [categoryId], references: [id])
+  categoryId       String?
+  OrderProducts    OrderProducts[]
+  translations     Json?
+  preparationSteps PreparationStep[]
 }
 
 model Category {
-  id        String    @id
-  createdAt DateTime  @default(now())
-  name      String
-  products  Product[]
+  id                        String                    @id
+  createdAt                 DateTime                  @default(now())
+  name                      String
+  products                  Product[]
+  preparationStepCategories PreparationStepCategory[]
 }
 
 model Campaign {
@@ -181,21 +241,22 @@ model PromotialMessage {
 }
 
 model Order {
-  id                String           @id
-  number            String?
-  createdAt         DateTime         @default(now())
-  amount            Int
-  customer          Customer         @relation(fields: [customerId], references: [id])
-  type              OrderType        @default(DELIVERY)
-  paymentMethod     PaymentType      @default(CARD)
-  tipAmount         Int?
-  address           Address?         @relation(fields: [addressId], references: [id])
-  deliveryAddress   DeliveryAddress? @relation(fields: [deliveryAddressId], references: [id])
-  orderProducts     OrderProducts[]
-  customerId        String
-  externalId        String?
-  addressId         String?
-  deliveryAddressId String?
+  id                        String                    @id
+  number                    String?
+  createdAt                 DateTime                  @default(now())
+  amount                    Int
+  customer                  Customer                  @relation(fields: [customerId], references: [id])
+  type                      OrderType                 @default(DELIVERY)
+  paymentMethod             PaymentType               @default(CARD)
+  tipAmount                 Int?
+  address                   Address?                  @relation(fields: [addressId], references: [id])
+  deliveryAddress           DeliveryAddress?          @relation(fields: [deliveryAddressId], references: [id])
+  orderProducts             OrderProducts[]
+  customerId                String
+  externalId                String?
+  addressId                 String?
+  deliveryAddressId         String?
+  preparationStepCategories PreparationStepCategory[]
 }
 
 enum PaymentType {
@@ -210,13 +271,15 @@ enum OrderType {
 }
 
 model OrderProducts {
-  id         String   @id
-  createdAt  DateTime @default(now())
-  product    Product  @relation(fields: [productId], references: [id])
-  productId  String
-  quantity   Int
-  fullAmount Int
-  amount     Int
-  order      Order?   @relation(fields: [orderId], references: [id])
-  orderId    String?
+  id                 String              @id
+  createdAt          DateTime            @default(now())
+  product            Product             @relation(fields: [productId], references: [id])
+  productId          String
+  quantity           Int
+  comments           String?
+  modifierGroupItems ModifierGroupItem[]
+  fullAmount         Int
+  amount             Int
+  order              Order?              @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId            String?
 }

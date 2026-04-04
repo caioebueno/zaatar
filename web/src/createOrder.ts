@@ -4,9 +4,16 @@ import prisma from "../prisma";
 import TCart from "../types/cart";
 import getProgressiveDiscount from "./getProgressiveDiscount";
 import { randomUUID } from "crypto";
-import { TOrder, TOrderType, TPaymentMethod } from "./types/order";
+import {
+  TOrder,
+  TOrderProduct,
+  TOrderType,
+  TPaymentMethod,
+} from "./types/order";
 import { calculateProductPriceWithProgressiveDiscount } from "../utils/calculateProductPriceWithProgressiveDiscount";
 import getProducts from "./getProducts";
+import { createOrderPreparationStepsUseCase } from "@/src/modules/station/application/createOrderPreparationSteps";
+import { prismaStationRepository } from "@/src/modules/station/infrastructure/prisma/prismaStationRepository";
 
 type TCreateOrder = {
   cart: TCart;
@@ -56,41 +63,106 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
       paymentMethod: data.paymentMethod,
       tipAmount: data.tipAmount,
       type: data.orderType,
+    },
+    include: {
       orderProducts: {
-        createMany: {
-          data: data.cart.items.map((item) => {
-            const price = calculateProductPriceWithProgressiveDiscount(
-              item.productId,
-              progressiveDiscount,
-              data.cart,
-              productData.categories,
-            );
-            if (!price)
-              throw {
-                code: "ERROR_CALCULATING_PRICE",
-                data: {
-                  productId: item.productId,
-                },
-              };
-            return {
-              id: randomUUID(),
-              amount: price.actualPrice,
-              productId: item.productId,
-              fullAmount: price.fullPrice,
-              quantity: item.quantity,
-            };
-          }),
+        include: {
+          product: true,
         },
       },
     },
   });
-  return {
+  const prismaOrderProducts: ({
+    product: {
+      id: string;
+      name: string;
+      createdAt: Date;
+      price: number | null;
+      categoryId: string | null;
+      description: string | null;
+      comparedAtPrice: number | null;
+      translations: any;
+    };
+    modifierGroupItems: {
+      id: string;
+      name: string;
+      createdAt: Date;
+      price: number;
+      modifierGroupId: string | null;
+      fileId: string | null;
+    }[];
+  } & {
+    id: string;
+    comments: string | null;
+    createdAt: Date;
+    quantity: number;
+    fullAmount: number;
+    amount: number;
+    productId: string;
+  })[] = [];
+  for (const item of data.cart.items) {
+    const price = calculateProductPriceWithProgressiveDiscount(
+      item.productId,
+      progressiveDiscount,
+      data.cart,
+      productData.categories,
+    );
+    if (!price)
+      throw {
+        code: "ERROR_CALCULATING_PRICE",
+        data: {
+          productId: item.productId,
+        },
+      };
+    const createdOrderProduct = await prisma.orderProducts.create({
+      data: {
+        id: randomUUID(),
+        amount: price.actualPrice,
+        productId: item.productId,
+        orderId: createdOrder.id,
+        fullAmount: price.fullPrice,
+        quantity: item.quantity,
+        comments: item.description,
+        modifierGroupItems: {
+          connect: item.modifiers.map((modItem) => ({
+            id: modItem.modifierItemId,
+          })),
+        },
+      },
+      include: {
+        modifierGroupItems: true,
+        product: true,
+      },
+    });
+    prismaOrderProducts.push(createdOrderProduct);
+  }
+  const orderProducts: TOrderProduct[] = prismaOrderProducts.map((item) => ({
+    id: item.id,
+    amount: item.amount,
+    fullAmount: item.fullAmount,
+    productId: item.productId,
+    quantity: item.quantity,
+    comments: item.comments || undefined,
+    selectedModifierGroupItemIds: item.modifierGroupItems.map(
+      (item) => item.id,
+    ),
+    product: {
+      id: item.product.id,
+      name: item.product.name,
+      categoryId: item.product.categoryId || undefined,
+      preparationStep: [],
+    },
+  }));
+  const order: TOrder = {
     id: createdOrder.id,
     createdAt: createdOrder.createdAt.toISOString(),
-    orderProducts: [],
+    orderProducts: orderProducts,
     paymentMethod: createdOrder.paymentMethod,
     type: createdOrder.type,
+    preparationStepCategory: [],
   };
+  await createOrderPreparationStepsUseCase(prismaStationRepository, order);
+  return order;
 };
 
 export default createOrder;

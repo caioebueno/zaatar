@@ -1,13 +1,18 @@
 "use client";
 
+import { DEFAULT_BRANCH_ID } from "@/constants/branch";
 import { calculateCartWithProgressiveDiscount } from "@/utils/calculatePrice";
 import { useCart } from "./CartContext";
 import formatCurrency from "@/utils/formatCurrecy";
+import { isOperationHoursOpenAt } from "@/src/modules/branch/domain/branch.types";
 import { TGetProductsResponse } from "../../src/getProducts";
 import TCart, { TCartItem } from "@/types/cart";
 import Button from "./Button";
 import {
   FiArrowLeft,
+  FiCalendar,
+  FiChevronDown,
+  FiClock,
   FiPlus,
   FiShoppingBag,
   FiTruck,
@@ -17,10 +22,10 @@ import { useRouter } from "next/navigation";
 import { findProductById } from "./MenuPage";
 import { calculateProductPriceWithProgressiveDiscount } from "@/utils/calculateProductPriceWithProgressiveDiscount";
 import { QuantitySelector } from "./ProductModal";
-import { parseAsInteger, useQueryState } from "nuqs";
+import { parseAsInteger, parseAsStringLiteral, useQueryState } from "nuqs";
 import PhoneInput, { PhoneValue } from "./PhoneInput";
 import getCustomerData from "../../src/getCustomerData";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TCustomer from "../../src/types/customer";
 import TextInput from "./TextInput";
 import { Dialog } from "radix-ui";
@@ -32,6 +37,13 @@ import { TOrderType, TPaymentMethod } from "../../src/types/order";
 import createOrder from "../../src/createOrder";
 import Link from "next/link";
 import { TModifierGroup } from "@/src/types/product";
+import type { TOperationHours } from "@/src/types/operationHours";
+import { weekDays, type WeekDay } from "@/src/modules/branch/domain/branch.types";
+import {
+  clearStoredCustomerSession,
+  getStoredCustomerSession,
+  setStoredCustomerSession,
+} from "@/utils/customerSession";
 import text from "@/constants/text";
 
 type TPrice = {
@@ -89,36 +101,304 @@ type TCartProduct = {
   lg: string;
 };
 
+type ScheduleSelection = {
+  date: string;
+  time: string;
+};
+
+type ScheduleTimeOption = {
+  value: string;
+  label: string;
+};
+
+type ScheduleDayOption = {
+  value: string;
+  label: string;
+  times: ScheduleTimeOption[];
+};
+
+const SCHEDULE_SLOT_INTERVAL_MINUTES = 30;
+const SCHEDULE_DAY_WINDOW = 7;
+
+function formatDateInputValue(date: Date): string {
+  const year = date.getFullYear();
+  const month = `${date.getMonth() + 1}`.padStart(2, "0");
+  const day = `${date.getDate()}`.padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
+function formatTimeInputValue(date: Date): string {
+  const hours = `${date.getHours()}`.padStart(2, "0");
+  const minutes = `${date.getMinutes()}`.padStart(2, "0");
+
+  return `${hours}:${minutes}`;
+}
+
+function addDays(date: Date, days: number): Date {
+  const nextDate = new Date(date);
+  nextDate.setDate(nextDate.getDate() + days);
+  return nextDate;
+}
+
+function startOfDay(date: Date): Date {
+  const nextDate = new Date(date);
+  nextDate.setHours(0, 0, 0, 0);
+  return nextDate;
+}
+
+function getWeekDay(date: Date): WeekDay {
+  return weekDays[(date.getDay() + 6) % 7];
+}
+
+function getPreviousWeekDay(day: WeekDay): WeekDay {
+  const dayIndex = weekDays.indexOf(day);
+  return weekDays[(dayIndex + weekDays.length - 1) % weekDays.length];
+}
+
+function toMinutes(time: string): number {
+  const [hours, minutes] = time.split(":").map(Number);
+  return hours * 60 + minutes;
+}
+
+function buildSlotDate(date: Date, minutes: number): Date {
+  const slotDate = new Date(date);
+  slotDate.setHours(Math.floor(minutes / 60), minutes % 60, 0, 0);
+  return slotDate;
+}
+
+function addRangeSlots(
+  minutesSet: Set<number>,
+  startMinutes: number,
+  endMinutes: number,
+  includeEndMinutes = true,
+) {
+  const firstAvailableMinute = Math.min(
+    startMinutes + SCHEDULE_SLOT_INTERVAL_MINUTES,
+    endMinutes,
+  );
+
+  for (
+    let minute = firstAvailableMinute;
+    minute < endMinutes;
+    minute += SCHEDULE_SLOT_INTERVAL_MINUTES
+  ) {
+    minutesSet.add(minute);
+  }
+
+  if (includeEndMinutes && endMinutes < 24 * 60) {
+    minutesSet.add(endMinutes);
+  }
+}
+
+function getScheduleMinutesForDate(
+  operationHours: TOperationHours,
+  date: Date,
+): number[] {
+  const currentDay = getWeekDay(date);
+  const previousDay = getPreviousWeekDay(currentDay);
+  const minutesSet = new Set<number>();
+
+  for (const range of operationHours[currentDay]) {
+    const fromMinutes = toMinutes(range.from);
+    const toMinutesValue = toMinutes(range.to);
+
+    if (fromMinutes === toMinutesValue) {
+      addRangeSlots(minutesSet, 0, 24 * 60, false);
+      continue;
+    }
+
+    if (fromMinutes < toMinutesValue) {
+      addRangeSlots(minutesSet, fromMinutes, toMinutesValue);
+      continue;
+    }
+
+    addRangeSlots(minutesSet, fromMinutes, 24 * 60);
+  }
+
+  for (const range of operationHours[previousDay]) {
+    const fromMinutes = toMinutes(range.from);
+    const toMinutesValue = toMinutes(range.to);
+
+    if (fromMinutes > toMinutesValue) {
+      addRangeSlots(minutesSet, 0, toMinutesValue);
+    }
+  }
+
+  return Array.from(minutesSet).sort((a, b) => a - b);
+}
+
+function buildScheduleOptions(
+  operationHours: TOperationHours,
+  now: Date,
+  language: string,
+): ScheduleDayOption[] {
+  const locale = language === "pt" ? "pt-BR" : "en-US";
+  const dateFormatter = new Intl.DateTimeFormat(locale, {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+  });
+  const timeFormatter = new Intl.DateTimeFormat(locale, {
+    hour: "numeric",
+    minute: "2-digit",
+  });
+
+  return Array.from({ length: SCHEDULE_DAY_WINDOW }, (_, offset) => {
+    const date = addDays(now, offset);
+    date.setHours(0, 0, 0, 0);
+    const differenceInDays = Math.round(
+      (startOfDay(date).getTime() - startOfDay(now).getTime()) /
+        (1000 * 60 * 60 * 24),
+    );
+
+    const label =
+      differenceInDays === 0
+        ? language === "pt"
+          ? "Hoje"
+          : "Today"
+        : differenceInDays === 1
+          ? language === "pt"
+            ? "Amanhã"
+            : "Tomorrow"
+          : dateFormatter.format(date);
+
+    const times = getScheduleMinutesForDate(operationHours, date)
+      .map((minutes) => buildSlotDate(date, minutes))
+      .filter((slotDate) => slotDate > now)
+      .map((slotDate) => ({
+        value: formatTimeInputValue(slotDate),
+        label: timeFormatter.format(slotDate),
+      }));
+
+    return {
+      value: formatDateInputValue(date),
+      label,
+      times,
+    };
+  }).filter((option) => option.times.length > 0);
+}
+
+function formatSelectedScheduleLabel(
+  schedule: ScheduleSelection,
+  scheduleOptions: ScheduleDayOption[],
+): string {
+  const selectedDay = scheduleOptions.find(
+    (option) => option.value === schedule.date,
+  );
+  const selectedTime = selectedDay?.times.find(
+    (option) => option.value === schedule.time,
+  );
+
+  if (!selectedDay || !selectedTime) {
+    return `${schedule.date} - ${schedule.time}`;
+  }
+
+  return `${selectedDay.label} - ${selectedTime.label}`;
+}
+
 const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
   const { cart } = useCart();
   const [step, setStep] = useQueryState("step", parseAsInteger.withDefault(1));
+  const [orderType, setOrderType] = useQueryState(
+    "orderType",
+    parseAsStringLiteral(["DELIVERY", "TAKEAWAY"]),
+  );
   const [paymentType, setPaymentType] = useState<TPaymentMethod | null>("CARD");
-  const [orderType, setOrderType] = useState<TOrderType | null>(null);
   const [selectedTip, setSelectedTip] = useState<string | null>("15");
   const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
   const [customer, setCustomer] = useState<TCustomer | null>(null);
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState<null | string>(null);
+  const [operationHours, setOperationHours] = useState<TOperationHours | null>(
+    null,
+  );
+  const [isBranchOpen, setIsBranchOpen] = useState<boolean | null>(null);
+  const [scheduledAt, setScheduledAt] = useState<ScheduleSelection | null>(null);
+  const [scheduleError, setScheduleError] = useState<string | null>(null);
 
   const router = useRouter();
   const content = text[lg];
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    const loadOperationHours = async () => {
+      try {
+        const response = await fetch(
+          `/api/branches/${DEFAULT_BRANCH_ID}/working-hours`,
+          {
+            signal: controller.signal,
+          },
+        );
+
+        if (!response.ok) return;
+
+        const data = (await response.json()) as {
+          operationHours?: TOperationHours;
+        };
+
+        if (data.operationHours) {
+          setOperationHours(data.operationHours);
+          setIsBranchOpen(isOperationHoursOpenAt(data.operationHours, new Date()));
+        }
+      } catch (error) {
+        if ((error as Error).name === "AbortError") return;
+      }
+    };
+
+    loadOperationHours();
+
+    return () => controller.abort();
+  }, []);
 
   const price = calculateCartWithProgressiveDiscount(
     data.categories,
     cart,
     data.progressiveDiscount,
   );
+  const scheduleOptions = operationHours
+    ? buildScheduleOptions(operationHours, new Date(), lg)
+    : [];
   const priceWithTip =
     price.discountedPrice +
     (Number(selectedTip || 0) * price.discountedPrice) / 100;
 
+  useEffect(() => {
+    if (!scheduledAt) return;
+
+    const isSelectedScheduleAvailable = scheduleOptions.some(
+      (dayOption) =>
+        dayOption.value === scheduledAt.date &&
+        dayOption.times.some((timeOption) => timeOption.value === scheduledAt.time),
+    );
+
+    if (!isSelectedScheduleAvailable) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setScheduledAt(null);
+    }
+  }, [scheduleOptions, scheduledAt]);
+
   const handleConfirm = async () => {
     try {
       if (!paymentType || !selectedAddress || !customer || !orderType) return;
+      if (isBranchOpen === false) {
+        if (scheduleOptions.length === 0) {
+          setScheduleError(content["noScheduleAvailability"]);
+          return;
+        }
+
+        if (scheduledAt === null) {
+          setScheduleError(content["selectDateAndTime"]);
+          return;
+        }
+      }
+
+      setScheduleError(null);
       setLoading(true);
       const order = await createOrder({
         cart: cart,
-        orderType: "DELIVERY",
+        orderType,
         paymentMethod: paymentType,
         customerId: customer.id,
         addressId: selectedAddress,
@@ -134,7 +414,7 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
 
   if (step === 3)
     return (
-      <>
+      <div className="flex flex-col h-dvh overflow-hidden">
         <div className="bg-foreground p-4 border-[#B9BFBF] border-b flex flex-row justify-between">
           <Button
             onClick={() => setStep(2)}
@@ -144,7 +424,7 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
             <span>{content["back"]}</span>
           </Button>
         </div>
-        <div className="py-6 px-4 flex flex-col gap-4">
+        <div className="py-6 px-4 flex flex-1 flex-col gap-4 overflow-y-auto pb-36">
           <div className="py-3 px-4 rounded-xl bg-foreground flex flex-row justify-between items-center mb-2">
             <div>
               <span className="font-semibold text-sm text-lightText">
@@ -186,6 +466,33 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
               {content["verify"]}
             </Button>
           </div>
+          {isBranchOpen === false && (
+            <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-0.5">
+                <span className="font-semibold text-[16px]">
+                  {content["scheduleOrder"]}
+                </span>
+                <span className="text-sm text-lightText">
+                  {content["orderForLater"]}
+                </span>
+              </div>
+              <ScheduleSelector
+                content={content}
+                error={scheduleError}
+                onChange={(value) => {
+                  setScheduledAt(value);
+                  setScheduleError(null);
+                }}
+                scheduleOptions={scheduleOptions}
+                value={scheduledAt}
+              />
+              {scheduleOptions.length === 0 && (
+                <span className="text-sm text-lightText">
+                  {content["noScheduleAvailability"]}
+                </span>
+              )}
+            </div>
+          )}
           <PaymentTypeSelector
             selectedPaymentType={paymentType}
             onSelect={setPaymentType}
@@ -196,7 +503,9 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
         <div className="bg-foreground pt-4 pb-8 px-4 border-[#B9BFBF] border-t fixed bottom-0 w-full flex flex-col items-center gap-2.5">
           <Button
             onClick={handleConfirm}
-            disabled={loading}
+            disabled={
+              loading || (isBranchOpen === false && scheduleOptions.length === 0)
+            }
             className="bg-brandBackground w-full py-3 gap-3"
           >
             <span className="text-lg">
@@ -206,7 +515,7 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
             </span>
           </Button>
         </div>
-      </>
+      </div>
     );
 
   if (step === 2)
@@ -228,7 +537,7 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
   return (
     <div>
       <Price cart={cart} data={data} content={content} />
-      <div className="py-6 px-4 flex flex-col gap-4 `pb-55">
+      <div className="py-6 px-4 flex flex-col gap-4 pb-55">
         {cart.items.length > 0 ? (
           cart.items.map((item) => (
             <CartListItem
@@ -264,7 +573,13 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
             <FiTruck size={22} />
             <span className="text-lg">{content["delivery"]}</span>
           </Button>
-          <Button className="bg-brandBackground w-full py-2! gap-3">
+          <Button
+            className="bg-brandBackground w-full py-2! gap-3"
+            onClick={() => {
+              setStep(2);
+              setOrderType("TAKEAWAY");
+            }}
+          >
             <FiShoppingBag size={22} />
             <span className="text-lg">{content["takeAway"]}</span>
           </Button>
@@ -274,11 +589,172 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
   );
 };
 
+type TScheduleSelector = {
+  content: {
+    [key: string]: string;
+  };
+  error: string | null;
+  onChange: (value: ScheduleSelection) => void;
+  scheduleOptions: ScheduleDayOption[];
+  value: ScheduleSelection | null;
+};
+
+const ScheduleSelector: React.FC<TScheduleSelector> = ({
+  content,
+  error,
+  onChange,
+  scheduleOptions,
+  value,
+}) => {
+  const errorId = "schedule-selector-error";
+  const [open, setOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<string | null>(
+    value?.date || scheduleOptions[0]?.value || null,
+  );
+
+  useEffect(() => {
+    if (value?.date) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+      setSelectedDate(value.date);
+      return;
+    }
+
+    if (!scheduleOptions.some((option) => option.value === selectedDate)) {
+      setSelectedDate(scheduleOptions[0]?.value || null);
+    }
+  }, [scheduleOptions, selectedDate, value?.date]);
+
+  const selectedDay =
+    scheduleOptions.find((option) => option.value === selectedDate) || null;
+  const displayValue = value
+    ? formatSelectedScheduleLabel(value, scheduleOptions)
+    : content["selectDateAndTime"];
+
+  return (
+    <div className="w-full flex flex-col gap-1.5">
+      {/* <label className="text-[16px] font-semibold text-neutral-700">
+        {content["scheduleDateTime"]} *
+      </label> */}
+      <Dialog.Root open={open} onOpenChange={setOpen}>
+        <Dialog.Trigger asChild>
+          <button
+            type="button"
+            disabled={scheduleOptions.length === 0}
+            aria-invalid={Boolean(error)}
+            aria-describedby={error ? errorId : undefined}
+            className={`w-full flex items-center justify-between rounded-xl bg-foreground text-lg px-3 py-3 transition border-2 ${
+              error
+                ? "border-red-500"
+                : "border-foreground"
+            } ${scheduleOptions.length === 0 ? "opacity-50" : ""}`}
+          >
+            <div className="flex items-center gap-2 min-w-0">
+              <FiCalendar className="text-neutral-500 shrink-0" />
+              <span
+                className={`truncate text-left ${
+                  value ? "text-text" : "text-lightText"
+                }`}
+              >
+                {displayValue}
+              </span>
+            </div>
+            <FiChevronDown className="text-neutral-500 shrink-0" />
+          </button>
+        </Dialog.Trigger>
+        <Dialog.Content className="w-dvw h-dvh bg-background fixed top-0 left-0 z-50 flex flex-col">
+          <div className="flex flex-row justify-between items-center px-4 py-3 bg-foreground border-[#CCD0D0] border-b">
+            <Button className="p-2! bg-transparent text-text! opacity-0">
+              <FiX />
+            </Button>
+            <span className="font-semibold">{content["scheduleOrder"]}</span>
+            <Button
+              onClick={() => setOpen(false)}
+              className="p-2! bg-transparent text-text!"
+            >
+              <FiX size={18} />
+            </Button>
+          </div>
+          <div className="px-4 py-4 flex flex-col gap-6 overflow-y-auto">
+            <div className="flex flex-col gap-3">
+              <span className="font-semibold text-[16px]">
+                {content["chooseAvailableDate"]}
+              </span>
+              <div className="grid grid-cols-2 gap-2">
+                {scheduleOptions.map((option) => (
+                  <button
+                    key={option.value}
+                    type="button"
+                    onClick={() => setSelectedDate(option.value)}
+                    className={`rounded-xl border-2 px-3 py-3 text-left transition ${
+                      selectedDate === option.value
+                        ? "border-brandBackground bg-brandBackground/10"
+                        : "border-foreground bg-foreground"
+                    }`}
+                  >
+                    <span className="block font-semibold capitalize">
+                      {option.label}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="flex flex-col gap-3">
+              <span className="font-semibold text-[16px]">
+                {content["chooseAvailableTime"]}
+              </span>
+              <div className="grid grid-cols-2 gap-2">
+                {selectedDay?.times.map((timeOption) => {
+                  const isSelected =
+                    value?.date === selectedDay.value &&
+                    value.time === timeOption.value;
+
+                  return (
+                    <button
+                      key={`${selectedDay.value}-${timeOption.value}`}
+                      type="button"
+                      onClick={() => {
+                        onChange({
+                          date: selectedDay.value,
+                          time: timeOption.value,
+                        });
+                        setOpen(false);
+                      }}
+                      className={`rounded-xl border-2 px-3 py-3 text-left transition ${
+                        isSelected
+                          ? "border-brandBackground bg-brandBackground/10"
+                          : "border-foreground bg-foreground"
+                      }`}
+                    >
+                      <span className="flex items-center gap-2 font-semibold">
+                        <FiClock className="shrink-0" />
+                        {timeOption.label}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </Dialog.Content>
+      </Dialog.Root>
+      {error ? (
+        <p
+          id={errorId}
+          role="alert"
+          className="text-[16px] font-medium text-red-500"
+        >
+          {error}
+        </p>
+      ) : null}
+    </div>
+  );
+};
+
 type TAddressStep = {
   onBack: () => void;
   onNext: () => void;
   selectedAddress: string | null;
-  setSelectedAddress: (value: string) => void;
+  setSelectedAddress: (value: string | null) => void;
   customer: TCustomer | null;
   setCustomer: (data: TCustomer | null) => void;
   name: string | null;
@@ -307,9 +783,52 @@ const AddressStep: React.FC<TAddressStep> = ({
   content,
 }) => {
   const [phoneData, setPhoneData] = useState<PhoneValue | null>(null);
+  const [phoneValue, setPhoneValue] = useState("");
+  const [phoneCountry, setPhoneCountry] = useState<PhoneValue["country"]>("US");
   const [loading, setLoading] = useState(false);
   const [openAddress, setOpenAddress] = useState(false);
   const [error, setError] = useState<TInputError>(null);
+
+  useEffect(() => {
+    const storedSession = getStoredCustomerSession();
+    if (!storedSession) return;
+
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setPhoneValue(storedSession.phone);
+    setPhoneCountry(
+      (storedSession.phoneCountry as PhoneValue["country"] | undefined) || "US",
+    );
+    setPhoneData({
+      country:
+        (storedSession.phoneCountry as PhoneValue["country"] | undefined) || "US",
+      raw: storedSession.phone,
+      formatted: storedSession.phone,
+      e164: null,
+      isValid: true,
+    });
+    setCustomer(storedSession.customer);
+    setName(storedSession.customer.name);
+
+    if (
+      storedSession.selectedAddressId &&
+      storedSession.customer.addresses?.some(
+        (address) => address.id === storedSession.selectedAddressId,
+      )
+    ) {
+      setSelectedAddress(storedSession.selectedAddressId);
+    }
+  }, [setCustomer, setName, setSelectedAddress]);
+
+  useEffect(() => {
+    if (!customer || !phoneData?.raw) return;
+
+    setStoredCustomerSession({
+      customer,
+      phone: phoneData.raw,
+      phoneCountry: phoneData.country,
+      selectedAddressId: selectedAddress || undefined,
+    });
+  }, [customer, phoneData?.raw, selectedAddress]);
 
   const handleConfirm = async () => {
     if (phoneData === null)
@@ -330,6 +849,12 @@ const AddressStep: React.FC<TAddressStep> = ({
       });
       setName(customer.name);
       setCustomer(customer);
+      setStoredCustomerSession({
+        customer,
+        phone: phoneData.raw,
+        phoneCountry: phoneData.country,
+        selectedAddressId: selectedAddress || undefined,
+      });
       setLoading(false);
     } else {
       if (!name || name.length === 0)
@@ -346,9 +871,22 @@ const AddressStep: React.FC<TAddressStep> = ({
       }
       if (!customer.name || customer.name.length === 0) {
         setLoading(true);
-        await updateCustomerName({
+        const updatedCustomer = await updateCustomerName({
           customerId: customer.id,
           name: name,
+        });
+        setCustomer({
+          ...customer,
+          name: updatedCustomer.name,
+        });
+        setStoredCustomerSession({
+          customer: {
+            ...customer,
+            name: updatedCustomer.name,
+          },
+          phone: phoneData.raw,
+          phoneCountry: phoneData.country,
+          selectedAddressId: selectedAddress || undefined,
         });
         setLoading(false);
       }
@@ -364,6 +902,12 @@ const AddressStep: React.FC<TAddressStep> = ({
     });
     setCustomer(customer);
     setSelectedAddress(data.id);
+    setStoredCustomerSession({
+      customer,
+      phone: phoneData.raw,
+      phoneCountry: phoneData.country,
+      selectedAddressId: data.id,
+    });
     // if (!data.address.raw.address?.house_number || !customer) return;
     // await addNewDeliveryAddress({
     //   address: {
@@ -402,12 +946,21 @@ const AddressStep: React.FC<TAddressStep> = ({
               {content["phone"]}
             </span>
             <PhoneInput
+              defaultCountry={phoneCountry}
               onClear={() => {
+                clearStoredCustomerSession();
                 setCustomer(null);
                 setPhoneData(null);
+                setPhoneValue("");
+                setPhoneCountry("US");
+                setName(null);
+                setSelectedAddress(null);
               }}
-              // value={phone}
-              onChange={setPhoneData}
+              value={phoneValue}
+              onChange={(value) => {
+                setPhoneData(value);
+                setPhoneCountry(value.country);
+              }}
               block={customer !== null}
             />
             {error?.field === "phone" && (

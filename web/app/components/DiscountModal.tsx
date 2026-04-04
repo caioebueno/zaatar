@@ -37,7 +37,7 @@ const DiscountModal: React.FC<TDiscountModal> = ({
       onOpenChange={onOpenChange}
       //onOpenChange={setOpen}
     >
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md lg:rounded-xl">
         <DialogHeader className="gap-4">
           <DialogTitle className="font-bold">
             {content["progressiveDiscount"]}

@@ -197,6 +197,10 @@ export default function PhoneInput({
   }, [value]);
 
   useEffect(() => {
+    setCountry(defaultCountry);
+  }, [defaultCountry]);
+
+  useEffect(() => {
     if (isOpen) {
       setTimeout(() => searchRef.current?.focus(), 0);
     }

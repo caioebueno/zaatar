@@ -1,6 +1,30 @@
-import { operationHours } from "@/constants/operationHours";
+"use client";
+
+import { DEFAULT_BRANCH_ID } from "@/constants/branch";
+import type { TOperationHours } from "@/src/types/operationHours";
 import { Dialog } from "radix-ui";
+import { useEffect, useState } from "react";
 import { FiCheck, FiClock, FiTruck, FiX } from "react-icons/fi";
+
+const emptyOperationHours: TOperationHours = {
+  monday: [],
+  tuesday: [],
+  wednesday: [],
+  thursday: [],
+  friday: [],
+  saturday: [],
+  sunday: [],
+};
+
+const orderedDays: Array<keyof TOperationHours> = [
+  "sunday",
+  "monday",
+  "tuesday",
+  "wednesday",
+  "thursday",
+  "friday",
+  "saturday",
+];
 
 type TInformationModal = {
   open: boolean;
@@ -27,10 +51,45 @@ const InformationModal: React.FC<TInformationModal> = ({
   open,
   content,
 }) => {
+  const [hours, setHours] = useState<TOperationHours>(emptyOperationHours);
+
+  useEffect(() => {
+    if (!open) return;
+
+    const controller = new AbortController();
+
+    const loadOperationHours = async () => {
+      try {
+        const response = await fetch(
+          `/api/branches/${DEFAULT_BRANCH_ID}/working-hours`,
+          {
+            signal: controller.signal,
+          },
+        );
+
+        if (!response.ok) return;
+
+        const data = (await response.json()) as {
+          operationHours?: TOperationHours;
+        };
+
+        if (data.operationHours) {
+          setHours(data.operationHours);
+        }
+      } catch (error) {
+        if ((error as Error).name === "AbortError") return;
+      }
+    };
+
+    loadOperationHours();
+
+    return () => controller.abort();
+  }, [open]);
+
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
-      <Dialog.Overlay className="bg-black/50 h-dvh w-dvh fixed top-0 left-0 z-40"></Dialog.Overlay>
-      <Dialog.Content className="transition fixed bottom-0 left-1/2 z-50 grid w-full bg-white -translate-x-1/2 ">
+      <Dialog.Overlay className="bg-black/50 h-dvh w-dvw fixed top-0 left-0 z-40"></Dialog.Overlay>
+      <Dialog.Content className="transition fixed bottom-0 left-1/2 z-50 grid w-full bg-white -translate-x-1/2 max-w-[900px] rounded-t-xl">
         <div className="px-4 py-3 flex flex-row justify-between w-full bg-foreground">
           <span className="font-bold">{content["information"]}</span>
           <Dialog.Close>
@@ -48,49 +107,21 @@ const InformationModal: React.FC<TInformationModal> = ({
         </div>
         <div className="px-4 py-3 pb-8 flex flex-col">
           <span className="font-bold pb-2">{content["hoursOfOperation"]}</span>
-          <Weekday
-            day="sunday"
-            from={formatTo12Hour(operationHours.sunday[0].from)}
-            to={formatTo12Hour(operationHours.sunday[0].to)}
-            content={content}
-          />
-          <Weekday
-            day="monday"
-            from={formatTo12Hour(operationHours.monday[0].from)}
-            to={formatTo12Hour(operationHours.monday[0].to)}
-            content={content}
-          />
-          <Weekday
-            day="tuesday"
-            from={formatTo12Hour(operationHours.monday[0].from)}
-            to={formatTo12Hour(operationHours.monday[0].to)}
-            content={content}
-            closed
-          />
-          <Weekday
-            day="wednesday"
-            from={formatTo12Hour(operationHours.wednesday[0].from)}
-            to={formatTo12Hour(operationHours.wednesday[0].to)}
-            content={content}
-          />
-          <Weekday
-            day="thursday"
-            from={formatTo12Hour(operationHours.thursday[0].from)}
-            to={formatTo12Hour(operationHours.thursday[0].to)}
-            content={content}
-          />
-          <Weekday
-            day="friday"
-            from={formatTo12Hour(operationHours.friday[0].from)}
-            to={formatTo12Hour(operationHours.friday[0].to)}
-            content={content}
-          />
-          <Weekday
-            day="saturday"
-            from={formatTo12Hour(operationHours.saturday[0].from)}
-            to={formatTo12Hour(operationHours.saturday[0].to)}
-            content={content}
-          />
+          {orderedDays.map((day) => {
+            const range = hours[day][0];
+            const isClosed = !range;
+
+            return (
+              <Weekday
+                key={day}
+                day={day}
+                from={range ? formatTo12Hour(range.from) : undefined}
+                to={range ? formatTo12Hour(range.to) : undefined}
+                content={content}
+                closed={isClosed}
+              />
+            );
+          })}
         </div>
       </Dialog.Content>
     </Dialog.Root>
