@@ -1,0 +1,9 @@
+CREATE TYPE "OrderStatus" AS ENUM (
+  'ACCEPTED',
+  'PREPARING',
+  'OUT_FOR_DELIVERY',
+  'DELIVERED'
+);
+
+ALTER TABLE "Order"
+ADD COLUMN "status" "OrderStatus" NOT NULL DEFAULT 'ACCEPTED';

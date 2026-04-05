@@ -1,6 +1,7 @@
 import TCustomer from "@/src/types/customer";
 
 const CUSTOMER_SESSION_KEY = "foody-customer-session";
+export const CUSTOMER_SESSION_UPDATED_EVENT = "foody-customer-session-updated";
 
 type StoredCustomerSession = {
   customer: TCustomer;
@@ -68,12 +69,14 @@ export function setStoredCustomerSession(session: StoredCustomerSession) {
   if (typeof window === "undefined") return;
 
   window.localStorage.setItem(CUSTOMER_SESSION_KEY, JSON.stringify(session));
+  window.dispatchEvent(new CustomEvent(CUSTOMER_SESSION_UPDATED_EVENT));
 }
 
 export function clearStoredCustomerSession() {
   if (typeof window === "undefined") return;
 
   window.localStorage.removeItem(CUSTOMER_SESSION_KEY);
+  window.dispatchEvent(new CustomEvent(CUSTOMER_SESSION_UPDATED_EVENT));
 }
 
 export type TStoredCustomerSession = StoredCustomerSession;

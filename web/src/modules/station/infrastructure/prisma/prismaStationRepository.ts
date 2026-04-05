@@ -1,5 +1,6 @@
 import prisma from "@/prisma";
-import type { TOrder } from "@/src/types/order";
+import { Prisma } from "@/src/generated/prisma";
+import type { TOrder, TOrderStatus } from "@/src/types/order";
 import type { StationRepository, DayWindow } from "../../domain/station.repository";
 import type {
   PreparationStep,
@@ -86,6 +87,21 @@ class PrismaStationRepository implements StationRepository {
         createdAt: "asc",
       },
     });
+    const orderStatusById = new Map<string, TOrderStatus>();
+
+    if (orders.length > 0) {
+      const orderStatuses = await prisma.$queryRaw<
+        { id: string; status: TOrderStatus }[]
+      >`
+        SELECT "id", "status"
+        FROM "Order"
+        WHERE "id" IN (${Prisma.join(orders.map((order) => order.id))})
+      `;
+
+      for (const orderStatus of orderStatuses) {
+        orderStatusById.set(orderStatus.id, orderStatus.status);
+      }
+    }
 
     return orders
       .map((order): TOrder | null => {
@@ -126,6 +142,7 @@ class PrismaStationRepository implements StationRepository {
               );
 
               if (steps.length === 0) return null;
+              if (!category.categoryId || !category.category) return null;
 
               return {
                 id: category.id,
@@ -149,6 +166,7 @@ class PrismaStationRepository implements StationRepository {
           id: order.id,
           createdAt: order.createdAt.toISOString(),
           number: order.number ?? undefined,
+          status: orderStatusById.get(order.id) ?? "ACCEPTED",
           type: order.type,
           paymentMethod: order.paymentMethod,
           addressId: order.addressId ?? undefined,

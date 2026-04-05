@@ -241,7 +241,8 @@ exports.Prisma.ProductScalarFieldEnum = {
 exports.Prisma.CategoryScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
-  name: 'name'
+  name: 'name',
+  translations: 'translations'
 };
 
 exports.Prisma.CampaignScalarFieldEnum = {
@@ -265,6 +266,7 @@ exports.Prisma.DeliveryAddressScalarFieldEnum = {
   createdAt: 'createdAt',
   lat: 'lat',
   lng: 'lng',
+  deliveryFee: 'deliveryFee',
   city: 'city',
   zipCode: 'zipCode',
   State: 'State',
@@ -297,6 +299,7 @@ exports.Prisma.OrderScalarFieldEnum = {
   number: 'number',
   createdAt: 'createdAt',
   amount: 'amount',
+  status: 'status',
   type: 'type',
   paymentMethod: 'paymentMethod',
   tipAmount: 'tipAmount',
@@ -350,6 +353,13 @@ exports.ProgressiveDiscountStepType = exports.$Enums.ProgressiveDiscountStepType
 exports.ModifierGroupType = exports.$Enums.ModifierGroupType = {
   MULTI: 'MULTI',
   SINGLE: 'SINGLE'
+};
+
+exports.OrderStatus = exports.$Enums.OrderStatus = {
+  ACCEPTED: 'ACCEPTED',
+  PREPARING: 'PREPARING',
+  OUT_FOR_DELIVERY: 'OUT_FOR_DELIVERY',
+  DELIVERED: 'DELIVERED'
 };
 
 exports.OrderType = exports.$Enums.OrderType = {

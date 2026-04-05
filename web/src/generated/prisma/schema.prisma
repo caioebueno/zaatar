@@ -35,8 +35,8 @@ model PreparationStep {
 model PreparationStepCategory {
   id                    String                 @id
   createdAt             DateTime               @default(now())
-  category              Category               @relation(fields: [categoryId], references: [id])
-  categoryId            String
+  category              Category?              @relation(fields: [categoryId], references: [id])
+  categoryId            String?
   completed             Boolean                @default(false)
   order                 Order                  @relation(fields: [orderId], references: [id], onDelete: Cascade)
   orderId               String
@@ -139,14 +139,14 @@ model Business {
 }
 
 model Branch {
-  id         String    @id
-  createdAt  DateTime  @default(now())
-  name       String
+  id             String    @id
+  createdAt      DateTime  @default(now())
+  name           String
   operationHours Json?
-  address    Address?  @relation(fields: [addressId], references: [id])
-  addressId  String?   @unique
-  business   Business? @relation(fields: [businessId], references: [id])
-  businessId String?
+  address        Address?  @relation(fields: [addressId], references: [id])
+  addressId      String?   @unique
+  business       Business? @relation(fields: [businessId], references: [id])
+  businessId     String?
 }
 
 model Address {
@@ -178,6 +178,7 @@ model Category {
   id                        String                    @id
   createdAt                 DateTime                  @default(now())
   name                      String
+  translations              Json?
   products                  Product[]
   preparationStepCategories PreparationStepCategory[]
 }
@@ -207,6 +208,7 @@ model DeliveryAddress {
   createdAt        DateTime  @default(now())
   lat              String
   lng              String
+  deliveryFee      Int       @default(0)
   city             String
   zipCode          String
   State            String
@@ -246,6 +248,7 @@ model Order {
   createdAt                 DateTime                  @default(now())
   amount                    Int
   customer                  Customer                  @relation(fields: [customerId], references: [id])
+  status                    OrderStatus               @default(ACCEPTED)
   type                      OrderType                 @default(DELIVERY)
   paymentMethod             PaymentType               @default(CARD)
   tipAmount                 Int?
@@ -270,10 +273,17 @@ enum OrderType {
   TAKEAWAY
 }
 
+enum OrderStatus {
+  ACCEPTED
+  PREPARING
+  OUT_FOR_DELIVERY
+  DELIVERED
+}
+
 model OrderProducts {
   id                 String              @id
   createdAt          DateTime            @default(now())
-  product            Product             @relation(fields: [productId], references: [id])
+  product            Product             @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId          String
   quantity           Int
   comments           String?

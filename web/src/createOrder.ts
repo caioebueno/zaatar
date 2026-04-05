@@ -1,5 +1,6 @@
 "use server";
 
+import { MAX_DELIVERY_FEE_CENTS } from "@/utils/calculateDeliveryFee";
 import prisma from "../prisma";
 import TCart from "../types/cart";
 import getProgressiveDiscount from "./getProgressiveDiscount";
@@ -33,6 +34,34 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
         message: "DELIVERY_MUST_HAVE_ADDRESS",
       },
     };
+  if (data.addressId && data.orderType === "DELIVERY") {
+    const deliveryAddress = await prisma.$queryRaw<
+      { deliveryFee: number }[]
+    >`
+      SELECT "deliveryFee"
+      FROM "DeliveryAddress"
+      WHERE "id" = ${data.addressId}
+      LIMIT 1
+    `;
+
+    if (deliveryAddress.length === 0) {
+      throw {
+        code: "INVALID_PARAMS",
+        data: {
+          message: "DELIVERY_MUST_HAVE_ADDRESS",
+        },
+      };
+    }
+
+    if (deliveryAddress[0].deliveryFee > MAX_DELIVERY_FEE_CENTS) {
+      throw {
+        code: "INVALID_PARAMS",
+        data: {
+          message: "OUTSIDE_DELIVERY_COVERAGE_AREA",
+        },
+      };
+    }
+  }
   const now = new Date();
 
   const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -156,6 +185,7 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
   const order: TOrder = {
     id: createdOrder.id,
     createdAt: createdOrder.createdAt.toISOString(),
+    status: "ACCEPTED",
     orderProducts: orderProducts,
     paymentMethod: createdOrder.paymentMethod,
     type: createdOrder.type,

@@ -1,16 +1,26 @@
 import TAddress from "./address";
 import TCustomer from "./customer";
-import TProduct from "./product";
+import TProduct, { TModifierGroupItem } from "./product";
 import { TPreparationStepCategory, TPreparationStepTrack } from "./station";
 
 export type TPaymentMethod = "CARD" | "CASH" | "ZELLE";
 export type TOrderType = "DELIVERY" | "TAKEAWAY";
+export type TOrderStatus =
+  | "ACCEPTED"
+  | "PREPARING"
+  | "OUT_FOR_DELIVERY"
+  | "DELIVERED";
 
 export type TOrder = {
   id: string;
   createdAt: string;
   number?: string;
+  status: TOrderStatus;
   type: TOrderType;
+  totalAmount?: number;
+  subtotalAmount?: number;
+  tipAmount?: number;
+  deliveryFee?: number;
   costumerId?: string;
   customer?: TCustomer;
   paymentMethod: TPaymentMethod;
@@ -26,6 +36,7 @@ export type TOrderProduct = {
   product?: TProduct;
   comments?: string;
   selectedModifierGroupItemIds?: string[];
+  selectedModifierGroupItems?: TModifierGroupItem[];
   amount: number;
   fullAmount: number;
   quantity: number;

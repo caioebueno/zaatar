@@ -12,6 +12,7 @@ type TAddress = {
   complement?: string;
   numberComplement?: string;
   customerId?: string;
+  deliveryFee?: number;
 };
 
 export default TAddress;

@@ -160,6 +160,16 @@ export const OrderType: {
 
 export type OrderType = (typeof OrderType)[keyof typeof OrderType]
 
+
+export const OrderStatus: {
+  ACCEPTED: 'ACCEPTED',
+  PREPARING: 'PREPARING',
+  OUT_FOR_DELIVERY: 'OUT_FOR_DELIVERY',
+  DELIVERED: 'DELIVERED'
+};
+
+export type OrderStatus = (typeof OrderStatus)[keyof typeof OrderStatus]
+
 }
 
 export type ProgressiveDiscountStepType = $Enums.ProgressiveDiscountStepType
@@ -177,6 +187,10 @@ export const PaymentType: typeof $Enums.PaymentType
 export type OrderType = $Enums.OrderType
 
 export const OrderType: typeof $Enums.OrderType
+
+export type OrderStatus = $Enums.OrderStatus
+
+export const OrderStatus: typeof $Enums.OrderStatus
 
 /**
  * ##  Prisma Client ʲˢ
@@ -5784,7 +5798,7 @@ export namespace Prisma {
   export type PreparationStepCategoryGroupByOutputType = {
     id: string
     createdAt: Date
-    categoryId: string
+    categoryId: string | null
     completed: boolean
     orderId: string
     _count: PreparationStepCategoryCountAggregateOutputType | null
@@ -5812,7 +5826,7 @@ export namespace Prisma {
     categoryId?: boolean
     completed?: boolean
     orderId?: boolean
-    category?: boolean | CategoryDefaultArgs<ExtArgs>
+    category?: boolean | PreparationStepCategory$categoryArgs<ExtArgs>
     order?: boolean | OrderDefaultArgs<ExtArgs>
     preparationStepTracks?: boolean | PreparationStepCategory$preparationStepTracksArgs<ExtArgs>
     _count?: boolean | PreparationStepCategoryCountOutputTypeDefaultArgs<ExtArgs>
@@ -5824,7 +5838,7 @@ export namespace Prisma {
     categoryId?: boolean
     completed?: boolean
     orderId?: boolean
-    category?: boolean | CategoryDefaultArgs<ExtArgs>
+    category?: boolean | PreparationStepCategory$categoryArgs<ExtArgs>
     order?: boolean | OrderDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["preparationStepCategory"]>
 
@@ -5834,7 +5848,7 @@ export namespace Prisma {
     categoryId?: boolean
     completed?: boolean
     orderId?: boolean
-    category?: boolean | CategoryDefaultArgs<ExtArgs>
+    category?: boolean | PreparationStepCategory$categoryArgs<ExtArgs>
     order?: boolean | OrderDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["preparationStepCategory"]>
 
@@ -5848,31 +5862,31 @@ export namespace Prisma {
 
   export type PreparationStepCategoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "categoryId" | "completed" | "orderId", ExtArgs["result"]["preparationStepCategory"]>
   export type PreparationStepCategoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    category?: boolean | CategoryDefaultArgs<ExtArgs>
+    category?: boolean | PreparationStepCategory$categoryArgs<ExtArgs>
     order?: boolean | OrderDefaultArgs<ExtArgs>
     preparationStepTracks?: boolean | PreparationStepCategory$preparationStepTracksArgs<ExtArgs>
     _count?: boolean | PreparationStepCategoryCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type PreparationStepCategoryIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    category?: boolean | CategoryDefaultArgs<ExtArgs>
+    category?: boolean | PreparationStepCategory$categoryArgs<ExtArgs>
     order?: boolean | OrderDefaultArgs<ExtArgs>
   }
   export type PreparationStepCategoryIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    category?: boolean | CategoryDefaultArgs<ExtArgs>
+    category?: boolean | PreparationStepCategory$categoryArgs<ExtArgs>
     order?: boolean | OrderDefaultArgs<ExtArgs>
   }
 
   export type $PreparationStepCategoryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "PreparationStepCategory"
     objects: {
-      category: Prisma.$CategoryPayload<ExtArgs>
+      category: Prisma.$CategoryPayload<ExtArgs> | null
       order: Prisma.$OrderPayload<ExtArgs>
       preparationStepTracks: Prisma.$PreparationStepTrackPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       createdAt: Date
-      categoryId: string
+      categoryId: string | null
       completed: boolean
       orderId: string
     }, ExtArgs["result"]["preparationStepCategory"]>
@@ -6269,7 +6283,7 @@ export namespace Prisma {
    */
   export interface Prisma__PreparationStepCategoryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    category<T extends CategoryDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CategoryDefaultArgs<ExtArgs>>): Prisma__CategoryClient<$Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    category<T extends PreparationStepCategory$categoryArgs<ExtArgs> = {}>(args?: Subset<T, PreparationStepCategory$categoryArgs<ExtArgs>>): Prisma__CategoryClient<$Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     order<T extends OrderDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrderDefaultArgs<ExtArgs>>): Prisma__OrderClient<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     preparationStepTracks<T extends PreparationStepCategory$preparationStepTracksArgs<ExtArgs> = {}>(args?: Subset<T, PreparationStepCategory$preparationStepTracksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PreparationStepTrackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -6704,6 +6718,25 @@ export namespace Prisma {
      * Limit how many PreparationStepCategories to delete.
      */
     limit?: number
+  }
+
+  /**
+   * PreparationStepCategory.category
+   */
+  export type PreparationStepCategory$categoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Category
+     */
+    select?: CategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Category
+     */
+    omit?: CategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CategoryInclude<ExtArgs> | null
+    where?: CategoryWhereInput
   }
 
   /**
@@ -15773,7 +15806,6 @@ export namespace Prisma {
     id: string | null
     createdAt: Date | null
     name: string | null
-    operationHours: JsonValue | null
     addressId: string | null
     businessId: string | null
   }
@@ -15782,7 +15814,6 @@ export namespace Prisma {
     id: string | null
     createdAt: Date | null
     name: string | null
-    operationHours: JsonValue | null
     addressId: string | null
     businessId: string | null
   }
@@ -15802,7 +15833,6 @@ export namespace Prisma {
     id?: true
     createdAt?: true
     name?: true
-    operationHours?: true
     addressId?: true
     businessId?: true
   }
@@ -15811,7 +15841,6 @@ export namespace Prisma {
     id?: true
     createdAt?: true
     name?: true
-    operationHours?: true
     addressId?: true
     businessId?: true
   }
@@ -16421,6 +16450,7 @@ export namespace Prisma {
     readonly id: FieldRef<"Branch", 'String'>
     readonly createdAt: FieldRef<"Branch", 'DateTime'>
     readonly name: FieldRef<"Branch", 'String'>
+    readonly operationHours: FieldRef<"Branch", 'Json'>
     readonly addressId: FieldRef<"Branch", 'String'>
     readonly businessId: FieldRef<"Branch", 'String'>
   }
@@ -19260,6 +19290,7 @@ export namespace Prisma {
     id: number
     createdAt: number
     name: number
+    translations: number
     _all: number
   }
 
@@ -19280,6 +19311,7 @@ export namespace Prisma {
     id?: true
     createdAt?: true
     name?: true
+    translations?: true
     _all?: true
   }
 
@@ -19359,6 +19391,7 @@ export namespace Prisma {
     id: string
     createdAt: Date
     name: string
+    translations: JsonValue | null
     _count: CategoryCountAggregateOutputType | null
     _min: CategoryMinAggregateOutputType | null
     _max: CategoryMaxAggregateOutputType | null
@@ -19382,6 +19415,7 @@ export namespace Prisma {
     id?: boolean
     createdAt?: boolean
     name?: boolean
+    translations?: boolean
     products?: boolean | Category$productsArgs<ExtArgs>
     preparationStepCategories?: boolean | Category$preparationStepCategoriesArgs<ExtArgs>
     _count?: boolean | CategoryCountOutputTypeDefaultArgs<ExtArgs>
@@ -19391,21 +19425,24 @@ export namespace Prisma {
     id?: boolean
     createdAt?: boolean
     name?: boolean
+    translations?: boolean
   }, ExtArgs["result"]["category"]>
 
   export type CategorySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     createdAt?: boolean
     name?: boolean
+    translations?: boolean
   }, ExtArgs["result"]["category"]>
 
   export type CategorySelectScalar = {
     id?: boolean
     createdAt?: boolean
     name?: boolean
+    translations?: boolean
   }
 
-  export type CategoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "name", ExtArgs["result"]["category"]>
+  export type CategoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "name" | "translations", ExtArgs["result"]["category"]>
   export type CategoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     products?: boolean | Category$productsArgs<ExtArgs>
     preparationStepCategories?: boolean | Category$preparationStepCategoriesArgs<ExtArgs>
@@ -19424,6 +19461,7 @@ export namespace Prisma {
       id: string
       createdAt: Date
       name: string
+      translations: Prisma.JsonValue | null
     }, ExtArgs["result"]["category"]>
     composites: {}
   }
@@ -19852,6 +19890,7 @@ export namespace Prisma {
     readonly id: FieldRef<"Category", 'String'>
     readonly createdAt: FieldRef<"Category", 'DateTime'>
     readonly name: FieldRef<"Category", 'String'>
+    readonly translations: FieldRef<"Category", 'Json'>
   }
     
 
@@ -22523,8 +22562,18 @@ export namespace Prisma {
 
   export type AggregateDeliveryAddress = {
     _count: DeliveryAddressCountAggregateOutputType | null
+    _avg: DeliveryAddressAvgAggregateOutputType | null
+    _sum: DeliveryAddressSumAggregateOutputType | null
     _min: DeliveryAddressMinAggregateOutputType | null
     _max: DeliveryAddressMaxAggregateOutputType | null
+  }
+
+  export type DeliveryAddressAvgAggregateOutputType = {
+    deliveryFee: number | null
+  }
+
+  export type DeliveryAddressSumAggregateOutputType = {
+    deliveryFee: number | null
   }
 
   export type DeliveryAddressMinAggregateOutputType = {
@@ -22532,6 +22581,7 @@ export namespace Prisma {
     createdAt: Date | null
     lat: string | null
     lng: string | null
+    deliveryFee: number | null
     city: string | null
     zipCode: string | null
     State: string | null
@@ -22548,6 +22598,7 @@ export namespace Prisma {
     createdAt: Date | null
     lat: string | null
     lng: string | null
+    deliveryFee: number | null
     city: string | null
     zipCode: string | null
     State: string | null
@@ -22564,6 +22615,7 @@ export namespace Prisma {
     createdAt: number
     lat: number
     lng: number
+    deliveryFee: number
     city: number
     zipCode: number
     State: number
@@ -22577,11 +22629,20 @@ export namespace Prisma {
   }
 
 
+  export type DeliveryAddressAvgAggregateInputType = {
+    deliveryFee?: true
+  }
+
+  export type DeliveryAddressSumAggregateInputType = {
+    deliveryFee?: true
+  }
+
   export type DeliveryAddressMinAggregateInputType = {
     id?: true
     createdAt?: true
     lat?: true
     lng?: true
+    deliveryFee?: true
     city?: true
     zipCode?: true
     State?: true
@@ -22598,6 +22659,7 @@ export namespace Prisma {
     createdAt?: true
     lat?: true
     lng?: true
+    deliveryFee?: true
     city?: true
     zipCode?: true
     State?: true
@@ -22614,6 +22676,7 @@ export namespace Prisma {
     createdAt?: true
     lat?: true
     lng?: true
+    deliveryFee?: true
     city?: true
     zipCode?: true
     State?: true
@@ -22664,6 +22727,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: DeliveryAddressAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: DeliveryAddressSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: DeliveryAddressMinAggregateInputType
@@ -22694,6 +22769,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: DeliveryAddressCountAggregateInputType | true
+    _avg?: DeliveryAddressAvgAggregateInputType
+    _sum?: DeliveryAddressSumAggregateInputType
     _min?: DeliveryAddressMinAggregateInputType
     _max?: DeliveryAddressMaxAggregateInputType
   }
@@ -22703,6 +22780,7 @@ export namespace Prisma {
     createdAt: Date
     lat: string
     lng: string
+    deliveryFee: number
     city: string
     zipCode: string
     State: string
@@ -22713,6 +22791,8 @@ export namespace Prisma {
     numberComplement: string | null
     customerId: string | null
     _count: DeliveryAddressCountAggregateOutputType | null
+    _avg: DeliveryAddressAvgAggregateOutputType | null
+    _sum: DeliveryAddressSumAggregateOutputType | null
     _min: DeliveryAddressMinAggregateOutputType | null
     _max: DeliveryAddressMaxAggregateOutputType | null
   }
@@ -22736,6 +22816,7 @@ export namespace Prisma {
     createdAt?: boolean
     lat?: boolean
     lng?: boolean
+    deliveryFee?: boolean
     city?: boolean
     zipCode?: boolean
     State?: boolean
@@ -22755,6 +22836,7 @@ export namespace Prisma {
     createdAt?: boolean
     lat?: boolean
     lng?: boolean
+    deliveryFee?: boolean
     city?: boolean
     zipCode?: boolean
     State?: boolean
@@ -22772,6 +22854,7 @@ export namespace Prisma {
     createdAt?: boolean
     lat?: boolean
     lng?: boolean
+    deliveryFee?: boolean
     city?: boolean
     zipCode?: boolean
     State?: boolean
@@ -22789,6 +22872,7 @@ export namespace Prisma {
     createdAt?: boolean
     lat?: boolean
     lng?: boolean
+    deliveryFee?: boolean
     city?: boolean
     zipCode?: boolean
     State?: boolean
@@ -22800,7 +22884,7 @@ export namespace Prisma {
     customerId?: boolean
   }
 
-  export type DeliveryAddressOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "lat" | "lng" | "city" | "zipCode" | "State" | "street" | "number" | "description" | "complement" | "numberComplement" | "customerId", ExtArgs["result"]["deliveryAddress"]>
+  export type DeliveryAddressOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "lat" | "lng" | "deliveryFee" | "city" | "zipCode" | "State" | "street" | "number" | "description" | "complement" | "numberComplement" | "customerId", ExtArgs["result"]["deliveryAddress"]>
   export type DeliveryAddressInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     customer?: boolean | DeliveryAddress$customerArgs<ExtArgs>
     orders?: boolean | DeliveryAddress$ordersArgs<ExtArgs>
@@ -22824,6 +22908,7 @@ export namespace Prisma {
       createdAt: Date
       lat: string
       lng: string
+      deliveryFee: number
       city: string
       zipCode: string
       State: string
@@ -23262,6 +23347,7 @@ export namespace Prisma {
     readonly createdAt: FieldRef<"DeliveryAddress", 'DateTime'>
     readonly lat: FieldRef<"DeliveryAddress", 'String'>
     readonly lng: FieldRef<"DeliveryAddress", 'String'>
+    readonly deliveryFee: FieldRef<"DeliveryAddress", 'Int'>
     readonly city: FieldRef<"DeliveryAddress", 'String'>
     readonly zipCode: FieldRef<"DeliveryAddress", 'String'>
     readonly State: FieldRef<"DeliveryAddress", 'String'>
@@ -25933,6 +26019,7 @@ export namespace Prisma {
     number: string | null
     createdAt: Date | null
     amount: number | null
+    status: $Enums.OrderStatus | null
     type: $Enums.OrderType | null
     paymentMethod: $Enums.PaymentType | null
     tipAmount: number | null
@@ -25947,6 +26034,7 @@ export namespace Prisma {
     number: string | null
     createdAt: Date | null
     amount: number | null
+    status: $Enums.OrderStatus | null
     type: $Enums.OrderType | null
     paymentMethod: $Enums.PaymentType | null
     tipAmount: number | null
@@ -25961,6 +26049,7 @@ export namespace Prisma {
     number: number
     createdAt: number
     amount: number
+    status: number
     type: number
     paymentMethod: number
     tipAmount: number
@@ -25987,6 +26076,7 @@ export namespace Prisma {
     number?: true
     createdAt?: true
     amount?: true
+    status?: true
     type?: true
     paymentMethod?: true
     tipAmount?: true
@@ -26001,6 +26091,7 @@ export namespace Prisma {
     number?: true
     createdAt?: true
     amount?: true
+    status?: true
     type?: true
     paymentMethod?: true
     tipAmount?: true
@@ -26015,6 +26106,7 @@ export namespace Prisma {
     number?: true
     createdAt?: true
     amount?: true
+    status?: true
     type?: true
     paymentMethod?: true
     tipAmount?: true
@@ -26116,6 +26208,7 @@ export namespace Prisma {
     number: string | null
     createdAt: Date
     amount: number
+    status: $Enums.OrderStatus
     type: $Enums.OrderType
     paymentMethod: $Enums.PaymentType
     tipAmount: number | null
@@ -26149,6 +26242,7 @@ export namespace Prisma {
     number?: boolean
     createdAt?: boolean
     amount?: boolean
+    status?: boolean
     type?: boolean
     paymentMethod?: boolean
     tipAmount?: boolean
@@ -26169,6 +26263,7 @@ export namespace Prisma {
     number?: boolean
     createdAt?: boolean
     amount?: boolean
+    status?: boolean
     type?: boolean
     paymentMethod?: boolean
     tipAmount?: boolean
@@ -26186,6 +26281,7 @@ export namespace Prisma {
     number?: boolean
     createdAt?: boolean
     amount?: boolean
+    status?: boolean
     type?: boolean
     paymentMethod?: boolean
     tipAmount?: boolean
@@ -26203,6 +26299,7 @@ export namespace Prisma {
     number?: boolean
     createdAt?: boolean
     amount?: boolean
+    status?: boolean
     type?: boolean
     paymentMethod?: boolean
     tipAmount?: boolean
@@ -26212,7 +26309,7 @@ export namespace Prisma {
     deliveryAddressId?: boolean
   }
 
-  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "number" | "createdAt" | "amount" | "type" | "paymentMethod" | "tipAmount" | "customerId" | "externalId" | "addressId" | "deliveryAddressId", ExtArgs["result"]["order"]>
+  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "number" | "createdAt" | "amount" | "status" | "type" | "paymentMethod" | "tipAmount" | "customerId" | "externalId" | "addressId" | "deliveryAddressId", ExtArgs["result"]["order"]>
   export type OrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
     address?: boolean | Order$addressArgs<ExtArgs>
@@ -26246,6 +26343,7 @@ export namespace Prisma {
       number: string | null
       createdAt: Date
       amount: number
+      status: $Enums.OrderStatus
       type: $Enums.OrderType
       paymentMethod: $Enums.PaymentType
       tipAmount: number | null
@@ -26685,6 +26783,7 @@ export namespace Prisma {
     readonly number: FieldRef<"Order", 'String'>
     readonly createdAt: FieldRef<"Order", 'DateTime'>
     readonly amount: FieldRef<"Order", 'Int'>
+    readonly status: FieldRef<"Order", 'OrderStatus'>
     readonly type: FieldRef<"Order", 'OrderType'>
     readonly paymentMethod: FieldRef<"Order", 'PaymentType'>
     readonly tipAmount: FieldRef<"Order", 'Int'>
@@ -28575,7 +28674,8 @@ export namespace Prisma {
   export const CategoryScalarFieldEnum: {
     id: 'id',
     createdAt: 'createdAt',
-    name: 'name'
+    name: 'name',
+    translations: 'translations'
   };
 
   export type CategoryScalarFieldEnum = (typeof CategoryScalarFieldEnum)[keyof typeof CategoryScalarFieldEnum]
@@ -28608,6 +28708,7 @@ export namespace Prisma {
     createdAt: 'createdAt',
     lat: 'lat',
     lng: 'lng',
+    deliveryFee: 'deliveryFee',
     city: 'city',
     zipCode: 'zipCode',
     State: 'State',
@@ -28649,6 +28750,7 @@ export namespace Prisma {
     number: 'number',
     createdAt: 'createdAt',
     amount: 'amount',
+    status: 'status',
     type: 'type',
     paymentMethod: 'paymentMethod',
     tipAmount: 'tipAmount',
@@ -28813,6 +28915,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'OrderStatus'
+   */
+  export type EnumOrderStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OrderStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'OrderStatus[]'
+   */
+  export type ListEnumOrderStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OrderStatus[]'>
+    
+
+
+  /**
    * Reference to a field of type 'OrderType'
    */
   export type EnumOrderTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OrderType'>
@@ -28969,10 +29085,10 @@ export namespace Prisma {
     NOT?: PreparationStepCategoryWhereInput | PreparationStepCategoryWhereInput[]
     id?: StringFilter<"PreparationStepCategory"> | string
     createdAt?: DateTimeFilter<"PreparationStepCategory"> | Date | string
-    categoryId?: StringFilter<"PreparationStepCategory"> | string
+    categoryId?: StringNullableFilter<"PreparationStepCategory"> | string | null
     completed?: BoolFilter<"PreparationStepCategory"> | boolean
     orderId?: StringFilter<"PreparationStepCategory"> | string
-    category?: XOR<CategoryScalarRelationFilter, CategoryWhereInput>
+    category?: XOR<CategoryNullableScalarRelationFilter, CategoryWhereInput> | null
     order?: XOR<OrderScalarRelationFilter, OrderWhereInput>
     preparationStepTracks?: PreparationStepTrackListRelationFilter
   }
@@ -28980,7 +29096,7 @@ export namespace Prisma {
   export type PreparationStepCategoryOrderByWithRelationInput = {
     id?: SortOrder
     createdAt?: SortOrder
-    categoryId?: SortOrder
+    categoryId?: SortOrderInput | SortOrder
     completed?: SortOrder
     orderId?: SortOrder
     category?: CategoryOrderByWithRelationInput
@@ -28994,10 +29110,10 @@ export namespace Prisma {
     OR?: PreparationStepCategoryWhereInput[]
     NOT?: PreparationStepCategoryWhereInput | PreparationStepCategoryWhereInput[]
     createdAt?: DateTimeFilter<"PreparationStepCategory"> | Date | string
-    categoryId?: StringFilter<"PreparationStepCategory"> | string
+    categoryId?: StringNullableFilter<"PreparationStepCategory"> | string | null
     completed?: BoolFilter<"PreparationStepCategory"> | boolean
     orderId?: StringFilter<"PreparationStepCategory"> | string
-    category?: XOR<CategoryScalarRelationFilter, CategoryWhereInput>
+    category?: XOR<CategoryNullableScalarRelationFilter, CategoryWhereInput> | null
     order?: XOR<OrderScalarRelationFilter, OrderWhereInput>
     preparationStepTracks?: PreparationStepTrackListRelationFilter
   }, "id">
@@ -29005,7 +29121,7 @@ export namespace Prisma {
   export type PreparationStepCategoryOrderByWithAggregationInput = {
     id?: SortOrder
     createdAt?: SortOrder
-    categoryId?: SortOrder
+    categoryId?: SortOrderInput | SortOrder
     completed?: SortOrder
     orderId?: SortOrder
     _count?: PreparationStepCategoryCountOrderByAggregateInput
@@ -29019,7 +29135,7 @@ export namespace Prisma {
     NOT?: PreparationStepCategoryScalarWhereWithAggregatesInput | PreparationStepCategoryScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"PreparationStepCategory"> | string
     createdAt?: DateTimeWithAggregatesFilter<"PreparationStepCategory"> | Date | string
-    categoryId?: StringWithAggregatesFilter<"PreparationStepCategory"> | string
+    categoryId?: StringNullableWithAggregatesFilter<"PreparationStepCategory"> | string | null
     completed?: BoolWithAggregatesFilter<"PreparationStepCategory"> | boolean
     orderId?: StringWithAggregatesFilter<"PreparationStepCategory"> | string
   }
@@ -29730,6 +29846,7 @@ export namespace Prisma {
     id?: StringFilter<"Category"> | string
     createdAt?: DateTimeFilter<"Category"> | Date | string
     name?: StringFilter<"Category"> | string
+    translations?: JsonNullableFilter<"Category">
     products?: ProductListRelationFilter
     preparationStepCategories?: PreparationStepCategoryListRelationFilter
   }
@@ -29738,6 +29855,7 @@ export namespace Prisma {
     id?: SortOrder
     createdAt?: SortOrder
     name?: SortOrder
+    translations?: SortOrderInput | SortOrder
     products?: ProductOrderByRelationAggregateInput
     preparationStepCategories?: PreparationStepCategoryOrderByRelationAggregateInput
   }
@@ -29749,6 +29867,7 @@ export namespace Prisma {
     NOT?: CategoryWhereInput | CategoryWhereInput[]
     createdAt?: DateTimeFilter<"Category"> | Date | string
     name?: StringFilter<"Category"> | string
+    translations?: JsonNullableFilter<"Category">
     products?: ProductListRelationFilter
     preparationStepCategories?: PreparationStepCategoryListRelationFilter
   }, "id">
@@ -29757,6 +29876,7 @@ export namespace Prisma {
     id?: SortOrder
     createdAt?: SortOrder
     name?: SortOrder
+    translations?: SortOrderInput | SortOrder
     _count?: CategoryCountOrderByAggregateInput
     _max?: CategoryMaxOrderByAggregateInput
     _min?: CategoryMinOrderByAggregateInput
@@ -29769,6 +29889,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Category"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Category"> | Date | string
     name?: StringWithAggregatesFilter<"Category"> | string
+    translations?: JsonNullableWithAggregatesFilter<"Category">
   }
 
   export type CampaignWhereInput = {
@@ -29895,6 +30016,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"DeliveryAddress"> | Date | string
     lat?: StringFilter<"DeliveryAddress"> | string
     lng?: StringFilter<"DeliveryAddress"> | string
+    deliveryFee?: IntFilter<"DeliveryAddress"> | number
     city?: StringFilter<"DeliveryAddress"> | string
     zipCode?: StringFilter<"DeliveryAddress"> | string
     State?: StringFilter<"DeliveryAddress"> | string
@@ -29913,6 +30035,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     lat?: SortOrder
     lng?: SortOrder
+    deliveryFee?: SortOrder
     city?: SortOrder
     zipCode?: SortOrder
     State?: SortOrder
@@ -29934,6 +30057,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"DeliveryAddress"> | Date | string
     lat?: StringFilter<"DeliveryAddress"> | string
     lng?: StringFilter<"DeliveryAddress"> | string
+    deliveryFee?: IntFilter<"DeliveryAddress"> | number
     city?: StringFilter<"DeliveryAddress"> | string
     zipCode?: StringFilter<"DeliveryAddress"> | string
     State?: StringFilter<"DeliveryAddress"> | string
@@ -29952,6 +30076,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     lat?: SortOrder
     lng?: SortOrder
+    deliveryFee?: SortOrder
     city?: SortOrder
     zipCode?: SortOrder
     State?: SortOrder
@@ -29962,8 +30087,10 @@ export namespace Prisma {
     numberComplement?: SortOrderInput | SortOrder
     customerId?: SortOrderInput | SortOrder
     _count?: DeliveryAddressCountOrderByAggregateInput
+    _avg?: DeliveryAddressAvgOrderByAggregateInput
     _max?: DeliveryAddressMaxOrderByAggregateInput
     _min?: DeliveryAddressMinOrderByAggregateInput
+    _sum?: DeliveryAddressSumOrderByAggregateInput
   }
 
   export type DeliveryAddressScalarWhereWithAggregatesInput = {
@@ -29974,6 +30101,7 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"DeliveryAddress"> | Date | string
     lat?: StringWithAggregatesFilter<"DeliveryAddress"> | string
     lng?: StringWithAggregatesFilter<"DeliveryAddress"> | string
+    deliveryFee?: IntWithAggregatesFilter<"DeliveryAddress"> | number
     city?: StringWithAggregatesFilter<"DeliveryAddress"> | string
     zipCode?: StringWithAggregatesFilter<"DeliveryAddress"> | string
     State?: StringWithAggregatesFilter<"DeliveryAddress"> | string
@@ -30109,6 +30237,7 @@ export namespace Prisma {
     number?: StringNullableFilter<"Order"> | string | null
     createdAt?: DateTimeFilter<"Order"> | Date | string
     amount?: IntFilter<"Order"> | number
+    status?: EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
     type?: EnumOrderTypeFilter<"Order"> | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFilter<"Order"> | $Enums.PaymentType
     tipAmount?: IntNullableFilter<"Order"> | number | null
@@ -30128,6 +30257,7 @@ export namespace Prisma {
     number?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     amount?: SortOrder
+    status?: SortOrder
     type?: SortOrder
     paymentMethod?: SortOrder
     tipAmount?: SortOrderInput | SortOrder
@@ -30150,6 +30280,7 @@ export namespace Prisma {
     number?: StringNullableFilter<"Order"> | string | null
     createdAt?: DateTimeFilter<"Order"> | Date | string
     amount?: IntFilter<"Order"> | number
+    status?: EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
     type?: EnumOrderTypeFilter<"Order"> | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFilter<"Order"> | $Enums.PaymentType
     tipAmount?: IntNullableFilter<"Order"> | number | null
@@ -30169,6 +30300,7 @@ export namespace Prisma {
     number?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     amount?: SortOrder
+    status?: SortOrder
     type?: SortOrder
     paymentMethod?: SortOrder
     tipAmount?: SortOrderInput | SortOrder
@@ -30191,6 +30323,7 @@ export namespace Prisma {
     number?: StringNullableWithAggregatesFilter<"Order"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Order"> | Date | string
     amount?: IntWithAggregatesFilter<"Order"> | number
+    status?: EnumOrderStatusWithAggregatesFilter<"Order"> | $Enums.OrderStatus
     type?: EnumOrderTypeWithAggregatesFilter<"Order"> | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeWithAggregatesFilter<"Order"> | $Enums.PaymentType
     tipAmount?: IntNullableWithAggregatesFilter<"Order"> | number | null
@@ -30391,7 +30524,7 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     completed?: boolean
-    category: CategoryCreateNestedOneWithoutPreparationStepCategoriesInput
+    category?: CategoryCreateNestedOneWithoutPreparationStepCategoriesInput
     order: OrderCreateNestedOneWithoutPreparationStepCategoriesInput
     preparationStepTracks?: PreparationStepTrackCreateNestedManyWithoutPreparationStepCategoryInput
   }
@@ -30399,7 +30532,7 @@ export namespace Prisma {
   export type PreparationStepCategoryUncheckedCreateInput = {
     id: string
     createdAt?: Date | string
-    categoryId: string
+    categoryId?: string | null
     completed?: boolean
     orderId: string
     preparationStepTracks?: PreparationStepTrackUncheckedCreateNestedManyWithoutPreparationStepCategoryInput
@@ -30409,7 +30542,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     completed?: BoolFieldUpdateOperationsInput | boolean
-    category?: CategoryUpdateOneRequiredWithoutPreparationStepCategoriesNestedInput
+    category?: CategoryUpdateOneWithoutPreparationStepCategoriesNestedInput
     order?: OrderUpdateOneRequiredWithoutPreparationStepCategoriesNestedInput
     preparationStepTracks?: PreparationStepTrackUpdateManyWithoutPreparationStepCategoryNestedInput
   }
@@ -30417,7 +30550,7 @@ export namespace Prisma {
   export type PreparationStepCategoryUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    categoryId?: StringFieldUpdateOperationsInput | string
+    categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     orderId?: StringFieldUpdateOperationsInput | string
     preparationStepTracks?: PreparationStepTrackUncheckedUpdateManyWithoutPreparationStepCategoryNestedInput
@@ -30426,7 +30559,7 @@ export namespace Prisma {
   export type PreparationStepCategoryCreateManyInput = {
     id: string
     createdAt?: Date | string
-    categoryId: string
+    categoryId?: string | null
     completed?: boolean
     orderId: string
   }
@@ -30440,7 +30573,7 @@ export namespace Prisma {
   export type PreparationStepCategoryUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    categoryId?: StringFieldUpdateOperationsInput | string
+    categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     orderId?: StringFieldUpdateOperationsInput | string
   }
@@ -31166,6 +31299,7 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     name: string
+    translations?: NullableJsonNullValueInput | InputJsonValue
     products?: ProductCreateNestedManyWithoutCategoryInput
     preparationStepCategories?: PreparationStepCategoryCreateNestedManyWithoutCategoryInput
   }
@@ -31174,6 +31308,7 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     name: string
+    translations?: NullableJsonNullValueInput | InputJsonValue
     products?: ProductUncheckedCreateNestedManyWithoutCategoryInput
     preparationStepCategories?: PreparationStepCategoryUncheckedCreateNestedManyWithoutCategoryInput
   }
@@ -31182,6 +31317,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
+    translations?: NullableJsonNullValueInput | InputJsonValue
     products?: ProductUpdateManyWithoutCategoryNestedInput
     preparationStepCategories?: PreparationStepCategoryUpdateManyWithoutCategoryNestedInput
   }
@@ -31190,6 +31326,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
+    translations?: NullableJsonNullValueInput | InputJsonValue
     products?: ProductUncheckedUpdateManyWithoutCategoryNestedInput
     preparationStepCategories?: PreparationStepCategoryUncheckedUpdateManyWithoutCategoryNestedInput
   }
@@ -31198,18 +31335,21 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     name: string
+    translations?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type CategoryUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
+    translations?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type CategoryUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
+    translations?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type CampaignCreateInput = {
@@ -31345,6 +31485,7 @@ export namespace Prisma {
     createdAt?: Date | string
     lat: string
     lng: string
+    deliveryFee?: number
     city: string
     zipCode: string
     State: string
@@ -31362,6 +31503,7 @@ export namespace Prisma {
     createdAt?: Date | string
     lat: string
     lng: string
+    deliveryFee?: number
     city: string
     zipCode: string
     State: string
@@ -31379,6 +31521,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lat?: StringFieldUpdateOperationsInput | string
     lng?: StringFieldUpdateOperationsInput | string
+    deliveryFee?: IntFieldUpdateOperationsInput | number
     city?: StringFieldUpdateOperationsInput | string
     zipCode?: StringFieldUpdateOperationsInput | string
     State?: StringFieldUpdateOperationsInput | string
@@ -31396,6 +31539,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lat?: StringFieldUpdateOperationsInput | string
     lng?: StringFieldUpdateOperationsInput | string
+    deliveryFee?: IntFieldUpdateOperationsInput | number
     city?: StringFieldUpdateOperationsInput | string
     zipCode?: StringFieldUpdateOperationsInput | string
     State?: StringFieldUpdateOperationsInput | string
@@ -31413,6 +31557,7 @@ export namespace Prisma {
     createdAt?: Date | string
     lat: string
     lng: string
+    deliveryFee?: number
     city: string
     zipCode: string
     State: string
@@ -31429,6 +31574,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lat?: StringFieldUpdateOperationsInput | string
     lng?: StringFieldUpdateOperationsInput | string
+    deliveryFee?: IntFieldUpdateOperationsInput | number
     city?: StringFieldUpdateOperationsInput | string
     zipCode?: StringFieldUpdateOperationsInput | string
     State?: StringFieldUpdateOperationsInput | string
@@ -31444,6 +31590,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lat?: StringFieldUpdateOperationsInput | string
     lng?: StringFieldUpdateOperationsInput | string
+    deliveryFee?: IntFieldUpdateOperationsInput | number
     city?: StringFieldUpdateOperationsInput | string
     zipCode?: StringFieldUpdateOperationsInput | string
     State?: StringFieldUpdateOperationsInput | string
@@ -31573,6 +31720,7 @@ export namespace Prisma {
     number?: string | null
     createdAt?: Date | string
     amount: number
+    status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     tipAmount?: number | null
@@ -31589,6 +31737,7 @@ export namespace Prisma {
     number?: string | null
     createdAt?: Date | string
     amount: number
+    status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     tipAmount?: number | null
@@ -31605,6 +31754,7 @@ export namespace Prisma {
     number?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     amount?: IntFieldUpdateOperationsInput | number
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
@@ -31621,6 +31771,7 @@ export namespace Prisma {
     number?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     amount?: IntFieldUpdateOperationsInput | number
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
@@ -31637,6 +31788,7 @@ export namespace Prisma {
     number?: string | null
     createdAt?: Date | string
     amount: number
+    status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     tipAmount?: number | null
@@ -31651,6 +31803,7 @@ export namespace Prisma {
     number?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     amount?: IntFieldUpdateOperationsInput | number
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
@@ -31662,6 +31815,7 @@ export namespace Prisma {
     number?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     amount?: IntFieldUpdateOperationsInput | number
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
@@ -31898,14 +32052,34 @@ export namespace Prisma {
     _max?: NestedBoolFilter<$PrismaModel>
   }
 
-  export type CategoryScalarRelationFilter = {
-    is?: CategoryWhereInput
-    isNot?: CategoryWhereInput
+  export type StringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type CategoryNullableScalarRelationFilter = {
+    is?: CategoryWhereInput | null
+    isNot?: CategoryWhereInput | null
   }
 
   export type OrderScalarRelationFilter = {
     is?: OrderWhereInput
     isNot?: OrderWhereInput
+  }
+
+  export type SortOrderInput = {
+    sort: SortOrder
+    nulls?: NullsOrder
   }
 
   export type PreparationStepCategoryCountOrderByAggregateInput = {
@@ -31932,18 +32106,7 @@ export namespace Prisma {
     orderId?: SortOrder
   }
 
-  export type IntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
-
-  export type StringNullableFilter<$PrismaModel = never> = {
+  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
     notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -31955,7 +32118,21 @@ export namespace Prisma {
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     mode?: QueryMode
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
   export type PreparationStepModifierTrackListRelationFilter = {
@@ -31972,11 +32149,6 @@ export namespace Prisma {
   export type PreparationStepCategoryScalarRelationFilter = {
     is?: PreparationStepCategoryWhereInput
     isNot?: PreparationStepCategoryWhereInput
-  }
-
-  export type SortOrderInput = {
-    sort: SortOrder
-    nulls?: NullsOrder
   }
 
   export type PreparationStepModifierTrackOrderByRelationAggregateInput = {
@@ -32038,24 +32210,6 @@ export namespace Prisma {
     _sum?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedIntNullableFilter<$PrismaModel>
     _max?: NestedIntNullableFilter<$PrismaModel>
-  }
-
-  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type ModifierGroupItemScalarRelationFilter = {
@@ -32398,6 +32552,29 @@ export namespace Prisma {
     createdAt?: SortOrder
     name?: SortOrder
   }
+  export type JsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
 
   export type AddressNullableScalarRelationFilter = {
     is?: AddressWhereInput | null
@@ -32413,6 +32590,7 @@ export namespace Prisma {
     id?: SortOrder
     createdAt?: SortOrder
     name?: SortOrder
+    operationHours?: SortOrder
     addressId?: SortOrder
     businessId?: SortOrder
   }
@@ -32431,6 +32609,32 @@ export namespace Prisma {
     name?: SortOrder
     addressId?: SortOrder
     businessId?: SortOrder
+  }
+  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedJsonNullableFilter<$PrismaModel>
+    _max?: NestedJsonNullableFilter<$PrismaModel>
   }
 
   export type BranchNullableScalarRelationFilter = {
@@ -32468,29 +32672,6 @@ export namespace Prisma {
     description?: SortOrder
     googleMapsUrl?: SortOrder
   }
-  export type JsonNullableFilter<$PrismaModel = never> =
-    | PatchUndefined<
-        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
-        Required<JsonNullableFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
-
-  export type JsonNullableFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string[]
-    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-  }
 
   export type FileListRelationFilter = {
     every?: FileWhereInput
@@ -32502,11 +32683,6 @@ export namespace Prisma {
     every?: ModifierGroupWhereInput
     some?: ModifierGroupWhereInput
     none?: ModifierGroupWhereInput
-  }
-
-  export type CategoryNullableScalarRelationFilter = {
-    is?: CategoryWhereInput | null
-    isNot?: CategoryWhereInput | null
   }
 
   export type FileOrderByRelationAggregateInput = {
@@ -32557,32 +32733,6 @@ export namespace Prisma {
     price?: SortOrder
     comparedAtPrice?: SortOrder
   }
-  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
-    | PatchUndefined<
-        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
-        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
-
-  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string[]
-    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedJsonNullableFilter<$PrismaModel>
-    _max?: NestedJsonNullableFilter<$PrismaModel>
-  }
 
   export type PreparationStepCategoryListRelationFilter = {
     every?: PreparationStepCategoryWhereInput
@@ -32598,6 +32748,7 @@ export namespace Prisma {
     id?: SortOrder
     createdAt?: SortOrder
     name?: SortOrder
+    translations?: SortOrder
   }
 
   export type CategoryMaxOrderByAggregateInput = {
@@ -32715,6 +32866,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     lat?: SortOrder
     lng?: SortOrder
+    deliveryFee?: SortOrder
     city?: SortOrder
     zipCode?: SortOrder
     State?: SortOrder
@@ -32726,11 +32878,16 @@ export namespace Prisma {
     customerId?: SortOrder
   }
 
+  export type DeliveryAddressAvgOrderByAggregateInput = {
+    deliveryFee?: SortOrder
+  }
+
   export type DeliveryAddressMaxOrderByAggregateInput = {
     id?: SortOrder
     createdAt?: SortOrder
     lat?: SortOrder
     lng?: SortOrder
+    deliveryFee?: SortOrder
     city?: SortOrder
     zipCode?: SortOrder
     State?: SortOrder
@@ -32747,6 +32904,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     lat?: SortOrder
     lng?: SortOrder
+    deliveryFee?: SortOrder
     city?: SortOrder
     zipCode?: SortOrder
     State?: SortOrder
@@ -32756,6 +32914,10 @@ export namespace Prisma {
     complement?: SortOrder
     numberComplement?: SortOrder
     customerId?: SortOrder
+  }
+
+  export type DeliveryAddressSumOrderByAggregateInput = {
+    deliveryFee?: SortOrder
   }
 
   export type MessageCountOrderByAggregateInput = {
@@ -32821,6 +32983,13 @@ export namespace Prisma {
     customerId?: SortOrder
   }
 
+  export type EnumOrderStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.OrderStatus | EnumOrderStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.OrderStatus[] | ListEnumOrderStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.OrderStatus[] | ListEnumOrderStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumOrderStatusFilter<$PrismaModel> | $Enums.OrderStatus
+  }
+
   export type EnumOrderTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.OrderType | EnumOrderTypeFieldRefInput<$PrismaModel>
     in?: $Enums.OrderType[] | ListEnumOrderTypeFieldRefInput<$PrismaModel>
@@ -32845,6 +33014,7 @@ export namespace Prisma {
     number?: SortOrder
     createdAt?: SortOrder
     amount?: SortOrder
+    status?: SortOrder
     type?: SortOrder
     paymentMethod?: SortOrder
     tipAmount?: SortOrder
@@ -32864,6 +33034,7 @@ export namespace Prisma {
     number?: SortOrder
     createdAt?: SortOrder
     amount?: SortOrder
+    status?: SortOrder
     type?: SortOrder
     paymentMethod?: SortOrder
     tipAmount?: SortOrder
@@ -32878,6 +33049,7 @@ export namespace Prisma {
     number?: SortOrder
     createdAt?: SortOrder
     amount?: SortOrder
+    status?: SortOrder
     type?: SortOrder
     paymentMethod?: SortOrder
     tipAmount?: SortOrder
@@ -32890,6 +33062,16 @@ export namespace Prisma {
   export type OrderSumOrderByAggregateInput = {
     amount?: SortOrder
     tipAmount?: SortOrder
+  }
+
+  export type EnumOrderStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.OrderStatus | EnumOrderStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.OrderStatus[] | ListEnumOrderStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.OrderStatus[] | ListEnumOrderStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumOrderStatusWithAggregatesFilter<$PrismaModel> | $Enums.OrderStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumOrderStatusFilter<$PrismaModel>
+    _max?: NestedEnumOrderStatusFilter<$PrismaModel>
   }
 
   export type EnumOrderTypeWithAggregatesFilter<$PrismaModel = never> = {
@@ -33141,10 +33323,12 @@ export namespace Prisma {
     connect?: PreparationStepTrackWhereUniqueInput | PreparationStepTrackWhereUniqueInput[]
   }
 
-  export type CategoryUpdateOneRequiredWithoutPreparationStepCategoriesNestedInput = {
+  export type CategoryUpdateOneWithoutPreparationStepCategoriesNestedInput = {
     create?: XOR<CategoryCreateWithoutPreparationStepCategoriesInput, CategoryUncheckedCreateWithoutPreparationStepCategoriesInput>
     connectOrCreate?: CategoryCreateOrConnectWithoutPreparationStepCategoriesInput
     upsert?: CategoryUpsertWithoutPreparationStepCategoriesInput
+    disconnect?: CategoryWhereInput | boolean
+    delete?: CategoryWhereInput | boolean
     connect?: CategoryWhereUniqueInput
     update?: XOR<XOR<CategoryUpdateToOneWithWhereWithoutPreparationStepCategoriesInput, CategoryUpdateWithoutPreparationStepCategoriesInput>, CategoryUncheckedUpdateWithoutPreparationStepCategoriesInput>
   }
@@ -33169,6 +33353,10 @@ export namespace Prisma {
     update?: PreparationStepTrackUpdateWithWhereUniqueWithoutPreparationStepCategoryInput | PreparationStepTrackUpdateWithWhereUniqueWithoutPreparationStepCategoryInput[]
     updateMany?: PreparationStepTrackUpdateManyWithWhereWithoutPreparationStepCategoryInput | PreparationStepTrackUpdateManyWithWhereWithoutPreparationStepCategoryInput[]
     deleteMany?: PreparationStepTrackScalarWhereInput | PreparationStepTrackScalarWhereInput[]
+  }
+
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
   }
 
   export type PreparationStepTrackUncheckedUpdateManyWithoutPreparationStepCategoryNestedInput = {
@@ -33217,10 +33405,6 @@ export namespace Prisma {
     decrement?: number
     multiply?: number
     divide?: number
-  }
-
-  export type NullableStringFieldUpdateOperationsInput = {
-    set?: string | null
   }
 
   export type PreparationStepModifierTrackUpdateManyWithoutPreparationStepTrackNestedInput = {
@@ -34387,6 +34571,10 @@ export namespace Prisma {
     connect?: PreparationStepCategoryWhereUniqueInput | PreparationStepCategoryWhereUniqueInput[]
   }
 
+  export type EnumOrderStatusFieldUpdateOperationsInput = {
+    set?: $Enums.OrderStatus
+  }
+
   export type EnumOrderTypeFieldUpdateOperationsInput = {
     set?: $Enums.OrderType
   }
@@ -34627,17 +34815,6 @@ export namespace Prisma {
     _max?: NestedBoolFilter<$PrismaModel>
   }
 
-  export type NestedIntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
-
   export type NestedStringNullableFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -34650,6 +34827,34 @@ export namespace Prisma {
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type NestedIntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
   export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -34677,23 +34882,6 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
-  }
-
-  export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumProgressiveDiscountStepTypeFilter<$PrismaModel = never> = {
@@ -34805,6 +34993,13 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
+  export type NestedEnumOrderStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.OrderStatus | EnumOrderStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.OrderStatus[] | ListEnumOrderStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.OrderStatus[] | ListEnumOrderStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumOrderStatusFilter<$PrismaModel> | $Enums.OrderStatus
+  }
+
   export type NestedEnumOrderTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.OrderType | EnumOrderTypeFieldRefInput<$PrismaModel>
     in?: $Enums.OrderType[] | ListEnumOrderTypeFieldRefInput<$PrismaModel>
@@ -34817,6 +35012,16 @@ export namespace Prisma {
     in?: $Enums.PaymentType[] | ListEnumPaymentTypeFieldRefInput<$PrismaModel>
     notIn?: $Enums.PaymentType[] | ListEnumPaymentTypeFieldRefInput<$PrismaModel>
     not?: NestedEnumPaymentTypeFilter<$PrismaModel> | $Enums.PaymentType
+  }
+
+  export type NestedEnumOrderStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.OrderStatus | EnumOrderStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.OrderStatus[] | ListEnumOrderStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.OrderStatus[] | ListEnumOrderStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumOrderStatusWithAggregatesFilter<$PrismaModel> | $Enums.OrderStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumOrderStatusFilter<$PrismaModel>
+    _max?: NestedEnumOrderStatusFilter<$PrismaModel>
   }
 
   export type NestedEnumOrderTypeWithAggregatesFilter<$PrismaModel = never> = {
@@ -35062,6 +35267,7 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     name: string
+    translations?: NullableJsonNullValueInput | InputJsonValue
     products?: ProductCreateNestedManyWithoutCategoryInput
   }
 
@@ -35069,6 +35275,7 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     name: string
+    translations?: NullableJsonNullValueInput | InputJsonValue
     products?: ProductUncheckedCreateNestedManyWithoutCategoryInput
   }
 
@@ -35082,6 +35289,7 @@ export namespace Prisma {
     number?: string | null
     createdAt?: Date | string
     amount: number
+    status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     tipAmount?: number | null
@@ -35097,6 +35305,7 @@ export namespace Prisma {
     number?: string | null
     createdAt?: Date | string
     amount: number
+    status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     tipAmount?: number | null
@@ -35159,6 +35368,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
+    translations?: NullableJsonNullValueInput | InputJsonValue
     products?: ProductUpdateManyWithoutCategoryNestedInput
   }
 
@@ -35166,6 +35376,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
+    translations?: NullableJsonNullValueInput | InputJsonValue
     products?: ProductUncheckedUpdateManyWithoutCategoryNestedInput
   }
 
@@ -35185,6 +35396,7 @@ export namespace Prisma {
     number?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     amount?: IntFieldUpdateOperationsInput | number
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
@@ -35200,6 +35412,7 @@ export namespace Prisma {
     number?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     amount?: IntFieldUpdateOperationsInput | number
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
@@ -35279,14 +35492,14 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     completed?: boolean
-    category: CategoryCreateNestedOneWithoutPreparationStepCategoriesInput
+    category?: CategoryCreateNestedOneWithoutPreparationStepCategoriesInput
     order: OrderCreateNestedOneWithoutPreparationStepCategoriesInput
   }
 
   export type PreparationStepCategoryUncheckedCreateWithoutPreparationStepTracksInput = {
     id: string
     createdAt?: Date | string
-    categoryId: string
+    categoryId?: string | null
     completed?: boolean
     orderId: string
   }
@@ -35369,14 +35582,14 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     completed?: BoolFieldUpdateOperationsInput | boolean
-    category?: CategoryUpdateOneRequiredWithoutPreparationStepCategoriesNestedInput
+    category?: CategoryUpdateOneWithoutPreparationStepCategoriesNestedInput
     order?: OrderUpdateOneRequiredWithoutPreparationStepCategoriesNestedInput
   }
 
   export type PreparationStepCategoryUncheckedUpdateWithoutPreparationStepTracksInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    categoryId?: StringFieldUpdateOperationsInput | string
+    categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     orderId?: StringFieldUpdateOperationsInput | string
   }
@@ -36038,6 +36251,7 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     name: string
+    operationHours?: NullableJsonNullValueInput | InputJsonValue
     address?: AddressCreateNestedOneWithoutBranchInput
   }
 
@@ -36045,6 +36259,7 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     name: string
+    operationHours?: NullableJsonNullValueInput | InputJsonValue
     addressId?: string | null
   }
 
@@ -36081,6 +36296,7 @@ export namespace Prisma {
     id?: StringFilter<"Branch"> | string
     createdAt?: DateTimeFilter<"Branch"> | Date | string
     name?: StringFilter<"Branch"> | string
+    operationHours?: JsonNullableFilter<"Branch">
     addressId?: StringNullableFilter<"Branch"> | string | null
     businessId?: StringNullableFilter<"Branch"> | string | null
   }
@@ -36177,6 +36393,7 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     name: string
+    operationHours?: NullableJsonNullValueInput | InputJsonValue
     business?: BusinessCreateNestedOneWithoutBranchesInput
   }
 
@@ -36184,6 +36401,7 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     name: string
+    operationHours?: NullableJsonNullValueInput | InputJsonValue
     businessId?: string | null
   }
 
@@ -36197,6 +36415,7 @@ export namespace Prisma {
     number?: string | null
     createdAt?: Date | string
     amount: number
+    status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     tipAmount?: number | null
@@ -36212,6 +36431,7 @@ export namespace Prisma {
     number?: string | null
     createdAt?: Date | string
     amount: number
+    status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     tipAmount?: number | null
@@ -36247,6 +36467,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
+    operationHours?: NullableJsonNullValueInput | InputJsonValue
     business?: BusinessUpdateOneWithoutBranchesNestedInput
   }
 
@@ -36254,6 +36475,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
+    operationHours?: NullableJsonNullValueInput | InputJsonValue
     businessId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -36281,6 +36503,7 @@ export namespace Prisma {
     number?: StringNullableFilter<"Order"> | string | null
     createdAt?: DateTimeFilter<"Order"> | Date | string
     amount?: IntFilter<"Order"> | number
+    status?: EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
     type?: EnumOrderTypeFilter<"Order"> | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFilter<"Order"> | $Enums.PaymentType
     tipAmount?: IntNullableFilter<"Order"> | number | null
@@ -36349,6 +36572,7 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     name: string
+    translations?: NullableJsonNullValueInput | InputJsonValue
     preparationStepCategories?: PreparationStepCategoryCreateNestedManyWithoutCategoryInput
   }
 
@@ -36356,6 +36580,7 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     name: string
+    translations?: NullableJsonNullValueInput | InputJsonValue
     preparationStepCategories?: PreparationStepCategoryUncheckedCreateNestedManyWithoutCategoryInput
   }
 
@@ -36493,6 +36718,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
+    translations?: NullableJsonNullValueInput | InputJsonValue
     preparationStepCategories?: PreparationStepCategoryUpdateManyWithoutCategoryNestedInput
   }
 
@@ -36500,6 +36726,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
+    translations?: NullableJsonNullValueInput | InputJsonValue
     preparationStepCategories?: PreparationStepCategoryUncheckedUpdateManyWithoutCategoryNestedInput
   }
 
@@ -36637,7 +36864,7 @@ export namespace Prisma {
     NOT?: PreparationStepCategoryScalarWhereInput | PreparationStepCategoryScalarWhereInput[]
     id?: StringFilter<"PreparationStepCategory"> | string
     createdAt?: DateTimeFilter<"PreparationStepCategory"> | Date | string
-    categoryId?: StringFilter<"PreparationStepCategory"> | string
+    categoryId?: StringNullableFilter<"PreparationStepCategory"> | string | null
     completed?: BoolFilter<"PreparationStepCategory"> | boolean
     orderId?: StringFilter<"PreparationStepCategory"> | string
   }
@@ -36698,6 +36925,7 @@ export namespace Prisma {
     number?: string | null
     createdAt?: Date | string
     amount: number
+    status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     tipAmount?: number | null
@@ -36713,6 +36941,7 @@ export namespace Prisma {
     number?: string | null
     createdAt?: Date | string
     amount: number
+    status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     tipAmount?: number | null
@@ -36762,6 +36991,7 @@ export namespace Prisma {
     createdAt?: Date | string
     lat: string
     lng: string
+    deliveryFee?: number
     city: string
     zipCode: string
     State: string
@@ -36778,6 +37008,7 @@ export namespace Prisma {
     createdAt?: Date | string
     lat: string
     lng: string
+    deliveryFee?: number
     city: string
     zipCode: string
     State: string
@@ -36855,6 +37086,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"DeliveryAddress"> | Date | string
     lat?: StringFilter<"DeliveryAddress"> | string
     lng?: StringFilter<"DeliveryAddress"> | string
+    deliveryFee?: IntFilter<"DeliveryAddress"> | number
     city?: StringFilter<"DeliveryAddress"> | string
     zipCode?: StringFilter<"DeliveryAddress"> | string
     State?: StringFilter<"DeliveryAddress"> | string
@@ -36900,6 +37132,7 @@ export namespace Prisma {
     number?: string | null
     createdAt?: Date | string
     amount: number
+    status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     tipAmount?: number | null
@@ -36915,6 +37148,7 @@ export namespace Prisma {
     number?: string | null
     createdAt?: Date | string
     amount: number
+    status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     tipAmount?: number | null
@@ -37233,6 +37467,7 @@ export namespace Prisma {
     createdAt?: Date | string
     lat: string
     lng: string
+    deliveryFee?: number
     city: string
     zipCode: string
     State: string
@@ -37249,6 +37484,7 @@ export namespace Prisma {
     createdAt?: Date | string
     lat: string
     lng: string
+    deliveryFee?: number
     city: string
     zipCode: string
     State: string
@@ -37301,14 +37537,14 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     completed?: boolean
-    category: CategoryCreateNestedOneWithoutPreparationStepCategoriesInput
+    category?: CategoryCreateNestedOneWithoutPreparationStepCategoriesInput
     preparationStepTracks?: PreparationStepTrackCreateNestedManyWithoutPreparationStepCategoryInput
   }
 
   export type PreparationStepCategoryUncheckedCreateWithoutOrderInput = {
     id: string
     createdAt?: Date | string
-    categoryId: string
+    categoryId?: string | null
     completed?: boolean
     preparationStepTracks?: PreparationStepTrackUncheckedCreateNestedManyWithoutPreparationStepCategoryInput
   }
@@ -37401,6 +37637,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lat?: StringFieldUpdateOperationsInput | string
     lng?: StringFieldUpdateOperationsInput | string
+    deliveryFee?: IntFieldUpdateOperationsInput | number
     city?: StringFieldUpdateOperationsInput | string
     zipCode?: StringFieldUpdateOperationsInput | string
     State?: StringFieldUpdateOperationsInput | string
@@ -37417,6 +37654,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lat?: StringFieldUpdateOperationsInput | string
     lng?: StringFieldUpdateOperationsInput | string
+    deliveryFee?: IntFieldUpdateOperationsInput | number
     city?: StringFieldUpdateOperationsInput | string
     zipCode?: StringFieldUpdateOperationsInput | string
     State?: StringFieldUpdateOperationsInput | string
@@ -37525,6 +37763,7 @@ export namespace Prisma {
     number?: string | null
     createdAt?: Date | string
     amount: number
+    status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     tipAmount?: number | null
@@ -37540,6 +37779,7 @@ export namespace Prisma {
     number?: string | null
     createdAt?: Date | string
     amount: number
+    status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     tipAmount?: number | null
@@ -37626,6 +37866,7 @@ export namespace Prisma {
     number?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     amount?: IntFieldUpdateOperationsInput | number
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
@@ -37641,6 +37882,7 @@ export namespace Prisma {
     number?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     amount?: IntFieldUpdateOperationsInput | number
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
@@ -38054,6 +38296,7 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     name: string
+    operationHours?: NullableJsonNullValueInput | InputJsonValue
     addressId?: string | null
   }
 
@@ -38061,6 +38304,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
+    operationHours?: NullableJsonNullValueInput | InputJsonValue
     address?: AddressUpdateOneWithoutBranchNestedInput
   }
 
@@ -38068,6 +38312,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
+    operationHours?: NullableJsonNullValueInput | InputJsonValue
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -38075,6 +38320,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
+    operationHours?: NullableJsonNullValueInput | InputJsonValue
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -38083,6 +38329,7 @@ export namespace Prisma {
     number?: string | null
     createdAt?: Date | string
     amount: number
+    status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     tipAmount?: number | null
@@ -38096,6 +38343,7 @@ export namespace Prisma {
     number?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     amount?: IntFieldUpdateOperationsInput | number
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
@@ -38111,6 +38359,7 @@ export namespace Prisma {
     number?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     amount?: IntFieldUpdateOperationsInput | number
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
@@ -38126,6 +38375,7 @@ export namespace Prisma {
     number?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     amount?: IntFieldUpdateOperationsInput | number
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
@@ -38382,6 +38632,7 @@ export namespace Prisma {
     number?: string | null
     createdAt?: Date | string
     amount: number
+    status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     tipAmount?: number | null
@@ -38402,6 +38653,7 @@ export namespace Prisma {
     createdAt?: Date | string
     lat: string
     lng: string
+    deliveryFee?: number
     city: string
     zipCode: string
     State: string
@@ -38417,6 +38669,7 @@ export namespace Prisma {
     number?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     amount?: IntFieldUpdateOperationsInput | number
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
@@ -38432,6 +38685,7 @@ export namespace Prisma {
     number?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     amount?: IntFieldUpdateOperationsInput | number
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
@@ -38447,6 +38701,7 @@ export namespace Prisma {
     number?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     amount?: IntFieldUpdateOperationsInput | number
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
@@ -38481,6 +38736,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lat?: StringFieldUpdateOperationsInput | string
     lng?: StringFieldUpdateOperationsInput | string
+    deliveryFee?: IntFieldUpdateOperationsInput | number
     city?: StringFieldUpdateOperationsInput | string
     zipCode?: StringFieldUpdateOperationsInput | string
     State?: StringFieldUpdateOperationsInput | string
@@ -38497,6 +38753,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lat?: StringFieldUpdateOperationsInput | string
     lng?: StringFieldUpdateOperationsInput | string
+    deliveryFee?: IntFieldUpdateOperationsInput | number
     city?: StringFieldUpdateOperationsInput | string
     zipCode?: StringFieldUpdateOperationsInput | string
     State?: StringFieldUpdateOperationsInput | string
@@ -38513,6 +38770,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lat?: StringFieldUpdateOperationsInput | string
     lng?: StringFieldUpdateOperationsInput | string
+    deliveryFee?: IntFieldUpdateOperationsInput | number
     city?: StringFieldUpdateOperationsInput | string
     zipCode?: StringFieldUpdateOperationsInput | string
     State?: StringFieldUpdateOperationsInput | string
@@ -38528,6 +38786,7 @@ export namespace Prisma {
     number?: string | null
     createdAt?: Date | string
     amount: number
+    status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     tipAmount?: number | null
@@ -38541,6 +38800,7 @@ export namespace Prisma {
     number?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     amount?: IntFieldUpdateOperationsInput | number
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
@@ -38556,6 +38816,7 @@ export namespace Prisma {
     number?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     amount?: IntFieldUpdateOperationsInput | number
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
@@ -38571,6 +38832,7 @@ export namespace Prisma {
     number?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     amount?: IntFieldUpdateOperationsInput | number
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
@@ -38620,7 +38882,7 @@ export namespace Prisma {
   export type PreparationStepCategoryCreateManyOrderInput = {
     id: string
     createdAt?: Date | string
-    categoryId: string
+    categoryId?: string | null
     completed?: boolean
   }
 
@@ -38660,14 +38922,14 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     completed?: BoolFieldUpdateOperationsInput | boolean
-    category?: CategoryUpdateOneRequiredWithoutPreparationStepCategoriesNestedInput
+    category?: CategoryUpdateOneWithoutPreparationStepCategoriesNestedInput
     preparationStepTracks?: PreparationStepTrackUpdateManyWithoutPreparationStepCategoryNestedInput
   }
 
   export type PreparationStepCategoryUncheckedUpdateWithoutOrderInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    categoryId?: StringFieldUpdateOperationsInput | string
+    categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     preparationStepTracks?: PreparationStepTrackUncheckedUpdateManyWithoutPreparationStepCategoryNestedInput
   }
@@ -38675,7 +38937,7 @@ export namespace Prisma {
   export type PreparationStepCategoryUncheckedUpdateManyWithoutOrderInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    categoryId?: StringFieldUpdateOperationsInput | string
+    categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     completed?: BoolFieldUpdateOperationsInput | boolean
   }
 

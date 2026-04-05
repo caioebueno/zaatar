@@ -199,6 +199,7 @@ const MenuPage: React.FC<TMenuPage> = ({ data, lg }) => {
         activeCategoryId={activeCategoryId}
         categories={data.categories}
         containerRef={categoryBarRef}
+        lg={lg}
         onCategorySelect={setActiveCategoryId}
       />
       <div className="px-4 pb-55 flex flex-col max-w-[900px] lg:px-0">
@@ -243,6 +244,7 @@ type TCategoryBar = {
   activeCategoryId: string | null;
   categories: TCategory[];
   containerRef: React.RefObject<HTMLDivElement | null>;
+  lg: string;
   onCategorySelect: (categoryId: string) => void;
 };
 
@@ -250,6 +252,7 @@ const CategoryBar: React.FC<TCategoryBar> = ({
   activeCategoryId,
   categories,
   containerRef,
+  lg,
   onCategorySelect,
 }) => {
   const itemRefs = useRef<Record<string, HTMLAnchorElement | null>>({});
@@ -279,13 +282,14 @@ const CategoryBar: React.FC<TCategoryBar> = ({
     <>
       <div
         ref={containerRef}
-        className="category-bar-scroll flex flex-row border-gray-300 border-b w-full sticky top-0 bg-background overflow-x-auto max-w-[900px] z-10"
+        className="category-bar-scroll flex flex-row border-gray-300 border-b w-full sticky top-[var(--menu-sticky-offset)] bg-background overflow-x-auto max-w-[900px] z-10"
       >
         {categories.map((category) => (
           <CategoryBarItem
             active={activeCategoryId === category.id}
             category={category}
             key={category.id}
+            lg={lg}
             onSelect={onCategorySelect}
             ref={(element) => {
               itemRefs.current[category.id] = element;
@@ -312,11 +316,12 @@ const CategoryBar: React.FC<TCategoryBar> = ({
 type TCategoryBarItem = {
   active: boolean;
   category: TCategory;
+  lg: string;
   onSelect: (categoryId: string) => void;
 };
 
 const CategoryBarItem = forwardRef<HTMLAnchorElement, TCategoryBarItem>(
-  ({ active, category, onSelect }, ref) => {
+  ({ active, category, lg, onSelect }, ref) => {
     return (
       <a
         ref={ref}
@@ -329,7 +334,8 @@ const CategoryBarItem = forwardRef<HTMLAnchorElement, TCategoryBarItem>(
             : "text-lightText border-transparent",
         )}
       >
-        {category.title}
+        {category.translations?.[lg]?.title ??
+          category.title}
       </a>
     );
   },
@@ -354,9 +360,14 @@ const CategoryItem: React.FC<TCategoryItem> = ({
   progressiveDiscount,
   lg,
 }) => {
+  const categoryTitle =
+    category.translations?.[lg]?.title ||
+    category.translations?.["en"]?.title ||
+    category.title;
+
   return (
     <section className="flex flex-col gap-4 pt-8" id={category.id}>
-      <h2 className="text-[22px] font-bold">{category.title}</h2>
+      <h2 className="text-[22px] font-bold">{categoryTitle}</h2>
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
         {category.products.map((product) => (
           <ProductItem
@@ -415,13 +426,13 @@ const ProductItem: React.FC<TProductItem> = ({
     >
       <ProductImage
         src={firstImageUrl}
-        className="rounded-2xl aspect-[4/3] object-cover bg-foreground"
+        className="rounded-2xl aspect-square object-cover bg-foreground"
         alt={product.name}
       />
       <div className="flex flex-col gap-1">
         <span className="text-md font-semibold leading-4.5">
           {product.translations
-            ? product.translations[lg]["title"] || product.name
+            ? product.translations[lg] && product.translations[lg]["title"] || product.name
             : product.name}
         </span>
         <div className="flex flex-row gap-2">

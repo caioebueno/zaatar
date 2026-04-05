@@ -89,13 +89,13 @@ const ProductModal: React.FC<TProductModal> = ({
             <div className="pt-6 px-4 flex flex-col gap-3 leading-4 lg:flex-1 lg:pt-8">
               <span className="text-2xl font-bold">
                 {product.translations
-                  ? product.translations[lg]["title"] || product.name
+                  ? product.translations[lg] && product.translations[lg]["title"] || product.name
                   : product.name}
               </span>
               <p className="text-lightText text-sm">
                 {" "}
                 {product.translations
-                  ? product.translations[lg]["description"] ||
+                  ?  product.translations[lg] &&  product.translations[lg]["description"] ||
                     product.description
                   : product.description}
               </p>

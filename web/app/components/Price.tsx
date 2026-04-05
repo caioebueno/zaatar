@@ -13,6 +13,7 @@ import {
   FiArrowLeft,
   FiCalendar,
   FiChevronDown,
+  FiChevronRight,
   FiClock,
   FiPlus,
   FiShoppingBag,
@@ -34,9 +35,10 @@ import AddressAutocompleteInput, { TAddressValue } from "./AddressInput";
 import addNewDeliveryAddress from "../../src/addNewDeliveryAddress";
 import TAddress from "../../src/types/address";
 import updateCustomerName from "../../src/updateCustomerName";
-import { TOrderType, TPaymentMethod } from "../../src/types/order";
+import { TOrder, TOrderType, TPaymentMethod } from "../../src/types/order";
 import createOrder from "../../src/createOrder";
 import Link from "next/link";
+import { Montserrat } from "next/font/google";
 import { TModifierGroup } from "@/src/types/product";
 import type { TOperationHours } from "@/src/types/operationHours";
 import { weekDays, type WeekDay } from "@/src/modules/branch/domain/branch.types";
@@ -46,6 +48,11 @@ import {
   setStoredCustomerSession,
 } from "@/utils/customerSession";
 import text from "@/constants/text";
+
+const montserrat = Montserrat({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
 
 type TPrice = {
   data: TGetProductsResponse;
@@ -64,7 +71,7 @@ const Price: React.FC<TPrice> = ({ data, cart, content }) => {
   const router = useRouter();
 
   return (
-    <div className="bg-foreground p-4 border-[#B9BFBF] border-b flex flex-row justify-between sticky top-0">
+    <div className="bg-foreground p-4 border-[#B9BFBF] border-b flex flex-row justify-between sticky top-[var(--menu-sticky-offset)]">
       <Button
         onClick={() => router.back()}
         className="p-0! text-[16px] font-semibold text-text! bg-transparent flex flex-row gap-2 items-center"
@@ -299,7 +306,7 @@ function formatSelectedScheduleLabel(
 }
 
 const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
-  const { cart } = useCart();
+  const { cart, clearCart } = useCart();
   const [step, setStep] = useQueryState("step", parseAsInteger.withDefault(1));
   const [orderType, setOrderType] = useQueryState(
     "orderType",
@@ -310,6 +317,7 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
   const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
   const [customer, setCustomer] = useState<TCustomer | null>(null);
   const [loading, setLoading] = useState(false);
+  const [openSummaryModal, setOpenSummaryModal] = useState(false);
   const [name, setName] = useState<null | string>(null);
   const [operationHours, setOperationHours] = useState<TOperationHours | null>(
     null,
@@ -361,9 +369,17 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
   const scheduleOptions = operationHours
     ? buildScheduleOptions(operationHours, new Date(), lg)
     : [];
+  const selectedDeliveryAddress =
+    customer?.addresses?.find((address) => address.id === selectedAddress) || null;
+  const deliveryFee =
+    orderType === "DELIVERY" ? selectedDeliveryAddress?.deliveryFee ?? 0 : 0;
+  const taxAmount = 0;
+  const tipAmount =
+    (Number(selectedTip || 0) * price.discountedPrice) / 100;
   const priceWithTip =
     price.discountedPrice +
-    (Number(selectedTip || 0) * price.discountedPrice) / 100;
+    tipAmount;
+  const orderTotal = price.discountedPrice + tipAmount + deliveryFee + taxAmount;
 
   useEffect(() => {
     if (!scheduledAt) return;
@@ -382,7 +398,8 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
 
   const handleConfirm = async () => {
     try {
-      if (!paymentType || !selectedAddress || !customer || !orderType) return;
+      if (!paymentType || !customer || !orderType) return;
+      if (orderType === "DELIVERY" && !selectedAddress) return;
       if (isBranchOpen === false) {
         if (scheduleOptions.length === 0) {
           setScheduleError(content["noScheduleAvailability"]);
@@ -402,9 +419,10 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
         orderType,
         paymentMethod: paymentType,
         customerId: customer.id,
-        addressId: selectedAddress,
+        addressId: selectedAddress || undefined,
         tipAmount: Number(selectedTip || 0),
       });
+      clearCart();
       setLoading(false);
       router.push(`/menu/${lg}/confirmation/${order.id}`);
     } catch (err) {
@@ -427,7 +445,11 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
         </div>
         <div className="py-6 px-4 flex flex-1 flex-col gap-4 overflow-y-auto pb-36">
           <div className="py-3 px-4 rounded-xl bg-foreground flex flex-row justify-between items-center mb-2">
-            <div>
+            <button
+              type="button"
+              onClick={() => setOpenSummaryModal(true)}
+              className="flex-1 text-left"
+            >
               <span className="font-semibold text-sm text-lightText">
                 {content["cartSummary"]}
               </span>
@@ -454,9 +476,12 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
                   </div>
                 </div>
               </div>
-            </div>
+            </button>
             <div>
-              <Button className="bg-brandBackground py-2! px-4 rounded-lg text-sm">
+              <Button
+                onClick={() => setOpenSummaryModal(true)}
+                className="bg-brandBackground py-2! px-4 rounded-lg text-sm"
+              >
                 {content["view"]}
               </Button>
             </div>
@@ -512,10 +537,23 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
             <span className="text-lg">
               {loading
                 ? content["loading"]
-                : `${content["confirm"]} ${formatCurrency(priceWithTip)}`}
+                : `${content["confirm"]} ${formatCurrency(orderTotal)}`}
             </span>
           </Button>
         </div>
+        <OrderSummaryModal
+          cart={cart}
+          content={content}
+          customer={customer}
+          data={data}
+          deliveryFee={deliveryFee}
+          open={openSummaryModal}
+          onOpenChange={setOpenSummaryModal}
+          taxAmount={taxAmount}
+          tipAmount={tipAmount}
+          total={orderTotal}
+          lg={lg}
+        />
       </div>
     );
 
@@ -766,6 +804,241 @@ type TAddressStep = {
   };
 };
 
+type TOrderSummaryModal = {
+  cart?: TCart;
+  content: {
+    [key: string]: string;
+  };
+  customer?: TCustomer | null;
+  data?: TGetProductsResponse;
+  deliveryFee?: number;
+  lg: string;
+  onOpenChange?: (value: boolean) => void;
+  open?: boolean;
+  order?: TOrder;
+  showSummaryCard?: boolean;
+  taxAmount?: number;
+  tipAmount?: number;
+  total?: number;
+};
+
+export const OrderSummaryModal: React.FC<TOrderSummaryModal> = ({
+  cart,
+  content,
+  data,
+  deliveryFee,
+  lg,
+  onOpenChange,
+  open,
+  order,
+  showSummaryCard,
+  taxAmount,
+  tipAmount,
+  total,
+}) => {
+  const [internalOpen, setInternalOpen] = useState(false);
+  const resolvedOpen = open ?? internalOpen;
+  const resolvedOnOpenChange = onOpenChange ?? setInternalOpen;
+  const isOrderMode = Boolean(order);
+  const productCount = isOrderMode
+    ? order?.orderProducts.reduce((sum, item) => sum + item.quantity, 0) ?? 0
+    : cart?.items.reduce((sum, item) => sum + item.quantity, 0) ?? 0;
+  const subtotal =
+    order?.subtotalAmount ??
+    (cart && data
+      ? calculateCartWithProgressiveDiscount(
+          data.categories,
+          cart,
+          data.progressiveDiscount,
+        ).discountedPrice
+      : 0);
+  const resolvedDeliveryFee = order?.deliveryFee ?? deliveryFee ?? 0;
+  const resolvedTipAmount = order?.tipAmount ?? tipAmount ?? 0;
+  const resolvedTaxAmount = taxAmount ?? 0;
+  const resolvedTotal = order?.totalAmount ?? total ?? 0;
+  const title = isOrderMode ? content["billSummary"] : content["cartSummary"];
+  const [productsExpanded, setProductsExpanded] = useState(true);
+
+  return (
+    <>
+      {showSummaryCard && (
+        <div className="w-full max-w-[900px] px-4">
+          <div
+            className={`flex items-center justify-between gap-4 ${montserrat.className} border-t border-t-[#E6E6E6] py-6`}
+          >
+            <div className="flex flex-col">
+              <span className="text-base font-bold text-text">{title}</span>
+              <span className="text-lightText font-medium">
+                {productCount} {content["products"]}
+              </span>
+            </div>
+            <Button
+              onClick={() => resolvedOnOpenChange(true)}
+              className="bg-transparent text-text! p-0! font-semibold"
+            >
+              <FiChevronRight />
+            </Button>
+          </div>
+        </div>
+      )}
+      <Dialog.Root open={resolvedOpen} onOpenChange={resolvedOnOpenChange}>
+        <Dialog.Overlay className="bg-black/40 fixed inset-0 z-40" />
+        <Dialog.Content
+          className={`w-dvw h-dvh bg-background fixed top-0 left-0 z-50 flex flex-col max-w-[900px] right-0 mx-auto ${montserrat.className}`}
+        >
+          <div className="flex flex-row items-center gap-3 px-4 py-4 bg-foreground border-[#E6E6E6] border-b justify-between">
+            
+            <span className="font-semibold text-lg leading-none">{title}</span>
+            <Button
+              onClick={() => resolvedOnOpenChange(false)}
+              className="p-0! bg-transparent text-text! min-w-0 h-auto"
+            >
+              <FiX size={18} />
+            </Button>
+          </div>
+          <div className="flex-1 overflow-y-auto px-4 py-5 flex flex-col gap-6">
+            <div className="flex flex-col gap-4">
+              <button
+                type="button"
+                onClick={() => setProductsExpanded((value) => !value)}
+                className="flex items-center justify-between gap-3 text-left"
+              >
+                <span className="font-semibold text-xl leading-tight text-text">
+                  {content["yourProducts"]} ({productCount})
+                </span>
+                <FiChevronDown
+                  size={20}
+                  className={`shrink-0 transition-transform ${
+                    productsExpanded ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+              {productsExpanded && (
+                <div className="flex flex-col">
+                  {isOrderMode
+                    ? order?.orderProducts.map((item, index) => {
+                        const productName =
+                          item.product?.translations?.[lg]?.title ||
+                          item.product?.name ||
+                          "";
+                        const lineTotal = item.amount * item.quantity;
+
+                        return (
+                          <OrderSummaryLineItem
+                            key={item.id}
+                            comments={item.comments}
+                            modifiers={
+                              item.selectedModifierGroupItems?.map(
+                                (modifierItem) => modifierItem.name,
+                              ) ?? []
+                            }
+                            name={productName}
+                            price={lineTotal}
+                            quantity={item.quantity}
+                            showDivider={index < (order.orderProducts.length - 1)}
+                          />
+                        );
+                      })
+                    : cart &&
+                      data &&
+                      cart.items.map((item, index) => (
+                        <OrderSummaryItem
+                          cart={cart}
+                          cartItem={item}
+                          content={content}
+                          data={data}
+                          key={item.cartId || item.productId}
+                          lg={lg}
+                          showDivider={index < cart.items.length - 1}
+                        />
+                      ))}
+                </div>
+              )}
+            </div>
+            <div className="border-t border-[#E6E6E6] pt-6 flex flex-col gap-3">
+              <SummaryRow
+                label={`${content["subtotalProducts"]} ${productCount}`}
+                value={formatCurrency(subtotal)}
+              />
+              <SummaryRow
+                label={content["totalProducts"]}
+                value={formatCurrency(subtotal)}
+                muted
+              />
+              {resolvedDeliveryFee > 0 && (
+                <SummaryRow
+                  label={content["deliveryFee"]}
+                  value={formatCurrency(resolvedDeliveryFee)}
+                />
+              )}
+              {resolvedTipAmount > 0 && (
+                <SummaryRow
+                  label={content["tip"]}
+                  value={formatCurrency(resolvedTipAmount)}
+                />
+              )}
+              {resolvedTaxAmount > 0 && (
+                <SummaryRow
+                  label={content["tax"]}
+                  value={formatCurrency(resolvedTaxAmount)}
+                />
+              )}
+              <div className="border-t border-[#E6E6E6] border-dashed pt-3">
+                <SummaryRow
+                  label={content["totalLabel"]}
+                  value={formatCurrency(resolvedTotal)}
+                  strong
+                />
+              </div>
+            </div>
+          </div>
+        </Dialog.Content>
+      </Dialog.Root>
+    </>
+  );
+};
+
+type TSummaryRow = {
+  label: string;
+  value: string;
+  strong?: boolean;
+  muted?: boolean;
+};
+
+const SummaryRow: React.FC<TSummaryRow> = ({
+  label,
+  value,
+  strong,
+  muted,
+}) => {
+  return (
+    <div className="flex items-center justify-between gap-3 font-medium">
+      <span
+        className={
+          strong
+            ? "font-bold text-base tracking-tight text-text"
+            : muted
+              ? "text-[#7A7A7A] text-[16px]"
+              : "text-text text-base"
+        }
+      >
+        {label}
+      </span>
+      <span
+        className={
+          strong
+            ? "font-bold text-base tracking-tight text-text"
+            : muted
+              ? "font-medium text-[#7A7A7A] text-[16px]"
+              : "font-medium text-text text-base"
+        }
+      >
+        {value}
+      </span>
+    </div>
+  );
+};
+
 export type TInputError = {
   field: string;
   message: string;
@@ -981,34 +1254,36 @@ const AddressStep: React.FC<TAddressStep> = ({
                   setName(e.target.value);
                 }}
               />
-              <div className="flex flex-col gap-2">
-                <span className="font-semibold">
-                  {content["deliveryAddress"]}
-                </span>
-                {!customer.addresses || customer.addresses.length === 0 ? (
-                  <div className="py-2 flex flex-col items-center">
-                    <span className="font-medium text-lightText">
-                      {content["noAddress"]}
-                    </span>
-                  </div>
-                ) : (
-                  <AddressSelector
-                    addresses={customer.addresses}
-                    onSelect={setSelectedAddress}
-                    selectedAddress={selectedAddress}
-                  />
-                )}
-                <Button
-                  onClick={() => setOpenAddress(true)}
-                  className="text-[16px]! py-3  bg-brandBackground flex flex-row gap-2"
-                >
-                  <FiPlus size={18} />
-                  {content["addNew"]}
-                </Button>
-                {error && error.field === "address" && (
-                  <span className="text-lg text-red-600">{error.message}</span>
-                )}
-              </div>
+              {orderType === "DELIVERY" && (
+                <div className="flex flex-col gap-2">
+                  <span className="font-semibold">
+                    {content["deliveryAddress"]}
+                  </span>
+                  {!customer.addresses || customer.addresses.length === 0 ? (
+                    <div className="py-2 flex flex-col items-center">
+                      <span className="font-medium text-lightText">
+                        {content["noAddress"]}
+                      </span>
+                    </div>
+                  ) : (
+                    <AddressSelector
+                      addresses={customer.addresses}
+                      onSelect={setSelectedAddress}
+                      selectedAddress={selectedAddress}
+                    />
+                  )}
+                  <Button
+                    onClick={() => setOpenAddress(true)}
+                    className="text-[16px]! py-3  bg-brandBackground flex flex-row gap-2"
+                  >
+                    <FiPlus size={18} />
+                    {content["addNew"]}
+                  </Button>
+                  {error && error.field === "address" && (
+                    <span className="text-lg text-red-600">{error.message}</span>
+                  )}
+                </div>
+              )}
             </>
           )}
         </div>
@@ -1023,13 +1298,15 @@ const AddressStep: React.FC<TAddressStep> = ({
             </span>
           </Button>
         </div>
-        <FindAddressModal
-          onConfirm={handleConfirmAddress}
-          onOpenChange={setOpenAddress}
-          open={openAddress}
-          custumerId={customer?.id}
-          content={content}
-        />
+        {orderType === "DELIVERY" && (
+          <FindAddressModal
+            onConfirm={handleConfirmAddress}
+            onOpenChange={setOpenAddress}
+            open={openAddress}
+            custumerId={customer?.id}
+            content={content}
+          />
+        )}
       </div>
     </>
   );
@@ -1041,6 +1318,9 @@ type TTipSelector = {
 };
 
 const TipSelector: React.FC<TTipSelector> = ({ onSelect, tipSelected }) => {
+  const customTipValue =
+    tipSelected && !["10", "15", "20"].includes(tipSelected) ? tipSelected : "";
+
   return (
     <div className="flex flex-col gap-2">
       <span className="font-semibold">Tip</span>
@@ -1072,10 +1352,37 @@ const TipSelector: React.FC<TTipSelector> = ({ onSelect, tipSelected }) => {
         <div>
           <TextInput
             prefix="%"
-            type="number"
+            type="text"
             inputMode="numeric"
-            onChange={(e) => onSelect(e.target.value)}
-            // autoComplete=""
+            pattern="[0-9]*"
+            value={customTipValue}
+            onChange={(e) => onSelect(e.target.value.replace(/\D/g, ""))}
+            onKeyDown={(e) => {
+              const allowedKeys = [
+                "Backspace",
+                "Delete",
+                "ArrowLeft",
+                "ArrowRight",
+                "Tab",
+                "Home",
+                "End",
+              ];
+
+              if (allowedKeys.includes(e.key) || e.ctrlKey || e.metaKey) {
+                return;
+              }
+
+              if (!/^\d$/.test(e.key)) {
+                e.preventDefault();
+              }
+            }}
+            onPaste={(e) => {
+              e.preventDefault();
+              const pastedValue = e.clipboardData
+                .getData("text")
+                .replace(/\D/g, "");
+              onSelect(pastedValue);
+            }}
             leftIcon="%"
             placeholder="Other"
           />
@@ -1196,31 +1503,45 @@ const FindAddressModal: React.FC<TFindAddressModal> = ({
   const [loading, setLoading] = useState(false);
   const [number, setNumber] = useState("");
   const [complement, setComplement] = useState("");
+  const [error, setError] = useState<string | null>(null);
 
   const handleConfirm = async () => {
     if (!selectedAddress) return;
     if (!selectedAddress.raw.address?.house_number) return;
     setLoading(true);
-    const address = await addNewDeliveryAddress({
-      address: {
-        id: "",
-        city: selectedAddress.city,
-        description: selectedAddress.raw.display_name,
-        lat: selectedAddress.lat.toString(),
-        lng: selectedAddress.lon.toString(),
-        number: selectedAddress.raw.address?.house_number,
-        state: selectedAddress.state,
-        street: selectedAddress.street1,
-        zipCode: selectedAddress.zip,
-        numberComplement: number || undefined,
-        complement: complement || undefined,
-        createdAt: "",
-        customerId: custumerId,
-      },
-    });
-    await onConfirm(address);
-    setLoading(false);
-    onOpenChange(false);
+    setError(null);
+    try {
+      const address = await addNewDeliveryAddress({
+        address: {
+          id: "",
+          city: selectedAddress.city,
+          description: selectedAddress.raw.display_name,
+          lat: selectedAddress.lat.toString(),
+          lng: selectedAddress.lon.toString(),
+          number: selectedAddress.raw.address?.house_number,
+          state: selectedAddress.state,
+          street: selectedAddress.street1,
+          zipCode: selectedAddress.zip,
+          numberComplement: number || undefined,
+          complement: complement || undefined,
+          createdAt: "",
+          customerId: custumerId,
+        },
+      });
+      await onConfirm(address);
+      onOpenChange(false);
+    } catch (error) {
+      if (
+        error instanceof Error &&
+        error.message === "OUTSIDE_DELIVERY_COVERAGE_AREA"
+      ) {
+        setError(content["outsideCoverageArea"]);
+      } else {
+        setError(content["addressSaveError"]);
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -1240,23 +1561,33 @@ const FindAddressModal: React.FC<TFindAddressModal> = ({
         </div>
         <div className="py-4 px-4 flex flex-col gap-3">
           <AddressAutocompleteInput
-            onSelect={setSelectedAddress}
+            onSelect={(value) => {
+              setSelectedAddress(value);
+              setError(null);
+            }}
             selected={selectedAddress}
           />
           {selectedAddress !== null && (
             <>
               <TextInput
                 value={number}
-                onChange={(e) => setNumber(e.target.value)}
+                onChange={(e) => {
+                  setNumber(e.target.value);
+                  setError(null);
+                }}
                 label={content["numberAppartment"]}
               />
               <TextInput
                 value={complement}
-                onChange={(e) => setComplement(e.target.value)}
+                onChange={(e) => {
+                  setComplement(e.target.value);
+                  setError(null);
+                }}
                 label={content["reference"]}
               />
             </>
           )}
+          {error && <span className="text-red-600 text-sm">{error}</span>}
         </div>
         <div className="bottom-0 bg-foreground pt-4 px-4 pb-8 w-full fixed border-t border-[#CCD0D0]">
           <Button
@@ -1278,6 +1609,105 @@ type TCartListItem = {
   quantity: number;
   cart: TCart;
   lg: string;
+};
+
+type TOrderSummaryItem = {
+  cart: TCart;
+  cartItem: TCartItem;
+  content: {
+    [key: string]: string;
+  };
+  data: TGetProductsResponse;
+  lg: string;
+  showDivider?: boolean;
+};
+
+const OrderSummaryItem: React.FC<TOrderSummaryItem> = ({
+  cart,
+  cartItem,
+  data,
+  lg,
+  showDivider,
+}) => {
+  const findProduct = findProductById(data.categories, cartItem.productId);
+  const price = calculateProductPriceWithProgressiveDiscount(
+    cartItem.productId,
+    data.progressiveDiscount,
+    cart,
+    data.categories,
+  );
+  const itemTotal = price ? price.discountedPrice * cartItem.quantity : 0;
+
+  return (
+    <OrderSummaryLineItem
+      comments={cartItem.description}
+      modifiers={
+        cartItem.modifiers?.map((item) => {
+          const modifierGroup = findProduct?.modifierGroups?.find(
+            (modifier) => modifier.id === item.modifierId,
+          );
+          const modifierItem = modifierGroup?.items.find(
+            (modifierItem) => modifierItem.id === item.modifierItemId,
+          );
+
+          return modifierItem?.name || "";
+        }) ?? []
+      }
+      name={
+        findProduct?.translations
+          ? findProduct.translations[lg] && findProduct.translations[lg]["title"] || findProduct.name
+          : findProduct?.name || ""
+      }
+      price={itemTotal}
+      quantity={cartItem.quantity}
+      showDivider={showDivider}
+    />
+  );
+};
+
+type TOrderSummaryLineItem = {
+  comments?: string;
+  modifiers: string[];
+  name: string;
+  price: number;
+  quantity: number;
+  showDivider?: boolean;
+};
+
+const OrderSummaryLineItem: React.FC<TOrderSummaryLineItem> = ({
+  comments,
+  modifiers,
+  name,
+  price,
+  quantity,
+  showDivider,
+}) => {
+  return (
+    <div
+      className={`py-3 ${showDivider ? "border-b border-dashed border-[#D8D8D8]" : ""}`}
+    >
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex flex-col gap-1">
+          <span className="font-semibold text-base text-text leading-tight">
+            {quantity} {name}
+          </span>
+          {modifiers.map((modifier, index) =>
+            modifier ? (
+              <span key={`${modifier}-${index}`} className="text-[16px] text-[#6E6E6E]">
+                {modifier}
+              </span>
+            ) : null,
+          )}
+          {comments && (
+            <span className="text-[16px] text-[#6E6E6E]">{comments}</span>
+          )}
+        </div>
+        <span className="font-semibold text-base text-text whitespace-nowrap">
+          {formatCurrency(price)}
+        </span>
+      </div>
+    </div>
+  );
 };
 
 const CartListItem: React.FC<TCartListItem> = ({
@@ -1314,7 +1744,7 @@ const CartListItem: React.FC<TCartListItem> = ({
         <div className="flex flex-col gap-1.5">
           <span className="font-semibold ">
             {findProduct?.translations
-              ? findProduct?.translations[lg]["title"] || findProduct?.name
+              ? findProduct?.translations[lg] && findProduct?.translations[lg]["title"] || findProduct?.name
               : findProduct?.name}
           </span>
           {cartItem.modifiers?.map((item) => (

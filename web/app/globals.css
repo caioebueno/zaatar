@@ -6,6 +6,7 @@
 
 :root {
     --brandBackground: #142826;
+    --menu-sticky-offset: 0px;
     --text: #0c0c0c;
     --lightText: #555555;
     --background: oklch(1 0 0);

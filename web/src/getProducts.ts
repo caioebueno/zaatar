@@ -1,6 +1,7 @@
 "use server";
 
 import prisma from "../prisma";
+import { Prisma } from "@/src/generated/prisma";
 import TCategory from "./types/category";
 import TProgressiveDiscount from "./types/progressiveDiscount";
 
@@ -9,21 +10,29 @@ export type TGetProductsResponse = {
   progressiveDiscount: TProgressiveDiscount | null;
 };
 
+type CategoryRow = {
+  id: string;
+  name: string;
+  translations: Prisma.JsonValue | null;
+};
+
 const getProducts = async (): Promise<TGetProductsResponse> => {
-  const prismaCategories = await prisma.category.findMany({
-    select: {
-      id: true,
-      name: true,
-      products: {
+  const prismaCategories = await prisma.$queryRaw<CategoryRow[]>`
+    SELECT "id", "name", "translations"
+    FROM "Category"
+    ORDER BY "createdAt" ASC
+  `;
+  const prismaProducts = await prisma.product.findMany({
+    include: {
+      photos: true,
+      modifierGroups: {
         include: {
-          photos: true,
-          modifierGroups: {
-            include: {
-              items: true,
-            },
-          },
+          items: true,
         },
       },
+    },
+    orderBy: {
+      createdAt: "asc",
     },
   });
   const prismaProgressiveDiscount = await prisma.progressiveDiscount.findUnique(
@@ -52,7 +61,18 @@ const getProducts = async (): Promise<TGetProductsResponse> => {
     categories: prismaCategories.map((category) => ({
       id: category.id,
       title: category.name,
-      products: category.products.map((product) => ({
+      translations:
+        category.translations &&
+        typeof category.translations === "object"
+          ? (category.translations as {
+              [key: string]: {
+                [key: string]: string;
+              };
+            })
+          : undefined,
+      products: prismaProducts
+        .filter((product) => product.categoryId === category.id)
+        .map((product) => ({
         id: product.id,
         name: product.name,
         translations: product.translations as {

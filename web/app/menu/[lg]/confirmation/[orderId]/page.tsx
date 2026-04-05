@@ -1,5 +1,7 @@
-import { Button } from "@/components/ui/button";
+import { OrderSummaryModal } from "@/app/components/Price";
+import OrderStatusStepper from "@/app/components/OrderStatusStepper";
 import getOrder from "@/src/getOrder";
+import formatCurrency from "@/utils/formatCurrecy";
 import { NextPage } from "next";
 import { Montserrat } from "next/font/google";
 import Link from "next/link";
@@ -24,9 +26,15 @@ const Confirmation: NextPage<{
 
   const content = text[lg];
   const order = await getOrder(orderId);
+  const paymentMethodLabel =
+    order.paymentMethod === "CASH"
+      ? content["cash"]
+      : order.paymentMethod === "CARD"
+        ? content["card"]
+        : content["zelle"];
 
   return (
-    <div>
+    <div className={montserrat.className}>
       <div className="bg-foreground p-4 border-[#B9BFBF] border-b flex flex-row justify-between">
         <Link
           href="/menu/en"
@@ -45,9 +53,7 @@ const Confirmation: NextPage<{
           {content["chatOnWhatsapp"]}
         </a>
       </div>
-      <div
-        className={`text-text ${montserrat.className} flex flex-col items-center pt-8 gap-4`}
-      >
+      <div className="text-text flex flex-col items-center pt-8 gap-4">
         <div className="p-2 w-fit h-fit bg-brandBackground rounded-full">
           <FiCheck color="white" size={32} />
         </div>
@@ -57,6 +63,38 @@ const Confirmation: NextPage<{
           </span>
           <span className="text-2xl font-bold">{content["orderReceived"]}</span>
         </div>
+      </div>
+      <OrderStatusStepper
+        content={content}
+        status={order.status}
+        type={order.type}
+      />
+      <OrderSummaryModal
+        content={content}
+        lg={lg}
+        order={order}
+        showSummaryCard
+      />
+      <div className="w-full max-w-[900px] px-4">
+        <div className="flex flex-col  border-t border-t-[#E6E6E6] pt-6">
+          <span className="text-base font-bold text-text">
+            {content["paymentInfo"]}
+          </span>
+          <div className="flex items-center font-medium text-lightText">
+            <span className="">{`${paymentMethodLabel} ${formatCurrency(order.totalAmount ?? 0)}`}</span>
+          </div>
+        </div>
+      </div>
+      <div className="w-full max-w-[900px] px-4 pb-8 pt-8">
+        <a
+          href={`https://wa.me/15551234567?text=Hi%20I%20want%20to%20know%20more%20about%20order%20${order.number}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="bg-[#25d366] px-4 py-3 rounded-xl text-white flex flex-row items-center justify-center gap-2 font-bold text-lg w-full"
+        >
+          <FaWhatsapp size={20} />
+          {content["inquireAboutYourOrder"]}
+        </a>
       </div>
     </div>
   );

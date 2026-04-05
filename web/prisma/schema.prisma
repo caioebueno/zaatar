@@ -178,6 +178,7 @@ model Category {
   id                        String                    @id
   createdAt                 DateTime                  @default(now())
   name                      String
+  translations              Json?
   products                  Product[]
   preparationStepCategories PreparationStepCategory[]
 }
@@ -207,6 +208,7 @@ model DeliveryAddress {
   createdAt        DateTime  @default(now())
   lat              String
   lng              String
+  deliveryFee      Int       @default(0)
   city             String
   zipCode          String
   State            String
@@ -246,6 +248,7 @@ model Order {
   createdAt                 DateTime                  @default(now())
   amount                    Int
   customer                  Customer                  @relation(fields: [customerId], references: [id])
+  status                    OrderStatus               @default(ACCEPTED)
   type                      OrderType                 @default(DELIVERY)
   paymentMethod             PaymentType               @default(CARD)
   tipAmount                 Int?
@@ -268,6 +271,13 @@ enum PaymentType {
 enum OrderType {
   DELIVERY
   TAKEAWAY
+}
+
+enum OrderStatus {
+  ACCEPTED
+  PREPARING
+  OUT_FOR_DELIVERY
+  DELIVERED
 }
 
 model OrderProducts {
