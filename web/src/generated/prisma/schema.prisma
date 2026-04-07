@@ -149,6 +149,47 @@ model Branch {
   businessId     String?
 }
 
+model Driver {
+  id            String     @id
+  createdAt     DateTime   @default(now())
+  name          String
+  active        Boolean    @default(true)
+  priorityLevel Int
+  dispatches    Dispatch[]
+}
+
+model Dispatch {
+  id                                String    @id
+  createdAt                         DateTime  @default(now())
+  dispatched                        Boolean   @default(false)
+  dispatchAt                        DateTime?
+  estimatedDeliveryDurationMinutes  Int?
+  estimatedRoundTripDurationMinutes Int?
+  driver                            Driver?   @relation(fields: [driverId], references: [id])
+  driverId                          String?
+  orders                            Order[]
+}
+
+enum DispatchAssignmentJobStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+model DispatchAssignmentJob {
+  id                  String                      @id
+  createdAt           DateTime                    @default(now())
+  status              DispatchAssignmentJobStatus @default(PENDING)
+  attempts            Int                         @default(0)
+  availableAt         DateTime                    @default(now())
+  processingStartedAt DateTime?
+  completedAt         DateTime?
+  lastError           String?
+  orderId             String                      @unique
+  deliveryAddressId   String
+}
+
 model Address {
   id            String   @id
   createdAt     DateTime @default(now())
@@ -246,17 +287,21 @@ model Order {
   id                        String                    @id
   number                    String?
   createdAt                 DateTime                  @default(now())
+  paidAt                    DateTime?
+  deliveredAt               DateTime?
   amount                    Int
   customer                  Customer                  @relation(fields: [customerId], references: [id])
   status                    OrderStatus               @default(ACCEPTED)
   type                      OrderType                 @default(DELIVERY)
   paymentMethod             PaymentType               @default(CARD)
   tipAmount                 Int?
+  dispatch                  Dispatch?                 @relation(fields: [dispatchId], references: [id])
   address                   Address?                  @relation(fields: [addressId], references: [id])
   deliveryAddress           DeliveryAddress?          @relation(fields: [deliveryAddressId], references: [id])
   orderProducts             OrderProducts[]
   customerId                String
   externalId                String?
+  dispatchId                String?
   addressId                 String?
   deliveryAddressId         String?
   preparationStepCategories PreparationStepCategory[]

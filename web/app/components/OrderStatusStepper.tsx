@@ -32,7 +32,7 @@ const deliverySteps = [
     label: "preparing",
   },
   {
-    status: "OUT_FOR_DELIVERY" as TOrderStatus,
+    status: "DELIVERING" as TOrderStatus,
     icon: FiTruck,
     label: "outForDelivery",
   },

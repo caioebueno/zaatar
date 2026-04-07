@@ -1,3129 +1,1635 @@
 [
   {
-    "id": "9fdef81a-a270-4cdb-aed5-76377bab9e72",
-    "name": "Pizzas",
-    "position": 2,
-    "type": "NORMAL",
-    "visible": true,
-    "products": [
-      {
-        "product_category_id": "9fdef81a-a270-4cdb-aed5-76377bab9e72",
-        "description": "Queijo mussarela - Mozzarella cheese",
-        "id": "9fdef81a-e487-4ba1-99bb-918b1b75ac95",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Mozzarella Pizza - Pizza Musarella",
-        "position": 0,
-        "visible": true,
-        "images": [
-          {
-            "id": "a106326f-ce09-4df3-aeee-3de326837848",
-            "image": "99f35865-f392-4f82-b8a2-34b8ee6193a0.png",
-            "image_url": "https://assets.olaclick.app/companies/products/images/800/99f35865-f392-4f82-b8a2-34b8ee6193a0.png",
-            "position": 0
-          }
-        ],
-        "product_variants": [
-          {
-            "id": "9fdef81a-e749-43f6-bfb4-7f9b4ee57d85",
-            "cost": 0,
-            "created_at": "2025-09-13 21:45:40",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 21.99,
-            "original_price": 21.99,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2025-10-31 21:34:27"
-          }
-        ],
-        "modifier_categories": [
-          {
-            "id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-            "name": "Borda Recheada - Stuffed Crust",
-            "min_modifiers": 1,
-            "max_modifiers": 1,
-            "company_id": "c1fee687-89b8-4480-b546-a92ae1d0d861",
-            "type": "one",
-            "is_active": true,
-            "required": true,
-            "position": 0,
-            "product_modifier_category_position": 0,
-            "modifiers": [
-              {
-                "id": "a14f6f01-4a85-4dac-a2a2-ce3349e3f1be",
-                "name": "Sem borda - No crust",
-                "cost": 0,
-                "original_price": 0,
-                "price": 0,
-                "sku": null,
-                "modifier_category_id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-                "position": 0,
-                "max_limit": 1,
-                "visible": true
-              },
-              {
-                "id": "a14f6f01-9908-43a5-a78f-b4f425485f71",
-                "name": "Catupiry - Cream Cheese",
-                "cost": 0,
-                "original_price": 10,
-                "price": 10,
-                "sku": null,
-                "modifier_category_id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-                "position": 1,
-                "max_limit": 1,
-                "visible": true
-              }
-            ]
-          }
-        ],
-        "slug": "mozzarella-pizza-pizza-musarella"
+    "id": "05be9257-b477-43fa-b8de-ae5292205797",
+    "categoryId": null,
+    "comparedAtPrice": 399,
+    "createdAt": "2026-03-20T00:42:18.902Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "2 Cheese Sfiha",
+    "price": 329,
+    "translations": {
+      "es": {
+        "title": "2 Cheese Esfiha",
+        "description": "Recién hecho, sabor intenso e irresistible."
       },
-      {
-        "product_category_id": "9fdef81a-a270-4cdb-aed5-76377bab9e72",
-        "description": "Mussarela, parmesão, catupiry e gorgonzola - Mozzarella, parmesan, cream cheese and blue cheese",
-        "id": "9fdef889-25bd-4727-a048-6d2664b3138d",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "4 Cheese Pizza - Pizza de 4 Queijos",
-        "position": 1,
-        "visible": true,
-        "images": [
-          {
-            "id": "a1083d14-8623-4401-91ac-d18d3d5f30f8",
-            "image": "e47a902a-d56a-488c-9805-a9a1c8d63a35.png",
-            "image_url": "https://assets.olaclick.app/companies/products/images/800/e47a902a-d56a-488c-9805-a9a1c8d63a35.png",
-            "position": 0
-          }
-        ],
-        "product_variants": [
-          {
-            "id": "9fdef889-2712-4f10-8d1b-d44c31c82e6c",
-            "cost": 0,
-            "created_at": "2025-09-13 21:46:52",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 26.99,
-            "original_price": 26.99,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2025-10-31 21:34:33"
-          }
-        ],
-        "modifier_categories": [
-          {
-            "id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-            "name": "Borda Recheada - Stuffed Crust",
-            "min_modifiers": 1,
-            "max_modifiers": 1,
-            "company_id": "c1fee687-89b8-4480-b546-a92ae1d0d861",
-            "type": "one",
-            "is_active": true,
-            "required": true,
-            "position": 0,
-            "product_modifier_category_position": 0,
-            "modifiers": [
-              {
-                "id": "a14f6f01-4a85-4dac-a2a2-ce3349e3f1be",
-                "name": "Sem borda - No crust",
-                "cost": 0,
-                "original_price": 0,
-                "price": 0,
-                "sku": null,
-                "modifier_category_id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-                "position": 0,
-                "max_limit": 1,
-                "visible": true
-              },
-              {
-                "id": "a14f6f01-9908-43a5-a78f-b4f425485f71",
-                "name": "Catupiry - Cream Cheese",
-                "cost": 0,
-                "original_price": 10,
-                "price": 10,
-                "sku": null,
-                "modifier_category_id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-                "position": 1,
-                "max_limit": 1,
-                "visible": true
-              }
-            ]
-          }
-        ],
-        "slug": "4-cheese-pizza-pizza-de-4-queijos"
-      },
-      {
-        "product_category_id": "9fdef81a-a270-4cdb-aed5-76377bab9e72",
-        "description": null,
-        "id": "9fdef8a6-5f03-476a-94ef-34a43cc281ee",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Pizza de Frango com Catupriry",
-        "position": 2,
-        "visible": true,
-        "images": [
-          {
-            "id": "a0378daa-f765-4002-89f2-b58a6ce4b5c8",
-            "image": "95781119-e719-442b-b576-f9652769ed9e.png",
-            "image_url": "https://assets.olaclick.app/companies/products/images/800/95781119-e719-442b-b576-f9652769ed9e.png",
-            "position": 0
-          }
-        ],
-        "product_variants": [
-          {
-            "id": "9fdef8a6-60c7-4aeb-a2ae-15a13b7ae2d0",
-            "cost": 0,
-            "created_at": "2025-09-13 21:47:12",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 26.99,
-            "original_price": 26.99,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2025-10-31 21:34:37"
-          }
-        ],
-        "modifier_categories": [
-          {
-            "id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-            "name": "Borda Recheada - Stuffed Crust",
-            "min_modifiers": 1,
-            "max_modifiers": 1,
-            "company_id": "c1fee687-89b8-4480-b546-a92ae1d0d861",
-            "type": "one",
-            "is_active": true,
-            "required": true,
-            "position": 0,
-            "product_modifier_category_position": 0,
-            "modifiers": [
-              {
-                "id": "a14f6f01-4a85-4dac-a2a2-ce3349e3f1be",
-                "name": "Sem borda - No crust",
-                "cost": 0,
-                "original_price": 0,
-                "price": 0,
-                "sku": null,
-                "modifier_category_id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-                "position": 0,
-                "max_limit": 1,
-                "visible": true
-              },
-              {
-                "id": "a14f6f01-9908-43a5-a78f-b4f425485f71",
-                "name": "Catupiry - Cream Cheese",
-                "cost": 0,
-                "original_price": 10,
-                "price": 10,
-                "sku": null,
-                "modifier_category_id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-                "position": 1,
-                "max_limit": 1,
-                "visible": true
-              }
-            ]
-          }
-        ],
-        "slug": "pizza-de-frango-com-catupriry"
-      },
-      {
-        "product_category_id": "9fdef81a-a270-4cdb-aed5-76377bab9e72",
-        "description": null,
-        "id": "9fdef8c9-7a55-428e-b3d6-950d1ad49ac0",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Pizza de Frango com Catupiry e Bacon",
-        "position": 3,
-        "visible": true,
-        "images": [
-          {
-            "id": "a0378dd0-5476-46b6-9809-98dd237da126",
-            "image": "54951a60-228e-4235-8a05-df805aa0785d.png",
-            "image_url": "https://assets.olaclick.app/companies/products/images/800/54951a60-228e-4235-8a05-df805aa0785d.png",
-            "position": 0
-          }
-        ],
-        "product_variants": [
-          {
-            "id": "9fdef8c9-7b5e-48fa-9c42-c8183bb4eb48",
-            "cost": 0,
-            "created_at": "2025-09-13 21:47:35",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 28.99,
-            "original_price": 28.99,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2025-10-31 21:34:42"
-          }
-        ],
-        "modifier_categories": [
-          {
-            "id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-            "name": "Borda Recheada - Stuffed Crust",
-            "min_modifiers": 1,
-            "max_modifiers": 1,
-            "company_id": "c1fee687-89b8-4480-b546-a92ae1d0d861",
-            "type": "one",
-            "is_active": true,
-            "required": true,
-            "position": 0,
-            "product_modifier_category_position": 0,
-            "modifiers": [
-              {
-                "id": "a14f6f01-4a85-4dac-a2a2-ce3349e3f1be",
-                "name": "Sem borda - No crust",
-                "cost": 0,
-                "original_price": 0,
-                "price": 0,
-                "sku": null,
-                "modifier_category_id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-                "position": 0,
-                "max_limit": 1,
-                "visible": true
-              },
-              {
-                "id": "a14f6f01-9908-43a5-a78f-b4f425485f71",
-                "name": "Catupiry - Cream Cheese",
-                "cost": 0,
-                "original_price": 10,
-                "price": 10,
-                "sku": null,
-                "modifier_category_id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-                "position": 1,
-                "max_limit": 1,
-                "visible": true
-              }
-            ]
-          }
-        ],
-        "slug": "pizza-de-frango-com-catupiry-e-bacon"
-      },
-      {
-        "product_category_id": "9fdef81a-a270-4cdb-aed5-76377bab9e72",
-        "description": "Sliced kielbasa and mozzarella cheese - Calabresa fatiada com queijo mussarela",
-        "id": "9fdef8ef-bbc4-412d-bbe1-c5fa0ddffd44",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Kielbasa Pizza - Pizza de Calabresa",
-        "position": 4,
-        "visible": true,
-        "images": [
-          {
-            "id": "a1063329-4b18-4987-ac43-979a2dbd9d79",
-            "image": "e996e777-be4e-4f35-905d-9265cb2a030a.png",
-            "image_url": "https://assets.olaclick.app/companies/products/images/800/e996e777-be4e-4f35-905d-9265cb2a030a.png",
-            "position": 0
-          },
-          {
-            "id": "a1063351-ea4a-4d4c-844e-68bb2fab095b",
-            "image": "40a90cd7-2a80-423d-b203-a31aa995d5b9.png",
-            "image_url": "https://assets.olaclick.app/companies/products/images/800/40a90cd7-2a80-423d-b203-a31aa995d5b9.png",
-            "position": 1
-          }
-        ],
-        "product_variants": [
-          {
-            "id": "9fdef8ef-bd42-43c0-b985-0e65ab45f7a7",
-            "cost": 0,
-            "created_at": "2025-09-13 21:48:00",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 24.99,
-            "original_price": 24.99,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2025-10-31 21:34:47"
-          }
-        ],
-        "modifier_categories": [
-          {
-            "id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-            "name": "Borda Recheada - Stuffed Crust",
-            "min_modifiers": 1,
-            "max_modifiers": 1,
-            "company_id": "c1fee687-89b8-4480-b546-a92ae1d0d861",
-            "type": "one",
-            "is_active": true,
-            "required": true,
-            "position": 0,
-            "product_modifier_category_position": 0,
-            "modifiers": [
-              {
-                "id": "a14f6f01-4a85-4dac-a2a2-ce3349e3f1be",
-                "name": "Sem borda - No crust",
-                "cost": 0,
-                "original_price": 0,
-                "price": 0,
-                "sku": null,
-                "modifier_category_id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-                "position": 0,
-                "max_limit": 1,
-                "visible": true
-              },
-              {
-                "id": "a14f6f01-9908-43a5-a78f-b4f425485f71",
-                "name": "Catupiry - Cream Cheese",
-                "cost": 0,
-                "original_price": 10,
-                "price": 10,
-                "sku": null,
-                "modifier_category_id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-                "position": 1,
-                "max_limit": 1,
-                "visible": true
-              }
-            ]
-          }
-        ],
-        "slug": "kielbasa-pizza-pizza-de-calabresa"
-      },
-      {
-        "product_category_id": "9fdef81a-a270-4cdb-aed5-76377bab9e72",
-        "description": null,
-        "id": "9fdef905-8bd4-4edb-95da-c1264388a213",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Pizza de Calabresa com Catupiry",
-        "position": 5,
-        "visible": true,
-        "images": [
-          {
-            "id": "a0378df4-29df-4299-9b3b-b4e427a7d2b6",
-            "image": "1d5df235-6a92-43db-bc24-a0f7f7886b39.png",
-            "image_url": "https://assets.olaclick.app/companies/products/images/800/1d5df235-6a92-43db-bc24-a0f7f7886b39.png",
-            "position": 0
-          }
-        ],
-        "product_variants": [
-          {
-            "id": "9fdef905-8d7f-4f4f-b201-adc67fc2fafe",
-            "cost": 0,
-            "created_at": "2025-09-13 21:48:14",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 26.99,
-            "original_price": 26.99,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2025-10-31 21:34:51"
-          }
-        ],
-        "modifier_categories": [
-          {
-            "id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-            "name": "Borda Recheada - Stuffed Crust",
-            "min_modifiers": 1,
-            "max_modifiers": 1,
-            "company_id": "c1fee687-89b8-4480-b546-a92ae1d0d861",
-            "type": "one",
-            "is_active": true,
-            "required": true,
-            "position": 0,
-            "product_modifier_category_position": 0,
-            "modifiers": [
-              {
-                "id": "a14f6f01-4a85-4dac-a2a2-ce3349e3f1be",
-                "name": "Sem borda - No crust",
-                "cost": 0,
-                "original_price": 0,
-                "price": 0,
-                "sku": null,
-                "modifier_category_id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-                "position": 0,
-                "max_limit": 1,
-                "visible": true
-              },
-              {
-                "id": "a14f6f01-9908-43a5-a78f-b4f425485f71",
-                "name": "Catupiry - Cream Cheese",
-                "cost": 0,
-                "original_price": 10,
-                "price": 10,
-                "sku": null,
-                "modifier_category_id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-                "position": 1,
-                "max_limit": 1,
-                "visible": true
-              }
-            ]
-          }
-        ],
-        "slug": "pizza-de-calabresa-com-catupiry"
-      },
-      {
-        "product_category_id": "9fdef81a-a270-4cdb-aed5-76377bab9e72",
-        "description": "Bacon and mozzarella cheese - Bacon com queijo mussarela",
-        "id": "9fdef963-49d7-4c50-ab19-e663ca071436",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Bacon Pizza - Pizza de Bacon",
-        "position": 6,
-        "visible": true,
-        "images": [
-          {
-            "id": "a106337b-5412-432d-b117-0b3c0b1345bc",
-            "image": "868b660e-1fdb-4dc9-afaf-552bba06a390.png",
-            "image_url": "https://assets.olaclick.app/companies/products/images/800/868b660e-1fdb-4dc9-afaf-552bba06a390.png",
-            "position": 0
-          }
-        ],
-        "product_variants": [
-          {
-            "id": "9fdef963-4bf8-4d5b-878b-99950fb9a8c4",
-            "cost": 0,
-            "created_at": "2025-09-13 21:49:15",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 24.99,
-            "original_price": 24.99,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2025-10-31 21:34:55"
-          }
-        ],
-        "modifier_categories": [
-          {
-            "id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-            "name": "Borda Recheada - Stuffed Crust",
-            "min_modifiers": 1,
-            "max_modifiers": 1,
-            "company_id": "c1fee687-89b8-4480-b546-a92ae1d0d861",
-            "type": "one",
-            "is_active": true,
-            "required": true,
-            "position": 0,
-            "product_modifier_category_position": 0,
-            "modifiers": [
-              {
-                "id": "a14f6f01-4a85-4dac-a2a2-ce3349e3f1be",
-                "name": "Sem borda - No crust",
-                "cost": 0,
-                "original_price": 0,
-                "price": 0,
-                "sku": null,
-                "modifier_category_id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-                "position": 0,
-                "max_limit": 1,
-                "visible": true
-              },
-              {
-                "id": "a14f6f01-9908-43a5-a78f-b4f425485f71",
-                "name": "Catupiry - Cream Cheese",
-                "cost": 0,
-                "original_price": 10,
-                "price": 10,
-                "sku": null,
-                "modifier_category_id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-                "position": 1,
-                "max_limit": 1,
-                "visible": true
-              }
-            ]
-          }
-        ],
-        "slug": "bacon-pizza-pizza-de-bacon"
-      },
-      {
-        "product_category_id": "9fdef81a-a270-4cdb-aed5-76377bab9e72",
-        "description": null,
-        "id": "9fdef978-3e77-44d8-9715-609991612978",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Pizza de Bacon com Catupriry",
-        "position": 7,
-        "visible": true,
-        "images": [
-          {
-            "id": "a1063393-f62c-4e46-abf5-9e48a2f940d5",
-            "image": "c0186489-b6bd-4c44-91b5-1cd48e518f11.png",
-            "image_url": "https://assets.olaclick.app/companies/products/images/800/c0186489-b6bd-4c44-91b5-1cd48e518f11.png",
-            "position": 0
-          }
-        ],
-        "product_variants": [
-          {
-            "id": "9fdef978-3f77-4bdd-b2f0-6eb62e73c7b3",
-            "cost": 0,
-            "created_at": "2025-09-13 21:49:29",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 26.99,
-            "original_price": 26.99,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2025-10-31 21:34:59"
-          }
-        ],
-        "modifier_categories": [
-          {
-            "id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-            "name": "Borda Recheada - Stuffed Crust",
-            "min_modifiers": 1,
-            "max_modifiers": 1,
-            "company_id": "c1fee687-89b8-4480-b546-a92ae1d0d861",
-            "type": "one",
-            "is_active": true,
-            "required": true,
-            "position": 0,
-            "product_modifier_category_position": 0,
-            "modifiers": [
-              {
-                "id": "a14f6f01-4a85-4dac-a2a2-ce3349e3f1be",
-                "name": "Sem borda - No crust",
-                "cost": 0,
-                "original_price": 0,
-                "price": 0,
-                "sku": null,
-                "modifier_category_id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-                "position": 0,
-                "max_limit": 1,
-                "visible": true
-              },
-              {
-                "id": "a14f6f01-9908-43a5-a78f-b4f425485f71",
-                "name": "Catupiry - Cream Cheese",
-                "cost": 0,
-                "original_price": 10,
-                "price": 10,
-                "sku": null,
-                "modifier_category_id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-                "position": 1,
-                "max_limit": 1,
-                "visible": true
-              }
-            ]
-          }
-        ],
-        "slug": "pizza-de-bacon-com-catupriry"
-      },
-      {
-        "product_category_id": "9fdef81a-a270-4cdb-aed5-76377bab9e72",
-        "description": null,
-        "id": "a0378e1e-dbd7-4f1c-8077-abdb85423ae3",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Pizza Portuguesa",
-        "position": 8,
-        "visible": true,
-        "images": [
-          {
-            "id": "a0378e38-ad68-4e84-b5fd-fbc46b0e3145",
-            "image": "d6c55f33-c67b-4002-a101-406777480aa8.png",
-            "image_url": "https://assets.olaclick.app/companies/products/images/800/d6c55f33-c67b-4002-a101-406777480aa8.png",
-            "position": 0
-          }
-        ],
-        "product_variants": [
-          {
-            "id": "a0378e1e-e151-4168-b813-dfbc323e4383",
-            "cost": 0,
-            "created_at": "2025-10-27 22:38:00",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 26.99,
-            "original_price": 26.99,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2025-10-31 21:35:03"
-          }
-        ],
-        "modifier_categories": [
-          {
-            "id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-            "name": "Borda Recheada - Stuffed Crust",
-            "min_modifiers": 1,
-            "max_modifiers": 1,
-            "company_id": "c1fee687-89b8-4480-b546-a92ae1d0d861",
-            "type": "one",
-            "is_active": true,
-            "required": true,
-            "position": 0,
-            "product_modifier_category_position": 0,
-            "modifiers": [
-              {
-                "id": "a14f6f01-4a85-4dac-a2a2-ce3349e3f1be",
-                "name": "Sem borda - No crust",
-                "cost": 0,
-                "original_price": 0,
-                "price": 0,
-                "sku": null,
-                "modifier_category_id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-                "position": 0,
-                "max_limit": 1,
-                "visible": true
-              },
-              {
-                "id": "a14f6f01-9908-43a5-a78f-b4f425485f71",
-                "name": "Catupiry - Cream Cheese",
-                "cost": 0,
-                "original_price": 10,
-                "price": 10,
-                "sku": null,
-                "modifier_category_id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-                "position": 1,
-                "max_limit": 1,
-                "visible": true
-              }
-            ]
-          }
-        ],
-        "slug": "pizza-portuguesa"
-      },
-      {
-        "product_category_id": "9fdef81a-a270-4cdb-aed5-76377bab9e72",
-        "description": "Mussarela de bufala, Mussarela Zaatar, Pistache e Páprica. Textura e sabor do Pistache",
-        "id": "a049e0e2-3755-40b5-af28-e42cd05bbeb6",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Pizza de Zaatar com Pistache",
-        "position": 9,
-        "visible": true,
-        "images": [
-          {
-            "id": "a10633dc-0dae-427a-ba35-026d7963a29d",
-            "image": "7b3e9e75-f909-4cd0-9ba4-0ba132760184.png",
-            "image_url": "https://assets.olaclick.app/companies/products/images/800/7b3e9e75-f909-4cd0-9ba4-0ba132760184.png",
-            "position": 0
-          }
-        ],
-        "product_variants": [
-          {
-            "id": "a049e0e2-3a85-4edf-bd66-10af5a2caf25",
-            "cost": 0,
-            "created_at": "2025-11-06 01:14:19",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 26.99,
-            "original_price": 26.99,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2025-11-06 01:17:18"
-          }
-        ],
-        "modifier_categories": [
-          {
-            "id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-            "name": "Borda Recheada - Stuffed Crust",
-            "min_modifiers": 1,
-            "max_modifiers": 1,
-            "company_id": "c1fee687-89b8-4480-b546-a92ae1d0d861",
-            "type": "one",
-            "is_active": true,
-            "required": true,
-            "position": 0,
-            "product_modifier_category_position": 0,
-            "modifiers": [
-              {
-                "id": "a14f6f01-4a85-4dac-a2a2-ce3349e3f1be",
-                "name": "Sem borda - No crust",
-                "cost": 0,
-                "original_price": 0,
-                "price": 0,
-                "sku": null,
-                "modifier_category_id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-                "position": 0,
-                "max_limit": 1,
-                "visible": true
-              },
-              {
-                "id": "a14f6f01-9908-43a5-a78f-b4f425485f71",
-                "name": "Catupiry - Cream Cheese",
-                "cost": 0,
-                "original_price": 10,
-                "price": 10,
-                "sku": null,
-                "modifier_category_id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-                "position": 1,
-                "max_limit": 1,
-                "visible": true
-              }
-            ]
-          }
-        ],
-        "slug": "pizza-de-zaatar-com-pistache"
-      },
-      {
-        "product_category_id": "9fdef81a-a270-4cdb-aed5-76377bab9e72",
-        "description": null,
-        "id": "a049e27f-0b1c-4eef-9079-cc087cd60b38",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Pizza de Camarão",
-        "position": 10,
-        "visible": true,
-        "images": [
-          {
-            "id": "a1063406-3ab6-43c5-852c-a9beac1c0d22",
-            "image": "f0637b14-3158-4717-bdf3-a77cd644f119.png",
-            "image_url": "https://assets.olaclick.app/companies/products/images/800/f0637b14-3158-4717-bdf3-a77cd644f119.png",
-            "position": 0
-          }
-        ],
-        "product_variants": [
-          {
-            "id": "a049e27f-0c8b-4b8c-88a5-6d4dcbf7c05f",
-            "cost": 0,
-            "created_at": "2025-11-06 01:18:50",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 28.99,
-            "original_price": 28.99,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2025-11-06 01:19:13"
-          }
-        ],
-        "modifier_categories": [
-          {
-            "id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-            "name": "Borda Recheada - Stuffed Crust",
-            "min_modifiers": 1,
-            "max_modifiers": 1,
-            "company_id": "c1fee687-89b8-4480-b546-a92ae1d0d861",
-            "type": "one",
-            "is_active": true,
-            "required": true,
-            "position": 0,
-            "product_modifier_category_position": 0,
-            "modifiers": [
-              {
-                "id": "a14f6f01-4a85-4dac-a2a2-ce3349e3f1be",
-                "name": "Sem borda - No crust",
-                "cost": 0,
-                "original_price": 0,
-                "price": 0,
-                "sku": null,
-                "modifier_category_id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-                "position": 0,
-                "max_limit": 1,
-                "visible": true
-              },
-              {
-                "id": "a14f6f01-9908-43a5-a78f-b4f425485f71",
-                "name": "Catupiry - Cream Cheese",
-                "cost": 0,
-                "original_price": 10,
-                "price": 10,
-                "sku": null,
-                "modifier_category_id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-                "position": 1,
-                "max_limit": 1,
-                "visible": true
-              }
-            ]
-          }
-        ],
-        "slug": "pizza-de-camarao"
-      },
-      {
-        "product_category_id": "9fdef81a-a270-4cdb-aed5-76377bab9e72",
-        "description": null,
-        "id": "a049e2ad-3078-4138-b8d9-3ebd8ee56bda",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Pizza de Camarão com Catupriry",
-        "position": 11,
-        "visible": true,
-        "images": [
-          {
-            "id": "a0620fcf-56a2-485d-a8dd-61df5b8b3779",
-            "image": "b14ca476-c0ed-47a7-9e23-1f64fea48bf2.jpeg",
-            "image_url": "https://assets.olaclick.app/companies/products/images/800/b14ca476-c0ed-47a7-9e23-1f64fea48bf2.jpeg",
-            "position": 0
-          }
-        ],
-        "product_variants": [
-          {
-            "id": "a049e2ad-3230-4fee-8ae9-90a6108581f6",
-            "cost": 0,
-            "created_at": "2025-11-06 01:19:20",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 29.99,
-            "original_price": 29.99,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2025-11-06 01:19:32"
-          }
-        ],
-        "modifier_categories": [
-          {
-            "id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-            "name": "Borda Recheada - Stuffed Crust",
-            "min_modifiers": 1,
-            "max_modifiers": 1,
-            "company_id": "c1fee687-89b8-4480-b546-a92ae1d0d861",
-            "type": "one",
-            "is_active": true,
-            "required": true,
-            "position": 0,
-            "product_modifier_category_position": 0,
-            "modifiers": [
-              {
-                "id": "a14f6f01-4a85-4dac-a2a2-ce3349e3f1be",
-                "name": "Sem borda - No crust",
-                "cost": 0,
-                "original_price": 0,
-                "price": 0,
-                "sku": null,
-                "modifier_category_id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-                "position": 0,
-                "max_limit": 1,
-                "visible": true
-              },
-              {
-                "id": "a14f6f01-9908-43a5-a78f-b4f425485f71",
-                "name": "Catupiry - Cream Cheese",
-                "cost": 0,
-                "original_price": 10,
-                "price": 10,
-                "sku": null,
-                "modifier_category_id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-                "position": 1,
-                "max_limit": 1,
-                "visible": true
-              }
-            ]
-          }
-        ],
-        "slug": "pizza-de-camarao-com-catupriry"
-      },
-      {
-        "product_category_id": "9fdef81a-a270-4cdb-aed5-76377bab9e72",
-        "description": null,
-        "id": "a09db8dc-f75a-4894-99fa-f91f6a6c9f91",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Pizza de Bacon com Milho",
-        "position": 12,
-        "visible": true,
-        "images": [
-          {
-            "id": "a1063427-1943-495a-8d73-bc40f5ff0f16",
-            "image": "486b293b-192d-42b0-b8a2-77b949f621a4.png",
-            "image_url": "https://assets.olaclick.app/companies/products/images/800/486b293b-192d-42b0-b8a2-77b949f621a4.png",
-            "position": 0
-          }
-        ],
-        "product_variants": [
-          {
-            "id": "a09db8dc-fb7b-4a87-a2e6-af139dd864f0",
-            "cost": 0,
-            "created_at": "2025-12-17 17:31:57",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 26.99,
-            "original_price": 26.99,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2026-01-01 19:30:30"
-          }
-        ],
-        "modifier_categories": [
-          {
-            "id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-            "name": "Borda Recheada - Stuffed Crust",
-            "min_modifiers": 1,
-            "max_modifiers": 1,
-            "company_id": "c1fee687-89b8-4480-b546-a92ae1d0d861",
-            "type": "one",
-            "is_active": true,
-            "required": true,
-            "position": 0,
-            "product_modifier_category_position": 0,
-            "modifiers": [
-              {
-                "id": "a14f6f01-4a85-4dac-a2a2-ce3349e3f1be",
-                "name": "Sem borda - No crust",
-                "cost": 0,
-                "original_price": 0,
-                "price": 0,
-                "sku": null,
-                "modifier_category_id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-                "position": 0,
-                "max_limit": 1,
-                "visible": true
-              },
-              {
-                "id": "a14f6f01-9908-43a5-a78f-b4f425485f71",
-                "name": "Catupiry - Cream Cheese",
-                "cost": 0,
-                "original_price": 10,
-                "price": 10,
-                "sku": null,
-                "modifier_category_id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-                "position": 1,
-                "max_limit": 1,
-                "visible": true
-              }
-            ]
-          }
-        ],
-        "slug": "pizza-de-bacon-com-milho"
-      },
-      {
-        "product_category_id": "9fdef81a-a270-4cdb-aed5-76377bab9e72",
-        "description": null,
-        "id": "a09db8fb-c0dc-4a0e-b6b3-455ff2924ffb",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Pizza de Bacon com Milho e Catupiry",
-        "position": 13,
-        "visible": true,
-        "images": [
-          {
-            "id": "a106344c-efed-4b8f-9901-fa6508bc511f",
-            "image": "95ff4f53-88ed-4783-a432-e06b38fc5c52.png",
-            "image_url": "https://assets.olaclick.app/companies/products/images/800/95ff4f53-88ed-4783-a432-e06b38fc5c52.png",
-            "position": 0
-          }
-        ],
-        "product_variants": [
-          {
-            "id": "a09db8fb-c2f1-49e4-b1e8-6f688239edd9",
-            "cost": 0,
-            "created_at": "2025-12-17 17:32:18",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 26.99,
-            "original_price": 26.99,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2026-01-01 19:30:07"
-          }
-        ],
-        "modifier_categories": [
-          {
-            "id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-            "name": "Borda Recheada - Stuffed Crust",
-            "min_modifiers": 1,
-            "max_modifiers": 1,
-            "company_id": "c1fee687-89b8-4480-b546-a92ae1d0d861",
-            "type": "one",
-            "is_active": true,
-            "required": true,
-            "position": 0,
-            "product_modifier_category_position": 0,
-            "modifiers": [
-              {
-                "id": "a14f6f01-4a85-4dac-a2a2-ce3349e3f1be",
-                "name": "Sem borda - No crust",
-                "cost": 0,
-                "original_price": 0,
-                "price": 0,
-                "sku": null,
-                "modifier_category_id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-                "position": 0,
-                "max_limit": 1,
-                "visible": true
-              },
-              {
-                "id": "a14f6f01-9908-43a5-a78f-b4f425485f71",
-                "name": "Catupiry - Cream Cheese",
-                "cost": 0,
-                "original_price": 10,
-                "price": 10,
-                "sku": null,
-                "modifier_category_id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-                "position": 1,
-                "max_limit": 1,
-                "visible": true
-              }
-            ]
-          }
-        ],
-        "slug": "pizza-de-bacon-com-milho-e-catupiry"
-      },
-      {
-        "product_category_id": "9fdef81a-a270-4cdb-aed5-76377bab9e72",
-        "description": null,
-        "id": "a09db920-1da4-4695-a471-2744a2034228",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Pizza de Franco com Catupiry e Milho",
-        "position": 14,
-        "visible": true,
-        "images": [
-          {
-            "id": "a106346b-a7a7-4c01-8656-28df35d9835a",
-            "image": "a32422a7-88c4-4f5c-bf1a-6d8b328ac503.png",
-            "image_url": "https://assets.olaclick.app/companies/products/images/800/a32422a7-88c4-4f5c-bf1a-6d8b328ac503.png",
-            "position": 0
-          }
-        ],
-        "product_variants": [
-          {
-            "id": "a09db920-1fdb-4a87-ac52-ff3cb0195212",
-            "cost": 0,
-            "created_at": "2025-12-17 17:32:41",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 27.99,
-            "original_price": 27.99,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2026-02-23 00:18:54"
-          }
-        ],
-        "modifier_categories": [
-          {
-            "id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-            "name": "Borda Recheada - Stuffed Crust",
-            "min_modifiers": 1,
-            "max_modifiers": 1,
-            "company_id": "c1fee687-89b8-4480-b546-a92ae1d0d861",
-            "type": "one",
-            "is_active": true,
-            "required": true,
-            "position": 0,
-            "product_modifier_category_position": 0,
-            "modifiers": [
-              {
-                "id": "a14f6f01-4a85-4dac-a2a2-ce3349e3f1be",
-                "name": "Sem borda - No crust",
-                "cost": 0,
-                "original_price": 0,
-                "price": 0,
-                "sku": null,
-                "modifier_category_id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-                "position": 0,
-                "max_limit": 1,
-                "visible": true
-              },
-              {
-                "id": "a14f6f01-9908-43a5-a78f-b4f425485f71",
-                "name": "Catupiry - Cream Cheese",
-                "cost": 0,
-                "original_price": 10,
-                "price": 10,
-                "sku": null,
-                "modifier_category_id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-                "position": 1,
-                "max_limit": 1,
-                "visible": true
-              }
-            ]
-          }
-        ],
-        "slug": "pizza-de-franco-com-catupiry-e-milho"
-      },
-      {
-        "product_category_id": "9fdef81a-a270-4cdb-aed5-76377bab9e72",
-        "description": "Brócolis, mussarela , bacon, catupiry",
-        "id": "a0d0e674-3aed-44b1-856a-4d6fe9ff5ed3",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Pizza Brócolis, Bacon e Carupiry",
-        "position": 15,
-        "visible": true,
-        "images": [
-          {
-            "id": "a1063492-7ee7-46c0-b6d8-2a1e2eba277d",
-            "image": "ddf8eec1-d284-4ab3-a2e8-5506cab8ce66.png",
-            "image_url": "https://assets.olaclick.app/companies/products/images/800/ddf8eec1-d284-4ab3-a2e8-5506cab8ce66.png",
-            "position": 0
-          }
-        ],
-        "product_variants": [
-          {
-            "id": "a0d0e674-3dae-4478-8b88-98fa3c4c2e7d",
-            "cost": 0,
-            "created_at": "2026-01-12 04:06:40",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 26.99,
-            "original_price": 26.99,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2026-01-12 04:08:09"
-          }
-        ],
-        "modifier_categories": [
-          {
-            "id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-            "name": "Borda Recheada - Stuffed Crust",
-            "min_modifiers": 1,
-            "max_modifiers": 1,
-            "company_id": "c1fee687-89b8-4480-b546-a92ae1d0d861",
-            "type": "one",
-            "is_active": true,
-            "required": true,
-            "position": 0,
-            "product_modifier_category_position": 0,
-            "modifiers": [
-              {
-                "id": "a14f6f01-4a85-4dac-a2a2-ce3349e3f1be",
-                "name": "Sem borda - No crust",
-                "cost": 0,
-                "original_price": 0,
-                "price": 0,
-                "sku": null,
-                "modifier_category_id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-                "position": 0,
-                "max_limit": 1,
-                "visible": true
-              },
-              {
-                "id": "a14f6f01-9908-43a5-a78f-b4f425485f71",
-                "name": "Catupiry - Cream Cheese",
-                "cost": 0,
-                "original_price": 10,
-                "price": 10,
-                "sku": null,
-                "modifier_category_id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-                "position": 1,
-                "max_limit": 1,
-                "visible": true
-              }
-            ]
-          }
-        ],
-        "slug": "pizza-brocolis-bacon-e-carupiry"
-      },
-      {
-        "product_category_id": "9fdef81a-a270-4cdb-aed5-76377bab9e72",
-        "description": "Mussarela , Nutella e MM confeitos creme de pistache, pistaches",
-        "id": "a0d0e798-16da-4a8a-8c83-a3618fbc671c",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Pizza Nutella MM e Creme de pistache",
-        "position": 16,
-        "visible": false,
-        "images": [
-          {
-            "id": "a0d0e95c-3d15-4d33-b3fb-07d904fc774b",
-            "image": "bcebfb2a-821d-4e8b-b91e-7bbcd045e82d.jpeg",
-            "image_url": "https://assets.olaclick.app/companies/products/images/800/bcebfb2a-821d-4e8b-b91e-7bbcd045e82d.jpeg",
-            "position": 0
-          }
-        ],
-        "product_variants": [
-          {
-            "id": "a0d0e798-1853-49a4-94d3-bb3fc131e122",
-            "cost": 0,
-            "created_at": "2026-01-12 04:09:51",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 26.99,
-            "original_price": 26.99,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2026-01-12 04:11:38"
-          }
-        ],
-        "modifier_categories": [
-          {
-            "id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-            "name": "Borda Recheada - Stuffed Crust",
-            "min_modifiers": 1,
-            "max_modifiers": 1,
-            "company_id": "c1fee687-89b8-4480-b546-a92ae1d0d861",
-            "type": "one",
-            "is_active": true,
-            "required": true,
-            "position": 0,
-            "product_modifier_category_position": 0,
-            "modifiers": [
-              {
-                "id": "a14f6f01-4a85-4dac-a2a2-ce3349e3f1be",
-                "name": "Sem borda - No crust",
-                "cost": 0,
-                "original_price": 0,
-                "price": 0,
-                "sku": null,
-                "modifier_category_id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-                "position": 0,
-                "max_limit": 1,
-                "visible": true
-              },
-              {
-                "id": "a14f6f01-9908-43a5-a78f-b4f425485f71",
-                "name": "Catupiry - Cream Cheese",
-                "cost": 0,
-                "original_price": 10,
-                "price": 10,
-                "sku": null,
-                "modifier_category_id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-                "position": 1,
-                "max_limit": 1,
-                "visible": true
-              }
-            ]
-          }
-        ],
-        "slug": "pizza-nutella-mm-e-creme-de-pistache"
-      },
-      {
-        "product_category_id": "9fdef81a-a270-4cdb-aed5-76377bab9e72",
-        "description": "Mussarella, molho de tomate , manjericão e tomates",
-        "id": "a0d2828d-5a44-4b0b-ace9-592a9d2df5a2",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Marguerita",
-        "position": 17,
-        "visible": true,
-        "images": [
-          {
-            "id": "a0de0746-57a1-406c-828f-290b4df0d6c4",
-            "image": "c02400f6-7c31-4421-a41e-62b9080b302e.jpeg",
-            "image_url": "https://assets.olaclick.app/companies/products/images/800/c02400f6-7c31-4421-a41e-62b9080b302e.jpeg",
-            "position": 0
-          }
-        ],
-        "product_variants": [
-          {
-            "id": "a0d2828d-5f6d-4403-a7ba-120ec1101e4f",
-            "cost": 0,
-            "created_at": "2026-01-12 23:18:58",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 22.99,
-            "original_price": 22.99,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2026-01-12 23:21:13"
-          }
-        ],
-        "modifier_categories": [
-          {
-            "id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-            "name": "Borda Recheada - Stuffed Crust",
-            "min_modifiers": 1,
-            "max_modifiers": 1,
-            "company_id": "c1fee687-89b8-4480-b546-a92ae1d0d861",
-            "type": "one",
-            "is_active": true,
-            "required": true,
-            "position": 0,
-            "product_modifier_category_position": 0,
-            "modifiers": [
-              {
-                "id": "a14f6f01-4a85-4dac-a2a2-ce3349e3f1be",
-                "name": "Sem borda - No crust",
-                "cost": 0,
-                "original_price": 0,
-                "price": 0,
-                "sku": null,
-                "modifier_category_id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-                "position": 0,
-                "max_limit": 1,
-                "visible": true
-              },
-              {
-                "id": "a14f6f01-9908-43a5-a78f-b4f425485f71",
-                "name": "Catupiry - Cream Cheese",
-                "cost": 0,
-                "original_price": 10,
-                "price": 10,
-                "sku": null,
-                "modifier_category_id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-                "position": 1,
-                "max_limit": 1,
-                "visible": true
-              }
-            ]
-          }
-        ],
-        "slug": "marguerita"
-      },
-      {
-        "product_category_id": "9fdef81a-a270-4cdb-aed5-76377bab9e72",
-        "description": "Molho tomate , Mussarela,atum, cebola .",
-        "id": "a0d6103d-c9b9-47f6-8241-3b2a6566f533",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Pizza de Atum com cebola",
-        "position": 18,
-        "visible": true,
-        "images": [
-          {
-            "id": "a0de0653-2bc5-4faf-8c68-943246cc898f",
-            "image": "4ec718af-5887-403f-b9e4-3bb117276972.jpeg",
-            "image_url": "https://assets.olaclick.app/companies/products/images/800/4ec718af-5887-403f-b9e4-3bb117276972.jpeg",
-            "position": 0
-          }
-        ],
-        "product_variants": [
-          {
-            "id": "a0d6103d-cfcf-44ef-95aa-4794edde2948",
-            "cost": 0,
-            "created_at": "2026-01-14 17:42:39",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 26.99,
-            "original_price": 26.99,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2026-01-14 17:44:06"
-          }
-        ],
-        "modifier_categories": [
-          {
-            "id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-            "name": "Borda Recheada - Stuffed Crust",
-            "min_modifiers": 1,
-            "max_modifiers": 1,
-            "company_id": "c1fee687-89b8-4480-b546-a92ae1d0d861",
-            "type": "one",
-            "is_active": true,
-            "required": true,
-            "position": 0,
-            "product_modifier_category_position": 0,
-            "modifiers": [
-              {
-                "id": "a14f6f01-4a85-4dac-a2a2-ce3349e3f1be",
-                "name": "Sem borda - No crust",
-                "cost": 0,
-                "original_price": 0,
-                "price": 0,
-                "sku": null,
-                "modifier_category_id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-                "position": 0,
-                "max_limit": 1,
-                "visible": true
-              },
-              {
-                "id": "a14f6f01-9908-43a5-a78f-b4f425485f71",
-                "name": "Catupiry - Cream Cheese",
-                "cost": 0,
-                "original_price": 10,
-                "price": 10,
-                "sku": null,
-                "modifier_category_id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-                "position": 1,
-                "max_limit": 1,
-                "visible": true
-              }
-            ]
-          }
-        ],
-        "slug": "pizza-de-atum-com-cebola"
-      },
-      {
-        "product_category_id": "9fdef81a-a270-4cdb-aed5-76377bab9e72",
-        "description": "Marguerita com Mussarela búfala , manjericão",
-        "id": "a0f1917a-ce39-4807-aca4-a5f1c62546a1",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Marguerita Italy",
-        "position": 19,
-        "visible": true,
-        "images": [
-          {
-            "id": "a10634ba-de0d-4839-8bac-3542aa577d2b",
-            "image": "634b0103-20f5-4dcc-894b-4ca798b7dbf4.png",
-            "image_url": "https://assets.olaclick.app/companies/products/images/800/634b0103-20f5-4dcc-894b-4ca798b7dbf4.png",
-            "position": 0
-          }
-        ],
-        "product_variants": [
-          {
-            "id": "a0f1917a-d2f6-41fc-81cf-77692876d3ef",
-            "cost": 0,
-            "created_at": "2026-01-28 09:51:23",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 26.99,
-            "original_price": 26.99,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2026-01-28 09:55:46"
-          }
-        ],
-        "modifier_categories": [
-          {
-            "id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-            "name": "Borda Recheada - Stuffed Crust",
-            "min_modifiers": 1,
-            "max_modifiers": 1,
-            "company_id": "c1fee687-89b8-4480-b546-a92ae1d0d861",
-            "type": "one",
-            "is_active": true,
-            "required": true,
-            "position": 0,
-            "product_modifier_category_position": 0,
-            "modifiers": [
-              {
-                "id": "a14f6f01-4a85-4dac-a2a2-ce3349e3f1be",
-                "name": "Sem borda - No crust",
-                "cost": 0,
-                "original_price": 0,
-                "price": 0,
-                "sku": null,
-                "modifier_category_id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-                "position": 0,
-                "max_limit": 1,
-                "visible": true
-              },
-              {
-                "id": "a14f6f01-9908-43a5-a78f-b4f425485f71",
-                "name": "Catupiry - Cream Cheese",
-                "cost": 0,
-                "original_price": 10,
-                "price": 10,
-                "sku": null,
-                "modifier_category_id": "a14f6f00-fc57-407c-8da6-29e2ad7570ad",
-                "position": 1,
-                "max_limit": 1,
-                "visible": true
-              }
-            ]
-          }
-        ],
-        "slug": "marguerita-italy"
-      },
-      {
-        "product_category_id": "9fdef81a-a270-4cdb-aed5-76377bab9e72",
-        "description": null,
-        "id": "a1031234-1760-498e-9ac6-670e70d89194",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Nutella Heart - Coração de Nutella",
-        "position": 20,
-        "visible": true,
-        "images": [
-          {
-            "id": "a10312a3-56f7-4aad-ace8-31b31c1143c4",
-            "image": "a43d65ee-d2d3-4933-a13f-ee4988d6dd8c.jpeg",
-            "image_url": "https://assets.olaclick.app/companies/products/images/800/a43d65ee-d2d3-4933-a13f-ee4988d6dd8c.jpeg",
-            "position": 0
-          }
-        ],
-        "product_variants": [
-          {
-            "id": "a1031234-1bdb-4132-87c3-0195467cb3ac",
-            "cost": 0,
-            "created_at": "2026-02-06 02:40:23",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 25.99,
-            "original_price": 25.99,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2026-02-06 02:42:07"
-          }
-        ],
-        "modifier_categories": [],
-        "slug": "nutella-heart-coracao-de-nutella"
-      },
-      {
-        "product_category_id": "9fdef81a-a270-4cdb-aed5-76377bab9e72",
-        "description": null,
-        "id": "a1063526-d4de-420b-a6f1-7f9c291de29c",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Pizza de Nutella",
-        "position": 21,
-        "visible": true,
-        "images": [
-          {
-            "id": "a106354f-58c2-443a-b7c2-4414e013e09b",
-            "image": "26a24ad8-47cd-4f91-b305-678840b14b99.png",
-            "image_url": "https://assets.olaclick.app/companies/products/images/800/26a24ad8-47cd-4f91-b305-678840b14b99.png",
-            "position": 0
-          }
-        ],
-        "product_variants": [
-          {
-            "id": "a1063526-d64f-4b3a-ab79-be089131142a",
-            "cost": 0,
-            "created_at": "2026-02-07 16:05:36",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 25.99,
-            "original_price": 25.99,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2026-02-07 16:05:52"
-          }
-        ],
-        "modifier_categories": [],
-        "slug": "pizza-de-nutella"
-      },
-      {
-        "product_category_id": "9fdef81a-a270-4cdb-aed5-76377bab9e72",
-        "description": null,
-        "id": "a106355c-c003-4134-a52c-cc5275d4c171",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Pizza de Pistache",
-        "position": 22,
-        "visible": true,
-        "images": [
-          {
-            "id": "a106357c-d45a-4b08-9560-f72ab070f6ea",
-            "image": "366aa1f5-7be4-4b0a-9920-bf6e89c920b3.png",
-            "image_url": "https://assets.olaclick.app/companies/products/images/800/366aa1f5-7be4-4b0a-9920-bf6e89c920b3.png",
-            "position": 0
-          }
-        ],
-        "product_variants": [
-          {
-            "id": "a106355c-c27d-4004-b543-01a2ea289ac4",
-            "cost": 0,
-            "created_at": "2026-02-07 16:06:11",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 26.99,
-            "original_price": 26.99,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2026-02-07 16:06:37"
-          }
-        ],
-        "modifier_categories": [],
-        "slug": "pizza-de-pistache"
-      },
-      {
-        "product_category_id": "9fdef81a-a270-4cdb-aed5-76377bab9e72",
-        "description": "Nutella e pistache",
-        "id": "a1572ad1-4ef6-4426-bcd3-92c574616ddf",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Pizza Dubai",
-        "position": 23,
-        "visible": true,
-        "images": [],
-        "product_variants": [
-          {
-            "id": "a1572ad1-5327-4f68-bce2-5993fe088500",
-            "cost": 0,
-            "created_at": "2026-03-19 21:58:45",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 25.99,
-            "original_price": 25.99,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2026-03-19 21:59:34"
-          }
-        ],
-        "modifier_categories": [],
-        "slug": "pizza-dubai"
+      "pt": {
+        "title": "2 Cheese Esfiha",
+        "description": "Feito na hora, sabor intenso e irresistível."
       }
-    ],
-    "slug": "pizzas"
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
   },
   {
-    "id": "9eace605-cfbc-4249-afda-477d79c581a7",
-    "name": "Regular - Tradicionais",
-    "position": 3,
-    "type": "NORMAL",
-    "visible": true,
-    "products": [
-      {
-        "product_category_id": "9eace605-cfbc-4249-afda-477d79c581a7",
-        "description": "Ground beef seasoned with tomato and onion - Carne moída temperada com tomate e cebola",
-        "id": "9eace605-d3d7-4afd-8a55-fb8b6e715273",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Beef Sfiha - Esfiha de Carne",
-        "position": 0,
-        "visible": true,
-        "images": [
-          {
-            "id": "a0378866-f20c-4cb3-b964-d2c236e2430a",
-            "image": "08aaddae-c7fe-4618-a450-c10a09d4776f.png",
-            "image_url": "https://assets.olaclick.app/companies/products/images/800/08aaddae-c7fe-4618-a450-c10a09d4776f.png",
-            "position": 0
-          }
-        ],
-        "product_variants": [
-          {
-            "id": "9eace605-df05-459c-bdec-368862a51c49",
-            "cost": 0,
-            "created_at": "2025-04-14 18:11:47",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 3.19,
-            "original_price": 3.19,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2026-02-07 14:30:05"
-          }
-        ],
-        "modifier_categories": [],
-        "slug": "beef-sfiha-esfiha-de-carne"
+    "id": "4ab1a5de-f90b-4411-a817-6bc2ce2935d7",
+    "categoryId": null,
+    "comparedAtPrice": 359,
+    "createdAt": "2026-03-20T00:42:18.902Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Mozzarella Sfiha",
+    "price": 299,
+    "translations": {
+      "es": {
+        "title": "Mozzarella Esfiha",
+        "description": "Recién hecho, sabor intenso e irresistible."
       },
-      {
-        "product_category_id": "9eace605-cfbc-4249-afda-477d79c581a7",
-        "description": "Mozzarella cheese - Queijo mussarela",
-        "id": "9eace606-0af4-4dfa-bed5-712ea988782d",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Cheese Sfiha - Esfiha de Queijo",
-        "position": 1,
-        "visible": true,
-        "images": [
-          {
-            "id": "a03788af-8abc-40f1-9695-2b6163beb17c",
-            "image": "6afd6cd9-38f8-4889-ae89-d3b763c1c50d.png",
-            "image_url": "https://assets.olaclick.app/companies/products/images/800/6afd6cd9-38f8-4889-ae89-d3b763c1c50d.png",
-            "position": 0
-          }
-        ],
-        "product_variants": [
-          {
-            "id": "9eace606-1d06-435f-8d61-d836caad506f",
-            "cost": 0,
-            "created_at": "2025-04-14 18:11:47",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 2.99,
-            "original_price": 2.99,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2026-02-07 14:29:22"
-          }
-        ],
-        "modifier_categories": [],
-        "slug": "cheese-sfiha-esfiha-de-queijo"
-      },
-      {
-        "product_category_id": "9eace605-cfbc-4249-afda-477d79c581a7",
-        "description": "Shredded chicken - Frango desfiado",
-        "id": "9eace769-fe49-4e62-bb23-483eec48c7a2",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Chicken Sfiha - Esfiha de Frango",
-        "position": 2,
-        "visible": true,
-        "images": [],
-        "product_variants": [
-          {
-            "id": "9eace769-fff8-4040-8b58-34a207816e3b",
-            "cost": 0,
-            "created_at": "2025-04-14 18:15:40",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 3.19,
-            "original_price": 3.19,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2026-02-07 14:29:46"
-          }
-        ],
-        "modifier_categories": [],
-        "slug": "chicken-sfiha-esfiha-de-frango"
-      },
-      {
-        "product_category_id": "9eace605-cfbc-4249-afda-477d79c581a7",
-        "description": "Sliced kielbasa with mozzarella cheese - Calabresa fatiada com queijo mussarela",
-        "id": "9eace790-f265-404d-a759-800b563923b9",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Kielbasa Sfiha - Esfiha de Calabresa",
-        "position": 3,
-        "visible": true,
-        "images": [
-          {
-            "id": "a0378924-2725-4090-9301-41036fa86ae3",
-            "image": "49d5c6a2-c0eb-4121-9c95-49981d227a2d.png",
-            "image_url": "https://assets.olaclick.app/companies/products/images/800/49d5c6a2-c0eb-4121-9c95-49981d227a2d.png",
-            "position": 0
-          }
-        ],
-        "product_variants": [
-          {
-            "id": "9eace790-f527-4361-a2d0-e966e835370e",
-            "cost": 0,
-            "created_at": "2025-04-14 18:16:06",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 2.99,
-            "original_price": 2.99,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2026-02-07 14:30:15"
-          }
-        ],
-        "modifier_categories": [],
-        "slug": "kielbasa-sfiha-esfiha-de-calabresa"
-      },
-      {
-        "product_category_id": "9eace605-cfbc-4249-afda-477d79c581a7",
-        "description": "Chopped bacon with mozzarella cheese - Bacon picado com queijo mussarela",
-        "id": "9ef2f6cf-5ea4-485d-aaf8-515d1bbbaada",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Bacon Sfiha - Esfiha de Bacon",
-        "position": 4,
-        "visible": true,
-        "images": [
-          {
-            "id": "a0378963-c0c2-4b6e-8322-adb0cfb247ca",
-            "image": "498755c9-82df-4249-a564-2104c741e149.png",
-            "image_url": "https://assets.olaclick.app/companies/products/images/800/498755c9-82df-4249-a564-2104c741e149.png",
-            "position": 0
-          }
-        ],
-        "product_variants": [
-          {
-            "id": "9ef2f6cf-6196-4509-8ac1-d704a61a1b8c",
-            "cost": 0,
-            "created_at": "2025-05-19 14:06:40",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 2.8,
-            "original_price": 2.8,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2026-01-12 23:30:36"
-          }
-        ],
-        "modifier_categories": [],
-        "slug": "bacon-sfiha-esfiha-de-bacon"
+      "pt": {
+        "title": "Mozzarella Esfiha",
+        "description": "Feito na hora, sabor intenso e irresistível."
       }
-    ],
-    "slug": "regular-tradicionais"
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
   },
   {
-    "id": "9eace80a-fb82-4e91-83eb-cba737f7caac",
-    "name": "Specials - Especiais",
-    "position": 4,
-    "type": "NORMAL",
-    "visible": true,
-    "products": [
-      {
-        "product_category_id": "9eace80a-fb82-4e91-83eb-cba737f7caac",
-        "description": "Mozzarella and cream cheese - Queijo mussarela e catupiry",
-        "id": "9eace80b-2ab5-4de1-b68a-288eaffd90a1",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "2 Cheese Sfiha - Esfiha 2 Queijos",
-        "position": 0,
-        "visible": true,
-        "images": [
-          {
-            "id": "a037898f-9ad4-4cbd-b867-a1309197a44d",
-            "image": "4c93f296-184f-457d-9109-4df94000366d.png",
-            "image_url": "https://assets.olaclick.app/companies/products/images/800/4c93f296-184f-457d-9109-4df94000366d.png",
-            "position": 0
-          }
-        ],
-        "product_variants": [
-          {
-            "id": "9eace80b-2c4c-4ff6-9af3-9dbecb6ddfe1",
-            "cost": 0,
-            "created_at": "2025-04-14 18:17:26",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 3.3,
-            "original_price": 3.3,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2026-01-12 23:29:14"
-          }
-        ],
-        "modifier_categories": [],
-        "slug": "2-cheese-sfiha-esfiha-2-queijos"
+    "id": "67ee1acf-ba3b-4ebb-abe1-825d2aad9095",
+    "categoryId": null,
+    "comparedAtPrice": 2899,
+    "createdAt": "2026-03-17T20:39:31.656Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "4 Cheese Pizza",
+    "price": 2699,
+    "translations": {
+      "es": {
+        "title": "4 Cheese Pizza",
+        "description": "Recién hecho, sabor intenso e irresistible."
       },
-      {
-        "product_category_id": "9eace80a-fb82-4e91-83eb-cba737f7caac",
-        "description": "Carne moída temperada com tomate e cebola e catupiry por cima",
-        "id": "9eace891-c483-4243-8f29-4d8f0ad7f8ea",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Esfiha de Carne e Catupiry",
-        "position": 1,
-        "visible": true,
-        "images": [
-          {
-            "id": "a0378aac-3808-4809-a890-f262b2342a88",
-            "image": "66980812-39e5-4983-a30c-1880059048b8.png",
-            "image_url": "https://assets.olaclick.app/companies/products/images/800/66980812-39e5-4983-a30c-1880059048b8.png",
-            "position": 0
-          }
-        ],
-        "product_variants": [
-          {
-            "id": "9eace891-c5ff-40c3-acdc-84b823f32ae0",
-            "cost": 0,
-            "created_at": "2025-04-14 18:18:54",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 3.3,
-            "original_price": 3.3,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2026-01-12 23:29:00"
-          }
-        ],
-        "modifier_categories": [],
-        "slug": "esfiha-de-carne-e-catupiry"
-      },
-      {
-        "product_category_id": "9eace80a-fb82-4e91-83eb-cba737f7caac",
-        "description": "Frango desfiado com catupiry por cima",
-        "id": "9eacf1e7-67b9-4878-a1c0-9a773f971923",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Esfiha de Frango e catupiry",
-        "position": 2,
-        "visible": true,
-        "images": [
-          {
-            "id": "a0378a1a-7f15-4306-858a-0eef02e4c9e9",
-            "image": "b822f844-3e81-45dc-aa7c-77a25a4cd77a.png",
-            "image_url": "https://assets.olaclick.app/companies/products/images/800/b822f844-3e81-45dc-aa7c-77a25a4cd77a.png",
-            "position": 0
-          }
-        ],
-        "product_variants": [
-          {
-            "id": "9eacf1e7-7d52-42a4-91d1-368e8547f484",
-            "cost": 0,
-            "created_at": "2025-04-14 18:45:00",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 3.3,
-            "original_price": 3.3,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2026-01-12 23:34:38"
-          }
-        ],
-        "modifier_categories": [],
-        "slug": "esfiha-de-frango-e-catupiry"
-      },
-      {
-        "product_category_id": "9eace80a-fb82-4e91-83eb-cba737f7caac",
-        "description": "Calabresa fatiada com queijo mussarela e catupiry por cima",
-        "id": "9eacf304-2cc7-40a9-81d7-439a9a6e09e4",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Esfiha de Calabresa e Catupiry",
-        "position": 3,
-        "visible": true,
-        "images": [
-          {
-            "id": "a0378a40-4feb-43bf-957d-9be5be744708",
-            "image": "f498a8d1-395e-42ff-8320-056a0b622b78.png",
-            "image_url": "https://assets.olaclick.app/companies/products/images/800/f498a8d1-395e-42ff-8320-056a0b622b78.png",
-            "position": 0
-          }
-        ],
-        "product_variants": [
-          {
-            "id": "9eacf304-2e25-47f1-ba51-e6b939abb81b",
-            "cost": 0,
-            "created_at": "2025-04-14 18:48:07",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 3.3,
-            "original_price": 3.3,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2026-01-12 23:27:54"
-          }
-        ],
-        "modifier_categories": [],
-        "slug": "esfiha-de-calabresa-e-catupiry"
-      },
-      {
-        "product_category_id": "9eace80a-fb82-4e91-83eb-cba737f7caac",
-        "description": "Carne moída temperada com tomate e cebola e queijo mussarela por cima",
-        "id": "9ef2fccc-ea95-4763-955c-f5525e543a46",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Esfiha de carne com queijo",
-        "position": 4,
-        "visible": true,
-        "images": [
-          {
-            "id": "a0378a6d-59d0-4ae8-98ed-4a3c7398ac30",
-            "image": "cf481269-243c-4c60-99ef-8b54991f3926.png",
-            "image_url": "https://assets.olaclick.app/companies/products/images/800/cf481269-243c-4c60-99ef-8b54991f3926.png",
-            "position": 0
-          }
-        ],
-        "product_variants": [
-          {
-            "id": "9ef2fccc-edb1-46ab-ba66-98e75d4198c2",
-            "cost": 0,
-            "created_at": "2025-05-19 14:23:25",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 3.3,
-            "original_price": 3.3,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2025-12-06 14:05:38"
-          }
-        ],
-        "modifier_categories": [],
-        "slug": "esfiha-de-carne-com-queijo"
-      },
-      {
-        "product_category_id": "9eace80a-fb82-4e91-83eb-cba737f7caac",
-        "description": "Carne moída temperada com tomate e cebola e queijo mussarela e catupiry por cima",
-        "id": "9ef31247-8420-40e9-a48c-25bd3e1959f7",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Esfiha de carne c/ queijo e catupiry",
-        "position": 5,
-        "visible": true,
-        "images": [
-          {
-            "id": "9efc1c8b-e646-4595-878d-bfbad1879cde",
-            "image": "c2e6a588-ad30-4f77-bcba-50bca1374b78.jpeg",
-            "image_url": "https://assets.olaclick.app/companies/products/images/800/c2e6a588-ad30-4f77-bcba-50bca1374b78.jpeg",
-            "position": 0
-          }
-        ],
-        "product_variants": [
-          {
-            "id": "9ef31247-870c-4d49-a75f-1643b3b2b1f5",
-            "cost": 0,
-            "created_at": "2025-05-19 15:23:29",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 3.3,
-            "original_price": 3.3,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2025-12-06 14:05:47"
-          }
-        ],
-        "modifier_categories": [],
-        "slug": "esfiha-de-carne-c-queijo-e-catupiry"
-      },
-      {
-        "product_category_id": "9eace80a-fb82-4e91-83eb-cba737f7caac",
-        "description": null,
-        "id": "a049e204-f740-483d-8799-fa7a99a042c6",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Esfiha de Carne com Zaatar",
-        "position": 6,
-        "visible": true,
-        "images": [],
-        "product_variants": [
-          {
-            "id": "a049e204-f8df-44ef-bea6-233965895a62",
-            "cost": 0,
-            "created_at": "2025-11-06 01:17:30",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 3,
-            "original_price": 3,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2025-12-06 14:05:55"
-          }
-        ],
-        "modifier_categories": [],
-        "slug": "esfiha-de-carne-com-zaatar"
-      },
-      {
-        "product_category_id": "9eace80a-fb82-4e91-83eb-cba737f7caac",
-        "description": null,
-        "id": "a049e23b-0071-4e86-8a41-d6256c247b9d",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Esfiha de Carne e queijo com Zaatar",
-        "position": 7,
-        "visible": true,
-        "images": [],
-        "product_variants": [
-          {
-            "id": "a049e23b-01ce-4fbf-b615-24c622cd3380",
-            "cost": 0,
-            "created_at": "2025-11-06 01:18:05",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 3.3,
-            "original_price": 3.3,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2026-01-12 23:28:10"
-          }
-        ],
-        "modifier_categories": [],
-        "slug": "esfiha-de-carne-e-queijo-com-zaatar"
-      },
-      {
-        "product_category_id": "9eace80a-fb82-4e91-83eb-cba737f7caac",
-        "description": null,
-        "id": "9ef6fdbb-0c24-4102-b233-b046d59b0f8e",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Esfiha de Bacon com catupiry",
-        "position": 8,
-        "visible": true,
-        "images": [
-          {
-            "id": "a0378b02-d7a6-4b10-81f5-2e8333a61dd2",
-            "image": "b4cc4326-6ad9-4e96-bff2-baeb7de35284.png",
-            "image_url": "https://assets.olaclick.app/companies/products/images/800/b4cc4326-6ad9-4e96-bff2-baeb7de35284.png",
-            "position": 0
-          }
-        ],
-        "product_variants": [
-          {
-            "id": "9ef6fdbb-0ef9-48d3-8cb4-d6db01ebfd07",
-            "cost": 0,
-            "created_at": "2025-05-21 14:09:20",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 3.3,
-            "original_price": 3.3,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2026-01-12 23:28:43"
-          }
-        ],
-        "modifier_categories": [],
-        "slug": "esfiha-de-bacon-com-catupiry"
-      },
-      {
-        "product_category_id": "9eace80a-fb82-4e91-83eb-cba737f7caac",
-        "description": null,
-        "id": "9ef6fe08-eeb7-4471-963d-929929659e7f",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "4 Cheese Sfiha - Esfiha de 4 Queijos",
-        "position": 9,
-        "visible": true,
-        "images": [
-          {
-            "id": "a0378b32-d7ff-4304-a0d3-a6f585c450bc",
-            "image": "1d0c1b74-6020-458f-afed-8b5a167dd763.png",
-            "image_url": "https://assets.olaclick.app/companies/products/images/800/1d0c1b74-6020-458f-afed-8b5a167dd763.png",
-            "position": 0
-          }
-        ],
-        "product_variants": [
-          {
-            "id": "9ef6fe08-f087-4494-b1c7-ade960cd1c73",
-            "cost": 0,
-            "created_at": "2025-05-21 14:10:11",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 3.3,
-            "original_price": 3.3,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2026-01-12 23:28:28"
-          }
-        ],
-        "modifier_categories": [],
-        "slug": "4-cheese-sfiha-esfiha-de-4-queijos"
-      },
-      {
-        "product_category_id": "9eace80a-fb82-4e91-83eb-cba737f7caac",
-        "description": null,
-        "id": "9ef6fe5d-edb9-4913-a5b0-f814826a9223",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "5 Cheese Sfiha - Esfiha de 5 Queijos",
-        "position": 10,
-        "visible": true,
-        "images": [
-          {
-            "id": "a0378b54-aaeb-47e5-aeea-ef3e325309a9",
-            "image": "b36d10da-3223-4f31-98c2-2d02654f8455.png",
-            "image_url": "https://assets.olaclick.app/companies/products/images/800/b36d10da-3223-4f31-98c2-2d02654f8455.png",
-            "position": 0
-          }
-        ],
-        "product_variants": [
-          {
-            "id": "9ef6fe5d-efd3-4e98-aa6e-927477328916",
-            "cost": 0,
-            "created_at": "2025-05-21 14:11:07",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 3.4,
-            "original_price": 3.4,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2026-01-12 23:35:39"
-          }
-        ],
-        "modifier_categories": [],
-        "slug": "5-cheese-sfiha-esfiha-de-5-queijos"
-      },
-      {
-        "product_category_id": "9eace80a-fb82-4e91-83eb-cba737f7caac",
-        "description": null,
-        "id": "9ef6fe8a-7d42-4ed7-9b90-c0397b32a022",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Esfiha de Frango c/ Catupiry e Bacon",
-        "position": 11,
-        "visible": true,
-        "images": [
-          {
-            "id": "9efc1ce7-372e-46ff-b19a-3a78fe7273a5",
-            "image": "6b529044-c728-43f6-8c5d-32a49f4565ab.jpeg",
-            "image_url": "https://assets.olaclick.app/companies/products/images/800/6b529044-c728-43f6-8c5d-32a49f4565ab.jpeg",
-            "position": 0
-          }
-        ],
-        "product_variants": [
-          {
-            "id": "9ef6fe8a-7fbb-4a97-a012-7ac4fa9f0346",
-            "cost": 0,
-            "created_at": "2025-05-21 14:11:36",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 3.3,
-            "original_price": 3.3,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2025-12-06 14:06:47"
-          }
-        ],
-        "modifier_categories": [],
-        "slug": "esfiha-de-frango-c-catupiry-e-bacon"
-      },
-      {
-        "product_category_id": "9eace80a-fb82-4e91-83eb-cba737f7caac",
-        "description": null,
-        "id": "9ef71b7d-9c8e-4de3-9e4c-ce4503e8bf8d",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Esfiha de Frango com Cheddar",
-        "position": 12,
-        "visible": true,
-        "images": [
-          {
-            "id": "a0378ba6-1075-4f75-8e93-28070b712808",
-            "image": "d769130d-deee-4f7e-965d-ee991e9e65e1.png",
-            "image_url": "https://assets.olaclick.app/companies/products/images/800/d769130d-deee-4f7e-965d-ee991e9e65e1.png",
-            "position": 0
-          }
-        ],
-        "product_variants": [
-          {
-            "id": "9ef71b7d-9fd4-4b5f-ae78-2bd026c5bb1d",
-            "cost": 0,
-            "created_at": "2025-05-21 15:32:33",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 3.3,
-            "original_price": 3.3,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2025-12-06 14:06:54"
-          }
-        ],
-        "modifier_categories": [],
-        "slug": "esfiha-de-frango-com-cheddar"
-      },
-      {
-        "product_category_id": "9eace80a-fb82-4e91-83eb-cba737f7caac",
-        "description": null,
-        "id": "9ef7bdb9-ca39-4925-9196-d5c3fa79e3a4",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Esfiha de Frango com queijo",
-        "position": 13,
-        "visible": true,
-        "images": [
-          {
-            "id": "a0378be1-5c7a-4806-b56d-54774fd15070",
-            "image": "67d8c537-0022-46e5-b6cb-298f286fc238.png",
-            "image_url": "https://assets.olaclick.app/companies/products/images/800/67d8c537-0022-46e5-b6cb-298f286fc238.png",
-            "position": 0
-          }
-        ],
-        "product_variants": [
-          {
-            "id": "9ef7bdb9-cde3-4e3b-ad66-f290f60d0276",
-            "cost": 0,
-            "created_at": "2025-05-21 23:06:11",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 3.3,
-            "original_price": 3.3,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2025-12-06 14:07:03"
-          }
-        ],
-        "modifier_categories": [],
-        "slug": "esfiha-de-frango-com-queijo"
-      },
-      {
-        "product_category_id": "9eace80a-fb82-4e91-83eb-cba737f7caac",
-        "description": null,
-        "id": "9ef8ea91-db83-47e7-bfa0-aefb58447c91",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Esfiha de Bacon com Cheddar",
-        "position": 14,
-        "visible": true,
-        "images": [
-          {
-            "id": "9efc1d0d-531e-4347-95f9-0af3585140d6",
-            "image": "61386fa5-7458-4710-bed0-0cb89e992909.jpeg",
-            "image_url": "https://assets.olaclick.app/companies/products/images/800/61386fa5-7458-4710-bed0-0cb89e992909.jpeg",
-            "position": 0
-          }
-        ],
-        "product_variants": [
-          {
-            "id": "9ef8ea91-decc-4f41-9f7a-a638bdfe3237",
-            "cost": 0,
-            "created_at": "2025-05-22 13:07:25",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 3.3,
-            "original_price": 3.3,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2025-12-06 14:07:10"
-          }
-        ],
-        "modifier_categories": [],
-        "slug": "esfiha-de-bacon-com-cheddar"
-      },
-      {
-        "product_category_id": "9eace80a-fb82-4e91-83eb-cba737f7caac",
-        "description": "Mussarela ,brócolis , bacon e catupiry",
-        "id": "a0d0ea44-254d-4062-b946-bce7912533c4",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Esfiha de Brócolis com Bacon",
-        "position": 15,
-        "visible": true,
-        "images": [
-          {
-            "id": "a0d0eacd-b234-4c8f-963a-1516c6f859a4",
-            "image": "3acccbe4-89d0-45fa-ae13-6e7c7dfdec30.jpeg",
-            "image_url": "https://assets.olaclick.app/companies/products/images/800/3acccbe4-89d0-45fa-ae13-6e7c7dfdec30.jpeg",
-            "position": 0
-          }
-        ],
-        "product_variants": [
-          {
-            "id": "a0d0ea44-2743-44c4-82d8-9aef3bff1f98",
-            "cost": 0,
-            "created_at": "2026-01-12 04:17:19",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 3.3,
-            "original_price": 3.3,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2026-01-12 04:19:03"
-          }
-        ],
-        "modifier_categories": [],
-        "slug": "esfiha-de-brocolis-com-bacon"
+      "pt": {
+        "title": "4 Cheese Pizza",
+        "description": "Feito na hora, sabor intenso e irresistível."
       }
-    ],
-    "slug": "specials-especiais"
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
   },
   {
-    "id": "9eace606-1fc5-495a-a360-0a0210cfc86b",
-    "name": "Sweet Esfihas - Esfihas Doces",
-    "position": 5,
-    "type": "NORMAL",
-    "visible": true,
-    "products": [
-      {
-        "product_category_id": "9eace606-1fc5-495a-a360-0a0210cfc86b",
-        "description": "Nutella original com queijo mussarela",
-        "id": "9eacf371-fc54-4d58-89e7-be3b7d6da9ee",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Esfiha de Nutella",
-        "position": 0,
-        "visible": true,
-        "images": [
-          {
-            "id": "a0378c39-2d12-4da5-b3c7-b00c008680f1",
-            "image": "73431360-2cc2-4f19-a936-c11d7aacffec.png",
-            "image_url": "https://assets.olaclick.app/companies/products/images/800/73431360-2cc2-4f19-a936-c11d7aacffec.png",
-            "position": 0
-          }
-        ],
-        "product_variants": [
-          {
-            "id": "9eacf371-fda1-4e10-a024-aea8eab9fb2f",
-            "cost": 0,
-            "created_at": "2025-04-14 18:49:18",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 2.99,
-            "original_price": 2.99,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2026-02-07 14:31:11"
-          }
-        ],
-        "modifier_categories": [],
-        "slug": "esfiha-de-nutella"
+    "id": "71f1ddcd-b0bb-4d99-9963-35412cc1d957",
+    "categoryId": null,
+    "comparedAtPrice": 2599,
+    "createdAt": "2026-03-20T00:39:32.787Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Bacon Pizza",
+    "price": 2399,
+    "translations": {
+      "es": {
+        "title": "Bacon Pizza",
+        "description": "Recién hecho, sabor intenso e irresistible."
       },
-      {
-        "product_category_id": "9eace606-1fc5-495a-a360-0a0210cfc86b",
-        "description": "Nutella original com M&M’s por cima e queijo mussarela",
-        "id": "9eacf39f-ee5f-48f9-88cb-4cdfc74e7178",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Esfiha de Nutella & M&M’s",
-        "position": 1,
-        "visible": true,
-        "images": [
-          {
-            "id": "a0378c59-0143-4dbb-8cbf-b34753b0a6fe",
-            "image": "1213df86-0634-4c93-a212-6aa50c6b2bbb.png",
-            "image_url": "https://assets.olaclick.app/companies/products/images/800/1213df86-0634-4c93-a212-6aa50c6b2bbb.png",
-            "position": 0
-          }
-        ],
-        "product_variants": [
-          {
-            "id": "9eacf39f-f033-4ce4-b853-55c49268ed03",
-            "cost": 0,
-            "created_at": "2025-04-14 18:49:49",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 3.19,
-            "original_price": 3.19,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2026-02-07 14:32:05"
-          }
-        ],
-        "modifier_categories": [],
-        "slug": "esfiha-de-nutella-mms"
-      },
-      {
-        "product_category_id": "9eace606-1fc5-495a-a360-0a0210cfc86b",
-        "description": null,
-        "id": "9ef7019f-d5c8-4347-ba59-b6278a6c6d4d",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Esfiha de Nutella com Morango",
-        "position": 2,
-        "visible": false,
-        "images": [],
-        "product_variants": [
-          {
-            "id": "9ef7019f-d8a2-4ca5-876d-1e8b2755db6b",
-            "cost": 0,
-            "created_at": "2025-05-21 14:20:13",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 2.1,
-            "original_price": 2.1,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2025-05-21 14:20:31"
-          }
-        ],
-        "modifier_categories": [],
-        "slug": "esfiha-de-nutella-com-morango"
-      },
-      {
-        "product_category_id": "9eace606-1fc5-495a-a360-0a0210cfc86b",
-        "description": null,
-        "id": "9ef701c1-9060-48e3-b2bb-d0b03b2b1b61",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Esfiha de Nutella com Banana",
-        "position": 3,
-        "visible": false,
-        "images": [],
-        "product_variants": [
-          {
-            "id": "9ef701c1-9282-486c-9315-eeffe77698f1",
-            "cost": 0,
-            "created_at": "2025-05-21 14:20:35",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 2,
-            "original_price": 2,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2025-05-21 14:21:00"
-          }
-        ],
-        "modifier_categories": [],
-        "slug": "esfiha-de-nutella-com-banana"
-      },
-      {
-        "product_category_id": "9eace606-1fc5-495a-a360-0a0210cfc86b",
-        "description": null,
-        "id": "a00b1e24-a613-4e56-a7b5-556078ecdeaa",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Esfiha de Pistache",
-        "position": 4,
-        "visible": true,
-        "images": [
-          {
-            "id": "a0378c7d-3137-4139-a847-e5a93c2f043b",
-            "image": "ecfac7b5-7886-4244-a2ab-4186f7f97586.png",
-            "image_url": "https://assets.olaclick.app/companies/products/images/800/ecfac7b5-7886-4244-a2ab-4186f7f97586.png",
-            "position": 0
-          }
-        ],
-        "product_variants": [
-          {
-            "id": "a00b1e24-a885-4d0b-b063-fa70472c6ba0",
-            "cost": 0,
-            "created_at": "2025-10-05 20:28:28",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 3.5,
-            "original_price": 3.5,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2026-01-12 23:37:52"
-          }
-        ],
-        "modifier_categories": [],
-        "slug": "esfiha-de-pistache"
-      },
-      {
-        "product_category_id": "9eace606-1fc5-495a-a360-0a0210cfc86b",
-        "description": null,
-        "id": "a00b1e43-e193-4c3a-86da-604f6267de84",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Esfiha de Chocolate Preto",
-        "position": 5,
-        "visible": true,
-        "images": [],
-        "product_variants": [
-          {
-            "id": "a00b1e43-e2d4-4dea-ad5c-d73a500669bb",
-            "cost": 0,
-            "created_at": "2025-10-05 20:28:48",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 2.99,
-            "original_price": 2.99,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2026-02-07 14:32:35"
-          }
-        ],
-        "modifier_categories": [],
-        "slug": "esfiha-de-chocolate-preto"
-      },
-      {
-        "product_category_id": "9eace606-1fc5-495a-a360-0a0210cfc86b",
-        "description": null,
-        "id": "a00b1e5c-74d0-4d43-99f7-55ba5ecdac7f",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Esfiha de Chocolate Branco",
-        "position": 6,
-        "visible": true,
-        "images": [],
-        "product_variants": [
-          {
-            "id": "a00b1e5c-7626-41b1-9ff3-f2150ea0615e",
-            "cost": 0,
-            "created_at": "2025-10-05 20:29:04",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 2.99,
-            "original_price": 2.99,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2026-02-07 14:32:41"
-          }
-        ],
-        "modifier_categories": [],
-        "slug": "esfiha-de-chocolate-branco"
-      },
-      {
-        "product_category_id": "9eace606-1fc5-495a-a360-0a0210cfc86b",
-        "description": "Chocolate preto e chocolate branco",
-        "id": "a00b1e71-d9d4-4587-a811-570ef1c80ff1",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Esfiha de Dois Amores",
-        "position": 7,
-        "visible": true,
-        "images": [],
-        "product_variants": [
-          {
-            "id": "a00b1e71-db11-4479-8df8-22b378a61ab0",
-            "cost": 0,
-            "created_at": "2025-10-05 20:29:18",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 2.99,
-            "original_price": 2.99,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2026-02-07 14:32:46"
-          }
-        ],
-        "modifier_categories": [],
-        "slug": "esfiha-de-dois-amores"
-      },
-      {
-        "product_category_id": "9eace606-1fc5-495a-a360-0a0210cfc86b",
-        "description": null,
-        "id": "a00b1e96-881a-49e0-b5d7-46992d8804e0",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Esfiha de Doce de Leite",
-        "position": 8,
-        "visible": true,
-        "images": [],
-        "product_variants": [
-          {
-            "id": "a00b1e96-898c-4ee8-9060-9e89cb47606a",
-            "cost": 0,
-            "created_at": "2025-10-05 20:29:42",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 2.99,
-            "original_price": 2.99,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2026-02-07 14:32:52"
-          }
-        ],
-        "modifier_categories": [],
-        "slug": "esfiha-de-doce-de-leite"
-      },
-      {
-        "product_category_id": "9eace606-1fc5-495a-a360-0a0210cfc86b",
-        "description": null,
-        "id": "a00b1ead-7379-41cf-bf2d-26c8aa202da8",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Esfiha de Goiabada",
-        "position": 9,
-        "visible": true,
-        "images": [],
-        "product_variants": [
-          {
-            "id": "a00b1ead-74b3-405d-b11e-f226424ea0e9",
-            "cost": 0,
-            "created_at": "2025-10-05 20:29:57",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 2.99,
-            "original_price": 2.99,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2026-02-07 14:32:57"
-          }
-        ],
-        "modifier_categories": [],
-        "slug": "esfiha-de-goiabada"
-      },
-      {
-        "product_category_id": "9eace606-1fc5-495a-a360-0a0210cfc86b",
-        "description": null,
-        "id": "a00b1ebe-619b-4e52-8fca-c56ab8e65ec4",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Esfiha de Goiabada com Queijo",
-        "position": 10,
-        "visible": true,
-        "images": [
-          {
-            "id": "a0378c9d-bccf-4ce8-9e41-35be88f78106",
-            "image": "ef0a62de-dd9f-4eaa-b6c8-fc84362e5a4d.png",
-            "image_url": "https://assets.olaclick.app/companies/products/images/800/ef0a62de-dd9f-4eaa-b6c8-fc84362e5a4d.png",
-            "position": 0
-          }
-        ],
-        "product_variants": [
-          {
-            "id": "a00b1ebe-642d-46c4-9008-f0daf695af7f",
-            "cost": 0,
-            "created_at": "2025-10-05 20:30:08",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 2.99,
-            "original_price": 2.99,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2026-02-07 14:33:38"
-          }
-        ],
-        "modifier_categories": [],
-        "slug": "esfiha-de-goiabada-com-queijo"
-      },
-      {
-        "product_category_id": "9eace606-1fc5-495a-a360-0a0210cfc86b",
-        "description": null,
-        "id": "a0dc6992-2d0b-44cc-80cf-088a9cf46496",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Esfiha cheesecake morango",
-        "position": 11,
-        "visible": true,
-        "images": [
-          {
-            "id": "a0dc6a01-678b-4f38-818b-b17eb127be34",
-            "image": "55980902-e851-46f5-a5ab-a5243e11207f.jpeg",
-            "image_url": "https://assets.olaclick.app/companies/products/images/800/55980902-e851-46f5-a5ab-a5243e11207f.jpeg",
-            "position": 0
-          }
-        ],
-        "product_variants": [
-          {
-            "id": "a0dc6992-3167-4b57-93dd-d275231d0c32",
-            "cost": 0,
-            "created_at": "2026-01-17 21:27:24",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 3.5,
-            "original_price": 3.5,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2026-01-17 21:28:11"
-          }
-        ],
-        "modifier_categories": [],
-        "slug": "esfiha-cheesecake-morango"
+      "pt": {
+        "title": "Bacon Pizza",
+        "description": "Feito na hora, sabor intenso e irresistível."
       }
-    ],
-    "slug": "sweet-esfihas-esfihas-doces"
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
   },
   {
-    "id": "9ec90f61-3a59-40df-bff4-a1029a85da52",
-    "name": "Bebidas",
-    "position": 6,
-    "type": "NORMAL",
-    "visible": true,
-    "products": [
-      {
-        "product_category_id": "9ec90f61-3a59-40df-bff4-a1029a85da52",
-        "description": null,
-        "id": "9f4b67a1-6950-4a9e-af4b-b9715b96d297",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Guaraná Antartica 2L",
-        "position": 0,
-        "visible": true,
-        "images": [
-          {
-            "id": "9f4b67d9-973e-4fac-8750-283de18379dc",
-            "image": "0260771f-4e26-45b6-9706-188e50f24977.png",
-            "image_url": "https://assets.olaclick.app/companies/products/images/800/0260771f-4e26-45b6-9706-188e50f24977.png",
-            "position": 0
-          }
-        ],
-        "product_variants": [
-          {
-            "id": "9f4b67a1-6b0d-4343-b7ff-3f2cda4b4ef5",
-            "cost": 0,
-            "created_at": "2025-07-02 13:14:59",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 6.2,
-            "original_price": 6.2,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2025-07-02 13:15:42"
-          }
-        ],
-        "modifier_categories": [],
-        "slug": "guarana-antartica-2l"
+    "id": "9eace605-d3d7-4afd-8a55-fb8b6e715273",
+    "categoryId": "9eace605-cfbc-4249-afda-477d79c581a7",
+    "comparedAtPrice": 319,
+    "createdAt": "2026-03-31T18:08:22.391Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Beef Sfiha",
+    "price": 319,
+    "translations": {
+      "es": {
+        "title": "Beef Esfiha",
+        "description": "Recién hecho, sabor intenso e irresistible."
       },
-      {
-        "product_category_id": "9ec90f61-3a59-40df-bff4-a1029a85da52",
-        "description": null,
-        "id": "9f4b672a-8c50-49cc-a5bd-27498be498c8",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Guaraná Antartica",
-        "position": 1,
-        "visible": true,
-        "images": [
-          {
-            "id": "9f4b6742-349a-4da8-915c-944f2d5d94a2",
-            "image": "1258225b-d8e0-416a-a51a-a467c9b586d4.png",
-            "image_url": "https://assets.olaclick.app/companies/products/images/800/1258225b-d8e0-416a-a51a-a467c9b586d4.png",
-            "position": 0
-          }
-        ],
-        "product_variants": [
-          {
-            "id": "9f4b672a-8f93-455d-8e91-f580f929f1df",
-            "cost": 0,
-            "created_at": "2025-07-02 13:13:42",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 2.9,
-            "original_price": 2.9,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2025-07-22 00:11:43"
-          }
-        ],
-        "modifier_categories": [],
-        "slug": "guarana-antartica"
-      },
-      {
-        "product_category_id": "9ec90f61-3a59-40df-bff4-a1029a85da52",
-        "description": null,
-        "id": "9ec90f61-6e1a-417f-9385-2e9ed88b4ec8",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Coca Zero 355ml",
-        "position": 2,
-        "visible": true,
-        "images": [
-          {
-            "id": "9ec90fa3-3638-40ca-af5e-e08805aa4782",
-            "image": "4d856a5f-2e11-4af1-b1f1-406534885f25.jpeg",
-            "image_url": "https://assets.olaclick.app/companies/products/images/800/4d856a5f-2e11-4af1-b1f1-406534885f25.jpeg",
-            "position": 0
-          }
-        ],
-        "product_variants": [
-          {
-            "id": "9ec90f61-71ae-4b63-9880-a4c06a8462b0",
-            "cost": 0,
-            "created_at": "2025-04-28 18:10:36",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 2.3,
-            "original_price": 2.3,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2025-07-22 00:11:31"
-          }
-        ],
-        "modifier_categories": [],
-        "slug": "coca-zero-355ml"
-      },
-      {
-        "product_category_id": "9ec90f61-3a59-40df-bff4-a1029a85da52",
-        "description": null,
-        "id": "9ec90f73-8abe-4f9a-bc56-b51122098d41",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Fanta Laranja 355ml",
-        "position": 3,
-        "visible": true,
-        "images": [
-          {
-            "id": "9ec91000-9cc6-4685-b6dc-0fb55925253a",
-            "image": "c06e6924-fadf-43ab-b244-7d7f2ac13aca.jpeg",
-            "image_url": "https://assets.olaclick.app/companies/products/images/800/c06e6924-fadf-43ab-b244-7d7f2ac13aca.jpeg",
-            "position": 0
-          }
-        ],
-        "product_variants": [
-          {
-            "id": "9ec90f73-8cac-43ce-b10a-6fb0a5df4ef1",
-            "cost": 0,
-            "created_at": "2025-04-28 18:10:48",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 2.3,
-            "original_price": 2.3,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2025-07-22 00:11:35"
-          }
-        ],
-        "modifier_categories": [],
-        "slug": "fanta-laranja-355ml"
-      },
-      {
-        "product_category_id": "9ec90f61-3a59-40df-bff4-a1029a85da52",
-        "description": null,
-        "id": "9ec91012-7b96-49e2-95df-8200443fe910",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Sprite 355ml",
-        "position": 4,
-        "visible": true,
-        "images": [
-          {
-            "id": "9ec91090-60ed-4659-b70a-e00b0666ae43",
-            "image": "af53663d-e2c6-4d1c-a9fc-bc2bc64963ca.jpeg",
-            "image_url": "https://assets.olaclick.app/companies/products/images/800/af53663d-e2c6-4d1c-a9fc-bc2bc64963ca.jpeg",
-            "position": 0
-          }
-        ],
-        "product_variants": [
-          {
-            "id": "9ec91012-7dc4-43f7-ad07-63f7bab841f7",
-            "cost": 0,
-            "created_at": "2025-04-28 18:12:32",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 2.3,
-            "original_price": 2.3,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2025-07-22 00:11:38"
-          }
-        ],
-        "modifier_categories": [],
-        "slug": "sprite-355ml"
-      },
-      {
-        "product_category_id": "9ec90f61-3a59-40df-bff4-a1029a85da52",
-        "description": null,
-        "id": "a0d29e5d-f699-4c49-888b-c2b5a61a5263",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Água",
-        "position": 5,
-        "visible": true,
-        "images": [
-          {
-            "id": "a0d29f74-1c70-40ba-8fe3-45ecbe28e401",
-            "image": "f79a26f0-09e1-4f42-bbd9-f6e14e0a0e0f.jpeg",
-            "image_url": "https://assets.olaclick.app/companies/products/images/800/f79a26f0-09e1-4f42-bbd9-f6e14e0a0e0f.jpeg",
-            "position": 0
-          }
-        ],
-        "product_variants": [
-          {
-            "id": "a0d29e5d-fddd-4fd2-98cf-8afc36379fbc",
-            "cost": 0,
-            "created_at": "2026-01-13 00:36:45",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 2.3,
-            "original_price": 2.3,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2026-01-13 00:37:19"
-          }
-        ],
-        "modifier_categories": [],
-        "slug": "agua"
-      },
-      {
-        "product_category_id": "9ec90f61-3a59-40df-bff4-a1029a85da52",
-        "description": null,
-        "id": "a0d29f9c-1df0-43f0-9b06-f55f80dca44d",
-        "kitchen_id": "9eace605-956c-4726-85b6-3f42a2410319",
-        "stock_enabled": false,
-        "messages_for_customers": null,
-        "name": "Água com gas",
-        "position": 6,
-        "visible": true,
-        "images": [
-          {
-            "id": "a0d2a033-68c7-4980-a2b8-4867608cec2f",
-            "image": "8f9af807-12b5-4c4e-b4ce-24b9ab30cf56.jpeg",
-            "image_url": "https://assets.olaclick.app/companies/products/images/800/8f9af807-12b5-4c4e-b4ce-24b9ab30cf56.jpeg",
-            "position": 0
-          }
-        ],
-        "product_variants": [
-          {
-            "id": "a0d29f9c-210e-4df2-894c-d82c2a5d1497",
-            "cost": 0,
-            "created_at": "2026-01-13 00:40:13",
-            "name": null,
-            "packaging_price": 0,
-            "position": 0,
-            "price": 2.3,
-            "original_price": 2.3,
-            "sku": null,
-            "stock_threshold": 100,
-            "stock": 100,
-            "updated_at": "2026-01-13 00:41:26"
-          }
-        ],
-        "modifier_categories": [],
-        "slug": "agua-com-gas"
+      "pt": {
+        "title": "Beef Esfiha",
+        "description": "Feito na hora, sabor intenso e irresistível."
       }
-    ],
-    "slug": "bebidas"
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "9eace606-0af4-4dfa-bed5-712ea988782d",
+    "categoryId": "9eace605-cfbc-4249-afda-477d79c581a7",
+    "comparedAtPrice": 299,
+    "createdAt": "2026-03-31T18:08:22.579Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Cheese Sfiha",
+    "price": 299,
+    "translations": {
+      "es": {
+        "title": "Cheese Esfiha",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Cheese Esfiha",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "9eace769-fe49-4e62-bb23-483eec48c7a2",
+    "categoryId": "9eace605-cfbc-4249-afda-477d79c581a7",
+    "comparedAtPrice": 319,
+    "createdAt": "2026-03-31T18:08:22.706Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Chicken Sfiha",
+    "price": 319,
+    "translations": {
+      "es": {
+        "title": "Chicken Esfiha",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Chicken Esfiha",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "9eace790-f265-404d-a759-800b563923b9",
+    "categoryId": "9eace605-cfbc-4249-afda-477d79c581a7",
+    "comparedAtPrice": 299,
+    "createdAt": "2026-03-31T18:08:22.819Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Kielbasa Sfiha",
+    "price": 299,
+    "translations": {
+      "es": {
+        "title": "Kielbasa Esfiha",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Kielbasa Esfiha",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "9eace80b-2ab5-4de1-b68a-288eaffd90a1",
+    "categoryId": "9eace80a-fb82-4e91-83eb-cba737f7caac",
+    "comparedAtPrice": 330,
+    "createdAt": "2026-03-31T18:08:23.185Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "2 Cheese Sfiha",
+    "price": 330,
+    "translations": {
+      "es": {
+        "title": "2 Cheese Esfiha",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "2 Cheese Esfiha",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "9eace891-c483-4243-8f29-4d8f0ad7f8ea",
+    "categoryId": "9eace80a-fb82-4e91-83eb-cba737f7caac",
+    "comparedAtPrice": 330,
+    "createdAt": "2026-03-31T18:08:23.405Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Beef & Cream Cheese Sfiha",
+    "price": 330,
+    "translations": {
+      "es": {
+        "title": "Esfiha de Carne e Catupiry",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Esfiha de Carne e Catupiry",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "9eacf1e7-67b9-4878-a1c0-9a773f971923",
+    "categoryId": "9eace80a-fb82-4e91-83eb-cba737f7caac",
+    "comparedAtPrice": 330,
+    "createdAt": "2026-03-31T18:08:23.470Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Chicken & Cream Cheese Sfiha",
+    "price": 330,
+    "translations": {
+      "es": {
+        "title": "Esfiha de Frango e catupiry",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Esfiha de Frango e catupiry",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "9eacf304-2cc7-40a9-81d7-439a9a6e09e4",
+    "categoryId": "9eace80a-fb82-4e91-83eb-cba737f7caac",
+    "comparedAtPrice": 330,
+    "createdAt": "2026-03-31T18:08:23.533Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Kielbasa & Cream Cheese Sfiha",
+    "price": 330,
+    "translations": {
+      "es": {
+        "title": "Esfiha de Calabresa e Catupiry",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Esfiha de Calabresa e Catupiry",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "9eacf371-fc54-4d58-89e7-be3b7d6da9ee",
+    "categoryId": "9eace606-1fc5-495a-a360-0a0210cfc86b",
+    "comparedAtPrice": 299,
+    "createdAt": "2026-03-31T18:08:24.489Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Nutella Sfiha",
+    "price": 299,
+    "translations": {
+      "es": {
+        "title": "Esfiha de Nutella",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Esfiha de Nutella",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "9eacf39f-ee5f-48f9-88cb-4cdfc74e7178",
+    "categoryId": "9eace606-1fc5-495a-a360-0a0210cfc86b",
+    "comparedAtPrice": 319,
+    "createdAt": "2026-03-31T18:08:24.615Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Nutella & M&M's Sfiha",
+    "price": 319,
+    "translations": {
+      "es": {
+        "title": "Esfiha de Nutella & M&M’s",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Esfiha de Nutella & M&M’s",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "9ec90f61-6e1a-417f-9385-2e9ed88b4ec8",
+    "categoryId": "9ec90f61-3a59-40df-bff4-a1029a85da52",
+    "comparedAtPrice": 230,
+    "createdAt": "2026-03-31T18:08:25.407Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Coca Zero 355ml",
+    "price": 230,
+    "translations": {
+      "es": {
+        "title": "Coca Zero 355ml",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Coca Zero 355ml",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "9ec90f73-8abe-4f9a-bc56-b51122098d41",
+    "categoryId": "9ec90f61-3a59-40df-bff4-a1029a85da52",
+    "comparedAtPrice": 230,
+    "createdAt": "2026-03-31T18:08:25.474Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Fanta Orange 355ml",
+    "price": 230,
+    "translations": {
+      "es": {
+        "title": "Fanta Laranja 355ml",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Fanta Laranja 355ml",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "9ec91012-7b96-49e2-95df-8200443fe910",
+    "categoryId": "9ec90f61-3a59-40df-bff4-a1029a85da52",
+    "comparedAtPrice": 230,
+    "createdAt": "2026-03-31T18:08:25.538Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Sprite 355ml",
+    "price": 230,
+    "translations": {
+      "es": {
+        "title": "Sprite 355ml",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Sprite 355ml",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "9ef2f6cf-5ea4-485d-aaf8-515d1bbbaada",
+    "categoryId": "9eace605-cfbc-4249-afda-477d79c581a7",
+    "comparedAtPrice": 280,
+    "createdAt": "2026-03-31T18:08:22.948Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Bacon Sfiha",
+    "price": 280,
+    "translations": {
+      "es": {
+        "title": "Bacon Esfiha",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Bacon Esfiha",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "9ef2fccc-ea95-4763-955c-f5525e543a46",
+    "categoryId": "9eace80a-fb82-4e91-83eb-cba737f7caac",
+    "comparedAtPrice": 330,
+    "createdAt": "2026-03-31T18:08:23.630Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Beef & Cheese Sfiha",
+    "price": 330,
+    "translations": {
+      "es": {
+        "title": "Esfiha de carne com queijo",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Esfiha de carne com queijo",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "9ef31247-8420-40e9-a48c-25bd3e1959f7",
+    "categoryId": "9eace80a-fb82-4e91-83eb-cba737f7caac",
+    "comparedAtPrice": 330,
+    "createdAt": "2026-03-31T18:08:23.696Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Beef, Cheese & Cream Cheese Sfiha",
+    "price": 330,
+    "translations": {
+      "es": {
+        "title": "Esfiha de carne c/ queijo e catupiry",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Esfiha de carne c/ queijo e catupiry",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "9ef6fdbb-0c24-4102-b233-b046d59b0f8e",
+    "categoryId": "9eace80a-fb82-4e91-83eb-cba737f7caac",
+    "comparedAtPrice": 330,
+    "createdAt": "2026-03-31T18:08:23.840Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Bacon & Cream Cheese Sfiha",
+    "price": 330,
+    "translations": {
+      "es": {
+        "title": "Esfiha de Bacon com catupiry",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Esfiha de Bacon com catupiry",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "9ef6fe08-eeb7-4471-963d-929929659e7f",
+    "categoryId": "9eace80a-fb82-4e91-83eb-cba737f7caac",
+    "comparedAtPrice": 330,
+    "createdAt": "2026-03-31T18:08:23.910Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "4 Cheese Sfiha",
+    "price": 330,
+    "translations": {
+      "es": {
+        "title": "4 Cheese Esfiha",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "4 Cheese Esfiha",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "9ef6fe5d-edb9-4913-a5b0-f814826a9223",
+    "categoryId": "9eace80a-fb82-4e91-83eb-cba737f7caac",
+    "comparedAtPrice": 340,
+    "createdAt": "2026-03-31T18:08:23.994Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "5 Cheese Sfiha",
+    "price": 340,
+    "translations": {
+      "es": {
+        "title": "5 Cheese Esfiha",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "5 Cheese Esfiha",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "9ef6fe8a-7d42-4ed7-9b90-c0397b32a022",
+    "categoryId": "9eace80a-fb82-4e91-83eb-cba737f7caac",
+    "comparedAtPrice": 330,
+    "createdAt": "2026-03-31T18:08:24.081Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Chicken, Cream Cheese & Bacon Sfiha",
+    "price": 330,
+    "translations": {
+      "es": {
+        "title": "Esfiha de Frango c/ Catupiry e Bacon",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Esfiha de Frango c/ Catupiry e Bacon",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "9ef7019f-d5c8-4347-ba59-b6278a6c6d4d",
+    "categoryId": "9eace606-1fc5-495a-a360-0a0210cfc86b",
+    "comparedAtPrice": 210,
+    "createdAt": "2026-03-31T18:08:24.716Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Nutella & Strawberry Sfiha",
+    "price": 210,
+    "translations": {
+      "es": {
+        "title": "Esfiha de Nutella com Morango",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Esfiha de Nutella com Morango",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "9ef701c1-9060-48e3-b2bb-d0b03b2b1b61",
+    "categoryId": "9eace606-1fc5-495a-a360-0a0210cfc86b",
+    "comparedAtPrice": 200,
+    "createdAt": "2026-03-31T18:08:24.750Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Nutella & Banana Sfiha",
+    "price": 200,
+    "translations": {
+      "es": {
+        "title": "Esfiha de Nutella com Banana",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Esfiha de Nutella com Banana",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "9ef71b7d-9c8e-4de3-9e4c-ce4503e8bf8d",
+    "categoryId": "9eace80a-fb82-4e91-83eb-cba737f7caac",
+    "comparedAtPrice": 330,
+    "createdAt": "2026-03-31T18:08:24.144Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Chicken & Cheddar Sfiha",
+    "price": 330,
+    "translations": {
+      "es": {
+        "title": "Esfiha de Frango com Cheddar",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Esfiha de Frango com Cheddar",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "9ef7bdb9-ca39-4925-9196-d5c3fa79e3a4",
+    "categoryId": "9eace80a-fb82-4e91-83eb-cba737f7caac",
+    "comparedAtPrice": 330,
+    "createdAt": "2026-03-31T18:08:24.217Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Chicken & Cheese Sfiha",
+    "price": 330,
+    "translations": {
+      "es": {
+        "title": "Esfiha de Frango com queijo",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Esfiha de Frango com queijo",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "9ef8ea91-db83-47e7-bfa0-aefb58447c91",
+    "categoryId": "9eace80a-fb82-4e91-83eb-cba737f7caac",
+    "comparedAtPrice": 330,
+    "createdAt": "2026-03-31T18:08:24.286Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Bacon & Cheddar Sfiha",
+    "price": 330,
+    "translations": {
+      "es": {
+        "title": "Esfiha de Bacon com Cheddar",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Esfiha de Bacon com Cheddar",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "9f4b672a-8c50-49cc-a5bd-27498be498c8",
+    "categoryId": "9ec90f61-3a59-40df-bff4-a1029a85da52",
+    "comparedAtPrice": 290,
+    "createdAt": "2026-03-31T18:08:25.334Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Guarana Antarctica",
+    "price": 290,
+    "translations": {
+      "es": {
+        "title": "Guaraná Antartica",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Guaraná Antartica",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "9f4b67a1-6950-4a9e-af4b-b9715b96d297",
+    "categoryId": "9ec90f61-3a59-40df-bff4-a1029a85da52",
+    "comparedAtPrice": 620,
+    "createdAt": "2026-03-31T18:08:25.270Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Guarana Antarctica 2L",
+    "price": 620,
+    "translations": {
+      "es": {
+        "title": "Guaraná Antartica 2L",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Guaraná Antartica 2L",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "9fdef81a-e487-4ba1-99bb-918b1b75ac95",
+    "categoryId": "9fdef81a-a270-4cdb-aed5-76377bab9e72",
+    "comparedAtPrice": 2199,
+    "createdAt": "2026-03-31T18:08:18.171Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Mozzarella Pizza",
+    "price": 2199,
+    "translations": {
+      "es": {
+        "title": "Mozzarella Pizza",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Mozzarella Pizza",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "9fdef889-25bd-4727-a048-6d2664b3138d",
+    "categoryId": "9fdef81a-a270-4cdb-aed5-76377bab9e72",
+    "comparedAtPrice": 2699,
+    "createdAt": "2026-03-31T18:08:18.274Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "4 Cheese Pizza",
+    "price": 2699,
+    "translations": {
+      "es": {
+        "title": "4 Cheese Pizza",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "4 Cheese Pizza",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "9fdef8a6-5f03-476a-94ef-34a43cc281ee",
+    "categoryId": "9fdef81a-a270-4cdb-aed5-76377bab9e72",
+    "comparedAtPrice": 2699,
+    "createdAt": "2026-03-31T18:08:18.348Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Chicken & Cream Cheese Pizza",
+    "price": 2699,
+    "translations": {
+      "es": {
+        "title": "Pizza de Frango com Catupriry",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Pizza de Frango com Catupriry",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "9fdef8c9-7a55-428e-b3d6-950d1ad49ac0",
+    "categoryId": "9fdef81a-a270-4cdb-aed5-76377bab9e72",
+    "comparedAtPrice": 2899,
+    "createdAt": "2026-03-31T18:08:18.437Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Chicken, Cream Cheese & Bacon Pizza",
+    "price": 2899,
+    "translations": {
+      "es": {
+        "title": "Pizza de Frango com Catupiry e Bacon",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Pizza de Frango com Catupiry e Bacon",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "9fdef8ef-bbc4-412d-bbe1-c5fa0ddffd44",
+    "categoryId": "9fdef81a-a270-4cdb-aed5-76377bab9e72",
+    "comparedAtPrice": 2499,
+    "createdAt": "2026-03-31T18:08:18.520Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Kielbasa Pizza",
+    "price": 2499,
+    "translations": {
+      "es": {
+        "title": "Kielbasa Pizza",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Kielbasa Pizza",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "9fdef905-8bd4-4edb-95da-c1264388a213",
+    "categoryId": "9fdef81a-a270-4cdb-aed5-76377bab9e72",
+    "comparedAtPrice": 2699,
+    "createdAt": "2026-03-31T18:08:18.633Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Kielbasa & Cream Cheese Pizza",
+    "price": 2699,
+    "translations": {
+      "es": {
+        "title": "Pizza de Calabresa com Catupiry",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Pizza de Calabresa com Catupiry",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "9fdef963-49d7-4c50-ab19-e663ca071436",
+    "categoryId": "9fdef81a-a270-4cdb-aed5-76377bab9e72",
+    "comparedAtPrice": 2499,
+    "createdAt": "2026-03-31T18:08:18.769Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Bacon Pizza",
+    "price": 2499,
+    "translations": {
+      "es": {
+        "title": "Bacon Pizza",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Bacon Pizza",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "9fdef978-3e77-44d8-9715-609991612978",
+    "categoryId": "9fdef81a-a270-4cdb-aed5-76377bab9e72",
+    "comparedAtPrice": 2699,
+    "createdAt": "2026-03-31T18:08:18.893Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Bacon & Cream Cheese Pizza",
+    "price": 2699,
+    "translations": {
+      "es": {
+        "title": "Pizza de Bacon com Catupriry",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Pizza de Bacon com Catupriry",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "a00b1e24-a613-4e56-a7b5-556078ecdeaa",
+    "categoryId": "9eace606-1fc5-495a-a360-0a0210cfc86b",
+    "comparedAtPrice": 350,
+    "createdAt": "2026-03-31T18:08:24.807Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Pistachio Sfiha",
+    "price": 350,
+    "translations": {
+      "es": {
+        "title": "Esfiha de Pistache",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Esfiha de Pistache",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "a00b1e43-e193-4c3a-86da-604f6267de84",
+    "categoryId": "9eace606-1fc5-495a-a360-0a0210cfc86b",
+    "comparedAtPrice": 299,
+    "createdAt": "2026-03-31T18:08:24.893Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Dark Chocolate Sfiha",
+    "price": 299,
+    "translations": {
+      "es": {
+        "title": "Esfiha de Chocolate Preto",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Esfiha de Chocolate Preto",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "a00b1e5c-74d0-4d43-99f7-55ba5ecdac7f",
+    "categoryId": "9eace606-1fc5-495a-a360-0a0210cfc86b",
+    "comparedAtPrice": 299,
+    "createdAt": "2026-03-31T18:08:24.930Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "White Chocolate Sfiha",
+    "price": 299,
+    "translations": {
+      "es": {
+        "title": "Esfiha de Chocolate Branco",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Esfiha de Chocolate Branco",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "a00b1e71-d9d4-4587-a811-570ef1c80ff1",
+    "categoryId": "9eace606-1fc5-495a-a360-0a0210cfc86b",
+    "comparedAtPrice": 299,
+    "createdAt": "2026-03-31T18:08:24.966Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Dark & White Chocolate Sfiha",
+    "price": 299,
+    "translations": {
+      "es": {
+        "title": "Esfiha de Dois Amores",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Esfiha de Dois Amores",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "a00b1e96-881a-49e0-b5d7-46992d8804e0",
+    "categoryId": "9eace606-1fc5-495a-a360-0a0210cfc86b",
+    "comparedAtPrice": 299,
+    "createdAt": "2026-03-31T18:08:25.012Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Dulce de Leche Sfiha",
+    "price": 299,
+    "translations": {
+      "es": {
+        "title": "Esfiha de Doce de Leite",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Esfiha de Doce de Leite",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "a00b1ead-7379-41cf-bf2d-26c8aa202da8",
+    "categoryId": "9eace606-1fc5-495a-a360-0a0210cfc86b",
+    "comparedAtPrice": 299,
+    "createdAt": "2026-03-31T18:08:25.046Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Guava Paste Sfiha",
+    "price": 299,
+    "translations": {
+      "es": {
+        "title": "Esfiha de Goiabada",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Esfiha de Goiabada",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "a00b1ebe-619b-4e52-8fca-c56ab8e65ec4",
+    "categoryId": "9eace606-1fc5-495a-a360-0a0210cfc86b",
+    "comparedAtPrice": 299,
+    "createdAt": "2026-03-31T18:08:25.080Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Guava Paste & Cheese Sfiha",
+    "price": 299,
+    "translations": {
+      "es": {
+        "title": "Esfiha de Goiabada com Queijo",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Esfiha de Goiabada com Queijo",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "a0378e1e-dbd7-4f1c-8077-abdb85423ae3",
+    "categoryId": "9fdef81a-a270-4cdb-aed5-76377bab9e72",
+    "comparedAtPrice": 2699,
+    "createdAt": "2026-03-31T18:08:18.991Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Portuguese Pizza",
+    "price": 2699,
+    "translations": {
+      "es": {
+        "title": "Pizza Portuguesa",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Pizza Portuguesa",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "a049e0e2-3755-40b5-af28-e42cd05bbeb6",
+    "categoryId": "9fdef81a-a270-4cdb-aed5-76377bab9e72",
+    "comparedAtPrice": 2699,
+    "createdAt": "2026-03-31T18:08:19.091Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Zaatar & Pistachio Pizza",
+    "price": 2699,
+    "translations": {
+      "es": {
+        "title": "Pizza de Zaatar com Pistache",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Pizza de Zaatar com Pistache",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "a049e204-f740-483d-8799-fa7a99a042c6",
+    "categoryId": "9eace80a-fb82-4e91-83eb-cba737f7caac",
+    "comparedAtPrice": 300,
+    "createdAt": "2026-03-31T18:08:23.777Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Beef & Zaatar Sfiha",
+    "price": 300,
+    "translations": {
+      "es": {
+        "title": "Esfiha de Carne com Zaatar",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Esfiha de Carne com Zaatar",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "a049e23b-0071-4e86-8a41-d6256c247b9d",
+    "categoryId": "9eace80a-fb82-4e91-83eb-cba737f7caac",
+    "comparedAtPrice": 330,
+    "createdAt": "2026-03-31T18:08:23.808Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Beef, Cheese & Zaatar Sfiha",
+    "price": 330,
+    "translations": {
+      "es": {
+        "title": "Esfiha de Carne e queijo com Zaatar",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Esfiha de Carne e queijo com Zaatar",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "a049e27f-0b1c-4eef-9079-cc087cd60b38",
+    "categoryId": "9fdef81a-a270-4cdb-aed5-76377bab9e72",
+    "comparedAtPrice": 2899,
+    "createdAt": "2026-03-31T18:08:19.168Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Shrimp Pizza",
+    "price": 2899,
+    "translations": {
+      "es": {
+        "title": "Pizza de Camarão",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Pizza de Camarão",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "a049e2ad-3078-4138-b8d9-3ebd8ee56bda",
+    "categoryId": "9fdef81a-a270-4cdb-aed5-76377bab9e72",
+    "comparedAtPrice": 2999,
+    "createdAt": "2026-03-31T18:08:19.306Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Shrimp & Cream Cheese Pizza",
+    "price": 2999,
+    "translations": {
+      "es": {
+        "title": "Pizza de Camarão com Catupriry",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Pizza de Camarão com Catupriry",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "a09db8dc-f75a-4894-99fa-f91f6a6c9f91",
+    "categoryId": "9fdef81a-a270-4cdb-aed5-76377bab9e72",
+    "comparedAtPrice": 2699,
+    "createdAt": "2026-03-31T18:08:19.474Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Bacon & Corn Pizza",
+    "price": 2699,
+    "translations": {
+      "es": {
+        "title": "Pizza de Bacon com Milho",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Pizza de Bacon com Milho",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "a09db8fb-c0dc-4a0e-b6b3-455ff2924ffb",
+    "categoryId": "9fdef81a-a270-4cdb-aed5-76377bab9e72",
+    "comparedAtPrice": 2699,
+    "createdAt": "2026-03-31T18:08:19.833Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Bacon, Corn & Cream Cheese Pizza",
+    "price": 2699,
+    "translations": {
+      "es": {
+        "title": "Pizza de Bacon com Milho e Catupiry",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Pizza de Bacon com Milho e Catupiry",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "a09db920-1da4-4695-a471-2744a2034228",
+    "categoryId": "9fdef81a-a270-4cdb-aed5-76377bab9e72",
+    "comparedAtPrice": 2799,
+    "createdAt": "2026-03-31T18:08:20.047Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Chicken, Cream Cheese & Corn Pizza",
+    "price": 2799,
+    "translations": {
+      "es": {
+        "title": "Pizza de Franco com Catupiry e Milho",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Pizza de Franco com Catupiry e Milho",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "a0d0e674-3aed-44b1-856a-4d6fe9ff5ed3",
+    "categoryId": "9fdef81a-a270-4cdb-aed5-76377bab9e72",
+    "comparedAtPrice": 2699,
+    "createdAt": "2026-03-31T18:08:20.365Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Broccoli, Bacon & Cream Cheese Pizza",
+    "price": 2699,
+    "translations": {
+      "es": {
+        "title": "Pizza Brócolis, Bacon e Carupiry",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Pizza Brócolis, Bacon e Carupiry",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "a0d0e798-16da-4a8a-8c83-a3618fbc671c",
+    "categoryId": "9fdef81a-a270-4cdb-aed5-76377bab9e72",
+    "comparedAtPrice": 2699,
+    "createdAt": "2026-03-31T18:08:20.542Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Nutella, M&M's & Pistachio Cream Pizza",
+    "price": 2699,
+    "translations": {
+      "es": {
+        "title": "Pizza Nutella MM e Creme de pistache",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Pizza Nutella MM e Creme de pistache",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "a0d0ea44-254d-4062-b946-bce7912533c4",
+    "categoryId": "9eace80a-fb82-4e91-83eb-cba737f7caac",
+    "comparedAtPrice": 330,
+    "createdAt": "2026-03-31T18:08:24.354Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Broccoli & Bacon Sfiha",
+    "price": 330,
+    "translations": {
+      "es": {
+        "title": "Esfiha de Brócolis com Bacon",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Esfiha de Brócolis com Bacon",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "a0d2828d-5a44-4b0b-ace9-592a9d2df5a2",
+    "categoryId": "9fdef81a-a270-4cdb-aed5-76377bab9e72",
+    "comparedAtPrice": 2299,
+    "createdAt": "2026-03-31T18:08:20.885Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Margherita",
+    "price": 2299,
+    "translations": {
+      "es": {
+        "title": "Marguerita",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Marguerita",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "a0d29e5d-f699-4c49-888b-c2b5a61a5263",
+    "categoryId": "9ec90f61-3a59-40df-bff4-a1029a85da52",
+    "comparedAtPrice": 230,
+    "createdAt": "2026-03-31T18:08:25.608Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Water",
+    "price": 230,
+    "translations": {
+      "es": {
+        "title": "Água",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Água",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "a0d29f9c-1df0-43f0-9b06-f55f80dca44d",
+    "categoryId": "9ec90f61-3a59-40df-bff4-a1029a85da52",
+    "comparedAtPrice": 230,
+    "createdAt": "2026-03-31T18:08:25.682Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Sparkling Water",
+    "price": 230,
+    "translations": {
+      "es": {
+        "title": "Água com gas",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Água com gas",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "a0d6103d-c9b9-47f6-8241-3b2a6566f533",
+    "categoryId": "9fdef81a-a270-4cdb-aed5-76377bab9e72",
+    "comparedAtPrice": 2699,
+    "createdAt": "2026-03-31T18:08:21.063Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Tuna & Onion Pizza",
+    "price": 2699,
+    "translations": {
+      "es": {
+        "title": "Pizza de Atum com cebola",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Pizza de Atum com cebola",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "a0dc6992-2d0b-44cc-80cf-088a9cf46496",
+    "categoryId": "9eace606-1fc5-495a-a360-0a0210cfc86b",
+    "comparedAtPrice": 350,
+    "createdAt": "2026-03-31T18:08:25.146Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Strawberry Cheesecake Sfiha",
+    "price": 350,
+    "translations": {
+      "es": {
+        "title": "Esfiha cheesecake morango",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Esfiha cheesecake morango",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "a0f1917a-ce39-4807-aca4-a5f1c62546a1",
+    "categoryId": "9fdef81a-a270-4cdb-aed5-76377bab9e72",
+    "comparedAtPrice": 2699,
+    "createdAt": "2026-03-31T18:08:21.272Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Italian Margherita",
+    "price": 2699,
+    "translations": {
+      "es": {
+        "title": "Marguerita Italy",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Marguerita Italy",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "a1031234-1760-498e-9ac6-670e70d89194",
+    "categoryId": "9fdef81a-a270-4cdb-aed5-76377bab9e72",
+    "comparedAtPrice": 2599,
+    "createdAt": "2026-03-31T18:08:21.450Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Nutella Heart",
+    "price": 2599,
+    "translations": {
+      "es": {
+        "title": "Nutella Heart",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Nutella Heart",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "a1063526-d4de-420b-a6f1-7f9c291de29c",
+    "categoryId": "9fdef81a-a270-4cdb-aed5-76377bab9e72",
+    "comparedAtPrice": 2599,
+    "createdAt": "2026-03-31T18:08:21.631Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Nutella Pizza",
+    "price": 2599,
+    "translations": {
+      "es": {
+        "title": "Pizza de Nutella",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Pizza de Nutella",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "a106355c-c003-4134-a52c-cc5275d4c171",
+    "categoryId": "9fdef81a-a270-4cdb-aed5-76377bab9e72",
+    "comparedAtPrice": 2699,
+    "createdAt": "2026-03-31T18:08:21.899Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Pistachio Pizza",
+    "price": 2699,
+    "translations": {
+      "es": {
+        "title": "Pizza de Pistache",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Pizza de Pistache",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "a1572ad1-4ef6-4426-bcd3-92c574616ddf",
+    "categoryId": "9fdef81a-a270-4cdb-aed5-76377bab9e72",
+    "comparedAtPrice": 2599,
+    "createdAt": "2026-03-31T18:08:22.073Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Pizza Dubai",
+    "price": 2599,
+    "translations": {
+      "es": {
+        "title": "Pizza Dubai",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Pizza Dubai",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "af5f6503-a4ab-4ca8-bca9-9595d11f527e",
+    "categoryId": null,
+    "comparedAtPrice": 2499,
+    "createdAt": "2026-03-16T18:57:05.826Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Mozzarella Pizza",
+    "price": 2199,
+    "translations": {
+      "es": {
+        "title": "Mozzarella Pizza",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Mozzarella Pizza",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "e272b478-9fe0-4a11-909a-4065a4a25b47",
+    "categoryId": null,
+    "comparedAtPrice": 399,
+    "createdAt": "2026-03-20T00:43:29.957Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "4 Cheese Sfiha",
+    "price": 329,
+    "translations": {
+      "es": {
+        "title": "4 Cheese Esfiha",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "4 Cheese Esfiha",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
+  },
+  {
+    "id": "ffa344f4-1596-4abe-8b16-a77d5a5104b6",
+    "categoryId": null,
+    "comparedAtPrice": 2899,
+    "createdAt": "2026-03-20T00:38:21.630Z",
+    "description": "Freshly baked, rich flavor and perfect texture. A customer favorite.",
+    "name": "Chicken & Cream Cheese Pizza",
+    "price": 2699,
+    "translations": {
+      "es": {
+        "title": "Chicken & Cream Cheese Pizza",
+        "description": "Recién hecho, sabor intenso e irresistible."
+      },
+      "pt": {
+        "title": "Chicken & Cream Cheese Pizza",
+        "description": "Feito na hora, sabor intenso e irresistível."
+      }
+    },
+    "_ModifierGroupToProduct": null,
+    "_PreparationStepToProduct": null,
+    "File": null,
+    "OrderProducts": null
   }
 ]

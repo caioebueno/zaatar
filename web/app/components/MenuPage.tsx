@@ -21,6 +21,7 @@ import { FiInfo, FiMapPin } from "react-icons/fi";
 import InformationModal from "./InformationModal";
 import text from "@/constants/text";
 import clsx from "clsx";
+import Image from "next/image";
 
 export function findProductById(
   categories: TCategory[],
@@ -153,8 +154,12 @@ const MenuPage: React.FC<TMenuPage> = ({ data, lg }) => {
       />
       <div className="flex flex-col items-center w-full max-w-[900px]">
         <div className="relative w-full">
-          <img
+          <Image
             src="/pizza.png"
+            width={1800}
+            height={320}
+            priority
+            sizes="(max-width: 900px) 100vw, 900px"
             className="h-[160px] w-full object-cover"
             alt=""
           />
@@ -176,7 +181,14 @@ const MenuPage: React.FC<TMenuPage> = ({ data, lg }) => {
           )}
         </div>
         <div className="rounded-xl border-[3px] border-white overflow-hidden w-fit  mt-[-60px] z-10">
-          <img src="/logo.png" className="w-[100px] h-[100px]" alt="" />
+          <Image
+            src="/logo.png"
+            width={100}
+            height={100}
+            priority
+            className="w-[100px] h-[100px]"
+            alt=""
+          />
         </div>
         <div className="flex flex-col gap-4 pt-4 w-full items-center p-4">
           <h1 className="text-[32px] font-bold">Zaatar Grill & Pizza</h1>
@@ -428,6 +440,8 @@ const ProductItem: React.FC<TProductItem> = ({
         src={firstImageUrl}
         className="rounded-2xl aspect-square object-cover bg-foreground"
         alt={product.name}
+        quality={45}
+        sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 280px"
       />
       <div className="flex flex-col gap-1">
         <span className="text-md font-semibold leading-4.5">

@@ -74,6 +74,21 @@ export type Business = $Result.DefaultSelection<Prisma.$BusinessPayload>
  */
 export type Branch = $Result.DefaultSelection<Prisma.$BranchPayload>
 /**
+ * Model Driver
+ * 
+ */
+export type Driver = $Result.DefaultSelection<Prisma.$DriverPayload>
+/**
+ * Model Dispatch
+ * 
+ */
+export type Dispatch = $Result.DefaultSelection<Prisma.$DispatchPayload>
+/**
+ * Model DispatchAssignmentJob
+ * 
+ */
+export type DispatchAssignmentJob = $Result.DefaultSelection<Prisma.$DispatchAssignmentJobPayload>
+/**
  * Model Address
  * 
  */
@@ -144,6 +159,16 @@ export const ModifierGroupType: {
 export type ModifierGroupType = (typeof ModifierGroupType)[keyof typeof ModifierGroupType]
 
 
+export const DispatchAssignmentJobStatus: {
+  PENDING: 'PENDING',
+  PROCESSING: 'PROCESSING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED'
+};
+
+export type DispatchAssignmentJobStatus = (typeof DispatchAssignmentJobStatus)[keyof typeof DispatchAssignmentJobStatus]
+
+
 export const PaymentType: {
   CASH: 'CASH',
   CARD: 'CARD',
@@ -179,6 +204,10 @@ export const ProgressiveDiscountStepType: typeof $Enums.ProgressiveDiscountStepT
 export type ModifierGroupType = $Enums.ModifierGroupType
 
 export const ModifierGroupType: typeof $Enums.ModifierGroupType
+
+export type DispatchAssignmentJobStatus = $Enums.DispatchAssignmentJobStatus
+
+export const DispatchAssignmentJobStatus: typeof $Enums.DispatchAssignmentJobStatus
 
 export type PaymentType = $Enums.PaymentType
 
@@ -432,6 +461,36 @@ export class PrismaClient<
     * ```
     */
   get branch(): Prisma.BranchDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.driver`: Exposes CRUD operations for the **Driver** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Drivers
+    * const drivers = await prisma.driver.findMany()
+    * ```
+    */
+  get driver(): Prisma.DriverDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.dispatch`: Exposes CRUD operations for the **Dispatch** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Dispatches
+    * const dispatches = await prisma.dispatch.findMany()
+    * ```
+    */
+  get dispatch(): Prisma.DispatchDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.dispatchAssignmentJob`: Exposes CRUD operations for the **DispatchAssignmentJob** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more DispatchAssignmentJobs
+    * const dispatchAssignmentJobs = await prisma.dispatchAssignmentJob.findMany()
+    * ```
+    */
+  get dispatchAssignmentJob(): Prisma.DispatchAssignmentJobDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.address`: Exposes CRUD operations for the **Address** model.
@@ -978,6 +1037,9 @@ export namespace Prisma {
     ModifierGroupItem: 'ModifierGroupItem',
     Business: 'Business',
     Branch: 'Branch',
+    Driver: 'Driver',
+    Dispatch: 'Dispatch',
+    DispatchAssignmentJob: 'DispatchAssignmentJob',
     Address: 'Address',
     Product: 'Product',
     Category: 'Category',
@@ -1003,7 +1065,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "station" | "preparationStep" | "preparationStepCategory" | "preparationStepTrack" | "preparationStepModifierTrack" | "progressiveDiscount" | "progressiveDiscountStep" | "file" | "modifierGroup" | "modifierGroupItem" | "business" | "branch" | "address" | "product" | "category" | "campaign" | "customer" | "deliveryAddress" | "message" | "promotialMessage" | "order" | "orderProducts"
+      modelProps: "station" | "preparationStep" | "preparationStepCategory" | "preparationStepTrack" | "preparationStepModifierTrack" | "progressiveDiscount" | "progressiveDiscountStep" | "file" | "modifierGroup" | "modifierGroupItem" | "business" | "branch" | "driver" | "dispatch" | "dispatchAssignmentJob" | "address" | "product" | "category" | "campaign" | "customer" | "deliveryAddress" | "message" | "promotialMessage" | "order" | "orderProducts"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1895,6 +1957,228 @@ export namespace Prisma {
           }
         }
       }
+      Driver: {
+        payload: Prisma.$DriverPayload<ExtArgs>
+        fields: Prisma.DriverFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.DriverFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DriverPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DriverFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DriverPayload>
+          }
+          findFirst: {
+            args: Prisma.DriverFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DriverPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.DriverFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DriverPayload>
+          }
+          findMany: {
+            args: Prisma.DriverFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DriverPayload>[]
+          }
+          create: {
+            args: Prisma.DriverCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DriverPayload>
+          }
+          createMany: {
+            args: Prisma.DriverCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.DriverCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DriverPayload>[]
+          }
+          delete: {
+            args: Prisma.DriverDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DriverPayload>
+          }
+          update: {
+            args: Prisma.DriverUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DriverPayload>
+          }
+          deleteMany: {
+            args: Prisma.DriverDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.DriverUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.DriverUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DriverPayload>[]
+          }
+          upsert: {
+            args: Prisma.DriverUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DriverPayload>
+          }
+          aggregate: {
+            args: Prisma.DriverAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDriver>
+          }
+          groupBy: {
+            args: Prisma.DriverGroupByArgs<ExtArgs>
+            result: $Utils.Optional<DriverGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.DriverCountArgs<ExtArgs>
+            result: $Utils.Optional<DriverCountAggregateOutputType> | number
+          }
+        }
+      }
+      Dispatch: {
+        payload: Prisma.$DispatchPayload<ExtArgs>
+        fields: Prisma.DispatchFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.DispatchFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DispatchPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DispatchFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DispatchPayload>
+          }
+          findFirst: {
+            args: Prisma.DispatchFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DispatchPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.DispatchFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DispatchPayload>
+          }
+          findMany: {
+            args: Prisma.DispatchFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DispatchPayload>[]
+          }
+          create: {
+            args: Prisma.DispatchCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DispatchPayload>
+          }
+          createMany: {
+            args: Prisma.DispatchCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.DispatchCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DispatchPayload>[]
+          }
+          delete: {
+            args: Prisma.DispatchDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DispatchPayload>
+          }
+          update: {
+            args: Prisma.DispatchUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DispatchPayload>
+          }
+          deleteMany: {
+            args: Prisma.DispatchDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.DispatchUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.DispatchUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DispatchPayload>[]
+          }
+          upsert: {
+            args: Prisma.DispatchUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DispatchPayload>
+          }
+          aggregate: {
+            args: Prisma.DispatchAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDispatch>
+          }
+          groupBy: {
+            args: Prisma.DispatchGroupByArgs<ExtArgs>
+            result: $Utils.Optional<DispatchGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.DispatchCountArgs<ExtArgs>
+            result: $Utils.Optional<DispatchCountAggregateOutputType> | number
+          }
+        }
+      }
+      DispatchAssignmentJob: {
+        payload: Prisma.$DispatchAssignmentJobPayload<ExtArgs>
+        fields: Prisma.DispatchAssignmentJobFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.DispatchAssignmentJobFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DispatchAssignmentJobPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DispatchAssignmentJobFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DispatchAssignmentJobPayload>
+          }
+          findFirst: {
+            args: Prisma.DispatchAssignmentJobFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DispatchAssignmentJobPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.DispatchAssignmentJobFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DispatchAssignmentJobPayload>
+          }
+          findMany: {
+            args: Prisma.DispatchAssignmentJobFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DispatchAssignmentJobPayload>[]
+          }
+          create: {
+            args: Prisma.DispatchAssignmentJobCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DispatchAssignmentJobPayload>
+          }
+          createMany: {
+            args: Prisma.DispatchAssignmentJobCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.DispatchAssignmentJobCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DispatchAssignmentJobPayload>[]
+          }
+          delete: {
+            args: Prisma.DispatchAssignmentJobDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DispatchAssignmentJobPayload>
+          }
+          update: {
+            args: Prisma.DispatchAssignmentJobUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DispatchAssignmentJobPayload>
+          }
+          deleteMany: {
+            args: Prisma.DispatchAssignmentJobDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.DispatchAssignmentJobUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.DispatchAssignmentJobUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DispatchAssignmentJobPayload>[]
+          }
+          upsert: {
+            args: Prisma.DispatchAssignmentJobUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DispatchAssignmentJobPayload>
+          }
+          aggregate: {
+            args: Prisma.DispatchAssignmentJobAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDispatchAssignmentJob>
+          }
+          groupBy: {
+            args: Prisma.DispatchAssignmentJobGroupByArgs<ExtArgs>
+            result: $Utils.Optional<DispatchAssignmentJobGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.DispatchAssignmentJobCountArgs<ExtArgs>
+            result: $Utils.Optional<DispatchAssignmentJobCountAggregateOutputType> | number
+          }
+        }
+      }
       Address: {
         payload: Prisma.$AddressPayload<ExtArgs>
         fields: Prisma.AddressFieldRefs
@@ -2755,6 +3039,9 @@ export namespace Prisma {
     modifierGroupItem?: ModifierGroupItemOmit
     business?: BusinessOmit
     branch?: BranchOmit
+    driver?: DriverOmit
+    dispatch?: DispatchOmit
+    dispatchAssignmentJob?: DispatchAssignmentJobOmit
     address?: AddressOmit
     product?: ProductOmit
     category?: CategoryOmit
@@ -3143,6 +3430,68 @@ export namespace Prisma {
    */
   export type BusinessCountOutputTypeCountBranchesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: BranchWhereInput
+  }
+
+
+  /**
+   * Count Type DriverCountOutputType
+   */
+
+  export type DriverCountOutputType = {
+    dispatches: number
+  }
+
+  export type DriverCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    dispatches?: boolean | DriverCountOutputTypeCountDispatchesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * DriverCountOutputType without action
+   */
+  export type DriverCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DriverCountOutputType
+     */
+    select?: DriverCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * DriverCountOutputType without action
+   */
+  export type DriverCountOutputTypeCountDispatchesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DispatchWhereInput
+  }
+
+
+  /**
+   * Count Type DispatchCountOutputType
+   */
+
+  export type DispatchCountOutputType = {
+    orders: number
+  }
+
+  export type DispatchCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    orders?: boolean | DispatchCountOutputTypeCountOrdersArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * DispatchCountOutputType without action
+   */
+  export type DispatchCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DispatchCountOutputType
+     */
+    select?: DispatchCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * DispatchCountOutputType without action
+   */
+  export type DispatchCountOutputTypeCountOrdersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OrderWhereInput
   }
 
 
@@ -16911,6 +17260,3390 @@ export namespace Prisma {
 
 
   /**
+   * Model Driver
+   */
+
+  export type AggregateDriver = {
+    _count: DriverCountAggregateOutputType | null
+    _avg: DriverAvgAggregateOutputType | null
+    _sum: DriverSumAggregateOutputType | null
+    _min: DriverMinAggregateOutputType | null
+    _max: DriverMaxAggregateOutputType | null
+  }
+
+  export type DriverAvgAggregateOutputType = {
+    priorityLevel: number | null
+  }
+
+  export type DriverSumAggregateOutputType = {
+    priorityLevel: number | null
+  }
+
+  export type DriverMinAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    name: string | null
+    active: boolean | null
+    priorityLevel: number | null
+  }
+
+  export type DriverMaxAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    name: string | null
+    active: boolean | null
+    priorityLevel: number | null
+  }
+
+  export type DriverCountAggregateOutputType = {
+    id: number
+    createdAt: number
+    name: number
+    active: number
+    priorityLevel: number
+    _all: number
+  }
+
+
+  export type DriverAvgAggregateInputType = {
+    priorityLevel?: true
+  }
+
+  export type DriverSumAggregateInputType = {
+    priorityLevel?: true
+  }
+
+  export type DriverMinAggregateInputType = {
+    id?: true
+    createdAt?: true
+    name?: true
+    active?: true
+    priorityLevel?: true
+  }
+
+  export type DriverMaxAggregateInputType = {
+    id?: true
+    createdAt?: true
+    name?: true
+    active?: true
+    priorityLevel?: true
+  }
+
+  export type DriverCountAggregateInputType = {
+    id?: true
+    createdAt?: true
+    name?: true
+    active?: true
+    priorityLevel?: true
+    _all?: true
+  }
+
+  export type DriverAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Driver to aggregate.
+     */
+    where?: DriverWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Drivers to fetch.
+     */
+    orderBy?: DriverOrderByWithRelationInput | DriverOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: DriverWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Drivers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Drivers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Drivers
+    **/
+    _count?: true | DriverCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: DriverAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: DriverSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: DriverMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: DriverMaxAggregateInputType
+  }
+
+  export type GetDriverAggregateType<T extends DriverAggregateArgs> = {
+        [P in keyof T & keyof AggregateDriver]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDriver[P]>
+      : GetScalarType<T[P], AggregateDriver[P]>
+  }
+
+
+
+
+  export type DriverGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DriverWhereInput
+    orderBy?: DriverOrderByWithAggregationInput | DriverOrderByWithAggregationInput[]
+    by: DriverScalarFieldEnum[] | DriverScalarFieldEnum
+    having?: DriverScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DriverCountAggregateInputType | true
+    _avg?: DriverAvgAggregateInputType
+    _sum?: DriverSumAggregateInputType
+    _min?: DriverMinAggregateInputType
+    _max?: DriverMaxAggregateInputType
+  }
+
+  export type DriverGroupByOutputType = {
+    id: string
+    createdAt: Date
+    name: string
+    active: boolean
+    priorityLevel: number
+    _count: DriverCountAggregateOutputType | null
+    _avg: DriverAvgAggregateOutputType | null
+    _sum: DriverSumAggregateOutputType | null
+    _min: DriverMinAggregateOutputType | null
+    _max: DriverMaxAggregateOutputType | null
+  }
+
+  type GetDriverGroupByPayload<T extends DriverGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<DriverGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DriverGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DriverGroupByOutputType[P]>
+            : GetScalarType<T[P], DriverGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DriverSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    name?: boolean
+    active?: boolean
+    priorityLevel?: boolean
+    dispatches?: boolean | Driver$dispatchesArgs<ExtArgs>
+    _count?: boolean | DriverCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["driver"]>
+
+  export type DriverSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    name?: boolean
+    active?: boolean
+    priorityLevel?: boolean
+  }, ExtArgs["result"]["driver"]>
+
+  export type DriverSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    name?: boolean
+    active?: boolean
+    priorityLevel?: boolean
+  }, ExtArgs["result"]["driver"]>
+
+  export type DriverSelectScalar = {
+    id?: boolean
+    createdAt?: boolean
+    name?: boolean
+    active?: boolean
+    priorityLevel?: boolean
+  }
+
+  export type DriverOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "name" | "active" | "priorityLevel", ExtArgs["result"]["driver"]>
+  export type DriverInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    dispatches?: boolean | Driver$dispatchesArgs<ExtArgs>
+    _count?: boolean | DriverCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type DriverIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type DriverIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $DriverPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Driver"
+    objects: {
+      dispatches: Prisma.$DispatchPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      createdAt: Date
+      name: string
+      active: boolean
+      priorityLevel: number
+    }, ExtArgs["result"]["driver"]>
+    composites: {}
+  }
+
+  type DriverGetPayload<S extends boolean | null | undefined | DriverDefaultArgs> = $Result.GetResult<Prisma.$DriverPayload, S>
+
+  type DriverCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<DriverFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: DriverCountAggregateInputType | true
+    }
+
+  export interface DriverDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Driver'], meta: { name: 'Driver' } }
+    /**
+     * Find zero or one Driver that matches the filter.
+     * @param {DriverFindUniqueArgs} args - Arguments to find a Driver
+     * @example
+     * // Get one Driver
+     * const driver = await prisma.driver.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends DriverFindUniqueArgs>(args: SelectSubset<T, DriverFindUniqueArgs<ExtArgs>>): Prisma__DriverClient<$Result.GetResult<Prisma.$DriverPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Driver that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {DriverFindUniqueOrThrowArgs} args - Arguments to find a Driver
+     * @example
+     * // Get one Driver
+     * const driver = await prisma.driver.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends DriverFindUniqueOrThrowArgs>(args: SelectSubset<T, DriverFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DriverClient<$Result.GetResult<Prisma.$DriverPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Driver that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DriverFindFirstArgs} args - Arguments to find a Driver
+     * @example
+     * // Get one Driver
+     * const driver = await prisma.driver.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends DriverFindFirstArgs>(args?: SelectSubset<T, DriverFindFirstArgs<ExtArgs>>): Prisma__DriverClient<$Result.GetResult<Prisma.$DriverPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Driver that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DriverFindFirstOrThrowArgs} args - Arguments to find a Driver
+     * @example
+     * // Get one Driver
+     * const driver = await prisma.driver.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends DriverFindFirstOrThrowArgs>(args?: SelectSubset<T, DriverFindFirstOrThrowArgs<ExtArgs>>): Prisma__DriverClient<$Result.GetResult<Prisma.$DriverPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Drivers that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DriverFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Drivers
+     * const drivers = await prisma.driver.findMany()
+     * 
+     * // Get first 10 Drivers
+     * const drivers = await prisma.driver.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const driverWithIdOnly = await prisma.driver.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends DriverFindManyArgs>(args?: SelectSubset<T, DriverFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DriverPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Driver.
+     * @param {DriverCreateArgs} args - Arguments to create a Driver.
+     * @example
+     * // Create one Driver
+     * const Driver = await prisma.driver.create({
+     *   data: {
+     *     // ... data to create a Driver
+     *   }
+     * })
+     * 
+     */
+    create<T extends DriverCreateArgs>(args: SelectSubset<T, DriverCreateArgs<ExtArgs>>): Prisma__DriverClient<$Result.GetResult<Prisma.$DriverPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Drivers.
+     * @param {DriverCreateManyArgs} args - Arguments to create many Drivers.
+     * @example
+     * // Create many Drivers
+     * const driver = await prisma.driver.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends DriverCreateManyArgs>(args?: SelectSubset<T, DriverCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Drivers and returns the data saved in the database.
+     * @param {DriverCreateManyAndReturnArgs} args - Arguments to create many Drivers.
+     * @example
+     * // Create many Drivers
+     * const driver = await prisma.driver.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Drivers and only return the `id`
+     * const driverWithIdOnly = await prisma.driver.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends DriverCreateManyAndReturnArgs>(args?: SelectSubset<T, DriverCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DriverPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Driver.
+     * @param {DriverDeleteArgs} args - Arguments to delete one Driver.
+     * @example
+     * // Delete one Driver
+     * const Driver = await prisma.driver.delete({
+     *   where: {
+     *     // ... filter to delete one Driver
+     *   }
+     * })
+     * 
+     */
+    delete<T extends DriverDeleteArgs>(args: SelectSubset<T, DriverDeleteArgs<ExtArgs>>): Prisma__DriverClient<$Result.GetResult<Prisma.$DriverPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Driver.
+     * @param {DriverUpdateArgs} args - Arguments to update one Driver.
+     * @example
+     * // Update one Driver
+     * const driver = await prisma.driver.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends DriverUpdateArgs>(args: SelectSubset<T, DriverUpdateArgs<ExtArgs>>): Prisma__DriverClient<$Result.GetResult<Prisma.$DriverPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Drivers.
+     * @param {DriverDeleteManyArgs} args - Arguments to filter Drivers to delete.
+     * @example
+     * // Delete a few Drivers
+     * const { count } = await prisma.driver.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends DriverDeleteManyArgs>(args?: SelectSubset<T, DriverDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Drivers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DriverUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Drivers
+     * const driver = await prisma.driver.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends DriverUpdateManyArgs>(args: SelectSubset<T, DriverUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Drivers and returns the data updated in the database.
+     * @param {DriverUpdateManyAndReturnArgs} args - Arguments to update many Drivers.
+     * @example
+     * // Update many Drivers
+     * const driver = await prisma.driver.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Drivers and only return the `id`
+     * const driverWithIdOnly = await prisma.driver.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends DriverUpdateManyAndReturnArgs>(args: SelectSubset<T, DriverUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DriverPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Driver.
+     * @param {DriverUpsertArgs} args - Arguments to update or create a Driver.
+     * @example
+     * // Update or create a Driver
+     * const driver = await prisma.driver.upsert({
+     *   create: {
+     *     // ... data to create a Driver
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Driver we want to update
+     *   }
+     * })
+     */
+    upsert<T extends DriverUpsertArgs>(args: SelectSubset<T, DriverUpsertArgs<ExtArgs>>): Prisma__DriverClient<$Result.GetResult<Prisma.$DriverPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Drivers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DriverCountArgs} args - Arguments to filter Drivers to count.
+     * @example
+     * // Count the number of Drivers
+     * const count = await prisma.driver.count({
+     *   where: {
+     *     // ... the filter for the Drivers we want to count
+     *   }
+     * })
+    **/
+    count<T extends DriverCountArgs>(
+      args?: Subset<T, DriverCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DriverCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Driver.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DriverAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DriverAggregateArgs>(args: Subset<T, DriverAggregateArgs>): Prisma.PrismaPromise<GetDriverAggregateType<T>>
+
+    /**
+     * Group by Driver.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DriverGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends DriverGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DriverGroupByArgs['orderBy'] }
+        : { orderBy?: DriverGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DriverGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDriverGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Driver model
+   */
+  readonly fields: DriverFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Driver.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__DriverClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    dispatches<T extends Driver$dispatchesArgs<ExtArgs> = {}>(args?: Subset<T, Driver$dispatchesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DispatchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Driver model
+   */
+  interface DriverFieldRefs {
+    readonly id: FieldRef<"Driver", 'String'>
+    readonly createdAt: FieldRef<"Driver", 'DateTime'>
+    readonly name: FieldRef<"Driver", 'String'>
+    readonly active: FieldRef<"Driver", 'Boolean'>
+    readonly priorityLevel: FieldRef<"Driver", 'Int'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Driver findUnique
+   */
+  export type DriverFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Driver
+     */
+    select?: DriverSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Driver
+     */
+    omit?: DriverOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DriverInclude<ExtArgs> | null
+    /**
+     * Filter, which Driver to fetch.
+     */
+    where: DriverWhereUniqueInput
+  }
+
+  /**
+   * Driver findUniqueOrThrow
+   */
+  export type DriverFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Driver
+     */
+    select?: DriverSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Driver
+     */
+    omit?: DriverOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DriverInclude<ExtArgs> | null
+    /**
+     * Filter, which Driver to fetch.
+     */
+    where: DriverWhereUniqueInput
+  }
+
+  /**
+   * Driver findFirst
+   */
+  export type DriverFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Driver
+     */
+    select?: DriverSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Driver
+     */
+    omit?: DriverOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DriverInclude<ExtArgs> | null
+    /**
+     * Filter, which Driver to fetch.
+     */
+    where?: DriverWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Drivers to fetch.
+     */
+    orderBy?: DriverOrderByWithRelationInput | DriverOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Drivers.
+     */
+    cursor?: DriverWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Drivers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Drivers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Drivers.
+     */
+    distinct?: DriverScalarFieldEnum | DriverScalarFieldEnum[]
+  }
+
+  /**
+   * Driver findFirstOrThrow
+   */
+  export type DriverFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Driver
+     */
+    select?: DriverSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Driver
+     */
+    omit?: DriverOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DriverInclude<ExtArgs> | null
+    /**
+     * Filter, which Driver to fetch.
+     */
+    where?: DriverWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Drivers to fetch.
+     */
+    orderBy?: DriverOrderByWithRelationInput | DriverOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Drivers.
+     */
+    cursor?: DriverWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Drivers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Drivers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Drivers.
+     */
+    distinct?: DriverScalarFieldEnum | DriverScalarFieldEnum[]
+  }
+
+  /**
+   * Driver findMany
+   */
+  export type DriverFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Driver
+     */
+    select?: DriverSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Driver
+     */
+    omit?: DriverOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DriverInclude<ExtArgs> | null
+    /**
+     * Filter, which Drivers to fetch.
+     */
+    where?: DriverWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Drivers to fetch.
+     */
+    orderBy?: DriverOrderByWithRelationInput | DriverOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Drivers.
+     */
+    cursor?: DriverWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Drivers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Drivers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Drivers.
+     */
+    distinct?: DriverScalarFieldEnum | DriverScalarFieldEnum[]
+  }
+
+  /**
+   * Driver create
+   */
+  export type DriverCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Driver
+     */
+    select?: DriverSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Driver
+     */
+    omit?: DriverOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DriverInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Driver.
+     */
+    data: XOR<DriverCreateInput, DriverUncheckedCreateInput>
+  }
+
+  /**
+   * Driver createMany
+   */
+  export type DriverCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Drivers.
+     */
+    data: DriverCreateManyInput | DriverCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Driver createManyAndReturn
+   */
+  export type DriverCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Driver
+     */
+    select?: DriverSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Driver
+     */
+    omit?: DriverOmit<ExtArgs> | null
+    /**
+     * The data used to create many Drivers.
+     */
+    data: DriverCreateManyInput | DriverCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Driver update
+   */
+  export type DriverUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Driver
+     */
+    select?: DriverSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Driver
+     */
+    omit?: DriverOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DriverInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Driver.
+     */
+    data: XOR<DriverUpdateInput, DriverUncheckedUpdateInput>
+    /**
+     * Choose, which Driver to update.
+     */
+    where: DriverWhereUniqueInput
+  }
+
+  /**
+   * Driver updateMany
+   */
+  export type DriverUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Drivers.
+     */
+    data: XOR<DriverUpdateManyMutationInput, DriverUncheckedUpdateManyInput>
+    /**
+     * Filter which Drivers to update
+     */
+    where?: DriverWhereInput
+    /**
+     * Limit how many Drivers to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Driver updateManyAndReturn
+   */
+  export type DriverUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Driver
+     */
+    select?: DriverSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Driver
+     */
+    omit?: DriverOmit<ExtArgs> | null
+    /**
+     * The data used to update Drivers.
+     */
+    data: XOR<DriverUpdateManyMutationInput, DriverUncheckedUpdateManyInput>
+    /**
+     * Filter which Drivers to update
+     */
+    where?: DriverWhereInput
+    /**
+     * Limit how many Drivers to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Driver upsert
+   */
+  export type DriverUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Driver
+     */
+    select?: DriverSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Driver
+     */
+    omit?: DriverOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DriverInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Driver to update in case it exists.
+     */
+    where: DriverWhereUniqueInput
+    /**
+     * In case the Driver found by the `where` argument doesn't exist, create a new Driver with this data.
+     */
+    create: XOR<DriverCreateInput, DriverUncheckedCreateInput>
+    /**
+     * In case the Driver was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DriverUpdateInput, DriverUncheckedUpdateInput>
+  }
+
+  /**
+   * Driver delete
+   */
+  export type DriverDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Driver
+     */
+    select?: DriverSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Driver
+     */
+    omit?: DriverOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DriverInclude<ExtArgs> | null
+    /**
+     * Filter which Driver to delete.
+     */
+    where: DriverWhereUniqueInput
+  }
+
+  /**
+   * Driver deleteMany
+   */
+  export type DriverDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Drivers to delete
+     */
+    where?: DriverWhereInput
+    /**
+     * Limit how many Drivers to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Driver.dispatches
+   */
+  export type Driver$dispatchesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Dispatch
+     */
+    select?: DispatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Dispatch
+     */
+    omit?: DispatchOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DispatchInclude<ExtArgs> | null
+    where?: DispatchWhereInput
+    orderBy?: DispatchOrderByWithRelationInput | DispatchOrderByWithRelationInput[]
+    cursor?: DispatchWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DispatchScalarFieldEnum | DispatchScalarFieldEnum[]
+  }
+
+  /**
+   * Driver without action
+   */
+  export type DriverDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Driver
+     */
+    select?: DriverSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Driver
+     */
+    omit?: DriverOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DriverInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Dispatch
+   */
+
+  export type AggregateDispatch = {
+    _count: DispatchCountAggregateOutputType | null
+    _avg: DispatchAvgAggregateOutputType | null
+    _sum: DispatchSumAggregateOutputType | null
+    _min: DispatchMinAggregateOutputType | null
+    _max: DispatchMaxAggregateOutputType | null
+  }
+
+  export type DispatchAvgAggregateOutputType = {
+    estimatedDeliveryDurationMinutes: number | null
+    estimatedRoundTripDurationMinutes: number | null
+  }
+
+  export type DispatchSumAggregateOutputType = {
+    estimatedDeliveryDurationMinutes: number | null
+    estimatedRoundTripDurationMinutes: number | null
+  }
+
+  export type DispatchMinAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    dispatched: boolean | null
+    dispatchAt: Date | null
+    estimatedDeliveryDurationMinutes: number | null
+    estimatedRoundTripDurationMinutes: number | null
+    driverId: string | null
+  }
+
+  export type DispatchMaxAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    dispatched: boolean | null
+    dispatchAt: Date | null
+    estimatedDeliveryDurationMinutes: number | null
+    estimatedRoundTripDurationMinutes: number | null
+    driverId: string | null
+  }
+
+  export type DispatchCountAggregateOutputType = {
+    id: number
+    createdAt: number
+    dispatched: number
+    dispatchAt: number
+    estimatedDeliveryDurationMinutes: number
+    estimatedRoundTripDurationMinutes: number
+    driverId: number
+    _all: number
+  }
+
+
+  export type DispatchAvgAggregateInputType = {
+    estimatedDeliveryDurationMinutes?: true
+    estimatedRoundTripDurationMinutes?: true
+  }
+
+  export type DispatchSumAggregateInputType = {
+    estimatedDeliveryDurationMinutes?: true
+    estimatedRoundTripDurationMinutes?: true
+  }
+
+  export type DispatchMinAggregateInputType = {
+    id?: true
+    createdAt?: true
+    dispatched?: true
+    dispatchAt?: true
+    estimatedDeliveryDurationMinutes?: true
+    estimatedRoundTripDurationMinutes?: true
+    driverId?: true
+  }
+
+  export type DispatchMaxAggregateInputType = {
+    id?: true
+    createdAt?: true
+    dispatched?: true
+    dispatchAt?: true
+    estimatedDeliveryDurationMinutes?: true
+    estimatedRoundTripDurationMinutes?: true
+    driverId?: true
+  }
+
+  export type DispatchCountAggregateInputType = {
+    id?: true
+    createdAt?: true
+    dispatched?: true
+    dispatchAt?: true
+    estimatedDeliveryDurationMinutes?: true
+    estimatedRoundTripDurationMinutes?: true
+    driverId?: true
+    _all?: true
+  }
+
+  export type DispatchAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Dispatch to aggregate.
+     */
+    where?: DispatchWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Dispatches to fetch.
+     */
+    orderBy?: DispatchOrderByWithRelationInput | DispatchOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: DispatchWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Dispatches from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Dispatches.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Dispatches
+    **/
+    _count?: true | DispatchCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: DispatchAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: DispatchSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: DispatchMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: DispatchMaxAggregateInputType
+  }
+
+  export type GetDispatchAggregateType<T extends DispatchAggregateArgs> = {
+        [P in keyof T & keyof AggregateDispatch]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDispatch[P]>
+      : GetScalarType<T[P], AggregateDispatch[P]>
+  }
+
+
+
+
+  export type DispatchGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DispatchWhereInput
+    orderBy?: DispatchOrderByWithAggregationInput | DispatchOrderByWithAggregationInput[]
+    by: DispatchScalarFieldEnum[] | DispatchScalarFieldEnum
+    having?: DispatchScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DispatchCountAggregateInputType | true
+    _avg?: DispatchAvgAggregateInputType
+    _sum?: DispatchSumAggregateInputType
+    _min?: DispatchMinAggregateInputType
+    _max?: DispatchMaxAggregateInputType
+  }
+
+  export type DispatchGroupByOutputType = {
+    id: string
+    createdAt: Date
+    dispatched: boolean
+    dispatchAt: Date | null
+    estimatedDeliveryDurationMinutes: number | null
+    estimatedRoundTripDurationMinutes: number | null
+    driverId: string | null
+    _count: DispatchCountAggregateOutputType | null
+    _avg: DispatchAvgAggregateOutputType | null
+    _sum: DispatchSumAggregateOutputType | null
+    _min: DispatchMinAggregateOutputType | null
+    _max: DispatchMaxAggregateOutputType | null
+  }
+
+  type GetDispatchGroupByPayload<T extends DispatchGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<DispatchGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DispatchGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DispatchGroupByOutputType[P]>
+            : GetScalarType<T[P], DispatchGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DispatchSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    dispatched?: boolean
+    dispatchAt?: boolean
+    estimatedDeliveryDurationMinutes?: boolean
+    estimatedRoundTripDurationMinutes?: boolean
+    driverId?: boolean
+    driver?: boolean | Dispatch$driverArgs<ExtArgs>
+    orders?: boolean | Dispatch$ordersArgs<ExtArgs>
+    _count?: boolean | DispatchCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["dispatch"]>
+
+  export type DispatchSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    dispatched?: boolean
+    dispatchAt?: boolean
+    estimatedDeliveryDurationMinutes?: boolean
+    estimatedRoundTripDurationMinutes?: boolean
+    driverId?: boolean
+    driver?: boolean | Dispatch$driverArgs<ExtArgs>
+  }, ExtArgs["result"]["dispatch"]>
+
+  export type DispatchSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    dispatched?: boolean
+    dispatchAt?: boolean
+    estimatedDeliveryDurationMinutes?: boolean
+    estimatedRoundTripDurationMinutes?: boolean
+    driverId?: boolean
+    driver?: boolean | Dispatch$driverArgs<ExtArgs>
+  }, ExtArgs["result"]["dispatch"]>
+
+  export type DispatchSelectScalar = {
+    id?: boolean
+    createdAt?: boolean
+    dispatched?: boolean
+    dispatchAt?: boolean
+    estimatedDeliveryDurationMinutes?: boolean
+    estimatedRoundTripDurationMinutes?: boolean
+    driverId?: boolean
+  }
+
+  export type DispatchOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "dispatched" | "dispatchAt" | "estimatedDeliveryDurationMinutes" | "estimatedRoundTripDurationMinutes" | "driverId", ExtArgs["result"]["dispatch"]>
+  export type DispatchInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    driver?: boolean | Dispatch$driverArgs<ExtArgs>
+    orders?: boolean | Dispatch$ordersArgs<ExtArgs>
+    _count?: boolean | DispatchCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type DispatchIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    driver?: boolean | Dispatch$driverArgs<ExtArgs>
+  }
+  export type DispatchIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    driver?: boolean | Dispatch$driverArgs<ExtArgs>
+  }
+
+  export type $DispatchPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Dispatch"
+    objects: {
+      driver: Prisma.$DriverPayload<ExtArgs> | null
+      orders: Prisma.$OrderPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      createdAt: Date
+      dispatched: boolean
+      dispatchAt: Date | null
+      estimatedDeliveryDurationMinutes: number | null
+      estimatedRoundTripDurationMinutes: number | null
+      driverId: string | null
+    }, ExtArgs["result"]["dispatch"]>
+    composites: {}
+  }
+
+  type DispatchGetPayload<S extends boolean | null | undefined | DispatchDefaultArgs> = $Result.GetResult<Prisma.$DispatchPayload, S>
+
+  type DispatchCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<DispatchFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: DispatchCountAggregateInputType | true
+    }
+
+  export interface DispatchDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Dispatch'], meta: { name: 'Dispatch' } }
+    /**
+     * Find zero or one Dispatch that matches the filter.
+     * @param {DispatchFindUniqueArgs} args - Arguments to find a Dispatch
+     * @example
+     * // Get one Dispatch
+     * const dispatch = await prisma.dispatch.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends DispatchFindUniqueArgs>(args: SelectSubset<T, DispatchFindUniqueArgs<ExtArgs>>): Prisma__DispatchClient<$Result.GetResult<Prisma.$DispatchPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Dispatch that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {DispatchFindUniqueOrThrowArgs} args - Arguments to find a Dispatch
+     * @example
+     * // Get one Dispatch
+     * const dispatch = await prisma.dispatch.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends DispatchFindUniqueOrThrowArgs>(args: SelectSubset<T, DispatchFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DispatchClient<$Result.GetResult<Prisma.$DispatchPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Dispatch that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DispatchFindFirstArgs} args - Arguments to find a Dispatch
+     * @example
+     * // Get one Dispatch
+     * const dispatch = await prisma.dispatch.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends DispatchFindFirstArgs>(args?: SelectSubset<T, DispatchFindFirstArgs<ExtArgs>>): Prisma__DispatchClient<$Result.GetResult<Prisma.$DispatchPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Dispatch that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DispatchFindFirstOrThrowArgs} args - Arguments to find a Dispatch
+     * @example
+     * // Get one Dispatch
+     * const dispatch = await prisma.dispatch.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends DispatchFindFirstOrThrowArgs>(args?: SelectSubset<T, DispatchFindFirstOrThrowArgs<ExtArgs>>): Prisma__DispatchClient<$Result.GetResult<Prisma.$DispatchPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Dispatches that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DispatchFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Dispatches
+     * const dispatches = await prisma.dispatch.findMany()
+     * 
+     * // Get first 10 Dispatches
+     * const dispatches = await prisma.dispatch.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const dispatchWithIdOnly = await prisma.dispatch.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends DispatchFindManyArgs>(args?: SelectSubset<T, DispatchFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DispatchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Dispatch.
+     * @param {DispatchCreateArgs} args - Arguments to create a Dispatch.
+     * @example
+     * // Create one Dispatch
+     * const Dispatch = await prisma.dispatch.create({
+     *   data: {
+     *     // ... data to create a Dispatch
+     *   }
+     * })
+     * 
+     */
+    create<T extends DispatchCreateArgs>(args: SelectSubset<T, DispatchCreateArgs<ExtArgs>>): Prisma__DispatchClient<$Result.GetResult<Prisma.$DispatchPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Dispatches.
+     * @param {DispatchCreateManyArgs} args - Arguments to create many Dispatches.
+     * @example
+     * // Create many Dispatches
+     * const dispatch = await prisma.dispatch.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends DispatchCreateManyArgs>(args?: SelectSubset<T, DispatchCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Dispatches and returns the data saved in the database.
+     * @param {DispatchCreateManyAndReturnArgs} args - Arguments to create many Dispatches.
+     * @example
+     * // Create many Dispatches
+     * const dispatch = await prisma.dispatch.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Dispatches and only return the `id`
+     * const dispatchWithIdOnly = await prisma.dispatch.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends DispatchCreateManyAndReturnArgs>(args?: SelectSubset<T, DispatchCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DispatchPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Dispatch.
+     * @param {DispatchDeleteArgs} args - Arguments to delete one Dispatch.
+     * @example
+     * // Delete one Dispatch
+     * const Dispatch = await prisma.dispatch.delete({
+     *   where: {
+     *     // ... filter to delete one Dispatch
+     *   }
+     * })
+     * 
+     */
+    delete<T extends DispatchDeleteArgs>(args: SelectSubset<T, DispatchDeleteArgs<ExtArgs>>): Prisma__DispatchClient<$Result.GetResult<Prisma.$DispatchPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Dispatch.
+     * @param {DispatchUpdateArgs} args - Arguments to update one Dispatch.
+     * @example
+     * // Update one Dispatch
+     * const dispatch = await prisma.dispatch.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends DispatchUpdateArgs>(args: SelectSubset<T, DispatchUpdateArgs<ExtArgs>>): Prisma__DispatchClient<$Result.GetResult<Prisma.$DispatchPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Dispatches.
+     * @param {DispatchDeleteManyArgs} args - Arguments to filter Dispatches to delete.
+     * @example
+     * // Delete a few Dispatches
+     * const { count } = await prisma.dispatch.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends DispatchDeleteManyArgs>(args?: SelectSubset<T, DispatchDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Dispatches.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DispatchUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Dispatches
+     * const dispatch = await prisma.dispatch.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends DispatchUpdateManyArgs>(args: SelectSubset<T, DispatchUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Dispatches and returns the data updated in the database.
+     * @param {DispatchUpdateManyAndReturnArgs} args - Arguments to update many Dispatches.
+     * @example
+     * // Update many Dispatches
+     * const dispatch = await prisma.dispatch.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Dispatches and only return the `id`
+     * const dispatchWithIdOnly = await prisma.dispatch.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends DispatchUpdateManyAndReturnArgs>(args: SelectSubset<T, DispatchUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DispatchPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Dispatch.
+     * @param {DispatchUpsertArgs} args - Arguments to update or create a Dispatch.
+     * @example
+     * // Update or create a Dispatch
+     * const dispatch = await prisma.dispatch.upsert({
+     *   create: {
+     *     // ... data to create a Dispatch
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Dispatch we want to update
+     *   }
+     * })
+     */
+    upsert<T extends DispatchUpsertArgs>(args: SelectSubset<T, DispatchUpsertArgs<ExtArgs>>): Prisma__DispatchClient<$Result.GetResult<Prisma.$DispatchPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Dispatches.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DispatchCountArgs} args - Arguments to filter Dispatches to count.
+     * @example
+     * // Count the number of Dispatches
+     * const count = await prisma.dispatch.count({
+     *   where: {
+     *     // ... the filter for the Dispatches we want to count
+     *   }
+     * })
+    **/
+    count<T extends DispatchCountArgs>(
+      args?: Subset<T, DispatchCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DispatchCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Dispatch.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DispatchAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DispatchAggregateArgs>(args: Subset<T, DispatchAggregateArgs>): Prisma.PrismaPromise<GetDispatchAggregateType<T>>
+
+    /**
+     * Group by Dispatch.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DispatchGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends DispatchGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DispatchGroupByArgs['orderBy'] }
+        : { orderBy?: DispatchGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DispatchGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDispatchGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Dispatch model
+   */
+  readonly fields: DispatchFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Dispatch.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__DispatchClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    driver<T extends Dispatch$driverArgs<ExtArgs> = {}>(args?: Subset<T, Dispatch$driverArgs<ExtArgs>>): Prisma__DriverClient<$Result.GetResult<Prisma.$DriverPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    orders<T extends Dispatch$ordersArgs<ExtArgs> = {}>(args?: Subset<T, Dispatch$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Dispatch model
+   */
+  interface DispatchFieldRefs {
+    readonly id: FieldRef<"Dispatch", 'String'>
+    readonly createdAt: FieldRef<"Dispatch", 'DateTime'>
+    readonly dispatched: FieldRef<"Dispatch", 'Boolean'>
+    readonly dispatchAt: FieldRef<"Dispatch", 'DateTime'>
+    readonly estimatedDeliveryDurationMinutes: FieldRef<"Dispatch", 'Int'>
+    readonly estimatedRoundTripDurationMinutes: FieldRef<"Dispatch", 'Int'>
+    readonly driverId: FieldRef<"Dispatch", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Dispatch findUnique
+   */
+  export type DispatchFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Dispatch
+     */
+    select?: DispatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Dispatch
+     */
+    omit?: DispatchOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DispatchInclude<ExtArgs> | null
+    /**
+     * Filter, which Dispatch to fetch.
+     */
+    where: DispatchWhereUniqueInput
+  }
+
+  /**
+   * Dispatch findUniqueOrThrow
+   */
+  export type DispatchFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Dispatch
+     */
+    select?: DispatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Dispatch
+     */
+    omit?: DispatchOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DispatchInclude<ExtArgs> | null
+    /**
+     * Filter, which Dispatch to fetch.
+     */
+    where: DispatchWhereUniqueInput
+  }
+
+  /**
+   * Dispatch findFirst
+   */
+  export type DispatchFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Dispatch
+     */
+    select?: DispatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Dispatch
+     */
+    omit?: DispatchOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DispatchInclude<ExtArgs> | null
+    /**
+     * Filter, which Dispatch to fetch.
+     */
+    where?: DispatchWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Dispatches to fetch.
+     */
+    orderBy?: DispatchOrderByWithRelationInput | DispatchOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Dispatches.
+     */
+    cursor?: DispatchWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Dispatches from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Dispatches.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Dispatches.
+     */
+    distinct?: DispatchScalarFieldEnum | DispatchScalarFieldEnum[]
+  }
+
+  /**
+   * Dispatch findFirstOrThrow
+   */
+  export type DispatchFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Dispatch
+     */
+    select?: DispatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Dispatch
+     */
+    omit?: DispatchOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DispatchInclude<ExtArgs> | null
+    /**
+     * Filter, which Dispatch to fetch.
+     */
+    where?: DispatchWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Dispatches to fetch.
+     */
+    orderBy?: DispatchOrderByWithRelationInput | DispatchOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Dispatches.
+     */
+    cursor?: DispatchWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Dispatches from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Dispatches.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Dispatches.
+     */
+    distinct?: DispatchScalarFieldEnum | DispatchScalarFieldEnum[]
+  }
+
+  /**
+   * Dispatch findMany
+   */
+  export type DispatchFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Dispatch
+     */
+    select?: DispatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Dispatch
+     */
+    omit?: DispatchOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DispatchInclude<ExtArgs> | null
+    /**
+     * Filter, which Dispatches to fetch.
+     */
+    where?: DispatchWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Dispatches to fetch.
+     */
+    orderBy?: DispatchOrderByWithRelationInput | DispatchOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Dispatches.
+     */
+    cursor?: DispatchWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Dispatches from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Dispatches.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Dispatches.
+     */
+    distinct?: DispatchScalarFieldEnum | DispatchScalarFieldEnum[]
+  }
+
+  /**
+   * Dispatch create
+   */
+  export type DispatchCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Dispatch
+     */
+    select?: DispatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Dispatch
+     */
+    omit?: DispatchOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DispatchInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Dispatch.
+     */
+    data: XOR<DispatchCreateInput, DispatchUncheckedCreateInput>
+  }
+
+  /**
+   * Dispatch createMany
+   */
+  export type DispatchCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Dispatches.
+     */
+    data: DispatchCreateManyInput | DispatchCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Dispatch createManyAndReturn
+   */
+  export type DispatchCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Dispatch
+     */
+    select?: DispatchSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Dispatch
+     */
+    omit?: DispatchOmit<ExtArgs> | null
+    /**
+     * The data used to create many Dispatches.
+     */
+    data: DispatchCreateManyInput | DispatchCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DispatchIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Dispatch update
+   */
+  export type DispatchUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Dispatch
+     */
+    select?: DispatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Dispatch
+     */
+    omit?: DispatchOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DispatchInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Dispatch.
+     */
+    data: XOR<DispatchUpdateInput, DispatchUncheckedUpdateInput>
+    /**
+     * Choose, which Dispatch to update.
+     */
+    where: DispatchWhereUniqueInput
+  }
+
+  /**
+   * Dispatch updateMany
+   */
+  export type DispatchUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Dispatches.
+     */
+    data: XOR<DispatchUpdateManyMutationInput, DispatchUncheckedUpdateManyInput>
+    /**
+     * Filter which Dispatches to update
+     */
+    where?: DispatchWhereInput
+    /**
+     * Limit how many Dispatches to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Dispatch updateManyAndReturn
+   */
+  export type DispatchUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Dispatch
+     */
+    select?: DispatchSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Dispatch
+     */
+    omit?: DispatchOmit<ExtArgs> | null
+    /**
+     * The data used to update Dispatches.
+     */
+    data: XOR<DispatchUpdateManyMutationInput, DispatchUncheckedUpdateManyInput>
+    /**
+     * Filter which Dispatches to update
+     */
+    where?: DispatchWhereInput
+    /**
+     * Limit how many Dispatches to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DispatchIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Dispatch upsert
+   */
+  export type DispatchUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Dispatch
+     */
+    select?: DispatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Dispatch
+     */
+    omit?: DispatchOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DispatchInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Dispatch to update in case it exists.
+     */
+    where: DispatchWhereUniqueInput
+    /**
+     * In case the Dispatch found by the `where` argument doesn't exist, create a new Dispatch with this data.
+     */
+    create: XOR<DispatchCreateInput, DispatchUncheckedCreateInput>
+    /**
+     * In case the Dispatch was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DispatchUpdateInput, DispatchUncheckedUpdateInput>
+  }
+
+  /**
+   * Dispatch delete
+   */
+  export type DispatchDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Dispatch
+     */
+    select?: DispatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Dispatch
+     */
+    omit?: DispatchOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DispatchInclude<ExtArgs> | null
+    /**
+     * Filter which Dispatch to delete.
+     */
+    where: DispatchWhereUniqueInput
+  }
+
+  /**
+   * Dispatch deleteMany
+   */
+  export type DispatchDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Dispatches to delete
+     */
+    where?: DispatchWhereInput
+    /**
+     * Limit how many Dispatches to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Dispatch.driver
+   */
+  export type Dispatch$driverArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Driver
+     */
+    select?: DriverSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Driver
+     */
+    omit?: DriverOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DriverInclude<ExtArgs> | null
+    where?: DriverWhereInput
+  }
+
+  /**
+   * Dispatch.orders
+   */
+  export type Dispatch$ordersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Order
+     */
+    select?: OrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Order
+     */
+    omit?: OrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderInclude<ExtArgs> | null
+    where?: OrderWhereInput
+    orderBy?: OrderOrderByWithRelationInput | OrderOrderByWithRelationInput[]
+    cursor?: OrderWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: OrderScalarFieldEnum | OrderScalarFieldEnum[]
+  }
+
+  /**
+   * Dispatch without action
+   */
+  export type DispatchDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Dispatch
+     */
+    select?: DispatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Dispatch
+     */
+    omit?: DispatchOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DispatchInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model DispatchAssignmentJob
+   */
+
+  export type AggregateDispatchAssignmentJob = {
+    _count: DispatchAssignmentJobCountAggregateOutputType | null
+    _avg: DispatchAssignmentJobAvgAggregateOutputType | null
+    _sum: DispatchAssignmentJobSumAggregateOutputType | null
+    _min: DispatchAssignmentJobMinAggregateOutputType | null
+    _max: DispatchAssignmentJobMaxAggregateOutputType | null
+  }
+
+  export type DispatchAssignmentJobAvgAggregateOutputType = {
+    attempts: number | null
+  }
+
+  export type DispatchAssignmentJobSumAggregateOutputType = {
+    attempts: number | null
+  }
+
+  export type DispatchAssignmentJobMinAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    status: $Enums.DispatchAssignmentJobStatus | null
+    attempts: number | null
+    availableAt: Date | null
+    processingStartedAt: Date | null
+    completedAt: Date | null
+    lastError: string | null
+    orderId: string | null
+    deliveryAddressId: string | null
+  }
+
+  export type DispatchAssignmentJobMaxAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    status: $Enums.DispatchAssignmentJobStatus | null
+    attempts: number | null
+    availableAt: Date | null
+    processingStartedAt: Date | null
+    completedAt: Date | null
+    lastError: string | null
+    orderId: string | null
+    deliveryAddressId: string | null
+  }
+
+  export type DispatchAssignmentJobCountAggregateOutputType = {
+    id: number
+    createdAt: number
+    status: number
+    attempts: number
+    availableAt: number
+    processingStartedAt: number
+    completedAt: number
+    lastError: number
+    orderId: number
+    deliveryAddressId: number
+    _all: number
+  }
+
+
+  export type DispatchAssignmentJobAvgAggregateInputType = {
+    attempts?: true
+  }
+
+  export type DispatchAssignmentJobSumAggregateInputType = {
+    attempts?: true
+  }
+
+  export type DispatchAssignmentJobMinAggregateInputType = {
+    id?: true
+    createdAt?: true
+    status?: true
+    attempts?: true
+    availableAt?: true
+    processingStartedAt?: true
+    completedAt?: true
+    lastError?: true
+    orderId?: true
+    deliveryAddressId?: true
+  }
+
+  export type DispatchAssignmentJobMaxAggregateInputType = {
+    id?: true
+    createdAt?: true
+    status?: true
+    attempts?: true
+    availableAt?: true
+    processingStartedAt?: true
+    completedAt?: true
+    lastError?: true
+    orderId?: true
+    deliveryAddressId?: true
+  }
+
+  export type DispatchAssignmentJobCountAggregateInputType = {
+    id?: true
+    createdAt?: true
+    status?: true
+    attempts?: true
+    availableAt?: true
+    processingStartedAt?: true
+    completedAt?: true
+    lastError?: true
+    orderId?: true
+    deliveryAddressId?: true
+    _all?: true
+  }
+
+  export type DispatchAssignmentJobAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DispatchAssignmentJob to aggregate.
+     */
+    where?: DispatchAssignmentJobWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DispatchAssignmentJobs to fetch.
+     */
+    orderBy?: DispatchAssignmentJobOrderByWithRelationInput | DispatchAssignmentJobOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: DispatchAssignmentJobWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DispatchAssignmentJobs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DispatchAssignmentJobs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned DispatchAssignmentJobs
+    **/
+    _count?: true | DispatchAssignmentJobCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: DispatchAssignmentJobAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: DispatchAssignmentJobSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: DispatchAssignmentJobMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: DispatchAssignmentJobMaxAggregateInputType
+  }
+
+  export type GetDispatchAssignmentJobAggregateType<T extends DispatchAssignmentJobAggregateArgs> = {
+        [P in keyof T & keyof AggregateDispatchAssignmentJob]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDispatchAssignmentJob[P]>
+      : GetScalarType<T[P], AggregateDispatchAssignmentJob[P]>
+  }
+
+
+
+
+  export type DispatchAssignmentJobGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DispatchAssignmentJobWhereInput
+    orderBy?: DispatchAssignmentJobOrderByWithAggregationInput | DispatchAssignmentJobOrderByWithAggregationInput[]
+    by: DispatchAssignmentJobScalarFieldEnum[] | DispatchAssignmentJobScalarFieldEnum
+    having?: DispatchAssignmentJobScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DispatchAssignmentJobCountAggregateInputType | true
+    _avg?: DispatchAssignmentJobAvgAggregateInputType
+    _sum?: DispatchAssignmentJobSumAggregateInputType
+    _min?: DispatchAssignmentJobMinAggregateInputType
+    _max?: DispatchAssignmentJobMaxAggregateInputType
+  }
+
+  export type DispatchAssignmentJobGroupByOutputType = {
+    id: string
+    createdAt: Date
+    status: $Enums.DispatchAssignmentJobStatus
+    attempts: number
+    availableAt: Date
+    processingStartedAt: Date | null
+    completedAt: Date | null
+    lastError: string | null
+    orderId: string
+    deliveryAddressId: string
+    _count: DispatchAssignmentJobCountAggregateOutputType | null
+    _avg: DispatchAssignmentJobAvgAggregateOutputType | null
+    _sum: DispatchAssignmentJobSumAggregateOutputType | null
+    _min: DispatchAssignmentJobMinAggregateOutputType | null
+    _max: DispatchAssignmentJobMaxAggregateOutputType | null
+  }
+
+  type GetDispatchAssignmentJobGroupByPayload<T extends DispatchAssignmentJobGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<DispatchAssignmentJobGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DispatchAssignmentJobGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DispatchAssignmentJobGroupByOutputType[P]>
+            : GetScalarType<T[P], DispatchAssignmentJobGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DispatchAssignmentJobSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    status?: boolean
+    attempts?: boolean
+    availableAt?: boolean
+    processingStartedAt?: boolean
+    completedAt?: boolean
+    lastError?: boolean
+    orderId?: boolean
+    deliveryAddressId?: boolean
+  }, ExtArgs["result"]["dispatchAssignmentJob"]>
+
+  export type DispatchAssignmentJobSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    status?: boolean
+    attempts?: boolean
+    availableAt?: boolean
+    processingStartedAt?: boolean
+    completedAt?: boolean
+    lastError?: boolean
+    orderId?: boolean
+    deliveryAddressId?: boolean
+  }, ExtArgs["result"]["dispatchAssignmentJob"]>
+
+  export type DispatchAssignmentJobSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    status?: boolean
+    attempts?: boolean
+    availableAt?: boolean
+    processingStartedAt?: boolean
+    completedAt?: boolean
+    lastError?: boolean
+    orderId?: boolean
+    deliveryAddressId?: boolean
+  }, ExtArgs["result"]["dispatchAssignmentJob"]>
+
+  export type DispatchAssignmentJobSelectScalar = {
+    id?: boolean
+    createdAt?: boolean
+    status?: boolean
+    attempts?: boolean
+    availableAt?: boolean
+    processingStartedAt?: boolean
+    completedAt?: boolean
+    lastError?: boolean
+    orderId?: boolean
+    deliveryAddressId?: boolean
+  }
+
+  export type DispatchAssignmentJobOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "status" | "attempts" | "availableAt" | "processingStartedAt" | "completedAt" | "lastError" | "orderId" | "deliveryAddressId", ExtArgs["result"]["dispatchAssignmentJob"]>
+
+  export type $DispatchAssignmentJobPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "DispatchAssignmentJob"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      createdAt: Date
+      status: $Enums.DispatchAssignmentJobStatus
+      attempts: number
+      availableAt: Date
+      processingStartedAt: Date | null
+      completedAt: Date | null
+      lastError: string | null
+      orderId: string
+      deliveryAddressId: string
+    }, ExtArgs["result"]["dispatchAssignmentJob"]>
+    composites: {}
+  }
+
+  type DispatchAssignmentJobGetPayload<S extends boolean | null | undefined | DispatchAssignmentJobDefaultArgs> = $Result.GetResult<Prisma.$DispatchAssignmentJobPayload, S>
+
+  type DispatchAssignmentJobCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<DispatchAssignmentJobFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: DispatchAssignmentJobCountAggregateInputType | true
+    }
+
+  export interface DispatchAssignmentJobDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['DispatchAssignmentJob'], meta: { name: 'DispatchAssignmentJob' } }
+    /**
+     * Find zero or one DispatchAssignmentJob that matches the filter.
+     * @param {DispatchAssignmentJobFindUniqueArgs} args - Arguments to find a DispatchAssignmentJob
+     * @example
+     * // Get one DispatchAssignmentJob
+     * const dispatchAssignmentJob = await prisma.dispatchAssignmentJob.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends DispatchAssignmentJobFindUniqueArgs>(args: SelectSubset<T, DispatchAssignmentJobFindUniqueArgs<ExtArgs>>): Prisma__DispatchAssignmentJobClient<$Result.GetResult<Prisma.$DispatchAssignmentJobPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one DispatchAssignmentJob that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {DispatchAssignmentJobFindUniqueOrThrowArgs} args - Arguments to find a DispatchAssignmentJob
+     * @example
+     * // Get one DispatchAssignmentJob
+     * const dispatchAssignmentJob = await prisma.dispatchAssignmentJob.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends DispatchAssignmentJobFindUniqueOrThrowArgs>(args: SelectSubset<T, DispatchAssignmentJobFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DispatchAssignmentJobClient<$Result.GetResult<Prisma.$DispatchAssignmentJobPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DispatchAssignmentJob that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DispatchAssignmentJobFindFirstArgs} args - Arguments to find a DispatchAssignmentJob
+     * @example
+     * // Get one DispatchAssignmentJob
+     * const dispatchAssignmentJob = await prisma.dispatchAssignmentJob.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends DispatchAssignmentJobFindFirstArgs>(args?: SelectSubset<T, DispatchAssignmentJobFindFirstArgs<ExtArgs>>): Prisma__DispatchAssignmentJobClient<$Result.GetResult<Prisma.$DispatchAssignmentJobPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DispatchAssignmentJob that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DispatchAssignmentJobFindFirstOrThrowArgs} args - Arguments to find a DispatchAssignmentJob
+     * @example
+     * // Get one DispatchAssignmentJob
+     * const dispatchAssignmentJob = await prisma.dispatchAssignmentJob.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends DispatchAssignmentJobFindFirstOrThrowArgs>(args?: SelectSubset<T, DispatchAssignmentJobFindFirstOrThrowArgs<ExtArgs>>): Prisma__DispatchAssignmentJobClient<$Result.GetResult<Prisma.$DispatchAssignmentJobPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more DispatchAssignmentJobs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DispatchAssignmentJobFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all DispatchAssignmentJobs
+     * const dispatchAssignmentJobs = await prisma.dispatchAssignmentJob.findMany()
+     * 
+     * // Get first 10 DispatchAssignmentJobs
+     * const dispatchAssignmentJobs = await prisma.dispatchAssignmentJob.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const dispatchAssignmentJobWithIdOnly = await prisma.dispatchAssignmentJob.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends DispatchAssignmentJobFindManyArgs>(args?: SelectSubset<T, DispatchAssignmentJobFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DispatchAssignmentJobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a DispatchAssignmentJob.
+     * @param {DispatchAssignmentJobCreateArgs} args - Arguments to create a DispatchAssignmentJob.
+     * @example
+     * // Create one DispatchAssignmentJob
+     * const DispatchAssignmentJob = await prisma.dispatchAssignmentJob.create({
+     *   data: {
+     *     // ... data to create a DispatchAssignmentJob
+     *   }
+     * })
+     * 
+     */
+    create<T extends DispatchAssignmentJobCreateArgs>(args: SelectSubset<T, DispatchAssignmentJobCreateArgs<ExtArgs>>): Prisma__DispatchAssignmentJobClient<$Result.GetResult<Prisma.$DispatchAssignmentJobPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many DispatchAssignmentJobs.
+     * @param {DispatchAssignmentJobCreateManyArgs} args - Arguments to create many DispatchAssignmentJobs.
+     * @example
+     * // Create many DispatchAssignmentJobs
+     * const dispatchAssignmentJob = await prisma.dispatchAssignmentJob.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends DispatchAssignmentJobCreateManyArgs>(args?: SelectSubset<T, DispatchAssignmentJobCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many DispatchAssignmentJobs and returns the data saved in the database.
+     * @param {DispatchAssignmentJobCreateManyAndReturnArgs} args - Arguments to create many DispatchAssignmentJobs.
+     * @example
+     * // Create many DispatchAssignmentJobs
+     * const dispatchAssignmentJob = await prisma.dispatchAssignmentJob.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many DispatchAssignmentJobs and only return the `id`
+     * const dispatchAssignmentJobWithIdOnly = await prisma.dispatchAssignmentJob.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends DispatchAssignmentJobCreateManyAndReturnArgs>(args?: SelectSubset<T, DispatchAssignmentJobCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DispatchAssignmentJobPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a DispatchAssignmentJob.
+     * @param {DispatchAssignmentJobDeleteArgs} args - Arguments to delete one DispatchAssignmentJob.
+     * @example
+     * // Delete one DispatchAssignmentJob
+     * const DispatchAssignmentJob = await prisma.dispatchAssignmentJob.delete({
+     *   where: {
+     *     // ... filter to delete one DispatchAssignmentJob
+     *   }
+     * })
+     * 
+     */
+    delete<T extends DispatchAssignmentJobDeleteArgs>(args: SelectSubset<T, DispatchAssignmentJobDeleteArgs<ExtArgs>>): Prisma__DispatchAssignmentJobClient<$Result.GetResult<Prisma.$DispatchAssignmentJobPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one DispatchAssignmentJob.
+     * @param {DispatchAssignmentJobUpdateArgs} args - Arguments to update one DispatchAssignmentJob.
+     * @example
+     * // Update one DispatchAssignmentJob
+     * const dispatchAssignmentJob = await prisma.dispatchAssignmentJob.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends DispatchAssignmentJobUpdateArgs>(args: SelectSubset<T, DispatchAssignmentJobUpdateArgs<ExtArgs>>): Prisma__DispatchAssignmentJobClient<$Result.GetResult<Prisma.$DispatchAssignmentJobPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more DispatchAssignmentJobs.
+     * @param {DispatchAssignmentJobDeleteManyArgs} args - Arguments to filter DispatchAssignmentJobs to delete.
+     * @example
+     * // Delete a few DispatchAssignmentJobs
+     * const { count } = await prisma.dispatchAssignmentJob.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends DispatchAssignmentJobDeleteManyArgs>(args?: SelectSubset<T, DispatchAssignmentJobDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DispatchAssignmentJobs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DispatchAssignmentJobUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many DispatchAssignmentJobs
+     * const dispatchAssignmentJob = await prisma.dispatchAssignmentJob.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends DispatchAssignmentJobUpdateManyArgs>(args: SelectSubset<T, DispatchAssignmentJobUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DispatchAssignmentJobs and returns the data updated in the database.
+     * @param {DispatchAssignmentJobUpdateManyAndReturnArgs} args - Arguments to update many DispatchAssignmentJobs.
+     * @example
+     * // Update many DispatchAssignmentJobs
+     * const dispatchAssignmentJob = await prisma.dispatchAssignmentJob.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more DispatchAssignmentJobs and only return the `id`
+     * const dispatchAssignmentJobWithIdOnly = await prisma.dispatchAssignmentJob.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends DispatchAssignmentJobUpdateManyAndReturnArgs>(args: SelectSubset<T, DispatchAssignmentJobUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DispatchAssignmentJobPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one DispatchAssignmentJob.
+     * @param {DispatchAssignmentJobUpsertArgs} args - Arguments to update or create a DispatchAssignmentJob.
+     * @example
+     * // Update or create a DispatchAssignmentJob
+     * const dispatchAssignmentJob = await prisma.dispatchAssignmentJob.upsert({
+     *   create: {
+     *     // ... data to create a DispatchAssignmentJob
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the DispatchAssignmentJob we want to update
+     *   }
+     * })
+     */
+    upsert<T extends DispatchAssignmentJobUpsertArgs>(args: SelectSubset<T, DispatchAssignmentJobUpsertArgs<ExtArgs>>): Prisma__DispatchAssignmentJobClient<$Result.GetResult<Prisma.$DispatchAssignmentJobPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of DispatchAssignmentJobs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DispatchAssignmentJobCountArgs} args - Arguments to filter DispatchAssignmentJobs to count.
+     * @example
+     * // Count the number of DispatchAssignmentJobs
+     * const count = await prisma.dispatchAssignmentJob.count({
+     *   where: {
+     *     // ... the filter for the DispatchAssignmentJobs we want to count
+     *   }
+     * })
+    **/
+    count<T extends DispatchAssignmentJobCountArgs>(
+      args?: Subset<T, DispatchAssignmentJobCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DispatchAssignmentJobCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a DispatchAssignmentJob.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DispatchAssignmentJobAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DispatchAssignmentJobAggregateArgs>(args: Subset<T, DispatchAssignmentJobAggregateArgs>): Prisma.PrismaPromise<GetDispatchAssignmentJobAggregateType<T>>
+
+    /**
+     * Group by DispatchAssignmentJob.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DispatchAssignmentJobGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends DispatchAssignmentJobGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DispatchAssignmentJobGroupByArgs['orderBy'] }
+        : { orderBy?: DispatchAssignmentJobGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DispatchAssignmentJobGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDispatchAssignmentJobGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the DispatchAssignmentJob model
+   */
+  readonly fields: DispatchAssignmentJobFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for DispatchAssignmentJob.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__DispatchAssignmentJobClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the DispatchAssignmentJob model
+   */
+  interface DispatchAssignmentJobFieldRefs {
+    readonly id: FieldRef<"DispatchAssignmentJob", 'String'>
+    readonly createdAt: FieldRef<"DispatchAssignmentJob", 'DateTime'>
+    readonly status: FieldRef<"DispatchAssignmentJob", 'DispatchAssignmentJobStatus'>
+    readonly attempts: FieldRef<"DispatchAssignmentJob", 'Int'>
+    readonly availableAt: FieldRef<"DispatchAssignmentJob", 'DateTime'>
+    readonly processingStartedAt: FieldRef<"DispatchAssignmentJob", 'DateTime'>
+    readonly completedAt: FieldRef<"DispatchAssignmentJob", 'DateTime'>
+    readonly lastError: FieldRef<"DispatchAssignmentJob", 'String'>
+    readonly orderId: FieldRef<"DispatchAssignmentJob", 'String'>
+    readonly deliveryAddressId: FieldRef<"DispatchAssignmentJob", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * DispatchAssignmentJob findUnique
+   */
+  export type DispatchAssignmentJobFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DispatchAssignmentJob
+     */
+    select?: DispatchAssignmentJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DispatchAssignmentJob
+     */
+    omit?: DispatchAssignmentJobOmit<ExtArgs> | null
+    /**
+     * Filter, which DispatchAssignmentJob to fetch.
+     */
+    where: DispatchAssignmentJobWhereUniqueInput
+  }
+
+  /**
+   * DispatchAssignmentJob findUniqueOrThrow
+   */
+  export type DispatchAssignmentJobFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DispatchAssignmentJob
+     */
+    select?: DispatchAssignmentJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DispatchAssignmentJob
+     */
+    omit?: DispatchAssignmentJobOmit<ExtArgs> | null
+    /**
+     * Filter, which DispatchAssignmentJob to fetch.
+     */
+    where: DispatchAssignmentJobWhereUniqueInput
+  }
+
+  /**
+   * DispatchAssignmentJob findFirst
+   */
+  export type DispatchAssignmentJobFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DispatchAssignmentJob
+     */
+    select?: DispatchAssignmentJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DispatchAssignmentJob
+     */
+    omit?: DispatchAssignmentJobOmit<ExtArgs> | null
+    /**
+     * Filter, which DispatchAssignmentJob to fetch.
+     */
+    where?: DispatchAssignmentJobWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DispatchAssignmentJobs to fetch.
+     */
+    orderBy?: DispatchAssignmentJobOrderByWithRelationInput | DispatchAssignmentJobOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DispatchAssignmentJobs.
+     */
+    cursor?: DispatchAssignmentJobWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DispatchAssignmentJobs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DispatchAssignmentJobs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DispatchAssignmentJobs.
+     */
+    distinct?: DispatchAssignmentJobScalarFieldEnum | DispatchAssignmentJobScalarFieldEnum[]
+  }
+
+  /**
+   * DispatchAssignmentJob findFirstOrThrow
+   */
+  export type DispatchAssignmentJobFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DispatchAssignmentJob
+     */
+    select?: DispatchAssignmentJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DispatchAssignmentJob
+     */
+    omit?: DispatchAssignmentJobOmit<ExtArgs> | null
+    /**
+     * Filter, which DispatchAssignmentJob to fetch.
+     */
+    where?: DispatchAssignmentJobWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DispatchAssignmentJobs to fetch.
+     */
+    orderBy?: DispatchAssignmentJobOrderByWithRelationInput | DispatchAssignmentJobOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DispatchAssignmentJobs.
+     */
+    cursor?: DispatchAssignmentJobWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DispatchAssignmentJobs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DispatchAssignmentJobs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DispatchAssignmentJobs.
+     */
+    distinct?: DispatchAssignmentJobScalarFieldEnum | DispatchAssignmentJobScalarFieldEnum[]
+  }
+
+  /**
+   * DispatchAssignmentJob findMany
+   */
+  export type DispatchAssignmentJobFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DispatchAssignmentJob
+     */
+    select?: DispatchAssignmentJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DispatchAssignmentJob
+     */
+    omit?: DispatchAssignmentJobOmit<ExtArgs> | null
+    /**
+     * Filter, which DispatchAssignmentJobs to fetch.
+     */
+    where?: DispatchAssignmentJobWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DispatchAssignmentJobs to fetch.
+     */
+    orderBy?: DispatchAssignmentJobOrderByWithRelationInput | DispatchAssignmentJobOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing DispatchAssignmentJobs.
+     */
+    cursor?: DispatchAssignmentJobWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DispatchAssignmentJobs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DispatchAssignmentJobs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DispatchAssignmentJobs.
+     */
+    distinct?: DispatchAssignmentJobScalarFieldEnum | DispatchAssignmentJobScalarFieldEnum[]
+  }
+
+  /**
+   * DispatchAssignmentJob create
+   */
+  export type DispatchAssignmentJobCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DispatchAssignmentJob
+     */
+    select?: DispatchAssignmentJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DispatchAssignmentJob
+     */
+    omit?: DispatchAssignmentJobOmit<ExtArgs> | null
+    /**
+     * The data needed to create a DispatchAssignmentJob.
+     */
+    data: XOR<DispatchAssignmentJobCreateInput, DispatchAssignmentJobUncheckedCreateInput>
+  }
+
+  /**
+   * DispatchAssignmentJob createMany
+   */
+  export type DispatchAssignmentJobCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many DispatchAssignmentJobs.
+     */
+    data: DispatchAssignmentJobCreateManyInput | DispatchAssignmentJobCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * DispatchAssignmentJob createManyAndReturn
+   */
+  export type DispatchAssignmentJobCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DispatchAssignmentJob
+     */
+    select?: DispatchAssignmentJobSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DispatchAssignmentJob
+     */
+    omit?: DispatchAssignmentJobOmit<ExtArgs> | null
+    /**
+     * The data used to create many DispatchAssignmentJobs.
+     */
+    data: DispatchAssignmentJobCreateManyInput | DispatchAssignmentJobCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * DispatchAssignmentJob update
+   */
+  export type DispatchAssignmentJobUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DispatchAssignmentJob
+     */
+    select?: DispatchAssignmentJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DispatchAssignmentJob
+     */
+    omit?: DispatchAssignmentJobOmit<ExtArgs> | null
+    /**
+     * The data needed to update a DispatchAssignmentJob.
+     */
+    data: XOR<DispatchAssignmentJobUpdateInput, DispatchAssignmentJobUncheckedUpdateInput>
+    /**
+     * Choose, which DispatchAssignmentJob to update.
+     */
+    where: DispatchAssignmentJobWhereUniqueInput
+  }
+
+  /**
+   * DispatchAssignmentJob updateMany
+   */
+  export type DispatchAssignmentJobUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update DispatchAssignmentJobs.
+     */
+    data: XOR<DispatchAssignmentJobUpdateManyMutationInput, DispatchAssignmentJobUncheckedUpdateManyInput>
+    /**
+     * Filter which DispatchAssignmentJobs to update
+     */
+    where?: DispatchAssignmentJobWhereInput
+    /**
+     * Limit how many DispatchAssignmentJobs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * DispatchAssignmentJob updateManyAndReturn
+   */
+  export type DispatchAssignmentJobUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DispatchAssignmentJob
+     */
+    select?: DispatchAssignmentJobSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DispatchAssignmentJob
+     */
+    omit?: DispatchAssignmentJobOmit<ExtArgs> | null
+    /**
+     * The data used to update DispatchAssignmentJobs.
+     */
+    data: XOR<DispatchAssignmentJobUpdateManyMutationInput, DispatchAssignmentJobUncheckedUpdateManyInput>
+    /**
+     * Filter which DispatchAssignmentJobs to update
+     */
+    where?: DispatchAssignmentJobWhereInput
+    /**
+     * Limit how many DispatchAssignmentJobs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * DispatchAssignmentJob upsert
+   */
+  export type DispatchAssignmentJobUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DispatchAssignmentJob
+     */
+    select?: DispatchAssignmentJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DispatchAssignmentJob
+     */
+    omit?: DispatchAssignmentJobOmit<ExtArgs> | null
+    /**
+     * The filter to search for the DispatchAssignmentJob to update in case it exists.
+     */
+    where: DispatchAssignmentJobWhereUniqueInput
+    /**
+     * In case the DispatchAssignmentJob found by the `where` argument doesn't exist, create a new DispatchAssignmentJob with this data.
+     */
+    create: XOR<DispatchAssignmentJobCreateInput, DispatchAssignmentJobUncheckedCreateInput>
+    /**
+     * In case the DispatchAssignmentJob was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DispatchAssignmentJobUpdateInput, DispatchAssignmentJobUncheckedUpdateInput>
+  }
+
+  /**
+   * DispatchAssignmentJob delete
+   */
+  export type DispatchAssignmentJobDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DispatchAssignmentJob
+     */
+    select?: DispatchAssignmentJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DispatchAssignmentJob
+     */
+    omit?: DispatchAssignmentJobOmit<ExtArgs> | null
+    /**
+     * Filter which DispatchAssignmentJob to delete.
+     */
+    where: DispatchAssignmentJobWhereUniqueInput
+  }
+
+  /**
+   * DispatchAssignmentJob deleteMany
+   */
+  export type DispatchAssignmentJobDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DispatchAssignmentJobs to delete
+     */
+    where?: DispatchAssignmentJobWhereInput
+    /**
+     * Limit how many DispatchAssignmentJobs to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * DispatchAssignmentJob without action
+   */
+  export type DispatchAssignmentJobDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DispatchAssignmentJob
+     */
+    select?: DispatchAssignmentJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DispatchAssignmentJob
+     */
+    omit?: DispatchAssignmentJobOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Model Address
    */
 
@@ -26018,6 +29751,8 @@ export namespace Prisma {
     id: string | null
     number: string | null
     createdAt: Date | null
+    paidAt: Date | null
+    deliveredAt: Date | null
     amount: number | null
     status: $Enums.OrderStatus | null
     type: $Enums.OrderType | null
@@ -26025,6 +29760,7 @@ export namespace Prisma {
     tipAmount: number | null
     customerId: string | null
     externalId: string | null
+    dispatchId: string | null
     addressId: string | null
     deliveryAddressId: string | null
   }
@@ -26033,6 +29769,8 @@ export namespace Prisma {
     id: string | null
     number: string | null
     createdAt: Date | null
+    paidAt: Date | null
+    deliveredAt: Date | null
     amount: number | null
     status: $Enums.OrderStatus | null
     type: $Enums.OrderType | null
@@ -26040,6 +29778,7 @@ export namespace Prisma {
     tipAmount: number | null
     customerId: string | null
     externalId: string | null
+    dispatchId: string | null
     addressId: string | null
     deliveryAddressId: string | null
   }
@@ -26048,6 +29787,8 @@ export namespace Prisma {
     id: number
     number: number
     createdAt: number
+    paidAt: number
+    deliveredAt: number
     amount: number
     status: number
     type: number
@@ -26055,6 +29796,7 @@ export namespace Prisma {
     tipAmount: number
     customerId: number
     externalId: number
+    dispatchId: number
     addressId: number
     deliveryAddressId: number
     _all: number
@@ -26075,6 +29817,8 @@ export namespace Prisma {
     id?: true
     number?: true
     createdAt?: true
+    paidAt?: true
+    deliveredAt?: true
     amount?: true
     status?: true
     type?: true
@@ -26082,6 +29826,7 @@ export namespace Prisma {
     tipAmount?: true
     customerId?: true
     externalId?: true
+    dispatchId?: true
     addressId?: true
     deliveryAddressId?: true
   }
@@ -26090,6 +29835,8 @@ export namespace Prisma {
     id?: true
     number?: true
     createdAt?: true
+    paidAt?: true
+    deliveredAt?: true
     amount?: true
     status?: true
     type?: true
@@ -26097,6 +29844,7 @@ export namespace Prisma {
     tipAmount?: true
     customerId?: true
     externalId?: true
+    dispatchId?: true
     addressId?: true
     deliveryAddressId?: true
   }
@@ -26105,6 +29853,8 @@ export namespace Prisma {
     id?: true
     number?: true
     createdAt?: true
+    paidAt?: true
+    deliveredAt?: true
     amount?: true
     status?: true
     type?: true
@@ -26112,6 +29862,7 @@ export namespace Prisma {
     tipAmount?: true
     customerId?: true
     externalId?: true
+    dispatchId?: true
     addressId?: true
     deliveryAddressId?: true
     _all?: true
@@ -26207,6 +29958,8 @@ export namespace Prisma {
     id: string
     number: string | null
     createdAt: Date
+    paidAt: Date | null
+    deliveredAt: Date | null
     amount: number
     status: $Enums.OrderStatus
     type: $Enums.OrderType
@@ -26214,6 +29967,7 @@ export namespace Prisma {
     tipAmount: number | null
     customerId: string
     externalId: string | null
+    dispatchId: string | null
     addressId: string | null
     deliveryAddressId: string | null
     _count: OrderCountAggregateOutputType | null
@@ -26241,6 +29995,8 @@ export namespace Prisma {
     id?: boolean
     number?: boolean
     createdAt?: boolean
+    paidAt?: boolean
+    deliveredAt?: boolean
     amount?: boolean
     status?: boolean
     type?: boolean
@@ -26248,9 +30004,11 @@ export namespace Prisma {
     tipAmount?: boolean
     customerId?: boolean
     externalId?: boolean
+    dispatchId?: boolean
     addressId?: boolean
     deliveryAddressId?: boolean
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
+    dispatch?: boolean | Order$dispatchArgs<ExtArgs>
     address?: boolean | Order$addressArgs<ExtArgs>
     deliveryAddress?: boolean | Order$deliveryAddressArgs<ExtArgs>
     orderProducts?: boolean | Order$orderProductsArgs<ExtArgs>
@@ -26262,6 +30020,8 @@ export namespace Prisma {
     id?: boolean
     number?: boolean
     createdAt?: boolean
+    paidAt?: boolean
+    deliveredAt?: boolean
     amount?: boolean
     status?: boolean
     type?: boolean
@@ -26269,9 +30029,11 @@ export namespace Prisma {
     tipAmount?: boolean
     customerId?: boolean
     externalId?: boolean
+    dispatchId?: boolean
     addressId?: boolean
     deliveryAddressId?: boolean
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
+    dispatch?: boolean | Order$dispatchArgs<ExtArgs>
     address?: boolean | Order$addressArgs<ExtArgs>
     deliveryAddress?: boolean | Order$deliveryAddressArgs<ExtArgs>
   }, ExtArgs["result"]["order"]>
@@ -26280,6 +30042,8 @@ export namespace Prisma {
     id?: boolean
     number?: boolean
     createdAt?: boolean
+    paidAt?: boolean
+    deliveredAt?: boolean
     amount?: boolean
     status?: boolean
     type?: boolean
@@ -26287,9 +30051,11 @@ export namespace Prisma {
     tipAmount?: boolean
     customerId?: boolean
     externalId?: boolean
+    dispatchId?: boolean
     addressId?: boolean
     deliveryAddressId?: boolean
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
+    dispatch?: boolean | Order$dispatchArgs<ExtArgs>
     address?: boolean | Order$addressArgs<ExtArgs>
     deliveryAddress?: boolean | Order$deliveryAddressArgs<ExtArgs>
   }, ExtArgs["result"]["order"]>
@@ -26298,6 +30064,8 @@ export namespace Prisma {
     id?: boolean
     number?: boolean
     createdAt?: boolean
+    paidAt?: boolean
+    deliveredAt?: boolean
     amount?: boolean
     status?: boolean
     type?: boolean
@@ -26305,13 +30073,15 @@ export namespace Prisma {
     tipAmount?: boolean
     customerId?: boolean
     externalId?: boolean
+    dispatchId?: boolean
     addressId?: boolean
     deliveryAddressId?: boolean
   }
 
-  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "number" | "createdAt" | "amount" | "status" | "type" | "paymentMethod" | "tipAmount" | "customerId" | "externalId" | "addressId" | "deliveryAddressId", ExtArgs["result"]["order"]>
+  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "number" | "createdAt" | "paidAt" | "deliveredAt" | "amount" | "status" | "type" | "paymentMethod" | "tipAmount" | "customerId" | "externalId" | "dispatchId" | "addressId" | "deliveryAddressId", ExtArgs["result"]["order"]>
   export type OrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
+    dispatch?: boolean | Order$dispatchArgs<ExtArgs>
     address?: boolean | Order$addressArgs<ExtArgs>
     deliveryAddress?: boolean | Order$deliveryAddressArgs<ExtArgs>
     orderProducts?: boolean | Order$orderProductsArgs<ExtArgs>
@@ -26320,11 +30090,13 @@ export namespace Prisma {
   }
   export type OrderIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
+    dispatch?: boolean | Order$dispatchArgs<ExtArgs>
     address?: boolean | Order$addressArgs<ExtArgs>
     deliveryAddress?: boolean | Order$deliveryAddressArgs<ExtArgs>
   }
   export type OrderIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
+    dispatch?: boolean | Order$dispatchArgs<ExtArgs>
     address?: boolean | Order$addressArgs<ExtArgs>
     deliveryAddress?: boolean | Order$deliveryAddressArgs<ExtArgs>
   }
@@ -26333,6 +30105,7 @@ export namespace Prisma {
     name: "Order"
     objects: {
       customer: Prisma.$CustomerPayload<ExtArgs>
+      dispatch: Prisma.$DispatchPayload<ExtArgs> | null
       address: Prisma.$AddressPayload<ExtArgs> | null
       deliveryAddress: Prisma.$DeliveryAddressPayload<ExtArgs> | null
       orderProducts: Prisma.$OrderProductsPayload<ExtArgs>[]
@@ -26342,6 +30115,8 @@ export namespace Prisma {
       id: string
       number: string | null
       createdAt: Date
+      paidAt: Date | null
+      deliveredAt: Date | null
       amount: number
       status: $Enums.OrderStatus
       type: $Enums.OrderType
@@ -26349,6 +30124,7 @@ export namespace Prisma {
       tipAmount: number | null
       customerId: string
       externalId: string | null
+      dispatchId: string | null
       addressId: string | null
       deliveryAddressId: string | null
     }, ExtArgs["result"]["order"]>
@@ -26746,6 +30522,7 @@ export namespace Prisma {
   export interface Prisma__OrderClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     customer<T extends CustomerDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CustomerDefaultArgs<ExtArgs>>): Prisma__CustomerClient<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    dispatch<T extends Order$dispatchArgs<ExtArgs> = {}>(args?: Subset<T, Order$dispatchArgs<ExtArgs>>): Prisma__DispatchClient<$Result.GetResult<Prisma.$DispatchPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     address<T extends Order$addressArgs<ExtArgs> = {}>(args?: Subset<T, Order$addressArgs<ExtArgs>>): Prisma__AddressClient<$Result.GetResult<Prisma.$AddressPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     deliveryAddress<T extends Order$deliveryAddressArgs<ExtArgs> = {}>(args?: Subset<T, Order$deliveryAddressArgs<ExtArgs>>): Prisma__DeliveryAddressClient<$Result.GetResult<Prisma.$DeliveryAddressPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     orderProducts<T extends Order$orderProductsArgs<ExtArgs> = {}>(args?: Subset<T, Order$orderProductsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderProductsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -26782,6 +30559,8 @@ export namespace Prisma {
     readonly id: FieldRef<"Order", 'String'>
     readonly number: FieldRef<"Order", 'String'>
     readonly createdAt: FieldRef<"Order", 'DateTime'>
+    readonly paidAt: FieldRef<"Order", 'DateTime'>
+    readonly deliveredAt: FieldRef<"Order", 'DateTime'>
     readonly amount: FieldRef<"Order", 'Int'>
     readonly status: FieldRef<"Order", 'OrderStatus'>
     readonly type: FieldRef<"Order", 'OrderType'>
@@ -26789,6 +30568,7 @@ export namespace Prisma {
     readonly tipAmount: FieldRef<"Order", 'Int'>
     readonly customerId: FieldRef<"Order", 'String'>
     readonly externalId: FieldRef<"Order", 'String'>
+    readonly dispatchId: FieldRef<"Order", 'String'>
     readonly addressId: FieldRef<"Order", 'String'>
     readonly deliveryAddressId: FieldRef<"Order", 'String'>
   }
@@ -27189,6 +30969,25 @@ export namespace Prisma {
      * Limit how many Orders to delete.
      */
     limit?: number
+  }
+
+  /**
+   * Order.dispatch
+   */
+  export type Order$dispatchArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Dispatch
+     */
+    select?: DispatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Dispatch
+     */
+    omit?: DispatchOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DispatchInclude<ExtArgs> | null
+    where?: DispatchWhereInput
   }
 
   /**
@@ -28647,6 +32446,46 @@ export namespace Prisma {
   export type BranchScalarFieldEnum = (typeof BranchScalarFieldEnum)[keyof typeof BranchScalarFieldEnum]
 
 
+  export const DriverScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    name: 'name',
+    active: 'active',
+    priorityLevel: 'priorityLevel'
+  };
+
+  export type DriverScalarFieldEnum = (typeof DriverScalarFieldEnum)[keyof typeof DriverScalarFieldEnum]
+
+
+  export const DispatchScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    dispatched: 'dispatched',
+    dispatchAt: 'dispatchAt',
+    estimatedDeliveryDurationMinutes: 'estimatedDeliveryDurationMinutes',
+    estimatedRoundTripDurationMinutes: 'estimatedRoundTripDurationMinutes',
+    driverId: 'driverId'
+  };
+
+  export type DispatchScalarFieldEnum = (typeof DispatchScalarFieldEnum)[keyof typeof DispatchScalarFieldEnum]
+
+
+  export const DispatchAssignmentJobScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    status: 'status',
+    attempts: 'attempts',
+    availableAt: 'availableAt',
+    processingStartedAt: 'processingStartedAt',
+    completedAt: 'completedAt',
+    lastError: 'lastError',
+    orderId: 'orderId',
+    deliveryAddressId: 'deliveryAddressId'
+  };
+
+  export type DispatchAssignmentJobScalarFieldEnum = (typeof DispatchAssignmentJobScalarFieldEnum)[keyof typeof DispatchAssignmentJobScalarFieldEnum]
+
+
   export const AddressScalarFieldEnum: {
     id: 'id',
     createdAt: 'createdAt',
@@ -28749,6 +32588,8 @@ export namespace Prisma {
     id: 'id',
     number: 'number',
     createdAt: 'createdAt',
+    paidAt: 'paidAt',
+    deliveredAt: 'deliveredAt',
     amount: 'amount',
     status: 'status',
     type: 'type',
@@ -28756,6 +32597,7 @@ export namespace Prisma {
     tipAmount: 'tipAmount',
     customerId: 'customerId',
     externalId: 'externalId',
+    dispatchId: 'dispatchId',
     addressId: 'addressId',
     deliveryAddressId: 'deliveryAddressId'
   };
@@ -28911,6 +32753,20 @@ export namespace Prisma {
    * Reference to a field of type 'QueryMode'
    */
   export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+  /**
+   * Reference to a field of type 'DispatchAssignmentJobStatus'
+   */
+  export type EnumDispatchAssignmentJobStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DispatchAssignmentJobStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'DispatchAssignmentJobStatus[]'
+   */
+  export type ListEnumDispatchAssignmentJobStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DispatchAssignmentJobStatus[]'>
     
 
 
@@ -29702,6 +33558,212 @@ export namespace Prisma {
     businessId?: StringNullableWithAggregatesFilter<"Branch"> | string | null
   }
 
+  export type DriverWhereInput = {
+    AND?: DriverWhereInput | DriverWhereInput[]
+    OR?: DriverWhereInput[]
+    NOT?: DriverWhereInput | DriverWhereInput[]
+    id?: StringFilter<"Driver"> | string
+    createdAt?: DateTimeFilter<"Driver"> | Date | string
+    name?: StringFilter<"Driver"> | string
+    active?: BoolFilter<"Driver"> | boolean
+    priorityLevel?: IntFilter<"Driver"> | number
+    dispatches?: DispatchListRelationFilter
+  }
+
+  export type DriverOrderByWithRelationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    name?: SortOrder
+    active?: SortOrder
+    priorityLevel?: SortOrder
+    dispatches?: DispatchOrderByRelationAggregateInput
+  }
+
+  export type DriverWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: DriverWhereInput | DriverWhereInput[]
+    OR?: DriverWhereInput[]
+    NOT?: DriverWhereInput | DriverWhereInput[]
+    createdAt?: DateTimeFilter<"Driver"> | Date | string
+    name?: StringFilter<"Driver"> | string
+    active?: BoolFilter<"Driver"> | boolean
+    priorityLevel?: IntFilter<"Driver"> | number
+    dispatches?: DispatchListRelationFilter
+  }, "id">
+
+  export type DriverOrderByWithAggregationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    name?: SortOrder
+    active?: SortOrder
+    priorityLevel?: SortOrder
+    _count?: DriverCountOrderByAggregateInput
+    _avg?: DriverAvgOrderByAggregateInput
+    _max?: DriverMaxOrderByAggregateInput
+    _min?: DriverMinOrderByAggregateInput
+    _sum?: DriverSumOrderByAggregateInput
+  }
+
+  export type DriverScalarWhereWithAggregatesInput = {
+    AND?: DriverScalarWhereWithAggregatesInput | DriverScalarWhereWithAggregatesInput[]
+    OR?: DriverScalarWhereWithAggregatesInput[]
+    NOT?: DriverScalarWhereWithAggregatesInput | DriverScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Driver"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"Driver"> | Date | string
+    name?: StringWithAggregatesFilter<"Driver"> | string
+    active?: BoolWithAggregatesFilter<"Driver"> | boolean
+    priorityLevel?: IntWithAggregatesFilter<"Driver"> | number
+  }
+
+  export type DispatchWhereInput = {
+    AND?: DispatchWhereInput | DispatchWhereInput[]
+    OR?: DispatchWhereInput[]
+    NOT?: DispatchWhereInput | DispatchWhereInput[]
+    id?: StringFilter<"Dispatch"> | string
+    createdAt?: DateTimeFilter<"Dispatch"> | Date | string
+    dispatched?: BoolFilter<"Dispatch"> | boolean
+    dispatchAt?: DateTimeNullableFilter<"Dispatch"> | Date | string | null
+    estimatedDeliveryDurationMinutes?: IntNullableFilter<"Dispatch"> | number | null
+    estimatedRoundTripDurationMinutes?: IntNullableFilter<"Dispatch"> | number | null
+    driverId?: StringNullableFilter<"Dispatch"> | string | null
+    driver?: XOR<DriverNullableScalarRelationFilter, DriverWhereInput> | null
+    orders?: OrderListRelationFilter
+  }
+
+  export type DispatchOrderByWithRelationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    dispatched?: SortOrder
+    dispatchAt?: SortOrderInput | SortOrder
+    estimatedDeliveryDurationMinutes?: SortOrderInput | SortOrder
+    estimatedRoundTripDurationMinutes?: SortOrderInput | SortOrder
+    driverId?: SortOrderInput | SortOrder
+    driver?: DriverOrderByWithRelationInput
+    orders?: OrderOrderByRelationAggregateInput
+  }
+
+  export type DispatchWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: DispatchWhereInput | DispatchWhereInput[]
+    OR?: DispatchWhereInput[]
+    NOT?: DispatchWhereInput | DispatchWhereInput[]
+    createdAt?: DateTimeFilter<"Dispatch"> | Date | string
+    dispatched?: BoolFilter<"Dispatch"> | boolean
+    dispatchAt?: DateTimeNullableFilter<"Dispatch"> | Date | string | null
+    estimatedDeliveryDurationMinutes?: IntNullableFilter<"Dispatch"> | number | null
+    estimatedRoundTripDurationMinutes?: IntNullableFilter<"Dispatch"> | number | null
+    driverId?: StringNullableFilter<"Dispatch"> | string | null
+    driver?: XOR<DriverNullableScalarRelationFilter, DriverWhereInput> | null
+    orders?: OrderListRelationFilter
+  }, "id">
+
+  export type DispatchOrderByWithAggregationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    dispatched?: SortOrder
+    dispatchAt?: SortOrderInput | SortOrder
+    estimatedDeliveryDurationMinutes?: SortOrderInput | SortOrder
+    estimatedRoundTripDurationMinutes?: SortOrderInput | SortOrder
+    driverId?: SortOrderInput | SortOrder
+    _count?: DispatchCountOrderByAggregateInput
+    _avg?: DispatchAvgOrderByAggregateInput
+    _max?: DispatchMaxOrderByAggregateInput
+    _min?: DispatchMinOrderByAggregateInput
+    _sum?: DispatchSumOrderByAggregateInput
+  }
+
+  export type DispatchScalarWhereWithAggregatesInput = {
+    AND?: DispatchScalarWhereWithAggregatesInput | DispatchScalarWhereWithAggregatesInput[]
+    OR?: DispatchScalarWhereWithAggregatesInput[]
+    NOT?: DispatchScalarWhereWithAggregatesInput | DispatchScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Dispatch"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"Dispatch"> | Date | string
+    dispatched?: BoolWithAggregatesFilter<"Dispatch"> | boolean
+    dispatchAt?: DateTimeNullableWithAggregatesFilter<"Dispatch"> | Date | string | null
+    estimatedDeliveryDurationMinutes?: IntNullableWithAggregatesFilter<"Dispatch"> | number | null
+    estimatedRoundTripDurationMinutes?: IntNullableWithAggregatesFilter<"Dispatch"> | number | null
+    driverId?: StringNullableWithAggregatesFilter<"Dispatch"> | string | null
+  }
+
+  export type DispatchAssignmentJobWhereInput = {
+    AND?: DispatchAssignmentJobWhereInput | DispatchAssignmentJobWhereInput[]
+    OR?: DispatchAssignmentJobWhereInput[]
+    NOT?: DispatchAssignmentJobWhereInput | DispatchAssignmentJobWhereInput[]
+    id?: StringFilter<"DispatchAssignmentJob"> | string
+    createdAt?: DateTimeFilter<"DispatchAssignmentJob"> | Date | string
+    status?: EnumDispatchAssignmentJobStatusFilter<"DispatchAssignmentJob"> | $Enums.DispatchAssignmentJobStatus
+    attempts?: IntFilter<"DispatchAssignmentJob"> | number
+    availableAt?: DateTimeFilter<"DispatchAssignmentJob"> | Date | string
+    processingStartedAt?: DateTimeNullableFilter<"DispatchAssignmentJob"> | Date | string | null
+    completedAt?: DateTimeNullableFilter<"DispatchAssignmentJob"> | Date | string | null
+    lastError?: StringNullableFilter<"DispatchAssignmentJob"> | string | null
+    orderId?: StringFilter<"DispatchAssignmentJob"> | string
+    deliveryAddressId?: StringFilter<"DispatchAssignmentJob"> | string
+  }
+
+  export type DispatchAssignmentJobOrderByWithRelationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    status?: SortOrder
+    attempts?: SortOrder
+    availableAt?: SortOrder
+    processingStartedAt?: SortOrderInput | SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    lastError?: SortOrderInput | SortOrder
+    orderId?: SortOrder
+    deliveryAddressId?: SortOrder
+  }
+
+  export type DispatchAssignmentJobWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    orderId?: string
+    AND?: DispatchAssignmentJobWhereInput | DispatchAssignmentJobWhereInput[]
+    OR?: DispatchAssignmentJobWhereInput[]
+    NOT?: DispatchAssignmentJobWhereInput | DispatchAssignmentJobWhereInput[]
+    createdAt?: DateTimeFilter<"DispatchAssignmentJob"> | Date | string
+    status?: EnumDispatchAssignmentJobStatusFilter<"DispatchAssignmentJob"> | $Enums.DispatchAssignmentJobStatus
+    attempts?: IntFilter<"DispatchAssignmentJob"> | number
+    availableAt?: DateTimeFilter<"DispatchAssignmentJob"> | Date | string
+    processingStartedAt?: DateTimeNullableFilter<"DispatchAssignmentJob"> | Date | string | null
+    completedAt?: DateTimeNullableFilter<"DispatchAssignmentJob"> | Date | string | null
+    lastError?: StringNullableFilter<"DispatchAssignmentJob"> | string | null
+    deliveryAddressId?: StringFilter<"DispatchAssignmentJob"> | string
+  }, "id" | "orderId">
+
+  export type DispatchAssignmentJobOrderByWithAggregationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    status?: SortOrder
+    attempts?: SortOrder
+    availableAt?: SortOrder
+    processingStartedAt?: SortOrderInput | SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    lastError?: SortOrderInput | SortOrder
+    orderId?: SortOrder
+    deliveryAddressId?: SortOrder
+    _count?: DispatchAssignmentJobCountOrderByAggregateInput
+    _avg?: DispatchAssignmentJobAvgOrderByAggregateInput
+    _max?: DispatchAssignmentJobMaxOrderByAggregateInput
+    _min?: DispatchAssignmentJobMinOrderByAggregateInput
+    _sum?: DispatchAssignmentJobSumOrderByAggregateInput
+  }
+
+  export type DispatchAssignmentJobScalarWhereWithAggregatesInput = {
+    AND?: DispatchAssignmentJobScalarWhereWithAggregatesInput | DispatchAssignmentJobScalarWhereWithAggregatesInput[]
+    OR?: DispatchAssignmentJobScalarWhereWithAggregatesInput[]
+    NOT?: DispatchAssignmentJobScalarWhereWithAggregatesInput | DispatchAssignmentJobScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"DispatchAssignmentJob"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"DispatchAssignmentJob"> | Date | string
+    status?: EnumDispatchAssignmentJobStatusWithAggregatesFilter<"DispatchAssignmentJob"> | $Enums.DispatchAssignmentJobStatus
+    attempts?: IntWithAggregatesFilter<"DispatchAssignmentJob"> | number
+    availableAt?: DateTimeWithAggregatesFilter<"DispatchAssignmentJob"> | Date | string
+    processingStartedAt?: DateTimeNullableWithAggregatesFilter<"DispatchAssignmentJob"> | Date | string | null
+    completedAt?: DateTimeNullableWithAggregatesFilter<"DispatchAssignmentJob"> | Date | string | null
+    lastError?: StringNullableWithAggregatesFilter<"DispatchAssignmentJob"> | string | null
+    orderId?: StringWithAggregatesFilter<"DispatchAssignmentJob"> | string
+    deliveryAddressId?: StringWithAggregatesFilter<"DispatchAssignmentJob"> | string
+  }
+
   export type AddressWhereInput = {
     AND?: AddressWhereInput | AddressWhereInput[]
     OR?: AddressWhereInput[]
@@ -30236,6 +34298,8 @@ export namespace Prisma {
     id?: StringFilter<"Order"> | string
     number?: StringNullableFilter<"Order"> | string | null
     createdAt?: DateTimeFilter<"Order"> | Date | string
+    paidAt?: DateTimeNullableFilter<"Order"> | Date | string | null
+    deliveredAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     amount?: IntFilter<"Order"> | number
     status?: EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
     type?: EnumOrderTypeFilter<"Order"> | $Enums.OrderType
@@ -30243,9 +34307,11 @@ export namespace Prisma {
     tipAmount?: IntNullableFilter<"Order"> | number | null
     customerId?: StringFilter<"Order"> | string
     externalId?: StringNullableFilter<"Order"> | string | null
+    dispatchId?: StringNullableFilter<"Order"> | string | null
     addressId?: StringNullableFilter<"Order"> | string | null
     deliveryAddressId?: StringNullableFilter<"Order"> | string | null
     customer?: XOR<CustomerScalarRelationFilter, CustomerWhereInput>
+    dispatch?: XOR<DispatchNullableScalarRelationFilter, DispatchWhereInput> | null
     address?: XOR<AddressNullableScalarRelationFilter, AddressWhereInput> | null
     deliveryAddress?: XOR<DeliveryAddressNullableScalarRelationFilter, DeliveryAddressWhereInput> | null
     orderProducts?: OrderProductsListRelationFilter
@@ -30256,6 +34322,8 @@ export namespace Prisma {
     id?: SortOrder
     number?: SortOrderInput | SortOrder
     createdAt?: SortOrder
+    paidAt?: SortOrderInput | SortOrder
+    deliveredAt?: SortOrderInput | SortOrder
     amount?: SortOrder
     status?: SortOrder
     type?: SortOrder
@@ -30263,9 +34331,11 @@ export namespace Prisma {
     tipAmount?: SortOrderInput | SortOrder
     customerId?: SortOrder
     externalId?: SortOrderInput | SortOrder
+    dispatchId?: SortOrderInput | SortOrder
     addressId?: SortOrderInput | SortOrder
     deliveryAddressId?: SortOrderInput | SortOrder
     customer?: CustomerOrderByWithRelationInput
+    dispatch?: DispatchOrderByWithRelationInput
     address?: AddressOrderByWithRelationInput
     deliveryAddress?: DeliveryAddressOrderByWithRelationInput
     orderProducts?: OrderProductsOrderByRelationAggregateInput
@@ -30279,6 +34349,8 @@ export namespace Prisma {
     NOT?: OrderWhereInput | OrderWhereInput[]
     number?: StringNullableFilter<"Order"> | string | null
     createdAt?: DateTimeFilter<"Order"> | Date | string
+    paidAt?: DateTimeNullableFilter<"Order"> | Date | string | null
+    deliveredAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     amount?: IntFilter<"Order"> | number
     status?: EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
     type?: EnumOrderTypeFilter<"Order"> | $Enums.OrderType
@@ -30286,9 +34358,11 @@ export namespace Prisma {
     tipAmount?: IntNullableFilter<"Order"> | number | null
     customerId?: StringFilter<"Order"> | string
     externalId?: StringNullableFilter<"Order"> | string | null
+    dispatchId?: StringNullableFilter<"Order"> | string | null
     addressId?: StringNullableFilter<"Order"> | string | null
     deliveryAddressId?: StringNullableFilter<"Order"> | string | null
     customer?: XOR<CustomerScalarRelationFilter, CustomerWhereInput>
+    dispatch?: XOR<DispatchNullableScalarRelationFilter, DispatchWhereInput> | null
     address?: XOR<AddressNullableScalarRelationFilter, AddressWhereInput> | null
     deliveryAddress?: XOR<DeliveryAddressNullableScalarRelationFilter, DeliveryAddressWhereInput> | null
     orderProducts?: OrderProductsListRelationFilter
@@ -30299,6 +34373,8 @@ export namespace Prisma {
     id?: SortOrder
     number?: SortOrderInput | SortOrder
     createdAt?: SortOrder
+    paidAt?: SortOrderInput | SortOrder
+    deliveredAt?: SortOrderInput | SortOrder
     amount?: SortOrder
     status?: SortOrder
     type?: SortOrder
@@ -30306,6 +34382,7 @@ export namespace Prisma {
     tipAmount?: SortOrderInput | SortOrder
     customerId?: SortOrder
     externalId?: SortOrderInput | SortOrder
+    dispatchId?: SortOrderInput | SortOrder
     addressId?: SortOrderInput | SortOrder
     deliveryAddressId?: SortOrderInput | SortOrder
     _count?: OrderCountOrderByAggregateInput
@@ -30322,6 +34399,8 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Order"> | string
     number?: StringNullableWithAggregatesFilter<"Order"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Order"> | Date | string
+    paidAt?: DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
+    deliveredAt?: DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
     amount?: IntWithAggregatesFilter<"Order"> | number
     status?: EnumOrderStatusWithAggregatesFilter<"Order"> | $Enums.OrderStatus
     type?: EnumOrderTypeWithAggregatesFilter<"Order"> | $Enums.OrderType
@@ -30329,6 +34408,7 @@ export namespace Prisma {
     tipAmount?: IntNullableWithAggregatesFilter<"Order"> | number | null
     customerId?: StringWithAggregatesFilter<"Order"> | string
     externalId?: StringNullableWithAggregatesFilter<"Order"> | string | null
+    dispatchId?: StringNullableWithAggregatesFilter<"Order"> | string | null
     addressId?: StringNullableWithAggregatesFilter<"Order"> | string | null
     deliveryAddressId?: StringNullableWithAggregatesFilter<"Order"> | string | null
   }
@@ -31146,6 +35226,230 @@ export namespace Prisma {
     businessId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type DriverCreateInput = {
+    id: string
+    createdAt?: Date | string
+    name: string
+    active?: boolean
+    priorityLevel: number
+    dispatches?: DispatchCreateNestedManyWithoutDriverInput
+  }
+
+  export type DriverUncheckedCreateInput = {
+    id: string
+    createdAt?: Date | string
+    name: string
+    active?: boolean
+    priorityLevel: number
+    dispatches?: DispatchUncheckedCreateNestedManyWithoutDriverInput
+  }
+
+  export type DriverUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    priorityLevel?: IntFieldUpdateOperationsInput | number
+    dispatches?: DispatchUpdateManyWithoutDriverNestedInput
+  }
+
+  export type DriverUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    priorityLevel?: IntFieldUpdateOperationsInput | number
+    dispatches?: DispatchUncheckedUpdateManyWithoutDriverNestedInput
+  }
+
+  export type DriverCreateManyInput = {
+    id: string
+    createdAt?: Date | string
+    name: string
+    active?: boolean
+    priorityLevel: number
+  }
+
+  export type DriverUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    priorityLevel?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type DriverUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    priorityLevel?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type DispatchCreateInput = {
+    id: string
+    createdAt?: Date | string
+    dispatched?: boolean
+    dispatchAt?: Date | string | null
+    estimatedDeliveryDurationMinutes?: number | null
+    estimatedRoundTripDurationMinutes?: number | null
+    driver?: DriverCreateNestedOneWithoutDispatchesInput
+    orders?: OrderCreateNestedManyWithoutDispatchInput
+  }
+
+  export type DispatchUncheckedCreateInput = {
+    id: string
+    createdAt?: Date | string
+    dispatched?: boolean
+    dispatchAt?: Date | string | null
+    estimatedDeliveryDurationMinutes?: number | null
+    estimatedRoundTripDurationMinutes?: number | null
+    driverId?: string | null
+    orders?: OrderUncheckedCreateNestedManyWithoutDispatchInput
+  }
+
+  export type DispatchUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dispatched?: BoolFieldUpdateOperationsInput | boolean
+    dispatchAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    estimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    driver?: DriverUpdateOneWithoutDispatchesNestedInput
+    orders?: OrderUpdateManyWithoutDispatchNestedInput
+  }
+
+  export type DispatchUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dispatched?: BoolFieldUpdateOperationsInput | boolean
+    dispatchAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    estimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    driverId?: NullableStringFieldUpdateOperationsInput | string | null
+    orders?: OrderUncheckedUpdateManyWithoutDispatchNestedInput
+  }
+
+  export type DispatchCreateManyInput = {
+    id: string
+    createdAt?: Date | string
+    dispatched?: boolean
+    dispatchAt?: Date | string | null
+    estimatedDeliveryDurationMinutes?: number | null
+    estimatedRoundTripDurationMinutes?: number | null
+    driverId?: string | null
+  }
+
+  export type DispatchUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dispatched?: BoolFieldUpdateOperationsInput | boolean
+    dispatchAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    estimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type DispatchUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dispatched?: BoolFieldUpdateOperationsInput | boolean
+    dispatchAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    estimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    driverId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type DispatchAssignmentJobCreateInput = {
+    id: string
+    createdAt?: Date | string
+    status?: $Enums.DispatchAssignmentJobStatus
+    attempts?: number
+    availableAt?: Date | string
+    processingStartedAt?: Date | string | null
+    completedAt?: Date | string | null
+    lastError?: string | null
+    orderId: string
+    deliveryAddressId: string
+  }
+
+  export type DispatchAssignmentJobUncheckedCreateInput = {
+    id: string
+    createdAt?: Date | string
+    status?: $Enums.DispatchAssignmentJobStatus
+    attempts?: number
+    availableAt?: Date | string
+    processingStartedAt?: Date | string | null
+    completedAt?: Date | string | null
+    lastError?: string | null
+    orderId: string
+    deliveryAddressId: string
+  }
+
+  export type DispatchAssignmentJobUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumDispatchAssignmentJobStatusFieldUpdateOperationsInput | $Enums.DispatchAssignmentJobStatus
+    attempts?: IntFieldUpdateOperationsInput | number
+    availableAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processingStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastError?: NullableStringFieldUpdateOperationsInput | string | null
+    orderId?: StringFieldUpdateOperationsInput | string
+    deliveryAddressId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type DispatchAssignmentJobUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumDispatchAssignmentJobStatusFieldUpdateOperationsInput | $Enums.DispatchAssignmentJobStatus
+    attempts?: IntFieldUpdateOperationsInput | number
+    availableAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processingStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastError?: NullableStringFieldUpdateOperationsInput | string | null
+    orderId?: StringFieldUpdateOperationsInput | string
+    deliveryAddressId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type DispatchAssignmentJobCreateManyInput = {
+    id: string
+    createdAt?: Date | string
+    status?: $Enums.DispatchAssignmentJobStatus
+    attempts?: number
+    availableAt?: Date | string
+    processingStartedAt?: Date | string | null
+    completedAt?: Date | string | null
+    lastError?: string | null
+    orderId: string
+    deliveryAddressId: string
+  }
+
+  export type DispatchAssignmentJobUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumDispatchAssignmentJobStatusFieldUpdateOperationsInput | $Enums.DispatchAssignmentJobStatus
+    attempts?: IntFieldUpdateOperationsInput | number
+    availableAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processingStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastError?: NullableStringFieldUpdateOperationsInput | string | null
+    orderId?: StringFieldUpdateOperationsInput | string
+    deliveryAddressId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type DispatchAssignmentJobUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumDispatchAssignmentJobStatusFieldUpdateOperationsInput | $Enums.DispatchAssignmentJobStatus
+    attempts?: IntFieldUpdateOperationsInput | number
+    availableAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processingStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastError?: NullableStringFieldUpdateOperationsInput | string | null
+    orderId?: StringFieldUpdateOperationsInput | string
+    deliveryAddressId?: StringFieldUpdateOperationsInput | string
+  }
+
   export type AddressCreateInput = {
     id: string
     createdAt?: Date | string
@@ -31719,6 +36023,8 @@ export namespace Prisma {
     id: string
     number?: string | null
     createdAt?: Date | string
+    paidAt?: Date | string | null
+    deliveredAt?: Date | string | null
     amount: number
     status?: $Enums.OrderStatus
     type?: $Enums.OrderType
@@ -31726,6 +36032,7 @@ export namespace Prisma {
     tipAmount?: number | null
     externalId?: string | null
     customer: CustomerCreateNestedOneWithoutOrdersInput
+    dispatch?: DispatchCreateNestedOneWithoutOrdersInput
     address?: AddressCreateNestedOneWithoutOrdersInput
     deliveryAddress?: DeliveryAddressCreateNestedOneWithoutOrdersInput
     orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
@@ -31736,6 +36043,8 @@ export namespace Prisma {
     id: string
     number?: string | null
     createdAt?: Date | string
+    paidAt?: Date | string | null
+    deliveredAt?: Date | string | null
     amount: number
     status?: $Enums.OrderStatus
     type?: $Enums.OrderType
@@ -31743,6 +36052,7 @@ export namespace Prisma {
     tipAmount?: number | null
     customerId: string
     externalId?: string | null
+    dispatchId?: string | null
     addressId?: string | null
     deliveryAddressId?: string | null
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
@@ -31753,6 +36063,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     number?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     amount?: IntFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
@@ -31760,6 +36072,7 @@ export namespace Prisma {
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
     customer?: CustomerUpdateOneRequiredWithoutOrdersNestedInput
+    dispatch?: DispatchUpdateOneWithoutOrdersNestedInput
     address?: AddressUpdateOneWithoutOrdersNestedInput
     deliveryAddress?: DeliveryAddressUpdateOneWithoutOrdersNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
@@ -31770,6 +36083,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     number?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     amount?: IntFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
@@ -31777,6 +36092,7 @@ export namespace Prisma {
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     customerId?: StringFieldUpdateOperationsInput | string
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    dispatchId?: NullableStringFieldUpdateOperationsInput | string | null
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
@@ -31787,6 +36103,8 @@ export namespace Prisma {
     id: string
     number?: string | null
     createdAt?: Date | string
+    paidAt?: Date | string | null
+    deliveredAt?: Date | string | null
     amount: number
     status?: $Enums.OrderStatus
     type?: $Enums.OrderType
@@ -31794,6 +36112,7 @@ export namespace Prisma {
     tipAmount?: number | null
     customerId: string
     externalId?: string | null
+    dispatchId?: string | null
     addressId?: string | null
     deliveryAddressId?: string | null
   }
@@ -31802,6 +36121,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     number?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     amount?: IntFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
@@ -31814,6 +36135,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     number?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     amount?: IntFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
@@ -31821,6 +36144,7 @@ export namespace Prisma {
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     customerId?: StringFieldUpdateOperationsInput | string
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    dispatchId?: NullableStringFieldUpdateOperationsInput | string | null
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -32637,9 +36961,62 @@ export namespace Prisma {
     _max?: NestedJsonNullableFilter<$PrismaModel>
   }
 
-  export type BranchNullableScalarRelationFilter = {
-    is?: BranchWhereInput | null
-    isNot?: BranchWhereInput | null
+  export type DispatchListRelationFilter = {
+    every?: DispatchWhereInput
+    some?: DispatchWhereInput
+    none?: DispatchWhereInput
+  }
+
+  export type DispatchOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type DriverCountOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    name?: SortOrder
+    active?: SortOrder
+    priorityLevel?: SortOrder
+  }
+
+  export type DriverAvgOrderByAggregateInput = {
+    priorityLevel?: SortOrder
+  }
+
+  export type DriverMaxOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    name?: SortOrder
+    active?: SortOrder
+    priorityLevel?: SortOrder
+  }
+
+  export type DriverMinOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    name?: SortOrder
+    active?: SortOrder
+    priorityLevel?: SortOrder
+  }
+
+  export type DriverSumOrderByAggregateInput = {
+    priorityLevel?: SortOrder
+  }
+
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type DriverNullableScalarRelationFilter = {
+    is?: DriverWhereInput | null
+    isNot?: DriverWhereInput | null
   }
 
   export type OrderListRelationFilter = {
@@ -32650,6 +37027,129 @@ export namespace Prisma {
 
   export type OrderOrderByRelationAggregateInput = {
     _count?: SortOrder
+  }
+
+  export type DispatchCountOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    dispatched?: SortOrder
+    dispatchAt?: SortOrder
+    estimatedDeliveryDurationMinutes?: SortOrder
+    estimatedRoundTripDurationMinutes?: SortOrder
+    driverId?: SortOrder
+  }
+
+  export type DispatchAvgOrderByAggregateInput = {
+    estimatedDeliveryDurationMinutes?: SortOrder
+    estimatedRoundTripDurationMinutes?: SortOrder
+  }
+
+  export type DispatchMaxOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    dispatched?: SortOrder
+    dispatchAt?: SortOrder
+    estimatedDeliveryDurationMinutes?: SortOrder
+    estimatedRoundTripDurationMinutes?: SortOrder
+    driverId?: SortOrder
+  }
+
+  export type DispatchMinOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    dispatched?: SortOrder
+    dispatchAt?: SortOrder
+    estimatedDeliveryDurationMinutes?: SortOrder
+    estimatedRoundTripDurationMinutes?: SortOrder
+    driverId?: SortOrder
+  }
+
+  export type DispatchSumOrderByAggregateInput = {
+    estimatedDeliveryDurationMinutes?: SortOrder
+    estimatedRoundTripDurationMinutes?: SortOrder
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type EnumDispatchAssignmentJobStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.DispatchAssignmentJobStatus | EnumDispatchAssignmentJobStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.DispatchAssignmentJobStatus[] | ListEnumDispatchAssignmentJobStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DispatchAssignmentJobStatus[] | ListEnumDispatchAssignmentJobStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumDispatchAssignmentJobStatusFilter<$PrismaModel> | $Enums.DispatchAssignmentJobStatus
+  }
+
+  export type DispatchAssignmentJobCountOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    status?: SortOrder
+    attempts?: SortOrder
+    availableAt?: SortOrder
+    processingStartedAt?: SortOrder
+    completedAt?: SortOrder
+    lastError?: SortOrder
+    orderId?: SortOrder
+    deliveryAddressId?: SortOrder
+  }
+
+  export type DispatchAssignmentJobAvgOrderByAggregateInput = {
+    attempts?: SortOrder
+  }
+
+  export type DispatchAssignmentJobMaxOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    status?: SortOrder
+    attempts?: SortOrder
+    availableAt?: SortOrder
+    processingStartedAt?: SortOrder
+    completedAt?: SortOrder
+    lastError?: SortOrder
+    orderId?: SortOrder
+    deliveryAddressId?: SortOrder
+  }
+
+  export type DispatchAssignmentJobMinOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    status?: SortOrder
+    attempts?: SortOrder
+    availableAt?: SortOrder
+    processingStartedAt?: SortOrder
+    completedAt?: SortOrder
+    lastError?: SortOrder
+    orderId?: SortOrder
+    deliveryAddressId?: SortOrder
+  }
+
+  export type DispatchAssignmentJobSumOrderByAggregateInput = {
+    attempts?: SortOrder
+  }
+
+  export type EnumDispatchAssignmentJobStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.DispatchAssignmentJobStatus | EnumDispatchAssignmentJobStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.DispatchAssignmentJobStatus[] | ListEnumDispatchAssignmentJobStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DispatchAssignmentJobStatus[] | ListEnumDispatchAssignmentJobStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumDispatchAssignmentJobStatusWithAggregatesFilter<$PrismaModel> | $Enums.DispatchAssignmentJobStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumDispatchAssignmentJobStatusFilter<$PrismaModel>
+    _max?: NestedEnumDispatchAssignmentJobStatusFilter<$PrismaModel>
+  }
+
+  export type BranchNullableScalarRelationFilter = {
+    is?: BranchWhereInput | null
+    isNot?: BranchWhereInput | null
   }
 
   export type AddressCountOrderByAggregateInput = {
@@ -32763,17 +37263,6 @@ export namespace Prisma {
     name?: SortOrder
   }
 
-  export type DateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
   export type PromotialMessageListRelationFilter = {
     every?: PromotialMessageWhereInput
     some?: PromotialMessageWhereInput
@@ -32800,20 +37289,6 @@ export namespace Prisma {
     id?: SortOrder
     createdAt?: SortOrder
     startedAt?: SortOrder
-  }
-
-  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type DeliveryAddressListRelationFilter = {
@@ -33004,6 +37479,11 @@ export namespace Prisma {
     not?: NestedEnumPaymentTypeFilter<$PrismaModel> | $Enums.PaymentType
   }
 
+  export type DispatchNullableScalarRelationFilter = {
+    is?: DispatchWhereInput | null
+    isNot?: DispatchWhereInput | null
+  }
+
   export type DeliveryAddressNullableScalarRelationFilter = {
     is?: DeliveryAddressWhereInput | null
     isNot?: DeliveryAddressWhereInput | null
@@ -33013,6 +37493,8 @@ export namespace Prisma {
     id?: SortOrder
     number?: SortOrder
     createdAt?: SortOrder
+    paidAt?: SortOrder
+    deliveredAt?: SortOrder
     amount?: SortOrder
     status?: SortOrder
     type?: SortOrder
@@ -33020,6 +37502,7 @@ export namespace Prisma {
     tipAmount?: SortOrder
     customerId?: SortOrder
     externalId?: SortOrder
+    dispatchId?: SortOrder
     addressId?: SortOrder
     deliveryAddressId?: SortOrder
   }
@@ -33033,6 +37516,8 @@ export namespace Prisma {
     id?: SortOrder
     number?: SortOrder
     createdAt?: SortOrder
+    paidAt?: SortOrder
+    deliveredAt?: SortOrder
     amount?: SortOrder
     status?: SortOrder
     type?: SortOrder
@@ -33040,6 +37525,7 @@ export namespace Prisma {
     tipAmount?: SortOrder
     customerId?: SortOrder
     externalId?: SortOrder
+    dispatchId?: SortOrder
     addressId?: SortOrder
     deliveryAddressId?: SortOrder
   }
@@ -33048,6 +37534,8 @@ export namespace Prisma {
     id?: SortOrder
     number?: SortOrder
     createdAt?: SortOrder
+    paidAt?: SortOrder
+    deliveredAt?: SortOrder
     amount?: SortOrder
     status?: SortOrder
     type?: SortOrder
@@ -33055,6 +37543,7 @@ export namespace Prisma {
     tipAmount?: SortOrder
     customerId?: SortOrder
     externalId?: SortOrder
+    dispatchId?: SortOrder
     addressId?: SortOrder
     deliveryAddressId?: SortOrder
   }
@@ -33875,6 +38364,114 @@ export namespace Prisma {
     update?: XOR<XOR<BusinessUpdateToOneWithWhereWithoutBranchesInput, BusinessUpdateWithoutBranchesInput>, BusinessUncheckedUpdateWithoutBranchesInput>
   }
 
+  export type DispatchCreateNestedManyWithoutDriverInput = {
+    create?: XOR<DispatchCreateWithoutDriverInput, DispatchUncheckedCreateWithoutDriverInput> | DispatchCreateWithoutDriverInput[] | DispatchUncheckedCreateWithoutDriverInput[]
+    connectOrCreate?: DispatchCreateOrConnectWithoutDriverInput | DispatchCreateOrConnectWithoutDriverInput[]
+    createMany?: DispatchCreateManyDriverInputEnvelope
+    connect?: DispatchWhereUniqueInput | DispatchWhereUniqueInput[]
+  }
+
+  export type DispatchUncheckedCreateNestedManyWithoutDriverInput = {
+    create?: XOR<DispatchCreateWithoutDriverInput, DispatchUncheckedCreateWithoutDriverInput> | DispatchCreateWithoutDriverInput[] | DispatchUncheckedCreateWithoutDriverInput[]
+    connectOrCreate?: DispatchCreateOrConnectWithoutDriverInput | DispatchCreateOrConnectWithoutDriverInput[]
+    createMany?: DispatchCreateManyDriverInputEnvelope
+    connect?: DispatchWhereUniqueInput | DispatchWhereUniqueInput[]
+  }
+
+  export type DispatchUpdateManyWithoutDriverNestedInput = {
+    create?: XOR<DispatchCreateWithoutDriverInput, DispatchUncheckedCreateWithoutDriverInput> | DispatchCreateWithoutDriverInput[] | DispatchUncheckedCreateWithoutDriverInput[]
+    connectOrCreate?: DispatchCreateOrConnectWithoutDriverInput | DispatchCreateOrConnectWithoutDriverInput[]
+    upsert?: DispatchUpsertWithWhereUniqueWithoutDriverInput | DispatchUpsertWithWhereUniqueWithoutDriverInput[]
+    createMany?: DispatchCreateManyDriverInputEnvelope
+    set?: DispatchWhereUniqueInput | DispatchWhereUniqueInput[]
+    disconnect?: DispatchWhereUniqueInput | DispatchWhereUniqueInput[]
+    delete?: DispatchWhereUniqueInput | DispatchWhereUniqueInput[]
+    connect?: DispatchWhereUniqueInput | DispatchWhereUniqueInput[]
+    update?: DispatchUpdateWithWhereUniqueWithoutDriverInput | DispatchUpdateWithWhereUniqueWithoutDriverInput[]
+    updateMany?: DispatchUpdateManyWithWhereWithoutDriverInput | DispatchUpdateManyWithWhereWithoutDriverInput[]
+    deleteMany?: DispatchScalarWhereInput | DispatchScalarWhereInput[]
+  }
+
+  export type DispatchUncheckedUpdateManyWithoutDriverNestedInput = {
+    create?: XOR<DispatchCreateWithoutDriverInput, DispatchUncheckedCreateWithoutDriverInput> | DispatchCreateWithoutDriverInput[] | DispatchUncheckedCreateWithoutDriverInput[]
+    connectOrCreate?: DispatchCreateOrConnectWithoutDriverInput | DispatchCreateOrConnectWithoutDriverInput[]
+    upsert?: DispatchUpsertWithWhereUniqueWithoutDriverInput | DispatchUpsertWithWhereUniqueWithoutDriverInput[]
+    createMany?: DispatchCreateManyDriverInputEnvelope
+    set?: DispatchWhereUniqueInput | DispatchWhereUniqueInput[]
+    disconnect?: DispatchWhereUniqueInput | DispatchWhereUniqueInput[]
+    delete?: DispatchWhereUniqueInput | DispatchWhereUniqueInput[]
+    connect?: DispatchWhereUniqueInput | DispatchWhereUniqueInput[]
+    update?: DispatchUpdateWithWhereUniqueWithoutDriverInput | DispatchUpdateWithWhereUniqueWithoutDriverInput[]
+    updateMany?: DispatchUpdateManyWithWhereWithoutDriverInput | DispatchUpdateManyWithWhereWithoutDriverInput[]
+    deleteMany?: DispatchScalarWhereInput | DispatchScalarWhereInput[]
+  }
+
+  export type DriverCreateNestedOneWithoutDispatchesInput = {
+    create?: XOR<DriverCreateWithoutDispatchesInput, DriverUncheckedCreateWithoutDispatchesInput>
+    connectOrCreate?: DriverCreateOrConnectWithoutDispatchesInput
+    connect?: DriverWhereUniqueInput
+  }
+
+  export type OrderCreateNestedManyWithoutDispatchInput = {
+    create?: XOR<OrderCreateWithoutDispatchInput, OrderUncheckedCreateWithoutDispatchInput> | OrderCreateWithoutDispatchInput[] | OrderUncheckedCreateWithoutDispatchInput[]
+    connectOrCreate?: OrderCreateOrConnectWithoutDispatchInput | OrderCreateOrConnectWithoutDispatchInput[]
+    createMany?: OrderCreateManyDispatchInputEnvelope
+    connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+  }
+
+  export type OrderUncheckedCreateNestedManyWithoutDispatchInput = {
+    create?: XOR<OrderCreateWithoutDispatchInput, OrderUncheckedCreateWithoutDispatchInput> | OrderCreateWithoutDispatchInput[] | OrderUncheckedCreateWithoutDispatchInput[]
+    connectOrCreate?: OrderCreateOrConnectWithoutDispatchInput | OrderCreateOrConnectWithoutDispatchInput[]
+    createMany?: OrderCreateManyDispatchInputEnvelope
+    connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+  }
+
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
+  }
+
+  export type DriverUpdateOneWithoutDispatchesNestedInput = {
+    create?: XOR<DriverCreateWithoutDispatchesInput, DriverUncheckedCreateWithoutDispatchesInput>
+    connectOrCreate?: DriverCreateOrConnectWithoutDispatchesInput
+    upsert?: DriverUpsertWithoutDispatchesInput
+    disconnect?: DriverWhereInput | boolean
+    delete?: DriverWhereInput | boolean
+    connect?: DriverWhereUniqueInput
+    update?: XOR<XOR<DriverUpdateToOneWithWhereWithoutDispatchesInput, DriverUpdateWithoutDispatchesInput>, DriverUncheckedUpdateWithoutDispatchesInput>
+  }
+
+  export type OrderUpdateManyWithoutDispatchNestedInput = {
+    create?: XOR<OrderCreateWithoutDispatchInput, OrderUncheckedCreateWithoutDispatchInput> | OrderCreateWithoutDispatchInput[] | OrderUncheckedCreateWithoutDispatchInput[]
+    connectOrCreate?: OrderCreateOrConnectWithoutDispatchInput | OrderCreateOrConnectWithoutDispatchInput[]
+    upsert?: OrderUpsertWithWhereUniqueWithoutDispatchInput | OrderUpsertWithWhereUniqueWithoutDispatchInput[]
+    createMany?: OrderCreateManyDispatchInputEnvelope
+    set?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    disconnect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    delete?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    update?: OrderUpdateWithWhereUniqueWithoutDispatchInput | OrderUpdateWithWhereUniqueWithoutDispatchInput[]
+    updateMany?: OrderUpdateManyWithWhereWithoutDispatchInput | OrderUpdateManyWithWhereWithoutDispatchInput[]
+    deleteMany?: OrderScalarWhereInput | OrderScalarWhereInput[]
+  }
+
+  export type OrderUncheckedUpdateManyWithoutDispatchNestedInput = {
+    create?: XOR<OrderCreateWithoutDispatchInput, OrderUncheckedCreateWithoutDispatchInput> | OrderCreateWithoutDispatchInput[] | OrderUncheckedCreateWithoutDispatchInput[]
+    connectOrCreate?: OrderCreateOrConnectWithoutDispatchInput | OrderCreateOrConnectWithoutDispatchInput[]
+    upsert?: OrderUpsertWithWhereUniqueWithoutDispatchInput | OrderUpsertWithWhereUniqueWithoutDispatchInput[]
+    createMany?: OrderCreateManyDispatchInputEnvelope
+    set?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    disconnect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    delete?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    update?: OrderUpdateWithWhereUniqueWithoutDispatchInput | OrderUpdateWithWhereUniqueWithoutDispatchInput[]
+    updateMany?: OrderUpdateManyWithWhereWithoutDispatchInput | OrderUpdateManyWithWhereWithoutDispatchInput[]
+    deleteMany?: OrderScalarWhereInput | OrderScalarWhereInput[]
+  }
+
+  export type EnumDispatchAssignmentJobStatusFieldUpdateOperationsInput = {
+    set?: $Enums.DispatchAssignmentJobStatus
+  }
+
   export type BranchCreateNestedOneWithoutAddressInput = {
     create?: XOR<BranchCreateWithoutAddressInput, BranchUncheckedCreateWithoutAddressInput>
     connectOrCreate?: BranchCreateOrConnectWithoutAddressInput
@@ -34223,10 +38820,6 @@ export namespace Prisma {
     connect?: PromotialMessageWhereUniqueInput | PromotialMessageWhereUniqueInput[]
   }
 
-  export type NullableDateTimeFieldUpdateOperationsInput = {
-    set?: Date | string | null
-  }
-
   export type PromotialMessageUpdateManyWithoutCampaignNestedInput = {
     create?: XOR<PromotialMessageCreateWithoutCampaignInput, PromotialMessageUncheckedCreateWithoutCampaignInput> | PromotialMessageCreateWithoutCampaignInput[] | PromotialMessageUncheckedCreateWithoutCampaignInput[]
     connectOrCreate?: PromotialMessageCreateOrConnectWithoutCampaignInput | PromotialMessageCreateOrConnectWithoutCampaignInput[]
@@ -34531,6 +39124,12 @@ export namespace Prisma {
     connect?: CustomerWhereUniqueInput
   }
 
+  export type DispatchCreateNestedOneWithoutOrdersInput = {
+    create?: XOR<DispatchCreateWithoutOrdersInput, DispatchUncheckedCreateWithoutOrdersInput>
+    connectOrCreate?: DispatchCreateOrConnectWithoutOrdersInput
+    connect?: DispatchWhereUniqueInput
+  }
+
   export type AddressCreateNestedOneWithoutOrdersInput = {
     create?: XOR<AddressCreateWithoutOrdersInput, AddressUncheckedCreateWithoutOrdersInput>
     connectOrCreate?: AddressCreateOrConnectWithoutOrdersInput
@@ -34589,6 +39188,16 @@ export namespace Prisma {
     upsert?: CustomerUpsertWithoutOrdersInput
     connect?: CustomerWhereUniqueInput
     update?: XOR<XOR<CustomerUpdateToOneWithWhereWithoutOrdersInput, CustomerUpdateWithoutOrdersInput>, CustomerUncheckedUpdateWithoutOrdersInput>
+  }
+
+  export type DispatchUpdateOneWithoutOrdersNestedInput = {
+    create?: XOR<DispatchCreateWithoutOrdersInput, DispatchUncheckedCreateWithoutOrdersInput>
+    connectOrCreate?: DispatchCreateOrConnectWithoutOrdersInput
+    upsert?: DispatchUpsertWithoutOrdersInput
+    disconnect?: DispatchWhereInput | boolean
+    delete?: DispatchWhereInput | boolean
+    connect?: DispatchWhereUniqueInput
+    update?: XOR<XOR<DispatchUpdateToOneWithWhereWithoutOrdersInput, DispatchUpdateWithoutOrdersInput>, DispatchUncheckedUpdateWithoutOrdersInput>
   }
 
   export type AddressUpdateOneWithoutOrdersNestedInput = {
@@ -34993,6 +39602,23 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
+  export type NestedEnumDispatchAssignmentJobStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.DispatchAssignmentJobStatus | EnumDispatchAssignmentJobStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.DispatchAssignmentJobStatus[] | ListEnumDispatchAssignmentJobStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DispatchAssignmentJobStatus[] | ListEnumDispatchAssignmentJobStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumDispatchAssignmentJobStatusFilter<$PrismaModel> | $Enums.DispatchAssignmentJobStatus
+  }
+
+  export type NestedEnumDispatchAssignmentJobStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.DispatchAssignmentJobStatus | EnumDispatchAssignmentJobStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.DispatchAssignmentJobStatus[] | ListEnumDispatchAssignmentJobStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DispatchAssignmentJobStatus[] | ListEnumDispatchAssignmentJobStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumDispatchAssignmentJobStatusWithAggregatesFilter<$PrismaModel> | $Enums.DispatchAssignmentJobStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumDispatchAssignmentJobStatusFilter<$PrismaModel>
+    _max?: NestedEnumDispatchAssignmentJobStatusFilter<$PrismaModel>
+  }
+
   export type NestedEnumOrderStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.OrderStatus | EnumOrderStatusFieldRefInput<$PrismaModel>
     in?: $Enums.OrderStatus[] | ListEnumOrderStatusFieldRefInput<$PrismaModel>
@@ -35288,6 +39914,8 @@ export namespace Prisma {
     id: string
     number?: string | null
     createdAt?: Date | string
+    paidAt?: Date | string | null
+    deliveredAt?: Date | string | null
     amount: number
     status?: $Enums.OrderStatus
     type?: $Enums.OrderType
@@ -35295,6 +39923,7 @@ export namespace Prisma {
     tipAmount?: number | null
     externalId?: string | null
     customer: CustomerCreateNestedOneWithoutOrdersInput
+    dispatch?: DispatchCreateNestedOneWithoutOrdersInput
     address?: AddressCreateNestedOneWithoutOrdersInput
     deliveryAddress?: DeliveryAddressCreateNestedOneWithoutOrdersInput
     orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
@@ -35304,6 +39933,8 @@ export namespace Prisma {
     id: string
     number?: string | null
     createdAt?: Date | string
+    paidAt?: Date | string | null
+    deliveredAt?: Date | string | null
     amount: number
     status?: $Enums.OrderStatus
     type?: $Enums.OrderType
@@ -35311,6 +39942,7 @@ export namespace Prisma {
     tipAmount?: number | null
     customerId: string
     externalId?: string | null
+    dispatchId?: string | null
     addressId?: string | null
     deliveryAddressId?: string | null
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
@@ -35395,6 +40027,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     number?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     amount?: IntFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
@@ -35402,6 +40036,7 @@ export namespace Prisma {
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
     customer?: CustomerUpdateOneRequiredWithoutOrdersNestedInput
+    dispatch?: DispatchUpdateOneWithoutOrdersNestedInput
     address?: AddressUpdateOneWithoutOrdersNestedInput
     deliveryAddress?: DeliveryAddressUpdateOneWithoutOrdersNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
@@ -35411,6 +40046,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     number?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     amount?: IntFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
@@ -35418,6 +40055,7 @@ export namespace Prisma {
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     customerId?: StringFieldUpdateOperationsInput | string
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    dispatchId?: NullableStringFieldUpdateOperationsInput | string | null
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
@@ -36389,6 +41027,198 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
   }
 
+  export type DispatchCreateWithoutDriverInput = {
+    id: string
+    createdAt?: Date | string
+    dispatched?: boolean
+    dispatchAt?: Date | string | null
+    estimatedDeliveryDurationMinutes?: number | null
+    estimatedRoundTripDurationMinutes?: number | null
+    orders?: OrderCreateNestedManyWithoutDispatchInput
+  }
+
+  export type DispatchUncheckedCreateWithoutDriverInput = {
+    id: string
+    createdAt?: Date | string
+    dispatched?: boolean
+    dispatchAt?: Date | string | null
+    estimatedDeliveryDurationMinutes?: number | null
+    estimatedRoundTripDurationMinutes?: number | null
+    orders?: OrderUncheckedCreateNestedManyWithoutDispatchInput
+  }
+
+  export type DispatchCreateOrConnectWithoutDriverInput = {
+    where: DispatchWhereUniqueInput
+    create: XOR<DispatchCreateWithoutDriverInput, DispatchUncheckedCreateWithoutDriverInput>
+  }
+
+  export type DispatchCreateManyDriverInputEnvelope = {
+    data: DispatchCreateManyDriverInput | DispatchCreateManyDriverInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type DispatchUpsertWithWhereUniqueWithoutDriverInput = {
+    where: DispatchWhereUniqueInput
+    update: XOR<DispatchUpdateWithoutDriverInput, DispatchUncheckedUpdateWithoutDriverInput>
+    create: XOR<DispatchCreateWithoutDriverInput, DispatchUncheckedCreateWithoutDriverInput>
+  }
+
+  export type DispatchUpdateWithWhereUniqueWithoutDriverInput = {
+    where: DispatchWhereUniqueInput
+    data: XOR<DispatchUpdateWithoutDriverInput, DispatchUncheckedUpdateWithoutDriverInput>
+  }
+
+  export type DispatchUpdateManyWithWhereWithoutDriverInput = {
+    where: DispatchScalarWhereInput
+    data: XOR<DispatchUpdateManyMutationInput, DispatchUncheckedUpdateManyWithoutDriverInput>
+  }
+
+  export type DispatchScalarWhereInput = {
+    AND?: DispatchScalarWhereInput | DispatchScalarWhereInput[]
+    OR?: DispatchScalarWhereInput[]
+    NOT?: DispatchScalarWhereInput | DispatchScalarWhereInput[]
+    id?: StringFilter<"Dispatch"> | string
+    createdAt?: DateTimeFilter<"Dispatch"> | Date | string
+    dispatched?: BoolFilter<"Dispatch"> | boolean
+    dispatchAt?: DateTimeNullableFilter<"Dispatch"> | Date | string | null
+    estimatedDeliveryDurationMinutes?: IntNullableFilter<"Dispatch"> | number | null
+    estimatedRoundTripDurationMinutes?: IntNullableFilter<"Dispatch"> | number | null
+    driverId?: StringNullableFilter<"Dispatch"> | string | null
+  }
+
+  export type DriverCreateWithoutDispatchesInput = {
+    id: string
+    createdAt?: Date | string
+    name: string
+    active?: boolean
+    priorityLevel: number
+  }
+
+  export type DriverUncheckedCreateWithoutDispatchesInput = {
+    id: string
+    createdAt?: Date | string
+    name: string
+    active?: boolean
+    priorityLevel: number
+  }
+
+  export type DriverCreateOrConnectWithoutDispatchesInput = {
+    where: DriverWhereUniqueInput
+    create: XOR<DriverCreateWithoutDispatchesInput, DriverUncheckedCreateWithoutDispatchesInput>
+  }
+
+  export type OrderCreateWithoutDispatchInput = {
+    id: string
+    number?: string | null
+    createdAt?: Date | string
+    paidAt?: Date | string | null
+    deliveredAt?: Date | string | null
+    amount: number
+    status?: $Enums.OrderStatus
+    type?: $Enums.OrderType
+    paymentMethod?: $Enums.PaymentType
+    tipAmount?: number | null
+    externalId?: string | null
+    customer: CustomerCreateNestedOneWithoutOrdersInput
+    address?: AddressCreateNestedOneWithoutOrdersInput
+    deliveryAddress?: DeliveryAddressCreateNestedOneWithoutOrdersInput
+    orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
+    preparationStepCategories?: PreparationStepCategoryCreateNestedManyWithoutOrderInput
+  }
+
+  export type OrderUncheckedCreateWithoutDispatchInput = {
+    id: string
+    number?: string | null
+    createdAt?: Date | string
+    paidAt?: Date | string | null
+    deliveredAt?: Date | string | null
+    amount: number
+    status?: $Enums.OrderStatus
+    type?: $Enums.OrderType
+    paymentMethod?: $Enums.PaymentType
+    tipAmount?: number | null
+    customerId: string
+    externalId?: string | null
+    addressId?: string | null
+    deliveryAddressId?: string | null
+    orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
+    preparationStepCategories?: PreparationStepCategoryUncheckedCreateNestedManyWithoutOrderInput
+  }
+
+  export type OrderCreateOrConnectWithoutDispatchInput = {
+    where: OrderWhereUniqueInput
+    create: XOR<OrderCreateWithoutDispatchInput, OrderUncheckedCreateWithoutDispatchInput>
+  }
+
+  export type OrderCreateManyDispatchInputEnvelope = {
+    data: OrderCreateManyDispatchInput | OrderCreateManyDispatchInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type DriverUpsertWithoutDispatchesInput = {
+    update: XOR<DriverUpdateWithoutDispatchesInput, DriverUncheckedUpdateWithoutDispatchesInput>
+    create: XOR<DriverCreateWithoutDispatchesInput, DriverUncheckedCreateWithoutDispatchesInput>
+    where?: DriverWhereInput
+  }
+
+  export type DriverUpdateToOneWithWhereWithoutDispatchesInput = {
+    where?: DriverWhereInput
+    data: XOR<DriverUpdateWithoutDispatchesInput, DriverUncheckedUpdateWithoutDispatchesInput>
+  }
+
+  export type DriverUpdateWithoutDispatchesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    priorityLevel?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type DriverUncheckedUpdateWithoutDispatchesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    priorityLevel?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type OrderUpsertWithWhereUniqueWithoutDispatchInput = {
+    where: OrderWhereUniqueInput
+    update: XOR<OrderUpdateWithoutDispatchInput, OrderUncheckedUpdateWithoutDispatchInput>
+    create: XOR<OrderCreateWithoutDispatchInput, OrderUncheckedCreateWithoutDispatchInput>
+  }
+
+  export type OrderUpdateWithWhereUniqueWithoutDispatchInput = {
+    where: OrderWhereUniqueInput
+    data: XOR<OrderUpdateWithoutDispatchInput, OrderUncheckedUpdateWithoutDispatchInput>
+  }
+
+  export type OrderUpdateManyWithWhereWithoutDispatchInput = {
+    where: OrderScalarWhereInput
+    data: XOR<OrderUpdateManyMutationInput, OrderUncheckedUpdateManyWithoutDispatchInput>
+  }
+
+  export type OrderScalarWhereInput = {
+    AND?: OrderScalarWhereInput | OrderScalarWhereInput[]
+    OR?: OrderScalarWhereInput[]
+    NOT?: OrderScalarWhereInput | OrderScalarWhereInput[]
+    id?: StringFilter<"Order"> | string
+    number?: StringNullableFilter<"Order"> | string | null
+    createdAt?: DateTimeFilter<"Order"> | Date | string
+    paidAt?: DateTimeNullableFilter<"Order"> | Date | string | null
+    deliveredAt?: DateTimeNullableFilter<"Order"> | Date | string | null
+    amount?: IntFilter<"Order"> | number
+    status?: EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
+    type?: EnumOrderTypeFilter<"Order"> | $Enums.OrderType
+    paymentMethod?: EnumPaymentTypeFilter<"Order"> | $Enums.PaymentType
+    tipAmount?: IntNullableFilter<"Order"> | number | null
+    customerId?: StringFilter<"Order"> | string
+    externalId?: StringNullableFilter<"Order"> | string | null
+    dispatchId?: StringNullableFilter<"Order"> | string | null
+    addressId?: StringNullableFilter<"Order"> | string | null
+    deliveryAddressId?: StringNullableFilter<"Order"> | string | null
+  }
+
   export type BranchCreateWithoutAddressInput = {
     id: string
     createdAt?: Date | string
@@ -36414,6 +41244,8 @@ export namespace Prisma {
     id: string
     number?: string | null
     createdAt?: Date | string
+    paidAt?: Date | string | null
+    deliveredAt?: Date | string | null
     amount: number
     status?: $Enums.OrderStatus
     type?: $Enums.OrderType
@@ -36421,6 +41253,7 @@ export namespace Prisma {
     tipAmount?: number | null
     externalId?: string | null
     customer: CustomerCreateNestedOneWithoutOrdersInput
+    dispatch?: DispatchCreateNestedOneWithoutOrdersInput
     deliveryAddress?: DeliveryAddressCreateNestedOneWithoutOrdersInput
     orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryCreateNestedManyWithoutOrderInput
@@ -36430,6 +41263,8 @@ export namespace Prisma {
     id: string
     number?: string | null
     createdAt?: Date | string
+    paidAt?: Date | string | null
+    deliveredAt?: Date | string | null
     amount: number
     status?: $Enums.OrderStatus
     type?: $Enums.OrderType
@@ -36437,6 +41272,7 @@ export namespace Prisma {
     tipAmount?: number | null
     customerId: string
     externalId?: string | null
+    dispatchId?: string | null
     deliveryAddressId?: string | null
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryUncheckedCreateNestedManyWithoutOrderInput
@@ -36493,24 +41329,6 @@ export namespace Prisma {
   export type OrderUpdateManyWithWhereWithoutAddressInput = {
     where: OrderScalarWhereInput
     data: XOR<OrderUpdateManyMutationInput, OrderUncheckedUpdateManyWithoutAddressInput>
-  }
-
-  export type OrderScalarWhereInput = {
-    AND?: OrderScalarWhereInput | OrderScalarWhereInput[]
-    OR?: OrderScalarWhereInput[]
-    NOT?: OrderScalarWhereInput | OrderScalarWhereInput[]
-    id?: StringFilter<"Order"> | string
-    number?: StringNullableFilter<"Order"> | string | null
-    createdAt?: DateTimeFilter<"Order"> | Date | string
-    amount?: IntFilter<"Order"> | number
-    status?: EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
-    type?: EnumOrderTypeFilter<"Order"> | $Enums.OrderType
-    paymentMethod?: EnumPaymentTypeFilter<"Order"> | $Enums.PaymentType
-    tipAmount?: IntNullableFilter<"Order"> | number | null
-    customerId?: StringFilter<"Order"> | string
-    externalId?: StringNullableFilter<"Order"> | string | null
-    addressId?: StringNullableFilter<"Order"> | string | null
-    deliveryAddressId?: StringNullableFilter<"Order"> | string | null
   }
 
   export type FileCreateWithoutProductInput = {
@@ -36924,12 +41742,15 @@ export namespace Prisma {
     id: string
     number?: string | null
     createdAt?: Date | string
+    paidAt?: Date | string | null
+    deliveredAt?: Date | string | null
     amount: number
     status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     tipAmount?: number | null
     externalId?: string | null
+    dispatch?: DispatchCreateNestedOneWithoutOrdersInput
     address?: AddressCreateNestedOneWithoutOrdersInput
     deliveryAddress?: DeliveryAddressCreateNestedOneWithoutOrdersInput
     orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
@@ -36940,12 +41761,15 @@ export namespace Prisma {
     id: string
     number?: string | null
     createdAt?: Date | string
+    paidAt?: Date | string | null
+    deliveredAt?: Date | string | null
     amount: number
     status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     tipAmount?: number | null
     externalId?: string | null
+    dispatchId?: string | null
     addressId?: string | null
     deliveryAddressId?: string | null
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
@@ -37131,6 +41955,8 @@ export namespace Prisma {
     id: string
     number?: string | null
     createdAt?: Date | string
+    paidAt?: Date | string | null
+    deliveredAt?: Date | string | null
     amount: number
     status?: $Enums.OrderStatus
     type?: $Enums.OrderType
@@ -37138,6 +41964,7 @@ export namespace Prisma {
     tipAmount?: number | null
     externalId?: string | null
     customer: CustomerCreateNestedOneWithoutOrdersInput
+    dispatch?: DispatchCreateNestedOneWithoutOrdersInput
     address?: AddressCreateNestedOneWithoutOrdersInput
     orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryCreateNestedManyWithoutOrderInput
@@ -37147,6 +41974,8 @@ export namespace Prisma {
     id: string
     number?: string | null
     createdAt?: Date | string
+    paidAt?: Date | string | null
+    deliveredAt?: Date | string | null
     amount: number
     status?: $Enums.OrderStatus
     type?: $Enums.OrderType
@@ -37154,6 +41983,7 @@ export namespace Prisma {
     tipAmount?: number | null
     customerId: string
     externalId?: string | null
+    dispatchId?: string | null
     addressId?: string | null
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryUncheckedCreateNestedManyWithoutOrderInput
@@ -37441,6 +42271,31 @@ export namespace Prisma {
     create: XOR<CustomerCreateWithoutOrdersInput, CustomerUncheckedCreateWithoutOrdersInput>
   }
 
+  export type DispatchCreateWithoutOrdersInput = {
+    id: string
+    createdAt?: Date | string
+    dispatched?: boolean
+    dispatchAt?: Date | string | null
+    estimatedDeliveryDurationMinutes?: number | null
+    estimatedRoundTripDurationMinutes?: number | null
+    driver?: DriverCreateNestedOneWithoutDispatchesInput
+  }
+
+  export type DispatchUncheckedCreateWithoutOrdersInput = {
+    id: string
+    createdAt?: Date | string
+    dispatched?: boolean
+    dispatchAt?: Date | string | null
+    estimatedDeliveryDurationMinutes?: number | null
+    estimatedRoundTripDurationMinutes?: number | null
+    driverId?: string | null
+  }
+
+  export type DispatchCreateOrConnectWithoutOrdersInput = {
+    where: DispatchWhereUniqueInput
+    create: XOR<DispatchCreateWithoutOrdersInput, DispatchUncheckedCreateWithoutOrdersInput>
+  }
+
   export type AddressCreateWithoutOrdersInput = {
     id: string
     createdAt?: Date | string
@@ -37592,6 +42447,37 @@ export namespace Prisma {
     lastMessageSent?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     promotionalMessages?: PromotialMessageUncheckedUpdateManyWithoutCustomerNestedInput
     addresses?: DeliveryAddressUncheckedUpdateManyWithoutCustomerNestedInput
+  }
+
+  export type DispatchUpsertWithoutOrdersInput = {
+    update: XOR<DispatchUpdateWithoutOrdersInput, DispatchUncheckedUpdateWithoutOrdersInput>
+    create: XOR<DispatchCreateWithoutOrdersInput, DispatchUncheckedCreateWithoutOrdersInput>
+    where?: DispatchWhereInput
+  }
+
+  export type DispatchUpdateToOneWithWhereWithoutOrdersInput = {
+    where?: DispatchWhereInput
+    data: XOR<DispatchUpdateWithoutOrdersInput, DispatchUncheckedUpdateWithoutOrdersInput>
+  }
+
+  export type DispatchUpdateWithoutOrdersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dispatched?: BoolFieldUpdateOperationsInput | boolean
+    dispatchAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    estimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    driver?: DriverUpdateOneWithoutDispatchesNestedInput
+  }
+
+  export type DispatchUncheckedUpdateWithoutOrdersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dispatched?: BoolFieldUpdateOperationsInput | boolean
+    dispatchAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    estimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    driverId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type AddressUpsertWithoutOrdersInput = {
@@ -37762,6 +42648,8 @@ export namespace Prisma {
     id: string
     number?: string | null
     createdAt?: Date | string
+    paidAt?: Date | string | null
+    deliveredAt?: Date | string | null
     amount: number
     status?: $Enums.OrderStatus
     type?: $Enums.OrderType
@@ -37769,6 +42657,7 @@ export namespace Prisma {
     tipAmount?: number | null
     externalId?: string | null
     customer: CustomerCreateNestedOneWithoutOrdersInput
+    dispatch?: DispatchCreateNestedOneWithoutOrdersInput
     address?: AddressCreateNestedOneWithoutOrdersInput
     deliveryAddress?: DeliveryAddressCreateNestedOneWithoutOrdersInput
     preparationStepCategories?: PreparationStepCategoryCreateNestedManyWithoutOrderInput
@@ -37778,6 +42667,8 @@ export namespace Prisma {
     id: string
     number?: string | null
     createdAt?: Date | string
+    paidAt?: Date | string | null
+    deliveredAt?: Date | string | null
     amount: number
     status?: $Enums.OrderStatus
     type?: $Enums.OrderType
@@ -37785,6 +42676,7 @@ export namespace Prisma {
     tipAmount?: number | null
     customerId: string
     externalId?: string | null
+    dispatchId?: string | null
     addressId?: string | null
     deliveryAddressId?: string | null
     preparationStepCategories?: PreparationStepCategoryUncheckedCreateNestedManyWithoutOrderInput
@@ -37865,6 +42757,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     number?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     amount?: IntFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
@@ -37872,6 +42766,7 @@ export namespace Prisma {
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
     customer?: CustomerUpdateOneRequiredWithoutOrdersNestedInput
+    dispatch?: DispatchUpdateOneWithoutOrdersNestedInput
     address?: AddressUpdateOneWithoutOrdersNestedInput
     deliveryAddress?: DeliveryAddressUpdateOneWithoutOrdersNestedInput
     preparationStepCategories?: PreparationStepCategoryUpdateManyWithoutOrderNestedInput
@@ -37881,6 +42776,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     number?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     amount?: IntFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
@@ -37888,6 +42785,7 @@ export namespace Prisma {
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     customerId?: StringFieldUpdateOperationsInput | string
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    dispatchId?: NullableStringFieldUpdateOperationsInput | string | null
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
     preparationStepCategories?: PreparationStepCategoryUncheckedUpdateManyWithoutOrderNestedInput
@@ -38324,10 +43222,50 @@ export namespace Prisma {
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
-  export type OrderCreateManyAddressInput = {
+  export type DispatchCreateManyDriverInput = {
+    id: string
+    createdAt?: Date | string
+    dispatched?: boolean
+    dispatchAt?: Date | string | null
+    estimatedDeliveryDurationMinutes?: number | null
+    estimatedRoundTripDurationMinutes?: number | null
+  }
+
+  export type DispatchUpdateWithoutDriverInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dispatched?: BoolFieldUpdateOperationsInput | boolean
+    dispatchAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    estimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    orders?: OrderUpdateManyWithoutDispatchNestedInput
+  }
+
+  export type DispatchUncheckedUpdateWithoutDriverInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dispatched?: BoolFieldUpdateOperationsInput | boolean
+    dispatchAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    estimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    orders?: OrderUncheckedUpdateManyWithoutDispatchNestedInput
+  }
+
+  export type DispatchUncheckedUpdateManyWithoutDriverInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dispatched?: BoolFieldUpdateOperationsInput | boolean
+    dispatchAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    estimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type OrderCreateManyDispatchInput = {
     id: string
     number?: string | null
     createdAt?: Date | string
+    paidAt?: Date | string | null
+    deliveredAt?: Date | string | null
     amount: number
     status?: $Enums.OrderStatus
     type?: $Enums.OrderType
@@ -38335,13 +43273,16 @@ export namespace Prisma {
     tipAmount?: number | null
     customerId: string
     externalId?: string | null
+    addressId?: string | null
     deliveryAddressId?: string | null
   }
 
-  export type OrderUpdateWithoutAddressInput = {
+  export type OrderUpdateWithoutDispatchInput = {
     id?: StringFieldUpdateOperationsInput | string
     number?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     amount?: IntFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
@@ -38349,6 +43290,79 @@ export namespace Prisma {
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
     customer?: CustomerUpdateOneRequiredWithoutOrdersNestedInput
+    address?: AddressUpdateOneWithoutOrdersNestedInput
+    deliveryAddress?: DeliveryAddressUpdateOneWithoutOrdersNestedInput
+    orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
+    preparationStepCategories?: PreparationStepCategoryUpdateManyWithoutOrderNestedInput
+  }
+
+  export type OrderUncheckedUpdateWithoutDispatchInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    number?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    amount?: IntFieldUpdateOperationsInput | number
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+    paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
+    tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    customerId?: StringFieldUpdateOperationsInput | string
+    externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    addressId?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
+    orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
+    preparationStepCategories?: PreparationStepCategoryUncheckedUpdateManyWithoutOrderNestedInput
+  }
+
+  export type OrderUncheckedUpdateManyWithoutDispatchInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    number?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    amount?: IntFieldUpdateOperationsInput | number
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+    paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
+    tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    customerId?: StringFieldUpdateOperationsInput | string
+    externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    addressId?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type OrderCreateManyAddressInput = {
+    id: string
+    number?: string | null
+    createdAt?: Date | string
+    paidAt?: Date | string | null
+    deliveredAt?: Date | string | null
+    amount: number
+    status?: $Enums.OrderStatus
+    type?: $Enums.OrderType
+    paymentMethod?: $Enums.PaymentType
+    tipAmount?: number | null
+    customerId: string
+    externalId?: string | null
+    dispatchId?: string | null
+    deliveryAddressId?: string | null
+  }
+
+  export type OrderUpdateWithoutAddressInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    number?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    amount?: IntFieldUpdateOperationsInput | number
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+    paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
+    tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    customer?: CustomerUpdateOneRequiredWithoutOrdersNestedInput
+    dispatch?: DispatchUpdateOneWithoutOrdersNestedInput
     deliveryAddress?: DeliveryAddressUpdateOneWithoutOrdersNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUpdateManyWithoutOrderNestedInput
@@ -38358,6 +43372,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     number?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     amount?: IntFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
@@ -38365,6 +43381,7 @@ export namespace Prisma {
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     customerId?: StringFieldUpdateOperationsInput | string
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    dispatchId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUncheckedUpdateManyWithoutOrderNestedInput
@@ -38374,6 +43391,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     number?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     amount?: IntFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
@@ -38381,6 +43400,7 @@ export namespace Prisma {
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     customerId?: StringFieldUpdateOperationsInput | string
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    dispatchId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -38631,12 +43651,15 @@ export namespace Prisma {
     id: string
     number?: string | null
     createdAt?: Date | string
+    paidAt?: Date | string | null
+    deliveredAt?: Date | string | null
     amount: number
     status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     tipAmount?: number | null
     externalId?: string | null
+    dispatchId?: string | null
     addressId?: string | null
     deliveryAddressId?: string | null
   }
@@ -38668,12 +43691,15 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     number?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     amount?: IntFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    dispatch?: DispatchUpdateOneWithoutOrdersNestedInput
     address?: AddressUpdateOneWithoutOrdersNestedInput
     deliveryAddress?: DeliveryAddressUpdateOneWithoutOrdersNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
@@ -38684,12 +43710,15 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     number?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     amount?: IntFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    dispatchId?: NullableStringFieldUpdateOperationsInput | string | null
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
@@ -38700,12 +43729,15 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     number?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     amount?: IntFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    dispatchId?: NullableStringFieldUpdateOperationsInput | string | null
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -38785,6 +43817,8 @@ export namespace Prisma {
     id: string
     number?: string | null
     createdAt?: Date | string
+    paidAt?: Date | string | null
+    deliveredAt?: Date | string | null
     amount: number
     status?: $Enums.OrderStatus
     type?: $Enums.OrderType
@@ -38792,6 +43826,7 @@ export namespace Prisma {
     tipAmount?: number | null
     customerId: string
     externalId?: string | null
+    dispatchId?: string | null
     addressId?: string | null
   }
 
@@ -38799,6 +43834,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     number?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     amount?: IntFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
@@ -38806,6 +43843,7 @@ export namespace Prisma {
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
     customer?: CustomerUpdateOneRequiredWithoutOrdersNestedInput
+    dispatch?: DispatchUpdateOneWithoutOrdersNestedInput
     address?: AddressUpdateOneWithoutOrdersNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUpdateManyWithoutOrderNestedInput
@@ -38815,6 +43853,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     number?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     amount?: IntFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
@@ -38822,6 +43862,7 @@ export namespace Prisma {
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     customerId?: StringFieldUpdateOperationsInput | string
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    dispatchId?: NullableStringFieldUpdateOperationsInput | string | null
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUncheckedUpdateManyWithoutOrderNestedInput
@@ -38831,6 +43872,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     number?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     amount?: IntFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
@@ -38838,6 +43881,7 @@ export namespace Prisma {
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     customerId?: StringFieldUpdateOperationsInput | string
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    dispatchId?: NullableStringFieldUpdateOperationsInput | string | null
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 

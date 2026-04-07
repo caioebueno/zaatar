@@ -1,5 +1,6 @@
 "use server";
 
+import { after } from "next/server";
 import { MAX_DELIVERY_FEE_CENTS } from "@/utils/calculateDeliveryFee";
 import prisma from "../prisma";
 import TCart from "../types/cart";
@@ -15,6 +16,10 @@ import { calculateProductPriceWithProgressiveDiscount } from "../utils/calculate
 import getProducts from "./getProducts";
 import { createOrderPreparationStepsUseCase } from "@/src/modules/station/application/createOrderPreparationSteps";
 import { prismaStationRepository } from "@/src/modules/station/infrastructure/prisma/prismaStationRepository";
+import {
+  enqueueAssignDeliveryOrderToDispatch,
+  processDispatchAssignmentJobs,
+} from "@/src/modules/dispatch/application/assignDeliveryOrderToDispatchQueue";
 
 type TCreateOrder = {
   cart: TCart;
@@ -185,6 +190,7 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
   const order: TOrder = {
     id: createdOrder.id,
     createdAt: createdOrder.createdAt.toISOString(),
+    paidAt: null,
     status: "ACCEPTED",
     orderProducts: orderProducts,
     paymentMethod: createdOrder.paymentMethod,
@@ -192,6 +198,20 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
     preparationStepCategory: [],
   };
   await createOrderPreparationStepsUseCase(prismaStationRepository, order);
+
+  if (data.orderType === "DELIVERY" && data.addressId) {
+    await enqueueAssignDeliveryOrderToDispatch({
+      orderId: createdOrder.id,
+      deliveryAddressId: data.addressId,
+    });
+
+    after(async () => {
+      await processDispatchAssignmentJobs(1).catch((error: unknown) => {
+        console.error("Failed to trigger dispatch assignment processing:", error);
+      });
+    });
+  }
+
   return order;
 };
 

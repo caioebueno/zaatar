@@ -1,0 +1,8 @@
+CREATE TABLE "Driver" (
+  "id" TEXT NOT NULL,
+  "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "name" TEXT NOT NULL,
+  "priorityLevel" INTEGER NOT NULL,
+
+  CONSTRAINT "Driver_pkey" PRIMARY KEY ("id")
+);

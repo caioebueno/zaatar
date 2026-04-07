@@ -93,9 +93,28 @@ class PrismaStationRepository implements StationRepository {
       const orderStatuses = await prisma.$queryRaw<
         { id: string; status: TOrderStatus }[]
       >`
-        SELECT "id", "status"
-        FROM "Order"
-        WHERE "id" IN (${Prisma.join(orders.map((order) => order.id))})
+        SELECT
+          orders."id",
+          CASE
+            WHEN orders."deliveredAt" IS NOT NULL THEN 'DELIVERED'
+            WHEN EXISTS (
+              SELECT 1
+              FROM "Dispatch" dispatch
+              WHERE dispatch."id" = orders."dispatchId"
+                AND dispatch."dispatched" = true
+            ) THEN 'DELIVERING'
+            WHEN EXISTS (
+              SELECT 1
+              FROM "PreparationStepCategory" preparationStepCategory
+              INNER JOIN "PreparationStepTrack" preparationStepTrack
+                ON preparationStepTrack."preparationStepCategoryId" = preparationStepCategory."id"
+              WHERE preparationStepCategory."orderId" = orders."id"
+                AND preparationStepTrack."completed" = true
+            ) THEN 'PREPARING'
+            ELSE 'ACCEPTED'
+          END AS "status"
+        FROM "Order" orders
+        WHERE orders."id" IN (${Prisma.join(orders.map((order) => order.id))})
       `;
 
       for (const orderStatus of orderStatuses) {

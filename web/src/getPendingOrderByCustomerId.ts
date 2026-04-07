@@ -15,14 +15,31 @@ const getPendingOrderByCustomerId = async (
 ): Promise<TPendingOrder | null> => {
   const [order] = await prisma.$queryRaw<TPendingOrder[]>`
     SELECT
-      "id",
-      "number",
-      "status",
-      "type"
-    FROM "Order"
-    WHERE "customerId" = ${customerId}
-      AND "status" <> 'DELIVERED'
-    ORDER BY "createdAt" DESC
+      orders."id",
+      orders."number",
+      CASE
+        WHEN orders."deliveredAt" IS NOT NULL THEN 'DELIVERED'
+        WHEN EXISTS (
+          SELECT 1
+          FROM "Dispatch" dispatch
+          WHERE dispatch."id" = orders."dispatchId"
+            AND dispatch."dispatched" = true
+        ) THEN 'DELIVERING'
+        WHEN EXISTS (
+          SELECT 1
+          FROM "PreparationStepCategory" preparationStepCategory
+          INNER JOIN "PreparationStepTrack" preparationStepTrack
+            ON preparationStepTrack."preparationStepCategoryId" = preparationStepCategory."id"
+          WHERE preparationStepCategory."orderId" = orders."id"
+            AND preparationStepTrack."completed" = true
+        ) THEN 'PREPARING'
+        ELSE 'ACCEPTED'
+      END AS "status",
+      orders."type"
+    FROM "Order" orders
+    WHERE orders."customerId" = ${customerId}
+      AND orders."deliveredAt" IS NULL
+    ORDER BY orders."createdAt" DESC
     LIMIT 1
   `;
 

@@ -84,6 +84,8 @@ const ProductModal: React.FC<TProductModal> = ({
                 src={productImageUrl}
                 alt={`${product.name} photo`}
                 className="h-100 w-full object-cover bg-background lg:w-full lg:h-auto lg:rounded-xl"
+                quality={85}
+                sizes="(max-width: 1024px) 100vw, 50vw"
               />
             </div>
             <div className="pt-6 px-4 flex flex-col gap-3 leading-4 lg:flex-1 lg:pt-8">

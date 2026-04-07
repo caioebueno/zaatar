@@ -6,6 +6,8 @@ import { TOrder, TOrderStatus, TOrderType, TPaymentMethod } from "./types/order"
 type OrderRow = {
   id: string;
   createdAt: Date;
+  paidAt: Date | null;
+  deliveredAt: Date | null;
   number: string | null;
   status: TOrderStatus;
   type: TOrderType;
@@ -24,8 +26,27 @@ const getOrder = async (orderId: string): Promise<TOrder> => {
     SELECT
       o."id",
       o."createdAt",
+      o."paidAt",
+      o."deliveredAt",
       o."number",
-      o."status",
+      CASE
+        WHEN o."deliveredAt" IS NOT NULL THEN 'DELIVERED'
+        WHEN EXISTS (
+          SELECT 1
+          FROM "Dispatch" dispatch
+          WHERE dispatch."id" = o."dispatchId"
+            AND dispatch."dispatched" = true
+        ) THEN 'DELIVERING'
+        WHEN EXISTS (
+          SELECT 1
+          FROM "PreparationStepCategory" preparationStepCategory
+          INNER JOIN "PreparationStepTrack" preparationStepTrack
+            ON preparationStepTrack."preparationStepCategoryId" = preparationStepCategory."id"
+          WHERE preparationStepCategory."orderId" = o."id"
+            AND preparationStepTrack."completed" = true
+        ) THEN 'PREPARING'
+        ELSE 'ACCEPTED'
+      END AS "status",
       o."type",
       o."paymentMethod",
       o."amount",
@@ -39,12 +60,14 @@ const getOrder = async (orderId: string): Promise<TOrder> => {
     GROUP BY
       o."id",
       o."createdAt",
+      o."paidAt",
+      o."deliveredAt",
       o."number",
-      o."status",
       o."type",
       o."paymentMethod",
       o."amount",
       o."tipAmount",
+      o."dispatchId",
       da."deliveryFee"
     LIMIT 1
   `;
@@ -77,6 +100,8 @@ const getOrder = async (orderId: string): Promise<TOrder> => {
   return {
     id: order.id,
     createdAt: order.createdAt.toISOString(),
+    paidAt: order.paidAt ? order.paidAt.toISOString() : null,
+    ...(order.deliveredAt ? { deliveredAt: order.deliveredAt.toISOString() } : {}),
     status: order.status,
     type: order.type,
     number: order.number || undefined,

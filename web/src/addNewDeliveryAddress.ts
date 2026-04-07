@@ -1,5 +1,6 @@
 "use server";
 
+import { DEFAULT_BRANCH_COORDINATES } from "@/constants/branch";
 import {
   calculateDeliveryFeeInCents,
   MAX_DELIVERY_DISTANCE_KM,
@@ -16,11 +17,6 @@ type TAddNewDeliveryAddress = {
 type Coordinates = {
   lat: number;
   lng: number;
-};
-
-const BRANCH_COORDINATES: Coordinates = {
-  lat: 28.34883080351401,
-  lng: -81.65145586075074,
 };
 
 type DeliveryAddressRow = {
@@ -75,7 +71,7 @@ const addNewDeliveryAddress = async (
   }
 
   const deliveryDistanceInKm = await getMapboxRouteDistanceInKm(
-    BRANCH_COORDINATES,
+    DEFAULT_BRANCH_COORDINATES satisfies Coordinates,
     customerCoordinates,
   );
 

@@ -9,6 +9,14 @@ const nextConfig: NextConfig = {
   /* config options here */
   outputFileTracingRoot: path.join(__dirname, ".."),
   devIndicators: false,
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "assets.olaclick.app",
+      },
+    ],
+  },
 };
 
 export default nextConfig;

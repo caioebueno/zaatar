@@ -14,14 +14,17 @@ export default function Button({
   ...props
 }: ButtonProps) {
   const baseStyles =
-    "inline-flex items-center justify-center rounded-xl font-bold transition focus:outline-none focus:ring-2 focus:ring-offset-2";
+    "inline-flex cursor-pointer items-center justify-center rounded-xl font-bold transition focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed";
 
   const variants = {
-    primary: "bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500",
-    secondary: "bg-background text-text hover:bg-gray-700 focus:ring-gray-500",
+    primary:
+      "bg-brandBackground text-white hover:bg-[#1C3A36] focus:ring-[#2A564F]",
+    secondary:
+      "bg-background text-text hover:bg-gray-100 hover:text-text focus:ring-gray-300",
     outline:
-      "border border-gray-300 text-gray-700 hover:bg-gray-100 focus:ring-gray-400",
-    ghost: "text-gray-700 hover:bg-gray-100 focus:ring-gray-400",
+      "border border-[#B0B7B6] text-text hover:bg-gray-100 hover:text-text focus:ring-gray-300",
+    ghost:
+      "text-text hover:bg-gray-100 hover:text-text focus:ring-gray-300",
   };
 
   const sizes = {

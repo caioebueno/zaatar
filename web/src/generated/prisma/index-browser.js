@@ -220,6 +220,37 @@ exports.Prisma.BranchScalarFieldEnum = {
   businessId: 'businessId'
 };
 
+exports.Prisma.DriverScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  name: 'name',
+  active: 'active',
+  priorityLevel: 'priorityLevel'
+};
+
+exports.Prisma.DispatchScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  dispatched: 'dispatched',
+  dispatchAt: 'dispatchAt',
+  estimatedDeliveryDurationMinutes: 'estimatedDeliveryDurationMinutes',
+  estimatedRoundTripDurationMinutes: 'estimatedRoundTripDurationMinutes',
+  driverId: 'driverId'
+};
+
+exports.Prisma.DispatchAssignmentJobScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  status: 'status',
+  attempts: 'attempts',
+  availableAt: 'availableAt',
+  processingStartedAt: 'processingStartedAt',
+  completedAt: 'completedAt',
+  lastError: 'lastError',
+  orderId: 'orderId',
+  deliveryAddressId: 'deliveryAddressId'
+};
+
 exports.Prisma.AddressScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
@@ -298,6 +329,8 @@ exports.Prisma.OrderScalarFieldEnum = {
   id: 'id',
   number: 'number',
   createdAt: 'createdAt',
+  paidAt: 'paidAt',
+  deliveredAt: 'deliveredAt',
   amount: 'amount',
   status: 'status',
   type: 'type',
@@ -305,6 +338,7 @@ exports.Prisma.OrderScalarFieldEnum = {
   tipAmount: 'tipAmount',
   customerId: 'customerId',
   externalId: 'externalId',
+  dispatchId: 'dispatchId',
   addressId: 'addressId',
   deliveryAddressId: 'deliveryAddressId'
 };
@@ -355,6 +389,13 @@ exports.ModifierGroupType = exports.$Enums.ModifierGroupType = {
   SINGLE: 'SINGLE'
 };
 
+exports.DispatchAssignmentJobStatus = exports.$Enums.DispatchAssignmentJobStatus = {
+  PENDING: 'PENDING',
+  PROCESSING: 'PROCESSING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED'
+};
+
 exports.OrderStatus = exports.$Enums.OrderStatus = {
   ACCEPTED: 'ACCEPTED',
   PREPARING: 'PREPARING',
@@ -386,6 +427,9 @@ exports.Prisma.ModelName = {
   ModifierGroupItem: 'ModifierGroupItem',
   Business: 'Business',
   Branch: 'Branch',
+  Driver: 'Driver',
+  Dispatch: 'Dispatch',
+  DispatchAssignmentJob: 'DispatchAssignmentJob',
   Address: 'Address',
   Product: 'Product',
   Category: 'Category',

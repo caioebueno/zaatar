@@ -8,15 +8,18 @@ export type TOrderType = "DELIVERY" | "TAKEAWAY";
 export type TOrderStatus =
   | "ACCEPTED"
   | "PREPARING"
-  | "OUT_FOR_DELIVERY"
+  | "DELIVERING"
   | "DELIVERED";
 
 export type TOrder = {
   id: string;
   createdAt: string;
+  paidAt?: string | null;
+  deliveredAt?: string;
   number?: string;
   status: TOrderStatus;
   type: TOrderType;
+  dispatchId?: string;
   totalAmount?: number;
   subtotalAmount?: number;
   tipAmount?: number;

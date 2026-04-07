@@ -1204,7 +1204,12 @@ const AddressStep: React.FC<TAddressStep> = ({
 
   return (
     <>
-      <div className="flex flex-col h-dvh overflow-hidden">
+      <div
+        className="flex flex-col overflow-hidden"
+        style={{
+          height: "calc(100dvh - var(--menu-sticky-offset))",
+        }}
+      >
         <div className="bg-foreground p-4 border-[#B9BFBF] border-b flex flex-row justify-between">
           <Button
             onClick={() => onBack()}
@@ -1255,7 +1260,7 @@ const AddressStep: React.FC<TAddressStep> = ({
                 }}
               />
               {orderType === "DELIVERY" && (
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-2 pb-8">
                   <span className="font-semibold">
                     {content["deliveryAddress"]}
                   </span>
@@ -1268,6 +1273,7 @@ const AddressStep: React.FC<TAddressStep> = ({
                   ) : (
                     <AddressSelector
                       addresses={customer.addresses}
+                      content={content}
                       onSelect={setSelectedAddress}
                       selectedAddress={selectedAddress}
                     />
@@ -1287,7 +1293,7 @@ const AddressStep: React.FC<TAddressStep> = ({
             </>
           )}
         </div>
-        <div className="bg-foreground pt-4 pb-8 px-4 border-[#B9BFBF] border-t w-full flex flex-col items-center gap-2.5">
+        <div className="bg-foreground pt-4 pb-8 px-4 border-[#B9BFBF] border-t w-full flex flex-col items-center gap-2.5 sticky bottom-0">
           <Button
             onClick={handleConfirm}
             disabled={loading}
@@ -1444,12 +1450,16 @@ const PaymentTypeSelector: React.FC<TPaymentTypeSelector> = ({
 
 type TAddressSelector = {
   addresses: TAddress[];
+  content: {
+    [key: string]: string;
+  };
   selectedAddress: string | null;
   onSelect: (value: string) => void;
 };
 
 const AddressSelector: React.FC<TAddressSelector> = ({
   addresses,
+  content,
   onSelect,
   selectedAddress,
 }) => {
@@ -1461,11 +1471,19 @@ const AddressSelector: React.FC<TAddressSelector> = ({
           key={address.id}
           className={`px-3 py-3 rounded-xl bg-foreground font-medium text-[16px] flex flex-row justify-between items-center border-2 transition ${selectedAddress === address.id ? "border-brandBackground" : "border-foreground"}`}
         >
-          <div className="flex flex-col">
-            <span className="flex-1">{`${address.street}, ${address.city}`}</span>
-            {address.complement && (
-              <div className="text-sm text-lightText">{address.complement}</div>
+          <div className="flex flex-1 items-start justify-between gap-3">
+            <div className="flex min-w-0 flex-col">
+              <span className="flex-1">{`${address.street}, ${address.city}`}</span>
+               {typeof address.deliveryFee === "number" && (
+              <div className="shrink-0 self-start whitespace-nowrap text-sm text-lightText">
+                {formatCurrency(address.deliveryFee)} {content["deliveryFee"]}
+              </div>
             )}
+              {address.complement && (
+                <div className="text-sm text-lightText">{address.complement}</div>
+              )}
+            </div>
+           
           </div>
           <div
             className={`h-5 w-5 flex items-center justify-center ${address.id === selectedAddress ? "border-brandBackground" : "border-[#CCD0D0]"} border-2 rounded-full`}
