@@ -4,6 +4,11 @@ import prisma from "../prisma";
 import { Prisma } from "@/src/generated/prisma";
 import TCategory from "./types/category";
 import TProgressiveDiscount from "./types/progressiveDiscount";
+import { DEFAULT_PROGRESSIVE_DISCOUNT_ID } from "@/src/constants/progressiveDiscount";
+import {
+  mapProgressiveDiscountPrize,
+  progressiveDiscountPrizeInclude,
+} from "@/src/progressiveDiscountPrizeHelpers";
 
 export type TGetProductsResponse = {
   categories: TCategory[];
@@ -27,7 +32,11 @@ const getProducts = async (): Promise<TGetProductsResponse> => {
       photos: true,
       modifierGroups: {
         include: {
-          items: true,
+          items: {
+            include: {
+              photo: true,
+            },
+          },
         },
       },
     },
@@ -38,11 +47,22 @@ const getProducts = async (): Promise<TGetProductsResponse> => {
   const prismaProgressiveDiscount = await prisma.progressiveDiscount.findUnique(
     {
       where: {
-        id: "bdbe5049-241f-4d93-8b88-ddeef5f34880",
+        id: DEFAULT_PROGRESSIVE_DISCOUNT_ID,
       },
-      select: {
-        id: true,
-        steps: true,
+      include: {
+        steps: {
+          orderBy: {
+            amount: "asc",
+          },
+          include: {
+            prizes: {
+              orderBy: {
+                createdAt: "asc",
+              },
+              include: progressiveDiscountPrizeInclude,
+            },
+          },
+        },
       },
     },
   );
@@ -55,6 +75,7 @@ const getProducts = async (): Promise<TGetProductsResponse> => {
             type: step.discountType,
             amount: step.amount || undefined,
             discount: step.discount || undefined,
+            prizes: step.prizes.map(mapProgressiveDiscountPrize),
           })),
         }
       : null,
@@ -87,11 +108,38 @@ const getProducts = async (): Promise<TGetProductsResponse> => {
           id: item.id,
           required: item.required,
           title: item.title,
-          items: item.items.map((modifierItem) => ({
-            id: modifierItem.id,
-            name: modifierItem.name,
-            price: modifierItem.price,
-          })),
+          type: item.type,
+          minSelection: item.minSelection,
+          maxSelection: item.maxSelection,
+          items: item.items.map((modifierItem) => {
+            const modifierItemWithTranslations = modifierItem as typeof modifierItem & {
+              translations: unknown;
+            };
+
+            return {
+              id: modifierItem.id,
+              name: modifierItem.name,
+              description: modifierItem.description || undefined,
+              price: modifierItem.price,
+              ...(modifierItem.photo
+                ? {
+                    photo: {
+                      id: modifierItem.photo.id,
+                      url: modifierItem.photo.url,
+                    },
+                  }
+                : {}),
+              translations:
+                modifierItemWithTranslations.translations &&
+                typeof modifierItemWithTranslations.translations === "object"
+                  ? (modifierItemWithTranslations.translations as {
+                      [key: string]: {
+                        [key: string]: string;
+                      };
+                    })
+                  : undefined,
+            };
+          }),
         })),
         photos: product.photos?.map((photo) => ({
           id: photo.id,

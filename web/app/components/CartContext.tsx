@@ -1,6 +1,10 @@
 "use client";
 
-import TCart, { TCartItem, TSelectedModifier } from "@/types/cart";
+import TCart, {
+  TCartItem,
+  TCartPrizeSelection,
+  TSelectedModifier,
+} from "@/types/cart";
 import {
   createContext,
   useContext,
@@ -74,6 +78,44 @@ function ensureCartItemId(item: TCartItem): TCartItem {
   };
 }
 
+function sanitizeSelectedPrizeSelection(
+  selectedPrize: unknown,
+): TCartPrizeSelection | null {
+  if (!selectedPrize || typeof selectedPrize !== "object") return null;
+
+  const selectedPrizeObject = selectedPrize as {
+    selectedPrizeId?: unknown;
+    selectedProductIdsByPrizeId?: unknown;
+  };
+
+  const selectedPrizeId =
+    typeof selectedPrizeObject.selectedPrizeId === "string" ||
+    selectedPrizeObject.selectedPrizeId === null
+      ? selectedPrizeObject.selectedPrizeId
+      : null;
+
+  const selectedProductIdsByPrizeId: Record<string, string[]> = {};
+
+  if (
+    selectedPrizeObject.selectedProductIdsByPrizeId &&
+    typeof selectedPrizeObject.selectedProductIdsByPrizeId === "object"
+  ) {
+    for (const [prizeId, value] of Object.entries(
+      selectedPrizeObject.selectedProductIdsByPrizeId as Record<string, unknown>,
+    )) {
+      if (!Array.isArray(value)) continue;
+      selectedProductIdsByPrizeId[prizeId] = value.filter(
+        (item): item is string => typeof item === "string",
+      );
+    }
+  }
+
+  return {
+    selectedPrizeId,
+    selectedProductIdsByPrizeId,
+  };
+}
+
 /* =========================
    Pure Functions
 ========================= */
@@ -87,11 +129,13 @@ function addItemToCart(cart: TCart, item: TCartItem): TCart {
 
   if (existingIndex === -1) {
     return {
+      ...cart,
       items: [...cart.items, nextItem],
     };
   }
 
   return {
+    ...cart,
     items: cart.items.map((cartItem, index) => {
       if (index !== existingIndex) return cartItem;
 
@@ -105,6 +149,7 @@ function addItemToCart(cart: TCart, item: TCartItem): TCart {
 
 function removeItemFromCart(cart: TCart, cartId: string): TCart {
   return {
+    ...cart,
     items: cart.items.filter((item) => item.cartId !== cartId),
   };
 }
@@ -116,11 +161,13 @@ function updateItemQuantityInCart(
 ): TCart {
   if (newQuantity <= 0) {
     return {
+      ...cart,
       items: cart.items.filter((item) => item.cartId !== cartId),
     };
   }
 
   return {
+    ...cart,
     items: cart.items.map((item) => {
       if (item.cartId !== cartId) return item;
 
@@ -133,32 +180,33 @@ function updateItemQuantityInCart(
 }
 
 function clearCartState(): TCart {
-  return { items: [] };
+  return { items: [], selectedPrize: null };
 }
 
 function getInitialCart(): TCart {
   if (typeof window === "undefined") {
-    return { items: [] };
+    return { items: [], selectedPrize: null };
   }
 
   try {
     const storedCart = window.localStorage.getItem(CART_STORAGE_KEY);
 
     if (!storedCart) {
-      return { items: [] };
+      return { items: [], selectedPrize: null };
     }
 
     const parsedCart = JSON.parse(storedCart) as TCart;
 
     if (!parsedCart || !Array.isArray(parsedCart.items)) {
-      return { items: [] };
+      return { items: [], selectedPrize: null };
     }
 
     return {
       items: parsedCart.items.map(ensureCartItemId),
+      selectedPrize: sanitizeSelectedPrizeSelection(parsedCart.selectedPrize),
     };
   } catch {
-    return { items: [] };
+    return { items: [], selectedPrize: null };
   }
 }
 
@@ -171,6 +219,7 @@ type CartContextType = {
   addItem: (item: Omit<TCartItem, "cartId"> | TCartItem) => void;
   removeItem: (cartId: string) => void;
   updateItemQuantity: (cartId: string, newQuantity: number) => void;
+  setSelectedPrize: (selectedPrize: TCartPrizeSelection | null) => void;
   clearCart: () => void;
 };
 
@@ -199,6 +248,13 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setCart((prev) => updateItemQuantityInCart(prev, cartId, newQuantity));
   };
 
+  const setSelectedPrize = (selectedPrize: TCartPrizeSelection | null) => {
+    setCart((prev) => ({
+      ...prev,
+      selectedPrize,
+    }));
+  };
+
   const clearCart = () => {
     setCart(clearCartState());
   };
@@ -210,6 +266,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         addItem,
         removeItem,
         updateItemQuantity,
+        setSelectedPrize,
         clearCart,
       }}
     >

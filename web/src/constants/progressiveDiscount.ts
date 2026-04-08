@@ -1,0 +1,2 @@
+export const DEFAULT_PROGRESSIVE_DISCOUNT_ID =
+  "bdbe5049-241f-4d93-8b88-ddeef5f34880";

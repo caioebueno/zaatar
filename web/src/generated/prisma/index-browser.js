@@ -176,6 +176,22 @@ exports.Prisma.ProgressiveDiscountStepScalarFieldEnum = {
   progressiveDiscountId: 'progressiveDiscountId'
 };
 
+exports.Prisma.ProgressiveDiscountPrizeScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  name: 'name',
+  quantity: 'quantity',
+  imageUrl: 'imageUrl',
+  progressiveDiscountStepId: 'progressiveDiscountStepId'
+};
+
+exports.Prisma.ProgressiveDiscountPrizeProductScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  prizeId: 'prizeId',
+  productId: 'productId'
+};
+
 exports.Prisma.FileScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
@@ -201,6 +217,7 @@ exports.Prisma.ModifierGroupItemScalarFieldEnum = {
   name: 'name',
   price: 'price',
   description: 'description',
+  translations: 'translations',
   modifierGroupId: 'modifierGroupId',
   fileId: 'fileId'
 };
@@ -331,11 +348,13 @@ exports.Prisma.OrderScalarFieldEnum = {
   createdAt: 'createdAt',
   paidAt: 'paidAt',
   deliveredAt: 'deliveredAt',
+  dispatchOrderIndex: 'dispatchOrderIndex',
   amount: 'amount',
   status: 'status',
   type: 'type',
   paymentMethod: 'paymentMethod',
   tipAmount: 'tipAmount',
+  progressiveDiscountSnapshot: 'progressiveDiscountSnapshot',
   customerId: 'customerId',
   externalId: 'externalId',
   dispatchId: 'dispatchId',
@@ -422,6 +441,8 @@ exports.Prisma.ModelName = {
   PreparationStepModifierTrack: 'PreparationStepModifierTrack',
   ProgressiveDiscount: 'ProgressiveDiscount',
   ProgressiveDiscountStep: 'ProgressiveDiscountStep',
+  ProgressiveDiscountPrize: 'ProgressiveDiscountPrize',
+  ProgressiveDiscountPrizeProduct: 'ProgressiveDiscountPrizeProduct',
   File: 'File',
   ModifierGroup: 'ModifierGroup',
   ModifierGroupItem: 'ModifierGroupItem',

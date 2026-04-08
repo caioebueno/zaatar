@@ -6,6 +6,13 @@ type TCartItem = {
   description?: string;
 };
 
+type TCartPrizeSelection = {
+  selectedPrizeId: string | null;
+  selectedProductIdsByPrizeId: {
+    [prizeId: string]: string[];
+  };
+};
+
 type TSelectedModifier = {
   modifierId: string;
   modifierItemId: string;
@@ -13,7 +20,8 @@ type TSelectedModifier = {
 
 type TCart = {
   items: TCartItem[];
+  selectedPrize?: TCartPrizeSelection | null;
 };
 
 export default TCart;
-export { TCartItem, TSelectedModifier };
+export { TCartItem, TCartPrizeSelection, TSelectedModifier };

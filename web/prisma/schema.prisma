@@ -87,6 +87,29 @@ model ProgressiveDiscountStep {
   discountType          ProgressiveDiscountStepType
   progressiveDiscount   ProgressiveDiscount         @relation(fields: [progressiveDiscountId], references: [id])
   progressiveDiscountId String
+  prizes                ProgressiveDiscountPrize[]
+}
+
+model ProgressiveDiscountPrize {
+  id                        String                          @id
+  createdAt                 DateTime                        @default(now())
+  name                      String
+  quantity                  Int                             @default(1)
+  imageUrl                  String?
+  progressiveDiscountStep   ProgressiveDiscountStep         @relation(fields: [progressiveDiscountStepId], references: [id], onDelete: Cascade)
+  progressiveDiscountStepId String
+  products                  ProgressiveDiscountPrizeProduct[]
+}
+
+model ProgressiveDiscountPrizeProduct {
+  id        String                   @id
+  createdAt DateTime                 @default(now())
+  prize     ProgressiveDiscountPrize @relation(fields: [prizeId], references: [id], onDelete: Cascade)
+  prizeId   String
+  product   Product                  @relation(fields: [productId], references: [id])
+  productId String
+
+  @@unique([prizeId, productId])
 }
 
 model File {
@@ -118,6 +141,7 @@ model ModifierGroupItem {
   name                          String
   price                         Int
   description                   String?
+  translations                  Json?
   photo                         File?                          @relation(fields: [fileId], references: [id])
   modifierGroup                 ModifierGroup?                 @relation(fields: [modifierGroupId], references: [id])
   modifierGroupId               String?
@@ -211,6 +235,7 @@ model Product {
   category         Category?         @relation(fields: [categoryId], references: [id])
   categoryId       String?
   OrderProducts    OrderProducts[]
+  prizeProducts    ProgressiveDiscountPrizeProduct[]
   translations     Json?
   preparationSteps PreparationStep[]
 }
@@ -287,14 +312,17 @@ model Order {
   id                        String                    @id
   number                    String?
   createdAt                 DateTime                  @default(now())
+  scheduleFor               DateTime?
   paidAt                    DateTime?
   deliveredAt               DateTime?
+  dispatchOrderIndex        Int?
   amount                    Int
   customer                  Customer                  @relation(fields: [customerId], references: [id])
   status                    OrderStatus               @default(ACCEPTED)
   type                      OrderType                 @default(DELIVERY)
   paymentMethod             PaymentType               @default(CARD)
   tipAmount                 Int?
+  progressiveDiscountSnapshot Json?
   dispatch                  Dispatch?                 @relation(fields: [dispatchId], references: [id])
   address                   Address?                  @relation(fields: [addressId], references: [id])
   deliveryAddress           DeliveryAddress?          @relation(fields: [deliveryAddressId], references: [id])
@@ -305,6 +333,8 @@ model Order {
   addressId                 String?
   deliveryAddressId         String?
   preparationStepCategories PreparationStepCategory[]
+
+  @@index([dispatchId, dispatchOrderIndex])
 }
 
 enum PaymentType {

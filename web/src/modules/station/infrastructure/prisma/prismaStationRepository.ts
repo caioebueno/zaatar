@@ -184,6 +184,12 @@ class PrismaStationRepository implements StationRepository {
         return {
           id: order.id,
           createdAt: order.createdAt.toISOString(),
+          scheduleFor:
+            (
+              order as typeof order & {
+                scheduleFor?: Date | null;
+              }
+            ).scheduleFor?.toISOString() || null,
           number: order.number ?? undefined,
           status: orderStatusById.get(order.id) ?? "ACCEPTED",
           type: order.type,

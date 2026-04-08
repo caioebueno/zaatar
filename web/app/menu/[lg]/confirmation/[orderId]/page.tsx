@@ -1,6 +1,7 @@
 import { OrderSummaryModal } from "@/app/components/Price";
 import OrderStatusStepper from "@/app/components/OrderStatusStepper";
 import getOrder from "@/src/getOrder";
+import { TOrderStatus, TOrderType } from "@/src/types/order";
 import formatCurrency from "@/utils/formatCurrecy";
 import { NextPage } from "next";
 import { Montserrat } from "next/font/google";
@@ -14,6 +15,18 @@ const montserrat = Montserrat({
   subsets: ["latin"],
 });
 
+function getOrderHeadlineByStatus(
+  status: TOrderStatus,
+  type: TOrderType,
+  content: { [key: string]: string },
+): string {
+  if (status === "ACCEPTED") return content["orderReceived"];
+  if (status === "PREPARING") return content["preparing"];
+  if (status === "DELIVERING") return content["outForDelivery"];
+  if (type === "TAKEAWAY") return content["ready"];
+  return content["delivered"];
+}
+
 const Confirmation: NextPage<{
   params: Promise<{
     orderId: string;
@@ -24,8 +37,9 @@ const Confirmation: NextPage<{
   const orderId = resultParams.orderId;
   const lg = resultParams.lg;
 
-  const content = text[lg];
+  const content = text[lg] || text["en"];
   const order = await getOrder(orderId);
+  const orderHeadline = getOrderHeadlineByStatus(order.status, order.type, content);
   const paymentMethodLabel =
     order.paymentMethod === "CASH"
       ? content["cash"]
@@ -34,8 +48,8 @@ const Confirmation: NextPage<{
         : content["zelle"];
 
   return (
-    <div className={montserrat.className}>
-      <div className="bg-foreground p-4 border-[#B9BFBF] border-b flex flex-row justify-between">
+    <div className={`${montserrat.className} flex flex-col items-center`}>
+      <div className="bg-foreground p-4 border-[#B9BFBF] border-b flex flex-row justify-between w-full">
         <Link
           href="/menu/en"
           className="p-0! text-[16px] font-semibold text-text! bg-transparent flex flex-row gap-2 items-center"
@@ -61,7 +75,7 @@ const Confirmation: NextPage<{
           <span className="text-[30px] text-lightText font-bold">
             #{order.number}
           </span>
-          <span className="text-2xl font-bold">{content["orderReceived"]}</span>
+          <span className="text-2xl font-bold">{orderHeadline}</span>
         </div>
       </div>
       <OrderStatusStepper
@@ -73,6 +87,7 @@ const Confirmation: NextPage<{
         content={content}
         lg={lg}
         order={order}
+        progressiveDiscountSnapshot={order.progressiveDiscountSnapshot}
         showSummaryCard
       />
       <div className="w-full max-w-[900px] px-4">

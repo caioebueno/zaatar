@@ -1,4 +1,4 @@
-import TCart from "@/types/cart";
+import TCart, { TCartItem } from "@/types/cart";
 import TCategory from "../src/types/category";
 import TProgressiveDiscount, {
   TProgressiveDiscountStep,
@@ -18,7 +18,29 @@ export function calculateProductPriceWithProgressiveDiscount(
   progressiveDiscount: TProgressiveDiscount | null,
   cart: TCart,
   categories: TCategory[],
+  options?: {
+    cartItem?: TCartItem;
+  },
 ): TResult | null {
+  const getModifierUnitPrice = (product: TProduct, cartItem?: TCartItem) => {
+    if (!cartItem?.modifiers?.length || !product.modifierGroups?.length) {
+      return 0;
+    }
+
+    const modifierPriceMap = new Map<string, number>();
+
+    for (const modifierGroup of product.modifierGroups) {
+      for (const modifierItem of modifierGroup.items) {
+        modifierPriceMap.set(modifierItem.id, modifierItem.price);
+      }
+    }
+
+    return cartItem.modifiers.reduce(
+      (sum, modifier) => sum + (modifierPriceMap.get(modifier.modifierItemId) ?? 0),
+      0,
+    );
+  };
+
   const productMap = new Map<string, TProduct>();
 
   for (const category of categories) {
@@ -32,7 +54,6 @@ export function calculateProductPriceWithProgressiveDiscount(
   if (!product) return null;
 
   let cartFullPrice = 0;
-  let cartActualPrice = 0;
 
   for (const item of cart.items) {
     const cartProduct = productMap.get(item.productId);
@@ -44,27 +65,31 @@ export function calculateProductPriceWithProgressiveDiscount(
         : 0;
 
     const price = typeof cartProduct.price === "number" ? cartProduct.price : 0;
+    const modifierUnitPrice = getModifierUnitPrice(cartProduct, item);
 
     const compared =
       typeof cartProduct.comparedAtPrice === "number"
         ? cartProduct.comparedAtPrice
         : price;
 
-    cartFullPrice += compared * quantity;
-    cartActualPrice += price * quantity;
+    cartFullPrice += (compared + modifierUnitPrice) * quantity;
   }
 
-  const productActualPrice =
-    typeof product.price === "number" ? product.price : 0;
+  const productBasePrice = typeof product.price === "number" ? product.price : 0;
+  const productModifierUnitPrice = getModifierUnitPrice(product, options?.cartItem);
+  const productActualPrice = productBasePrice + productModifierUnitPrice;
 
-  const productFullPrice =
+  const productBaseFullPrice =
     typeof product.comparedAtPrice === "number"
       ? product.comparedAtPrice
-      : productActualPrice;
+      : productBasePrice;
 
-  const nextCartFullPrice = Number(
-    (cartFullPrice + productFullPrice).toFixed(2),
-  );
+  const productFullPrice = productBaseFullPrice + productModifierUnitPrice;
+
+  const thresholdCartFullPrice =
+    options?.cartItem === undefined ? cartFullPrice + productFullPrice : cartFullPrice;
+
+  const nextCartFullPrice = Number(thresholdCartFullPrice.toFixed(2));
 
   let appliedStep: TProgressiveDiscountStep | null = null;
 

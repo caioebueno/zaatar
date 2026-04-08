@@ -15,6 +15,14 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "assets.olaclick.app",
       },
+      {
+        protocol: "https",
+        hostname: "d2nagnwby8accc.cloudfront.net",
+      },
+       {
+        protocol: "https",
+        hostname: "photos.tryotter.com",
+      }
     ],
   },
 };

@@ -49,6 +49,16 @@ export type ProgressiveDiscount = $Result.DefaultSelection<Prisma.$ProgressiveDi
  */
 export type ProgressiveDiscountStep = $Result.DefaultSelection<Prisma.$ProgressiveDiscountStepPayload>
 /**
+ * Model ProgressiveDiscountPrize
+ * 
+ */
+export type ProgressiveDiscountPrize = $Result.DefaultSelection<Prisma.$ProgressiveDiscountPrizePayload>
+/**
+ * Model ProgressiveDiscountPrizeProduct
+ * 
+ */
+export type ProgressiveDiscountPrizeProduct = $Result.DefaultSelection<Prisma.$ProgressiveDiscountPrizeProductPayload>
+/**
  * Model File
  * 
  */
@@ -411,6 +421,26 @@ export class PrismaClient<
     * ```
     */
   get progressiveDiscountStep(): Prisma.ProgressiveDiscountStepDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.progressiveDiscountPrize`: Exposes CRUD operations for the **ProgressiveDiscountPrize** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ProgressiveDiscountPrizes
+    * const progressiveDiscountPrizes = await prisma.progressiveDiscountPrize.findMany()
+    * ```
+    */
+  get progressiveDiscountPrize(): Prisma.ProgressiveDiscountPrizeDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.progressiveDiscountPrizeProduct`: Exposes CRUD operations for the **ProgressiveDiscountPrizeProduct** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ProgressiveDiscountPrizeProducts
+    * const progressiveDiscountPrizeProducts = await prisma.progressiveDiscountPrizeProduct.findMany()
+    * ```
+    */
+  get progressiveDiscountPrizeProduct(): Prisma.ProgressiveDiscountPrizeProductDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.file`: Exposes CRUD operations for the **File** model.
@@ -1032,6 +1062,8 @@ export namespace Prisma {
     PreparationStepModifierTrack: 'PreparationStepModifierTrack',
     ProgressiveDiscount: 'ProgressiveDiscount',
     ProgressiveDiscountStep: 'ProgressiveDiscountStep',
+    ProgressiveDiscountPrize: 'ProgressiveDiscountPrize',
+    ProgressiveDiscountPrizeProduct: 'ProgressiveDiscountPrizeProduct',
     File: 'File',
     ModifierGroup: 'ModifierGroup',
     ModifierGroupItem: 'ModifierGroupItem',
@@ -1065,7 +1097,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "station" | "preparationStep" | "preparationStepCategory" | "preparationStepTrack" | "preparationStepModifierTrack" | "progressiveDiscount" | "progressiveDiscountStep" | "file" | "modifierGroup" | "modifierGroupItem" | "business" | "branch" | "driver" | "dispatch" | "dispatchAssignmentJob" | "address" | "product" | "category" | "campaign" | "customer" | "deliveryAddress" | "message" | "promotialMessage" | "order" | "orderProducts"
+      modelProps: "station" | "preparationStep" | "preparationStepCategory" | "preparationStepTrack" | "preparationStepModifierTrack" | "progressiveDiscount" | "progressiveDiscountStep" | "progressiveDiscountPrize" | "progressiveDiscountPrizeProduct" | "file" | "modifierGroup" | "modifierGroupItem" | "business" | "branch" | "driver" | "dispatch" | "dispatchAssignmentJob" | "address" | "product" | "category" | "campaign" | "customer" | "deliveryAddress" | "message" | "promotialMessage" | "order" | "orderProducts"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1584,6 +1616,154 @@ export namespace Prisma {
           count: {
             args: Prisma.ProgressiveDiscountStepCountArgs<ExtArgs>
             result: $Utils.Optional<ProgressiveDiscountStepCountAggregateOutputType> | number
+          }
+        }
+      }
+      ProgressiveDiscountPrize: {
+        payload: Prisma.$ProgressiveDiscountPrizePayload<ExtArgs>
+        fields: Prisma.ProgressiveDiscountPrizeFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ProgressiveDiscountPrizeFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProgressiveDiscountPrizePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ProgressiveDiscountPrizeFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProgressiveDiscountPrizePayload>
+          }
+          findFirst: {
+            args: Prisma.ProgressiveDiscountPrizeFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProgressiveDiscountPrizePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ProgressiveDiscountPrizeFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProgressiveDiscountPrizePayload>
+          }
+          findMany: {
+            args: Prisma.ProgressiveDiscountPrizeFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProgressiveDiscountPrizePayload>[]
+          }
+          create: {
+            args: Prisma.ProgressiveDiscountPrizeCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProgressiveDiscountPrizePayload>
+          }
+          createMany: {
+            args: Prisma.ProgressiveDiscountPrizeCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ProgressiveDiscountPrizeCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProgressiveDiscountPrizePayload>[]
+          }
+          delete: {
+            args: Prisma.ProgressiveDiscountPrizeDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProgressiveDiscountPrizePayload>
+          }
+          update: {
+            args: Prisma.ProgressiveDiscountPrizeUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProgressiveDiscountPrizePayload>
+          }
+          deleteMany: {
+            args: Prisma.ProgressiveDiscountPrizeDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ProgressiveDiscountPrizeUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ProgressiveDiscountPrizeUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProgressiveDiscountPrizePayload>[]
+          }
+          upsert: {
+            args: Prisma.ProgressiveDiscountPrizeUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProgressiveDiscountPrizePayload>
+          }
+          aggregate: {
+            args: Prisma.ProgressiveDiscountPrizeAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateProgressiveDiscountPrize>
+          }
+          groupBy: {
+            args: Prisma.ProgressiveDiscountPrizeGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ProgressiveDiscountPrizeGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ProgressiveDiscountPrizeCountArgs<ExtArgs>
+            result: $Utils.Optional<ProgressiveDiscountPrizeCountAggregateOutputType> | number
+          }
+        }
+      }
+      ProgressiveDiscountPrizeProduct: {
+        payload: Prisma.$ProgressiveDiscountPrizeProductPayload<ExtArgs>
+        fields: Prisma.ProgressiveDiscountPrizeProductFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ProgressiveDiscountPrizeProductFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProgressiveDiscountPrizeProductPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ProgressiveDiscountPrizeProductFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProgressiveDiscountPrizeProductPayload>
+          }
+          findFirst: {
+            args: Prisma.ProgressiveDiscountPrizeProductFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProgressiveDiscountPrizeProductPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ProgressiveDiscountPrizeProductFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProgressiveDiscountPrizeProductPayload>
+          }
+          findMany: {
+            args: Prisma.ProgressiveDiscountPrizeProductFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProgressiveDiscountPrizeProductPayload>[]
+          }
+          create: {
+            args: Prisma.ProgressiveDiscountPrizeProductCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProgressiveDiscountPrizeProductPayload>
+          }
+          createMany: {
+            args: Prisma.ProgressiveDiscountPrizeProductCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ProgressiveDiscountPrizeProductCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProgressiveDiscountPrizeProductPayload>[]
+          }
+          delete: {
+            args: Prisma.ProgressiveDiscountPrizeProductDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProgressiveDiscountPrizeProductPayload>
+          }
+          update: {
+            args: Prisma.ProgressiveDiscountPrizeProductUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProgressiveDiscountPrizeProductPayload>
+          }
+          deleteMany: {
+            args: Prisma.ProgressiveDiscountPrizeProductDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ProgressiveDiscountPrizeProductUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ProgressiveDiscountPrizeProductUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProgressiveDiscountPrizeProductPayload>[]
+          }
+          upsert: {
+            args: Prisma.ProgressiveDiscountPrizeProductUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProgressiveDiscountPrizeProductPayload>
+          }
+          aggregate: {
+            args: Prisma.ProgressiveDiscountPrizeProductAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateProgressiveDiscountPrizeProduct>
+          }
+          groupBy: {
+            args: Prisma.ProgressiveDiscountPrizeProductGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ProgressiveDiscountPrizeProductGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ProgressiveDiscountPrizeProductCountArgs<ExtArgs>
+            result: $Utils.Optional<ProgressiveDiscountPrizeProductCountAggregateOutputType> | number
           }
         }
       }
@@ -3034,6 +3214,8 @@ export namespace Prisma {
     preparationStepModifierTrack?: PreparationStepModifierTrackOmit
     progressiveDiscount?: ProgressiveDiscountOmit
     progressiveDiscountStep?: ProgressiveDiscountStepOmit
+    progressiveDiscountPrize?: ProgressiveDiscountPrizeOmit
+    progressiveDiscountPrizeProduct?: ProgressiveDiscountPrizeProductOmit
     file?: FileOmit
     modifierGroup?: ModifierGroupOmit
     modifierGroupItem?: ModifierGroupItemOmit
@@ -3292,6 +3474,68 @@ export namespace Prisma {
 
 
   /**
+   * Count Type ProgressiveDiscountStepCountOutputType
+   */
+
+  export type ProgressiveDiscountStepCountOutputType = {
+    prizes: number
+  }
+
+  export type ProgressiveDiscountStepCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    prizes?: boolean | ProgressiveDiscountStepCountOutputTypeCountPrizesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * ProgressiveDiscountStepCountOutputType without action
+   */
+  export type ProgressiveDiscountStepCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProgressiveDiscountStepCountOutputType
+     */
+    select?: ProgressiveDiscountStepCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ProgressiveDiscountStepCountOutputType without action
+   */
+  export type ProgressiveDiscountStepCountOutputTypeCountPrizesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProgressiveDiscountPrizeWhereInput
+  }
+
+
+  /**
+   * Count Type ProgressiveDiscountPrizeCountOutputType
+   */
+
+  export type ProgressiveDiscountPrizeCountOutputType = {
+    products: number
+  }
+
+  export type ProgressiveDiscountPrizeCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    products?: boolean | ProgressiveDiscountPrizeCountOutputTypeCountProductsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * ProgressiveDiscountPrizeCountOutputType without action
+   */
+  export type ProgressiveDiscountPrizeCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProgressiveDiscountPrizeCountOutputType
+     */
+    select?: ProgressiveDiscountPrizeCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ProgressiveDiscountPrizeCountOutputType without action
+   */
+  export type ProgressiveDiscountPrizeCountOutputTypeCountProductsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProgressiveDiscountPrizeProductWhereInput
+  }
+
+
+  /**
    * Count Type FileCountOutputType
    */
 
@@ -3534,6 +3778,7 @@ export namespace Prisma {
     photos: number
     modifierGroups: number
     OrderProducts: number
+    prizeProducts: number
     preparationSteps: number
   }
 
@@ -3541,6 +3786,7 @@ export namespace Prisma {
     photos?: boolean | ProductCountOutputTypeCountPhotosArgs
     modifierGroups?: boolean | ProductCountOutputTypeCountModifierGroupsArgs
     OrderProducts?: boolean | ProductCountOutputTypeCountOrderProductsArgs
+    prizeProducts?: boolean | ProductCountOutputTypeCountPrizeProductsArgs
     preparationSteps?: boolean | ProductCountOutputTypeCountPreparationStepsArgs
   }
 
@@ -3574,6 +3820,13 @@ export namespace Prisma {
    */
   export type ProductCountOutputTypeCountOrderProductsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: OrderProductsWhereInput
+  }
+
+  /**
+   * ProductCountOutputType without action
+   */
+  export type ProductCountOutputTypeCountPrizeProductsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProgressiveDiscountPrizeProductWhereInput
   }
 
   /**
@@ -10636,6 +10889,8 @@ export namespace Prisma {
     discountType?: boolean
     progressiveDiscountId?: boolean
     progressiveDiscount?: boolean | ProgressiveDiscountDefaultArgs<ExtArgs>
+    prizes?: boolean | ProgressiveDiscountStep$prizesArgs<ExtArgs>
+    _count?: boolean | ProgressiveDiscountStepCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["progressiveDiscountStep"]>
 
   export type ProgressiveDiscountStepSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -10670,6 +10925,8 @@ export namespace Prisma {
   export type ProgressiveDiscountStepOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "amount" | "discount" | "discountType" | "progressiveDiscountId", ExtArgs["result"]["progressiveDiscountStep"]>
   export type ProgressiveDiscountStepInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     progressiveDiscount?: boolean | ProgressiveDiscountDefaultArgs<ExtArgs>
+    prizes?: boolean | ProgressiveDiscountStep$prizesArgs<ExtArgs>
+    _count?: boolean | ProgressiveDiscountStepCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ProgressiveDiscountStepIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     progressiveDiscount?: boolean | ProgressiveDiscountDefaultArgs<ExtArgs>
@@ -10682,6 +10939,7 @@ export namespace Prisma {
     name: "ProgressiveDiscountStep"
     objects: {
       progressiveDiscount: Prisma.$ProgressiveDiscountPayload<ExtArgs>
+      prizes: Prisma.$ProgressiveDiscountPrizePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -11085,6 +11343,7 @@ export namespace Prisma {
   export interface Prisma__ProgressiveDiscountStepClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     progressiveDiscount<T extends ProgressiveDiscountDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProgressiveDiscountDefaultArgs<ExtArgs>>): Prisma__ProgressiveDiscountClient<$Result.GetResult<Prisma.$ProgressiveDiscountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    prizes<T extends ProgressiveDiscountStep$prizesArgs<ExtArgs> = {}>(args?: Subset<T, ProgressiveDiscountStep$prizesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProgressiveDiscountPrizePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -11521,6 +11780,30 @@ export namespace Prisma {
   }
 
   /**
+   * ProgressiveDiscountStep.prizes
+   */
+  export type ProgressiveDiscountStep$prizesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProgressiveDiscountPrize
+     */
+    select?: ProgressiveDiscountPrizeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProgressiveDiscountPrize
+     */
+    omit?: ProgressiveDiscountPrizeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProgressiveDiscountPrizeInclude<ExtArgs> | null
+    where?: ProgressiveDiscountPrizeWhereInput
+    orderBy?: ProgressiveDiscountPrizeOrderByWithRelationInput | ProgressiveDiscountPrizeOrderByWithRelationInput[]
+    cursor?: ProgressiveDiscountPrizeWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProgressiveDiscountPrizeScalarFieldEnum | ProgressiveDiscountPrizeScalarFieldEnum[]
+  }
+
+  /**
    * ProgressiveDiscountStep without action
    */
   export type ProgressiveDiscountStepDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -11536,6 +11819,2204 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: ProgressiveDiscountStepInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ProgressiveDiscountPrize
+   */
+
+  export type AggregateProgressiveDiscountPrize = {
+    _count: ProgressiveDiscountPrizeCountAggregateOutputType | null
+    _avg: ProgressiveDiscountPrizeAvgAggregateOutputType | null
+    _sum: ProgressiveDiscountPrizeSumAggregateOutputType | null
+    _min: ProgressiveDiscountPrizeMinAggregateOutputType | null
+    _max: ProgressiveDiscountPrizeMaxAggregateOutputType | null
+  }
+
+  export type ProgressiveDiscountPrizeAvgAggregateOutputType = {
+    quantity: number | null
+  }
+
+  export type ProgressiveDiscountPrizeSumAggregateOutputType = {
+    quantity: number | null
+  }
+
+  export type ProgressiveDiscountPrizeMinAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    name: string | null
+    quantity: number | null
+    imageUrl: string | null
+    progressiveDiscountStepId: string | null
+  }
+
+  export type ProgressiveDiscountPrizeMaxAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    name: string | null
+    quantity: number | null
+    imageUrl: string | null
+    progressiveDiscountStepId: string | null
+  }
+
+  export type ProgressiveDiscountPrizeCountAggregateOutputType = {
+    id: number
+    createdAt: number
+    name: number
+    quantity: number
+    imageUrl: number
+    progressiveDiscountStepId: number
+    _all: number
+  }
+
+
+  export type ProgressiveDiscountPrizeAvgAggregateInputType = {
+    quantity?: true
+  }
+
+  export type ProgressiveDiscountPrizeSumAggregateInputType = {
+    quantity?: true
+  }
+
+  export type ProgressiveDiscountPrizeMinAggregateInputType = {
+    id?: true
+    createdAt?: true
+    name?: true
+    quantity?: true
+    imageUrl?: true
+    progressiveDiscountStepId?: true
+  }
+
+  export type ProgressiveDiscountPrizeMaxAggregateInputType = {
+    id?: true
+    createdAt?: true
+    name?: true
+    quantity?: true
+    imageUrl?: true
+    progressiveDiscountStepId?: true
+  }
+
+  export type ProgressiveDiscountPrizeCountAggregateInputType = {
+    id?: true
+    createdAt?: true
+    name?: true
+    quantity?: true
+    imageUrl?: true
+    progressiveDiscountStepId?: true
+    _all?: true
+  }
+
+  export type ProgressiveDiscountPrizeAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ProgressiveDiscountPrize to aggregate.
+     */
+    where?: ProgressiveDiscountPrizeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProgressiveDiscountPrizes to fetch.
+     */
+    orderBy?: ProgressiveDiscountPrizeOrderByWithRelationInput | ProgressiveDiscountPrizeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ProgressiveDiscountPrizeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProgressiveDiscountPrizes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProgressiveDiscountPrizes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ProgressiveDiscountPrizes
+    **/
+    _count?: true | ProgressiveDiscountPrizeCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ProgressiveDiscountPrizeAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ProgressiveDiscountPrizeSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ProgressiveDiscountPrizeMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ProgressiveDiscountPrizeMaxAggregateInputType
+  }
+
+  export type GetProgressiveDiscountPrizeAggregateType<T extends ProgressiveDiscountPrizeAggregateArgs> = {
+        [P in keyof T & keyof AggregateProgressiveDiscountPrize]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateProgressiveDiscountPrize[P]>
+      : GetScalarType<T[P], AggregateProgressiveDiscountPrize[P]>
+  }
+
+
+
+
+  export type ProgressiveDiscountPrizeGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProgressiveDiscountPrizeWhereInput
+    orderBy?: ProgressiveDiscountPrizeOrderByWithAggregationInput | ProgressiveDiscountPrizeOrderByWithAggregationInput[]
+    by: ProgressiveDiscountPrizeScalarFieldEnum[] | ProgressiveDiscountPrizeScalarFieldEnum
+    having?: ProgressiveDiscountPrizeScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ProgressiveDiscountPrizeCountAggregateInputType | true
+    _avg?: ProgressiveDiscountPrizeAvgAggregateInputType
+    _sum?: ProgressiveDiscountPrizeSumAggregateInputType
+    _min?: ProgressiveDiscountPrizeMinAggregateInputType
+    _max?: ProgressiveDiscountPrizeMaxAggregateInputType
+  }
+
+  export type ProgressiveDiscountPrizeGroupByOutputType = {
+    id: string
+    createdAt: Date
+    name: string
+    quantity: number
+    imageUrl: string | null
+    progressiveDiscountStepId: string
+    _count: ProgressiveDiscountPrizeCountAggregateOutputType | null
+    _avg: ProgressiveDiscountPrizeAvgAggregateOutputType | null
+    _sum: ProgressiveDiscountPrizeSumAggregateOutputType | null
+    _min: ProgressiveDiscountPrizeMinAggregateOutputType | null
+    _max: ProgressiveDiscountPrizeMaxAggregateOutputType | null
+  }
+
+  type GetProgressiveDiscountPrizeGroupByPayload<T extends ProgressiveDiscountPrizeGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ProgressiveDiscountPrizeGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ProgressiveDiscountPrizeGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ProgressiveDiscountPrizeGroupByOutputType[P]>
+            : GetScalarType<T[P], ProgressiveDiscountPrizeGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ProgressiveDiscountPrizeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    name?: boolean
+    quantity?: boolean
+    imageUrl?: boolean
+    progressiveDiscountStepId?: boolean
+    progressiveDiscountStep?: boolean | ProgressiveDiscountStepDefaultArgs<ExtArgs>
+    products?: boolean | ProgressiveDiscountPrize$productsArgs<ExtArgs>
+    _count?: boolean | ProgressiveDiscountPrizeCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["progressiveDiscountPrize"]>
+
+  export type ProgressiveDiscountPrizeSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    name?: boolean
+    quantity?: boolean
+    imageUrl?: boolean
+    progressiveDiscountStepId?: boolean
+    progressiveDiscountStep?: boolean | ProgressiveDiscountStepDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["progressiveDiscountPrize"]>
+
+  export type ProgressiveDiscountPrizeSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    name?: boolean
+    quantity?: boolean
+    imageUrl?: boolean
+    progressiveDiscountStepId?: boolean
+    progressiveDiscountStep?: boolean | ProgressiveDiscountStepDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["progressiveDiscountPrize"]>
+
+  export type ProgressiveDiscountPrizeSelectScalar = {
+    id?: boolean
+    createdAt?: boolean
+    name?: boolean
+    quantity?: boolean
+    imageUrl?: boolean
+    progressiveDiscountStepId?: boolean
+  }
+
+  export type ProgressiveDiscountPrizeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "name" | "quantity" | "imageUrl" | "progressiveDiscountStepId", ExtArgs["result"]["progressiveDiscountPrize"]>
+  export type ProgressiveDiscountPrizeInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    progressiveDiscountStep?: boolean | ProgressiveDiscountStepDefaultArgs<ExtArgs>
+    products?: boolean | ProgressiveDiscountPrize$productsArgs<ExtArgs>
+    _count?: boolean | ProgressiveDiscountPrizeCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type ProgressiveDiscountPrizeIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    progressiveDiscountStep?: boolean | ProgressiveDiscountStepDefaultArgs<ExtArgs>
+  }
+  export type ProgressiveDiscountPrizeIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    progressiveDiscountStep?: boolean | ProgressiveDiscountStepDefaultArgs<ExtArgs>
+  }
+
+  export type $ProgressiveDiscountPrizePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ProgressiveDiscountPrize"
+    objects: {
+      progressiveDiscountStep: Prisma.$ProgressiveDiscountStepPayload<ExtArgs>
+      products: Prisma.$ProgressiveDiscountPrizeProductPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      createdAt: Date
+      name: string
+      quantity: number
+      imageUrl: string | null
+      progressiveDiscountStepId: string
+    }, ExtArgs["result"]["progressiveDiscountPrize"]>
+    composites: {}
+  }
+
+  type ProgressiveDiscountPrizeGetPayload<S extends boolean | null | undefined | ProgressiveDiscountPrizeDefaultArgs> = $Result.GetResult<Prisma.$ProgressiveDiscountPrizePayload, S>
+
+  type ProgressiveDiscountPrizeCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ProgressiveDiscountPrizeFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ProgressiveDiscountPrizeCountAggregateInputType | true
+    }
+
+  export interface ProgressiveDiscountPrizeDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ProgressiveDiscountPrize'], meta: { name: 'ProgressiveDiscountPrize' } }
+    /**
+     * Find zero or one ProgressiveDiscountPrize that matches the filter.
+     * @param {ProgressiveDiscountPrizeFindUniqueArgs} args - Arguments to find a ProgressiveDiscountPrize
+     * @example
+     * // Get one ProgressiveDiscountPrize
+     * const progressiveDiscountPrize = await prisma.progressiveDiscountPrize.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ProgressiveDiscountPrizeFindUniqueArgs>(args: SelectSubset<T, ProgressiveDiscountPrizeFindUniqueArgs<ExtArgs>>): Prisma__ProgressiveDiscountPrizeClient<$Result.GetResult<Prisma.$ProgressiveDiscountPrizePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ProgressiveDiscountPrize that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ProgressiveDiscountPrizeFindUniqueOrThrowArgs} args - Arguments to find a ProgressiveDiscountPrize
+     * @example
+     * // Get one ProgressiveDiscountPrize
+     * const progressiveDiscountPrize = await prisma.progressiveDiscountPrize.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ProgressiveDiscountPrizeFindUniqueOrThrowArgs>(args: SelectSubset<T, ProgressiveDiscountPrizeFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ProgressiveDiscountPrizeClient<$Result.GetResult<Prisma.$ProgressiveDiscountPrizePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ProgressiveDiscountPrize that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProgressiveDiscountPrizeFindFirstArgs} args - Arguments to find a ProgressiveDiscountPrize
+     * @example
+     * // Get one ProgressiveDiscountPrize
+     * const progressiveDiscountPrize = await prisma.progressiveDiscountPrize.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ProgressiveDiscountPrizeFindFirstArgs>(args?: SelectSubset<T, ProgressiveDiscountPrizeFindFirstArgs<ExtArgs>>): Prisma__ProgressiveDiscountPrizeClient<$Result.GetResult<Prisma.$ProgressiveDiscountPrizePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ProgressiveDiscountPrize that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProgressiveDiscountPrizeFindFirstOrThrowArgs} args - Arguments to find a ProgressiveDiscountPrize
+     * @example
+     * // Get one ProgressiveDiscountPrize
+     * const progressiveDiscountPrize = await prisma.progressiveDiscountPrize.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ProgressiveDiscountPrizeFindFirstOrThrowArgs>(args?: SelectSubset<T, ProgressiveDiscountPrizeFindFirstOrThrowArgs<ExtArgs>>): Prisma__ProgressiveDiscountPrizeClient<$Result.GetResult<Prisma.$ProgressiveDiscountPrizePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ProgressiveDiscountPrizes that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProgressiveDiscountPrizeFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ProgressiveDiscountPrizes
+     * const progressiveDiscountPrizes = await prisma.progressiveDiscountPrize.findMany()
+     * 
+     * // Get first 10 ProgressiveDiscountPrizes
+     * const progressiveDiscountPrizes = await prisma.progressiveDiscountPrize.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const progressiveDiscountPrizeWithIdOnly = await prisma.progressiveDiscountPrize.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ProgressiveDiscountPrizeFindManyArgs>(args?: SelectSubset<T, ProgressiveDiscountPrizeFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProgressiveDiscountPrizePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ProgressiveDiscountPrize.
+     * @param {ProgressiveDiscountPrizeCreateArgs} args - Arguments to create a ProgressiveDiscountPrize.
+     * @example
+     * // Create one ProgressiveDiscountPrize
+     * const ProgressiveDiscountPrize = await prisma.progressiveDiscountPrize.create({
+     *   data: {
+     *     // ... data to create a ProgressiveDiscountPrize
+     *   }
+     * })
+     * 
+     */
+    create<T extends ProgressiveDiscountPrizeCreateArgs>(args: SelectSubset<T, ProgressiveDiscountPrizeCreateArgs<ExtArgs>>): Prisma__ProgressiveDiscountPrizeClient<$Result.GetResult<Prisma.$ProgressiveDiscountPrizePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ProgressiveDiscountPrizes.
+     * @param {ProgressiveDiscountPrizeCreateManyArgs} args - Arguments to create many ProgressiveDiscountPrizes.
+     * @example
+     * // Create many ProgressiveDiscountPrizes
+     * const progressiveDiscountPrize = await prisma.progressiveDiscountPrize.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ProgressiveDiscountPrizeCreateManyArgs>(args?: SelectSubset<T, ProgressiveDiscountPrizeCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ProgressiveDiscountPrizes and returns the data saved in the database.
+     * @param {ProgressiveDiscountPrizeCreateManyAndReturnArgs} args - Arguments to create many ProgressiveDiscountPrizes.
+     * @example
+     * // Create many ProgressiveDiscountPrizes
+     * const progressiveDiscountPrize = await prisma.progressiveDiscountPrize.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ProgressiveDiscountPrizes and only return the `id`
+     * const progressiveDiscountPrizeWithIdOnly = await prisma.progressiveDiscountPrize.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ProgressiveDiscountPrizeCreateManyAndReturnArgs>(args?: SelectSubset<T, ProgressiveDiscountPrizeCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProgressiveDiscountPrizePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ProgressiveDiscountPrize.
+     * @param {ProgressiveDiscountPrizeDeleteArgs} args - Arguments to delete one ProgressiveDiscountPrize.
+     * @example
+     * // Delete one ProgressiveDiscountPrize
+     * const ProgressiveDiscountPrize = await prisma.progressiveDiscountPrize.delete({
+     *   where: {
+     *     // ... filter to delete one ProgressiveDiscountPrize
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ProgressiveDiscountPrizeDeleteArgs>(args: SelectSubset<T, ProgressiveDiscountPrizeDeleteArgs<ExtArgs>>): Prisma__ProgressiveDiscountPrizeClient<$Result.GetResult<Prisma.$ProgressiveDiscountPrizePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ProgressiveDiscountPrize.
+     * @param {ProgressiveDiscountPrizeUpdateArgs} args - Arguments to update one ProgressiveDiscountPrize.
+     * @example
+     * // Update one ProgressiveDiscountPrize
+     * const progressiveDiscountPrize = await prisma.progressiveDiscountPrize.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ProgressiveDiscountPrizeUpdateArgs>(args: SelectSubset<T, ProgressiveDiscountPrizeUpdateArgs<ExtArgs>>): Prisma__ProgressiveDiscountPrizeClient<$Result.GetResult<Prisma.$ProgressiveDiscountPrizePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ProgressiveDiscountPrizes.
+     * @param {ProgressiveDiscountPrizeDeleteManyArgs} args - Arguments to filter ProgressiveDiscountPrizes to delete.
+     * @example
+     * // Delete a few ProgressiveDiscountPrizes
+     * const { count } = await prisma.progressiveDiscountPrize.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ProgressiveDiscountPrizeDeleteManyArgs>(args?: SelectSubset<T, ProgressiveDiscountPrizeDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ProgressiveDiscountPrizes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProgressiveDiscountPrizeUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ProgressiveDiscountPrizes
+     * const progressiveDiscountPrize = await prisma.progressiveDiscountPrize.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ProgressiveDiscountPrizeUpdateManyArgs>(args: SelectSubset<T, ProgressiveDiscountPrizeUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ProgressiveDiscountPrizes and returns the data updated in the database.
+     * @param {ProgressiveDiscountPrizeUpdateManyAndReturnArgs} args - Arguments to update many ProgressiveDiscountPrizes.
+     * @example
+     * // Update many ProgressiveDiscountPrizes
+     * const progressiveDiscountPrize = await prisma.progressiveDiscountPrize.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ProgressiveDiscountPrizes and only return the `id`
+     * const progressiveDiscountPrizeWithIdOnly = await prisma.progressiveDiscountPrize.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ProgressiveDiscountPrizeUpdateManyAndReturnArgs>(args: SelectSubset<T, ProgressiveDiscountPrizeUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProgressiveDiscountPrizePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ProgressiveDiscountPrize.
+     * @param {ProgressiveDiscountPrizeUpsertArgs} args - Arguments to update or create a ProgressiveDiscountPrize.
+     * @example
+     * // Update or create a ProgressiveDiscountPrize
+     * const progressiveDiscountPrize = await prisma.progressiveDiscountPrize.upsert({
+     *   create: {
+     *     // ... data to create a ProgressiveDiscountPrize
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ProgressiveDiscountPrize we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ProgressiveDiscountPrizeUpsertArgs>(args: SelectSubset<T, ProgressiveDiscountPrizeUpsertArgs<ExtArgs>>): Prisma__ProgressiveDiscountPrizeClient<$Result.GetResult<Prisma.$ProgressiveDiscountPrizePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ProgressiveDiscountPrizes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProgressiveDiscountPrizeCountArgs} args - Arguments to filter ProgressiveDiscountPrizes to count.
+     * @example
+     * // Count the number of ProgressiveDiscountPrizes
+     * const count = await prisma.progressiveDiscountPrize.count({
+     *   where: {
+     *     // ... the filter for the ProgressiveDiscountPrizes we want to count
+     *   }
+     * })
+    **/
+    count<T extends ProgressiveDiscountPrizeCountArgs>(
+      args?: Subset<T, ProgressiveDiscountPrizeCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ProgressiveDiscountPrizeCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ProgressiveDiscountPrize.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProgressiveDiscountPrizeAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ProgressiveDiscountPrizeAggregateArgs>(args: Subset<T, ProgressiveDiscountPrizeAggregateArgs>): Prisma.PrismaPromise<GetProgressiveDiscountPrizeAggregateType<T>>
+
+    /**
+     * Group by ProgressiveDiscountPrize.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProgressiveDiscountPrizeGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ProgressiveDiscountPrizeGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ProgressiveDiscountPrizeGroupByArgs['orderBy'] }
+        : { orderBy?: ProgressiveDiscountPrizeGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ProgressiveDiscountPrizeGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetProgressiveDiscountPrizeGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ProgressiveDiscountPrize model
+   */
+  readonly fields: ProgressiveDiscountPrizeFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ProgressiveDiscountPrize.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ProgressiveDiscountPrizeClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    progressiveDiscountStep<T extends ProgressiveDiscountStepDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProgressiveDiscountStepDefaultArgs<ExtArgs>>): Prisma__ProgressiveDiscountStepClient<$Result.GetResult<Prisma.$ProgressiveDiscountStepPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    products<T extends ProgressiveDiscountPrize$productsArgs<ExtArgs> = {}>(args?: Subset<T, ProgressiveDiscountPrize$productsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProgressiveDiscountPrizeProductPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ProgressiveDiscountPrize model
+   */
+  interface ProgressiveDiscountPrizeFieldRefs {
+    readonly id: FieldRef<"ProgressiveDiscountPrize", 'String'>
+    readonly createdAt: FieldRef<"ProgressiveDiscountPrize", 'DateTime'>
+    readonly name: FieldRef<"ProgressiveDiscountPrize", 'String'>
+    readonly quantity: FieldRef<"ProgressiveDiscountPrize", 'Int'>
+    readonly imageUrl: FieldRef<"ProgressiveDiscountPrize", 'String'>
+    readonly progressiveDiscountStepId: FieldRef<"ProgressiveDiscountPrize", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ProgressiveDiscountPrize findUnique
+   */
+  export type ProgressiveDiscountPrizeFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProgressiveDiscountPrize
+     */
+    select?: ProgressiveDiscountPrizeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProgressiveDiscountPrize
+     */
+    omit?: ProgressiveDiscountPrizeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProgressiveDiscountPrizeInclude<ExtArgs> | null
+    /**
+     * Filter, which ProgressiveDiscountPrize to fetch.
+     */
+    where: ProgressiveDiscountPrizeWhereUniqueInput
+  }
+
+  /**
+   * ProgressiveDiscountPrize findUniqueOrThrow
+   */
+  export type ProgressiveDiscountPrizeFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProgressiveDiscountPrize
+     */
+    select?: ProgressiveDiscountPrizeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProgressiveDiscountPrize
+     */
+    omit?: ProgressiveDiscountPrizeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProgressiveDiscountPrizeInclude<ExtArgs> | null
+    /**
+     * Filter, which ProgressiveDiscountPrize to fetch.
+     */
+    where: ProgressiveDiscountPrizeWhereUniqueInput
+  }
+
+  /**
+   * ProgressiveDiscountPrize findFirst
+   */
+  export type ProgressiveDiscountPrizeFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProgressiveDiscountPrize
+     */
+    select?: ProgressiveDiscountPrizeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProgressiveDiscountPrize
+     */
+    omit?: ProgressiveDiscountPrizeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProgressiveDiscountPrizeInclude<ExtArgs> | null
+    /**
+     * Filter, which ProgressiveDiscountPrize to fetch.
+     */
+    where?: ProgressiveDiscountPrizeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProgressiveDiscountPrizes to fetch.
+     */
+    orderBy?: ProgressiveDiscountPrizeOrderByWithRelationInput | ProgressiveDiscountPrizeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ProgressiveDiscountPrizes.
+     */
+    cursor?: ProgressiveDiscountPrizeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProgressiveDiscountPrizes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProgressiveDiscountPrizes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ProgressiveDiscountPrizes.
+     */
+    distinct?: ProgressiveDiscountPrizeScalarFieldEnum | ProgressiveDiscountPrizeScalarFieldEnum[]
+  }
+
+  /**
+   * ProgressiveDiscountPrize findFirstOrThrow
+   */
+  export type ProgressiveDiscountPrizeFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProgressiveDiscountPrize
+     */
+    select?: ProgressiveDiscountPrizeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProgressiveDiscountPrize
+     */
+    omit?: ProgressiveDiscountPrizeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProgressiveDiscountPrizeInclude<ExtArgs> | null
+    /**
+     * Filter, which ProgressiveDiscountPrize to fetch.
+     */
+    where?: ProgressiveDiscountPrizeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProgressiveDiscountPrizes to fetch.
+     */
+    orderBy?: ProgressiveDiscountPrizeOrderByWithRelationInput | ProgressiveDiscountPrizeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ProgressiveDiscountPrizes.
+     */
+    cursor?: ProgressiveDiscountPrizeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProgressiveDiscountPrizes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProgressiveDiscountPrizes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ProgressiveDiscountPrizes.
+     */
+    distinct?: ProgressiveDiscountPrizeScalarFieldEnum | ProgressiveDiscountPrizeScalarFieldEnum[]
+  }
+
+  /**
+   * ProgressiveDiscountPrize findMany
+   */
+  export type ProgressiveDiscountPrizeFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProgressiveDiscountPrize
+     */
+    select?: ProgressiveDiscountPrizeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProgressiveDiscountPrize
+     */
+    omit?: ProgressiveDiscountPrizeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProgressiveDiscountPrizeInclude<ExtArgs> | null
+    /**
+     * Filter, which ProgressiveDiscountPrizes to fetch.
+     */
+    where?: ProgressiveDiscountPrizeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProgressiveDiscountPrizes to fetch.
+     */
+    orderBy?: ProgressiveDiscountPrizeOrderByWithRelationInput | ProgressiveDiscountPrizeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ProgressiveDiscountPrizes.
+     */
+    cursor?: ProgressiveDiscountPrizeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProgressiveDiscountPrizes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProgressiveDiscountPrizes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ProgressiveDiscountPrizes.
+     */
+    distinct?: ProgressiveDiscountPrizeScalarFieldEnum | ProgressiveDiscountPrizeScalarFieldEnum[]
+  }
+
+  /**
+   * ProgressiveDiscountPrize create
+   */
+  export type ProgressiveDiscountPrizeCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProgressiveDiscountPrize
+     */
+    select?: ProgressiveDiscountPrizeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProgressiveDiscountPrize
+     */
+    omit?: ProgressiveDiscountPrizeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProgressiveDiscountPrizeInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ProgressiveDiscountPrize.
+     */
+    data: XOR<ProgressiveDiscountPrizeCreateInput, ProgressiveDiscountPrizeUncheckedCreateInput>
+  }
+
+  /**
+   * ProgressiveDiscountPrize createMany
+   */
+  export type ProgressiveDiscountPrizeCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ProgressiveDiscountPrizes.
+     */
+    data: ProgressiveDiscountPrizeCreateManyInput | ProgressiveDiscountPrizeCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ProgressiveDiscountPrize createManyAndReturn
+   */
+  export type ProgressiveDiscountPrizeCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProgressiveDiscountPrize
+     */
+    select?: ProgressiveDiscountPrizeSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProgressiveDiscountPrize
+     */
+    omit?: ProgressiveDiscountPrizeOmit<ExtArgs> | null
+    /**
+     * The data used to create many ProgressiveDiscountPrizes.
+     */
+    data: ProgressiveDiscountPrizeCreateManyInput | ProgressiveDiscountPrizeCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProgressiveDiscountPrizeIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ProgressiveDiscountPrize update
+   */
+  export type ProgressiveDiscountPrizeUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProgressiveDiscountPrize
+     */
+    select?: ProgressiveDiscountPrizeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProgressiveDiscountPrize
+     */
+    omit?: ProgressiveDiscountPrizeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProgressiveDiscountPrizeInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ProgressiveDiscountPrize.
+     */
+    data: XOR<ProgressiveDiscountPrizeUpdateInput, ProgressiveDiscountPrizeUncheckedUpdateInput>
+    /**
+     * Choose, which ProgressiveDiscountPrize to update.
+     */
+    where: ProgressiveDiscountPrizeWhereUniqueInput
+  }
+
+  /**
+   * ProgressiveDiscountPrize updateMany
+   */
+  export type ProgressiveDiscountPrizeUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ProgressiveDiscountPrizes.
+     */
+    data: XOR<ProgressiveDiscountPrizeUpdateManyMutationInput, ProgressiveDiscountPrizeUncheckedUpdateManyInput>
+    /**
+     * Filter which ProgressiveDiscountPrizes to update
+     */
+    where?: ProgressiveDiscountPrizeWhereInput
+    /**
+     * Limit how many ProgressiveDiscountPrizes to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ProgressiveDiscountPrize updateManyAndReturn
+   */
+  export type ProgressiveDiscountPrizeUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProgressiveDiscountPrize
+     */
+    select?: ProgressiveDiscountPrizeSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProgressiveDiscountPrize
+     */
+    omit?: ProgressiveDiscountPrizeOmit<ExtArgs> | null
+    /**
+     * The data used to update ProgressiveDiscountPrizes.
+     */
+    data: XOR<ProgressiveDiscountPrizeUpdateManyMutationInput, ProgressiveDiscountPrizeUncheckedUpdateManyInput>
+    /**
+     * Filter which ProgressiveDiscountPrizes to update
+     */
+    where?: ProgressiveDiscountPrizeWhereInput
+    /**
+     * Limit how many ProgressiveDiscountPrizes to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProgressiveDiscountPrizeIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ProgressiveDiscountPrize upsert
+   */
+  export type ProgressiveDiscountPrizeUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProgressiveDiscountPrize
+     */
+    select?: ProgressiveDiscountPrizeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProgressiveDiscountPrize
+     */
+    omit?: ProgressiveDiscountPrizeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProgressiveDiscountPrizeInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ProgressiveDiscountPrize to update in case it exists.
+     */
+    where: ProgressiveDiscountPrizeWhereUniqueInput
+    /**
+     * In case the ProgressiveDiscountPrize found by the `where` argument doesn't exist, create a new ProgressiveDiscountPrize with this data.
+     */
+    create: XOR<ProgressiveDiscountPrizeCreateInput, ProgressiveDiscountPrizeUncheckedCreateInput>
+    /**
+     * In case the ProgressiveDiscountPrize was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ProgressiveDiscountPrizeUpdateInput, ProgressiveDiscountPrizeUncheckedUpdateInput>
+  }
+
+  /**
+   * ProgressiveDiscountPrize delete
+   */
+  export type ProgressiveDiscountPrizeDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProgressiveDiscountPrize
+     */
+    select?: ProgressiveDiscountPrizeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProgressiveDiscountPrize
+     */
+    omit?: ProgressiveDiscountPrizeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProgressiveDiscountPrizeInclude<ExtArgs> | null
+    /**
+     * Filter which ProgressiveDiscountPrize to delete.
+     */
+    where: ProgressiveDiscountPrizeWhereUniqueInput
+  }
+
+  /**
+   * ProgressiveDiscountPrize deleteMany
+   */
+  export type ProgressiveDiscountPrizeDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ProgressiveDiscountPrizes to delete
+     */
+    where?: ProgressiveDiscountPrizeWhereInput
+    /**
+     * Limit how many ProgressiveDiscountPrizes to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ProgressiveDiscountPrize.products
+   */
+  export type ProgressiveDiscountPrize$productsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProgressiveDiscountPrizeProduct
+     */
+    select?: ProgressiveDiscountPrizeProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProgressiveDiscountPrizeProduct
+     */
+    omit?: ProgressiveDiscountPrizeProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProgressiveDiscountPrizeProductInclude<ExtArgs> | null
+    where?: ProgressiveDiscountPrizeProductWhereInput
+    orderBy?: ProgressiveDiscountPrizeProductOrderByWithRelationInput | ProgressiveDiscountPrizeProductOrderByWithRelationInput[]
+    cursor?: ProgressiveDiscountPrizeProductWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProgressiveDiscountPrizeProductScalarFieldEnum | ProgressiveDiscountPrizeProductScalarFieldEnum[]
+  }
+
+  /**
+   * ProgressiveDiscountPrize without action
+   */
+  export type ProgressiveDiscountPrizeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProgressiveDiscountPrize
+     */
+    select?: ProgressiveDiscountPrizeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProgressiveDiscountPrize
+     */
+    omit?: ProgressiveDiscountPrizeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProgressiveDiscountPrizeInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ProgressiveDiscountPrizeProduct
+   */
+
+  export type AggregateProgressiveDiscountPrizeProduct = {
+    _count: ProgressiveDiscountPrizeProductCountAggregateOutputType | null
+    _min: ProgressiveDiscountPrizeProductMinAggregateOutputType | null
+    _max: ProgressiveDiscountPrizeProductMaxAggregateOutputType | null
+  }
+
+  export type ProgressiveDiscountPrizeProductMinAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    prizeId: string | null
+    productId: string | null
+  }
+
+  export type ProgressiveDiscountPrizeProductMaxAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    prizeId: string | null
+    productId: string | null
+  }
+
+  export type ProgressiveDiscountPrizeProductCountAggregateOutputType = {
+    id: number
+    createdAt: number
+    prizeId: number
+    productId: number
+    _all: number
+  }
+
+
+  export type ProgressiveDiscountPrizeProductMinAggregateInputType = {
+    id?: true
+    createdAt?: true
+    prizeId?: true
+    productId?: true
+  }
+
+  export type ProgressiveDiscountPrizeProductMaxAggregateInputType = {
+    id?: true
+    createdAt?: true
+    prizeId?: true
+    productId?: true
+  }
+
+  export type ProgressiveDiscountPrizeProductCountAggregateInputType = {
+    id?: true
+    createdAt?: true
+    prizeId?: true
+    productId?: true
+    _all?: true
+  }
+
+  export type ProgressiveDiscountPrizeProductAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ProgressiveDiscountPrizeProduct to aggregate.
+     */
+    where?: ProgressiveDiscountPrizeProductWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProgressiveDiscountPrizeProducts to fetch.
+     */
+    orderBy?: ProgressiveDiscountPrizeProductOrderByWithRelationInput | ProgressiveDiscountPrizeProductOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ProgressiveDiscountPrizeProductWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProgressiveDiscountPrizeProducts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProgressiveDiscountPrizeProducts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ProgressiveDiscountPrizeProducts
+    **/
+    _count?: true | ProgressiveDiscountPrizeProductCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ProgressiveDiscountPrizeProductMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ProgressiveDiscountPrizeProductMaxAggregateInputType
+  }
+
+  export type GetProgressiveDiscountPrizeProductAggregateType<T extends ProgressiveDiscountPrizeProductAggregateArgs> = {
+        [P in keyof T & keyof AggregateProgressiveDiscountPrizeProduct]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateProgressiveDiscountPrizeProduct[P]>
+      : GetScalarType<T[P], AggregateProgressiveDiscountPrizeProduct[P]>
+  }
+
+
+
+
+  export type ProgressiveDiscountPrizeProductGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProgressiveDiscountPrizeProductWhereInput
+    orderBy?: ProgressiveDiscountPrizeProductOrderByWithAggregationInput | ProgressiveDiscountPrizeProductOrderByWithAggregationInput[]
+    by: ProgressiveDiscountPrizeProductScalarFieldEnum[] | ProgressiveDiscountPrizeProductScalarFieldEnum
+    having?: ProgressiveDiscountPrizeProductScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ProgressiveDiscountPrizeProductCountAggregateInputType | true
+    _min?: ProgressiveDiscountPrizeProductMinAggregateInputType
+    _max?: ProgressiveDiscountPrizeProductMaxAggregateInputType
+  }
+
+  export type ProgressiveDiscountPrizeProductGroupByOutputType = {
+    id: string
+    createdAt: Date
+    prizeId: string
+    productId: string
+    _count: ProgressiveDiscountPrizeProductCountAggregateOutputType | null
+    _min: ProgressiveDiscountPrizeProductMinAggregateOutputType | null
+    _max: ProgressiveDiscountPrizeProductMaxAggregateOutputType | null
+  }
+
+  type GetProgressiveDiscountPrizeProductGroupByPayload<T extends ProgressiveDiscountPrizeProductGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ProgressiveDiscountPrizeProductGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ProgressiveDiscountPrizeProductGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ProgressiveDiscountPrizeProductGroupByOutputType[P]>
+            : GetScalarType<T[P], ProgressiveDiscountPrizeProductGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ProgressiveDiscountPrizeProductSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    prizeId?: boolean
+    productId?: boolean
+    prize?: boolean | ProgressiveDiscountPrizeDefaultArgs<ExtArgs>
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["progressiveDiscountPrizeProduct"]>
+
+  export type ProgressiveDiscountPrizeProductSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    prizeId?: boolean
+    productId?: boolean
+    prize?: boolean | ProgressiveDiscountPrizeDefaultArgs<ExtArgs>
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["progressiveDiscountPrizeProduct"]>
+
+  export type ProgressiveDiscountPrizeProductSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    prizeId?: boolean
+    productId?: boolean
+    prize?: boolean | ProgressiveDiscountPrizeDefaultArgs<ExtArgs>
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["progressiveDiscountPrizeProduct"]>
+
+  export type ProgressiveDiscountPrizeProductSelectScalar = {
+    id?: boolean
+    createdAt?: boolean
+    prizeId?: boolean
+    productId?: boolean
+  }
+
+  export type ProgressiveDiscountPrizeProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "prizeId" | "productId", ExtArgs["result"]["progressiveDiscountPrizeProduct"]>
+  export type ProgressiveDiscountPrizeProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    prize?: boolean | ProgressiveDiscountPrizeDefaultArgs<ExtArgs>
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }
+  export type ProgressiveDiscountPrizeProductIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    prize?: boolean | ProgressiveDiscountPrizeDefaultArgs<ExtArgs>
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }
+  export type ProgressiveDiscountPrizeProductIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    prize?: boolean | ProgressiveDiscountPrizeDefaultArgs<ExtArgs>
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }
+
+  export type $ProgressiveDiscountPrizeProductPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ProgressiveDiscountPrizeProduct"
+    objects: {
+      prize: Prisma.$ProgressiveDiscountPrizePayload<ExtArgs>
+      product: Prisma.$ProductPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      createdAt: Date
+      prizeId: string
+      productId: string
+    }, ExtArgs["result"]["progressiveDiscountPrizeProduct"]>
+    composites: {}
+  }
+
+  type ProgressiveDiscountPrizeProductGetPayload<S extends boolean | null | undefined | ProgressiveDiscountPrizeProductDefaultArgs> = $Result.GetResult<Prisma.$ProgressiveDiscountPrizeProductPayload, S>
+
+  type ProgressiveDiscountPrizeProductCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ProgressiveDiscountPrizeProductFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ProgressiveDiscountPrizeProductCountAggregateInputType | true
+    }
+
+  export interface ProgressiveDiscountPrizeProductDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ProgressiveDiscountPrizeProduct'], meta: { name: 'ProgressiveDiscountPrizeProduct' } }
+    /**
+     * Find zero or one ProgressiveDiscountPrizeProduct that matches the filter.
+     * @param {ProgressiveDiscountPrizeProductFindUniqueArgs} args - Arguments to find a ProgressiveDiscountPrizeProduct
+     * @example
+     * // Get one ProgressiveDiscountPrizeProduct
+     * const progressiveDiscountPrizeProduct = await prisma.progressiveDiscountPrizeProduct.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ProgressiveDiscountPrizeProductFindUniqueArgs>(args: SelectSubset<T, ProgressiveDiscountPrizeProductFindUniqueArgs<ExtArgs>>): Prisma__ProgressiveDiscountPrizeProductClient<$Result.GetResult<Prisma.$ProgressiveDiscountPrizeProductPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ProgressiveDiscountPrizeProduct that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ProgressiveDiscountPrizeProductFindUniqueOrThrowArgs} args - Arguments to find a ProgressiveDiscountPrizeProduct
+     * @example
+     * // Get one ProgressiveDiscountPrizeProduct
+     * const progressiveDiscountPrizeProduct = await prisma.progressiveDiscountPrizeProduct.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ProgressiveDiscountPrizeProductFindUniqueOrThrowArgs>(args: SelectSubset<T, ProgressiveDiscountPrizeProductFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ProgressiveDiscountPrizeProductClient<$Result.GetResult<Prisma.$ProgressiveDiscountPrizeProductPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ProgressiveDiscountPrizeProduct that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProgressiveDiscountPrizeProductFindFirstArgs} args - Arguments to find a ProgressiveDiscountPrizeProduct
+     * @example
+     * // Get one ProgressiveDiscountPrizeProduct
+     * const progressiveDiscountPrizeProduct = await prisma.progressiveDiscountPrizeProduct.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ProgressiveDiscountPrizeProductFindFirstArgs>(args?: SelectSubset<T, ProgressiveDiscountPrizeProductFindFirstArgs<ExtArgs>>): Prisma__ProgressiveDiscountPrizeProductClient<$Result.GetResult<Prisma.$ProgressiveDiscountPrizeProductPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ProgressiveDiscountPrizeProduct that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProgressiveDiscountPrizeProductFindFirstOrThrowArgs} args - Arguments to find a ProgressiveDiscountPrizeProduct
+     * @example
+     * // Get one ProgressiveDiscountPrizeProduct
+     * const progressiveDiscountPrizeProduct = await prisma.progressiveDiscountPrizeProduct.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ProgressiveDiscountPrizeProductFindFirstOrThrowArgs>(args?: SelectSubset<T, ProgressiveDiscountPrizeProductFindFirstOrThrowArgs<ExtArgs>>): Prisma__ProgressiveDiscountPrizeProductClient<$Result.GetResult<Prisma.$ProgressiveDiscountPrizeProductPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ProgressiveDiscountPrizeProducts that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProgressiveDiscountPrizeProductFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ProgressiveDiscountPrizeProducts
+     * const progressiveDiscountPrizeProducts = await prisma.progressiveDiscountPrizeProduct.findMany()
+     * 
+     * // Get first 10 ProgressiveDiscountPrizeProducts
+     * const progressiveDiscountPrizeProducts = await prisma.progressiveDiscountPrizeProduct.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const progressiveDiscountPrizeProductWithIdOnly = await prisma.progressiveDiscountPrizeProduct.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ProgressiveDiscountPrizeProductFindManyArgs>(args?: SelectSubset<T, ProgressiveDiscountPrizeProductFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProgressiveDiscountPrizeProductPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ProgressiveDiscountPrizeProduct.
+     * @param {ProgressiveDiscountPrizeProductCreateArgs} args - Arguments to create a ProgressiveDiscountPrizeProduct.
+     * @example
+     * // Create one ProgressiveDiscountPrizeProduct
+     * const ProgressiveDiscountPrizeProduct = await prisma.progressiveDiscountPrizeProduct.create({
+     *   data: {
+     *     // ... data to create a ProgressiveDiscountPrizeProduct
+     *   }
+     * })
+     * 
+     */
+    create<T extends ProgressiveDiscountPrizeProductCreateArgs>(args: SelectSubset<T, ProgressiveDiscountPrizeProductCreateArgs<ExtArgs>>): Prisma__ProgressiveDiscountPrizeProductClient<$Result.GetResult<Prisma.$ProgressiveDiscountPrizeProductPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ProgressiveDiscountPrizeProducts.
+     * @param {ProgressiveDiscountPrizeProductCreateManyArgs} args - Arguments to create many ProgressiveDiscountPrizeProducts.
+     * @example
+     * // Create many ProgressiveDiscountPrizeProducts
+     * const progressiveDiscountPrizeProduct = await prisma.progressiveDiscountPrizeProduct.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ProgressiveDiscountPrizeProductCreateManyArgs>(args?: SelectSubset<T, ProgressiveDiscountPrizeProductCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ProgressiveDiscountPrizeProducts and returns the data saved in the database.
+     * @param {ProgressiveDiscountPrizeProductCreateManyAndReturnArgs} args - Arguments to create many ProgressiveDiscountPrizeProducts.
+     * @example
+     * // Create many ProgressiveDiscountPrizeProducts
+     * const progressiveDiscountPrizeProduct = await prisma.progressiveDiscountPrizeProduct.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ProgressiveDiscountPrizeProducts and only return the `id`
+     * const progressiveDiscountPrizeProductWithIdOnly = await prisma.progressiveDiscountPrizeProduct.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ProgressiveDiscountPrizeProductCreateManyAndReturnArgs>(args?: SelectSubset<T, ProgressiveDiscountPrizeProductCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProgressiveDiscountPrizeProductPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ProgressiveDiscountPrizeProduct.
+     * @param {ProgressiveDiscountPrizeProductDeleteArgs} args - Arguments to delete one ProgressiveDiscountPrizeProduct.
+     * @example
+     * // Delete one ProgressiveDiscountPrizeProduct
+     * const ProgressiveDiscountPrizeProduct = await prisma.progressiveDiscountPrizeProduct.delete({
+     *   where: {
+     *     // ... filter to delete one ProgressiveDiscountPrizeProduct
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ProgressiveDiscountPrizeProductDeleteArgs>(args: SelectSubset<T, ProgressiveDiscountPrizeProductDeleteArgs<ExtArgs>>): Prisma__ProgressiveDiscountPrizeProductClient<$Result.GetResult<Prisma.$ProgressiveDiscountPrizeProductPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ProgressiveDiscountPrizeProduct.
+     * @param {ProgressiveDiscountPrizeProductUpdateArgs} args - Arguments to update one ProgressiveDiscountPrizeProduct.
+     * @example
+     * // Update one ProgressiveDiscountPrizeProduct
+     * const progressiveDiscountPrizeProduct = await prisma.progressiveDiscountPrizeProduct.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ProgressiveDiscountPrizeProductUpdateArgs>(args: SelectSubset<T, ProgressiveDiscountPrizeProductUpdateArgs<ExtArgs>>): Prisma__ProgressiveDiscountPrizeProductClient<$Result.GetResult<Prisma.$ProgressiveDiscountPrizeProductPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ProgressiveDiscountPrizeProducts.
+     * @param {ProgressiveDiscountPrizeProductDeleteManyArgs} args - Arguments to filter ProgressiveDiscountPrizeProducts to delete.
+     * @example
+     * // Delete a few ProgressiveDiscountPrizeProducts
+     * const { count } = await prisma.progressiveDiscountPrizeProduct.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ProgressiveDiscountPrizeProductDeleteManyArgs>(args?: SelectSubset<T, ProgressiveDiscountPrizeProductDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ProgressiveDiscountPrizeProducts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProgressiveDiscountPrizeProductUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ProgressiveDiscountPrizeProducts
+     * const progressiveDiscountPrizeProduct = await prisma.progressiveDiscountPrizeProduct.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ProgressiveDiscountPrizeProductUpdateManyArgs>(args: SelectSubset<T, ProgressiveDiscountPrizeProductUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ProgressiveDiscountPrizeProducts and returns the data updated in the database.
+     * @param {ProgressiveDiscountPrizeProductUpdateManyAndReturnArgs} args - Arguments to update many ProgressiveDiscountPrizeProducts.
+     * @example
+     * // Update many ProgressiveDiscountPrizeProducts
+     * const progressiveDiscountPrizeProduct = await prisma.progressiveDiscountPrizeProduct.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ProgressiveDiscountPrizeProducts and only return the `id`
+     * const progressiveDiscountPrizeProductWithIdOnly = await prisma.progressiveDiscountPrizeProduct.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ProgressiveDiscountPrizeProductUpdateManyAndReturnArgs>(args: SelectSubset<T, ProgressiveDiscountPrizeProductUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProgressiveDiscountPrizeProductPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ProgressiveDiscountPrizeProduct.
+     * @param {ProgressiveDiscountPrizeProductUpsertArgs} args - Arguments to update or create a ProgressiveDiscountPrizeProduct.
+     * @example
+     * // Update or create a ProgressiveDiscountPrizeProduct
+     * const progressiveDiscountPrizeProduct = await prisma.progressiveDiscountPrizeProduct.upsert({
+     *   create: {
+     *     // ... data to create a ProgressiveDiscountPrizeProduct
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ProgressiveDiscountPrizeProduct we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ProgressiveDiscountPrizeProductUpsertArgs>(args: SelectSubset<T, ProgressiveDiscountPrizeProductUpsertArgs<ExtArgs>>): Prisma__ProgressiveDiscountPrizeProductClient<$Result.GetResult<Prisma.$ProgressiveDiscountPrizeProductPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ProgressiveDiscountPrizeProducts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProgressiveDiscountPrizeProductCountArgs} args - Arguments to filter ProgressiveDiscountPrizeProducts to count.
+     * @example
+     * // Count the number of ProgressiveDiscountPrizeProducts
+     * const count = await prisma.progressiveDiscountPrizeProduct.count({
+     *   where: {
+     *     // ... the filter for the ProgressiveDiscountPrizeProducts we want to count
+     *   }
+     * })
+    **/
+    count<T extends ProgressiveDiscountPrizeProductCountArgs>(
+      args?: Subset<T, ProgressiveDiscountPrizeProductCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ProgressiveDiscountPrizeProductCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ProgressiveDiscountPrizeProduct.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProgressiveDiscountPrizeProductAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ProgressiveDiscountPrizeProductAggregateArgs>(args: Subset<T, ProgressiveDiscountPrizeProductAggregateArgs>): Prisma.PrismaPromise<GetProgressiveDiscountPrizeProductAggregateType<T>>
+
+    /**
+     * Group by ProgressiveDiscountPrizeProduct.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProgressiveDiscountPrizeProductGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ProgressiveDiscountPrizeProductGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ProgressiveDiscountPrizeProductGroupByArgs['orderBy'] }
+        : { orderBy?: ProgressiveDiscountPrizeProductGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ProgressiveDiscountPrizeProductGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetProgressiveDiscountPrizeProductGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ProgressiveDiscountPrizeProduct model
+   */
+  readonly fields: ProgressiveDiscountPrizeProductFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ProgressiveDiscountPrizeProduct.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ProgressiveDiscountPrizeProductClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    prize<T extends ProgressiveDiscountPrizeDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProgressiveDiscountPrizeDefaultArgs<ExtArgs>>): Prisma__ProgressiveDiscountPrizeClient<$Result.GetResult<Prisma.$ProgressiveDiscountPrizePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    product<T extends ProductDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProductDefaultArgs<ExtArgs>>): Prisma__ProductClient<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ProgressiveDiscountPrizeProduct model
+   */
+  interface ProgressiveDiscountPrizeProductFieldRefs {
+    readonly id: FieldRef<"ProgressiveDiscountPrizeProduct", 'String'>
+    readonly createdAt: FieldRef<"ProgressiveDiscountPrizeProduct", 'DateTime'>
+    readonly prizeId: FieldRef<"ProgressiveDiscountPrizeProduct", 'String'>
+    readonly productId: FieldRef<"ProgressiveDiscountPrizeProduct", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ProgressiveDiscountPrizeProduct findUnique
+   */
+  export type ProgressiveDiscountPrizeProductFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProgressiveDiscountPrizeProduct
+     */
+    select?: ProgressiveDiscountPrizeProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProgressiveDiscountPrizeProduct
+     */
+    omit?: ProgressiveDiscountPrizeProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProgressiveDiscountPrizeProductInclude<ExtArgs> | null
+    /**
+     * Filter, which ProgressiveDiscountPrizeProduct to fetch.
+     */
+    where: ProgressiveDiscountPrizeProductWhereUniqueInput
+  }
+
+  /**
+   * ProgressiveDiscountPrizeProduct findUniqueOrThrow
+   */
+  export type ProgressiveDiscountPrizeProductFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProgressiveDiscountPrizeProduct
+     */
+    select?: ProgressiveDiscountPrizeProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProgressiveDiscountPrizeProduct
+     */
+    omit?: ProgressiveDiscountPrizeProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProgressiveDiscountPrizeProductInclude<ExtArgs> | null
+    /**
+     * Filter, which ProgressiveDiscountPrizeProduct to fetch.
+     */
+    where: ProgressiveDiscountPrizeProductWhereUniqueInput
+  }
+
+  /**
+   * ProgressiveDiscountPrizeProduct findFirst
+   */
+  export type ProgressiveDiscountPrizeProductFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProgressiveDiscountPrizeProduct
+     */
+    select?: ProgressiveDiscountPrizeProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProgressiveDiscountPrizeProduct
+     */
+    omit?: ProgressiveDiscountPrizeProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProgressiveDiscountPrizeProductInclude<ExtArgs> | null
+    /**
+     * Filter, which ProgressiveDiscountPrizeProduct to fetch.
+     */
+    where?: ProgressiveDiscountPrizeProductWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProgressiveDiscountPrizeProducts to fetch.
+     */
+    orderBy?: ProgressiveDiscountPrizeProductOrderByWithRelationInput | ProgressiveDiscountPrizeProductOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ProgressiveDiscountPrizeProducts.
+     */
+    cursor?: ProgressiveDiscountPrizeProductWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProgressiveDiscountPrizeProducts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProgressiveDiscountPrizeProducts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ProgressiveDiscountPrizeProducts.
+     */
+    distinct?: ProgressiveDiscountPrizeProductScalarFieldEnum | ProgressiveDiscountPrizeProductScalarFieldEnum[]
+  }
+
+  /**
+   * ProgressiveDiscountPrizeProduct findFirstOrThrow
+   */
+  export type ProgressiveDiscountPrizeProductFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProgressiveDiscountPrizeProduct
+     */
+    select?: ProgressiveDiscountPrizeProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProgressiveDiscountPrizeProduct
+     */
+    omit?: ProgressiveDiscountPrizeProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProgressiveDiscountPrizeProductInclude<ExtArgs> | null
+    /**
+     * Filter, which ProgressiveDiscountPrizeProduct to fetch.
+     */
+    where?: ProgressiveDiscountPrizeProductWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProgressiveDiscountPrizeProducts to fetch.
+     */
+    orderBy?: ProgressiveDiscountPrizeProductOrderByWithRelationInput | ProgressiveDiscountPrizeProductOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ProgressiveDiscountPrizeProducts.
+     */
+    cursor?: ProgressiveDiscountPrizeProductWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProgressiveDiscountPrizeProducts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProgressiveDiscountPrizeProducts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ProgressiveDiscountPrizeProducts.
+     */
+    distinct?: ProgressiveDiscountPrizeProductScalarFieldEnum | ProgressiveDiscountPrizeProductScalarFieldEnum[]
+  }
+
+  /**
+   * ProgressiveDiscountPrizeProduct findMany
+   */
+  export type ProgressiveDiscountPrizeProductFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProgressiveDiscountPrizeProduct
+     */
+    select?: ProgressiveDiscountPrizeProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProgressiveDiscountPrizeProduct
+     */
+    omit?: ProgressiveDiscountPrizeProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProgressiveDiscountPrizeProductInclude<ExtArgs> | null
+    /**
+     * Filter, which ProgressiveDiscountPrizeProducts to fetch.
+     */
+    where?: ProgressiveDiscountPrizeProductWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProgressiveDiscountPrizeProducts to fetch.
+     */
+    orderBy?: ProgressiveDiscountPrizeProductOrderByWithRelationInput | ProgressiveDiscountPrizeProductOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ProgressiveDiscountPrizeProducts.
+     */
+    cursor?: ProgressiveDiscountPrizeProductWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProgressiveDiscountPrizeProducts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProgressiveDiscountPrizeProducts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ProgressiveDiscountPrizeProducts.
+     */
+    distinct?: ProgressiveDiscountPrizeProductScalarFieldEnum | ProgressiveDiscountPrizeProductScalarFieldEnum[]
+  }
+
+  /**
+   * ProgressiveDiscountPrizeProduct create
+   */
+  export type ProgressiveDiscountPrizeProductCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProgressiveDiscountPrizeProduct
+     */
+    select?: ProgressiveDiscountPrizeProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProgressiveDiscountPrizeProduct
+     */
+    omit?: ProgressiveDiscountPrizeProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProgressiveDiscountPrizeProductInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ProgressiveDiscountPrizeProduct.
+     */
+    data: XOR<ProgressiveDiscountPrizeProductCreateInput, ProgressiveDiscountPrizeProductUncheckedCreateInput>
+  }
+
+  /**
+   * ProgressiveDiscountPrizeProduct createMany
+   */
+  export type ProgressiveDiscountPrizeProductCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ProgressiveDiscountPrizeProducts.
+     */
+    data: ProgressiveDiscountPrizeProductCreateManyInput | ProgressiveDiscountPrizeProductCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ProgressiveDiscountPrizeProduct createManyAndReturn
+   */
+  export type ProgressiveDiscountPrizeProductCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProgressiveDiscountPrizeProduct
+     */
+    select?: ProgressiveDiscountPrizeProductSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProgressiveDiscountPrizeProduct
+     */
+    omit?: ProgressiveDiscountPrizeProductOmit<ExtArgs> | null
+    /**
+     * The data used to create many ProgressiveDiscountPrizeProducts.
+     */
+    data: ProgressiveDiscountPrizeProductCreateManyInput | ProgressiveDiscountPrizeProductCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProgressiveDiscountPrizeProductIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ProgressiveDiscountPrizeProduct update
+   */
+  export type ProgressiveDiscountPrizeProductUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProgressiveDiscountPrizeProduct
+     */
+    select?: ProgressiveDiscountPrizeProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProgressiveDiscountPrizeProduct
+     */
+    omit?: ProgressiveDiscountPrizeProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProgressiveDiscountPrizeProductInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ProgressiveDiscountPrizeProduct.
+     */
+    data: XOR<ProgressiveDiscountPrizeProductUpdateInput, ProgressiveDiscountPrizeProductUncheckedUpdateInput>
+    /**
+     * Choose, which ProgressiveDiscountPrizeProduct to update.
+     */
+    where: ProgressiveDiscountPrizeProductWhereUniqueInput
+  }
+
+  /**
+   * ProgressiveDiscountPrizeProduct updateMany
+   */
+  export type ProgressiveDiscountPrizeProductUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ProgressiveDiscountPrizeProducts.
+     */
+    data: XOR<ProgressiveDiscountPrizeProductUpdateManyMutationInput, ProgressiveDiscountPrizeProductUncheckedUpdateManyInput>
+    /**
+     * Filter which ProgressiveDiscountPrizeProducts to update
+     */
+    where?: ProgressiveDiscountPrizeProductWhereInput
+    /**
+     * Limit how many ProgressiveDiscountPrizeProducts to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ProgressiveDiscountPrizeProduct updateManyAndReturn
+   */
+  export type ProgressiveDiscountPrizeProductUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProgressiveDiscountPrizeProduct
+     */
+    select?: ProgressiveDiscountPrizeProductSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProgressiveDiscountPrizeProduct
+     */
+    omit?: ProgressiveDiscountPrizeProductOmit<ExtArgs> | null
+    /**
+     * The data used to update ProgressiveDiscountPrizeProducts.
+     */
+    data: XOR<ProgressiveDiscountPrizeProductUpdateManyMutationInput, ProgressiveDiscountPrizeProductUncheckedUpdateManyInput>
+    /**
+     * Filter which ProgressiveDiscountPrizeProducts to update
+     */
+    where?: ProgressiveDiscountPrizeProductWhereInput
+    /**
+     * Limit how many ProgressiveDiscountPrizeProducts to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProgressiveDiscountPrizeProductIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ProgressiveDiscountPrizeProduct upsert
+   */
+  export type ProgressiveDiscountPrizeProductUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProgressiveDiscountPrizeProduct
+     */
+    select?: ProgressiveDiscountPrizeProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProgressiveDiscountPrizeProduct
+     */
+    omit?: ProgressiveDiscountPrizeProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProgressiveDiscountPrizeProductInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ProgressiveDiscountPrizeProduct to update in case it exists.
+     */
+    where: ProgressiveDiscountPrizeProductWhereUniqueInput
+    /**
+     * In case the ProgressiveDiscountPrizeProduct found by the `where` argument doesn't exist, create a new ProgressiveDiscountPrizeProduct with this data.
+     */
+    create: XOR<ProgressiveDiscountPrizeProductCreateInput, ProgressiveDiscountPrizeProductUncheckedCreateInput>
+    /**
+     * In case the ProgressiveDiscountPrizeProduct was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ProgressiveDiscountPrizeProductUpdateInput, ProgressiveDiscountPrizeProductUncheckedUpdateInput>
+  }
+
+  /**
+   * ProgressiveDiscountPrizeProduct delete
+   */
+  export type ProgressiveDiscountPrizeProductDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProgressiveDiscountPrizeProduct
+     */
+    select?: ProgressiveDiscountPrizeProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProgressiveDiscountPrizeProduct
+     */
+    omit?: ProgressiveDiscountPrizeProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProgressiveDiscountPrizeProductInclude<ExtArgs> | null
+    /**
+     * Filter which ProgressiveDiscountPrizeProduct to delete.
+     */
+    where: ProgressiveDiscountPrizeProductWhereUniqueInput
+  }
+
+  /**
+   * ProgressiveDiscountPrizeProduct deleteMany
+   */
+  export type ProgressiveDiscountPrizeProductDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ProgressiveDiscountPrizeProducts to delete
+     */
+    where?: ProgressiveDiscountPrizeProductWhereInput
+    /**
+     * Limit how many ProgressiveDiscountPrizeProducts to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ProgressiveDiscountPrizeProduct without action
+   */
+  export type ProgressiveDiscountPrizeProductDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProgressiveDiscountPrizeProduct
+     */
+    select?: ProgressiveDiscountPrizeProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProgressiveDiscountPrizeProduct
+     */
+    omit?: ProgressiveDiscountPrizeProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProgressiveDiscountPrizeProductInclude<ExtArgs> | null
   }
 
 
@@ -13911,6 +16392,7 @@ export namespace Prisma {
     name: number
     price: number
     description: number
+    translations: number
     modifierGroupId: number
     fileId: number
     _all: number
@@ -13951,6 +16433,7 @@ export namespace Prisma {
     name?: true
     price?: true
     description?: true
+    translations?: true
     modifierGroupId?: true
     fileId?: true
     _all?: true
@@ -14048,6 +16531,7 @@ export namespace Prisma {
     name: string
     price: number
     description: string | null
+    translations: JsonValue | null
     modifierGroupId: string | null
     fileId: string | null
     _count: ModifierGroupItemCountAggregateOutputType | null
@@ -14077,6 +16561,7 @@ export namespace Prisma {
     name?: boolean
     price?: boolean
     description?: boolean
+    translations?: boolean
     modifierGroupId?: boolean
     fileId?: boolean
     photo?: boolean | ModifierGroupItem$photoArgs<ExtArgs>
@@ -14092,6 +16577,7 @@ export namespace Prisma {
     name?: boolean
     price?: boolean
     description?: boolean
+    translations?: boolean
     modifierGroupId?: boolean
     fileId?: boolean
     photo?: boolean | ModifierGroupItem$photoArgs<ExtArgs>
@@ -14104,6 +16590,7 @@ export namespace Prisma {
     name?: boolean
     price?: boolean
     description?: boolean
+    translations?: boolean
     modifierGroupId?: boolean
     fileId?: boolean
     photo?: boolean | ModifierGroupItem$photoArgs<ExtArgs>
@@ -14116,11 +16603,12 @@ export namespace Prisma {
     name?: boolean
     price?: boolean
     description?: boolean
+    translations?: boolean
     modifierGroupId?: boolean
     fileId?: boolean
   }
 
-  export type ModifierGroupItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "name" | "price" | "description" | "modifierGroupId" | "fileId", ExtArgs["result"]["modifierGroupItem"]>
+  export type ModifierGroupItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "name" | "price" | "description" | "translations" | "modifierGroupId" | "fileId", ExtArgs["result"]["modifierGroupItem"]>
   export type ModifierGroupItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     photo?: boolean | ModifierGroupItem$photoArgs<ExtArgs>
     modifierGroup?: boolean | ModifierGroupItem$modifierGroupArgs<ExtArgs>
@@ -14151,6 +16639,7 @@ export namespace Prisma {
       name: string
       price: number
       description: string | null
+      translations: Prisma.JsonValue | null
       modifierGroupId: string | null
       fileId: string | null
     }, ExtArgs["result"]["modifierGroupItem"]>
@@ -14585,6 +17074,7 @@ export namespace Prisma {
     readonly name: FieldRef<"ModifierGroupItem", 'String'>
     readonly price: FieldRef<"ModifierGroupItem", 'Int'>
     readonly description: FieldRef<"ModifierGroupItem", 'String'>
+    readonly translations: FieldRef<"ModifierGroupItem", 'Json'>
     readonly modifierGroupId: FieldRef<"ModifierGroupItem", 'String'>
     readonly fileId: FieldRef<"ModifierGroupItem", 'String'>
   }
@@ -21954,6 +24444,7 @@ export namespace Prisma {
     modifierGroups?: boolean | Product$modifierGroupsArgs<ExtArgs>
     category?: boolean | Product$categoryArgs<ExtArgs>
     OrderProducts?: boolean | Product$OrderProductsArgs<ExtArgs>
+    prizeProducts?: boolean | Product$prizeProductsArgs<ExtArgs>
     preparationSteps?: boolean | Product$preparationStepsArgs<ExtArgs>
     _count?: boolean | ProductCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["product"]>
@@ -21999,6 +24490,7 @@ export namespace Prisma {
     modifierGroups?: boolean | Product$modifierGroupsArgs<ExtArgs>
     category?: boolean | Product$categoryArgs<ExtArgs>
     OrderProducts?: boolean | Product$OrderProductsArgs<ExtArgs>
+    prizeProducts?: boolean | Product$prizeProductsArgs<ExtArgs>
     preparationSteps?: boolean | Product$preparationStepsArgs<ExtArgs>
     _count?: boolean | ProductCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -22016,6 +24508,7 @@ export namespace Prisma {
       modifierGroups: Prisma.$ModifierGroupPayload<ExtArgs>[]
       category: Prisma.$CategoryPayload<ExtArgs> | null
       OrderProducts: Prisma.$OrderProductsPayload<ExtArgs>[]
+      prizeProducts: Prisma.$ProgressiveDiscountPrizeProductPayload<ExtArgs>[]
       preparationSteps: Prisma.$PreparationStepPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -22425,6 +24918,7 @@ export namespace Prisma {
     modifierGroups<T extends Product$modifierGroupsArgs<ExtArgs> = {}>(args?: Subset<T, Product$modifierGroupsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ModifierGroupPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     category<T extends Product$categoryArgs<ExtArgs> = {}>(args?: Subset<T, Product$categoryArgs<ExtArgs>>): Prisma__CategoryClient<$Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     OrderProducts<T extends Product$OrderProductsArgs<ExtArgs> = {}>(args?: Subset<T, Product$OrderProductsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderProductsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    prizeProducts<T extends Product$prizeProductsArgs<ExtArgs> = {}>(args?: Subset<T, Product$prizeProductsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProgressiveDiscountPrizeProductPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     preparationSteps<T extends Product$preparationStepsArgs<ExtArgs> = {}>(args?: Subset<T, Product$preparationStepsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PreparationStepPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -22952,6 +25446,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: OrderProductsScalarFieldEnum | OrderProductsScalarFieldEnum[]
+  }
+
+  /**
+   * Product.prizeProducts
+   */
+  export type Product$prizeProductsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProgressiveDiscountPrizeProduct
+     */
+    select?: ProgressiveDiscountPrizeProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProgressiveDiscountPrizeProduct
+     */
+    omit?: ProgressiveDiscountPrizeProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProgressiveDiscountPrizeProductInclude<ExtArgs> | null
+    where?: ProgressiveDiscountPrizeProductWhereInput
+    orderBy?: ProgressiveDiscountPrizeProductOrderByWithRelationInput | ProgressiveDiscountPrizeProductOrderByWithRelationInput[]
+    cursor?: ProgressiveDiscountPrizeProductWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProgressiveDiscountPrizeProductScalarFieldEnum | ProgressiveDiscountPrizeProductScalarFieldEnum[]
   }
 
   /**
@@ -29738,11 +32256,13 @@ export namespace Prisma {
   }
 
   export type OrderAvgAggregateOutputType = {
+    dispatchOrderIndex: number | null
     amount: number | null
     tipAmount: number | null
   }
 
   export type OrderSumAggregateOutputType = {
+    dispatchOrderIndex: number | null
     amount: number | null
     tipAmount: number | null
   }
@@ -29753,6 +32273,7 @@ export namespace Prisma {
     createdAt: Date | null
     paidAt: Date | null
     deliveredAt: Date | null
+    dispatchOrderIndex: number | null
     amount: number | null
     status: $Enums.OrderStatus | null
     type: $Enums.OrderType | null
@@ -29771,6 +32292,7 @@ export namespace Prisma {
     createdAt: Date | null
     paidAt: Date | null
     deliveredAt: Date | null
+    dispatchOrderIndex: number | null
     amount: number | null
     status: $Enums.OrderStatus | null
     type: $Enums.OrderType | null
@@ -29789,11 +32311,13 @@ export namespace Prisma {
     createdAt: number
     paidAt: number
     deliveredAt: number
+    dispatchOrderIndex: number
     amount: number
     status: number
     type: number
     paymentMethod: number
     tipAmount: number
+    progressiveDiscountSnapshot: number
     customerId: number
     externalId: number
     dispatchId: number
@@ -29804,11 +32328,13 @@ export namespace Prisma {
 
 
   export type OrderAvgAggregateInputType = {
+    dispatchOrderIndex?: true
     amount?: true
     tipAmount?: true
   }
 
   export type OrderSumAggregateInputType = {
+    dispatchOrderIndex?: true
     amount?: true
     tipAmount?: true
   }
@@ -29819,6 +32345,7 @@ export namespace Prisma {
     createdAt?: true
     paidAt?: true
     deliveredAt?: true
+    dispatchOrderIndex?: true
     amount?: true
     status?: true
     type?: true
@@ -29837,6 +32364,7 @@ export namespace Prisma {
     createdAt?: true
     paidAt?: true
     deliveredAt?: true
+    dispatchOrderIndex?: true
     amount?: true
     status?: true
     type?: true
@@ -29855,11 +32383,13 @@ export namespace Prisma {
     createdAt?: true
     paidAt?: true
     deliveredAt?: true
+    dispatchOrderIndex?: true
     amount?: true
     status?: true
     type?: true
     paymentMethod?: true
     tipAmount?: true
+    progressiveDiscountSnapshot?: true
     customerId?: true
     externalId?: true
     dispatchId?: true
@@ -29960,11 +32490,13 @@ export namespace Prisma {
     createdAt: Date
     paidAt: Date | null
     deliveredAt: Date | null
+    dispatchOrderIndex: number | null
     amount: number
     status: $Enums.OrderStatus
     type: $Enums.OrderType
     paymentMethod: $Enums.PaymentType
     tipAmount: number | null
+    progressiveDiscountSnapshot: JsonValue | null
     customerId: string
     externalId: string | null
     dispatchId: string | null
@@ -29997,11 +32529,13 @@ export namespace Prisma {
     createdAt?: boolean
     paidAt?: boolean
     deliveredAt?: boolean
+    dispatchOrderIndex?: boolean
     amount?: boolean
     status?: boolean
     type?: boolean
     paymentMethod?: boolean
     tipAmount?: boolean
+    progressiveDiscountSnapshot?: boolean
     customerId?: boolean
     externalId?: boolean
     dispatchId?: boolean
@@ -30022,11 +32556,13 @@ export namespace Prisma {
     createdAt?: boolean
     paidAt?: boolean
     deliveredAt?: boolean
+    dispatchOrderIndex?: boolean
     amount?: boolean
     status?: boolean
     type?: boolean
     paymentMethod?: boolean
     tipAmount?: boolean
+    progressiveDiscountSnapshot?: boolean
     customerId?: boolean
     externalId?: boolean
     dispatchId?: boolean
@@ -30044,11 +32580,13 @@ export namespace Prisma {
     createdAt?: boolean
     paidAt?: boolean
     deliveredAt?: boolean
+    dispatchOrderIndex?: boolean
     amount?: boolean
     status?: boolean
     type?: boolean
     paymentMethod?: boolean
     tipAmount?: boolean
+    progressiveDiscountSnapshot?: boolean
     customerId?: boolean
     externalId?: boolean
     dispatchId?: boolean
@@ -30066,11 +32604,13 @@ export namespace Prisma {
     createdAt?: boolean
     paidAt?: boolean
     deliveredAt?: boolean
+    dispatchOrderIndex?: boolean
     amount?: boolean
     status?: boolean
     type?: boolean
     paymentMethod?: boolean
     tipAmount?: boolean
+    progressiveDiscountSnapshot?: boolean
     customerId?: boolean
     externalId?: boolean
     dispatchId?: boolean
@@ -30078,7 +32618,7 @@ export namespace Prisma {
     deliveryAddressId?: boolean
   }
 
-  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "number" | "createdAt" | "paidAt" | "deliveredAt" | "amount" | "status" | "type" | "paymentMethod" | "tipAmount" | "customerId" | "externalId" | "dispatchId" | "addressId" | "deliveryAddressId", ExtArgs["result"]["order"]>
+  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "number" | "createdAt" | "paidAt" | "deliveredAt" | "dispatchOrderIndex" | "amount" | "status" | "type" | "paymentMethod" | "tipAmount" | "progressiveDiscountSnapshot" | "customerId" | "externalId" | "dispatchId" | "addressId" | "deliveryAddressId", ExtArgs["result"]["order"]>
   export type OrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
     dispatch?: boolean | Order$dispatchArgs<ExtArgs>
@@ -30117,11 +32657,13 @@ export namespace Prisma {
       createdAt: Date
       paidAt: Date | null
       deliveredAt: Date | null
+      dispatchOrderIndex: number | null
       amount: number
       status: $Enums.OrderStatus
       type: $Enums.OrderType
       paymentMethod: $Enums.PaymentType
       tipAmount: number | null
+      progressiveDiscountSnapshot: Prisma.JsonValue | null
       customerId: string
       externalId: string | null
       dispatchId: string | null
@@ -30561,11 +33103,13 @@ export namespace Prisma {
     readonly createdAt: FieldRef<"Order", 'DateTime'>
     readonly paidAt: FieldRef<"Order", 'DateTime'>
     readonly deliveredAt: FieldRef<"Order", 'DateTime'>
+    readonly dispatchOrderIndex: FieldRef<"Order", 'Int'>
     readonly amount: FieldRef<"Order", 'Int'>
     readonly status: FieldRef<"Order", 'OrderStatus'>
     readonly type: FieldRef<"Order", 'OrderType'>
     readonly paymentMethod: FieldRef<"Order", 'PaymentType'>
     readonly tipAmount: FieldRef<"Order", 'Int'>
+    readonly progressiveDiscountSnapshot: FieldRef<"Order", 'Json'>
     readonly customerId: FieldRef<"Order", 'String'>
     readonly externalId: FieldRef<"Order", 'String'>
     readonly dispatchId: FieldRef<"Order", 'String'>
@@ -32387,6 +34931,28 @@ export namespace Prisma {
   export type ProgressiveDiscountStepScalarFieldEnum = (typeof ProgressiveDiscountStepScalarFieldEnum)[keyof typeof ProgressiveDiscountStepScalarFieldEnum]
 
 
+  export const ProgressiveDiscountPrizeScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    name: 'name',
+    quantity: 'quantity',
+    imageUrl: 'imageUrl',
+    progressiveDiscountStepId: 'progressiveDiscountStepId'
+  };
+
+  export type ProgressiveDiscountPrizeScalarFieldEnum = (typeof ProgressiveDiscountPrizeScalarFieldEnum)[keyof typeof ProgressiveDiscountPrizeScalarFieldEnum]
+
+
+  export const ProgressiveDiscountPrizeProductScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    prizeId: 'prizeId',
+    productId: 'productId'
+  };
+
+  export type ProgressiveDiscountPrizeProductScalarFieldEnum = (typeof ProgressiveDiscountPrizeProductScalarFieldEnum)[keyof typeof ProgressiveDiscountPrizeProductScalarFieldEnum]
+
+
   export const FileScalarFieldEnum: {
     id: 'id',
     createdAt: 'createdAt',
@@ -32418,6 +34984,7 @@ export namespace Prisma {
     name: 'name',
     price: 'price',
     description: 'description',
+    translations: 'translations',
     modifierGroupId: 'modifierGroupId',
     fileId: 'fileId'
   };
@@ -32590,11 +35157,13 @@ export namespace Prisma {
     createdAt: 'createdAt',
     paidAt: 'paidAt',
     deliveredAt: 'deliveredAt',
+    dispatchOrderIndex: 'dispatchOrderIndex',
     amount: 'amount',
     status: 'status',
     type: 'type',
     paymentMethod: 'paymentMethod',
     tipAmount: 'tipAmount',
+    progressiveDiscountSnapshot: 'progressiveDiscountSnapshot',
     customerId: 'customerId',
     externalId: 'externalId',
     dispatchId: 'dispatchId',
@@ -33188,6 +35757,7 @@ export namespace Prisma {
     discountType?: EnumProgressiveDiscountStepTypeFilter<"ProgressiveDiscountStep"> | $Enums.ProgressiveDiscountStepType
     progressiveDiscountId?: StringFilter<"ProgressiveDiscountStep"> | string
     progressiveDiscount?: XOR<ProgressiveDiscountScalarRelationFilter, ProgressiveDiscountWhereInput>
+    prizes?: ProgressiveDiscountPrizeListRelationFilter
   }
 
   export type ProgressiveDiscountStepOrderByWithRelationInput = {
@@ -33198,6 +35768,7 @@ export namespace Prisma {
     discountType?: SortOrder
     progressiveDiscountId?: SortOrder
     progressiveDiscount?: ProgressiveDiscountOrderByWithRelationInput
+    prizes?: ProgressiveDiscountPrizeOrderByRelationAggregateInput
   }
 
   export type ProgressiveDiscountStepWhereUniqueInput = Prisma.AtLeast<{
@@ -33211,6 +35782,7 @@ export namespace Prisma {
     discountType?: EnumProgressiveDiscountStepTypeFilter<"ProgressiveDiscountStep"> | $Enums.ProgressiveDiscountStepType
     progressiveDiscountId?: StringFilter<"ProgressiveDiscountStep"> | string
     progressiveDiscount?: XOR<ProgressiveDiscountScalarRelationFilter, ProgressiveDiscountWhereInput>
+    prizes?: ProgressiveDiscountPrizeListRelationFilter
   }, "id">
 
   export type ProgressiveDiscountStepOrderByWithAggregationInput = {
@@ -33237,6 +35809,125 @@ export namespace Prisma {
     discount?: IntNullableWithAggregatesFilter<"ProgressiveDiscountStep"> | number | null
     discountType?: EnumProgressiveDiscountStepTypeWithAggregatesFilter<"ProgressiveDiscountStep"> | $Enums.ProgressiveDiscountStepType
     progressiveDiscountId?: StringWithAggregatesFilter<"ProgressiveDiscountStep"> | string
+  }
+
+  export type ProgressiveDiscountPrizeWhereInput = {
+    AND?: ProgressiveDiscountPrizeWhereInput | ProgressiveDiscountPrizeWhereInput[]
+    OR?: ProgressiveDiscountPrizeWhereInput[]
+    NOT?: ProgressiveDiscountPrizeWhereInput | ProgressiveDiscountPrizeWhereInput[]
+    id?: StringFilter<"ProgressiveDiscountPrize"> | string
+    createdAt?: DateTimeFilter<"ProgressiveDiscountPrize"> | Date | string
+    name?: StringFilter<"ProgressiveDiscountPrize"> | string
+    quantity?: IntFilter<"ProgressiveDiscountPrize"> | number
+    imageUrl?: StringNullableFilter<"ProgressiveDiscountPrize"> | string | null
+    progressiveDiscountStepId?: StringFilter<"ProgressiveDiscountPrize"> | string
+    progressiveDiscountStep?: XOR<ProgressiveDiscountStepScalarRelationFilter, ProgressiveDiscountStepWhereInput>
+    products?: ProgressiveDiscountPrizeProductListRelationFilter
+  }
+
+  export type ProgressiveDiscountPrizeOrderByWithRelationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    name?: SortOrder
+    quantity?: SortOrder
+    imageUrl?: SortOrderInput | SortOrder
+    progressiveDiscountStepId?: SortOrder
+    progressiveDiscountStep?: ProgressiveDiscountStepOrderByWithRelationInput
+    products?: ProgressiveDiscountPrizeProductOrderByRelationAggregateInput
+  }
+
+  export type ProgressiveDiscountPrizeWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ProgressiveDiscountPrizeWhereInput | ProgressiveDiscountPrizeWhereInput[]
+    OR?: ProgressiveDiscountPrizeWhereInput[]
+    NOT?: ProgressiveDiscountPrizeWhereInput | ProgressiveDiscountPrizeWhereInput[]
+    createdAt?: DateTimeFilter<"ProgressiveDiscountPrize"> | Date | string
+    name?: StringFilter<"ProgressiveDiscountPrize"> | string
+    quantity?: IntFilter<"ProgressiveDiscountPrize"> | number
+    imageUrl?: StringNullableFilter<"ProgressiveDiscountPrize"> | string | null
+    progressiveDiscountStepId?: StringFilter<"ProgressiveDiscountPrize"> | string
+    progressiveDiscountStep?: XOR<ProgressiveDiscountStepScalarRelationFilter, ProgressiveDiscountStepWhereInput>
+    products?: ProgressiveDiscountPrizeProductListRelationFilter
+  }, "id">
+
+  export type ProgressiveDiscountPrizeOrderByWithAggregationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    name?: SortOrder
+    quantity?: SortOrder
+    imageUrl?: SortOrderInput | SortOrder
+    progressiveDiscountStepId?: SortOrder
+    _count?: ProgressiveDiscountPrizeCountOrderByAggregateInput
+    _avg?: ProgressiveDiscountPrizeAvgOrderByAggregateInput
+    _max?: ProgressiveDiscountPrizeMaxOrderByAggregateInput
+    _min?: ProgressiveDiscountPrizeMinOrderByAggregateInput
+    _sum?: ProgressiveDiscountPrizeSumOrderByAggregateInput
+  }
+
+  export type ProgressiveDiscountPrizeScalarWhereWithAggregatesInput = {
+    AND?: ProgressiveDiscountPrizeScalarWhereWithAggregatesInput | ProgressiveDiscountPrizeScalarWhereWithAggregatesInput[]
+    OR?: ProgressiveDiscountPrizeScalarWhereWithAggregatesInput[]
+    NOT?: ProgressiveDiscountPrizeScalarWhereWithAggregatesInput | ProgressiveDiscountPrizeScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ProgressiveDiscountPrize"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"ProgressiveDiscountPrize"> | Date | string
+    name?: StringWithAggregatesFilter<"ProgressiveDiscountPrize"> | string
+    quantity?: IntWithAggregatesFilter<"ProgressiveDiscountPrize"> | number
+    imageUrl?: StringNullableWithAggregatesFilter<"ProgressiveDiscountPrize"> | string | null
+    progressiveDiscountStepId?: StringWithAggregatesFilter<"ProgressiveDiscountPrize"> | string
+  }
+
+  export type ProgressiveDiscountPrizeProductWhereInput = {
+    AND?: ProgressiveDiscountPrizeProductWhereInput | ProgressiveDiscountPrizeProductWhereInput[]
+    OR?: ProgressiveDiscountPrizeProductWhereInput[]
+    NOT?: ProgressiveDiscountPrizeProductWhereInput | ProgressiveDiscountPrizeProductWhereInput[]
+    id?: StringFilter<"ProgressiveDiscountPrizeProduct"> | string
+    createdAt?: DateTimeFilter<"ProgressiveDiscountPrizeProduct"> | Date | string
+    prizeId?: StringFilter<"ProgressiveDiscountPrizeProduct"> | string
+    productId?: StringFilter<"ProgressiveDiscountPrizeProduct"> | string
+    prize?: XOR<ProgressiveDiscountPrizeScalarRelationFilter, ProgressiveDiscountPrizeWhereInput>
+    product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
+  }
+
+  export type ProgressiveDiscountPrizeProductOrderByWithRelationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    prizeId?: SortOrder
+    productId?: SortOrder
+    prize?: ProgressiveDiscountPrizeOrderByWithRelationInput
+    product?: ProductOrderByWithRelationInput
+  }
+
+  export type ProgressiveDiscountPrizeProductWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    prizeId_productId?: ProgressiveDiscountPrizeProductPrizeIdProductIdCompoundUniqueInput
+    AND?: ProgressiveDiscountPrizeProductWhereInput | ProgressiveDiscountPrizeProductWhereInput[]
+    OR?: ProgressiveDiscountPrizeProductWhereInput[]
+    NOT?: ProgressiveDiscountPrizeProductWhereInput | ProgressiveDiscountPrizeProductWhereInput[]
+    createdAt?: DateTimeFilter<"ProgressiveDiscountPrizeProduct"> | Date | string
+    prizeId?: StringFilter<"ProgressiveDiscountPrizeProduct"> | string
+    productId?: StringFilter<"ProgressiveDiscountPrizeProduct"> | string
+    prize?: XOR<ProgressiveDiscountPrizeScalarRelationFilter, ProgressiveDiscountPrizeWhereInput>
+    product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
+  }, "id" | "prizeId_productId">
+
+  export type ProgressiveDiscountPrizeProductOrderByWithAggregationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    prizeId?: SortOrder
+    productId?: SortOrder
+    _count?: ProgressiveDiscountPrizeProductCountOrderByAggregateInput
+    _max?: ProgressiveDiscountPrizeProductMaxOrderByAggregateInput
+    _min?: ProgressiveDiscountPrizeProductMinOrderByAggregateInput
+  }
+
+  export type ProgressiveDiscountPrizeProductScalarWhereWithAggregatesInput = {
+    AND?: ProgressiveDiscountPrizeProductScalarWhereWithAggregatesInput | ProgressiveDiscountPrizeProductScalarWhereWithAggregatesInput[]
+    OR?: ProgressiveDiscountPrizeProductScalarWhereWithAggregatesInput[]
+    NOT?: ProgressiveDiscountPrizeProductScalarWhereWithAggregatesInput | ProgressiveDiscountPrizeProductScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ProgressiveDiscountPrizeProduct"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"ProgressiveDiscountPrizeProduct"> | Date | string
+    prizeId?: StringWithAggregatesFilter<"ProgressiveDiscountPrizeProduct"> | string
+    productId?: StringWithAggregatesFilter<"ProgressiveDiscountPrizeProduct"> | string
   }
 
   export type FileWhereInput = {
@@ -33383,6 +36074,7 @@ export namespace Prisma {
     name?: StringFilter<"ModifierGroupItem"> | string
     price?: IntFilter<"ModifierGroupItem"> | number
     description?: StringNullableFilter<"ModifierGroupItem"> | string | null
+    translations?: JsonNullableFilter<"ModifierGroupItem">
     modifierGroupId?: StringNullableFilter<"ModifierGroupItem"> | string | null
     fileId?: StringNullableFilter<"ModifierGroupItem"> | string | null
     photo?: XOR<FileNullableScalarRelationFilter, FileWhereInput> | null
@@ -33397,6 +36089,7 @@ export namespace Prisma {
     name?: SortOrder
     price?: SortOrder
     description?: SortOrderInput | SortOrder
+    translations?: SortOrderInput | SortOrder
     modifierGroupId?: SortOrderInput | SortOrder
     fileId?: SortOrderInput | SortOrder
     photo?: FileOrderByWithRelationInput
@@ -33414,6 +36107,7 @@ export namespace Prisma {
     name?: StringFilter<"ModifierGroupItem"> | string
     price?: IntFilter<"ModifierGroupItem"> | number
     description?: StringNullableFilter<"ModifierGroupItem"> | string | null
+    translations?: JsonNullableFilter<"ModifierGroupItem">
     modifierGroupId?: StringNullableFilter<"ModifierGroupItem"> | string | null
     fileId?: StringNullableFilter<"ModifierGroupItem"> | string | null
     photo?: XOR<FileNullableScalarRelationFilter, FileWhereInput> | null
@@ -33428,6 +36122,7 @@ export namespace Prisma {
     name?: SortOrder
     price?: SortOrder
     description?: SortOrderInput | SortOrder
+    translations?: SortOrderInput | SortOrder
     modifierGroupId?: SortOrderInput | SortOrder
     fileId?: SortOrderInput | SortOrder
     _count?: ModifierGroupItemCountOrderByAggregateInput
@@ -33446,6 +36141,7 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"ModifierGroupItem"> | string
     price?: IntWithAggregatesFilter<"ModifierGroupItem"> | number
     description?: StringNullableWithAggregatesFilter<"ModifierGroupItem"> | string | null
+    translations?: JsonNullableWithAggregatesFilter<"ModifierGroupItem">
     modifierGroupId?: StringNullableWithAggregatesFilter<"ModifierGroupItem"> | string | null
     fileId?: StringNullableWithAggregatesFilter<"ModifierGroupItem"> | string | null
   }
@@ -33833,6 +36529,7 @@ export namespace Prisma {
     modifierGroups?: ModifierGroupListRelationFilter
     category?: XOR<CategoryNullableScalarRelationFilter, CategoryWhereInput> | null
     OrderProducts?: OrderProductsListRelationFilter
+    prizeProducts?: ProgressiveDiscountPrizeProductListRelationFilter
     preparationSteps?: PreparationStepListRelationFilter
   }
 
@@ -33849,6 +36546,7 @@ export namespace Prisma {
     modifierGroups?: ModifierGroupOrderByRelationAggregateInput
     category?: CategoryOrderByWithRelationInput
     OrderProducts?: OrderProductsOrderByRelationAggregateInput
+    prizeProducts?: ProgressiveDiscountPrizeProductOrderByRelationAggregateInput
     preparationSteps?: PreparationStepOrderByRelationAggregateInput
   }
 
@@ -33868,6 +36566,7 @@ export namespace Prisma {
     modifierGroups?: ModifierGroupListRelationFilter
     category?: XOR<CategoryNullableScalarRelationFilter, CategoryWhereInput> | null
     OrderProducts?: OrderProductsListRelationFilter
+    prizeProducts?: ProgressiveDiscountPrizeProductListRelationFilter
     preparationSteps?: PreparationStepListRelationFilter
   }, "id">
 
@@ -34300,11 +36999,13 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Order"> | Date | string
     paidAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     deliveredAt?: DateTimeNullableFilter<"Order"> | Date | string | null
+    dispatchOrderIndex?: IntNullableFilter<"Order"> | number | null
     amount?: IntFilter<"Order"> | number
     status?: EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
     type?: EnumOrderTypeFilter<"Order"> | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFilter<"Order"> | $Enums.PaymentType
     tipAmount?: IntNullableFilter<"Order"> | number | null
+    progressiveDiscountSnapshot?: JsonNullableFilter<"Order">
     customerId?: StringFilter<"Order"> | string
     externalId?: StringNullableFilter<"Order"> | string | null
     dispatchId?: StringNullableFilter<"Order"> | string | null
@@ -34324,11 +37025,13 @@ export namespace Prisma {
     createdAt?: SortOrder
     paidAt?: SortOrderInput | SortOrder
     deliveredAt?: SortOrderInput | SortOrder
+    dispatchOrderIndex?: SortOrderInput | SortOrder
     amount?: SortOrder
     status?: SortOrder
     type?: SortOrder
     paymentMethod?: SortOrder
     tipAmount?: SortOrderInput | SortOrder
+    progressiveDiscountSnapshot?: SortOrderInput | SortOrder
     customerId?: SortOrder
     externalId?: SortOrderInput | SortOrder
     dispatchId?: SortOrderInput | SortOrder
@@ -34351,11 +37054,13 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Order"> | Date | string
     paidAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     deliveredAt?: DateTimeNullableFilter<"Order"> | Date | string | null
+    dispatchOrderIndex?: IntNullableFilter<"Order"> | number | null
     amount?: IntFilter<"Order"> | number
     status?: EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
     type?: EnumOrderTypeFilter<"Order"> | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFilter<"Order"> | $Enums.PaymentType
     tipAmount?: IntNullableFilter<"Order"> | number | null
+    progressiveDiscountSnapshot?: JsonNullableFilter<"Order">
     customerId?: StringFilter<"Order"> | string
     externalId?: StringNullableFilter<"Order"> | string | null
     dispatchId?: StringNullableFilter<"Order"> | string | null
@@ -34375,11 +37080,13 @@ export namespace Prisma {
     createdAt?: SortOrder
     paidAt?: SortOrderInput | SortOrder
     deliveredAt?: SortOrderInput | SortOrder
+    dispatchOrderIndex?: SortOrderInput | SortOrder
     amount?: SortOrder
     status?: SortOrder
     type?: SortOrder
     paymentMethod?: SortOrder
     tipAmount?: SortOrderInput | SortOrder
+    progressiveDiscountSnapshot?: SortOrderInput | SortOrder
     customerId?: SortOrder
     externalId?: SortOrderInput | SortOrder
     dispatchId?: SortOrderInput | SortOrder
@@ -34401,11 +37108,13 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"Order"> | Date | string
     paidAt?: DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
     deliveredAt?: DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
+    dispatchOrderIndex?: IntNullableWithAggregatesFilter<"Order"> | number | null
     amount?: IntWithAggregatesFilter<"Order"> | number
     status?: EnumOrderStatusWithAggregatesFilter<"Order"> | $Enums.OrderStatus
     type?: EnumOrderTypeWithAggregatesFilter<"Order"> | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeWithAggregatesFilter<"Order"> | $Enums.PaymentType
     tipAmount?: IntNullableWithAggregatesFilter<"Order"> | number | null
+    progressiveDiscountSnapshot?: JsonNullableWithAggregatesFilter<"Order">
     customerId?: StringWithAggregatesFilter<"Order"> | string
     externalId?: StringNullableWithAggregatesFilter<"Order"> | string | null
     dispatchId?: StringNullableWithAggregatesFilter<"Order"> | string | null
@@ -34844,6 +37553,7 @@ export namespace Prisma {
     discount?: number | null
     discountType: $Enums.ProgressiveDiscountStepType
     progressiveDiscount: ProgressiveDiscountCreateNestedOneWithoutStepsInput
+    prizes?: ProgressiveDiscountPrizeCreateNestedManyWithoutProgressiveDiscountStepInput
   }
 
   export type ProgressiveDiscountStepUncheckedCreateInput = {
@@ -34853,6 +37563,7 @@ export namespace Prisma {
     discount?: number | null
     discountType: $Enums.ProgressiveDiscountStepType
     progressiveDiscountId: string
+    prizes?: ProgressiveDiscountPrizeUncheckedCreateNestedManyWithoutProgressiveDiscountStepInput
   }
 
   export type ProgressiveDiscountStepUpdateInput = {
@@ -34862,6 +37573,7 @@ export namespace Prisma {
     discount?: NullableIntFieldUpdateOperationsInput | number | null
     discountType?: EnumProgressiveDiscountStepTypeFieldUpdateOperationsInput | $Enums.ProgressiveDiscountStepType
     progressiveDiscount?: ProgressiveDiscountUpdateOneRequiredWithoutStepsNestedInput
+    prizes?: ProgressiveDiscountPrizeUpdateManyWithoutProgressiveDiscountStepNestedInput
   }
 
   export type ProgressiveDiscountStepUncheckedUpdateInput = {
@@ -34871,6 +37583,7 @@ export namespace Prisma {
     discount?: NullableIntFieldUpdateOperationsInput | number | null
     discountType?: EnumProgressiveDiscountStepTypeFieldUpdateOperationsInput | $Enums.ProgressiveDiscountStepType
     progressiveDiscountId?: StringFieldUpdateOperationsInput | string
+    prizes?: ProgressiveDiscountPrizeUncheckedUpdateManyWithoutProgressiveDiscountStepNestedInput
   }
 
   export type ProgressiveDiscountStepCreateManyInput = {
@@ -34897,6 +37610,119 @@ export namespace Prisma {
     discount?: NullableIntFieldUpdateOperationsInput | number | null
     discountType?: EnumProgressiveDiscountStepTypeFieldUpdateOperationsInput | $Enums.ProgressiveDiscountStepType
     progressiveDiscountId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ProgressiveDiscountPrizeCreateInput = {
+    id: string
+    createdAt?: Date | string
+    name: string
+    quantity?: number
+    imageUrl?: string | null
+    progressiveDiscountStep: ProgressiveDiscountStepCreateNestedOneWithoutPrizesInput
+    products?: ProgressiveDiscountPrizeProductCreateNestedManyWithoutPrizeInput
+  }
+
+  export type ProgressiveDiscountPrizeUncheckedCreateInput = {
+    id: string
+    createdAt?: Date | string
+    name: string
+    quantity?: number
+    imageUrl?: string | null
+    progressiveDiscountStepId: string
+    products?: ProgressiveDiscountPrizeProductUncheckedCreateNestedManyWithoutPrizeInput
+  }
+
+  export type ProgressiveDiscountPrizeUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    progressiveDiscountStep?: ProgressiveDiscountStepUpdateOneRequiredWithoutPrizesNestedInput
+    products?: ProgressiveDiscountPrizeProductUpdateManyWithoutPrizeNestedInput
+  }
+
+  export type ProgressiveDiscountPrizeUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    progressiveDiscountStepId?: StringFieldUpdateOperationsInput | string
+    products?: ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutPrizeNestedInput
+  }
+
+  export type ProgressiveDiscountPrizeCreateManyInput = {
+    id: string
+    createdAt?: Date | string
+    name: string
+    quantity?: number
+    imageUrl?: string | null
+    progressiveDiscountStepId: string
+  }
+
+  export type ProgressiveDiscountPrizeUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ProgressiveDiscountPrizeUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    progressiveDiscountStepId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ProgressiveDiscountPrizeProductCreateInput = {
+    id: string
+    createdAt?: Date | string
+    prize: ProgressiveDiscountPrizeCreateNestedOneWithoutProductsInput
+    product: ProductCreateNestedOneWithoutPrizeProductsInput
+  }
+
+  export type ProgressiveDiscountPrizeProductUncheckedCreateInput = {
+    id: string
+    createdAt?: Date | string
+    prizeId: string
+    productId: string
+  }
+
+  export type ProgressiveDiscountPrizeProductUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    prize?: ProgressiveDiscountPrizeUpdateOneRequiredWithoutProductsNestedInput
+    product?: ProductUpdateOneRequiredWithoutPrizeProductsNestedInput
+  }
+
+  export type ProgressiveDiscountPrizeProductUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    prizeId?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ProgressiveDiscountPrizeProductCreateManyInput = {
+    id: string
+    createdAt?: Date | string
+    prizeId: string
+    productId: string
+  }
+
+  export type ProgressiveDiscountPrizeProductUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProgressiveDiscountPrizeProductUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    prizeId?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
   }
 
   export type FileCreateInput = {
@@ -35049,6 +37875,7 @@ export namespace Prisma {
     name: string
     price: number
     description?: string | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
     photo?: FileCreateNestedOneWithoutModifierGroupItemsInput
     modifierGroup?: ModifierGroupCreateNestedOneWithoutItemsInput
     preparationStepModifierTracks?: PreparationStepModifierTrackCreateNestedManyWithoutModifierGroupItemInput
@@ -35061,6 +37888,7 @@ export namespace Prisma {
     name: string
     price: number
     description?: string | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
     modifierGroupId?: string | null
     fileId?: string | null
     preparationStepModifierTracks?: PreparationStepModifierTrackUncheckedCreateNestedManyWithoutModifierGroupItemInput
@@ -35073,6 +37901,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     price?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
     photo?: FileUpdateOneWithoutModifierGroupItemsNestedInput
     modifierGroup?: ModifierGroupUpdateOneWithoutItemsNestedInput
     preparationStepModifierTracks?: PreparationStepModifierTrackUpdateManyWithoutModifierGroupItemNestedInput
@@ -35085,6 +37914,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     price?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
     modifierGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     fileId?: NullableStringFieldUpdateOperationsInput | string | null
     preparationStepModifierTracks?: PreparationStepModifierTrackUncheckedUpdateManyWithoutModifierGroupItemNestedInput
@@ -35097,6 +37927,7 @@ export namespace Prisma {
     name: string
     price: number
     description?: string | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
     modifierGroupId?: string | null
     fileId?: string | null
   }
@@ -35107,6 +37938,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     price?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type ModifierGroupItemUncheckedUpdateManyInput = {
@@ -35115,6 +37947,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     price?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
     modifierGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     fileId?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -35519,6 +38352,7 @@ export namespace Prisma {
     modifierGroups?: ModifierGroupCreateNestedManyWithoutProductsInput
     category?: CategoryCreateNestedOneWithoutProductsInput
     OrderProducts?: OrderProductsCreateNestedManyWithoutProductInput
+    prizeProducts?: ProgressiveDiscountPrizeProductCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepCreateNestedManyWithoutProductsInput
   }
 
@@ -35534,6 +38368,7 @@ export namespace Prisma {
     photos?: FileUncheckedCreateNestedManyWithoutProductInput
     modifierGroups?: ModifierGroupUncheckedCreateNestedManyWithoutProductsInput
     OrderProducts?: OrderProductsUncheckedCreateNestedManyWithoutProductInput
+    prizeProducts?: ProgressiveDiscountPrizeProductUncheckedCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepUncheckedCreateNestedManyWithoutProductsInput
   }
 
@@ -35549,6 +38384,7 @@ export namespace Prisma {
     modifierGroups?: ModifierGroupUpdateManyWithoutProductsNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
     OrderProducts?: OrderProductsUpdateManyWithoutProductNestedInput
+    prizeProducts?: ProgressiveDiscountPrizeProductUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUpdateManyWithoutProductsNestedInput
   }
 
@@ -35564,6 +38400,7 @@ export namespace Prisma {
     photos?: FileUncheckedUpdateManyWithoutProductNestedInput
     modifierGroups?: ModifierGroupUncheckedUpdateManyWithoutProductsNestedInput
     OrderProducts?: OrderProductsUncheckedUpdateManyWithoutProductNestedInput
+    prizeProducts?: ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUncheckedUpdateManyWithoutProductsNestedInput
   }
 
@@ -36025,11 +38862,13 @@ export namespace Prisma {
     createdAt?: Date | string
     paidAt?: Date | string | null
     deliveredAt?: Date | string | null
+    dispatchOrderIndex?: number | null
     amount: number
     status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     tipAmount?: number | null
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
     externalId?: string | null
     customer: CustomerCreateNestedOneWithoutOrdersInput
     dispatch?: DispatchCreateNestedOneWithoutOrdersInput
@@ -36045,11 +38884,13 @@ export namespace Prisma {
     createdAt?: Date | string
     paidAt?: Date | string | null
     deliveredAt?: Date | string | null
+    dispatchOrderIndex?: number | null
     amount: number
     status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     tipAmount?: number | null
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
     customerId: string
     externalId?: string | null
     dispatchId?: string | null
@@ -36065,11 +38906,13 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
     customer?: CustomerUpdateOneRequiredWithoutOrdersNestedInput
     dispatch?: DispatchUpdateOneWithoutOrdersNestedInput
@@ -36085,11 +38928,13 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
     customerId?: StringFieldUpdateOperationsInput | string
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
     dispatchId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -36105,11 +38950,13 @@ export namespace Prisma {
     createdAt?: Date | string
     paidAt?: Date | string | null
     deliveredAt?: Date | string | null
+    dispatchOrderIndex?: number | null
     amount: number
     status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     tipAmount?: number | null
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
     customerId: string
     externalId?: string | null
     dispatchId?: string | null
@@ -36123,11 +38970,13 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -36137,11 +38986,13 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
     customerId?: StringFieldUpdateOperationsInput | string
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
     dispatchId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -36621,6 +39472,16 @@ export namespace Prisma {
     isNot?: ProgressiveDiscountWhereInput
   }
 
+  export type ProgressiveDiscountPrizeListRelationFilter = {
+    every?: ProgressiveDiscountPrizeWhereInput
+    some?: ProgressiveDiscountPrizeWhereInput
+    none?: ProgressiveDiscountPrizeWhereInput
+  }
+
+  export type ProgressiveDiscountPrizeOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type ProgressiveDiscountStepCountOrderByAggregateInput = {
     id?: SortOrder
     createdAt?: SortOrder
@@ -36682,6 +39543,92 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumProgressiveDiscountStepTypeFilter<$PrismaModel>
     _max?: NestedEnumProgressiveDiscountStepTypeFilter<$PrismaModel>
+  }
+
+  export type ProgressiveDiscountStepScalarRelationFilter = {
+    is?: ProgressiveDiscountStepWhereInput
+    isNot?: ProgressiveDiscountStepWhereInput
+  }
+
+  export type ProgressiveDiscountPrizeProductListRelationFilter = {
+    every?: ProgressiveDiscountPrizeProductWhereInput
+    some?: ProgressiveDiscountPrizeProductWhereInput
+    none?: ProgressiveDiscountPrizeProductWhereInput
+  }
+
+  export type ProgressiveDiscountPrizeProductOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ProgressiveDiscountPrizeCountOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    name?: SortOrder
+    quantity?: SortOrder
+    imageUrl?: SortOrder
+    progressiveDiscountStepId?: SortOrder
+  }
+
+  export type ProgressiveDiscountPrizeAvgOrderByAggregateInput = {
+    quantity?: SortOrder
+  }
+
+  export type ProgressiveDiscountPrizeMaxOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    name?: SortOrder
+    quantity?: SortOrder
+    imageUrl?: SortOrder
+    progressiveDiscountStepId?: SortOrder
+  }
+
+  export type ProgressiveDiscountPrizeMinOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    name?: SortOrder
+    quantity?: SortOrder
+    imageUrl?: SortOrder
+    progressiveDiscountStepId?: SortOrder
+  }
+
+  export type ProgressiveDiscountPrizeSumOrderByAggregateInput = {
+    quantity?: SortOrder
+  }
+
+  export type ProgressiveDiscountPrizeScalarRelationFilter = {
+    is?: ProgressiveDiscountPrizeWhereInput
+    isNot?: ProgressiveDiscountPrizeWhereInput
+  }
+
+  export type ProductScalarRelationFilter = {
+    is?: ProductWhereInput
+    isNot?: ProductWhereInput
+  }
+
+  export type ProgressiveDiscountPrizeProductPrizeIdProductIdCompoundUniqueInput = {
+    prizeId: string
+    productId: string
+  }
+
+  export type ProgressiveDiscountPrizeProductCountOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    prizeId?: SortOrder
+    productId?: SortOrder
+  }
+
+  export type ProgressiveDiscountPrizeProductMaxOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    prizeId?: SortOrder
+    productId?: SortOrder
+  }
+
+  export type ProgressiveDiscountPrizeProductMinOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    prizeId?: SortOrder
+    productId?: SortOrder
   }
 
   export type ProductNullableScalarRelationFilter = {
@@ -36790,6 +39737,29 @@ export namespace Prisma {
     _min?: NestedEnumModifierGroupTypeNullableFilter<$PrismaModel>
     _max?: NestedEnumModifierGroupTypeNullableFilter<$PrismaModel>
   }
+  export type JsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
 
   export type FileNullableScalarRelationFilter = {
     is?: FileWhereInput | null
@@ -36817,6 +39787,7 @@ export namespace Prisma {
     name?: SortOrder
     price?: SortOrder
     description?: SortOrder
+    translations?: SortOrder
     modifierGroupId?: SortOrder
     fileId?: SortOrder
   }
@@ -36848,6 +39819,32 @@ export namespace Prisma {
   export type ModifierGroupItemSumOrderByAggregateInput = {
     price?: SortOrder
   }
+  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedJsonNullableFilter<$PrismaModel>
+    _max?: NestedJsonNullableFilter<$PrismaModel>
+  }
 
   export type BranchListRelationFilter = {
     every?: BranchWhereInput
@@ -36875,29 +39872,6 @@ export namespace Prisma {
     id?: SortOrder
     createdAt?: SortOrder
     name?: SortOrder
-  }
-  export type JsonNullableFilter<$PrismaModel = never> =
-    | PatchUndefined<
-        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
-        Required<JsonNullableFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
-
-  export type JsonNullableFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string[]
-    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
   export type AddressNullableScalarRelationFilter = {
@@ -36933,32 +39907,6 @@ export namespace Prisma {
     name?: SortOrder
     addressId?: SortOrder
     businessId?: SortOrder
-  }
-  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
-    | PatchUndefined<
-        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
-        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
-
-  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string[]
-    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedJsonNullableFilter<$PrismaModel>
-    _max?: NestedJsonNullableFilter<$PrismaModel>
   }
 
   export type DispatchListRelationFilter = {
@@ -37495,11 +40443,13 @@ export namespace Prisma {
     createdAt?: SortOrder
     paidAt?: SortOrder
     deliveredAt?: SortOrder
+    dispatchOrderIndex?: SortOrder
     amount?: SortOrder
     status?: SortOrder
     type?: SortOrder
     paymentMethod?: SortOrder
     tipAmount?: SortOrder
+    progressiveDiscountSnapshot?: SortOrder
     customerId?: SortOrder
     externalId?: SortOrder
     dispatchId?: SortOrder
@@ -37508,6 +40458,7 @@ export namespace Prisma {
   }
 
   export type OrderAvgOrderByAggregateInput = {
+    dispatchOrderIndex?: SortOrder
     amount?: SortOrder
     tipAmount?: SortOrder
   }
@@ -37518,6 +40469,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     paidAt?: SortOrder
     deliveredAt?: SortOrder
+    dispatchOrderIndex?: SortOrder
     amount?: SortOrder
     status?: SortOrder
     type?: SortOrder
@@ -37536,6 +40488,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     paidAt?: SortOrder
     deliveredAt?: SortOrder
+    dispatchOrderIndex?: SortOrder
     amount?: SortOrder
     status?: SortOrder
     type?: SortOrder
@@ -37549,6 +40502,7 @@ export namespace Prisma {
   }
 
   export type OrderSumOrderByAggregateInput = {
+    dispatchOrderIndex?: SortOrder
     amount?: SortOrder
     tipAmount?: SortOrder
   }
@@ -37581,11 +40535,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumPaymentTypeFilter<$PrismaModel>
     _max?: NestedEnumPaymentTypeFilter<$PrismaModel>
-  }
-
-  export type ProductScalarRelationFilter = {
-    is?: ProductWhereInput
-    isNot?: ProductWhereInput
   }
 
   export type OrderNullableScalarRelationFilter = {
@@ -38016,6 +40965,20 @@ export namespace Prisma {
     connect?: ProgressiveDiscountWhereUniqueInput
   }
 
+  export type ProgressiveDiscountPrizeCreateNestedManyWithoutProgressiveDiscountStepInput = {
+    create?: XOR<ProgressiveDiscountPrizeCreateWithoutProgressiveDiscountStepInput, ProgressiveDiscountPrizeUncheckedCreateWithoutProgressiveDiscountStepInput> | ProgressiveDiscountPrizeCreateWithoutProgressiveDiscountStepInput[] | ProgressiveDiscountPrizeUncheckedCreateWithoutProgressiveDiscountStepInput[]
+    connectOrCreate?: ProgressiveDiscountPrizeCreateOrConnectWithoutProgressiveDiscountStepInput | ProgressiveDiscountPrizeCreateOrConnectWithoutProgressiveDiscountStepInput[]
+    createMany?: ProgressiveDiscountPrizeCreateManyProgressiveDiscountStepInputEnvelope
+    connect?: ProgressiveDiscountPrizeWhereUniqueInput | ProgressiveDiscountPrizeWhereUniqueInput[]
+  }
+
+  export type ProgressiveDiscountPrizeUncheckedCreateNestedManyWithoutProgressiveDiscountStepInput = {
+    create?: XOR<ProgressiveDiscountPrizeCreateWithoutProgressiveDiscountStepInput, ProgressiveDiscountPrizeUncheckedCreateWithoutProgressiveDiscountStepInput> | ProgressiveDiscountPrizeCreateWithoutProgressiveDiscountStepInput[] | ProgressiveDiscountPrizeUncheckedCreateWithoutProgressiveDiscountStepInput[]
+    connectOrCreate?: ProgressiveDiscountPrizeCreateOrConnectWithoutProgressiveDiscountStepInput | ProgressiveDiscountPrizeCreateOrConnectWithoutProgressiveDiscountStepInput[]
+    createMany?: ProgressiveDiscountPrizeCreateManyProgressiveDiscountStepInputEnvelope
+    connect?: ProgressiveDiscountPrizeWhereUniqueInput | ProgressiveDiscountPrizeWhereUniqueInput[]
+  }
+
   export type IntFieldUpdateOperationsInput = {
     set?: number
     increment?: number
@@ -38034,6 +40997,118 @@ export namespace Prisma {
     upsert?: ProgressiveDiscountUpsertWithoutStepsInput
     connect?: ProgressiveDiscountWhereUniqueInput
     update?: XOR<XOR<ProgressiveDiscountUpdateToOneWithWhereWithoutStepsInput, ProgressiveDiscountUpdateWithoutStepsInput>, ProgressiveDiscountUncheckedUpdateWithoutStepsInput>
+  }
+
+  export type ProgressiveDiscountPrizeUpdateManyWithoutProgressiveDiscountStepNestedInput = {
+    create?: XOR<ProgressiveDiscountPrizeCreateWithoutProgressiveDiscountStepInput, ProgressiveDiscountPrizeUncheckedCreateWithoutProgressiveDiscountStepInput> | ProgressiveDiscountPrizeCreateWithoutProgressiveDiscountStepInput[] | ProgressiveDiscountPrizeUncheckedCreateWithoutProgressiveDiscountStepInput[]
+    connectOrCreate?: ProgressiveDiscountPrizeCreateOrConnectWithoutProgressiveDiscountStepInput | ProgressiveDiscountPrizeCreateOrConnectWithoutProgressiveDiscountStepInput[]
+    upsert?: ProgressiveDiscountPrizeUpsertWithWhereUniqueWithoutProgressiveDiscountStepInput | ProgressiveDiscountPrizeUpsertWithWhereUniqueWithoutProgressiveDiscountStepInput[]
+    createMany?: ProgressiveDiscountPrizeCreateManyProgressiveDiscountStepInputEnvelope
+    set?: ProgressiveDiscountPrizeWhereUniqueInput | ProgressiveDiscountPrizeWhereUniqueInput[]
+    disconnect?: ProgressiveDiscountPrizeWhereUniqueInput | ProgressiveDiscountPrizeWhereUniqueInput[]
+    delete?: ProgressiveDiscountPrizeWhereUniqueInput | ProgressiveDiscountPrizeWhereUniqueInput[]
+    connect?: ProgressiveDiscountPrizeWhereUniqueInput | ProgressiveDiscountPrizeWhereUniqueInput[]
+    update?: ProgressiveDiscountPrizeUpdateWithWhereUniqueWithoutProgressiveDiscountStepInput | ProgressiveDiscountPrizeUpdateWithWhereUniqueWithoutProgressiveDiscountStepInput[]
+    updateMany?: ProgressiveDiscountPrizeUpdateManyWithWhereWithoutProgressiveDiscountStepInput | ProgressiveDiscountPrizeUpdateManyWithWhereWithoutProgressiveDiscountStepInput[]
+    deleteMany?: ProgressiveDiscountPrizeScalarWhereInput | ProgressiveDiscountPrizeScalarWhereInput[]
+  }
+
+  export type ProgressiveDiscountPrizeUncheckedUpdateManyWithoutProgressiveDiscountStepNestedInput = {
+    create?: XOR<ProgressiveDiscountPrizeCreateWithoutProgressiveDiscountStepInput, ProgressiveDiscountPrizeUncheckedCreateWithoutProgressiveDiscountStepInput> | ProgressiveDiscountPrizeCreateWithoutProgressiveDiscountStepInput[] | ProgressiveDiscountPrizeUncheckedCreateWithoutProgressiveDiscountStepInput[]
+    connectOrCreate?: ProgressiveDiscountPrizeCreateOrConnectWithoutProgressiveDiscountStepInput | ProgressiveDiscountPrizeCreateOrConnectWithoutProgressiveDiscountStepInput[]
+    upsert?: ProgressiveDiscountPrizeUpsertWithWhereUniqueWithoutProgressiveDiscountStepInput | ProgressiveDiscountPrizeUpsertWithWhereUniqueWithoutProgressiveDiscountStepInput[]
+    createMany?: ProgressiveDiscountPrizeCreateManyProgressiveDiscountStepInputEnvelope
+    set?: ProgressiveDiscountPrizeWhereUniqueInput | ProgressiveDiscountPrizeWhereUniqueInput[]
+    disconnect?: ProgressiveDiscountPrizeWhereUniqueInput | ProgressiveDiscountPrizeWhereUniqueInput[]
+    delete?: ProgressiveDiscountPrizeWhereUniqueInput | ProgressiveDiscountPrizeWhereUniqueInput[]
+    connect?: ProgressiveDiscountPrizeWhereUniqueInput | ProgressiveDiscountPrizeWhereUniqueInput[]
+    update?: ProgressiveDiscountPrizeUpdateWithWhereUniqueWithoutProgressiveDiscountStepInput | ProgressiveDiscountPrizeUpdateWithWhereUniqueWithoutProgressiveDiscountStepInput[]
+    updateMany?: ProgressiveDiscountPrizeUpdateManyWithWhereWithoutProgressiveDiscountStepInput | ProgressiveDiscountPrizeUpdateManyWithWhereWithoutProgressiveDiscountStepInput[]
+    deleteMany?: ProgressiveDiscountPrizeScalarWhereInput | ProgressiveDiscountPrizeScalarWhereInput[]
+  }
+
+  export type ProgressiveDiscountStepCreateNestedOneWithoutPrizesInput = {
+    create?: XOR<ProgressiveDiscountStepCreateWithoutPrizesInput, ProgressiveDiscountStepUncheckedCreateWithoutPrizesInput>
+    connectOrCreate?: ProgressiveDiscountStepCreateOrConnectWithoutPrizesInput
+    connect?: ProgressiveDiscountStepWhereUniqueInput
+  }
+
+  export type ProgressiveDiscountPrizeProductCreateNestedManyWithoutPrizeInput = {
+    create?: XOR<ProgressiveDiscountPrizeProductCreateWithoutPrizeInput, ProgressiveDiscountPrizeProductUncheckedCreateWithoutPrizeInput> | ProgressiveDiscountPrizeProductCreateWithoutPrizeInput[] | ProgressiveDiscountPrizeProductUncheckedCreateWithoutPrizeInput[]
+    connectOrCreate?: ProgressiveDiscountPrizeProductCreateOrConnectWithoutPrizeInput | ProgressiveDiscountPrizeProductCreateOrConnectWithoutPrizeInput[]
+    createMany?: ProgressiveDiscountPrizeProductCreateManyPrizeInputEnvelope
+    connect?: ProgressiveDiscountPrizeProductWhereUniqueInput | ProgressiveDiscountPrizeProductWhereUniqueInput[]
+  }
+
+  export type ProgressiveDiscountPrizeProductUncheckedCreateNestedManyWithoutPrizeInput = {
+    create?: XOR<ProgressiveDiscountPrizeProductCreateWithoutPrizeInput, ProgressiveDiscountPrizeProductUncheckedCreateWithoutPrizeInput> | ProgressiveDiscountPrizeProductCreateWithoutPrizeInput[] | ProgressiveDiscountPrizeProductUncheckedCreateWithoutPrizeInput[]
+    connectOrCreate?: ProgressiveDiscountPrizeProductCreateOrConnectWithoutPrizeInput | ProgressiveDiscountPrizeProductCreateOrConnectWithoutPrizeInput[]
+    createMany?: ProgressiveDiscountPrizeProductCreateManyPrizeInputEnvelope
+    connect?: ProgressiveDiscountPrizeProductWhereUniqueInput | ProgressiveDiscountPrizeProductWhereUniqueInput[]
+  }
+
+  export type ProgressiveDiscountStepUpdateOneRequiredWithoutPrizesNestedInput = {
+    create?: XOR<ProgressiveDiscountStepCreateWithoutPrizesInput, ProgressiveDiscountStepUncheckedCreateWithoutPrizesInput>
+    connectOrCreate?: ProgressiveDiscountStepCreateOrConnectWithoutPrizesInput
+    upsert?: ProgressiveDiscountStepUpsertWithoutPrizesInput
+    connect?: ProgressiveDiscountStepWhereUniqueInput
+    update?: XOR<XOR<ProgressiveDiscountStepUpdateToOneWithWhereWithoutPrizesInput, ProgressiveDiscountStepUpdateWithoutPrizesInput>, ProgressiveDiscountStepUncheckedUpdateWithoutPrizesInput>
+  }
+
+  export type ProgressiveDiscountPrizeProductUpdateManyWithoutPrizeNestedInput = {
+    create?: XOR<ProgressiveDiscountPrizeProductCreateWithoutPrizeInput, ProgressiveDiscountPrizeProductUncheckedCreateWithoutPrizeInput> | ProgressiveDiscountPrizeProductCreateWithoutPrizeInput[] | ProgressiveDiscountPrizeProductUncheckedCreateWithoutPrizeInput[]
+    connectOrCreate?: ProgressiveDiscountPrizeProductCreateOrConnectWithoutPrizeInput | ProgressiveDiscountPrizeProductCreateOrConnectWithoutPrizeInput[]
+    upsert?: ProgressiveDiscountPrizeProductUpsertWithWhereUniqueWithoutPrizeInput | ProgressiveDiscountPrizeProductUpsertWithWhereUniqueWithoutPrizeInput[]
+    createMany?: ProgressiveDiscountPrizeProductCreateManyPrizeInputEnvelope
+    set?: ProgressiveDiscountPrizeProductWhereUniqueInput | ProgressiveDiscountPrizeProductWhereUniqueInput[]
+    disconnect?: ProgressiveDiscountPrizeProductWhereUniqueInput | ProgressiveDiscountPrizeProductWhereUniqueInput[]
+    delete?: ProgressiveDiscountPrizeProductWhereUniqueInput | ProgressiveDiscountPrizeProductWhereUniqueInput[]
+    connect?: ProgressiveDiscountPrizeProductWhereUniqueInput | ProgressiveDiscountPrizeProductWhereUniqueInput[]
+    update?: ProgressiveDiscountPrizeProductUpdateWithWhereUniqueWithoutPrizeInput | ProgressiveDiscountPrizeProductUpdateWithWhereUniqueWithoutPrizeInput[]
+    updateMany?: ProgressiveDiscountPrizeProductUpdateManyWithWhereWithoutPrizeInput | ProgressiveDiscountPrizeProductUpdateManyWithWhereWithoutPrizeInput[]
+    deleteMany?: ProgressiveDiscountPrizeProductScalarWhereInput | ProgressiveDiscountPrizeProductScalarWhereInput[]
+  }
+
+  export type ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutPrizeNestedInput = {
+    create?: XOR<ProgressiveDiscountPrizeProductCreateWithoutPrizeInput, ProgressiveDiscountPrizeProductUncheckedCreateWithoutPrizeInput> | ProgressiveDiscountPrizeProductCreateWithoutPrizeInput[] | ProgressiveDiscountPrizeProductUncheckedCreateWithoutPrizeInput[]
+    connectOrCreate?: ProgressiveDiscountPrizeProductCreateOrConnectWithoutPrizeInput | ProgressiveDiscountPrizeProductCreateOrConnectWithoutPrizeInput[]
+    upsert?: ProgressiveDiscountPrizeProductUpsertWithWhereUniqueWithoutPrizeInput | ProgressiveDiscountPrizeProductUpsertWithWhereUniqueWithoutPrizeInput[]
+    createMany?: ProgressiveDiscountPrizeProductCreateManyPrizeInputEnvelope
+    set?: ProgressiveDiscountPrizeProductWhereUniqueInput | ProgressiveDiscountPrizeProductWhereUniqueInput[]
+    disconnect?: ProgressiveDiscountPrizeProductWhereUniqueInput | ProgressiveDiscountPrizeProductWhereUniqueInput[]
+    delete?: ProgressiveDiscountPrizeProductWhereUniqueInput | ProgressiveDiscountPrizeProductWhereUniqueInput[]
+    connect?: ProgressiveDiscountPrizeProductWhereUniqueInput | ProgressiveDiscountPrizeProductWhereUniqueInput[]
+    update?: ProgressiveDiscountPrizeProductUpdateWithWhereUniqueWithoutPrizeInput | ProgressiveDiscountPrizeProductUpdateWithWhereUniqueWithoutPrizeInput[]
+    updateMany?: ProgressiveDiscountPrizeProductUpdateManyWithWhereWithoutPrizeInput | ProgressiveDiscountPrizeProductUpdateManyWithWhereWithoutPrizeInput[]
+    deleteMany?: ProgressiveDiscountPrizeProductScalarWhereInput | ProgressiveDiscountPrizeProductScalarWhereInput[]
+  }
+
+  export type ProgressiveDiscountPrizeCreateNestedOneWithoutProductsInput = {
+    create?: XOR<ProgressiveDiscountPrizeCreateWithoutProductsInput, ProgressiveDiscountPrizeUncheckedCreateWithoutProductsInput>
+    connectOrCreate?: ProgressiveDiscountPrizeCreateOrConnectWithoutProductsInput
+    connect?: ProgressiveDiscountPrizeWhereUniqueInput
+  }
+
+  export type ProductCreateNestedOneWithoutPrizeProductsInput = {
+    create?: XOR<ProductCreateWithoutPrizeProductsInput, ProductUncheckedCreateWithoutPrizeProductsInput>
+    connectOrCreate?: ProductCreateOrConnectWithoutPrizeProductsInput
+    connect?: ProductWhereUniqueInput
+  }
+
+  export type ProgressiveDiscountPrizeUpdateOneRequiredWithoutProductsNestedInput = {
+    create?: XOR<ProgressiveDiscountPrizeCreateWithoutProductsInput, ProgressiveDiscountPrizeUncheckedCreateWithoutProductsInput>
+    connectOrCreate?: ProgressiveDiscountPrizeCreateOrConnectWithoutProductsInput
+    upsert?: ProgressiveDiscountPrizeUpsertWithoutProductsInput
+    connect?: ProgressiveDiscountPrizeWhereUniqueInput
+    update?: XOR<XOR<ProgressiveDiscountPrizeUpdateToOneWithWhereWithoutProductsInput, ProgressiveDiscountPrizeUpdateWithoutProductsInput>, ProgressiveDiscountPrizeUncheckedUpdateWithoutProductsInput>
+  }
+
+  export type ProductUpdateOneRequiredWithoutPrizeProductsNestedInput = {
+    create?: XOR<ProductCreateWithoutPrizeProductsInput, ProductUncheckedCreateWithoutPrizeProductsInput>
+    connectOrCreate?: ProductCreateOrConnectWithoutPrizeProductsInput
+    upsert?: ProductUpsertWithoutPrizeProductsInput
+    connect?: ProductWhereUniqueInput
+    update?: XOR<XOR<ProductUpdateToOneWithWhereWithoutPrizeProductsInput, ProductUpdateWithoutPrizeProductsInput>, ProductUncheckedUpdateWithoutPrizeProductsInput>
   }
 
   export type ProductCreateNestedOneWithoutPhotosInput = {
@@ -38572,6 +41647,13 @@ export namespace Prisma {
     connect?: OrderProductsWhereUniqueInput | OrderProductsWhereUniqueInput[]
   }
 
+  export type ProgressiveDiscountPrizeProductCreateNestedManyWithoutProductInput = {
+    create?: XOR<ProgressiveDiscountPrizeProductCreateWithoutProductInput, ProgressiveDiscountPrizeProductUncheckedCreateWithoutProductInput> | ProgressiveDiscountPrizeProductCreateWithoutProductInput[] | ProgressiveDiscountPrizeProductUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: ProgressiveDiscountPrizeProductCreateOrConnectWithoutProductInput | ProgressiveDiscountPrizeProductCreateOrConnectWithoutProductInput[]
+    createMany?: ProgressiveDiscountPrizeProductCreateManyProductInputEnvelope
+    connect?: ProgressiveDiscountPrizeProductWhereUniqueInput | ProgressiveDiscountPrizeProductWhereUniqueInput[]
+  }
+
   export type PreparationStepCreateNestedManyWithoutProductsInput = {
     create?: XOR<PreparationStepCreateWithoutProductsInput, PreparationStepUncheckedCreateWithoutProductsInput> | PreparationStepCreateWithoutProductsInput[] | PreparationStepUncheckedCreateWithoutProductsInput[]
     connectOrCreate?: PreparationStepCreateOrConnectWithoutProductsInput | PreparationStepCreateOrConnectWithoutProductsInput[]
@@ -38596,6 +41678,13 @@ export namespace Prisma {
     connectOrCreate?: OrderProductsCreateOrConnectWithoutProductInput | OrderProductsCreateOrConnectWithoutProductInput[]
     createMany?: OrderProductsCreateManyProductInputEnvelope
     connect?: OrderProductsWhereUniqueInput | OrderProductsWhereUniqueInput[]
+  }
+
+  export type ProgressiveDiscountPrizeProductUncheckedCreateNestedManyWithoutProductInput = {
+    create?: XOR<ProgressiveDiscountPrizeProductCreateWithoutProductInput, ProgressiveDiscountPrizeProductUncheckedCreateWithoutProductInput> | ProgressiveDiscountPrizeProductCreateWithoutProductInput[] | ProgressiveDiscountPrizeProductUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: ProgressiveDiscountPrizeProductCreateOrConnectWithoutProductInput | ProgressiveDiscountPrizeProductCreateOrConnectWithoutProductInput[]
+    createMany?: ProgressiveDiscountPrizeProductCreateManyProductInputEnvelope
+    connect?: ProgressiveDiscountPrizeProductWhereUniqueInput | ProgressiveDiscountPrizeProductWhereUniqueInput[]
   }
 
   export type PreparationStepUncheckedCreateNestedManyWithoutProductsInput = {
@@ -38655,6 +41744,20 @@ export namespace Prisma {
     deleteMany?: OrderProductsScalarWhereInput | OrderProductsScalarWhereInput[]
   }
 
+  export type ProgressiveDiscountPrizeProductUpdateManyWithoutProductNestedInput = {
+    create?: XOR<ProgressiveDiscountPrizeProductCreateWithoutProductInput, ProgressiveDiscountPrizeProductUncheckedCreateWithoutProductInput> | ProgressiveDiscountPrizeProductCreateWithoutProductInput[] | ProgressiveDiscountPrizeProductUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: ProgressiveDiscountPrizeProductCreateOrConnectWithoutProductInput | ProgressiveDiscountPrizeProductCreateOrConnectWithoutProductInput[]
+    upsert?: ProgressiveDiscountPrizeProductUpsertWithWhereUniqueWithoutProductInput | ProgressiveDiscountPrizeProductUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: ProgressiveDiscountPrizeProductCreateManyProductInputEnvelope
+    set?: ProgressiveDiscountPrizeProductWhereUniqueInput | ProgressiveDiscountPrizeProductWhereUniqueInput[]
+    disconnect?: ProgressiveDiscountPrizeProductWhereUniqueInput | ProgressiveDiscountPrizeProductWhereUniqueInput[]
+    delete?: ProgressiveDiscountPrizeProductWhereUniqueInput | ProgressiveDiscountPrizeProductWhereUniqueInput[]
+    connect?: ProgressiveDiscountPrizeProductWhereUniqueInput | ProgressiveDiscountPrizeProductWhereUniqueInput[]
+    update?: ProgressiveDiscountPrizeProductUpdateWithWhereUniqueWithoutProductInput | ProgressiveDiscountPrizeProductUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: ProgressiveDiscountPrizeProductUpdateManyWithWhereWithoutProductInput | ProgressiveDiscountPrizeProductUpdateManyWithWhereWithoutProductInput[]
+    deleteMany?: ProgressiveDiscountPrizeProductScalarWhereInput | ProgressiveDiscountPrizeProductScalarWhereInput[]
+  }
+
   export type PreparationStepUpdateManyWithoutProductsNestedInput = {
     create?: XOR<PreparationStepCreateWithoutProductsInput, PreparationStepUncheckedCreateWithoutProductsInput> | PreparationStepCreateWithoutProductsInput[] | PreparationStepUncheckedCreateWithoutProductsInput[]
     connectOrCreate?: PreparationStepCreateOrConnectWithoutProductsInput | PreparationStepCreateOrConnectWithoutProductsInput[]
@@ -38707,6 +41810,20 @@ export namespace Prisma {
     update?: OrderProductsUpdateWithWhereUniqueWithoutProductInput | OrderProductsUpdateWithWhereUniqueWithoutProductInput[]
     updateMany?: OrderProductsUpdateManyWithWhereWithoutProductInput | OrderProductsUpdateManyWithWhereWithoutProductInput[]
     deleteMany?: OrderProductsScalarWhereInput | OrderProductsScalarWhereInput[]
+  }
+
+  export type ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutProductNestedInput = {
+    create?: XOR<ProgressiveDiscountPrizeProductCreateWithoutProductInput, ProgressiveDiscountPrizeProductUncheckedCreateWithoutProductInput> | ProgressiveDiscountPrizeProductCreateWithoutProductInput[] | ProgressiveDiscountPrizeProductUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: ProgressiveDiscountPrizeProductCreateOrConnectWithoutProductInput | ProgressiveDiscountPrizeProductCreateOrConnectWithoutProductInput[]
+    upsert?: ProgressiveDiscountPrizeProductUpsertWithWhereUniqueWithoutProductInput | ProgressiveDiscountPrizeProductUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: ProgressiveDiscountPrizeProductCreateManyProductInputEnvelope
+    set?: ProgressiveDiscountPrizeProductWhereUniqueInput | ProgressiveDiscountPrizeProductWhereUniqueInput[]
+    disconnect?: ProgressiveDiscountPrizeProductWhereUniqueInput | ProgressiveDiscountPrizeProductWhereUniqueInput[]
+    delete?: ProgressiveDiscountPrizeProductWhereUniqueInput | ProgressiveDiscountPrizeProductWhereUniqueInput[]
+    connect?: ProgressiveDiscountPrizeProductWhereUniqueInput | ProgressiveDiscountPrizeProductWhereUniqueInput[]
+    update?: ProgressiveDiscountPrizeProductUpdateWithWhereUniqueWithoutProductInput | ProgressiveDiscountPrizeProductUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: ProgressiveDiscountPrizeProductUpdateManyWithWhereWithoutProductInput | ProgressiveDiscountPrizeProductUpdateManyWithWhereWithoutProductInput[]
+    deleteMany?: ProgressiveDiscountPrizeProductScalarWhereInput | ProgressiveDiscountPrizeProductScalarWhereInput[]
   }
 
   export type PreparationStepUncheckedUpdateManyWithoutProductsNestedInput = {
@@ -39740,6 +42857,7 @@ export namespace Prisma {
     modifierGroups?: ModifierGroupCreateNestedManyWithoutProductsInput
     category?: CategoryCreateNestedOneWithoutProductsInput
     OrderProducts?: OrderProductsCreateNestedManyWithoutProductInput
+    prizeProducts?: ProgressiveDiscountPrizeProductCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutPreparationStepsInput = {
@@ -39754,6 +42872,7 @@ export namespace Prisma {
     photos?: FileUncheckedCreateNestedManyWithoutProductInput
     modifierGroups?: ModifierGroupUncheckedCreateNestedManyWithoutProductsInput
     OrderProducts?: OrderProductsUncheckedCreateNestedManyWithoutProductInput
+    prizeProducts?: ProgressiveDiscountPrizeProductUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutPreparationStepsInput = {
@@ -39916,11 +43035,13 @@ export namespace Prisma {
     createdAt?: Date | string
     paidAt?: Date | string | null
     deliveredAt?: Date | string | null
+    dispatchOrderIndex?: number | null
     amount: number
     status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     tipAmount?: number | null
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
     externalId?: string | null
     customer: CustomerCreateNestedOneWithoutOrdersInput
     dispatch?: DispatchCreateNestedOneWithoutOrdersInput
@@ -39935,11 +43056,13 @@ export namespace Prisma {
     createdAt?: Date | string
     paidAt?: Date | string | null
     deliveredAt?: Date | string | null
+    dispatchOrderIndex?: number | null
     amount: number
     status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     tipAmount?: number | null
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
     customerId: string
     externalId?: string | null
     dispatchId?: string | null
@@ -40029,11 +43152,13 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
     customer?: CustomerUpdateOneRequiredWithoutOrdersNestedInput
     dispatch?: DispatchUpdateOneWithoutOrdersNestedInput
@@ -40048,11 +43173,13 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
     customerId?: StringFieldUpdateOperationsInput | string
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
     dispatchId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -40238,6 +43365,7 @@ export namespace Prisma {
     name: string
     price: number
     description?: string | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
     photo?: FileCreateNestedOneWithoutModifierGroupItemsInput
     modifierGroup?: ModifierGroupCreateNestedOneWithoutItemsInput
     orderProducts?: OrderProductsCreateNestedManyWithoutModifierGroupItemsInput
@@ -40249,6 +43377,7 @@ export namespace Prisma {
     name: string
     price: number
     description?: string | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
     modifierGroupId?: string | null
     fileId?: string | null
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutModifierGroupItemsInput
@@ -40303,6 +43432,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     price?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
     photo?: FileUpdateOneWithoutModifierGroupItemsNestedInput
     modifierGroup?: ModifierGroupUpdateOneWithoutItemsNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutModifierGroupItemsNestedInput
@@ -40314,6 +43444,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     price?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
     modifierGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     fileId?: NullableStringFieldUpdateOperationsInput | string | null
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutModifierGroupItemsNestedInput
@@ -40358,6 +43489,7 @@ export namespace Prisma {
     amount: number
     discount?: number | null
     discountType: $Enums.ProgressiveDiscountStepType
+    prizes?: ProgressiveDiscountPrizeCreateNestedManyWithoutProgressiveDiscountStepInput
   }
 
   export type ProgressiveDiscountStepUncheckedCreateWithoutProgressiveDiscountInput = {
@@ -40366,6 +43498,7 @@ export namespace Prisma {
     amount: number
     discount?: number | null
     discountType: $Enums.ProgressiveDiscountStepType
+    prizes?: ProgressiveDiscountPrizeUncheckedCreateNestedManyWithoutProgressiveDiscountStepInput
   }
 
   export type ProgressiveDiscountStepCreateOrConnectWithoutProgressiveDiscountInput = {
@@ -40423,6 +43556,34 @@ export namespace Prisma {
     create: XOR<ProgressiveDiscountCreateWithoutStepsInput, ProgressiveDiscountUncheckedCreateWithoutStepsInput>
   }
 
+  export type ProgressiveDiscountPrizeCreateWithoutProgressiveDiscountStepInput = {
+    id: string
+    createdAt?: Date | string
+    name: string
+    quantity?: number
+    imageUrl?: string | null
+    products?: ProgressiveDiscountPrizeProductCreateNestedManyWithoutPrizeInput
+  }
+
+  export type ProgressiveDiscountPrizeUncheckedCreateWithoutProgressiveDiscountStepInput = {
+    id: string
+    createdAt?: Date | string
+    name: string
+    quantity?: number
+    imageUrl?: string | null
+    products?: ProgressiveDiscountPrizeProductUncheckedCreateNestedManyWithoutPrizeInput
+  }
+
+  export type ProgressiveDiscountPrizeCreateOrConnectWithoutProgressiveDiscountStepInput = {
+    where: ProgressiveDiscountPrizeWhereUniqueInput
+    create: XOR<ProgressiveDiscountPrizeCreateWithoutProgressiveDiscountStepInput, ProgressiveDiscountPrizeUncheckedCreateWithoutProgressiveDiscountStepInput>
+  }
+
+  export type ProgressiveDiscountPrizeCreateManyProgressiveDiscountStepInputEnvelope = {
+    data: ProgressiveDiscountPrizeCreateManyProgressiveDiscountStepInput | ProgressiveDiscountPrizeCreateManyProgressiveDiscountStepInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ProgressiveDiscountUpsertWithoutStepsInput = {
     update: XOR<ProgressiveDiscountUpdateWithoutStepsInput, ProgressiveDiscountUncheckedUpdateWithoutStepsInput>
     create: XOR<ProgressiveDiscountCreateWithoutStepsInput, ProgressiveDiscountUncheckedCreateWithoutStepsInput>
@@ -40446,6 +43607,262 @@ export namespace Prisma {
     completed?: BoolFieldUpdateOperationsInput | boolean
   }
 
+  export type ProgressiveDiscountPrizeUpsertWithWhereUniqueWithoutProgressiveDiscountStepInput = {
+    where: ProgressiveDiscountPrizeWhereUniqueInput
+    update: XOR<ProgressiveDiscountPrizeUpdateWithoutProgressiveDiscountStepInput, ProgressiveDiscountPrizeUncheckedUpdateWithoutProgressiveDiscountStepInput>
+    create: XOR<ProgressiveDiscountPrizeCreateWithoutProgressiveDiscountStepInput, ProgressiveDiscountPrizeUncheckedCreateWithoutProgressiveDiscountStepInput>
+  }
+
+  export type ProgressiveDiscountPrizeUpdateWithWhereUniqueWithoutProgressiveDiscountStepInput = {
+    where: ProgressiveDiscountPrizeWhereUniqueInput
+    data: XOR<ProgressiveDiscountPrizeUpdateWithoutProgressiveDiscountStepInput, ProgressiveDiscountPrizeUncheckedUpdateWithoutProgressiveDiscountStepInput>
+  }
+
+  export type ProgressiveDiscountPrizeUpdateManyWithWhereWithoutProgressiveDiscountStepInput = {
+    where: ProgressiveDiscountPrizeScalarWhereInput
+    data: XOR<ProgressiveDiscountPrizeUpdateManyMutationInput, ProgressiveDiscountPrizeUncheckedUpdateManyWithoutProgressiveDiscountStepInput>
+  }
+
+  export type ProgressiveDiscountPrizeScalarWhereInput = {
+    AND?: ProgressiveDiscountPrizeScalarWhereInput | ProgressiveDiscountPrizeScalarWhereInput[]
+    OR?: ProgressiveDiscountPrizeScalarWhereInput[]
+    NOT?: ProgressiveDiscountPrizeScalarWhereInput | ProgressiveDiscountPrizeScalarWhereInput[]
+    id?: StringFilter<"ProgressiveDiscountPrize"> | string
+    createdAt?: DateTimeFilter<"ProgressiveDiscountPrize"> | Date | string
+    name?: StringFilter<"ProgressiveDiscountPrize"> | string
+    quantity?: IntFilter<"ProgressiveDiscountPrize"> | number
+    imageUrl?: StringNullableFilter<"ProgressiveDiscountPrize"> | string | null
+    progressiveDiscountStepId?: StringFilter<"ProgressiveDiscountPrize"> | string
+  }
+
+  export type ProgressiveDiscountStepCreateWithoutPrizesInput = {
+    id: string
+    createdAt?: Date | string
+    amount: number
+    discount?: number | null
+    discountType: $Enums.ProgressiveDiscountStepType
+    progressiveDiscount: ProgressiveDiscountCreateNestedOneWithoutStepsInput
+  }
+
+  export type ProgressiveDiscountStepUncheckedCreateWithoutPrizesInput = {
+    id: string
+    createdAt?: Date | string
+    amount: number
+    discount?: number | null
+    discountType: $Enums.ProgressiveDiscountStepType
+    progressiveDiscountId: string
+  }
+
+  export type ProgressiveDiscountStepCreateOrConnectWithoutPrizesInput = {
+    where: ProgressiveDiscountStepWhereUniqueInput
+    create: XOR<ProgressiveDiscountStepCreateWithoutPrizesInput, ProgressiveDiscountStepUncheckedCreateWithoutPrizesInput>
+  }
+
+  export type ProgressiveDiscountPrizeProductCreateWithoutPrizeInput = {
+    id: string
+    createdAt?: Date | string
+    product: ProductCreateNestedOneWithoutPrizeProductsInput
+  }
+
+  export type ProgressiveDiscountPrizeProductUncheckedCreateWithoutPrizeInput = {
+    id: string
+    createdAt?: Date | string
+    productId: string
+  }
+
+  export type ProgressiveDiscountPrizeProductCreateOrConnectWithoutPrizeInput = {
+    where: ProgressiveDiscountPrizeProductWhereUniqueInput
+    create: XOR<ProgressiveDiscountPrizeProductCreateWithoutPrizeInput, ProgressiveDiscountPrizeProductUncheckedCreateWithoutPrizeInput>
+  }
+
+  export type ProgressiveDiscountPrizeProductCreateManyPrizeInputEnvelope = {
+    data: ProgressiveDiscountPrizeProductCreateManyPrizeInput | ProgressiveDiscountPrizeProductCreateManyPrizeInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ProgressiveDiscountStepUpsertWithoutPrizesInput = {
+    update: XOR<ProgressiveDiscountStepUpdateWithoutPrizesInput, ProgressiveDiscountStepUncheckedUpdateWithoutPrizesInput>
+    create: XOR<ProgressiveDiscountStepCreateWithoutPrizesInput, ProgressiveDiscountStepUncheckedCreateWithoutPrizesInput>
+    where?: ProgressiveDiscountStepWhereInput
+  }
+
+  export type ProgressiveDiscountStepUpdateToOneWithWhereWithoutPrizesInput = {
+    where?: ProgressiveDiscountStepWhereInput
+    data: XOR<ProgressiveDiscountStepUpdateWithoutPrizesInput, ProgressiveDiscountStepUncheckedUpdateWithoutPrizesInput>
+  }
+
+  export type ProgressiveDiscountStepUpdateWithoutPrizesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    amount?: IntFieldUpdateOperationsInput | number
+    discount?: NullableIntFieldUpdateOperationsInput | number | null
+    discountType?: EnumProgressiveDiscountStepTypeFieldUpdateOperationsInput | $Enums.ProgressiveDiscountStepType
+    progressiveDiscount?: ProgressiveDiscountUpdateOneRequiredWithoutStepsNestedInput
+  }
+
+  export type ProgressiveDiscountStepUncheckedUpdateWithoutPrizesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    amount?: IntFieldUpdateOperationsInput | number
+    discount?: NullableIntFieldUpdateOperationsInput | number | null
+    discountType?: EnumProgressiveDiscountStepTypeFieldUpdateOperationsInput | $Enums.ProgressiveDiscountStepType
+    progressiveDiscountId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ProgressiveDiscountPrizeProductUpsertWithWhereUniqueWithoutPrizeInput = {
+    where: ProgressiveDiscountPrizeProductWhereUniqueInput
+    update: XOR<ProgressiveDiscountPrizeProductUpdateWithoutPrizeInput, ProgressiveDiscountPrizeProductUncheckedUpdateWithoutPrizeInput>
+    create: XOR<ProgressiveDiscountPrizeProductCreateWithoutPrizeInput, ProgressiveDiscountPrizeProductUncheckedCreateWithoutPrizeInput>
+  }
+
+  export type ProgressiveDiscountPrizeProductUpdateWithWhereUniqueWithoutPrizeInput = {
+    where: ProgressiveDiscountPrizeProductWhereUniqueInput
+    data: XOR<ProgressiveDiscountPrizeProductUpdateWithoutPrizeInput, ProgressiveDiscountPrizeProductUncheckedUpdateWithoutPrizeInput>
+  }
+
+  export type ProgressiveDiscountPrizeProductUpdateManyWithWhereWithoutPrizeInput = {
+    where: ProgressiveDiscountPrizeProductScalarWhereInput
+    data: XOR<ProgressiveDiscountPrizeProductUpdateManyMutationInput, ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutPrizeInput>
+  }
+
+  export type ProgressiveDiscountPrizeProductScalarWhereInput = {
+    AND?: ProgressiveDiscountPrizeProductScalarWhereInput | ProgressiveDiscountPrizeProductScalarWhereInput[]
+    OR?: ProgressiveDiscountPrizeProductScalarWhereInput[]
+    NOT?: ProgressiveDiscountPrizeProductScalarWhereInput | ProgressiveDiscountPrizeProductScalarWhereInput[]
+    id?: StringFilter<"ProgressiveDiscountPrizeProduct"> | string
+    createdAt?: DateTimeFilter<"ProgressiveDiscountPrizeProduct"> | Date | string
+    prizeId?: StringFilter<"ProgressiveDiscountPrizeProduct"> | string
+    productId?: StringFilter<"ProgressiveDiscountPrizeProduct"> | string
+  }
+
+  export type ProgressiveDiscountPrizeCreateWithoutProductsInput = {
+    id: string
+    createdAt?: Date | string
+    name: string
+    quantity?: number
+    imageUrl?: string | null
+    progressiveDiscountStep: ProgressiveDiscountStepCreateNestedOneWithoutPrizesInput
+  }
+
+  export type ProgressiveDiscountPrizeUncheckedCreateWithoutProductsInput = {
+    id: string
+    createdAt?: Date | string
+    name: string
+    quantity?: number
+    imageUrl?: string | null
+    progressiveDiscountStepId: string
+  }
+
+  export type ProgressiveDiscountPrizeCreateOrConnectWithoutProductsInput = {
+    where: ProgressiveDiscountPrizeWhereUniqueInput
+    create: XOR<ProgressiveDiscountPrizeCreateWithoutProductsInput, ProgressiveDiscountPrizeUncheckedCreateWithoutProductsInput>
+  }
+
+  export type ProductCreateWithoutPrizeProductsInput = {
+    id: string
+    createdAt?: Date | string
+    name: string
+    description?: string | null
+    price?: number | null
+    comparedAtPrice?: number | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
+    photos?: FileCreateNestedManyWithoutProductInput
+    modifierGroups?: ModifierGroupCreateNestedManyWithoutProductsInput
+    category?: CategoryCreateNestedOneWithoutProductsInput
+    OrderProducts?: OrderProductsCreateNestedManyWithoutProductInput
+    preparationSteps?: PreparationStepCreateNestedManyWithoutProductsInput
+  }
+
+  export type ProductUncheckedCreateWithoutPrizeProductsInput = {
+    id: string
+    createdAt?: Date | string
+    name: string
+    description?: string | null
+    price?: number | null
+    comparedAtPrice?: number | null
+    categoryId?: string | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
+    photos?: FileUncheckedCreateNestedManyWithoutProductInput
+    modifierGroups?: ModifierGroupUncheckedCreateNestedManyWithoutProductsInput
+    OrderProducts?: OrderProductsUncheckedCreateNestedManyWithoutProductInput
+    preparationSteps?: PreparationStepUncheckedCreateNestedManyWithoutProductsInput
+  }
+
+  export type ProductCreateOrConnectWithoutPrizeProductsInput = {
+    where: ProductWhereUniqueInput
+    create: XOR<ProductCreateWithoutPrizeProductsInput, ProductUncheckedCreateWithoutPrizeProductsInput>
+  }
+
+  export type ProgressiveDiscountPrizeUpsertWithoutProductsInput = {
+    update: XOR<ProgressiveDiscountPrizeUpdateWithoutProductsInput, ProgressiveDiscountPrizeUncheckedUpdateWithoutProductsInput>
+    create: XOR<ProgressiveDiscountPrizeCreateWithoutProductsInput, ProgressiveDiscountPrizeUncheckedCreateWithoutProductsInput>
+    where?: ProgressiveDiscountPrizeWhereInput
+  }
+
+  export type ProgressiveDiscountPrizeUpdateToOneWithWhereWithoutProductsInput = {
+    where?: ProgressiveDiscountPrizeWhereInput
+    data: XOR<ProgressiveDiscountPrizeUpdateWithoutProductsInput, ProgressiveDiscountPrizeUncheckedUpdateWithoutProductsInput>
+  }
+
+  export type ProgressiveDiscountPrizeUpdateWithoutProductsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    progressiveDiscountStep?: ProgressiveDiscountStepUpdateOneRequiredWithoutPrizesNestedInput
+  }
+
+  export type ProgressiveDiscountPrizeUncheckedUpdateWithoutProductsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    progressiveDiscountStepId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ProductUpsertWithoutPrizeProductsInput = {
+    update: XOR<ProductUpdateWithoutPrizeProductsInput, ProductUncheckedUpdateWithoutPrizeProductsInput>
+    create: XOR<ProductCreateWithoutPrizeProductsInput, ProductUncheckedCreateWithoutPrizeProductsInput>
+    where?: ProductWhereInput
+  }
+
+  export type ProductUpdateToOneWithWhereWithoutPrizeProductsInput = {
+    where?: ProductWhereInput
+    data: XOR<ProductUpdateWithoutPrizeProductsInput, ProductUncheckedUpdateWithoutPrizeProductsInput>
+  }
+
+  export type ProductUpdateWithoutPrizeProductsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: NullableIntFieldUpdateOperationsInput | number | null
+    comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
+    photos?: FileUpdateManyWithoutProductNestedInput
+    modifierGroups?: ModifierGroupUpdateManyWithoutProductsNestedInput
+    category?: CategoryUpdateOneWithoutProductsNestedInput
+    OrderProducts?: OrderProductsUpdateManyWithoutProductNestedInput
+    preparationSteps?: PreparationStepUpdateManyWithoutProductsNestedInput
+  }
+
+  export type ProductUncheckedUpdateWithoutPrizeProductsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: NullableIntFieldUpdateOperationsInput | number | null
+    comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
+    categoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
+    photos?: FileUncheckedUpdateManyWithoutProductNestedInput
+    modifierGroups?: ModifierGroupUncheckedUpdateManyWithoutProductsNestedInput
+    OrderProducts?: OrderProductsUncheckedUpdateManyWithoutProductNestedInput
+    preparationSteps?: PreparationStepUncheckedUpdateManyWithoutProductsNestedInput
+  }
+
   export type ProductCreateWithoutPhotosInput = {
     id: string
     createdAt?: Date | string
@@ -40457,6 +43874,7 @@ export namespace Prisma {
     modifierGroups?: ModifierGroupCreateNestedManyWithoutProductsInput
     category?: CategoryCreateNestedOneWithoutProductsInput
     OrderProducts?: OrderProductsCreateNestedManyWithoutProductInput
+    prizeProducts?: ProgressiveDiscountPrizeProductCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepCreateNestedManyWithoutProductsInput
   }
 
@@ -40471,6 +43889,7 @@ export namespace Prisma {
     translations?: NullableJsonNullValueInput | InputJsonValue
     modifierGroups?: ModifierGroupUncheckedCreateNestedManyWithoutProductsInput
     OrderProducts?: OrderProductsUncheckedCreateNestedManyWithoutProductInput
+    prizeProducts?: ProgressiveDiscountPrizeProductUncheckedCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepUncheckedCreateNestedManyWithoutProductsInput
   }
 
@@ -40485,6 +43904,7 @@ export namespace Prisma {
     name: string
     price: number
     description?: string | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
     modifierGroup?: ModifierGroupCreateNestedOneWithoutItemsInput
     preparationStepModifierTracks?: PreparationStepModifierTrackCreateNestedManyWithoutModifierGroupItemInput
     orderProducts?: OrderProductsCreateNestedManyWithoutModifierGroupItemsInput
@@ -40496,6 +43916,7 @@ export namespace Prisma {
     name: string
     price: number
     description?: string | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
     modifierGroupId?: string | null
     preparationStepModifierTracks?: PreparationStepModifierTrackUncheckedCreateNestedManyWithoutModifierGroupItemInput
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutModifierGroupItemsInput
@@ -40533,6 +43954,7 @@ export namespace Prisma {
     modifierGroups?: ModifierGroupUpdateManyWithoutProductsNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
     OrderProducts?: OrderProductsUpdateManyWithoutProductNestedInput
+    prizeProducts?: ProgressiveDiscountPrizeProductUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUpdateManyWithoutProductsNestedInput
   }
 
@@ -40547,6 +43969,7 @@ export namespace Prisma {
     translations?: NullableJsonNullValueInput | InputJsonValue
     modifierGroups?: ModifierGroupUncheckedUpdateManyWithoutProductsNestedInput
     OrderProducts?: OrderProductsUncheckedUpdateManyWithoutProductNestedInput
+    prizeProducts?: ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUncheckedUpdateManyWithoutProductsNestedInput
   }
 
@@ -40575,6 +43998,7 @@ export namespace Prisma {
     name?: StringFilter<"ModifierGroupItem"> | string
     price?: IntFilter<"ModifierGroupItem"> | number
     description?: StringNullableFilter<"ModifierGroupItem"> | string | null
+    translations?: JsonNullableFilter<"ModifierGroupItem">
     modifierGroupId?: StringNullableFilter<"ModifierGroupItem"> | string | null
     fileId?: StringNullableFilter<"ModifierGroupItem"> | string | null
   }
@@ -40590,6 +44014,7 @@ export namespace Prisma {
     photos?: FileCreateNestedManyWithoutProductInput
     category?: CategoryCreateNestedOneWithoutProductsInput
     OrderProducts?: OrderProductsCreateNestedManyWithoutProductInput
+    prizeProducts?: ProgressiveDiscountPrizeProductCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepCreateNestedManyWithoutProductsInput
   }
 
@@ -40604,6 +44029,7 @@ export namespace Prisma {
     translations?: NullableJsonNullValueInput | InputJsonValue
     photos?: FileUncheckedCreateNestedManyWithoutProductInput
     OrderProducts?: OrderProductsUncheckedCreateNestedManyWithoutProductInput
+    prizeProducts?: ProgressiveDiscountPrizeProductUncheckedCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepUncheckedCreateNestedManyWithoutProductsInput
   }
 
@@ -40618,6 +44044,7 @@ export namespace Prisma {
     name: string
     price: number
     description?: string | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
     photo?: FileCreateNestedOneWithoutModifierGroupItemsInput
     preparationStepModifierTracks?: PreparationStepModifierTrackCreateNestedManyWithoutModifierGroupItemInput
     orderProducts?: OrderProductsCreateNestedManyWithoutModifierGroupItemsInput
@@ -40629,6 +44056,7 @@ export namespace Prisma {
     name: string
     price: number
     description?: string | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
     fileId?: string | null
     preparationStepModifierTracks?: PreparationStepModifierTrackUncheckedCreateNestedManyWithoutModifierGroupItemInput
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutModifierGroupItemsInput
@@ -41113,11 +44541,13 @@ export namespace Prisma {
     createdAt?: Date | string
     paidAt?: Date | string | null
     deliveredAt?: Date | string | null
+    dispatchOrderIndex?: number | null
     amount: number
     status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     tipAmount?: number | null
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
     externalId?: string | null
     customer: CustomerCreateNestedOneWithoutOrdersInput
     address?: AddressCreateNestedOneWithoutOrdersInput
@@ -41132,11 +44562,13 @@ export namespace Prisma {
     createdAt?: Date | string
     paidAt?: Date | string | null
     deliveredAt?: Date | string | null
+    dispatchOrderIndex?: number | null
     amount: number
     status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     tipAmount?: number | null
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
     customerId: string
     externalId?: string | null
     addressId?: string | null
@@ -41207,11 +44639,13 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Order"> | Date | string
     paidAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     deliveredAt?: DateTimeNullableFilter<"Order"> | Date | string | null
+    dispatchOrderIndex?: IntNullableFilter<"Order"> | number | null
     amount?: IntFilter<"Order"> | number
     status?: EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
     type?: EnumOrderTypeFilter<"Order"> | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFilter<"Order"> | $Enums.PaymentType
     tipAmount?: IntNullableFilter<"Order"> | number | null
+    progressiveDiscountSnapshot?: JsonNullableFilter<"Order">
     customerId?: StringFilter<"Order"> | string
     externalId?: StringNullableFilter<"Order"> | string | null
     dispatchId?: StringNullableFilter<"Order"> | string | null
@@ -41246,11 +44680,13 @@ export namespace Prisma {
     createdAt?: Date | string
     paidAt?: Date | string | null
     deliveredAt?: Date | string | null
+    dispatchOrderIndex?: number | null
     amount: number
     status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     tipAmount?: number | null
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
     externalId?: string | null
     customer: CustomerCreateNestedOneWithoutOrdersInput
     dispatch?: DispatchCreateNestedOneWithoutOrdersInput
@@ -41265,11 +44701,13 @@ export namespace Prisma {
     createdAt?: Date | string
     paidAt?: Date | string | null
     deliveredAt?: Date | string | null
+    dispatchOrderIndex?: number | null
     amount: number
     status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     tipAmount?: number | null
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
     customerId: string
     externalId?: string | null
     dispatchId?: string | null
@@ -41439,6 +44877,28 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ProgressiveDiscountPrizeProductCreateWithoutProductInput = {
+    id: string
+    createdAt?: Date | string
+    prize: ProgressiveDiscountPrizeCreateNestedOneWithoutProductsInput
+  }
+
+  export type ProgressiveDiscountPrizeProductUncheckedCreateWithoutProductInput = {
+    id: string
+    createdAt?: Date | string
+    prizeId: string
+  }
+
+  export type ProgressiveDiscountPrizeProductCreateOrConnectWithoutProductInput = {
+    where: ProgressiveDiscountPrizeProductWhereUniqueInput
+    create: XOR<ProgressiveDiscountPrizeProductCreateWithoutProductInput, ProgressiveDiscountPrizeProductUncheckedCreateWithoutProductInput>
+  }
+
+  export type ProgressiveDiscountPrizeProductCreateManyProductInputEnvelope = {
+    data: ProgressiveDiscountPrizeProductCreateManyProductInput | ProgressiveDiscountPrizeProductCreateManyProductInput[]
+    skipDuplicates?: boolean
+  }
+
   export type PreparationStepCreateWithoutProductsInput = {
     id: string
     createdAt?: Date | string
@@ -41564,6 +45024,22 @@ export namespace Prisma {
     data: XOR<OrderProductsUpdateManyMutationInput, OrderProductsUncheckedUpdateManyWithoutProductInput>
   }
 
+  export type ProgressiveDiscountPrizeProductUpsertWithWhereUniqueWithoutProductInput = {
+    where: ProgressiveDiscountPrizeProductWhereUniqueInput
+    update: XOR<ProgressiveDiscountPrizeProductUpdateWithoutProductInput, ProgressiveDiscountPrizeProductUncheckedUpdateWithoutProductInput>
+    create: XOR<ProgressiveDiscountPrizeProductCreateWithoutProductInput, ProgressiveDiscountPrizeProductUncheckedCreateWithoutProductInput>
+  }
+
+  export type ProgressiveDiscountPrizeProductUpdateWithWhereUniqueWithoutProductInput = {
+    where: ProgressiveDiscountPrizeProductWhereUniqueInput
+    data: XOR<ProgressiveDiscountPrizeProductUpdateWithoutProductInput, ProgressiveDiscountPrizeProductUncheckedUpdateWithoutProductInput>
+  }
+
+  export type ProgressiveDiscountPrizeProductUpdateManyWithWhereWithoutProductInput = {
+    where: ProgressiveDiscountPrizeProductScalarWhereInput
+    data: XOR<ProgressiveDiscountPrizeProductUpdateManyMutationInput, ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutProductInput>
+  }
+
   export type PreparationStepUpsertWithWhereUniqueWithoutProductsInput = {
     where: PreparationStepWhereUniqueInput
     update: XOR<PreparationStepUpdateWithoutProductsInput, PreparationStepUncheckedUpdateWithoutProductsInput>
@@ -41591,6 +45067,7 @@ export namespace Prisma {
     photos?: FileCreateNestedManyWithoutProductInput
     modifierGroups?: ModifierGroupCreateNestedManyWithoutProductsInput
     OrderProducts?: OrderProductsCreateNestedManyWithoutProductInput
+    prizeProducts?: ProgressiveDiscountPrizeProductCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepCreateNestedManyWithoutProductsInput
   }
 
@@ -41605,6 +45082,7 @@ export namespace Prisma {
     photos?: FileUncheckedCreateNestedManyWithoutProductInput
     modifierGroups?: ModifierGroupUncheckedCreateNestedManyWithoutProductsInput
     OrderProducts?: OrderProductsUncheckedCreateNestedManyWithoutProductInput
+    prizeProducts?: ProgressiveDiscountPrizeProductUncheckedCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepUncheckedCreateNestedManyWithoutProductsInput
   }
 
@@ -41744,11 +45222,13 @@ export namespace Prisma {
     createdAt?: Date | string
     paidAt?: Date | string | null
     deliveredAt?: Date | string | null
+    dispatchOrderIndex?: number | null
     amount: number
     status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     tipAmount?: number | null
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
     externalId?: string | null
     dispatch?: DispatchCreateNestedOneWithoutOrdersInput
     address?: AddressCreateNestedOneWithoutOrdersInput
@@ -41763,11 +45243,13 @@ export namespace Prisma {
     createdAt?: Date | string
     paidAt?: Date | string | null
     deliveredAt?: Date | string | null
+    dispatchOrderIndex?: number | null
     amount: number
     status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     tipAmount?: number | null
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
     externalId?: string | null
     dispatchId?: string | null
     addressId?: string | null
@@ -41957,11 +45439,13 @@ export namespace Prisma {
     createdAt?: Date | string
     paidAt?: Date | string | null
     deliveredAt?: Date | string | null
+    dispatchOrderIndex?: number | null
     amount: number
     status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     tipAmount?: number | null
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
     externalId?: string | null
     customer: CustomerCreateNestedOneWithoutOrdersInput
     dispatch?: DispatchCreateNestedOneWithoutOrdersInput
@@ -41976,11 +45460,13 @@ export namespace Prisma {
     createdAt?: Date | string
     paidAt?: Date | string | null
     deliveredAt?: Date | string | null
+    dispatchOrderIndex?: number | null
     amount: number
     status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     tipAmount?: number | null
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
     customerId: string
     externalId?: string | null
     dispatchId?: string | null
@@ -42595,6 +46081,7 @@ export namespace Prisma {
     photos?: FileCreateNestedManyWithoutProductInput
     modifierGroups?: ModifierGroupCreateNestedManyWithoutProductsInput
     category?: CategoryCreateNestedOneWithoutProductsInput
+    prizeProducts?: ProgressiveDiscountPrizeProductCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepCreateNestedManyWithoutProductsInput
   }
 
@@ -42609,6 +46096,7 @@ export namespace Prisma {
     translations?: NullableJsonNullValueInput | InputJsonValue
     photos?: FileUncheckedCreateNestedManyWithoutProductInput
     modifierGroups?: ModifierGroupUncheckedCreateNestedManyWithoutProductsInput
+    prizeProducts?: ProgressiveDiscountPrizeProductUncheckedCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepUncheckedCreateNestedManyWithoutProductsInput
   }
 
@@ -42623,6 +46111,7 @@ export namespace Prisma {
     name: string
     price: number
     description?: string | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
     photo?: FileCreateNestedOneWithoutModifierGroupItemsInput
     modifierGroup?: ModifierGroupCreateNestedOneWithoutItemsInput
     preparationStepModifierTracks?: PreparationStepModifierTrackCreateNestedManyWithoutModifierGroupItemInput
@@ -42634,6 +46123,7 @@ export namespace Prisma {
     name: string
     price: number
     description?: string | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
     modifierGroupId?: string | null
     fileId?: string | null
     preparationStepModifierTracks?: PreparationStepModifierTrackUncheckedCreateNestedManyWithoutModifierGroupItemInput
@@ -42650,11 +46140,13 @@ export namespace Prisma {
     createdAt?: Date | string
     paidAt?: Date | string | null
     deliveredAt?: Date | string | null
+    dispatchOrderIndex?: number | null
     amount: number
     status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     tipAmount?: number | null
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
     externalId?: string | null
     customer: CustomerCreateNestedOneWithoutOrdersInput
     dispatch?: DispatchCreateNestedOneWithoutOrdersInput
@@ -42669,11 +46161,13 @@ export namespace Prisma {
     createdAt?: Date | string
     paidAt?: Date | string | null
     deliveredAt?: Date | string | null
+    dispatchOrderIndex?: number | null
     amount: number
     status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     tipAmount?: number | null
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
     customerId: string
     externalId?: string | null
     dispatchId?: string | null
@@ -42709,6 +46203,7 @@ export namespace Prisma {
     photos?: FileUpdateManyWithoutProductNestedInput
     modifierGroups?: ModifierGroupUpdateManyWithoutProductsNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
+    prizeProducts?: ProgressiveDiscountPrizeProductUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUpdateManyWithoutProductsNestedInput
   }
 
@@ -42723,6 +46218,7 @@ export namespace Prisma {
     translations?: NullableJsonNullValueInput | InputJsonValue
     photos?: FileUncheckedUpdateManyWithoutProductNestedInput
     modifierGroups?: ModifierGroupUncheckedUpdateManyWithoutProductsNestedInput
+    prizeProducts?: ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUncheckedUpdateManyWithoutProductsNestedInput
   }
 
@@ -42759,11 +46255,13 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
     customer?: CustomerUpdateOneRequiredWithoutOrdersNestedInput
     dispatch?: DispatchUpdateOneWithoutOrdersNestedInput
@@ -42778,11 +46276,13 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
     customerId?: StringFieldUpdateOperationsInput | string
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
     dispatchId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -42849,6 +46349,7 @@ export namespace Prisma {
     modifierGroups?: ModifierGroupUpdateManyWithoutProductsNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
     OrderProducts?: OrderProductsUpdateManyWithoutProductNestedInput
+    prizeProducts?: ProgressiveDiscountPrizeProductUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutPreparationStepsInput = {
@@ -42863,6 +46364,7 @@ export namespace Prisma {
     photos?: FileUncheckedUpdateManyWithoutProductNestedInput
     modifierGroups?: ModifierGroupUncheckedUpdateManyWithoutProductsNestedInput
     OrderProducts?: OrderProductsUncheckedUpdateManyWithoutProductNestedInput
+    prizeProducts?: ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateManyWithoutPreparationStepsInput = {
@@ -42992,6 +46494,7 @@ export namespace Prisma {
     amount?: IntFieldUpdateOperationsInput | number
     discount?: NullableIntFieldUpdateOperationsInput | number | null
     discountType?: EnumProgressiveDiscountStepTypeFieldUpdateOperationsInput | $Enums.ProgressiveDiscountStepType
+    prizes?: ProgressiveDiscountPrizeUpdateManyWithoutProgressiveDiscountStepNestedInput
   }
 
   export type ProgressiveDiscountStepUncheckedUpdateWithoutProgressiveDiscountInput = {
@@ -43000,6 +46503,7 @@ export namespace Prisma {
     amount?: IntFieldUpdateOperationsInput | number
     discount?: NullableIntFieldUpdateOperationsInput | number | null
     discountType?: EnumProgressiveDiscountStepTypeFieldUpdateOperationsInput | $Enums.ProgressiveDiscountStepType
+    prizes?: ProgressiveDiscountPrizeUncheckedUpdateManyWithoutProgressiveDiscountStepNestedInput
   }
 
   export type ProgressiveDiscountStepUncheckedUpdateManyWithoutProgressiveDiscountInput = {
@@ -43010,12 +46514,71 @@ export namespace Prisma {
     discountType?: EnumProgressiveDiscountStepTypeFieldUpdateOperationsInput | $Enums.ProgressiveDiscountStepType
   }
 
+  export type ProgressiveDiscountPrizeCreateManyProgressiveDiscountStepInput = {
+    id: string
+    createdAt?: Date | string
+    name: string
+    quantity?: number
+    imageUrl?: string | null
+  }
+
+  export type ProgressiveDiscountPrizeUpdateWithoutProgressiveDiscountStepInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    products?: ProgressiveDiscountPrizeProductUpdateManyWithoutPrizeNestedInput
+  }
+
+  export type ProgressiveDiscountPrizeUncheckedUpdateWithoutProgressiveDiscountStepInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    products?: ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutPrizeNestedInput
+  }
+
+  export type ProgressiveDiscountPrizeUncheckedUpdateManyWithoutProgressiveDiscountStepInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ProgressiveDiscountPrizeProductCreateManyPrizeInput = {
+    id: string
+    createdAt?: Date | string
+    productId: string
+  }
+
+  export type ProgressiveDiscountPrizeProductUpdateWithoutPrizeInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    product?: ProductUpdateOneRequiredWithoutPrizeProductsNestedInput
+  }
+
+  export type ProgressiveDiscountPrizeProductUncheckedUpdateWithoutPrizeInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    productId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutPrizeInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    productId?: StringFieldUpdateOperationsInput | string
+  }
+
   export type ModifierGroupItemCreateManyPhotoInput = {
     id: string
     createdAt?: Date | string
     name: string
     price: number
     description?: string | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
     modifierGroupId?: string | null
   }
 
@@ -43025,6 +46588,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     price?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
     modifierGroup?: ModifierGroupUpdateOneWithoutItemsNestedInput
     preparationStepModifierTracks?: PreparationStepModifierTrackUpdateManyWithoutModifierGroupItemNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutModifierGroupItemsNestedInput
@@ -43036,6 +46600,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     price?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
     modifierGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     preparationStepModifierTracks?: PreparationStepModifierTrackUncheckedUpdateManyWithoutModifierGroupItemNestedInput
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutModifierGroupItemsNestedInput
@@ -43047,6 +46612,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     price?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
     modifierGroupId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -43056,6 +46622,7 @@ export namespace Prisma {
     name: string
     price: number
     description?: string | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
     fileId?: string | null
   }
 
@@ -43070,6 +46637,7 @@ export namespace Prisma {
     photos?: FileUpdateManyWithoutProductNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
     OrderProducts?: OrderProductsUpdateManyWithoutProductNestedInput
+    prizeProducts?: ProgressiveDiscountPrizeProductUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUpdateManyWithoutProductsNestedInput
   }
 
@@ -43084,6 +46652,7 @@ export namespace Prisma {
     translations?: NullableJsonNullValueInput | InputJsonValue
     photos?: FileUncheckedUpdateManyWithoutProductNestedInput
     OrderProducts?: OrderProductsUncheckedUpdateManyWithoutProductNestedInput
+    prizeProducts?: ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUncheckedUpdateManyWithoutProductsNestedInput
   }
 
@@ -43104,6 +46673,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     price?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
     photo?: FileUpdateOneWithoutModifierGroupItemsNestedInput
     preparationStepModifierTracks?: PreparationStepModifierTrackUpdateManyWithoutModifierGroupItemNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutModifierGroupItemsNestedInput
@@ -43115,6 +46685,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     price?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
     fileId?: NullableStringFieldUpdateOperationsInput | string | null
     preparationStepModifierTracks?: PreparationStepModifierTrackUncheckedUpdateManyWithoutModifierGroupItemNestedInput
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutModifierGroupItemsNestedInput
@@ -43126,6 +46697,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     price?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
     fileId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -43266,11 +46838,13 @@ export namespace Prisma {
     createdAt?: Date | string
     paidAt?: Date | string | null
     deliveredAt?: Date | string | null
+    dispatchOrderIndex?: number | null
     amount: number
     status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     tipAmount?: number | null
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
     customerId: string
     externalId?: string | null
     addressId?: string | null
@@ -43283,11 +46857,13 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
     customer?: CustomerUpdateOneRequiredWithoutOrdersNestedInput
     address?: AddressUpdateOneWithoutOrdersNestedInput
@@ -43302,11 +46878,13 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
     customerId?: StringFieldUpdateOperationsInput | string
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -43321,11 +46899,13 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
     customerId?: StringFieldUpdateOperationsInput | string
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -43338,11 +46918,13 @@ export namespace Prisma {
     createdAt?: Date | string
     paidAt?: Date | string | null
     deliveredAt?: Date | string | null
+    dispatchOrderIndex?: number | null
     amount: number
     status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     tipAmount?: number | null
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
     customerId: string
     externalId?: string | null
     dispatchId?: string | null
@@ -43355,11 +46937,13 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
     customer?: CustomerUpdateOneRequiredWithoutOrdersNestedInput
     dispatch?: DispatchUpdateOneWithoutOrdersNestedInput
@@ -43374,11 +46958,13 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
     customerId?: StringFieldUpdateOperationsInput | string
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
     dispatchId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -43393,11 +46979,13 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
     customerId?: StringFieldUpdateOperationsInput | string
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
     dispatchId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -43420,6 +47008,12 @@ export namespace Prisma {
     fullAmount: number
     amount: number
     orderId?: string | null
+  }
+
+  export type ProgressiveDiscountPrizeProductCreateManyProductInput = {
+    id: string
+    createdAt?: Date | string
+    prizeId: string
   }
 
   export type FileUpdateWithoutProductInput = {
@@ -43512,6 +47106,24 @@ export namespace Prisma {
     orderId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type ProgressiveDiscountPrizeProductUpdateWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    prize?: ProgressiveDiscountPrizeUpdateOneRequiredWithoutProductsNestedInput
+  }
+
+  export type ProgressiveDiscountPrizeProductUncheckedUpdateWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    prizeId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    prizeId?: StringFieldUpdateOperationsInput | string
+  }
+
   export type PreparationStepUpdateWithoutProductsInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -43569,6 +47181,7 @@ export namespace Prisma {
     photos?: FileUpdateManyWithoutProductNestedInput
     modifierGroups?: ModifierGroupUpdateManyWithoutProductsNestedInput
     OrderProducts?: OrderProductsUpdateManyWithoutProductNestedInput
+    prizeProducts?: ProgressiveDiscountPrizeProductUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUpdateManyWithoutProductsNestedInput
   }
 
@@ -43583,6 +47196,7 @@ export namespace Prisma {
     photos?: FileUncheckedUpdateManyWithoutProductNestedInput
     modifierGroups?: ModifierGroupUncheckedUpdateManyWithoutProductsNestedInput
     OrderProducts?: OrderProductsUncheckedUpdateManyWithoutProductNestedInput
+    prizeProducts?: ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUncheckedUpdateManyWithoutProductsNestedInput
   }
 
@@ -43653,11 +47267,13 @@ export namespace Prisma {
     createdAt?: Date | string
     paidAt?: Date | string | null
     deliveredAt?: Date | string | null
+    dispatchOrderIndex?: number | null
     amount: number
     status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     tipAmount?: number | null
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
     externalId?: string | null
     dispatchId?: string | null
     addressId?: string | null
@@ -43693,11 +47309,13 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
     dispatch?: DispatchUpdateOneWithoutOrdersNestedInput
     address?: AddressUpdateOneWithoutOrdersNestedInput
@@ -43712,11 +47330,13 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
     dispatchId?: NullableStringFieldUpdateOperationsInput | string | null
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -43731,11 +47351,13 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
     dispatchId?: NullableStringFieldUpdateOperationsInput | string | null
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -43819,11 +47441,13 @@ export namespace Prisma {
     createdAt?: Date | string
     paidAt?: Date | string | null
     deliveredAt?: Date | string | null
+    dispatchOrderIndex?: number | null
     amount: number
     status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     tipAmount?: number | null
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
     customerId: string
     externalId?: string | null
     dispatchId?: string | null
@@ -43836,11 +47460,13 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
     customer?: CustomerUpdateOneRequiredWithoutOrdersNestedInput
     dispatch?: DispatchUpdateOneWithoutOrdersNestedInput
@@ -43855,11 +47481,13 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
     customerId?: StringFieldUpdateOperationsInput | string
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
     dispatchId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -43874,11 +47502,13 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
     customerId?: StringFieldUpdateOperationsInput | string
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
     dispatchId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -43991,6 +47621,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     price?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
     photo?: FileUpdateOneWithoutModifierGroupItemsNestedInput
     modifierGroup?: ModifierGroupUpdateOneWithoutItemsNestedInput
     preparationStepModifierTracks?: PreparationStepModifierTrackUpdateManyWithoutModifierGroupItemNestedInput
@@ -44002,6 +47633,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     price?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
     modifierGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     fileId?: NullableStringFieldUpdateOperationsInput | string | null
     preparationStepModifierTracks?: PreparationStepModifierTrackUncheckedUpdateManyWithoutModifierGroupItemNestedInput
@@ -44013,6 +47645,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     price?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
     modifierGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     fileId?: NullableStringFieldUpdateOperationsInput | string | null
   }

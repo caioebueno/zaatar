@@ -18,7 +18,6 @@ const getPendingOrderByCustomerId = async (
       orders."id",
       orders."number",
       CASE
-        WHEN orders."deliveredAt" IS NOT NULL THEN 'DELIVERED'
         WHEN EXISTS (
           SELECT 1
           FROM "Dispatch" dispatch
@@ -38,6 +37,7 @@ const getPendingOrderByCustomerId = async (
       orders."type"
     FROM "Order" orders
     WHERE orders."customerId" = ${customerId}
+      -- Pending order endpoint should only return non-delivered orders.
       AND orders."deliveredAt" IS NULL
     ORDER BY orders."createdAt" DESC
     LIMIT 1

@@ -22,6 +22,7 @@ import InformationModal from "./InformationModal";
 import text from "@/constants/text";
 import clsx from "clsx";
 import Image from "next/image";
+import Link from "next/link";
 
 export function findProductById(
   categories: TCategory[],
@@ -54,7 +55,27 @@ const MenuPage: React.FC<TMenuPage> = ({ data, lg }) => {
 
   const { addItem, cart } = useCart();
 
-  const content = text[lg];
+  const content = text[lg] || text["en"];
+  const languageOptions = [
+    {
+      code: "en",
+      label: "EN",
+      flagSrc: "/us.svg",
+      flagAlt: "United States flag",
+    },
+    {
+      code: "pt",
+      label: "PT",
+      flagSrc: "/portuguese.svg",
+      flagAlt: "Brazil flag",
+    },
+    {
+      code: "es",
+      label: "ES",
+      flagSrc: "/spanish.svg",
+      flagAlt: "Spanish flag",
+    },
+  ];
 
   useEffect(() => {
     const controller = new AbortController();
@@ -163,17 +184,45 @@ const MenuPage: React.FC<TMenuPage> = ({ data, lg }) => {
             className="h-[160px] w-full object-cover"
             alt=""
           />
+          <div className="absolute right-4 top-4 z-10 flex items-center gap-1 rounded-full border border-black/10 bg-white/90 p-1 shadow-sm backdrop-blur">
+            {languageOptions.map((language) => {
+              const active = lg === language.code;
+
+              return (
+                <Link
+                  key={language.code}
+                  href={`/menu/${language.code}`}
+                  aria-current={active ? "page" : undefined}
+                  className={clsx(
+                    "flex items-center gap-1 rounded-full px-2 py-1 text-[11px] font-semibold transition-colors",
+                    active
+                      ? "bg-[#142826] text-white"
+                      : "text-[#142826] hover:bg-[#E8EFEE]",
+                  )}
+                >
+                  <Image
+                    src={language.flagSrc}
+                    width={16}
+                    height={12}
+                    alt={language.flagAlt}
+                    className="rounded-[2px]"
+                  />
+                  <span>{language.label}</span>
+                </Link>
+              );
+            })}
+          </div>
           {isBranchOpen !== null && (
-            <div className="absolute left-4 top-4 flex flex-col gap-2">
+            <div className="absolute left-4 top-4 flex flex-col gap-0">
               <div
                 className={`w-fit rounded-full px-3 py-1 text-xs font-bold text-white shadow-sm ${
-                  isBranchOpen ? "bg-green-600" : "bg-red-600"
+                  isBranchOpen ? "bg-green-600" : "bg-red-600 rounded-b-none rounded-t-xl w-full flex justify-center items-center"
                 }`}
               >
                 {isBranchOpen ? content["open"] : content["closed"]}
               </div>
               {isBranchOpen === false && (
-                <div className="w-fit rounded-full bg-black/65 px-3 py-1.5 text-xs font-semibold text-white">
+                <div className="w-fit rounded-b-xl rounded-t-none bg-black/65 px-3 py-1.5 text-xs font-semibold text-white">
                   {content["orderForLater"]}
                 </div>
               )}
@@ -242,6 +291,7 @@ const MenuPage: React.FC<TMenuPage> = ({ data, lg }) => {
         lg={lg}
       />
       <ProductModal
+        key={selectedProduct?.id ?? "none"}
         product={selectedProduct}
         onClose={() => setSelectedProductId(null)}
         onAdd={addProduct}

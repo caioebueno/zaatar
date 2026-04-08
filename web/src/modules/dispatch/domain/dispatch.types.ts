@@ -37,3 +37,19 @@ export type UpdateDispatchStatusInput = {
   dispatched: boolean;
   dispatchAt?: string | null;
 };
+
+export type MoveDispatchOrderInput = {
+  orderId: string;
+  createNewDispatch?: boolean;
+  targetDispatchId?: string;
+  targetIndex?: number;
+};
+
+export type MoveDispatchOrderResult = {
+  orderId: string;
+  sourceDispatchId?: string;
+  targetDispatchId: string;
+  targetIndex: number;
+  createdDispatch: boolean;
+  sourceDispatchDeleted: boolean;
+};

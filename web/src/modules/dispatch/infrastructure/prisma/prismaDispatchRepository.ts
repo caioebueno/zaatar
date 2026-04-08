@@ -11,6 +11,8 @@ import type { DispatchRepository } from "../../domain/dispatch.repository";
 import type {
   CreateDispatchInput,
   Dispatch,
+  MoveDispatchOrderInput,
+  MoveDispatchOrderResult,
   UpdateDispatchInput,
   UpdateDispatchStatusInput,
 } from "../../domain/dispatch.types";
@@ -33,8 +35,11 @@ type DispatchOrderRow = {
   dispatchId: string;
   id: string;
   createdAt: Date;
+  scheduleFor: Date | null;
   paidAt: Date | null;
   deliveredAt: Date | null;
+  progressiveDiscountSnapshot: unknown | null;
+  dispatchOrderIndex: number | null;
   number: string | null;
   delivered: boolean;
   customerId: string;
@@ -121,6 +126,7 @@ type DispatchOrderProductRow = {
     name: string;
     price: number;
     description: string | null;
+    translations: unknown;
   }[];
 };
 
@@ -163,13 +169,24 @@ function mapDispatch(
       row.id,
       orderRows
         .filter((orderRow) => orderRow.dispatchId === row.id)
-        .map((orderRow) => ({
+        .map((orderRow, index) => ({
           id: orderRow.id,
           createdAt: orderRow.createdAt.toISOString(),
+          scheduleFor: orderRow.scheduleFor
+            ? orderRow.scheduleFor.toISOString()
+            : null,
           paidAt: orderRow.paidAt ? orderRow.paidAt.toISOString() : null,
+          ...(orderRow.progressiveDiscountSnapshot &&
+          typeof orderRow.progressiveDiscountSnapshot === "object"
+            ? {
+                progressiveDiscountSnapshot:
+                  orderRow.progressiveDiscountSnapshot as TOrder["progressiveDiscountSnapshot"],
+              }
+            : {}),
           ...(orderRow.deliveredAt
             ? { deliveredAt: orderRow.deliveredAt.toISOString() }
             : {}),
+          dispatchOrderIndex: orderRow.dispatchOrderIndex ?? index + 1,
           number: orderRow.number || undefined,
           delivered: orderRow.delivered,
           type: orderRow.type,
@@ -242,16 +259,46 @@ async function syncDispatchOrders(
 ): Promise<void> {
   await tx.$executeRaw`
     UPDATE "Order"
-    SET "dispatchId" = NULL
+    SET
+      "dispatchId" = NULL,
+      "dispatchOrderIndex" = NULL
     WHERE "dispatchId" = ${dispatchId}
   `;
 
   if (orderIds.length === 0) return;
 
+  for (const [index, orderId] of orderIds.entries()) {
+    await tx.$executeRaw`
+      UPDATE "Order"
+      SET
+        "dispatchId" = ${dispatchId},
+        "dispatchOrderIndex" = ${index + 1}
+      WHERE "id" = ${orderId}
+    `;
+  }
+}
+
+async function normalizeDispatchOrderIndexes(
+  tx: Prisma.TransactionClient,
+  dispatchId: string,
+): Promise<void> {
   await tx.$executeRaw`
-    UPDATE "Order"
-    SET "dispatchId" = ${dispatchId}
-    WHERE "id" IN (${Prisma.join(orderIds)})
+    WITH ranked_orders AS (
+      SELECT
+        orders."id",
+        ROW_NUMBER() OVER (
+          ORDER BY
+            COALESCE(orders."dispatchOrderIndex", 2147483647) ASC,
+            orders."createdAt" ASC,
+            orders."id" ASC
+        ) AS "nextIndex"
+      FROM "Order" orders
+      WHERE orders."dispatchId" = ${dispatchId}
+    )
+    UPDATE "Order" orders
+    SET "dispatchOrderIndex" = ranked_orders."nextIndex"
+    FROM ranked_orders
+    WHERE orders."id" = ranked_orders."id"
   `;
 }
 
@@ -267,8 +314,11 @@ async function getDispatchOrders(
       orders."dispatchId",
       orders."id",
       orders."createdAt",
+      orders."scheduleFor",
       orders."paidAt",
       orders."deliveredAt",
+      orders."progressiveDiscountSnapshot",
+      orders."dispatchOrderIndex",
       orders."number",
       (orders."deliveredAt" IS NOT NULL) AS "delivered",
       orders."customerId",
@@ -296,7 +346,9 @@ async function getDispatchOrders(
     LEFT JOIN "DeliveryAddress" deliveryAddress
       ON deliveryAddress."id" = orders."deliveryAddressId"
     WHERE orders."dispatchId" IN (${Prisma.join(dispatchIds)})
-    ORDER BY orders."createdAt" ASC
+    ORDER BY
+      orders."dispatchOrderIndex" ASC NULLS LAST,
+      orders."createdAt" ASC
   `;
 }
 
@@ -322,7 +374,7 @@ async function getDispatchOrderProducts(
     },
   });
 
-  const rows = orderProducts as DispatchOrderProductRow[];
+  const rows = orderProducts as unknown as DispatchOrderProductRow[];
   const orderProductsByOrderId = new Map<TOrder["id"], TOrder["orderProducts"]>();
 
   for (const row of rows) {
@@ -359,6 +411,15 @@ async function getDispatchOrderProducts(
         name: modifierItem.name,
         description: modifierItem.description || undefined,
         price: modifierItem.price,
+        translations:
+          modifierItem.translations &&
+          typeof modifierItem.translations === "object"
+            ? (modifierItem.translations as {
+                [key: string]: {
+                  [key: string]: string;
+                };
+              })
+            : undefined,
       })),
       amount: row.amount,
       fullAmount: row.fullAmount,
@@ -527,7 +588,13 @@ class PrismaDispatchRepository implements DispatchRepository {
   async assignOrder(dispatchId: string, orderId: string): Promise<void> {
     const [order] = await prisma.$queryRaw<{ id: string }[]>`
       UPDATE "Order"
-      SET "dispatchId" = ${dispatchId}
+      SET
+        "dispatchId" = ${dispatchId},
+        "dispatchOrderIndex" = (
+          SELECT COALESCE(MAX(existingOrders."dispatchOrderIndex"), 0) + 1
+          FROM "Order" existingOrders
+          WHERE existingOrders."dispatchId" = ${dispatchId}
+        )
       WHERE "id" = ${orderId}
       RETURNING "id"
     `;
@@ -642,6 +709,171 @@ class PrismaDispatchRepository implements DispatchRepository {
         SET "driverId" = ${selectedDriverId}
         WHERE "id" = ${dispatchId}
       `;
+    });
+  }
+
+  async moveOrder(
+    data: MoveDispatchOrderInput,
+  ): Promise<MoveDispatchOrderResult> {
+    return prisma.$transaction(async (tx) => {
+      const [order] = await tx.$queryRaw<
+        { id: string; dispatchId: string | null }[]
+      >`
+        SELECT "id", "dispatchId"
+        FROM "Order"
+        WHERE "id" = ${data.orderId}
+        LIMIT 1
+      `;
+
+      if (!order) {
+        throw {
+          code: "NOT_FOUND",
+          details: {
+            service: "ORDER",
+            id: data.orderId,
+          },
+        };
+      }
+
+      let targetDispatchId = data.targetDispatchId;
+      let createdDispatch = false;
+
+      if (data.createNewDispatch) {
+        targetDispatchId = randomUUID();
+        createdDispatch = true;
+
+        await tx.$executeRaw`
+          INSERT INTO "Dispatch" (
+            "id",
+            "dispatched",
+            "dispatchAt",
+            "driverId"
+          )
+          VALUES (
+            ${targetDispatchId},
+            false,
+            NULL,
+            NULL
+          )
+        `;
+      } else {
+        targetDispatchId = targetDispatchId || order.dispatchId || undefined;
+
+        if (!targetDispatchId) {
+          throw {
+            code: "INVALID_PARAMS",
+            details: {
+              field: "targetDispatchId",
+              message: "ORDER_IS_NOT_ASSIGNED_TO_DISPATCH",
+            },
+          };
+        }
+
+        const [targetDispatch] = await tx.$queryRaw<{ id: string }[]>`
+          SELECT "id"
+          FROM "Dispatch"
+          WHERE "id" = ${targetDispatchId}
+          LIMIT 1
+        `;
+
+        if (!targetDispatch) {
+          throw {
+            code: "NOT_FOUND",
+            details: {
+              service: "DISPATCH",
+              id: targetDispatchId,
+            },
+          };
+        }
+      }
+
+      const sourceDispatchId = order.dispatchId || undefined;
+
+      await tx.$executeRaw`
+        UPDATE "Order"
+        SET
+          "dispatchId" = NULL,
+          "dispatchOrderIndex" = NULL
+        WHERE "id" = ${data.orderId}
+      `;
+
+      if (sourceDispatchId) {
+        await normalizeDispatchOrderIndexes(tx, sourceDispatchId);
+      }
+
+      const [targetCountResult] = await tx.$queryRaw<
+        { count: bigint }[]
+      >`
+        SELECT COUNT(*)::BIGINT AS "count"
+        FROM "Order"
+        WHERE "dispatchId" = ${targetDispatchId}
+      `;
+
+      const targetOrderCount = Number(targetCountResult?.count ?? 0);
+      const insertIndex =
+        data.targetIndex === undefined
+          ? targetOrderCount + 1
+          : Math.max(1, Math.min(data.targetIndex, targetOrderCount + 1));
+
+      await tx.$executeRaw`
+        UPDATE "Order"
+        SET "dispatchOrderIndex" = "dispatchOrderIndex" + 1
+        WHERE "dispatchId" = ${targetDispatchId}
+          AND "dispatchOrderIndex" >= ${insertIndex}
+      `;
+
+      await tx.$executeRaw`
+        UPDATE "Order"
+        SET
+          "dispatchId" = ${targetDispatchId},
+          "dispatchOrderIndex" = ${insertIndex}
+        WHERE "id" = ${data.orderId}
+      `;
+
+      await normalizeDispatchOrderIndexes(tx, targetDispatchId);
+
+      const [movedOrder] = await tx.$queryRaw<
+        { dispatchOrderIndex: number | null }[]
+      >`
+        SELECT "dispatchOrderIndex"
+        FROM "Order"
+        WHERE "id" = ${data.orderId}
+        LIMIT 1
+      `;
+
+      let sourceDispatchDeleted = false;
+
+      if (
+        sourceDispatchId &&
+        sourceDispatchId !== targetDispatchId
+      ) {
+        const [sourceCountResult] = await tx.$queryRaw<
+          { count: bigint }[]
+        >`
+          SELECT COUNT(*)::BIGINT AS "count"
+          FROM "Order"
+          WHERE "dispatchId" = ${sourceDispatchId}
+        `;
+
+        const sourceOrderCount = Number(sourceCountResult?.count ?? 0);
+
+        if (sourceOrderCount === 0) {
+          await tx.$executeRaw`
+            DELETE FROM "Dispatch"
+            WHERE "id" = ${sourceDispatchId}
+          `;
+          sourceDispatchDeleted = true;
+        }
+      }
+
+      return {
+        orderId: data.orderId,
+        sourceDispatchId,
+        targetDispatchId,
+        targetIndex: movedOrder?.dispatchOrderIndex || insertIndex,
+        createdDispatch,
+        sourceDispatchDeleted,
+      };
     });
   }
 

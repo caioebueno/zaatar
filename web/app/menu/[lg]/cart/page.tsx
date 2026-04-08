@@ -15,7 +15,7 @@ const Cart: NextPage<{
 }> = async ({ params }) => {
   const data = await getProducts();
   const lg = (await params).lg;
-
+  console.log(data)
   return (
     <div className={`${montserrat.className} h-full`}>
       <CartList data={data} lg={lg} />

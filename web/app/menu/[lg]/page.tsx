@@ -15,7 +15,7 @@ const Menu: NextPage<{
 }> = async ({ params }) => {
   const categories = await getProducts();
   const lg = (await params).lg;
-  console.log(categories);
+
   return (
     <div
       className={`flex flex-col items-center text-text ${montserrat.className} relative`}

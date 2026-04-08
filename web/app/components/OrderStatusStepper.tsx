@@ -2,6 +2,7 @@
 
 import { TOrderStatus, TOrderType } from "@/src/types/order";
 import { useRouter } from "next/navigation";
+import { useTransition } from "react";
 import {
   FiCheckCircle,
   FiClock,
@@ -73,14 +74,18 @@ const OrderStatusStepper: React.FC<TOrderStatusStepper> = ({
   type,
 }) => {
   const router = useRouter();
+  const [isRefreshing, startRefreshTransition] = useTransition();
   const steps = type === "TAKEAWAY" ? takeawaySteps : deliverySteps;
   const activeStepIndex =
     type === "TAKEAWAY"
       ? getTakeawayStepIndex(status)
       : deliverySteps.findIndex((step) => step.status === status);
-  const orderTypeLabel =
-    type === "TAKEAWAY" ? content["takeAway"] : content["delivery"];
-    const orderTypeIcon =  type === "TAKEAWAY" ? <FiShoppingBag color="" /> : <FiTruck />
+
+  const handleRefreshStatus = () => {
+    startRefreshTransition(() => {
+      router.refresh();
+    });
+  };
 
   return (
     <div className="w-full max-w-[900px] px-4 pt-8 pb-6 flex flex-col gap-4">
@@ -122,19 +127,30 @@ const OrderStatusStepper: React.FC<TOrderStatusStepper> = ({
           })}
         </div>
         <div className="flex items-center justify-between gap-3 pb-2">
-          {/* <span className="text-base font-semibold text-lightText">
-            <div className="flex flex-row gap-2 items-center">
-              <div className="text-lightText text-xl">{orderTypeIcon}</div>
-               {orderTypeLabel}
-            </div>
-           
-          </span> */}
           <Button
-            onClick={() => router.refresh()}
-            className="bg-brandBackground py-3! px-3 text-base gap-2 flex-1"
+            onClick={handleRefreshStatus}
+            disabled={isRefreshing}
+            className="bg-brandBackground py-3! px-3 text-base gap-2 flex-1 disabled:opacity-85"
           >
-            <FiRefreshCw size={16} />
-            {content["refreshStatus"]}
+            <span className="relative flex items-center justify-center">
+              {isRefreshing && (
+                <span className="absolute h-6 w-6 rounded-full border border-white/40 animate-ping" />
+              )}
+              <FiRefreshCw
+                size={16}
+                className={isRefreshing ? "animate-spin" : ""}
+              />
+            </span>
+            <span className="flex items-center gap-1">
+              {content["refreshStatus"]}
+              {isRefreshing && (
+                <span className="flex items-center gap-0.5">
+                  <span className="h-1 w-1 rounded-full bg-white/85 animate-bounce [animation-delay:0ms]" />
+                  <span className="h-1 w-1 rounded-full bg-white/85 animate-bounce [animation-delay:150ms]" />
+                  <span className="h-1 w-1 rounded-full bg-white/85 animate-bounce [animation-delay:300ms]" />
+                </span>
+              )}
+            </span>
           </Button>
         </div>
         

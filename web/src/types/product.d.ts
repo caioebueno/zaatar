@@ -22,6 +22,9 @@ type TModifierGroup = {
   id: string;
   title: string;
   required: boolean;
+  type?: "MULTI" | "SINGLE" | null;
+  minSelection?: number | null;
+  maxSelection?: number | null;
   items: TModifierGroupItem[];
 };
 
@@ -30,6 +33,15 @@ type TModifierGroupItem = {
   name: string;
   description?: string;
   price: number;
+  photo?: {
+    id: string;
+    url: string;
+  };
+  translations?: {
+    [key: string]: {
+      [key: string]: string;
+    };
+  };
 };
 
 export default TProduct;

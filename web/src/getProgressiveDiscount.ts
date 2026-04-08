@@ -1,4 +1,9 @@
 import prisma from "../prisma";
+import { DEFAULT_PROGRESSIVE_DISCOUNT_ID } from "@/src/constants/progressiveDiscount";
+import {
+  mapProgressiveDiscountPrize,
+  progressiveDiscountPrizeInclude,
+} from "@/src/progressiveDiscountPrizeHelpers";
 import TProgressiveDiscount from "./types/progressiveDiscount";
 
 const getProgressiveDiscount =
@@ -6,11 +11,22 @@ const getProgressiveDiscount =
     const prismaProgressiveDiscount =
       await prisma.progressiveDiscount.findUnique({
         where: {
-          id: "bdbe5049-241f-4d93-8b88-ddeef5f34880",
+          id: DEFAULT_PROGRESSIVE_DISCOUNT_ID,
         },
-        select: {
-          id: true,
-          steps: true,
+        include: {
+          steps: {
+            orderBy: {
+              amount: "asc",
+            },
+            include: {
+              prizes: {
+                orderBy: {
+                  createdAt: "asc",
+                },
+                include: progressiveDiscountPrizeInclude,
+              },
+            },
+          },
         },
       });
     if (!prismaProgressiveDiscount) return null;
@@ -21,6 +37,7 @@ const getProgressiveDiscount =
         type: step.discountType,
         amount: step.amount || undefined,
         discount: step.discount || undefined,
+        prizes: step.prizes.map(mapProgressiveDiscountPrize),
       })),
     };
   };

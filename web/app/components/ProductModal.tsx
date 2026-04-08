@@ -1,10 +1,15 @@
-import { Dialog, DialogClose, DialogContent } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import TProduct, { TModifierGroupItem } from "../../src/types/product";
 import formatCurrency from "@/utils/formatCurrecy";
 import Button from "./Button";
 import ProductImage from "./ProductImage";
 import { FiArrowLeft, FiMinus, FiPlus, FiTrash2 } from "react-icons/fi";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { TSelectedModifier } from "@/types/cart";
 
 type TProductModal = {
@@ -30,16 +35,31 @@ const ProductModal: React.FC<TProductModal> = ({
   lg,
 }) => {
   const [quantity, setQuantity] = useState(1);
-  const [selectedModifier, setSelectedModifier] = useState<null | string>(null);
-  const [modifiers, setModifiers] = useState<TSelectedModifier[]>([]);
+  const [activeModifierGroupIndex, setActiveModifierGroupIndex] = useState<
+    number | null
+  >(null);
+  const [pendingModifiers, setPendingModifiers] = useState<TSelectedModifier[]>(
+    [],
+  );
   const [description, setDescription] = useState("");
+
+  const orderedModifierGroups = useMemo(
+    () =>
+      [...(product?.modifierGroups ?? [])].sort((a, b) => {
+        if (a.required === b.required) return 0;
+        return a.required ? -1 : 1;
+      }),
+    [product?.modifierGroups],
+  );
 
   const handleConfirm = () => {
     if (!product) return;
-    if (product.modifierGroups && product.modifierGroups.length > 0) {
-      const modiferGroup = product.modifierGroups[0];
-      setSelectedModifier(modiferGroup.id);
+    if (orderedModifierGroups.length > 0) {
+      setPendingModifiers([]);
+      setActiveModifierGroupIndex(0);
     } else {
+      setPendingModifiers([]);
+      setActiveModifierGroupIndex(null);
       onAdd(
         product.id,
         quantity,
@@ -52,27 +72,53 @@ const ProductModal: React.FC<TProductModal> = ({
   const handleClose = () => {
     setQuantity(1);
     setDescription("");
+    setActiveModifierGroupIndex(null);
+    setPendingModifiers([]);
     onClose();
   };
 
-  const handleModifier = (modifier: TSelectedModifier) => {
+  const handleModifier = (groupModifiers: TSelectedModifier[]) => {
     if (!product) return;
+    if (activeModifierGroupIndex === null) return;
+
+    const nextModifiers = [...pendingModifiers, ...groupModifiers];
+    const nextGroupIndex = activeModifierGroupIndex + 1;
+
+    if (nextGroupIndex < orderedModifierGroups.length) {
+      setPendingModifiers(nextModifiers);
+      setActiveModifierGroupIndex(nextGroupIndex);
+      return;
+    }
+
+    setPendingModifiers([]);
+    setActiveModifierGroupIndex(null);
     onAdd(
       product.id,
       quantity,
-      [modifier],
+      nextModifiers,
       description.length > 0 ? description : undefined,
     );
   };
 
   const productImageUrl = product?.photos?.[0]?.url ?? null;
+  const isProductModalOpen = product !== null;
+  const isModifierModalOpen =
+    isProductModalOpen && activeModifierGroupIndex !== null;
 
   return (
-    <Dialog open={product !== null} onOpenChange={handleClose}>
+    <Dialog
+      open={isProductModalOpen}
+      onOpenChange={(value) => {
+        if (!value) handleClose();
+      }}
+    >
       <DialogContent
         showCloseButton={false}
         className="w-full h-full p-0 bg-foreground transition-all"
       >
+        <DialogTitle className="sr-only">
+          {product ? product.name : "Product details"}
+        </DialogTitle>
         {product && (
           <div>
             <div className="flex flex-col lg:flex-row">
@@ -145,10 +191,25 @@ const ProductModal: React.FC<TProductModal> = ({
           </div>
         )}
         <ModifierModal
-          open={selectedModifier !== null}
-          onOpenChange={(value) => value === false && setSelectedModifier(null)}
+          key={orderedModifierGroups[activeModifierGroupIndex ?? -1]?.id || "none"}
+          open={isModifierModalOpen}
+          onOpenChange={(value) => {
+            if (value === false) {
+              setActiveModifierGroupIndex(null);
+              setPendingModifiers([]);
+            }
+          }}
           product={product}
-          modifierId={selectedModifier || undefined}
+          modifierId={
+            activeModifierGroupIndex !== null
+              ? orderedModifierGroups[activeModifierGroupIndex]?.id
+              : undefined
+          }
+          lg={lg}
+          hasNextModifierGroup={
+            activeModifierGroupIndex !== null &&
+            activeModifierGroupIndex < orderedModifierGroups.length - 1
+          }
           onConfirm={handleModifier}
         />
       </DialogContent>
@@ -160,8 +221,10 @@ type TModifierModal = {
   open: boolean;
   onOpenChange: (value: boolean) => void;
   modifierId?: string;
+  lg: string;
+  hasNextModifierGroup?: boolean;
   product: TProduct | null;
-  onConfirm: (value: TSelectedModifier) => void;
+  onConfirm: (value: TSelectedModifier[]) => void;
 };
 
 const ModifierModal: React.FC<TModifierModal> = ({
@@ -169,53 +232,120 @@ const ModifierModal: React.FC<TModifierModal> = ({
   open,
   product,
   modifierId,
+  lg,
+  hasNextModifierGroup,
   onConfirm,
 }) => {
-  const [selectedItem, setSelectedItem] = useState<null | string>(null);
+  const [selectedItemIds, setSelectedItemIds] = useState<string[]>([]);
 
   const modifierGroup = product?.modifierGroups?.find(
     (item) => item.id === modifierId,
   );
+  const isMulti = modifierGroup?.type === "MULTI";
+  const minSelection = modifierGroup?.minSelection ?? (modifierGroup?.required ? 1 : 0);
+  const maxSelection = isMulti ? modifierGroup?.maxSelection : 1;
 
-  const handleConfirm = () => {
-    if (!modifierId || !selectedItem) return;
-    onConfirm({
-      modifierId: modifierId,
-      modifierItemId: selectedItem,
+  const handleOpenChange = (nextOpen: boolean) => {
+    if (!nextOpen) {
+      setSelectedItemIds([]);
+    }
+    onOpenChange(nextOpen);
+  };
+
+  const toggleSelectedItem = (itemId: string) => {
+    setSelectedItemIds((currentIds) => {
+      const isSelected = currentIds.includes(itemId);
+
+      if (isMulti) {
+        if (isSelected) {
+          return currentIds.filter((id) => id !== itemId);
+        }
+
+        if (
+          typeof maxSelection === "number" &&
+          maxSelection > 0 &&
+          currentIds.length >= maxSelection
+        ) {
+          return currentIds;
+        }
+
+        return [...currentIds, itemId];
+      }
+
+      if (isSelected) {
+        return [];
+      }
+
+      return [itemId];
     });
   };
+
+  const handleConfirm = () => {
+    if (!modifierId) return;
+    if (selectedItemIds.length < minSelection) return;
+    onConfirm(
+      selectedItemIds.map((modifierItemId) => ({
+        modifierId,
+        modifierItemId,
+      })),
+    );
+  };
+
+  const handleSkip = () => {
+    if (minSelection > 0) return;
+    onConfirm([]);
+  };
+
+  const reachedMaxSelection =
+    typeof maxSelection === "number" &&
+    maxSelection > 0 &&
+    selectedItemIds.length >= maxSelection;
+
+  const canConfirm = selectedItemIds.length >= minSelection;
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent
         showCloseButton={false}
-        className="w-full h-full flex flex-col p-0 bg-foreground transition-all"
+        className="w-full h-full min-h-0 flex flex-col p-0 bg-foreground transition-all gap-0"
       >
+        <DialogTitle className="sr-only">
+          {modifierGroup?.title || "Modifier options"}
+        </DialogTitle>
         <div className="py-8 flex flex-col items-center">
           <span className="text-[22px] font-bold">
-            Do you want filled crust?
+            {modifierGroup?.title || "Select options"}
           </span>
         </div>
-        <div className="flex-1 px-4">
+        <div className="flex-1 min-h-0 overflow-y-auto px-4 pb-2">
           <div className="grid grid-cols-2 gap-3">
             {modifierGroup?.items.map((item) => (
               <ModifierItem
                 key={item.id}
                 modifierItem={item}
-                active={selectedItem === item.id}
-                onSelect={setSelectedItem}
+                active={selectedItemIds.includes(item.id)}
+                lg={lg}
+                disabled={reachedMaxSelection && !selectedItemIds.includes(item.id)}
+                onSelect={toggleSelectedItem}
               />
             ))}
           </div>
         </div>
         <div className="flex flex-row h-fit py-6 px-4 gap-3">
-          <Button className="bg-background! text-text! flex-1">
-            No, Thanks
-          </Button>
+          {!modifierGroup?.required && (
+            <Button
+              className="bg-background! text-text! flex-1 disabled:opacity-50"
+              onClick={handleSkip}
+            >
+              No, Thanks
+            </Button>
+          )}
           <Button
             onClick={handleConfirm}
-            className="bg-brandBackground py-2 flex-1"
+            disabled={!canConfirm}
+            className="bg-brandBackground py-2 flex-1 disabled:opacity-50"
           >
-            Add
+            {hasNextModifierGroup ? "Next" : "Add"}
           </Button>
         </div>
       </DialogContent>
@@ -227,19 +357,37 @@ type TModifierItemProps = {
   modifierItem: TModifierGroupItem;
   onSelect: (value: string) => void;
   active: boolean;
+  disabled?: boolean;
+  lg: string;
 };
 
 const ModifierItem: React.FC<TModifierItemProps> = ({
   modifierItem,
   active,
+  disabled,
+  lg,
   onSelect,
 }) => {
+  const label =
+    modifierItem.translations?.[lg]?.title ||
+    modifierItem.translations?.["en"]?.title ||
+    modifierItem.name;
+
   return (
     <div
-      className={`${active ? "border-brandBackground" : "border-background"} transition bg-background border-2 rounded-xl px-4 py-3 flex flex-col items-center`}
-      onClick={() => onSelect(modifierItem.id)}
+      className={`${active ? "border-brandBackground" : "border-background"} ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"} transition bg-background border-2 rounded-xl px-4 py-3 flex flex-col items-center gap-2`}
+      onClick={() => !disabled && onSelect(modifierItem.id)}
     >
-      <span className="font-bold text-[16px]">{modifierItem.name}</span>
+      {modifierItem.photo?.url && (
+        <ProductImage
+          src={modifierItem.photo.url}
+          alt={`${label} photo`}
+          className="w-full rounded-lg object-cover bg-white"
+          quality={80}
+          sizes="80px"
+        />
+      )}
+      <span className="font-bold text-[16px] text-center">{label}</span>
       <span className="font-bold text-[20px]">
         {formatCurrency(modifierItem.price)}
       </span>

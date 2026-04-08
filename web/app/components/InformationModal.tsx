@@ -90,6 +90,9 @@ const InformationModal: React.FC<TInformationModal> = ({
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Overlay className="bg-black/50 h-dvh w-dvw fixed top-0 left-0 z-40"></Dialog.Overlay>
       <Dialog.Content className="transition fixed bottom-0 left-1/2 z-50 grid w-full bg-white -translate-x-1/2 max-w-[900px] rounded-t-xl">
+        <Dialog.Title className="sr-only">
+          {content["information"]}
+        </Dialog.Title>
         <div className="px-4 py-3 flex flex-row justify-between w-full bg-foreground">
           <span className="font-bold">{content["information"]}</span>
           <Dialog.Close>

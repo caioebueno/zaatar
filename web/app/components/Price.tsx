@@ -20,6 +20,7 @@ import {
   FiTruck,
   FiX,
 } from "react-icons/fi";
+import { FaStar } from "react-icons/fa6";
 import { useRouter } from "next/navigation";
 import { findProductById } from "./MenuPage";
 import { calculateProductPriceWithProgressiveDiscount } from "@/utils/calculateProductPriceWithProgressiveDiscount";
@@ -27,7 +28,7 @@ import { QuantitySelector } from "./ProductModal";
 import { parseAsInteger, parseAsStringLiteral, useQueryState } from "nuqs";
 import PhoneInput, { PhoneValue } from "./PhoneInput";
 import getCustomerData from "../../src/getCustomerData";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import TCustomer from "../../src/types/customer";
 import TextInput from "./TextInput";
 import { Dialog } from "radix-ui";
@@ -35,11 +36,16 @@ import AddressAutocompleteInput, { TAddressValue } from "./AddressInput";
 import addNewDeliveryAddress from "../../src/addNewDeliveryAddress";
 import TAddress from "../../src/types/address";
 import updateCustomerName from "../../src/updateCustomerName";
-import { TOrder, TOrderType, TPaymentMethod } from "../../src/types/order";
+import {
+  TOrder,
+  TOrderProgressiveDiscountSnapshot,
+  TOrderType,
+  TPaymentMethod,
+} from "../../src/types/order";
 import createOrder from "../../src/createOrder";
 import Link from "next/link";
 import { Montserrat } from "next/font/google";
-import { TModifierGroup } from "@/src/types/product";
+import TProduct from "@/src/types/product";
 import type { TOperationHours } from "@/src/types/operationHours";
 import { weekDays, type WeekDay } from "@/src/modules/branch/domain/branch.types";
 import {
@@ -48,11 +54,237 @@ import {
   setStoredCustomerSession,
 } from "@/utils/customerSession";
 import text from "@/constants/text";
+import type { TProgressiveDiscountPrize } from "@/src/types/progressiveDiscount";
 
 const montserrat = Montserrat({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
+
+const formatDiscountOffLabel = (discountAmount: number) => {
+  const discountInDollars = discountAmount / 100;
+
+  if (discountInDollars < 1) {
+    return `$${discountInDollars.toFixed(2)} off`;
+  }
+
+  return `$${Math.floor(discountInDollars)} off`;
+};
+
+type TSummaryModifierItem = {
+  id: string;
+  title: string;
+  price: number;
+};
+
+type TSummaryModifierGroup = {
+  id: string;
+  title: string;
+  items: TSummaryModifierItem[];
+};
+
+const resolveModifierItemTitle = (
+  modifierItem: {
+    name: string;
+    translations?: {
+      [key: string]: {
+        [key: string]: string;
+      };
+    };
+  },
+  lg: string,
+) =>
+  modifierItem.translations?.[lg]?.title ||
+  modifierItem.translations?.["en"]?.title ||
+  modifierItem.name;
+
+const buildSelectedModifierGroupsFromCartItem = (
+  product: TProduct | null | undefined,
+  cartItem: TCartItem,
+  lg: string,
+): TSummaryModifierGroup[] =>
+  product?.modifierGroups
+    ?.map((modifierGroup) => {
+      const selectedModifierItems = cartItem.modifiers
+        ?.filter((modifier) => modifier.modifierId === modifierGroup.id)
+        .map((modifier) =>
+          modifierGroup.items.find(
+            (modifierItem) => modifierItem.id === modifier.modifierItemId,
+          ),
+        )
+        .filter((item): item is NonNullable<typeof item> => Boolean(item));
+
+      if (!selectedModifierItems || selectedModifierItems.length === 0) {
+        return null;
+      }
+
+      return {
+        id: modifierGroup.id,
+        title: modifierGroup.title,
+        items: selectedModifierItems.map((item) => ({
+          id: item.id,
+          title: resolveModifierItemTitle(item, lg),
+          price: item.price,
+        })),
+      };
+    })
+    .filter((group): group is TSummaryModifierGroup => Boolean(group)) || [];
+
+const buildSelectedModifierGroupsFromOrderProduct = (
+  orderProduct: TOrder["orderProducts"][number],
+  lg: string,
+  fallbackGroupTitle: string,
+): TSummaryModifierGroup[] => {
+  const selectedModifierItems = orderProduct.selectedModifierGroupItems || [];
+  if (selectedModifierItems.length === 0) return [];
+
+  const productModifierGroups = orderProduct.product?.modifierGroups || [];
+  if (productModifierGroups.length === 0) {
+    return [
+      {
+        id: `fallback-${orderProduct.id}`,
+        title: fallbackGroupTitle,
+        items: selectedModifierItems.map((item) => ({
+          id: item.id,
+          title: resolveModifierItemTitle(item, lg),
+          price: item.price,
+        })),
+      },
+    ];
+  }
+
+  return productModifierGroups
+    .map((modifierGroup) => {
+      const groupItems = selectedModifierItems
+        .filter((selectedItem) =>
+          modifierGroup.items.some((groupItem) => groupItem.id === selectedItem.id),
+        )
+        .map((item) => ({
+          id: item.id,
+          title: resolveModifierItemTitle(item, lg),
+          price: item.price,
+        }));
+
+      if (groupItems.length === 0) return null;
+
+      return {
+        id: modifierGroup.id,
+        title: modifierGroup.title,
+        items: groupItems,
+      };
+    })
+    .filter((group): group is TSummaryModifierGroup => Boolean(group));
+};
+
+const getPrizeImageUrl = (prize: TProgressiveDiscountPrize): string | null => {
+  if (prize.imageUrl) return prize.imageUrl;
+  return prize.products[0]?.photos?.[0]?.url || null;
+};
+
+const resolvePrizeProductTitle = (
+  prizeProduct: TProgressiveDiscountPrize["products"][number],
+  lg: string,
+) =>
+  prizeProduct.translations?.[lg]?.title ||
+  prizeProduct.translations?.["en"]?.title ||
+  prizeProduct.name;
+
+const getUniquePrizeProducts = (
+  prize: TProgressiveDiscountPrize,
+): TProgressiveDiscountPrize["products"] => {
+  const productMap = new Map<string, TProgressiveDiscountPrize["products"][number]>();
+
+  for (const product of prize.products) {
+    if (!productMap.has(product.id)) {
+      productMap.set(product.id, product);
+    }
+  }
+
+  return Array.from(productMap.values());
+};
+
+type TPrizeSummaryLineItem = {
+  id: string;
+  name: string;
+  quantity: number;
+};
+
+const buildPrizeSummaryLineItems = ({
+  availableProducts,
+  lg,
+  selectedProductCounts,
+  selectedProductIds,
+}: {
+  availableProducts: TProgressiveDiscountPrize["products"];
+  lg: string;
+  selectedProductCounts?: {
+    productId: string;
+    quantity: number;
+  }[];
+  selectedProductIds?: string[];
+}): TPrizeSummaryLineItem[] => {
+  const productById = new Map(
+    availableProducts.map((product) => [product.id, product]),
+  );
+  const productCountMap = new Map<string, number>();
+
+  if (selectedProductCounts && selectedProductCounts.length > 0) {
+    for (const selectedProduct of selectedProductCounts) {
+      if (selectedProduct.quantity <= 0) continue;
+      productCountMap.set(selectedProduct.productId, selectedProduct.quantity);
+    }
+  } else {
+    for (const productId of selectedProductIds || []) {
+      productCountMap.set(productId, (productCountMap.get(productId) || 0) + 1);
+    }
+  }
+
+  return Array.from(productCountMap.entries())
+    .map(([productId, quantity]) => {
+      if (quantity <= 0) return null;
+      const product = productById.get(productId);
+      if (!product) return null;
+
+      return {
+        id: productId,
+        name: resolvePrizeProductTitle(product, lg),
+        quantity,
+      };
+    })
+    .filter((item): item is TPrizeSummaryLineItem => Boolean(item));
+};
+
+const ModifierGroupsList: React.FC<{
+  modifierGroups: TSummaryModifierGroup[];
+}> = ({ modifierGroups }) => (
+  <>
+    {modifierGroups.map((modifierGroup) => (
+      <div key={modifierGroup.id} className="flex flex-col gap-0.5">
+        <span className="text-xs font-semibold text-lightText">
+          {modifierGroup.title}
+        </span>
+        <div className="flex min-w-0 flex-col gap-0.5">
+          {modifierGroup.items.map((modifierItem) => (
+            <div
+              key={modifierItem.id}
+              className="flex w-full min-w-0 items-center justify-between gap-2"
+            >
+              <span
+                title={modifierItem.title}
+                className="block min-w-0 flex-1 truncate text-xs font-medium text-lightText"
+              >
+                {modifierItem.title}
+              </span>
+              <span className="shrink-0 text-xs font-medium text-lightText">
+                {formatCurrency(modifierItem.price)}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    ))}
+  </>
+);
 
 type TPrice = {
   data: TGetProductsResponse;
@@ -71,7 +303,7 @@ const Price: React.FC<TPrice> = ({ data, cart, content }) => {
   const router = useRouter();
 
   return (
-    <div className="bg-foreground p-4 border-[#B9BFBF] border-b flex flex-row justify-between sticky top-[var(--menu-sticky-offset)]">
+    <div className="bg-foreground p-4 border-[#B9BFBF] border-b flex flex-row justify-between sticky top-[var(--menu-sticky-offset)] z-10">
       <Button
         onClick={() => router.back()}
         className="p-0! text-[16px] font-semibold text-text! bg-transparent flex flex-row gap-2 items-center"
@@ -79,12 +311,12 @@ const Price: React.FC<TPrice> = ({ data, cart, content }) => {
         <FiArrowLeft size={18} />
         <span>{content["back"]}</span>
       </Button>
-      <div className={`flex flex-row items-center gap-2.5`}>
+      <div className="flex flex-row items-center gap-2.5">
         <div>
           <div className="bg-[#CCD0D0] rounded-md">
-            {Math.floor(price.discountAmount / 100) !== 0 && (
+            {price.discountAmount > 0 && (
               <span className="text-xs font-semibold text-brandBackground py-1 px-1.5">
-                ${Math.floor(price.discountAmount / 100)} off
+                {formatDiscountOffLabel(price.discountAmount)}
               </span>
             )}
           </div>
@@ -305,8 +537,19 @@ function formatSelectedScheduleLabel(
   return `${selectedDay.label} - ${selectedTime.label}`;
 }
 
+function toScheduleForIsoString(
+  schedule: ScheduleSelection | null,
+): string | undefined {
+  if (!schedule) return undefined;
+
+  const parsedDate = new Date(`${schedule.date}T${schedule.time}:00`);
+  if (Number.isNaN(parsedDate.getTime())) return undefined;
+
+  return parsedDate.toISOString();
+}
+
 const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
-  const { cart, clearCart } = useCart();
+  const { cart, clearCart, setSelectedPrize } = useCart();
   const [step, setStep] = useQueryState("step", parseAsInteger.withDefault(1));
   const [orderType, setOrderType] = useQueryState(
     "orderType",
@@ -318,6 +561,8 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
   const [customer, setCustomer] = useState<TCustomer | null>(null);
   const [loading, setLoading] = useState(false);
   const [openSummaryModal, setOpenSummaryModal] = useState(false);
+  const [openPrizeModal, setOpenPrizeModal] = useState(false);
+  const [prizeBannerShakeSignal, setPrizeBannerShakeSignal] = useState(0);
   const [name, setName] = useState<null | string>(null);
   const [operationHours, setOperationHours] = useState<TOperationHours | null>(
     null,
@@ -366,6 +611,41 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
     cart,
     data.progressiveDiscount,
   );
+  const eligibleGiftStep = useMemo(
+    () =>
+      data.progressiveDiscount?.steps
+        .filter(
+          (step) =>
+            step.type === "GIFT" &&
+            typeof step.amount === "number" &&
+            price.fullPrice >= step.amount &&
+            Boolean(step.prizes?.length),
+        )
+        .sort((a, b) => (b.amount ?? 0) - (a.amount ?? 0))[0] || null,
+    [data.progressiveDiscount, price.fullPrice],
+  );
+  const availablePrizes = eligibleGiftStep?.prizes || [];
+  const prizeSelectionRequired = availablePrizes.length > 0;
+  const selectedPrizeId = cart.selectedPrize?.selectedPrizeId || null;
+  const selectedPrizeProductIdsByPrizeId =
+    cart.selectedPrize?.selectedProductIdsByPrizeId || {};
+  const selectedPrize =
+    availablePrizes.find((prize) => prize.id === selectedPrizeId) || null;
+  const selectedPrizeProductIds = selectedPrize
+    ? selectedPrizeProductIdsByPrizeId[selectedPrize.id] || []
+    : [];
+  const selectedPrizeRequiredSelectionCount = selectedPrize
+    ? Math.max(
+        0,
+        getUniquePrizeProducts(selectedPrize).length > 0
+          ? selectedPrize.quantity
+          : 0,
+      )
+    : 0;
+  const isSelectedPrizeReady =
+    !selectedPrize ||
+    selectedPrizeRequiredSelectionCount === 0 ||
+    selectedPrizeProductIds.length === selectedPrizeRequiredSelectionCount;
   const scheduleOptions = operationHours
     ? buildScheduleOptions(operationHours, new Date(), lg)
     : [];
@@ -380,6 +660,16 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
     price.discountedPrice +
     tipAmount;
   const orderTotal = price.discountedPrice + tipAmount + deliveryFee + taxAmount;
+
+  const handleServiceTypeSelection = (type: TOrderType) => {
+    if (prizeSelectionRequired && (!selectedPrize || !isSelectedPrizeReady)) {
+      setPrizeBannerShakeSignal((currentValue) => currentValue + 1);
+      return;
+    }
+
+    setStep(2);
+    setOrderType(type);
+  };
 
   useEffect(() => {
     if (!scheduledAt) return;
@@ -414,12 +704,20 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
 
       setScheduleError(null);
       setLoading(true);
+      const scheduleFor = toScheduleForIsoString(scheduledAt);
       const order = await createOrder({
         cart: cart,
         orderType,
         paymentMethod: paymentType,
         customerId: customer.id,
         addressId: selectedAddress || undefined,
+        scheduleFor,
+        selectedPrize: selectedPrize
+          ? {
+              prizeId: selectedPrize.id,
+              selectedProductIds: selectedPrizeProductIds,
+            }
+          : undefined,
         tipAmount: Number(selectedTip || 0),
       });
       clearCart();
@@ -467,9 +765,9 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
                   </div>
                   <div>
                     <div className="bg-[#CCD0D0] rounded-md">
-                      {Math.floor(price.discountAmount / 100) !== 0 && (
+                      {price.discountAmount > 0 && (
                         <span className="text-xs font-semibold text-brandBackground py-1 px-1.5">
-                          ${Math.floor(price.discountAmount / 100)} off
+                          {formatDiscountOffLabel(price.discountAmount)}
                         </span>
                       )}
                     </div>
@@ -576,7 +874,53 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
   return (
     <div>
       <Price cart={cart} data={data} content={content} />
-      <div className="py-6 px-4 flex flex-col gap-4 pb-55">
+      <div className="py-6 px-4 flex flex-col gap-6 pb-55">
+        {prizeSelectionRequired && (
+          <div
+            key={`prize-banner-${prizeBannerShakeSignal}`}
+            className="w-full"
+            style={
+              prizeBannerShakeSignal > 0
+                ? { animation: "cart-prize-banner-shake 420ms ease-in-out" }
+                : undefined
+            }
+          >
+            {selectedPrize ? (
+              <div className="w-full rounded-[12px] bg-[#E7E9E9] px-4 py-3 flex items-center gap-[10px]">
+                <ProductImage
+                  alt={selectedPrize.name}
+                  src={getPrizeImageUrl(selectedPrize)}
+                  className="h-[60px] w-[60px] shrink-0 rounded-[8px] object-cover"
+                />
+                <div className="min-w-0 flex-1">
+                  <span className="block truncate text-[18px] font-bold leading-[1.1] text-[#0C0C0C]">
+                    {selectedPrize.name}
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setOpenPrizeModal(true)}
+                  className="shrink-0 rounded-[8px] border border-[rgba(20,40,38,0.3)] bg-[#304240] px-4 py-3 text-[14px] font-bold leading-[1.1] text-white"
+                >
+                  {content["change"] || "Change"}
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setOpenPrizeModal(true)}
+                className="w-full rounded-[18px] border-2 border-dashed border-[#C4924C] bg-transparent px-[10px] py-4 text-left"
+              >
+                <div className="flex items-center justify-center gap-[10px]">
+                  <FaStar size={26} className="shrink-0 text-[#E0B11C]" />
+                  <span className="text-[20px] font-bold leading-none text-black">
+                    {content["chooseYourPrize"] || "Choose Your Prize"}
+                  </span>
+                </div>
+              </button>
+            )}
+          </div>
+        )}
         {cart.items.length > 0 ? (
           cart.items.map((item) => (
             <CartListItem
@@ -604,27 +948,350 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
           <span className="font-bold text-lg">{content["selectService"]}</span>
           <Button
             className="bg-brandBackground w-full py-2! gap-3"
-            onClick={() => {
-              setStep(2);
-              setOrderType("DELIVERY");
-            }}
+            onClick={() => handleServiceTypeSelection("DELIVERY")}
           >
             <FiTruck size={22} />
             <span className="text-lg">{content["delivery"]}</span>
           </Button>
           <Button
             className="bg-brandBackground w-full py-2! gap-3"
-            onClick={() => {
-              setStep(2);
-              setOrderType("TAKEAWAY");
-            }}
+            onClick={() => handleServiceTypeSelection("TAKEAWAY")}
           >
             <FiShoppingBag size={22} />
             <span className="text-lg">{content["takeAway"]}</span>
           </Button>
         </div>
       )}
+      {prizeSelectionRequired && (
+        <PrizeSelectionModal
+          key={`prize-modal-${openPrizeModal ? "open" : "closed"}-${selectedPrizeId ?? "none"}`}
+          content={content}
+          onOpenChange={setOpenPrizeModal}
+          onConfirmSelection={(payload) => {
+            setSelectedPrize({
+              selectedPrizeId: payload.prizeId,
+              selectedProductIdsByPrizeId: {
+                ...selectedPrizeProductIdsByPrizeId,
+                [payload.prizeId]: payload.productIds,
+              },
+            });
+          }}
+          lg={lg}
+          open={openPrizeModal}
+          initialSelectedProductIdsByPrizeId={selectedPrizeProductIdsByPrizeId}
+          prizes={availablePrizes}
+          selectedPrizeId={selectedPrizeId}
+        />
+      )}
+      <style jsx global>{`
+        @keyframes cart-prize-banner-shake {
+          0%,
+          100% {
+            transform: translateX(0);
+          }
+          20% {
+            transform: translateX(-8px);
+          }
+          40% {
+            transform: translateX(8px);
+          }
+          60% {
+            transform: translateX(-5px);
+          }
+          80% {
+            transform: translateX(5px);
+          }
+        }
+      `}</style>
     </div>
+  );
+};
+
+type TPrizeSelectionModal = {
+  content: {
+    [key: string]: string;
+  };
+  initialSelectedProductIdsByPrizeId: Record<string, string[]>;
+  lg: string;
+  onOpenChange: (value: boolean) => void;
+  onConfirmSelection: (payload: { prizeId: string; productIds: string[] }) => void;
+  open: boolean;
+  prizes: TProgressiveDiscountPrize[];
+  selectedPrizeId: string | null;
+};
+
+const PrizeSelectionModal: React.FC<TPrizeSelectionModal> = ({
+  content,
+  initialSelectedProductIdsByPrizeId,
+  lg,
+  onOpenChange,
+  onConfirmSelection,
+  open,
+  prizes,
+  selectedPrizeId,
+}) => {
+  const [pendingPrizeId, setPendingPrizeId] = useState<string | null>(
+    selectedPrizeId,
+  );
+  const [pendingSelectedProductIdsByPrizeId, setPendingSelectedProductIdsByPrizeId] =
+    useState<Record<string, string[]>>(initialSelectedProductIdsByPrizeId);
+
+  const pendingSelectedPrize =
+    prizes.find((prize) => prize.id === pendingPrizeId) || null;
+  const pendingSelectedPrizeProductIds = pendingPrizeId
+    ? pendingSelectedProductIdsByPrizeId[pendingPrizeId] || []
+    : [];
+  const pendingSelectedPrizeRequiredSelectionCount = pendingSelectedPrize
+    ? Math.max(
+        0,
+        getUniquePrizeProducts(pendingSelectedPrize).length > 0
+          ? pendingSelectedPrize.quantity
+          : 0,
+      )
+    : 0;
+  const isPendingSelectedPrizeReady =
+    !!pendingSelectedPrize &&
+    (pendingSelectedPrizeRequiredSelectionCount === 0 ||
+      pendingSelectedPrizeProductIds.length ===
+        pendingSelectedPrizeRequiredSelectionCount);
+
+  const updatePrizeProductCount = (
+    prizeId: string,
+    productId: string,
+    nextCount: number,
+  ) => {
+    const targetPrize = prizes.find((prize) => prize.id === prizeId);
+    if (!targetPrize) return;
+    const uniquePrizeProducts = getUniquePrizeProducts(targetPrize);
+    const uniqueProductIdsSet = new Set(uniquePrizeProducts.map((product) => product.id));
+    if (!uniqueProductIdsSet.has(productId)) return;
+
+    const requiredSelectionCount = Math.max(
+      0,
+      uniquePrizeProducts.length > 0 ? targetPrize.quantity : 0,
+    );
+
+    setPendingSelectedProductIdsByPrizeId((current) => {
+      const currentSelection = (current[prizeId] || []).filter((id) =>
+        uniqueProductIdsSet.has(id),
+      );
+      const currentCountForProduct = currentSelection.filter(
+        (id) => id === productId,
+      ).length;
+      const clampedNextCount = Math.max(0, nextCount);
+
+      if (
+        requiredSelectionCount > 0 &&
+        currentSelection.length >= requiredSelectionCount &&
+        clampedNextCount > currentCountForProduct
+      ) {
+        const swappedSelection = [...currentSelection];
+        let swapsNeeded = clampedNextCount - currentCountForProduct;
+
+        while (swapsNeeded > 0) {
+          const removableIndex = swappedSelection.findIndex((id) => id !== productId);
+          if (removableIndex === -1) {
+            break;
+          }
+
+          swappedSelection.splice(removableIndex, 1);
+          swappedSelection.push(productId);
+          swapsNeeded -= 1;
+        }
+
+        if (swappedSelection.length === currentSelection.length) {
+          return {
+            ...current,
+            [prizeId]: swappedSelection,
+          };
+        }
+
+        return {
+          ...current,
+          [prizeId]: swappedSelection,
+        };
+      }
+
+      const otherProductsCount = currentSelection.length - currentCountForProduct;
+      const maxCountForProduct = Math.max(0, requiredSelectionCount - otherProductsCount);
+      const resolvedNextCount = Math.min(clampedNextCount, maxCountForProduct);
+
+      return {
+        ...current,
+        [prizeId]: [
+          ...currentSelection.filter((id) => id !== productId),
+          ...Array.from({ length: resolvedNextCount }, () => productId),
+        ],
+      };
+    });
+  };
+
+  const handleConfirm = () => {
+    if (!pendingPrizeId || !isPendingSelectedPrizeReady) return;
+
+    onConfirmSelection({
+      prizeId: pendingPrizeId,
+      productIds: pendingSelectedProductIdsByPrizeId[pendingPrizeId] || [],
+    });
+    onOpenChange(false);
+  };
+
+  return (
+    <Dialog.Root open={open} onOpenChange={onOpenChange}>
+      <Dialog.Content className="w-dvw h-dvh bg-[#E7E9E9] fixed top-0 left-0 z-50 flex flex-col gap-8 p-4">
+        <Dialog.Title className="sr-only">
+          {content["prizeSelection"] || "Prize selection"}
+        </Dialog.Title>
+        <div className="flex w-full items-center justify-between">
+          <span className="text-[16px] font-bold leading-[1.1] text-[#0C0C0C]">
+            {content["choosePrizeModalTitle"] || "Choose you prize"}
+          </span>
+          <button
+            type="button"
+            onClick={() => onOpenChange(false)}
+            className="flex h-5 w-5 items-center justify-center text-[#0C0C0C]"
+          >
+            <FiX size={20} />
+          </button>
+        </div>
+        <div className="flex w-full flex-col gap-2">
+          {prizes.map((prize) => {
+            const isSelected = pendingPrizeId === prize.id;
+            const uniquePrizeProducts = getUniquePrizeProducts(prize);
+            const fallbackName = uniquePrizeProducts[0]?.name || "Prize";
+            const prizeLabel =
+              prize.name?.trim() || `${prize.quantity} ${fallbackName}`;
+            const prizeRequiredSelectionCount = Math.max(
+              0,
+              uniquePrizeProducts.length > 0 ? prize.quantity : 0,
+            );
+            const uniqueProductIdsSet = new Set(
+              uniquePrizeProducts.map((product) => product.id),
+            );
+            const prizeSelectedProductIds = (
+              pendingSelectedProductIdsByPrizeId[prize.id] || []
+            ).filter((id) => uniqueProductIdsSet.has(id));
+            const progressRatio =
+              prizeRequiredSelectionCount > 0
+                ? Math.min(
+                    1,
+                    prizeSelectedProductIds.length / prizeRequiredSelectionCount,
+                  )
+                : 0;
+
+            return (
+              <div
+                key={prize.id}
+                className={`w-full rounded-[12px] bg-white ${
+                  isSelected ? "border-2 border-[#142826]" : ""
+                }`}
+              >
+                <button
+                  type="button"
+                  onClick={() => setPendingPrizeId(prize.id)}
+                  className="flex w-full items-center gap-[10px] px-4 py-3 text-left"
+                >
+                  <ProductImage
+                    alt={prizeLabel}
+                    src={getPrizeImageUrl(prize)}
+                    className="h-[60px] w-[60px] shrink-0 rounded-[8px] object-cover"
+                  />
+                  <div className="min-w-0 flex-1">
+                    <span className="block truncate text-[18px] font-bold leading-[1.1] text-[#0C0C0C]">
+                      {prizeLabel}
+                    </span>
+                  </div>
+                  <span
+                    className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 ${
+                      isSelected ? "border-[#142826]" : "border-[#CCCCCC]"
+                    }`}
+                  >
+                    {isSelected && (
+                      <span className="h-2.5 w-2.5 rounded-full bg-[#142826]" />
+                    )}
+                  </span>
+                </button>
+
+                {isSelected && uniquePrizeProducts.length > 0 && (
+                  <div className="relative px-4 pb-3">
+                    <div className="grid grid-cols-3 gap-[10px]">
+                      {uniquePrizeProducts.map((product) => {
+                        const productSelectedCount = prizeSelectedProductIds.filter(
+                          (id) => id === product.id,
+                        ).length;
+                        const hasReachedRequiredTotal =
+                          prizeRequiredSelectionCount > 0 &&
+                          prizeSelectedProductIds.length >=
+                            prizeRequiredSelectionCount;
+                        const hasAnotherSelectedProduct =
+                          prizeSelectedProductIds.some((id) => id !== product.id);
+                        const canIncrement =
+                          prizeRequiredSelectionCount > 0 &&
+                          (!hasReachedRequiredTotal || hasAnotherSelectedProduct);
+
+                        return (
+                          <button
+                            key={product.id}
+                            type="button"
+                            onClick={() =>
+                              updatePrizeProductCount(
+                                prize.id,
+                                product.id,
+                                productSelectedCount + 1,
+                              )
+                            }
+                            disabled={!canIncrement}
+                            className={`flex flex-col items-center gap-2 text-center ${
+                              !canIncrement ? "opacity-80" : ""
+                            }`}
+                          >
+                            <div className="relative w-full">
+                              <ProductImage
+                                alt={resolvePrizeProductTitle(product, lg)}
+                                src={product.photos?.[0]?.url}
+                                className={`aspect-square w-full rounded-[12px] object-cover ${
+                                  productSelectedCount > 0 ? "ring-2 ring-[#142826]" : ""
+                                }`}
+                              />
+                              {productSelectedCount > 0 && (
+                                <div className="absolute right-1 top-1 flex h-6 min-w-6 items-center justify-center rounded-full bg-[#304240] px-1">
+                                  <span className="text-xs font-bold text-white">
+                                    {productSelectedCount}
+                                  </span>
+                                </div>
+                              )}
+                            </div>
+                            <span className="text-[16px] font-bold leading-[1.1] text-black">
+                              {resolvePrizeProductTitle(product, lg)}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                    <div className="mt-3 h-[15px] w-full overflow-hidden rounded-[100px] bg-[#E7E9E9]">
+                      <div
+                        className="h-full rounded-[100px] bg-[#142826] transition-all"
+                        style={{ width: `${progressRatio * 100}%` }}
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+        <button
+          type="button"
+          onClick={handleConfirm}
+          disabled={!isPendingSelectedPrizeReady}
+          className={`h-[52px] w-full rounded-[8px] border border-[rgba(20,40,38,0.3)] bg-[#304240] text-[18px] font-bold leading-[1.1] text-white ${
+            !isPendingSelectedPrizeReady ? "opacity-50" : ""
+          }`}
+        >
+          {content["confirm"] || "Confirm"}
+        </button>
+      </Dialog.Content>
+    </Dialog.Root>
   );
 };
 
@@ -701,6 +1368,9 @@ const ScheduleSelector: React.FC<TScheduleSelector> = ({
           </button>
         </Dialog.Trigger>
         <Dialog.Content className="w-dvw h-dvh bg-background fixed top-0 left-0 z-50 flex flex-col">
+          <Dialog.Title className="sr-only">
+            {content["scheduleDateTime"]}
+          </Dialog.Title>
           <div className="flex flex-row justify-between items-center px-4 py-3 bg-foreground border-[#CCD0D0] border-b">
             <Button className="p-2! bg-transparent text-text! opacity-0">
               <FiX />
@@ -816,6 +1486,7 @@ type TOrderSummaryModal = {
   onOpenChange?: (value: boolean) => void;
   open?: boolean;
   order?: TOrder;
+  progressiveDiscountSnapshot?: TOrderProgressiveDiscountSnapshot | null;
   showSummaryCard?: boolean;
   taxAmount?: number;
   tipAmount?: number;
@@ -831,6 +1502,7 @@ export const OrderSummaryModal: React.FC<TOrderSummaryModal> = ({
   onOpenChange,
   open,
   order,
+  progressiveDiscountSnapshot,
   showSummaryCard,
   taxAmount,
   tipAmount,
@@ -840,22 +1512,94 @@ export const OrderSummaryModal: React.FC<TOrderSummaryModal> = ({
   const resolvedOpen = open ?? internalOpen;
   const resolvedOnOpenChange = onOpenChange ?? setInternalOpen;
   const isOrderMode = Boolean(order);
-  const productCount = isOrderMode
-    ? order?.orderProducts.reduce((sum, item) => sum + item.quantity, 0) ?? 0
-    : cart?.items.reduce((sum, item) => sum + item.quantity, 0) ?? 0;
-  const subtotal =
-    order?.subtotalAmount ??
-    (cart && data
+  const resolvedProgressiveDiscountSnapshot = isOrderMode
+    ? progressiveDiscountSnapshot ?? order?.progressiveDiscountSnapshot ?? null
+    : null;
+  const prizeBadgeLabel = content["prize"] || "Prize";
+  const orderPrizeSummaryLineItems = isOrderMode
+    ? buildPrizeSummaryLineItems({
+        availableProducts:
+          resolvedProgressiveDiscountSnapshot?.selectedPrize?.availableProducts || [],
+        lg,
+        selectedProductCounts:
+          resolvedProgressiveDiscountSnapshot?.selectedPrize?.selectedProductCounts ||
+          [],
+        selectedProductIds:
+          resolvedProgressiveDiscountSnapshot?.selectedPrize?.selectedProductIds || [],
+      })
+    : [];
+  const cartPrizeSummaryLineItems =
+    !isOrderMode &&
+    cart?.selectedPrize?.selectedPrizeId &&
+    data?.progressiveDiscount
+      ? (() => {
+          const availablePrizes = data.progressiveDiscount.steps.flatMap(
+            (step) => step.prizes || [],
+          );
+          const selectedPrize = availablePrizes.find(
+            (prize) => prize.id === cart.selectedPrize?.selectedPrizeId,
+          );
+          if (!selectedPrize) return [];
+
+          return buildPrizeSummaryLineItems({
+            availableProducts: selectedPrize.products,
+            lg,
+            selectedProductIds:
+              cart.selectedPrize?.selectedProductIdsByPrizeId?.[selectedPrize.id] ||
+              [],
+          });
+        })()
+      : [];
+  const prizeSummaryLineItems = isOrderMode
+    ? orderPrizeSummaryLineItems
+    : cartPrizeSummaryLineItems;
+  const orderProductsFullSubtotal = order?.orderProducts.reduce(
+    (sum, item) => sum + item.fullAmount * item.quantity,
+    0,
+  ) ?? 0;
+  const orderProductsDiscountedSubtotal = order?.orderProducts.reduce(
+    (sum, item) => sum + item.amount * item.quantity,
+    0,
+  ) ?? 0;
+  const cartPricingSummary =
+    cart && data
       ? calculateCartWithProgressiveDiscount(
           data.categories,
           cart,
           data.progressiveDiscount,
-        ).discountedPrice
-      : 0);
+        )
+      : null;
+  const baseProductCount = isOrderMode
+    ? order?.orderProducts.reduce((sum, item) => sum + item.quantity, 0) ?? 0
+    : cart?.items.reduce((sum, item) => sum + item.quantity, 0) ?? 0;
+  const prizeProductCount = prizeSummaryLineItems.reduce(
+    (sum, item) => sum + item.quantity,
+    0,
+  );
+  const productCount = baseProductCount + prizeProductCount;
   const resolvedDeliveryFee = order?.deliveryFee ?? deliveryFee ?? 0;
-  const resolvedTipAmount = order?.tipAmount ?? tipAmount ?? 0;
   const resolvedTaxAmount = taxAmount ?? 0;
-  const resolvedTotal = order?.totalAmount ?? total ?? 0;
+  const subtotal = isOrderMode
+    ? resolvedProgressiveDiscountSnapshot?.fullPrice ?? orderProductsFullSubtotal
+    : cartPricingSummary?.fullPrice ?? 0;
+  const discountedSubtotal = isOrderMode
+    ? resolvedProgressiveDiscountSnapshot?.discountedPrice ??
+      order?.subtotalAmount ??
+      orderProductsDiscountedSubtotal
+    : cartPricingSummary?.discountedPrice ?? 0;
+  const resolvedDiscountAmount = isOrderMode
+    ? resolvedProgressiveDiscountSnapshot?.discountAmount ??
+      Math.max(0, subtotal - discountedSubtotal)
+    : cartPricingSummary?.discountAmount ?? 0;
+  const totalWithoutFees = Math.max(0, subtotal - resolvedDiscountAmount);
+  const resolvedTipAmount = isOrderMode
+    ? Math.round((totalWithoutFees * (order?.tipAmount ?? 0)) / 100)
+    : tipAmount ?? 0;
+  const resolvedTotal = isOrderMode
+    ? order?.totalAmount ??
+      totalWithoutFees + resolvedDeliveryFee + resolvedTipAmount + resolvedTaxAmount
+    : total ??
+      totalWithoutFees + resolvedDeliveryFee + resolvedTipAmount + resolvedTaxAmount;
   const title = isOrderMode ? content["billSummary"] : content["cartSummary"];
   const [productsExpanded, setProductsExpanded] = useState(true);
 
@@ -863,8 +1607,10 @@ export const OrderSummaryModal: React.FC<TOrderSummaryModal> = ({
     <>
       {showSummaryCard && (
         <div className="w-full max-w-[900px] px-4">
-          <div
-            className={`flex items-center justify-between gap-4 ${montserrat.className} border-t border-t-[#E6E6E6] py-6`}
+          <button
+            type="button"
+            onClick={() => resolvedOnOpenChange(true)}
+            className={`flex w-full items-center justify-between gap-4 border-t border-t-[#E6E6E6] py-6 text-left ${montserrat.className}`}
           >
             <div className="flex flex-col">
               <span className="text-base font-bold text-text">{title}</span>
@@ -872,13 +1618,8 @@ export const OrderSummaryModal: React.FC<TOrderSummaryModal> = ({
                 {productCount} {content["products"]}
               </span>
             </div>
-            <Button
-              onClick={() => resolvedOnOpenChange(true)}
-              className="bg-transparent text-text! p-0! font-semibold"
-            >
-              <FiChevronRight />
-            </Button>
-          </div>
+            <FiChevronRight className="text-text" />
+          </button>
         </div>
       )}
       <Dialog.Root open={resolvedOpen} onOpenChange={resolvedOnOpenChange}>
@@ -886,6 +1627,7 @@ export const OrderSummaryModal: React.FC<TOrderSummaryModal> = ({
         <Dialog.Content
           className={`w-dvw h-dvh bg-background fixed top-0 left-0 z-50 flex flex-col max-w-[900px] right-0 mx-auto ${montserrat.className}`}
         >
+          <Dialog.Title className="sr-only">{title}</Dialog.Title>
           <div className="flex flex-row items-center gap-3 px-4 py-4 bg-foreground border-[#E6E6E6] border-b justify-between">
             
             <span className="font-semibold text-lg leading-none">{title}</span>
@@ -921,24 +1663,47 @@ export const OrderSummaryModal: React.FC<TOrderSummaryModal> = ({
                           item.product?.translations?.[lg]?.title ||
                           item.product?.name ||
                           "";
-                        const lineTotal = item.amount * item.quantity;
+                        const lineTotal = item.fullAmount * item.quantity;
+                        const modifierGroups = buildSelectedModifierGroupsFromOrderProduct(
+                          item,
+                          lg,
+                          content["modifiers"] || "Modifiers",
+                        );
+                        const totalOrderSummaryLines =
+                          (order?.orderProducts.length || 0) +
+                          orderPrizeSummaryLineItems.length;
 
                         return (
                           <OrderSummaryLineItem
                             key={item.id}
                             comments={item.comments}
-                            modifiers={
-                              item.selectedModifierGroupItems?.map(
-                                (modifierItem) => modifierItem.name,
-                              ) ?? []
-                            }
+                            modifierGroups={modifierGroups}
                             name={productName}
                             price={lineTotal}
                             quantity={item.quantity}
-                            showDivider={index < (order.orderProducts.length - 1)}
+                            showDivider={index < (totalOrderSummaryLines - 1)}
                           />
                         );
-                      })
+                      }).concat(
+                        orderPrizeSummaryLineItems.map((item, index) => {
+                          const orderItemsLength = order?.orderProducts.length || 0;
+                          const totalOrderSummaryLines =
+                            orderItemsLength + orderPrizeSummaryLineItems.length;
+                          const currentLineIndex = orderItemsLength + index;
+
+                          return (
+                            <OrderSummaryLineItem
+                              key={`prize-${item.id}-${index}`}
+                              badgeLabel={prizeBadgeLabel}
+                              modifierGroups={[]}
+                              name={item.name}
+                              price={0}
+                              quantity={item.quantity}
+                              showDivider={currentLineIndex < (totalOrderSummaryLines - 1)}
+                            />
+                          );
+                        }),
+                      )
                     : cart &&
                       data &&
                       cart.items.map((item, index) => (
@@ -949,40 +1714,60 @@ export const OrderSummaryModal: React.FC<TOrderSummaryModal> = ({
                           data={data}
                           key={item.cartId || item.productId}
                           lg={lg}
-                          showDivider={index < cart.items.length - 1}
+                          showDivider={
+                            index <
+                            cart.items.length + cartPrizeSummaryLineItems.length - 1
+                          }
                         />
-                      ))}
+                      )).concat(
+                        cartPrizeSummaryLineItems.map((item, index) => {
+                          const currentLineIndex = cart.items.length + index;
+                          const totalCartSummaryLines =
+                            cart.items.length + cartPrizeSummaryLineItems.length;
+
+                          return (
+                            <OrderSummaryLineItem
+                              key={`prize-${item.id}-${index}`}
+                              badgeLabel={prizeBadgeLabel}
+                              modifierGroups={[]}
+                              name={item.name}
+                              price={0}
+                              quantity={item.quantity}
+                              showDivider={currentLineIndex < (totalCartSummaryLines - 1)}
+                            />
+                          );
+                        }),
+                      )}
                 </div>
               )}
             </div>
             <div className="border-t border-[#E6E6E6] pt-6 flex flex-col gap-3">
               <SummaryRow
-                label={`${content["subtotalProducts"]} ${productCount}`}
-                value={formatCurrency(subtotal)}
-              />
-              <SummaryRow
                 label={content["totalProducts"]}
                 value={formatCurrency(subtotal)}
                 muted
               />
-              {resolvedDeliveryFee > 0 && (
+              {resolvedDiscountAmount > 0 && (
                 <SummaryRow
-                  label={content["deliveryFee"]}
-                  value={formatCurrency(resolvedDeliveryFee)}
+                  label={content["discount"] || "Discount"}
+                  value={`-${formatCurrency(resolvedDiscountAmount)}`}
+                  muted
                 />
               )}
+              <SummaryRow
+                label={content["deliveryFee"]}
+                value={formatCurrency(resolvedDeliveryFee)}
+              />
               {resolvedTipAmount > 0 && (
                 <SummaryRow
                   label={content["tip"]}
                   value={formatCurrency(resolvedTipAmount)}
                 />
               )}
-              {resolvedTaxAmount > 0 && (
-                <SummaryRow
-                  label={content["tax"]}
-                  value={formatCurrency(resolvedTaxAmount)}
-                />
-              )}
+              <SummaryRow
+                label={content["salesTax"] || "Sales tax"}
+                value={formatCurrency(resolvedTaxAmount)}
+              />
               <div className="border-t border-[#E6E6E6] border-dashed pt-3">
                 <SummaryRow
                   label={content["totalLabel"]}
@@ -1565,6 +2350,9 @@ const FindAddressModal: React.FC<TFindAddressModal> = ({
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Content className="w-dvw h-dvh bg-background fixed top-0">
+        <Dialog.Title className="sr-only">
+          {content["addAddress"]}
+        </Dialog.Title>
         <div className="flex flex-row justify-between items-center px-4 py-3 bg-foreground border-[#CCD0D0] border-b">
           <Button className="p-2! bg-transparent text-text! opacity-0">
             <FiX />
@@ -1648,29 +2436,24 @@ const OrderSummaryItem: React.FC<TOrderSummaryItem> = ({
   showDivider,
 }) => {
   const findProduct = findProductById(data.categories, cartItem.productId);
+  const selectedModifierGroups = buildSelectedModifierGroupsFromCartItem(
+    findProduct,
+    cartItem,
+    lg,
+  );
   const price = calculateProductPriceWithProgressiveDiscount(
     cartItem.productId,
     data.progressiveDiscount,
     cart,
     data.categories,
+    { cartItem },
   );
-  const itemTotal = price ? price.discountedPrice * cartItem.quantity : 0;
+  const itemTotal = price ? price.fullPrice * cartItem.quantity : 0;
 
   return (
     <OrderSummaryLineItem
       comments={cartItem.description}
-      modifiers={
-        cartItem.modifiers?.map((item) => {
-          const modifierGroup = findProduct?.modifierGroups?.find(
-            (modifier) => modifier.id === item.modifierId,
-          );
-          const modifierItem = modifierGroup?.items.find(
-            (modifierItem) => modifierItem.id === item.modifierItemId,
-          );
-
-          return modifierItem?.name || "";
-        }) ?? []
-      }
+      modifierGroups={selectedModifierGroups}
       name={
         findProduct?.translations
           ? findProduct.translations[lg] && findProduct.translations[lg]["title"] || findProduct.name
@@ -1684,8 +2467,9 @@ const OrderSummaryItem: React.FC<TOrderSummaryItem> = ({
 };
 
 type TOrderSummaryLineItem = {
+  badgeLabel?: string;
   comments?: string;
-  modifiers: string[];
+  modifierGroups: TSummaryModifierGroup[];
   name: string;
   price: number;
   quantity: number;
@@ -1693,8 +2477,9 @@ type TOrderSummaryLineItem = {
 };
 
 const OrderSummaryLineItem: React.FC<TOrderSummaryLineItem> = ({
+  badgeLabel,
   comments,
-  modifiers,
+  modifierGroups,
   name,
   price,
   quantity,
@@ -1706,16 +2491,17 @@ const OrderSummaryLineItem: React.FC<TOrderSummaryLineItem> = ({
     >
       <div className="flex items-start justify-between gap-4">
         <div className="flex flex-col gap-1">
-          <span className="font-semibold text-base text-text leading-tight">
-            {quantity} {name}
-          </span>
-          {modifiers.map((modifier, index) =>
-            modifier ? (
-              <span key={`${modifier}-${index}`} className="text-[16px] text-[#6E6E6E]">
-                {modifier}
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="font-semibold text-base text-text leading-tight">
+              {quantity} {name}
+            </span>
+            {badgeLabel && (
+              <span className="rounded-full bg-[#FFE8B8] px-2 py-0.5 text-[11px] font-bold uppercase tracking-[0.04em] text-[#7A4A00]">
+                {badgeLabel}
               </span>
-            ) : null,
-          )}
+            )}
+          </div>
+          <ModifierGroupsList modifierGroups={modifierGroups} />
           {comments && (
             <span className="text-[16px] text-[#6E6E6E]">{comments}</span>
           )}
@@ -1742,36 +2528,33 @@ const CartListItem: React.FC<TCartListItem> = ({
     data.progressiveDiscount,
     cart,
     data.categories,
+    { cartItem },
   );
 
   const findProduct = findProductById(data.categories, cartItem.productId);
   const image = findProduct?.photos?.[0]?.url ?? null;
-  const selectedModifiers = findProduct?.modifierGroups?.filter((item) =>
-    cartItem.modifiers?.find((modifier) => modifier.modifierId === item.id),
+  const selectedModifierGroups = buildSelectedModifierGroupsFromCartItem(
+    findProduct,
+    cartItem,
+    lg,
   );
 
   return (
-    <div className="flex flex-row items-center justify-between w-full">
-      <div className="flex flex-row gap-3 items-center">
+    <div className="flex w-full flex-row items-center gap-2">
+      <div className="flex min-w-0 flex-1 flex-row items-start gap-3">
         <ProductImage
           src={image}
           alt={findProduct?.name || "Product image"}
-          className="h-20 w-20 rounded-lg object-cover bg-foreground"
+          className="h-20 w-20 rounded-lg object-cover bg-foreground aspect-square shrink-0"
           iconClassName="h-6 w-6"
         />
-        <div className="flex flex-col gap-1.5">
+        <div className="flex flex-col gap-1.5 min-w-0">
           <span className="font-semibold ">
             {findProduct?.translations
               ? findProduct?.translations[lg] && findProduct?.translations[lg]["title"] || findProduct?.name
               : findProduct?.name}
           </span>
-          {cartItem.modifiers?.map((item) => (
-            <ModifierItem
-              key={item.modifierItemId}
-              modifiers={findProduct?.modifierGroups || []}
-              modifierItemId={item.modifierItemId}
-            />
-          ))}
+          <ModifierGroupsList modifierGroups={selectedModifierGroups} />
           {cartItem.description && (
             <p className="text-sm text-lightText font-medium">
               {cartItem.description}
@@ -1781,9 +2564,9 @@ const CartListItem: React.FC<TCartListItem> = ({
             <div className={`flex flex-row items-center gap-2 pt-1`}>
               <div>
                 <div className="bg-[#CCD0D0] rounded-md">
-                  {price && Math.floor(price.discountAmount / 100) !== 0 && (
+                  {price && price.discountAmount > 0 && (
                     <span className="text-xs font-semibold text-brandBackground py-0.5 px-1">
-                      ${Math.floor(price.discountAmount / 100)} off
+                      {formatDiscountOffLabel(price.discountAmount)}
                     </span>
                   )}
                 </div>
@@ -1800,7 +2583,7 @@ const CartListItem: React.FC<TCartListItem> = ({
           </div>
         </div>
       </div>
-      <div>
+      <div className="shrink-0">
         <QuantitySelector
           value={quantity}
           onChange={(value) => updateItemQuantity(cartItem.cartId, value)}
@@ -1809,25 +2592,6 @@ const CartListItem: React.FC<TCartListItem> = ({
         />
       </div>
     </div>
-  );
-};
-
-const ModifierItem: React.FC<{
-  modifierItemId: string;
-  modifiers: TModifierGroup[];
-}> = ({ modifierItemId, modifiers }) => {
-  const findModifier = modifiers.find((item) =>
-    item.items.find((modifier) => modifier.id === modifierItemId),
-  );
-  const findModifierItem = findModifier?.items.find(
-    (modifier) => modifier.id === modifierItemId,
-  );
-  return (
-    <span>
-      <span className="text-sm font-medium text-lightText">
-        {findModifierItem?.name}
-      </span>
-    </span>
   );
 };
 

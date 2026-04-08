@@ -1,7 +1,11 @@
 import TAddress from "./address";
 import TCustomer from "./customer";
 import TProduct, { TModifierGroupItem } from "./product";
-import { TPreparationStepCategory, TPreparationStepTrack } from "./station";
+import TProgressiveDiscount, {
+  TProgressiveDiscountPrizeProduct,
+  TProgressiveDiscountStep,
+} from "./progressiveDiscount";
+import { TPreparationStepCategory } from "./station";
 
 export type TPaymentMethod = "CARD" | "CASH" | "ZELLE";
 export type TOrderType = "DELIVERY" | "TAKEAWAY";
@@ -14,12 +18,15 @@ export type TOrderStatus =
 export type TOrder = {
   id: string;
   createdAt: string;
+  scheduleFor?: string | null;
   paidAt?: string | null;
+  progressiveDiscountSnapshot?: TOrderProgressiveDiscountSnapshot;
   deliveredAt?: string;
   number?: string;
   status: TOrderStatus;
   type: TOrderType;
   dispatchId?: string;
+  dispatchOrderIndex?: number;
   totalAmount?: number;
   subtotalAmount?: number;
   tipAmount?: number;
@@ -31,6 +38,27 @@ export type TOrder = {
   address?: TAddress;
   orderProducts: TOrderProduct[];
   preparationStepCategory: TPreparationStepCategory[];
+};
+
+export type TOrderProgressiveDiscountSnapshot = {
+  progressiveDiscount: TProgressiveDiscount;
+  appliedStep: TProgressiveDiscountStep | null;
+  fullPrice: number;
+  discountedPrice: number;
+  discountAmount: number;
+  selectedPrize?: TOrderSelectedPrizeSnapshot | null;
+};
+
+export type TOrderSelectedPrizeSnapshot = {
+  prizeId: string;
+  prizeName: string;
+  quantity: number;
+  selectedProductIds: string[];
+  selectedProductCounts: {
+    productId: string;
+    quantity: number;
+  }[];
+  availableProducts: TProgressiveDiscountPrizeProduct[];
 };
 
 export type TOrderProduct = {
