@@ -163,6 +163,10 @@ function mapDispatch(
   orderRows: DispatchOrderRow[],
   ordersByDispatchId: Map<string, DispatchApiOrder[]>,
   orderProductsByOrderId: Map<TOrder["id"], TOrder["orderProducts"]>,
+  preparationStepCategoriesByOrderId: Map<
+    TOrder["id"],
+    TOrder["preparationStepCategory"]
+  >,
 ): Dispatch {
   if (!ordersByDispatchId.has(row.id)) {
     ordersByDispatchId.set(
@@ -222,7 +226,8 @@ function mapDispatch(
               }
             : {}),
           orderProducts: orderProductsByOrderId.get(orderRow.id) || [],
-          preparationStepCategory: [],
+          preparationStepCategory:
+            preparationStepCategoriesByOrderId.get(orderRow.id) || [],
         })),
     );
   }
@@ -430,6 +435,135 @@ async function getDispatchOrderProducts(
   }
 
   return orderProductsByOrderId;
+}
+
+async function getDispatchPreparationStepCategories(
+  orderIds: string[],
+): Promise<Map<TOrder["id"], TOrder["preparationStepCategory"]>> {
+  if (orderIds.length === 0) {
+    return new Map();
+  }
+
+  const categories = await prisma.preparationStepCategory.findMany({
+    where: {
+      orderId: {
+        in: orderIds,
+      },
+    },
+    include: {
+      category: true,
+      preparationStepTracks: {
+        include: {
+          preparationStep: true,
+          preparationStepModifierTracks: {
+            include: {
+              modifierGroupItem: {
+                include: {
+                  photo: {
+                    select: {
+                      id: true,
+                      url: true,
+                    },
+                  },
+                },
+              },
+            },
+            orderBy: {
+              createdAt: "asc",
+            },
+          },
+        },
+        orderBy: {
+          createdAt: "asc",
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "asc",
+    },
+  });
+  const categoriesByOrderId = new Map<
+    TOrder["id"],
+    TOrder["preparationStepCategory"]
+  >();
+
+  for (const category of categories) {
+    if (!category.categoryId || !category.category) {
+      continue;
+    }
+
+    const current = categoriesByOrderId.get(category.orderId) || [];
+
+    current.push({
+      id: category.id,
+      categoryId: category.categoryId,
+      completed: category.completed,
+      orderId: category.orderId,
+      snoozes: [],
+      category: {
+        id: category.category.id,
+        title: category.category.name,
+        products: [],
+        ...(category.category.translations &&
+        typeof category.category.translations === "object"
+          ? {
+              translations: category.category.translations as {
+                [key: string]: {
+                  [key: string]: string;
+                };
+              },
+            }
+          : {}),
+      },
+      steps: category.preparationStepTracks.map((track) => ({
+        id: track.id,
+        name: track.preparationStep.name,
+        quantity: track.quantity || 1,
+        completed: track.completed,
+        preparationStepId: track.preparationStepId,
+        preparationStepCategoryId: track.preparationStepCategoryId,
+        comments: track.comments || undefined,
+        completedComments: track.completedComments,
+        preparationStepModifiers: track.preparationStepModifierTracks.map(
+          (modifierTrack) => ({
+            id: modifierTrack.id,
+            completed: modifierTrack.completed,
+            modifierGroupItem: modifierTrack.modifierGroupItemId,
+            modifierGtroupItem: {
+              id: modifierTrack.modifierGroupItem.id,
+              name: modifierTrack.modifierGroupItem.name,
+              price: modifierTrack.modifierGroupItem.price,
+              description:
+                modifierTrack.modifierGroupItem.description || undefined,
+              ...(modifierTrack.modifierGroupItem.photo
+                ? {
+                    photo: {
+                      id: modifierTrack.modifierGroupItem.photo.id,
+                      url: modifierTrack.modifierGroupItem.photo.url,
+                    },
+                  }
+                : {}),
+              ...(modifierTrack.modifierGroupItem.translations &&
+              typeof modifierTrack.modifierGroupItem.translations === "object"
+                ? {
+                    translations: modifierTrack.modifierGroupItem
+                      .translations as {
+                      [key: string]: {
+                        [key: string]: string;
+                      };
+                    },
+                  }
+                : {}),
+            },
+          }),
+        ),
+      })),
+    });
+
+    categoriesByOrderId.set(category.orderId, current);
+  }
+
+  return categoriesByOrderId;
 }
 
 function parseCoordinates(row: { lat: string; lng: string }) {
@@ -934,12 +1068,17 @@ class PrismaDispatchRepository implements DispatchRepository {
     const orderProductsByOrderId = await getDispatchOrderProducts(
       orderRows.map((order) => order.id),
     );
+    const preparationStepCategoriesByOrderId =
+      await getDispatchPreparationStepCategories(
+        orderRows.map((order) => order.id),
+      );
 
     return mapDispatch(
       dispatchRow,
       orderRows,
       new Map(),
       orderProductsByOrderId,
+      preparationStepCategoriesByOrderId,
     );
   }
 
@@ -1111,12 +1250,17 @@ class PrismaDispatchRepository implements DispatchRepository {
     const orderProductsByOrderId = await getDispatchOrderProducts(
       orderRows.map((order) => order.id),
     );
+    const preparationStepCategoriesByOrderId =
+      await getDispatchPreparationStepCategories(
+        orderRows.map((order) => order.id),
+      );
 
     return mapDispatch(
       dispatchRow,
       orderRows,
       new Map(),
       orderProductsByOrderId,
+      preparationStepCategoriesByOrderId,
     );
   }
 
@@ -1164,6 +1308,10 @@ class PrismaDispatchRepository implements DispatchRepository {
     const orderProductsByOrderId = await getDispatchOrderProducts(
       orderRows.map((order) => order.id),
     );
+    const preparationStepCategoriesByOrderId =
+      await getDispatchPreparationStepCategories(
+        orderRows.map((order) => order.id),
+      );
     const ordersByDispatchId = new Map<string, DispatchApiOrder[]>();
 
     return dispatches.map((dispatch) =>
@@ -1172,6 +1320,7 @@ class PrismaDispatchRepository implements DispatchRepository {
         orderRows,
         ordersByDispatchId,
         orderProductsByOrderId,
+        preparationStepCategoriesByOrderId,
       ),
     );
   }
@@ -1250,12 +1399,17 @@ class PrismaDispatchRepository implements DispatchRepository {
     const orderProductsByOrderId = await getDispatchOrderProducts(
       orderRows.map((order) => order.id),
     );
+    const preparationStepCategoriesByOrderId =
+      await getDispatchPreparationStepCategories(
+        orderRows.map((order) => order.id),
+      );
 
     return mapDispatch(
       dispatchRow,
       orderRows,
       new Map(),
       orderProductsByOrderId,
+      preparationStepCategoriesByOrderId,
     );
   }
 
@@ -1331,12 +1485,17 @@ class PrismaDispatchRepository implements DispatchRepository {
     const orderProductsByOrderId = await getDispatchOrderProducts(
       orderRows.map((order) => order.id),
     );
+    const preparationStepCategoriesByOrderId =
+      await getDispatchPreparationStepCategories(
+        orderRows.map((order) => order.id),
+      );
 
     return mapDispatch(
       dispatchRow,
       orderRows,
       new Map(),
       orderProductsByOrderId,
+      preparationStepCategoriesByOrderId,
     );
   }
 

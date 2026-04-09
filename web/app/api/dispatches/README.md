@@ -94,6 +94,8 @@ Order payload notes:
 - `paidAt` is included as an ISO timestamp when the order has been paid (otherwise `null`)
 - `deliveredAt` is included when the order has been marked as delivered
 - `progressiveDiscountSnapshot` is included when the order has a stored progressive discount snapshot (including selected prize data)
+- `preparationStepCategory` is populated with nested entities:
+  category data, steps, and each step's `preparationStepModifiers` (including `modifierGtroupItem` details when available)
 - `customer` is included on each order
 - `deliveryAddress` is included when the order has one
 - `orderProducts` includes the selected product data and modifier selections

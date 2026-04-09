@@ -17,6 +17,7 @@ import { calculateCartWithProgressiveDiscount } from "../utils/calculatePrice";
 import getProducts from "./getProducts";
 import { createOrderPreparationStepsUseCase } from "@/src/modules/station/application/createOrderPreparationSteps";
 import { prismaStationRepository } from "@/src/modules/station/infrastructure/prisma/prismaStationRepository";
+import { prismaDispatchRepository } from "@/src/modules/dispatch/infrastructure/prisma/prismaDispatchRepository";
 import {
   enqueueAssignDeliveryOrderToDispatch,
   processDispatchAssignmentJobs,
@@ -230,7 +231,8 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
       id: randomUUID(),
       amount: 0,
       number: (todayOrders.length + 1).toString(),
-      deliveryAddressId: data.addressId,
+      deliveryAddressId:
+        data.orderType === "DELIVERY" ? data.addressId : undefined,
       customerId: data.customerId,
       paymentMethod: data.paymentMethod,
       tipAmount: data.tipAmount,
@@ -397,6 +399,12 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
       await processDispatchAssignmentJobs(1).catch((error: unknown) => {
         console.error("Failed to trigger dispatch assignment processing:", error);
       });
+    });
+  } else if (data.orderType === "TAKEAWAY") {
+    await prismaDispatchRepository.create({
+      dispatched: false,
+      driverId: null,
+      orderIds: [createdOrder.id],
     });
   }
 
