@@ -1,0 +1,15 @@
+{
+  "name": "dispatch-queue-worker",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "node-cron": "^4.2.1"
+  }
+}
