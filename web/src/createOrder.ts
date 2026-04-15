@@ -221,6 +221,37 @@ async function enqueueDispatchAssignmentJobTx(
   `;
 }
 
+async function triggerDispatchQueueRun(): Promise<void> {
+  const workerBaseUrl = process.env.DISPATCH_QUEUE_WORKER_BASE_URL?.trim();
+
+  if (!workerBaseUrl) {
+    await processDispatchAssignmentJobs(1);
+    return;
+  }
+
+  const endpoint = `${workerBaseUrl.replace(/\/$/, "")}/run`;
+  const runSecret = process.env.DISPATCH_QUEUE_RUN_SECRET?.trim();
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
+
+  if (runSecret) {
+    headers.Authorization = `Bearer ${runSecret}`;
+  }
+
+  const response = await fetch(endpoint, {
+    method: "POST",
+    headers,
+  });
+
+  if (!response.ok) {
+    const errorBody = await response.text().catch(() => "");
+    throw new Error(
+      `QUEUE_WORKER_TRIGGER_FAILED status=${response.status} body=${errorBody}`,
+    );
+  }
+}
+
 async function createPreparationStepCategoriesForOrderTx(
   tx: Prisma.TransactionClient,
   order: TOrder,
@@ -462,8 +493,8 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
       async (tx) => {
         const orderNumberLockKey = `order-number:${startOfDay.toISOString().slice(0, 10)}`;
 
-        await tx.$queryRaw`
-          SELECT pg_advisory_xact_lock(hashtext(${orderNumberLockKey}))
+        await tx.$executeRaw`
+          SELECT pg_advisory_xact_lock(hashtext(${orderNumberLockKey})::bigint)
         `;
 
         const [todayOrderCount] = await tx.$queryRaw<{ count: bigint }[]>`
@@ -701,7 +732,7 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
 
   if (data.orderType === "DELIVERY" && data.addressId) {
     after(async () => {
-      await processDispatchAssignmentJobs(1).catch((error: unknown) => {
+      await triggerDispatchQueueRun().catch((error: unknown) => {
         console.error("Failed to trigger dispatch assignment processing:", error);
       });
     });
