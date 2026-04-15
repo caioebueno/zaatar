@@ -1,28 +1,24 @@
+import 'dotenv/config'
 import http from "node:http";
 import cron from "node-cron";
+import { processDispatchAssignmentJobs as runDispatchAssignmentJobs } from "../web/src/modules/dispatch/application/assignDeliveryOrderToDispatchQueue.ts";
 
 const PORT = Number(process.env.PORT || 4000);
-const TARGET_BASE_URL = process.env.TARGET_BASE_URL;
-const TARGET_PATH =
-  process.env.TARGET_PATH || "/api/internal/dispatch-assignment-jobs/process";
 const CRON_SCHEDULE = process.env.CRON_SCHEDULE || "0 0 * * *";
-const CRON_SECRET = process.env.CRON_SECRET;
 const PROCESS_ON_START = process.env.PROCESS_ON_START === "true";
-const REQUEST_TIMEOUT_MS = Number(process.env.REQUEST_TIMEOUT_MS || 60000);
+const JOBS_PER_RUN = Number(process.env.JOBS_PER_RUN || 10);
+const RUN_TRIGGER_SECRET = process.env.RUN_TRIGGER_SECRET?.trim();
 
 let isProcessing = false;
 
-function getTargetUrl() {
-  if (!TARGET_BASE_URL) {
-    throw new Error("Missing TARGET_BASE_URL environment variable");
+function getValidatedJobsPerRun() {
+  if (!Number.isInteger(JOBS_PER_RUN) || JOBS_PER_RUN < 1) {
+    throw new Error(
+      `Invalid JOBS_PER_RUN "${process.env.JOBS_PER_RUN}". Expected a positive integer.`,
+    );
   }
 
-  const baseUrl = TARGET_BASE_URL.endsWith("/")
-    ? TARGET_BASE_URL.slice(0, -1)
-    : TARGET_BASE_URL;
-  const path = TARGET_PATH.startsWith("/") ? TARGET_PATH : `/${TARGET_PATH}`;
-
-  return `${baseUrl}${path}`;
+  return JOBS_PER_RUN;
 }
 
 async function processDispatchAssignmentJobs() {
@@ -34,42 +30,15 @@ async function processDispatchAssignmentJobs() {
   isProcessing = true;
 
   try {
-    const targetUrl = getTargetUrl();
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+    const jobsPerRun = getValidatedJobsPerRun();
 
     console.log(
-      `[queue-worker] Triggering queue processing at ${new Date().toISOString()} -> ${targetUrl}`,
+      `[queue-worker] Triggering queue processing at ${new Date().toISOString()} with limit=${jobsPerRun}`,
     );
 
-    const response = await fetch(targetUrl, {
-      method: "GET",
-      headers: {
-        ...(CRON_SECRET ? { Authorization: `Bearer ${CRON_SECRET}` } : {}),
-      },
-      signal: controller.signal,
-    });
+    const result = await runDispatchAssignmentJobs(jobsPerRun);
 
-    clearTimeout(timeoutId);
-
-    const rawBody = await response.text();
-    let parsedBody = rawBody;
-
-    try {
-      parsedBody = JSON.parse(rawBody);
-    } catch {
-      // Non-JSON body; keep as text.
-    }
-
-    if (!response.ok) {
-      console.error("[queue-worker] Queue processing failed:", {
-        status: response.status,
-        body: parsedBody,
-      });
-      return;
-    }
-
-    console.log("[queue-worker] Queue processing completed:", parsedBody);
+    console.log("[queue-worker] Queue processing completed:", result);
   } catch (error) {
     console.error("[queue-worker] Queue processing error:", error);
   } finally {
@@ -85,13 +54,25 @@ function handleRequest(request, response) {
         ok: true,
         service: "dispatch-queue-worker",
         schedule: CRON_SCHEDULE,
-        targetPath: TARGET_PATH,
+        jobsPerRun: JOBS_PER_RUN,
       }),
     );
     return;
   }
 
   if (request.method === "POST" && request.url === "/run") {
+    if (RUN_TRIGGER_SECRET) {
+      const authorizationHeader = request.headers.authorization;
+      const isAuthorized =
+        authorizationHeader === `Bearer ${RUN_TRIGGER_SECRET}`;
+
+      if (!isAuthorized) {
+        response.writeHead(401, { "Content-Type": "application/json" });
+        response.end(JSON.stringify({ error: "Unauthorized" }));
+        return;
+      }
+    }
+
     processDispatchAssignmentJobs().finally(() => {
       response.writeHead(202, { "Content-Type": "application/json" });
       response.end(JSON.stringify({ accepted: true }));
@@ -131,7 +112,7 @@ function startCron() {
 }
 
 try {
-  getTargetUrl();
+  getValidatedJobsPerRun();
   startServer();
   startCron();
 

@@ -2,24 +2,25 @@
 
 Standalone Node.js server that triggers:
 
-- `GET /api/internal/dispatch-assignment-jobs/process`
+- `processDispatchAssignmentJobs(...)` directly from your app codebase
 
 This replaces Vercel Cron and is intended to run on Railway.
 
 ## Environment Variables
 
 - `PORT`: HTTP port (`Railway` provides this automatically)
-- `TARGET_BASE_URL`: base URL of your deployed Next app (required)
-- `TARGET_PATH`: defaults to `/api/internal/dispatch-assignment-jobs/process`
 - `CRON_SCHEDULE`: cron expression (default: `0 0 * * *`, daily at 00:00 UTC)
-- `CRON_SECRET`: optional bearer token; must match `CRON_SECRET` in the Next app
+- `JOBS_PER_RUN`: max queue jobs processed per run (default `10`)
+- `DATABASE_URL`: PostgreSQL connection string (same database as app)
+- `MAPBOX_API`: required by dispatch route-duration calculation
 - `PROCESS_ON_START`: `true` to run once immediately on boot (default `false`)
-- `REQUEST_TIMEOUT_MS`: request timeout in milliseconds (default `60000`)
+- `RUN_TRIGGER_SECRET`: optional bearer token required by `POST /run`
 
 ## Endpoints
 
 - `GET /health` - health/status
 - `POST /run` - trigger queue processing manually
+  - if `RUN_TRIGGER_SECRET` is configured, send `Authorization: Bearer <RUN_TRIGGER_SECRET>`
 
 ## Local Run
 
@@ -37,5 +38,5 @@ npm start
 3. Add environment variables from `.env.example`.
 4. Use the start command:
    - `npm start`
-5. Ensure `TARGET_BASE_URL` points to your deployed Next app URL.
-6. If your Next API route is protected, set the same `CRON_SECRET` in both apps.
+5. Use the same `DATABASE_URL` as your app so the worker processes the same queue.
+6. If you want only your web app to trigger `/run`, set `RUN_TRIGGER_SECRET` here and `DISPATCH_QUEUE_RUN_SECRET` in the web app.
