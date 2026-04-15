@@ -1,7 +1,7 @@
 import 'dotenv/config'
 import http from "node:http";
 import cron from "node-cron";
-import { processDispatchAssignmentJobs as runDispatchAssignmentJobs } from "../web/src/modules/dispatch/application/assignDeliveryOrderToDispatchQueue.ts";
+import { processDispatchAssignmentJobs as runDispatchAssignmentJobs } from "./dispatchAssignment.js";
 
 const PORT = Number(process.env.PORT || 4000);
 const CRON_SCHEDULE = process.env.CRON_SCHEDULE || "0 0 * * *";

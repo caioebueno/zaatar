@@ -4,8 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "postinstall": "npm --prefix ../web install --omit=dev",
-    "start": "TSX_TSCONFIG_PATH=../web/tsconfig.json node --import tsx server.js"
+    "start": "node server.js"
   },
   "engines": {
     "node": ">=18"
@@ -13,6 +12,6 @@
   "dependencies": {
     "dotenv": "^17.4.2",
     "node-cron": "^4.2.1",
-    "tsx": "^4.20.6"
+    "pg": "^8.16.3"
   }
 }

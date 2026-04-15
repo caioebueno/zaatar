@@ -2,7 +2,7 @@
 
 Standalone Node.js server that triggers:
 
-- `processDispatchAssignmentJobs(...)` directly from your app codebase
+- local queue-processing logic inside this worker (no imports from `web/src`)
 
 This replaces Vercel Cron and is intended to run on Railway.
 
