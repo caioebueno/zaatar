@@ -16,3 +16,8 @@ export type UpdateDriverPriorityInput = {
   driverId: string;
   priorityLevel: number;
 };
+
+export type UpdateDriverActiveInput = {
+  driverId: string;
+  active: boolean;
+};

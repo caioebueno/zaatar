@@ -24,6 +24,8 @@ import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
 
+const ADDRESS_MAPS_URL = "https://maps.app.goo.gl/daqTiXJTTGwVeH4Z6";
+
 export function findProductById(
   categories: TCategory[],
   productId: string,
@@ -249,7 +251,12 @@ const MenuPage: React.FC<TMenuPage> = ({ data, lg }) => {
               <FiInfo />
               {content["information"]}
             </Button>
-            <Button className="flex-1 bg-foreground border-[#B0B7B6] border text-lightText text-sm py-2.5 font-semibold h-[36px]">
+            <Button
+              onClick={() =>
+                window.open(ADDRESS_MAPS_URL, "_blank", "noopener,noreferrer")
+              }
+              className="flex-1 bg-foreground border-[#B0B7B6] border text-lightText text-sm py-2.5 font-semibold h-[36px]"
+            >
               <FiMapPin />
               {content["address"]}
             </Button>

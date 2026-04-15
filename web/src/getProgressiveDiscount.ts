@@ -1,5 +1,4 @@
 import prisma from "../prisma";
-import { DEFAULT_PROGRESSIVE_DISCOUNT_ID } from "@/src/constants/progressiveDiscount";
 import {
   mapProgressiveDiscountPrize,
   progressiveDiscountPrizeInclude,
@@ -8,31 +7,45 @@ import TProgressiveDiscount from "./types/progressiveDiscount";
 
 const getProgressiveDiscount =
   async (): Promise<TProgressiveDiscount | null> => {
-    const prismaProgressiveDiscount =
-      await prisma.progressiveDiscount.findUnique({
-        where: {
-          id: DEFAULT_PROGRESSIVE_DISCOUNT_ID,
+    const discountInclude = {
+      steps: {
+        orderBy: {
+          amount: "asc" as const,
         },
         include: {
-          steps: {
+          prizes: {
             orderBy: {
-              amount: "asc",
+              createdAt: "asc" as const,
             },
-            include: {
-              prizes: {
-                orderBy: {
-                  createdAt: "asc",
-                },
-                include: progressiveDiscountPrizeInclude,
-              },
-            },
+            include: progressiveDiscountPrizeInclude,
           },
         },
+      },
+    };
+    const prismaProgressiveDiscount =
+      await prisma.progressiveDiscount.findFirst({
+        where: {
+          completed: false,
+        },
+        include: discountInclude,
+        orderBy: {
+          createdAt: "desc",
+        },
       });
-    if (!prismaProgressiveDiscount) return null;
+    const fallbackProgressiveDiscount = prismaProgressiveDiscount
+      ? null
+      : await prisma.progressiveDiscount.findFirst({
+          include: discountInclude,
+          orderBy: {
+            createdAt: "desc",
+          },
+        });
+    const resolvedProgressiveDiscount =
+      prismaProgressiveDiscount || fallbackProgressiveDiscount;
+    if (!resolvedProgressiveDiscount) return null;
     return {
-      id: prismaProgressiveDiscount?.id,
-      steps: prismaProgressiveDiscount?.steps.map((step) => ({
+      id: resolvedProgressiveDiscount.id,
+      steps: resolvedProgressiveDiscount.steps.map((step) => ({
         id: step.id,
         type: step.discountType,
         amount: step.amount || undefined,

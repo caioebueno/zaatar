@@ -7,8 +7,10 @@ type OrderRow = {
   id: string;
   createdAt: Date;
   scheduleFor: Date | null;
+  language: string | null;
   paidAt: Date | null;
   deliveredAt: Date | null;
+  estimatedDeliveryDurationMinutes: number | null;
   progressiveDiscountSnapshot: unknown | null;
   dispatchOrderIndex: number | null;
   number: string | null;
@@ -30,8 +32,10 @@ const getOrder = async (orderId: string): Promise<TOrder> => {
       o."id",
       o."createdAt",
       o."scheduleFor",
+      o."language",
       o."paidAt",
       o."deliveredAt",
+      o."estimatedDeliveryDurationMinutes",
       o."progressiveDiscountSnapshot",
       o."dispatchOrderIndex",
       o."number",
@@ -67,8 +71,10 @@ const getOrder = async (orderId: string): Promise<TOrder> => {
       o."id",
       o."createdAt",
       o."scheduleFor",
+      o."language",
       o."paidAt",
       o."deliveredAt",
+      o."estimatedDeliveryDurationMinutes",
       o."progressiveDiscountSnapshot",
       o."dispatchOrderIndex",
       o."number",
@@ -131,9 +137,11 @@ const getOrder = async (orderId: string): Promise<TOrder> => {
     id: order.id,
     createdAt: order.createdAt.toISOString(),
     scheduleFor: order.scheduleFor ? order.scheduleFor.toISOString() : null,
+    language: order.language,
     paidAt: order.paidAt ? order.paidAt.toISOString() : null,
     ...(progressiveDiscountSnapshot ? { progressiveDiscountSnapshot } : {}),
     ...(order.deliveredAt ? { deliveredAt: order.deliveredAt.toISOString() } : {}),
+    estimatedDeliveryDurationMinutes: order.estimatedDeliveryDurationMinutes,
     ...(order.dispatchOrderIndex !== null
       ? { dispatchOrderIndex: order.dispatchOrderIndex }
       : {}),

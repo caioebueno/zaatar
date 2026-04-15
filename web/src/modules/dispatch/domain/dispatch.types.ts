@@ -6,6 +6,7 @@ import type TCustomer from "@/src/types/customer";
 export type Dispatch = {
   id: string;
   createdAt: string;
+  queueIndex?: number;
   dispatchAt?: string;
   dispatched: boolean;
   estimatedDeliveryDurationMinutes?: number;
@@ -34,8 +35,10 @@ export type UpdateDispatchInput = {
 
 export type UpdateDispatchStatusInput = {
   dispatchId: string;
-  dispatched: boolean;
+  dispatched?: boolean;
   dispatchAt?: string | null;
+  driverId?: string | null;
+  queueIndex?: number;
 };
 
 export type MoveDispatchOrderInput = {

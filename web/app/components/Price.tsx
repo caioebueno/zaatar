@@ -71,6 +71,8 @@ const formatDiscountOffLabel = (discountAmount: number) => {
   return `$${Math.floor(discountInDollars)} off`;
 };
 
+const DELIVERY_MINIMUM_ORDER_CENTS = 2499;
+
 type TSummaryModifierItem = {
   id: string;
   title: string;
@@ -548,6 +550,41 @@ function toScheduleForIsoString(
   return parsedDate.toISOString();
 }
 
+function resolveCheckoutErrorMessage(
+  error: unknown,
+  content: { [key: string]: string },
+): string {
+  const reason =
+    typeof error === "object" &&
+    error !== null &&
+    "data" in error &&
+    typeof (error as { data?: { message?: string } }).data?.message === "string"
+      ? (error as { data?: { message?: string } }).data?.message
+      : undefined;
+
+  switch (reason) {
+    case "CART_ITEMS_REQUIRED":
+      return content["yourCart"] || "Your cart is empty";
+    case "DELIVERY_MUST_HAVE_ADDRESS":
+      return content["selectAddress"] || "Select an address";
+    case "OUTSIDE_DELIVERY_COVERAGE_AREA":
+      return (
+        content["outsideCoverageArea"] ||
+        "This address is outside our delivery area"
+      );
+    case "INVALID_SELECTED_PRIZE":
+    case "INVALID_SELECTED_PRIZE_PRODUCTS":
+      return content["selectPrizeToContinue"] || "Select a prize to continue";
+    case "INVALID_SCHEDULE_FOR":
+      return content["selectDateAndTime"] || "Select a date and time";
+    default:
+      return (
+        content["checkoutError"] ||
+        "We could not place your order. Please try again."
+      );
+  }
+}
+
 const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
   const { cart, clearCart, setSelectedPrize } = useCart();
   const [step, setStep] = useQueryState("step", parseAsInteger.withDefault(1));
@@ -570,6 +607,7 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
   const [isBranchOpen, setIsBranchOpen] = useState<boolean | null>(null);
   const [scheduledAt, setScheduledAt] = useState<ScheduleSelection | null>(null);
   const [scheduleError, setScheduleError] = useState<string | null>(null);
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
 
   const router = useRouter();
   const content = text[lg];
@@ -660,13 +698,19 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
     price.discountedPrice +
     tipAmount;
   const orderTotal = price.discountedPrice + tipAmount + deliveryFee + taxAmount;
+  const isDeliveryEligible = price.discountedPrice >= DELIVERY_MINIMUM_ORDER_CENTS;
 
   const handleServiceTypeSelection = (type: TOrderType) => {
+    if (type === "DELIVERY" && !isDeliveryEligible) {
+      return;
+    }
+
     if (prizeSelectionRequired && (!selectedPrize || !isSelectedPrizeReady)) {
       setPrizeBannerShakeSignal((currentValue) => currentValue + 1);
       return;
     }
 
+    setCheckoutError(null);
     setStep(2);
     setOrderType(type);
   };
@@ -688,6 +732,11 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
 
   const handleConfirm = async () => {
     try {
+      setCheckoutError(null);
+      if (!Array.isArray(cart.items) || cart.items.length === 0) {
+        setCheckoutError(content["yourCart"] || "Your cart is empty");
+        return;
+      }
       if (!paymentType || !customer || !orderType) return;
       if (orderType === "DELIVERY" && !selectedAddress) return;
       if (isBranchOpen === false) {
@@ -710,6 +759,7 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
         orderType,
         paymentMethod: paymentType,
         customerId: customer.id,
+        language: lg,
         addressId: selectedAddress || undefined,
         scheduleFor,
         selectedPrize: selectedPrize
@@ -724,7 +774,8 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
       setLoading(false);
       router.push(`/menu/${lg}/confirmation/${order.id}`);
     } catch (err) {
-      console.log(err);
+      console.error("Checkout failed:", err);
+      setCheckoutError(resolveCheckoutErrorMessage(err, content));
       setLoading(false);
     }
   };
@@ -825,6 +876,9 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
           <TipSelector onSelect={setSelectedTip} tipSelected={selectedTip} />
         </div>
         <div className="bg-foreground pt-4 pb-8 px-4 border-[#B9BFBF] border-t fixed bottom-0 w-full flex flex-col items-center gap-2.5">
+          {checkoutError && (
+            <span className="text-red-600 text-sm w-full">{checkoutError}</span>
+          )}
           <Button
             onClick={handleConfirm}
             disabled={
@@ -946,9 +1000,19 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
       {cart.items.length > 0 && (
         <div className="bg-foreground pt-4 pb-8 px-4 border-[#B9BFBF] border-t fixed bottom-0 w-full flex flex-col items-center gap-2.5">
           <span className="font-bold text-lg">{content["selectService"]}</span>
+          {!isDeliveryEligible && (
+            <span className="text-sm text-lightText">
+              {(content["deliveryMinimum"] || "Delivery available from") +
+                " " +
+                formatCurrency(DELIVERY_MINIMUM_ORDER_CENTS)}
+            </span>
+          )}
           <Button
-            className="bg-brandBackground w-full py-2! gap-3"
+            className={`bg-brandBackground w-full py-2! gap-3 transition-opacity duration-200 ${
+              !isDeliveryEligible ? "opacity-50" : "opacity-100"
+            }`}
             onClick={() => handleServiceTypeSelection("DELIVERY")}
+            disabled={!isDeliveryEligible}
           >
             <FiTruck size={22} />
             <span className="text-lg">{content["delivery"]}</span>
@@ -1903,8 +1967,11 @@ const AddressStep: React.FC<TAddressStep> = ({
     setError(null);
     if (!customer) {
       setLoading(true);
+      const phoneForCustomerLookup = phoneData.e164
+        ? phoneData.e164.replace(/\D/g, "")
+        : phoneData.raw.replace(/\D/g, "");
       const customer = await getCustomerData({
-        phone: phoneData.raw,
+        phone: phoneForCustomerLookup,
       });
       setName(customer.name);
       setCustomer(customer);
@@ -1956,8 +2023,11 @@ const AddressStep: React.FC<TAddressStep> = ({
 
   const handleConfirmAddress = async (data: TAddress) => {
     if (!phoneData) return;
+    const phoneForCustomerLookup = phoneData.e164
+      ? phoneData.e164.replace(/\D/g, "")
+      : phoneData.raw.replace(/\D/g, "");
     const customer = await getCustomerData({
-      phone: phoneData.raw,
+      phone: phoneForCustomerLookup,
     });
     setCustomer(customer);
     setSelectedAddress(data.id);

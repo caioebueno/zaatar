@@ -20,6 +20,7 @@ import type {
 type DispatchRow = {
   id: string;
   createdAt: Date;
+  queueIndex: number | null;
   dispatchAt: Date | null;
   dispatched: boolean;
   estimatedDeliveryDurationMinutes: number | null;
@@ -36,8 +37,10 @@ type DispatchOrderRow = {
   id: string;
   createdAt: Date;
   scheduleFor: Date | null;
+  language: string | null;
   paidAt: Date | null;
   deliveredAt: Date | null;
+  estimatedDeliveryDurationMinutes: number | null;
   progressiveDiscountSnapshot: unknown | null;
   dispatchOrderIndex: number | null;
   number: string | null;
@@ -77,9 +80,11 @@ type DispatchAddressCandidateRow = {
   lng: string;
 };
 
-type DispatchRouteStopRow = {
-  deliveryAddressId: string;
+type DispatchOrderRouteRow = {
+  id: string;
+  dispatchOrderIndex: number | null;
   createdAt: Date;
+  deliveryAddressId: string;
   lat: string;
   lng: string;
 };
@@ -138,6 +143,18 @@ type RouteStop = {
   lng: string;
 };
 
+type OrderTypeRow = {
+  id: string;
+  type: TOrder["type"];
+  scheduleFor: Date | null;
+};
+
+type DispatchOrderCompositionRow = {
+  totalOrders: bigint;
+  takeawayOrders: bigint;
+  scheduledOrders: bigint;
+};
+
 function mapDriver(row: DispatchRow): Driver | undefined {
   if (
     !row.driverId ||
@@ -179,6 +196,7 @@ function mapDispatch(
           scheduleFor: orderRow.scheduleFor
             ? orderRow.scheduleFor.toISOString()
             : null,
+          language: orderRow.language,
           paidAt: orderRow.paidAt ? orderRow.paidAt.toISOString() : null,
           ...(orderRow.progressiveDiscountSnapshot &&
           typeof orderRow.progressiveDiscountSnapshot === "object"
@@ -190,6 +208,8 @@ function mapDispatch(
           ...(orderRow.deliveredAt
             ? { deliveredAt: orderRow.deliveredAt.toISOString() }
             : {}),
+          estimatedDeliveryDurationMinutes:
+            orderRow.estimatedDeliveryDurationMinutes,
           dispatchOrderIndex: orderRow.dispatchOrderIndex ?? index + 1,
           number: orderRow.number || undefined,
           delivered: orderRow.delivered,
@@ -237,6 +257,7 @@ function mapDispatch(
   return {
     id: row.id,
     createdAt: row.createdAt.toISOString(),
+    ...(row.queueIndex !== null ? { queueIndex: row.queueIndex } : {}),
     ...(row.dispatchAt ? { dispatchAt: row.dispatchAt.toISOString() } : {}),
     dispatched: row.dispatched,
     ...(row.estimatedDeliveryDurationMinutes !== null
@@ -255,6 +276,71 @@ function mapDispatch(
     ...(driver ? { driver } : {}),
     orders: ordersByDispatchId.get(row.id) || [],
   };
+}
+
+async function normalizeDispatchQueueIndexes(
+  tx: Prisma.TransactionClient,
+): Promise<void> {
+  await tx.$executeRaw`
+    WITH ranked_dispatches AS (
+      SELECT
+        dispatch."id",
+        ROW_NUMBER() OVER (
+          ORDER BY
+            COALESCE(dispatch."queueIndex", 2147483647) ASC,
+            dispatch."createdAt" ASC,
+            dispatch."id" ASC
+        ) AS "nextQueueIndex"
+      FROM "Dispatch" dispatch
+    )
+    UPDATE "Dispatch" dispatch
+    SET "queueIndex" = ranked_dispatches."nextQueueIndex"
+    FROM ranked_dispatches
+    WHERE dispatch."id" = ranked_dispatches."id"
+  `;
+}
+
+async function moveDispatchToQueueIndex(
+  tx: Prisma.TransactionClient,
+  dispatchId: string,
+  targetQueueIndex: number,
+): Promise<void> {
+  const rows = await tx.$queryRaw<{ id: string }[]>`
+    SELECT dispatch."id"
+    FROM "Dispatch" dispatch
+    ORDER BY
+      COALESCE(dispatch."queueIndex", 2147483647) ASC,
+      dispatch."createdAt" ASC,
+      dispatch."id" ASC
+  `;
+
+  const orderedDispatchIds = rows.map((row) => row.id);
+  const fromIndex = orderedDispatchIds.findIndex((id) => id === dispatchId);
+
+  if (fromIndex === -1) {
+    throw {
+      code: "NOT_FOUND",
+      details: {
+        service: "DISPATCH",
+        id: dispatchId,
+      },
+    };
+  }
+
+  const [movedDispatchId] = orderedDispatchIds.splice(fromIndex, 1);
+  const clampedTargetIndex = Math.max(
+    1,
+    Math.min(targetQueueIndex, orderedDispatchIds.length + 1),
+  );
+  orderedDispatchIds.splice(clampedTargetIndex - 1, 0, movedDispatchId);
+
+  for (const [index, id] of orderedDispatchIds.entries()) {
+    await tx.$executeRaw`
+      UPDATE "Dispatch"
+      SET "queueIndex" = ${index + 1}
+      WHERE "id" = ${id}
+    `;
+  }
 }
 
 async function syncDispatchOrders(
@@ -320,8 +406,10 @@ async function getDispatchOrders(
       orders."id",
       orders."createdAt",
       orders."scheduleFor",
+      orders."language",
       orders."paidAt",
       orders."deliveredAt",
+      orders."estimatedDeliveryDurationMinutes",
       orders."progressiveDiscountSnapshot",
       orders."dispatchOrderIndex",
       orders."number",
@@ -655,34 +743,61 @@ async function calculateOptimizedRoute(stops: RouteStop[]): Promise<{
   };
 }
 
-async function calculateDispatchRouteMetrics(
-  stops: DispatchRouteStopRow[],
+async function calculateDispatchOrderDeliveryMetricsByPosition(
+  orders: DispatchOrderRouteRow[],
 ): Promise<{
   estimatedDeliveryDurationMinutes: number;
   estimatedRoundTripDurationMinutes: number;
+  durationToOrderId: Map<string, number>;
 }> {
-  const optimizedRoute = await calculateOptimizedRoute(
-    stops.map((stop) => ({
-      routeKey: stop.deliveryAddressId,
-      deliveryAddressId: stop.deliveryAddressId,
-      createdAt: stop.createdAt,
-      lat: stop.lat,
-      lng: stop.lng,
-    })),
-  );
-
-  if (optimizedRoute.orderedStops.length === 0) {
+  if (orders.length === 0) {
     return {
       estimatedDeliveryDurationMinutes: 0,
       estimatedRoundTripDurationMinutes: 0,
+      durationToOrderId: new Map(),
     };
   }
 
+  const durationToAddressId = new Map<string, number>();
+  const durationToOrderId = new Map<string, number>();
+  let currentCoordinates = DEFAULT_BRANCH_COORDINATES;
+  let accumulatedDurationInMinutes = 0;
+
+  for (const order of orders) {
+    const existingDurationToAddress = durationToAddressId.get(
+      order.deliveryAddressId,
+    );
+
+    if (existingDurationToAddress !== undefined) {
+      durationToOrderId.set(order.id, existingDurationToAddress);
+      continue;
+    }
+
+    const orderCoordinates = parseCoordinates(order);
+    const durationToNextStop = await getMapboxRouteDurationInMinutes(
+      currentCoordinates,
+      orderCoordinates,
+    );
+
+    accumulatedDurationInMinutes += durationToNextStop;
+    const roundedDurationToStop = Math.ceil(accumulatedDurationInMinutes);
+
+    durationToAddressId.set(order.deliveryAddressId, roundedDurationToStop);
+    durationToOrderId.set(order.id, roundedDurationToStop);
+    currentCoordinates = orderCoordinates;
+  }
+
+  const returnToStoreDurationInMinutes = await getMapboxRouteDurationInMinutes(
+    currentCoordinates,
+    DEFAULT_BRANCH_COORDINATES,
+  );
+
   return {
-    estimatedDeliveryDurationMinutes:
-      optimizedRoute.estimatedDeliveryDurationMinutes,
-    estimatedRoundTripDurationMinutes:
-      optimizedRoute.estimatedRoundTripDurationMinutes,
+    estimatedDeliveryDurationMinutes: Math.ceil(accumulatedDurationInMinutes),
+    estimatedRoundTripDurationMinutes: Math.ceil(
+      accumulatedDurationInMinutes + returnToStoreDurationInMinutes,
+    ),
+    durationToOrderId,
   };
 }
 
@@ -718,30 +833,233 @@ async function assertDriverCanBeAssigned(
   }
 }
 
+async function findOrderTypesByIds(
+  tx: Prisma.TransactionClient,
+  orderIds: string[],
+): Promise<OrderTypeRow[]> {
+  if (orderIds.length === 0) return [];
+
+  return tx.$queryRaw<OrderTypeRow[]>`
+    SELECT "id", "type", "scheduleFor"
+    FROM "Order"
+    WHERE "id" IN (${Prisma.join(orderIds)})
+  `;
+}
+
+function assertTakeawayDispatchComposition(
+  orderTypes: OrderTypeRow[],
+  field: string,
+): void {
+  const takeawayOrders = orderTypes.filter(
+    (order) => order.type === "TAKEAWAY",
+  );
+
+  if (takeawayOrders.length > 0 && orderTypes.length > 1) {
+    throw {
+      code: "INVALID_PARAMS",
+      details: {
+        field,
+        message: "TAKEAWAY_DISPATCH_CAN_ONLY_HAVE_ONE_ORDER",
+      },
+    };
+  }
+}
+
+function assertScheduledDispatchComposition(
+  orderTypes: OrderTypeRow[],
+  field: string,
+): void {
+  const scheduledOrders = orderTypes.filter(
+    (order) => order.scheduleFor !== null,
+  );
+
+  if (scheduledOrders.length > 0 && orderTypes.length > 1) {
+    throw {
+      code: "INVALID_PARAMS",
+      details: {
+        field,
+        message: "SCHEDULED_ORDER_REQUIRES_OWN_DISPATCH",
+      },
+    };
+  }
+}
+
+async function assertOrderIdsExistAndTakeawayComposition(
+  tx: Prisma.TransactionClient,
+  orderIds: string[],
+  field: string,
+): Promise<void> {
+  const orderTypes = await findOrderTypesByIds(tx, orderIds);
+
+  if (orderTypes.length !== orderIds.length) {
+    const foundIds = new Set(orderTypes.map((order) => order.id));
+    const missingOrderId = orderIds.find((orderId) => !foundIds.has(orderId));
+
+    throw {
+      code: "NOT_FOUND",
+      details: {
+        service: "ORDER",
+        id: missingOrderId || orderIds[0],
+      },
+    };
+  }
+
+  assertTakeawayDispatchComposition(orderTypes, field);
+  assertScheduledDispatchComposition(orderTypes, field);
+}
+
+async function getDispatchOrderComposition(
+  tx: Prisma.TransactionClient,
+  dispatchId: string,
+  excludeOrderId?: string,
+): Promise<{
+  totalOrders: number;
+  takeawayOrders: number;
+  scheduledOrders: number;
+}> {
+  const exclusionClause = excludeOrderId
+    ? Prisma.sql`AND orders."id" != ${excludeOrderId}`
+    : Prisma.empty;
+
+  const [composition] = await tx.$queryRaw<DispatchOrderCompositionRow[]>`
+    SELECT
+      COUNT(*)::BIGINT AS "totalOrders",
+      COUNT(*) FILTER (WHERE orders."type" = 'TAKEAWAY')::BIGINT AS "takeawayOrders",
+      COUNT(*) FILTER (WHERE orders."scheduleFor" IS NOT NULL)::BIGINT AS "scheduledOrders"
+    FROM "Order" orders
+    WHERE orders."dispatchId" = ${dispatchId}
+    ${exclusionClause}
+  `;
+
+  return {
+    totalOrders: Number(composition?.totalOrders ?? 0),
+    takeawayOrders: Number(composition?.takeawayOrders ?? 0),
+    scheduledOrders: Number(composition?.scheduledOrders ?? 0),
+  };
+}
+
+async function assertDispatchCanReceiveOrder(
+  tx: Prisma.TransactionClient,
+  {
+    dispatchId,
+    orderType,
+    orderScheduled,
+    field,
+    excludeOrderId,
+  }: {
+    dispatchId: string;
+    orderType: TOrder["type"];
+    orderScheduled: boolean;
+    field: string;
+    excludeOrderId?: string;
+  },
+): Promise<void> {
+  const composition = await getDispatchOrderComposition(
+    tx,
+    dispatchId,
+    excludeOrderId,
+  );
+
+  if (orderType === "TAKEAWAY" && composition.totalOrders > 0) {
+    throw {
+      code: "INVALID_PARAMS",
+      details: {
+        field,
+        message: "TAKEAWAY_DISPATCH_CAN_ONLY_HAVE_ONE_ORDER",
+      },
+    };
+  }
+
+  if (orderType !== "TAKEAWAY" && composition.takeawayOrders > 0) {
+    throw {
+      code: "INVALID_PARAMS",
+      details: {
+        field,
+        message: "CANNOT_ADD_ORDER_TO_TAKEAWAY_DISPATCH",
+      },
+    };
+  }
+
+  if (orderScheduled && composition.totalOrders > 0) {
+    throw {
+      code: "INVALID_PARAMS",
+      details: {
+        field,
+        message: "SCHEDULED_ORDER_REQUIRES_OWN_DISPATCH",
+      },
+    };
+  }
+
+  if (!orderScheduled && composition.scheduledOrders > 0) {
+    throw {
+      code: "INVALID_PARAMS",
+      details: {
+        field,
+        message: "CANNOT_ADD_ORDER_TO_SCHEDULED_DISPATCH",
+      },
+    };
+  }
+}
+
 class PrismaDispatchRepository implements DispatchRepository {
   async assignOrder(dispatchId: string, orderId: string): Promise<void> {
-    const [order] = await prisma.$queryRaw<{ id: string }[]>`
-      UPDATE "Order"
-      SET
-        "dispatchId" = ${dispatchId},
-        "dispatchOrderIndex" = (
-          SELECT COALESCE(MAX(existingOrders."dispatchOrderIndex"), 0) + 1
-          FROM "Order" existingOrders
-          WHERE existingOrders."dispatchId" = ${dispatchId}
-        )
-      WHERE "id" = ${orderId}
-      RETURNING "id"
-    `;
+    await prisma.$transaction(async (tx) => {
+      const [dispatch] = await tx.$queryRaw<{ id: string }[]>`
+        SELECT "id"
+        FROM "Dispatch"
+        WHERE "id" = ${dispatchId}
+        LIMIT 1
+      `;
 
-    if (!order) {
-      throw {
-        code: "NOT_FOUND",
-        details: {
-          service: "ORDER",
-          id: orderId,
-        },
-      };
-    }
+      if (!dispatch) {
+        throw {
+          code: "NOT_FOUND",
+          details: {
+            service: "DISPATCH",
+            id: dispatchId,
+          },
+        };
+      }
+
+      const [order] = await tx.$queryRaw<
+        { id: string; type: TOrder["type"]; scheduleFor: Date | null }[]
+      >`
+        SELECT "id", "type", "scheduleFor"
+        FROM "Order"
+        WHERE "id" = ${orderId}
+        LIMIT 1
+      `;
+
+      if (!order) {
+        throw {
+          code: "NOT_FOUND",
+          details: {
+            service: "ORDER",
+            id: orderId,
+          },
+        };
+      }
+
+      await assertDispatchCanReceiveOrder(tx, {
+        dispatchId,
+        orderType: order.type,
+        orderScheduled: order.scheduleFor !== null,
+        field: "dispatchId",
+        excludeOrderId: order.id,
+      });
+
+      await tx.$executeRaw`
+        UPDATE "Order"
+        SET
+          "dispatchId" = ${dispatchId},
+          "dispatchOrderIndex" = (
+            SELECT COALESCE(MAX(existingOrders."dispatchOrderIndex"), 0) + 1
+            FROM "Order" existingOrders
+            WHERE existingOrders."dispatchId" = ${dispatchId}
+          )
+        WHERE "id" = ${orderId}
+      `;
+    });
   }
 
   async autoAssignDriver(dispatchId: string): Promise<void> {
@@ -851,9 +1169,14 @@ class PrismaDispatchRepository implements DispatchRepository {
   ): Promise<MoveDispatchOrderResult> {
     return prisma.$transaction(async (tx) => {
       const [order] = await tx.$queryRaw<
-        { id: string; dispatchId: string | null }[]
+        {
+          id: string;
+          dispatchId: string | null;
+          type: TOrder["type"];
+          scheduleFor: Date | null;
+        }[]
       >`
-        SELECT "id", "dispatchId"
+        SELECT "id", "dispatchId", "type", "scheduleFor"
         FROM "Order"
         WHERE "id" = ${data.orderId}
         LIMIT 1
@@ -879,12 +1202,17 @@ class PrismaDispatchRepository implements DispatchRepository {
         await tx.$executeRaw`
           INSERT INTO "Dispatch" (
             "id",
+            "queueIndex",
             "dispatched",
             "dispatchAt",
             "driverId"
           )
           VALUES (
             ${targetDispatchId},
+            (
+              SELECT COALESCE(MAX(dispatch."queueIndex"), 0) + 1
+              FROM "Dispatch" dispatch
+            ),
             false,
             NULL,
             NULL
@@ -922,6 +1250,19 @@ class PrismaDispatchRepository implements DispatchRepository {
       }
 
       const sourceDispatchId = order.dispatchId || undefined;
+
+      if (
+        sourceDispatchId !== targetDispatchId &&
+        typeof targetDispatchId === "string"
+      ) {
+        await assertDispatchCanReceiveOrder(tx, {
+          dispatchId: targetDispatchId,
+          orderType: order.type,
+          orderScheduled: order.scheduleFor !== null,
+          field: "targetDispatchId",
+          excludeOrderId: order.id,
+        });
+      }
 
       await tx.$executeRaw`
         UPDATE "Order"
@@ -996,6 +1337,7 @@ class PrismaDispatchRepository implements DispatchRepository {
             DELETE FROM "Dispatch"
             WHERE "id" = ${sourceDispatchId}
           `;
+          await normalizeDispatchQueueIndexes(tx);
           sourceDispatchDeleted = true;
         }
       }
@@ -1019,10 +1361,20 @@ class PrismaDispatchRepository implements DispatchRepository {
         await assertDriverCanBeAssigned(tx, data.driverId);
       }
 
+      await assertOrderIdsExistAndTakeawayComposition(
+        tx,
+        data.orderIds,
+        "orderIds",
+      );
+
       const [createdDispatch] = await tx.$queryRaw<DispatchRow[]>`
-        INSERT INTO "Dispatch" ("id", "dispatched", "dispatchAt", "driverId")
+        INSERT INTO "Dispatch" ("id", "queueIndex", "dispatched", "dispatchAt", "driverId")
         VALUES (
           ${dispatchId},
+          (
+            SELECT COALESCE(MAX(dispatch."queueIndex"), 0) + 1
+            FROM "Dispatch" dispatch
+          ),
           ${data.dispatched ?? false},
           ${data.dispatched ? new Date() : null},
           ${data.driverId ?? null}
@@ -1030,6 +1382,7 @@ class PrismaDispatchRepository implements DispatchRepository {
         RETURNING
           "id",
           "createdAt",
+          "queueIndex",
           "dispatchAt",
           "dispatched",
           "estimatedDeliveryDurationMinutes",
@@ -1050,6 +1403,7 @@ class PrismaDispatchRepository implements DispatchRepository {
       SELECT
         dispatch."id",
         dispatch."createdAt",
+        dispatch."queueIndex",
         dispatch."dispatchAt",
         dispatch."dispatched",
         dispatch."estimatedDeliveryDurationMinutes",
@@ -1117,6 +1471,13 @@ class PrismaDispatchRepository implements DispatchRepository {
       WHERE dispatch."dispatched" = false
         AND orders."deliveryAddressId" IS NOT NULL
         AND orders."deliveredAt" IS NULL
+        AND orders."scheduleFor" IS NULL
+        AND NOT EXISTS (
+          SELECT 1
+          FROM "Order" scheduledOrders
+          WHERE scheduledOrders."dispatchId" = dispatch."id"
+            AND scheduledOrders."scheduleFor" IS NOT NULL
+        )
         AND (
           SELECT COUNT(*)
           FROM "Order" dispatchOrders
@@ -1212,11 +1573,33 @@ class PrismaDispatchRepository implements DispatchRepository {
     return bestMatch?.dispatchId;
   }
 
+  async isOrderScheduled(orderId: string): Promise<boolean> {
+    const [order] = await prisma.$queryRaw<{ scheduleFor: Date | null }[]>`
+      SELECT "scheduleFor"
+      FROM "Order"
+      WHERE "id" = ${orderId}
+      LIMIT 1
+    `;
+
+    if (!order) {
+      throw {
+        code: "NOT_FOUND",
+        details: {
+          service: "ORDER",
+          id: orderId,
+        },
+      };
+    }
+
+    return order.scheduleFor !== null;
+  }
+
   async findNextForDriver(driverId: string): Promise<Dispatch | undefined> {
     const [dispatchRow] = await prisma.$queryRaw<DispatchRow[]>`
       SELECT
         dispatch."id",
         dispatch."createdAt",
+        dispatch."queueIndex",
         dispatch."dispatchAt",
         dispatch."dispatched",
         dispatch."estimatedDeliveryDurationMinutes",
@@ -1237,6 +1620,7 @@ class PrismaDispatchRepository implements DispatchRepository {
         )
       ORDER BY
         dispatch."dispatched" DESC,
+        COALESCE(dispatch."queueIndex", 2147483647) ASC,
         COALESCE(dispatch."dispatchAt", dispatch."createdAt") ASC,
         dispatch."createdAt" ASC
       LIMIT 1
@@ -1269,6 +1653,7 @@ class PrismaDispatchRepository implements DispatchRepository {
       SELECT
         dispatch."id",
         dispatch."createdAt",
+        dispatch."queueIndex",
         dispatch."dispatchAt",
         dispatch."dispatched",
         dispatch."estimatedDeliveryDurationMinutes",
@@ -1301,7 +1686,10 @@ class PrismaDispatchRepository implements DispatchRepository {
           )
         )
       )
-      ORDER BY dispatch."dispatched" DESC, dispatch."createdAt" ASC
+      ORDER BY
+        dispatch."dispatched" DESC,
+        COALESCE(dispatch."queueIndex", 2147483647) ASC,
+        dispatch."createdAt" ASC
     `;
 
     const orderRows = await getDispatchOrders(dispatches.map((dispatch) => dispatch.id));
@@ -1343,29 +1731,87 @@ class PrismaDispatchRepository implements DispatchRepository {
       };
     }
 
-    const [updatedDispatch] = await prisma.$queryRaw<DispatchRow[]>`
-      UPDATE "Dispatch"
-      SET
-        "dispatched" = ${data.dispatched},
-        "dispatchAt" = ${
+    const updatedDispatch = await prisma.$transaction(async (tx) => {
+      const [existingDispatch] = await tx.$queryRaw<{ id: string }[]>`
+        SELECT "id"
+        FROM "Dispatch"
+        WHERE "id" = ${data.dispatchId}
+        LIMIT 1
+      `;
+
+      if (!existingDispatch) {
+        throw {
+          code: "NOT_FOUND",
+          details: {
+            service: "DISPATCH",
+            id: data.dispatchId,
+          },
+        };
+      }
+
+      const updates: Prisma.Sql[] = [];
+
+      if (data.dispatched !== undefined) {
+        updates.push(Prisma.sql`"dispatched" = ${data.dispatched}`);
+        updates.push(
           data.dispatched
-            ? parsedDispatchAt || Prisma.sql`COALESCE("dispatchAt", CURRENT_TIMESTAMP)`
-            : null
+            ? Prisma.sql`"dispatchAt" = ${
+                parsedDispatchAt ||
+                Prisma.sql`COALESCE("dispatchAt", CURRENT_TIMESTAMP)`
+              }`
+            : Prisma.sql`"dispatchAt" = NULL`,
+        );
+      }
+
+      if (data.driverId !== undefined) {
+        if (data.driverId !== null) {
+          await assertDriverCanBeAssigned(tx, data.driverId);
         }
-      WHERE "id" = ${data.dispatchId}
-      RETURNING
-        "id",
-        "createdAt",
-        "dispatchAt",
-        "dispatched",
-        "estimatedDeliveryDurationMinutes",
-        "estimatedRoundTripDurationMinutes",
-        "driverId",
-        NULL::TIMESTAMP AS "driverCreatedAt",
-        NULL::TEXT AS "driverName",
-        NULL::BOOLEAN AS "driverActive",
-        NULL::INTEGER AS "driverPriorityLevel"
-    `;
+
+        updates.push(Prisma.sql`"driverId" = ${data.driverId}`);
+      }
+
+      if (updates.length > 0) {
+        await tx.$executeRaw`
+          UPDATE "Dispatch"
+          SET ${Prisma.join(updates, ", ")}
+          WHERE "id" = ${data.dispatchId}
+        `;
+      }
+
+      if (data.queueIndex !== undefined) {
+        await moveDispatchToQueueIndex(tx, data.dispatchId, data.queueIndex);
+      }
+
+      if (updates.length === 0 && data.queueIndex === undefined) {
+        throw {
+          code: "INVALID_PARAMS",
+          details: {
+            field: "body",
+          },
+        };
+      }
+
+      const [row] = await tx.$queryRaw<DispatchRow[]>`
+        SELECT
+          dispatch."id",
+          dispatch."createdAt",
+          dispatch."queueIndex",
+          dispatch."dispatchAt",
+          dispatch."dispatched",
+          dispatch."estimatedDeliveryDurationMinutes",
+          dispatch."estimatedRoundTripDurationMinutes",
+          dispatch."driverId",
+          NULL::TIMESTAMP AS "driverCreatedAt",
+          NULL::TEXT AS "driverName",
+          NULL::BOOLEAN AS "driverActive",
+          NULL::INTEGER AS "driverPriorityLevel"
+        FROM "Dispatch" dispatch
+        WHERE dispatch."id" = ${data.dispatchId}
+      `;
+
+      return row;
+    });
 
     if (!updatedDispatch) {
       throw {
@@ -1381,6 +1827,7 @@ class PrismaDispatchRepository implements DispatchRepository {
       SELECT
         dispatch."id",
         dispatch."createdAt",
+        dispatch."queueIndex",
         dispatch."dispatchAt",
         dispatch."dispatched",
         dispatch."estimatedDeliveryDurationMinutes",
@@ -1430,6 +1877,12 @@ class PrismaDispatchRepository implements DispatchRepository {
         updates.push(Prisma.sql`"driverId" = ${data.driverId}`);
       }
 
+      await assertOrderIdsExistAndTakeawayComposition(
+        tx,
+        data.orderIds,
+        "orderIds",
+      );
+
       const [updatedDispatch] = await tx.$queryRaw<DispatchRow[]>`
         UPDATE "Dispatch"
         SET ${Prisma.join(updates, ", ")}
@@ -1437,6 +1890,7 @@ class PrismaDispatchRepository implements DispatchRepository {
         RETURNING
           "id",
           "createdAt",
+          "queueIndex",
           "dispatchAt",
           "dispatched",
           "estimatedDeliveryDurationMinutes",
@@ -1467,6 +1921,7 @@ class PrismaDispatchRepository implements DispatchRepository {
       SELECT
         dispatch."id",
         dispatch."createdAt",
+        dispatch."queueIndex",
         dispatch."dispatchAt",
         dispatch."dispatched",
         dispatch."estimatedDeliveryDurationMinutes",
@@ -1500,10 +1955,12 @@ class PrismaDispatchRepository implements DispatchRepository {
   }
 
   async refreshRouteMetrics(dispatchId: string): Promise<void> {
-    const routeStops = await prisma.$queryRaw<DispatchRouteStopRow[]>`
-      SELECT DISTINCT ON (deliveryAddress."id")
-        deliveryAddress."id" AS "deliveryAddressId",
+    const routeOrders = await prisma.$queryRaw<DispatchOrderRouteRow[]>`
+      SELECT
+        orders."id",
+        orders."dispatchOrderIndex",
         orders."createdAt",
+        deliveryAddress."id" AS "deliveryAddressId",
         deliveryAddress."lat",
         deliveryAddress."lng"
       FROM "Order" orders
@@ -1511,18 +1968,38 @@ class PrismaDispatchRepository implements DispatchRepository {
         ON deliveryAddress."id" = orders."deliveryAddressId"
       WHERE orders."dispatchId" = ${dispatchId}
         AND orders."deliveredAt" IS NULL
-      ORDER BY deliveryAddress."id", orders."createdAt" ASC
+      ORDER BY
+        orders."dispatchOrderIndex" ASC NULLS LAST,
+        orders."createdAt" ASC,
+        orders."id" ASC
     `;
 
-    const metrics = await calculateDispatchRouteMetrics(routeStops);
+    const metrics =
+      await calculateDispatchOrderDeliveryMetricsByPosition(routeOrders);
 
-    await prisma.$executeRaw`
-      UPDATE "Dispatch"
-      SET
-        "estimatedDeliveryDurationMinutes" = ${metrics.estimatedDeliveryDurationMinutes},
-        "estimatedRoundTripDurationMinutes" = ${metrics.estimatedRoundTripDurationMinutes}
-      WHERE "id" = ${dispatchId}
-    `;
+    await prisma.$transaction(async (tx) => {
+      await tx.$executeRaw`
+        UPDATE "Dispatch"
+        SET
+          "estimatedDeliveryDurationMinutes" = ${metrics.estimatedDeliveryDurationMinutes},
+          "estimatedRoundTripDurationMinutes" = ${metrics.estimatedRoundTripDurationMinutes}
+        WHERE "id" = ${dispatchId}
+      `;
+
+      await tx.$executeRaw`
+        UPDATE "Order"
+        SET "estimatedDeliveryDurationMinutes" = NULL
+        WHERE "dispatchId" = ${dispatchId}
+      `;
+
+      for (const [orderId, durationInMinutes] of metrics.durationToOrderId) {
+        await tx.$executeRaw`
+          UPDATE "Order"
+          SET "estimatedDeliveryDurationMinutes" = ${durationInMinutes}
+          WHERE "id" = ${orderId}
+        `;
+      }
+    });
   }
 }
 

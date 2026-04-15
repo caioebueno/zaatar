@@ -4,7 +4,7 @@ import { DEFAULT_BRANCH_ID } from "@/constants/branch";
 import type { TOperationHours } from "@/src/types/operationHours";
 import { Dialog } from "radix-ui";
 import { useEffect, useState } from "react";
-import { FiCheck, FiClock, FiTruck, FiX } from "react-icons/fi";
+import { FiCheck, FiClock, FiInfo, FiShoppingBag, FiTruck, FiX } from "react-icons/fi";
 
 const emptyOperationHours: TOperationHours = {
   monday: [],
@@ -99,6 +99,15 @@ const InformationModal: React.FC<TInformationModal> = ({
             <FiX />
           </Dialog.Close>
         </div>
+        <div className="px-4 py-3">
+          <div className="px-4 py-2 flex flex-row rounded-xl border-gray-300 border items-center justify-between">
+            <div className="flex flex-row gap-2 items-center">
+              <FiShoppingBag size={24} color="#142826" />
+              <span className="text-lg font-bold">{content["takeaway"]}</span>
+            </div>
+            <FiCheck size={24} />
+          </div>
+        </div>
         <div className="px-4 py-3 flex flex-col">
           <div className="px-4 py-2 flex flex-row rounded-t-xl border-gray-300 border items-center justify-between">
             <div className="flex flex-row gap-2 items-center">
@@ -106,6 +115,18 @@ const InformationModal: React.FC<TInformationModal> = ({
               <span className="text-lg font-bold">{content["delivery"]}</span>
             </div>
             <FiCheck size={24} />
+          </div>
+          <div className="bg-foreground px-4 py-3 border-gray-300 border border-t-0 rounded-b-xl flex flex-col gap-3">
+            <span className="flex flex-row items-center gap-2">
+              <FiInfo size={18} className="text-lightText" />
+              <span className="text-sm">{content["homeDelivery"]}</span>
+              <span className="text-sm font-bold">$24.99</span>
+            </span>
+            <span className="flex flex-row items-center gap-2">
+              <FiInfo size={18} className="text-red-600" />
+              <span className="text-sm flex-1 leading-3.5 text-center">{content["deliveryPrice"]}</span>
+
+            </span>
           </div>
         </div>
         <div className="px-4 py-3 pb-8 flex flex-col">

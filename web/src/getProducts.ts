@@ -4,11 +4,7 @@ import prisma from "../prisma";
 import { Prisma } from "@/src/generated/prisma";
 import TCategory from "./types/category";
 import TProgressiveDiscount from "./types/progressiveDiscount";
-import { DEFAULT_PROGRESSIVE_DISCOUNT_ID } from "@/src/constants/progressiveDiscount";
-import {
-  mapProgressiveDiscountPrize,
-  progressiveDiscountPrizeInclude,
-} from "@/src/progressiveDiscountPrizeHelpers";
+import getProgressiveDiscount from "./getProgressiveDiscount";
 
 export type TGetProductsResponse = {
   categories: TCategory[];
@@ -18,14 +14,17 @@ export type TGetProductsResponse = {
 type CategoryRow = {
   id: string;
   name: string;
+  menuIndex: number | null;
   translations: Prisma.JsonValue | null;
 };
 
 const getProducts = async (): Promise<TGetProductsResponse> => {
   const prismaCategories = await prisma.$queryRaw<CategoryRow[]>`
-    SELECT "id", "name", "translations"
+    SELECT "id", "name", "menuIndex", "translations"
     FROM "Category"
-    ORDER BY "createdAt" ASC
+    ORDER BY
+      COALESCE("menuIndex", 2147483647) ASC,
+      "createdAt" ASC
   `;
   const prismaProducts = await prisma.product.findMany({
     include: {
@@ -40,48 +39,25 @@ const getProducts = async (): Promise<TGetProductsResponse> => {
         },
       },
     },
-    orderBy: {
-      createdAt: "asc",
-    },
+    orderBy: [
+      {
+        categoryId: "asc",
+      },
+      {
+        categoryIndex: "asc",
+      },
+      {
+        createdAt: "asc",
+      },
+    ],
   });
-  const prismaProgressiveDiscount = await prisma.progressiveDiscount.findUnique(
-    {
-      where: {
-        id: DEFAULT_PROGRESSIVE_DISCOUNT_ID,
-      },
-      include: {
-        steps: {
-          orderBy: {
-            amount: "asc",
-          },
-          include: {
-            prizes: {
-              orderBy: {
-                createdAt: "asc",
-              },
-              include: progressiveDiscountPrizeInclude,
-            },
-          },
-        },
-      },
-    },
-  );
+  const progressiveDiscount = await getProgressiveDiscount();
   return {
-    progressiveDiscount: prismaProgressiveDiscount
-      ? {
-          id: prismaProgressiveDiscount?.id,
-          steps: prismaProgressiveDiscount.steps.map((step) => ({
-            id: step.id,
-            type: step.discountType,
-            amount: step.amount || undefined,
-            discount: step.discount || undefined,
-            prizes: step.prizes.map(mapProgressiveDiscountPrize),
-          })),
-        }
-      : null,
+    progressiveDiscount,
     categories: prismaCategories.map((category) => ({
       id: category.id,
       title: category.name,
+      menuIndex: category.menuIndex,
       translations:
         category.translations &&
         typeof category.translations === "object"
@@ -93,6 +69,16 @@ const getProducts = async (): Promise<TGetProductsResponse> => {
           : undefined,
       products: prismaProducts
         .filter((product) => product.categoryId === category.id)
+        .sort((left, right) => {
+          const leftIndex = left.categoryIndex ?? Number.MAX_SAFE_INTEGER;
+          const rightIndex = right.categoryIndex ?? Number.MAX_SAFE_INTEGER;
+
+          if (leftIndex !== rightIndex) {
+            return leftIndex - rightIndex;
+          }
+
+          return left.createdAt.getTime() - right.createdAt.getTime();
+        })
         .map((product) => ({
         id: product.id,
         name: product.name,
@@ -103,6 +89,7 @@ const getProducts = async (): Promise<TGetProductsResponse> => {
         },
         description: product.description || undefined,
         price: product.price || undefined,
+        categoryIndex: product.categoryIndex ?? undefined,
         comparedAtPrice: product.comparedAtPrice || undefined,
         modifierGroups: product.modifierGroups.map((item) => ({
           id: item.id,

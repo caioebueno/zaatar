@@ -8,6 +8,7 @@ type TProduct = {
   price?: number | null;
   description?: string | null;
   categoryId?: string | null;
+  categoryIndex?: number | null;
   comparedAtPrice?: number | null;
   modifierGroups?: TModifierGroup[];
   preparationStep?: TPreparationStep[];

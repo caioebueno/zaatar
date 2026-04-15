@@ -4,6 +4,10 @@ import prisma from "../prisma";
 import TCustomer from "./types/customer";
 import { randomUUID } from "node:crypto";
 import TAddress from "./types/address";
+import {
+  buildPhoneCandidates,
+  normalizePhoneWithCountryCode,
+} from "./phone";
 
 type TGetCustomerData = {
   phone: string;
@@ -46,22 +50,47 @@ function mapDeliveryAddress(address: DeliveryAddressRow): TAddress {
 }
 
 const getCustomerData = async (data: TGetCustomerData): Promise<TCustomer> => {
+  const normalizedPhone = normalizePhoneWithCountryCode(data.phone);
+
+  if (!normalizedPhone) {
+    throw {
+      code: "INVALID_PARAMS",
+      details: { field: "phone" },
+    };
+  }
+
   const findCustomer = await prisma.customer.findFirst({
     where: {
-      phone: data.phone,
+      phone: {
+        in: buildPhoneCandidates(data.phone),
+      },
+    },
+    orderBy: {
+      createdAt: "asc",
     },
   });
   if (!findCustomer) {
     const createdCustomer = await prisma.customer.create({
       data: {
         id: randomUUID(),
-        phone: data.phone,
+        phone: normalizedPhone,
       },
     });
     return {
       id: createdCustomer.id,
       name: createdCustomer.name,
     };
+  }
+
+  if (findCustomer.phone !== normalizedPhone) {
+    await prisma.customer.update({
+      where: {
+        id: findCustomer.id,
+      },
+      data: {
+        phone: normalizedPhone,
+      },
+    });
   }
 
   const addresses = await prisma.$queryRaw<DeliveryAddressRow[]>`

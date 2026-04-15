@@ -6,6 +6,7 @@ import prisma from "../prisma";
 import TCart from "../types/cart";
 import getProgressiveDiscount from "./getProgressiveDiscount";
 import { randomUUID } from "crypto";
+import { Prisma } from "@/src/generated/prisma";
 import {
   TOrder,
   TOrderProduct,
@@ -15,11 +16,9 @@ import {
 import { calculateProductPriceWithProgressiveDiscount } from "../utils/calculateProductPriceWithProgressiveDiscount";
 import { calculateCartWithProgressiveDiscount } from "../utils/calculatePrice";
 import getProducts from "./getProducts";
-import { createOrderPreparationStepsUseCase } from "@/src/modules/station/application/createOrderPreparationSteps";
-import { prismaStationRepository } from "@/src/modules/station/infrastructure/prisma/prismaStationRepository";
-import { prismaDispatchRepository } from "@/src/modules/dispatch/infrastructure/prisma/prismaDispatchRepository";
+import { getOrderConfirmedWhatsAppMessage } from "./constants/whatsappMessages";
+import { buildPreparationStepCategories } from "@/src/modules/station/domain/buildPreparationStepCategories";
 import {
-  enqueueAssignDeliveryOrderToDispatch,
   processDispatchAssignmentJobs,
 } from "@/src/modules/dispatch/application/assignDeliveryOrderToDispatchQueue";
 
@@ -28,6 +27,7 @@ type TCreateOrder = {
   customerId: string;
   orderType: TOrderType;
   paymentMethod: TPaymentMethod;
+  language?: string;
   scheduleFor?: string;
   selectedPrize?: {
     prizeId: string;
@@ -37,6 +37,19 @@ type TCreateOrder = {
   addressId?: string;
   cupom?: string;
 };
+
+type CustomerContactRow = {
+  name: string | null;
+  phone: string | null;
+};
+
+type OrderCreationTransactionResult = {
+  order: TOrder;
+  orderId: string;
+  orderNumber?: string | null;
+};
+
+const MAX_ORDER_CREATION_TRANSACTION_RETRIES = 3;
 
 function ensureValidScheduleFor(value: unknown): Date | undefined {
   if (value === undefined || value === null) return undefined;
@@ -72,7 +85,220 @@ function ensureValidScheduleFor(value: unknown): Date | undefined {
   return parsedDate;
 }
 
+function normalizeOrderLanguage(value: unknown): string | undefined {
+  if (value === undefined || value === null) return undefined;
+  if (typeof value !== "string") {
+    throw {
+      code: "INVALID_PARAMS",
+      data: {
+        message: "INVALID_LANGUAGE",
+      },
+    };
+  }
+
+  const normalizedValue = value.trim().toLowerCase();
+  if (!normalizedValue) {
+    throw {
+      code: "INVALID_PARAMS",
+      data: {
+        message: "INVALID_LANGUAGE",
+      },
+    };
+  }
+
+  return normalizedValue;
+}
+
+function toWhatsAppChatId(phone: string): string | undefined {
+  const normalized = phone.replace(/\D/g, "");
+  if (!normalized) return undefined;
+
+  const countryCode = (
+    process.env.WHATSAPP_COUNTRY_CODE?.trim() || "1"
+  ).replace(/\D/g, "");
+
+  const phoneWithCountryCode =
+    countryCode && !normalized.startsWith(countryCode)
+      ? `${countryCode}${normalized}`
+      : normalized;
+
+  return `${phoneWithCountryCode}@c.us`;
+}
+
+async function sendOrderConfirmationWhatsAppMessage(input: {
+  language?: string | null;
+  customerName?: string | null;
+  customerPhone: string;
+  orderNumber?: string | null;
+  totalInCents: number;
+  orderType: TOrderType;
+}) {
+  const sessionId = process.env.WHATSAPP_SESSION_ID?.trim();
+
+  if (!sessionId) {
+    console.warn(
+      "Skipping order confirmation WhatsApp message: WHATSAPP_SESSION_ID is not configured.",
+    );
+    return;
+  }
+
+  const chatId = toWhatsAppChatId(input.customerPhone);
+
+  if (!chatId) {
+    return;
+  }
+
+  const baseUrl = (
+    process.env.WHATSAPP_API_BASE_URL?.trim() || "http://localhost:4000"
+  ).replace(/\/$/, "");
+  const message = getOrderConfirmedWhatsAppMessage({
+    language: input.language,
+    customerName: input.customerName,
+    orderNumber: input.orderNumber,
+    totalInCents: input.totalInCents,
+    orderType: input.orderType,
+  });
+  const endpoint = `${baseUrl}/client/sendMessage/${sessionId}`;
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
+
+  if (process.env.WHATSAPP_API_KEY) {
+    headers["x-api-key"] = process.env.WHATSAPP_API_KEY;
+  }
+
+  try {
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({
+        chatId,
+        contentType: "string",
+        content: message,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorBody = await response.text().catch(() => "");
+      console.error(
+        `Order confirmation WhatsApp API request failed (${response.status}): ${errorBody}`,
+      );
+    }
+  } catch (error) {
+    console.error(
+      "Failed to send order confirmation WhatsApp message:",
+      error,
+    );
+  }
+}
+
+async function enqueueDispatchAssignmentJobTx(
+  tx: Prisma.TransactionClient,
+  data: {
+    orderId: string;
+    deliveryAddressId: string;
+  },
+): Promise<void> {
+  await tx.$executeRaw`
+    INSERT INTO "DispatchAssignmentJob" (
+      "id",
+      "orderId",
+      "deliveryAddressId"
+    )
+    VALUES (
+      ${randomUUID()},
+      ${data.orderId},
+      ${data.deliveryAddressId}
+    )
+    ON CONFLICT ("orderId")
+    DO UPDATE SET
+      "deliveryAddressId" = EXCLUDED."deliveryAddressId",
+      "status" = 'PENDING',
+      "availableAt" = NOW(),
+      "lastError" = NULL,
+      "completedAt" = NULL,
+      "processingStartedAt" = NULL
+  `;
+}
+
+async function createPreparationStepCategoriesForOrderTx(
+  tx: Prisma.TransactionClient,
+  order: TOrder,
+): Promise<void> {
+  const preparationSteps = await tx.preparationStep.findMany({
+    include: {
+      products: {
+        select: {
+          id: true,
+        },
+      },
+    },
+  });
+
+  const categories = buildPreparationStepCategories(
+    order,
+    preparationSteps.map((step) => ({
+      id: step.id,
+      name: step.name,
+      stationId: step.stationId,
+      includeComments: step.includeComments,
+      includeModifiers: step.includeModifiers,
+      productIds: step.products.map((product) => product.id),
+    })),
+  );
+
+  for (const category of categories) {
+    await tx.preparationStepCategory.create({
+      data: {
+        id: category.id,
+        categoryId: category.categoryId,
+        orderId: category.orderId,
+        preparationStepTracks: {
+          create: category.steps.map((track) => ({
+            id: track.id,
+            preparationStepId: track.preparationStepId,
+            quantity: track.quantity,
+            comments: track.comments,
+            completedComments: track.completedComments,
+            preparationStepModifierTracks: track.preparationStepModifiers
+              ? {
+                  createMany: {
+                    data: track.preparationStepModifiers.map((item) => ({
+                      id: item.id,
+                      completed: item.completed,
+                      modifierGroupItemId: item.modifierGroupItem,
+                    })),
+                  },
+                }
+              : undefined,
+          })),
+        },
+      },
+    });
+  }
+}
+
+function isRetryableOrderCreationTransactionError(error: unknown): boolean {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "code" in error &&
+    (error as { code?: string }).code === "P2034"
+  );
+}
+
 const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
+  let deliveryFeeInCents = 0;
+
+  if (!Array.isArray(data.cart?.items) || data.cart.items.length === 0) {
+    throw {
+      code: "INVALID_PARAMS",
+      data: {
+        message: "CART_ITEMS_REQUIRED",
+      },
+    };
+  }
+
   if (!data.addressId && data.orderType === "DELIVERY")
     throw {
       code: "INVALID_PARAMS",
@@ -107,6 +333,8 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
         },
       };
     }
+
+    deliveryFeeInCents = deliveryAddress[0].deliveryFee;
   }
   const now = new Date();
 
@@ -117,17 +345,9 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
     now.getMonth(),
     now.getDate() + 1,
   );
-
-  const todayOrders = await prisma.order.findMany({
-    where: {
-      createdAt: {
-        gte: startOfDay,
-        lt: endOfDay,
-      },
-    },
-  });
   const progressiveDiscount = await getProgressiveDiscount();
   const productData = await getProducts();
+  const language = normalizeOrderLanguage(data.language);
   const scheduleFor = ensureValidScheduleFor(data.scheduleFor);
   const getCatalogProductById = (productId: string) => {
     for (const category of productData.categories) {
@@ -147,6 +367,17 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
     data.cart,
     progressiveDiscount,
   );
+  const sanitizedTipPercentage =
+    typeof data.tipAmount === "number" && Number.isFinite(data.tipAmount)
+      ? Math.max(data.tipAmount, 0)
+      : 0;
+  const tipAmountInCents = Math.round(
+    (cartPricingSummary.discountedPrice * sanitizedTipPercentage) / 100,
+  );
+  const orderTotalInCents =
+    cartPricingSummary.discountedPrice +
+    tipAmountInCents +
+    (data.orderType === "DELIVERY" ? deliveryFeeInCents : 0);
   const selectedPrizeSnapshot = (() => {
     if (!data.selectedPrize) return null;
     if (!progressiveDiscount) {
@@ -226,189 +457,272 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
         selectedPrize: selectedPrizeSnapshot,
       }
     : null;
-  const createdOrder = await prisma.order.create({
-    data: {
-      id: randomUUID(),
-      amount: 0,
-      number: (todayOrders.length + 1).toString(),
-      deliveryAddressId:
-        data.orderType === "DELIVERY" ? data.addressId : undefined,
-      customerId: data.customerId,
-      paymentMethod: data.paymentMethod,
-      tipAmount: data.tipAmount,
-      progressiveDiscountSnapshot: progressiveDiscountSnapshot || undefined,
-      type: data.orderType,
-    },
-  });
-  if (scheduleFor) {
-    await prisma.$executeRaw`
-      UPDATE "Order"
-      SET "scheduleFor" = ${scheduleFor}
-      WHERE "id" = ${createdOrder.id}
-    `;
-  }
-  for (const item of data.cart.items) {
-    const price = calculateProductPriceWithProgressiveDiscount(
-      item.productId,
-      progressiveDiscount,
-      data.cart,
-      productData.categories,
-      { cartItem: item },
-    );
-    if (!price)
-      throw {
-        code: "ERROR_CALCULATING_PRICE",
-        data: {
+  const runOrderCreationTransaction = async (): Promise<OrderCreationTransactionResult> =>
+    prisma.$transaction(
+      async (tx) => {
+        const orderNumberLockKey = `order-number:${startOfDay.toISOString().slice(0, 10)}`;
+
+        await tx.$queryRaw`
+          SELECT pg_advisory_xact_lock(hashtext(${orderNumberLockKey}))
+        `;
+
+        const [todayOrderCount] = await tx.$queryRaw<{ count: bigint }[]>`
+          SELECT COUNT(*)::BIGINT AS "count"
+          FROM "Order"
+          WHERE "createdAt" >= ${startOfDay}
+            AND "createdAt" < ${endOfDay}
+        `;
+        const nextOrderNumber = (Number(todayOrderCount?.count ?? 0) + 1).toString();
+
+        const createdOrder = await tx.order.create({
+          data: {
+            id: randomUUID(),
+            amount: 0,
+            number: nextOrderNumber,
+            scheduleFor,
+            deliveryAddressId:
+              data.orderType === "DELIVERY" ? data.addressId : undefined,
+            customerId: data.customerId,
+            paymentMethod: data.paymentMethod,
+            tipAmount: sanitizedTipPercentage,
+            language,
+            progressiveDiscountSnapshot: progressiveDiscountSnapshot || undefined,
+            type: data.orderType,
+          },
+        });
+
+        for (const item of data.cart.items) {
+          const price = calculateProductPriceWithProgressiveDiscount(
+            item.productId,
+            progressiveDiscount,
+            data.cart,
+            productData.categories,
+            { cartItem: item },
+          );
+          if (!price)
+            throw {
+              code: "ERROR_CALCULATING_PRICE",
+              data: {
+                productId: item.productId,
+              },
+            };
+          await tx.orderProducts.create({
+            data: {
+              id: randomUUID(),
+              amount: price.actualPrice,
+              productId: item.productId,
+              orderId: createdOrder.id,
+              fullAmount: price.fullPrice,
+              quantity: item.quantity,
+              comments: item.description,
+              modifierGroupItems: {
+                connect: item.modifiers.map((modItem) => ({
+                  id: modItem.modifierItemId,
+                })),
+              },
+            },
+          });
+        }
+
+        type CreatedOrderProductRow = {
+          id: string;
+          comments: string | null;
+          quantity: number;
+          fullAmount: number;
+          amount: number;
+          productId: string;
+          product: {
+            id: string;
+            name: string;
+            createdAt: Date;
+            price: number | null;
+            categoryId: string | null;
+            description: string | null;
+            comparedAtPrice: number | null;
+            translations: unknown;
+          };
+          modifierGroupItems: {
+            id: string;
+            name: string;
+            createdAt: Date;
+            price: number;
+            modifierGroupId: string | null;
+            fileId: string | null;
+          }[];
+        };
+
+        const createdOrderProducts = (await tx.orderProducts.findMany({
+          where: {
+            orderId: createdOrder.id,
+          },
+          include: {
+            modifierGroupItems: true,
+            product: true,
+          },
+          orderBy: {
+            createdAt: "asc",
+          },
+        })) as unknown as CreatedOrderProductRow[];
+
+        const orderProducts: TOrderProduct[] = createdOrderProducts.map((item) => ({
+          id: item.id,
+          amount: item.amount,
+          fullAmount: item.fullAmount,
           productId: item.productId,
-        },
-      };
-    await prisma.orderProducts.create({
-      data: {
-        id: randomUUID(),
-        amount: price.actualPrice,
-        productId: item.productId,
-        orderId: createdOrder.id,
-        fullAmount: price.fullPrice,
-        quantity: item.quantity,
-        comments: item.description,
-        modifierGroupItems: {
-          connect: item.modifiers.map((modItem) => ({
-            id: modItem.modifierItemId,
-          })),
-        },
+          quantity: item.quantity,
+          comments: item.comments || undefined,
+          selectedModifierGroupItemIds: item.modifierGroupItems.map(
+            (modifierItem) => modifierItem.id,
+          ),
+          product: {
+            id: item.product.id,
+            name: item.product.name,
+            categoryId: item.product.categoryId || undefined,
+            preparationStep: [],
+          },
+        }));
+        const prizePreparationOrderProducts: TOrderProduct[] = [];
+        if (selectedPrizeSnapshot) {
+          for (const selectedPrizeProduct of selectedPrizeSnapshot.selectedProductCounts) {
+            if (selectedPrizeProduct.quantity <= 0) continue;
+
+            const catalogProduct = getCatalogProductById(selectedPrizeProduct.productId);
+            if (!catalogProduct) continue;
+
+            const categoryId =
+              catalogProduct.product.categoryId ?? catalogProduct.categoryId;
+            if (!categoryId) continue;
+
+            prizePreparationOrderProducts.push({
+              id: randomUUID(),
+              amount: 0,
+              fullAmount: 0,
+              productId: selectedPrizeProduct.productId,
+              quantity: selectedPrizeProduct.quantity,
+              selectedModifierGroupItemIds: [],
+              product: {
+                id: catalogProduct.product.id,
+                name: catalogProduct.product.name,
+                categoryId,
+                translations: catalogProduct.product.translations,
+                preparationStep: [],
+              },
+            });
+          }
+        }
+        const order: TOrder = {
+          id: createdOrder.id,
+          createdAt: createdOrder.createdAt.toISOString(),
+          scheduleFor: scheduleFor?.toISOString() ?? null,
+          language: language ?? null,
+          paidAt: null,
+          status: "ACCEPTED",
+          orderProducts,
+          paymentMethod: createdOrder.paymentMethod,
+          type: createdOrder.type,
+          preparationStepCategory: [],
+        };
+        const orderForPreparationSteps =
+          prizePreparationOrderProducts.length > 0
+            ? {
+                ...order,
+                orderProducts: [...order.orderProducts, ...prizePreparationOrderProducts],
+              }
+            : order;
+
+        await createPreparationStepCategoriesForOrderTx(tx, orderForPreparationSteps);
+
+        if (data.orderType === "DELIVERY" && data.addressId) {
+          await enqueueDispatchAssignmentJobTx(tx, {
+            orderId: createdOrder.id,
+            deliveryAddressId: data.addressId,
+          });
+        } else if (data.orderType === "TAKEAWAY") {
+          const dispatchId = randomUUID();
+
+          await tx.dispatch.create({
+            data: {
+              id: dispatchId,
+              dispatched: false,
+              driverId: null,
+            },
+          });
+          await tx.order.update({
+            where: {
+              id: createdOrder.id,
+            },
+            data: {
+              dispatchId,
+              dispatchOrderIndex: 1,
+            },
+          });
+        }
+
+        return {
+          order,
+          orderId: createdOrder.id,
+          orderNumber: createdOrder.number,
+        };
       },
-    });
-  }
+      {
+        isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
+      },
+    );
 
-  type CreatedOrderProductRow = {
-    id: string;
-    comments: string | null;
-    quantity: number;
-    fullAmount: number;
-    amount: number;
-    productId: string;
-    product: {
-      id: string;
-      name: string;
-      createdAt: Date;
-      price: number | null;
-      categoryId: string | null;
-      description: string | null;
-      comparedAtPrice: number | null;
-      translations: unknown;
-    };
-    modifierGroupItems: {
-      id: string;
-      name: string;
-      createdAt: Date;
-      price: number;
-      modifierGroupId: string | null;
-      fileId: string | null;
-    }[];
-  };
+  let transactionResult: OrderCreationTransactionResult | null = null;
+  let attempt = 0;
 
-  const createdOrderProducts = (await prisma.orderProducts.findMany({
-    where: {
-      orderId: createdOrder.id,
-    },
-    include: {
-      modifierGroupItems: true,
-      product: true,
-    },
-    orderBy: {
-      createdAt: "asc",
-    },
-  })) as unknown as CreatedOrderProductRow[];
+  while (attempt < MAX_ORDER_CREATION_TRANSACTION_RETRIES) {
+    try {
+      transactionResult = await runOrderCreationTransaction();
+      break;
+    } catch (error) {
+      attempt += 1;
+      const canRetry =
+        attempt < MAX_ORDER_CREATION_TRANSACTION_RETRIES &&
+        isRetryableOrderCreationTransactionError(error);
 
-  const orderProducts: TOrderProduct[] = createdOrderProducts.map((item) => ({
-    id: item.id,
-    amount: item.amount,
-    fullAmount: item.fullAmount,
-    productId: item.productId,
-    quantity: item.quantity,
-    comments: item.comments || undefined,
-    selectedModifierGroupItemIds: item.modifierGroupItems.map(
-      (item) => item.id,
-    ),
-    product: {
-      id: item.product.id,
-      name: item.product.name,
-      categoryId: item.product.categoryId || undefined,
-      preparationStep: [],
-    },
-  }));
-  const prizePreparationOrderProducts: TOrderProduct[] = [];
-  if (selectedPrizeSnapshot) {
-    for (const selectedPrizeProduct of selectedPrizeSnapshot.selectedProductCounts) {
-      if (selectedPrizeProduct.quantity <= 0) continue;
-
-      const catalogProduct = getCatalogProductById(selectedPrizeProduct.productId);
-      if (!catalogProduct) continue;
-
-      const categoryId =
-        catalogProduct.product.categoryId ?? catalogProduct.categoryId;
-      if (!categoryId) continue;
-
-      prizePreparationOrderProducts.push({
-        id: randomUUID(),
-        amount: 0,
-        fullAmount: 0,
-        productId: selectedPrizeProduct.productId,
-        quantity: selectedPrizeProduct.quantity,
-        selectedModifierGroupItemIds: [],
-        product: {
-          id: catalogProduct.product.id,
-          name: catalogProduct.product.name,
-          categoryId,
-          translations: catalogProduct.product.translations,
-          preparationStep: [],
-        },
-      });
+      if (!canRetry) {
+        throw error;
+      }
     }
   }
-  const order: TOrder = {
-    id: createdOrder.id,
-    createdAt: createdOrder.createdAt.toISOString(),
-    scheduleFor: scheduleFor?.toISOString() ?? null,
-    paidAt: null,
-    status: "ACCEPTED",
-    orderProducts: orderProducts,
-    paymentMethod: createdOrder.paymentMethod,
-    type: createdOrder.type,
-    preparationStepCategory: [],
-  };
-  const orderForPreparationSteps =
-    prizePreparationOrderProducts.length > 0
-      ? {
-          ...order,
-          orderProducts: [...order.orderProducts, ...prizePreparationOrderProducts],
-        }
-      : order;
-  await createOrderPreparationStepsUseCase(
-    prismaStationRepository,
-    orderForPreparationSteps,
-  );
+
+  if (!transactionResult) {
+    throw new Error("ORDER_CREATION_TRANSACTION_FAILED");
+  }
+
+  const [customerContact] = await prisma.$queryRaw<CustomerContactRow[]>`
+    SELECT "name", "phone"
+    FROM "Customer"
+    WHERE "id" = ${data.customerId}
+    LIMIT 1
+  `;
 
   if (data.orderType === "DELIVERY" && data.addressId) {
-    await enqueueAssignDeliveryOrderToDispatch({
-      orderId: createdOrder.id,
-      deliveryAddressId: data.addressId,
-    });
-
     after(async () => {
       await processDispatchAssignmentJobs(1).catch((error: unknown) => {
         console.error("Failed to trigger dispatch assignment processing:", error);
       });
     });
-  } else if (data.orderType === "TAKEAWAY") {
-    await prismaDispatchRepository.create({
-      dispatched: false,
-      driverId: null,
-      orderIds: [createdOrder.id],
+  }
+
+  const customerPhone = customerContact?.phone;
+
+  if (customerPhone) {
+    after(async () => {
+      await sendOrderConfirmationWhatsAppMessage({
+        language: language ?? null,
+        customerName: customerContact.name,
+        customerPhone,
+        orderNumber: transactionResult.orderNumber,
+        totalInCents: orderTotalInCents,
+        orderType: data.orderType,
+      });
     });
   }
 
-  return order;
+  return transactionResult.order;
 };
 
 export default createOrder;

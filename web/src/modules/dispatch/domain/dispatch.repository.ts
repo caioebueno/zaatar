@@ -11,6 +11,7 @@ export interface DispatchRepository {
   assignOrder(dispatchId: string, orderId: string): Promise<void>;
   autoAssignDriver(dispatchId: string): Promise<void>;
   create(data: CreateDispatchInput): Promise<Dispatch>;
+  isOrderScheduled(orderId: string): Promise<boolean>;
   findNextForDriver(driverId: string): Promise<Dispatch | undefined>;
   findMatchingOpenDispatchForDeliveryAddress(
     deliveryAddressId: string,

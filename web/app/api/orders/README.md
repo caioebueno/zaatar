@@ -1,6 +1,77 @@
 # Orders API
 
-## Endpoint
+## Endpoints
+
+`POST /api/orders`
+
+Creates a new order.
+
+Request body:
+
+- `cart` (required)
+- `customerId` (required string)
+- `orderType` (required `"DELIVERY" | "TAKEAWAY"`)
+- `paymentMethod` (required `"CARD" | "CASH" | "ZELLE"`)
+- `language` (optional string)
+- `scheduleFor` (optional ISO string)
+- `addressId` (required for `DELIVERY`, optional for `TAKEAWAY`)
+- `tipAmount` (optional number)
+- `selectedPrize` (optional object)
+- `cupom` (optional string)
+
+`selectedPrize` shape:
+
+```json
+{
+  "prizeId": "prize-id",
+  "selectedProductIds": ["product-1", "product-2"]
+}
+```
+
+POST request example:
+
+```json
+{
+  "cart": {
+    "items": [
+      {
+        "cartId": "cart-item-1",
+        "productId": "product-id",
+        "quantity": 1,
+        "modifiers": [],
+        "description": "No onions"
+      }
+    ]
+  },
+  "customerId": "customer-id",
+  "orderType": "DELIVERY",
+  "paymentMethod": "CARD",
+  "language": "en",
+  "addressId": "delivery-address-id",
+  "tipAmount": 10,
+  "scheduleFor": "2026-04-13T18:00:00.000Z"
+}
+```
+
+POST success (`201`): returns created `TOrder` payload.
+
+POST validation error (`400`):
+
+```json
+{
+  "error": "Invalid payload",
+  "field": "addressId",
+  "reason": "DELIVERY_MUST_HAVE_ADDRESS"
+}
+```
+
+POST server error (`500`):
+
+```json
+{
+  "error": "Internal Server Error"
+}
+```
 
 `PATCH /api/orders/:orderId`
 

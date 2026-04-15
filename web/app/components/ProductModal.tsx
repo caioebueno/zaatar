@@ -8,7 +8,7 @@ import TProduct, { TModifierGroupItem } from "../../src/types/product";
 import formatCurrency from "@/utils/formatCurrecy";
 import Button from "./Button";
 import ProductImage from "./ProductImage";
-import { FiArrowLeft, FiMinus, FiPlus, FiTrash2 } from "react-icons/fi";
+import { FiArrowLeft, FiMinus, FiPlus, FiTrash2, FiX } from "react-icons/fi";
 import { useMemo, useState } from "react";
 import { TSelectedModifier } from "@/types/cart";
 
@@ -312,6 +312,17 @@ const ModifierModal: React.FC<TModifierModal> = ({
         <DialogTitle className="sr-only">
           {modifierGroup?.title || "Modifier options"}
         </DialogTitle>
+        <div className="absolute right-4 top-4 z-10">
+          <DialogClose asChild>
+            <button
+              type="button"
+              className="rounded-full bg-background p-2 text-text"
+              aria-label="Close modifier modal"
+            >
+              <FiX size={18} />
+            </button>
+          </DialogClose>
+        </div>
         <div className="py-8 flex flex-col items-center">
           <span className="text-[22px] font-bold">
             {modifierGroup?.title || "Select options"}

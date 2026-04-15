@@ -35,7 +35,7 @@ model PreparationStep {
 model PreparationStepCategory {
   id                    String                 @id
   createdAt             DateTime               @default(now())
-  category              Category?               @relation(fields: [categoryId], references: [id])
+  category              Category?              @relation(fields: [categoryId], references: [id])
   categoryId            String?
   completed             Boolean                @default(false)
   order                 Order                  @relation(fields: [orderId], references: [id], onDelete: Cascade)
@@ -91,12 +91,12 @@ model ProgressiveDiscountStep {
 }
 
 model ProgressiveDiscountPrize {
-  id                        String                          @id
-  createdAt                 DateTime                        @default(now())
+  id                        String                            @id
+  createdAt                 DateTime                          @default(now())
   name                      String
-  quantity                  Int                             @default(1)
+  quantity                  Int                               @default(1)
   imageUrl                  String?
-  progressiveDiscountStep   ProgressiveDiscountStep         @relation(fields: [progressiveDiscountStepId], references: [id], onDelete: Cascade)
+  progressiveDiscountStep   ProgressiveDiscountStep           @relation(fields: [progressiveDiscountStepId], references: [id], onDelete: Cascade)
   progressiveDiscountStepId String
   products                  ProgressiveDiscountPrizeProduct[]
 }
@@ -163,35 +163,38 @@ model Business {
 }
 
 model Branch {
-  id         String    @id
-  createdAt  DateTime  @default(now())
-  name       String
+  id             String    @id
+  createdAt      DateTime  @default(now())
+  name           String
   operationHours Json?
-  address    Address?  @relation(fields: [addressId], references: [id])
-  addressId  String?   @unique
-  business   Business? @relation(fields: [businessId], references: [id])
-  businessId String?
+  address        Address?  @relation(fields: [addressId], references: [id])
+  addressId      String?   @unique
+  business       Business? @relation(fields: [businessId], references: [id])
+  businessId     String?
 }
 
 model Driver {
-  id            String   @id
-  createdAt     DateTime @default(now())
+  id            String     @id
+  createdAt     DateTime   @default(now())
   name          String
-  active        Boolean  @default(true)
+  active        Boolean    @default(true)
   priorityLevel Int
   dispatches    Dispatch[]
 }
 
 model Dispatch {
-  id                              String   @id
-  createdAt                       DateTime @default(now())
-  dispatched                      Boolean  @default(false)
-  dispatchAt                      DateTime?
-  estimatedDeliveryDurationMinutes Int?
+  id                                String    @id
+  createdAt                         DateTime  @default(now())
+  queueIndex                        Int?
+  dispatched                        Boolean   @default(false)
+  dispatchAt                        DateTime?
+  estimatedDeliveryDurationMinutes  Int?
   estimatedRoundTripDurationMinutes Int?
-  driver                          Driver?  @relation(fields: [driverId], references: [id])
-  driverId                        String?
-  orders                          Order[]
+  driver                            Driver?   @relation(fields: [driverId], references: [id])
+  driverId                          String?
+  orders                            Order[]
+
+  @@index([queueIndex])
 }
 
 enum DispatchAssignmentJobStatus {
@@ -202,16 +205,16 @@ enum DispatchAssignmentJobStatus {
 }
 
 model DispatchAssignmentJob {
-  id                String                    @id
-  createdAt         DateTime                  @default(now())
-  status            DispatchAssignmentJobStatus @default(PENDING)
-  attempts          Int                       @default(0)
-  availableAt       DateTime                  @default(now())
+  id                  String                      @id
+  createdAt           DateTime                    @default(now())
+  status              DispatchAssignmentJobStatus @default(PENDING)
+  attempts            Int                         @default(0)
+  availableAt         DateTime                    @default(now())
   processingStartedAt DateTime?
-  completedAt       DateTime?
-  lastError         String?
-  orderId           String                    @unique
-  deliveryAddressId String
+  completedAt         DateTime?
+  lastError           String?
+  orderId             String                      @unique
+  deliveryAddressId   String
 }
 
 model Address {
@@ -224,29 +227,35 @@ model Address {
 }
 
 model Product {
-  id               String            @id
-  createdAt        DateTime          @default(now())
+  id               String                            @id
+  createdAt        DateTime                          @default(now())
   name             String
   description      String?
   price            Int?
   comparedAtPrice  Int?
+  categoryIndex    Int?
   photos           File[]
   modifierGroups   ModifierGroup[]
-  category         Category?         @relation(fields: [categoryId], references: [id])
+  category         Category?                         @relation(fields: [categoryId], references: [id])
   categoryId       String?
   OrderProducts    OrderProducts[]
   prizeProducts    ProgressiveDiscountPrizeProduct[]
   translations     Json?
   preparationSteps PreparationStep[]
+
+  @@index([categoryId, categoryIndex])
 }
 
 model Category {
   id                        String                    @id
   createdAt                 DateTime                  @default(now())
   name                      String
+  menuIndex                 Int?
   translations              Json?
   products                  Product[]
   preparationStepCategories PreparationStepCategory[]
+
+  @@index([menuIndex])
 }
 
 model Campaign {
@@ -309,30 +318,32 @@ model PromotialMessage {
 }
 
 model Order {
-  id                        String                    @id
-  number                    String?
-  createdAt                 DateTime                  @default(now())
-  scheduleFor               DateTime?
-  paidAt                    DateTime?
-  deliveredAt               DateTime?
-  dispatchOrderIndex        Int?
-  amount                    Int
-  customer                  Customer                  @relation(fields: [customerId], references: [id])
-  status                    OrderStatus               @default(ACCEPTED)
-  type                      OrderType                 @default(DELIVERY)
-  paymentMethod             PaymentType               @default(CARD)
-  tipAmount                 Int?
+  id                          String                    @id
+  number                      String?
+  createdAt                   DateTime                  @default(now())
+  scheduleFor                 DateTime?
+  language                    String?
+  paidAt                      DateTime?
+  deliveredAt                 DateTime?
+  estimatedDeliveryDurationMinutes Int?
+  dispatchOrderIndex          Int?
+  amount                      Int
+  customer                    Customer                  @relation(fields: [customerId], references: [id])
+  status                      OrderStatus               @default(ACCEPTED)
+  type                        OrderType                 @default(DELIVERY)
+  paymentMethod               PaymentType               @default(CARD)
+  tipAmount                   Int?
   progressiveDiscountSnapshot Json?
-  dispatch                  Dispatch?                 @relation(fields: [dispatchId], references: [id])
-  address                   Address?                  @relation(fields: [addressId], references: [id])
-  deliveryAddress           DeliveryAddress?          @relation(fields: [deliveryAddressId], references: [id])
-  orderProducts             OrderProducts[]
-  customerId                String
-  externalId                String?
-  dispatchId                String?
-  addressId                 String?
-  deliveryAddressId         String?
-  preparationStepCategories PreparationStepCategory[]
+  dispatch                    Dispatch?                 @relation(fields: [dispatchId], references: [id])
+  address                     Address?                  @relation(fields: [addressId], references: [id])
+  deliveryAddress             DeliveryAddress?          @relation(fields: [deliveryAddressId], references: [id])
+  orderProducts               OrderProducts[]
+  customerId                  String
+  externalId                  String?
+  dispatchId                  String?
+  addressId                   String?
+  deliveryAddressId           String?
+  preparationStepCategories   PreparationStepCategory[]
 
   @@index([dispatchId, dispatchOrderIndex])
 }

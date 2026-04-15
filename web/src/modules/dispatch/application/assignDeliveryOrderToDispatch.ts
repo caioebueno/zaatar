@@ -33,11 +33,14 @@ export async function assignDeliveryOrderToDispatchUseCase(
     };
   }
 
-  const existingDispatchId =
-    await repository.findMatchingOpenDispatchForDeliveryAddress(
-      deliveryAddressId,
-      MAX_ROUTE_DURATION_IN_MINUTES,
-    );
+  const isScheduledOrder = await repository.isOrderScheduled(orderId);
+
+  const existingDispatchId = isScheduledOrder
+    ? undefined
+    : await repository.findMatchingOpenDispatchForDeliveryAddress(
+        deliveryAddressId,
+        MAX_ROUTE_DURATION_IN_MINUTES,
+      );
 
   if (existingDispatchId) {
     await repository.assignOrder(existingDispatchId, orderId);

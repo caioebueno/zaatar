@@ -19,9 +19,11 @@ export type TOrder = {
   id: string;
   createdAt: string;
   scheduleFor?: string | null;
+  language?: string | null;
   paidAt?: string | null;
   progressiveDiscountSnapshot?: TOrderProgressiveDiscountSnapshot;
   deliveredAt?: string;
+  estimatedDeliveryDurationMinutes?: number | null;
   number?: string;
   status: TOrderStatus;
   type: TOrderType;

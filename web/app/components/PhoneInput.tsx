@@ -95,6 +95,11 @@ function countDigitsBeforeCursor(value: string, cursor: number) {
 
 function getCursorFromDigitIndex(formatted: string, digitIndex: number) {
   if (digitIndex <= 0) return 0;
+  const totalDigits = formatted.replace(/\D/g, "").length;
+
+  if (digitIndex >= totalDigits) {
+    return formatted.length;
+  }
 
   let seenDigits = 0;
 
@@ -108,6 +113,10 @@ function getCursorFromDigitIndex(formatted: string, digitIndex: number) {
   }
 
   return formatted.length;
+}
+
+function clamp(value: number, min: number, max: number) {
+  return Math.min(Math.max(value, min), max);
 }
 
 function sortCountries(countries: CountryOption[]) {
@@ -197,6 +206,9 @@ export default function PhoneInput({
   }, [value]);
 
   useEffect(() => {
+    const inputIsFocused = document.activeElement === inputRef.current;
+    if (inputIsFocused) return;
+
     setCountry(defaultCountry);
   }, [defaultCountry]);
 
@@ -271,51 +283,41 @@ export default function PhoneInput({
     const end = input.selectionEnd ?? 0;
     const formatted = phoneValue.formatted;
 
-    if (start !== end) return;
+    if (e.key !== "Backspace" && e.key !== "Delete") return;
 
-    if (e.key === "Backspace") {
-      if (start > 0 && /\D/.test(formatted[start - 1] ?? "")) {
-        e.preventDefault();
+    e.preventDefault();
 
-        const digitIndex = countDigitsBeforeCursor(formatted, start);
-        if (digitIndex <= 0) return;
+    const startDigitIndex = countDigitsBeforeCursor(formatted, start);
+    const endDigitIndex = countDigitsBeforeCursor(formatted, end);
+    const hasSelection = start !== end;
 
-        const nextDigits =
-          digits.slice(0, digitIndex - 1) + digits.slice(digitIndex);
+    let nextDigits = digits;
+    let nextDigitCursor = startDigitIndex;
 
-        setDigits(nextDigits);
-
-        requestAnimationFrame(() => {
-          const nextFormatted = formatPhone(nextDigits, country);
-          const nextCursor = getCursorFromDigitIndex(
-            nextFormatted,
-            digitIndex - 1,
-          );
-          input.setSelectionRange(nextCursor, nextCursor);
-        });
-      }
+    if (hasSelection) {
+      const safeStart = clamp(startDigitIndex, 0, digits.length);
+      const safeEnd = clamp(endDigitIndex, safeStart, digits.length);
+      nextDigits = digits.slice(0, safeStart) + digits.slice(safeEnd);
+      nextDigitCursor = safeStart;
+    } else if (e.key === "Backspace") {
+      if (startDigitIndex <= 0) return;
+      const removeAt = startDigitIndex - 1;
+      nextDigits = digits.slice(0, removeAt) + digits.slice(removeAt + 1);
+      nextDigitCursor = removeAt;
+    } else {
+      if (startDigitIndex >= digits.length) return;
+      const removeAt = startDigitIndex;
+      nextDigits = digits.slice(0, removeAt) + digits.slice(removeAt + 1);
+      nextDigitCursor = removeAt;
     }
 
-    if (e.key === "Delete") {
-      if (/\D/.test(formatted[start] ?? "")) {
-        e.preventDefault();
+    setDigits(nextDigits);
 
-        const digitIndex = countDigitsBeforeCursor(formatted, start);
-
-        if (digitIndex >= digits.length) return;
-
-        const nextDigits =
-          digits.slice(0, digitIndex) + digits.slice(digitIndex + 1);
-
-        setDigits(nextDigits);
-
-        requestAnimationFrame(() => {
-          const nextFormatted = formatPhone(nextDigits, country);
-          const nextCursor = getCursorFromDigitIndex(nextFormatted, digitIndex);
-          input.setSelectionRange(nextCursor, nextCursor);
-        });
-      }
-    }
+    requestAnimationFrame(() => {
+      const nextFormatted = formatPhone(nextDigits, country);
+      const nextCursor = getCursorFromDigitIndex(nextFormatted, nextDigitCursor);
+      input.setSelectionRange(nextCursor, nextCursor);
+    });
   }
 
   function handleSelectCountry(code: CountryCode) {
@@ -330,13 +332,14 @@ export default function PhoneInput({
 
   const selectedCountry =
     countries.find((item) => item.code === country) ?? countries[0];
+  const isDisabled = Boolean(disabled || block);
 
   return (
     <div ref={wrapperRef} className={`relative w-full ${className}`}>
       <div className="flex w-full overflow-hidden bg-white flex-row gap-px">
         <button
           type="button"
-          disabled={block}
+          disabled={isDisabled}
           onClick={() => setIsOpen((prev) => !prev)}
           className="flex items-center gap-2  px-3 py-2 text-sm bg-foreground rounded-l-xl disabled:opacity-50 "
         >
@@ -351,7 +354,7 @@ export default function PhoneInput({
           type="tel"
           inputMode="tel"
           autoComplete="tel"
-          disabled={block}
+          disabled={isDisabled}
           value={phoneValue.formatted}
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}

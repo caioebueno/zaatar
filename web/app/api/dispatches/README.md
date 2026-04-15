@@ -5,18 +5,29 @@
 `GET /api/dispatches`
 
 Returns all today's dispatches. For non-today dispatches, returns only those that are not dispatched yet or still have pending (undelivered) orders.
+Dispatches are ordered by `dispatched` first, then by `queueIndex`, then by `createdAt`.
 
 `PATCH /api/dispatches/:dispatchId`
 
-Updates dispatch status fields:
+Updates dispatch fields:
 
-- `dispatched` (required boolean)
-- `dispatchAt` (optional ISO string or `null`)
+- `dispatched` (optional boolean)
+- `dispatchAt` (optional ISO string or `null`, requires `dispatched` in the same request)
 - `dispatchedAt` is also accepted as an alias of `dispatchAt`
+- `driverId` (optional string or `null`; use `null` to unassign)
+- `queueIndex` (optional positive integer): moves the dispatch to this 1-based position in the global dispatch queue and reindexes all dispatches to keep the queue contiguous
+
+Reorder dispatch queue example (move this dispatch to first position):
+
+```json
+{
+  "queueIndex": 1
+}
+```
 
 `GET /api/dispatches/next?driverId=:driverId`
 
-Returns the next pending dispatch for the provided driver, including dispatches already marked as dispatched, as long as there are undelivered orders. Prioritizes already-dispatched dispatches first, then oldest by dispatch time/creation time. Returns `null` when no dispatch is available.
+Returns the next pending dispatch for the provided driver, including dispatches already marked as dispatched, as long as there are undelivered orders. Prioritizes already-dispatched dispatches first, then by `queueIndex`, then by dispatch time/creation time. Returns `null` when no dispatch is available.
 
 `PATCH /api/dispatches/orders/:orderId`
 
@@ -80,6 +91,7 @@ Each dispatch can include:
 
 - `driver`: the linked driver when one is assigned
 - `dispatched`: whether the dispatch has already gone out
+- `queueIndex`: 1-based queue order used to prioritize dispatches
 - `dispatchAt`: timestamp of when the dispatch was marked as dispatched
 - `estimatedDeliveryDurationMinutes`: estimated time to complete the remaining deliveries in the dispatch
 - `estimatedRoundTripDurationMinutes`: estimated time to complete the remaining deliveries and return to the store
@@ -91,8 +103,10 @@ Order payload notes:
 - `delivered` is the frontend-friendly boolean derived for each order
 - `dispatchOrderIndex` is always included as a 1-based position inside the dispatch
 - `scheduleFor` is included as an ISO timestamp when the order is scheduled (otherwise `null`)
+- `language` is included as the order language code when available (for example, `en`, `pt`, `es`)
 - `paidAt` is included as an ISO timestamp when the order has been paid (otherwise `null`)
 - `deliveredAt` is included when the order has been marked as delivered
+- `estimatedDeliveryDurationMinutes` is included when available, based on the order position inside the dispatch route
 - `progressiveDiscountSnapshot` is included when the order has a stored progressive discount snapshot (including selected prize data)
 - `preparationStepCategory` is populated with nested entities:
   category data, steps, and each step's `preparationStepModifiers` (including `modifierGtroupItem` details when available)
@@ -109,6 +123,7 @@ Success:
   {
     "id": "dispatch-id",
     "createdAt": "2026-04-06T15:30:00.000Z",
+    "queueIndex": 2,
     "dispatched": false,
     "estimatedDeliveryDurationMinutes": 24,
     "estimatedRoundTripDurationMinutes": 33,
