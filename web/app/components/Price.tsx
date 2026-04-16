@@ -305,35 +305,38 @@ const Price: React.FC<TPrice> = ({ data, cart, content }) => {
   const router = useRouter();
 
   return (
-    <div className="bg-foreground p-4 border-[#B9BFBF] border-b flex flex-row justify-between sticky top-[var(--menu-sticky-offset)] z-10">
-      <Button
-        onClick={() => router.back()}
-        className="p-0! text-[16px] font-semibold text-text! bg-transparent flex flex-row gap-2 items-center"
-      >
-        <FiArrowLeft size={18} />
-        <span>{content["back"]}</span>
-      </Button>
-      <div className="flex flex-row items-center gap-2.5">
-        <div>
-          <div className="bg-[#CCD0D0] rounded-md">
-            {price.discountAmount > 0 && (
-              <span className="text-xs font-semibold text-brandBackground py-1 px-1.5">
-                {formatDiscountOffLabel(price.discountAmount)}
+    <div className="bg-foreground p-4 border-[#B9BFBF] border-b flex flex-row justify-center  sticky top-[var(--menu-sticky-offset)] z-10 w-full">
+      <div className="w-[900px] flex flex-row justify-between">
+        <Button
+          onClick={() => router.back()}
+          className="p-0! text-[16px] font-semibold text-text! bg-transparent flex flex-row gap-2 items-center"
+        >
+          <FiArrowLeft size={18} />
+          <span>{content["back"]}</span>
+        </Button>
+        <div className="flex flex-row items-center gap-2.5">
+          <div>
+            <div className="bg-[#CCD0D0] rounded-md">
+              {price.discountAmount > 0 && (
+                <span className="text-xs font-semibold text-brandBackground py-1 px-1.5">
+                  {formatDiscountOffLabel(price.discountAmount)}
+                </span>
+              )}
+            </div>
+          </div>
+          <div className="flex flex-col">
+            {price.fullPrice !== price.discountedPrice && (
+              <span className="text-sm font-semibold line-through">
+                {formatCurrency(price.fullPrice)}
               </span>
             )}
+            <span className="text-[22px] font-bold">
+              {formatCurrency(price.discountedPrice)}
+            </span>
           </div>
         </div>
-        <div className="flex flex-col">
-          {price.fullPrice !== price.discountedPrice && (
-            <span className="text-sm font-semibold line-through">
-              {formatCurrency(price.fullPrice)}
-            </span>
-          )}
-          <span className="text-[22px] font-bold">
-            {formatCurrency(price.discountedPrice)}
-          </span>
-        </div>
       </div>
+
     </div>
   );
 };
@@ -491,7 +494,7 @@ function buildScheduleOptions(
     date.setHours(0, 0, 0, 0);
     const differenceInDays = Math.round(
       (startOfDay(date).getTime() - startOfDay(now).getTime()) /
-        (1000 * 60 * 60 * 24),
+      (1000 * 60 * 60 * 24),
     );
 
     const label =
@@ -556,9 +559,9 @@ function resolveCheckoutErrorMessage(
 ): string {
   const reason =
     typeof error === "object" &&
-    error !== null &&
-    "data" in error &&
-    typeof (error as { data?: { message?: string } }).data?.message === "string"
+      error !== null &&
+      "data" in error &&
+      typeof (error as { data?: { message?: string } }).data?.message === "string"
       ? (error as { data?: { message?: string } }).data?.message
       : undefined;
 
@@ -674,11 +677,11 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
     : [];
   const selectedPrizeRequiredSelectionCount = selectedPrize
     ? Math.max(
-        0,
-        getUniquePrizeProducts(selectedPrize).length > 0
-          ? selectedPrize.quantity
-          : 0,
-      )
+      0,
+      getUniquePrizeProducts(selectedPrize).length > 0
+        ? selectedPrize.quantity
+        : 0,
+    )
     : 0;
   const isSelectedPrizeReady =
     !selectedPrize ||
@@ -764,9 +767,9 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
         scheduleFor,
         selectedPrize: selectedPrize
           ? {
-              prizeId: selectedPrize.id,
-              selectedProductIds: selectedPrizeProductIds,
-            }
+            prizeId: selectedPrize.id,
+            selectedProductIds: selectedPrizeProductIds,
+          }
           : undefined,
         tipAmount: Number(selectedTip || 0),
       });
@@ -782,17 +785,19 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
 
   if (step === 3)
     return (
-      <div className="flex flex-col h-dvh overflow-hidden">
-        <div className="bg-foreground p-4 border-[#B9BFBF] border-b flex flex-row justify-between">
-          <Button
+      <div className="flex flex-col h-dvh overflow-hidden items-center">
+        <div className="bg-foreground p-4 border-[#B9BFBF] border-b flex flex-row justify-center w-full">
+          <div className="max-w-[900px] w-full">
+            <Button
             onClick={() => setStep(2)}
             className="p-0! text-[16px] font-semibold text-text! bg-transparent flex flex-row gap-2 items-center"
           >
             <FiArrowLeft size={18} />
             <span>{content["back"]}</span>
           </Button>
+          </div>
         </div>
-        <div className="py-6 px-4 flex flex-1 flex-col gap-4 overflow-y-auto pb-36">
+        <div className="py-6 px-4 flex flex-1 flex-col gap-4 overflow-y-auto pb-36 max-w-[900px] w-full">
           <div className="py-3 px-4 rounded-xl bg-foreground flex flex-row justify-between items-center mb-2">
             <button
               type="button"
@@ -835,12 +840,15 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
               </Button>
             </div>
           </div>
+          {/* Coupon field temporarily disabled */}
+          {/*
           <div className="flex flex-row items-end gap-1">
             <TextInput label="Cupom" placeholder="Insert cupom" />
             <Button className="bg-brandBackground h-14">
               {content["verify"]}
             </Button>
           </div>
+          */}
           {isBranchOpen === false && (
             <div className="flex flex-col gap-2">
               <div className="flex flex-col gap-0.5">
@@ -884,7 +892,7 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
             disabled={
               loading || (isBranchOpen === false && scheduleOptions.length === 0)
             }
-            className="bg-brandBackground w-full py-3 gap-3"
+            className="bg-brandBackground w-full py-3 gap-3 max-w-[900px]"
           >
             <span className="text-lg">
               {loading
@@ -926,9 +934,9 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
     );
 
   return (
-    <div>
+    <div className="flex flex-col items-center w-full">
       <Price cart={cart} data={data} content={content} />
-      <div className="py-6 px-4 flex flex-col gap-6 pb-55">
+      <div className="py-6 px-4 flex flex-col gap-6 pb-55 max-w-[900px] w-full">
         {prizeSelectionRequired && (
           <div
             key={`prize-banner-${prizeBannerShakeSignal}`}
@@ -998,32 +1006,33 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
         )}
       </div>
       {cart.items.length > 0 && (
-        <div className="bg-foreground pt-4 pb-8 px-4 border-[#B9BFBF] border-t fixed bottom-0 w-full flex flex-col items-center gap-2.5">
-          <span className="font-bold text-lg">{content["selectService"]}</span>
-          {!isDeliveryEligible && (
-            <span className="text-sm text-lightText">
-              {(content["deliveryMinimum"] || "Delivery available from") +
-                " " +
-                formatCurrency(DELIVERY_MINIMUM_ORDER_CENTS)}
-            </span>
-          )}
-          <Button
-            className={`bg-brandBackground w-full py-2! gap-3 transition-opacity duration-200 ${
-              !isDeliveryEligible ? "opacity-50" : "opacity-100"
-            }`}
-            onClick={() => handleServiceTypeSelection("DELIVERY")}
-            disabled={!isDeliveryEligible}
-          >
-            <FiTruck size={22} />
-            <span className="text-lg">{content["delivery"]}</span>
-          </Button>
-          <Button
-            className="bg-brandBackground w-full py-2! gap-3"
-            onClick={() => handleServiceTypeSelection("TAKEAWAY")}
-          >
-            <FiShoppingBag size={22} />
-            <span className="text-lg">{content["takeAway"]}</span>
-          </Button>
+        <div className="bg-foreground pt-4 pb-8 px-4 border-[#B9BFBF] border-t fixed bottom-0 w-full flex flex-col items-center">
+          <div className="flex flex-col items-center gap-2.5 max-w-[500px] w-full">
+            <span className="font-bold text-lg">{content["selectService"]}</span>
+            {!isDeliveryEligible && (
+              <span className="text-sm text-lightText">
+                {(content["deliveryMinimum"] || "Delivery available from") +
+                  " " +
+                  formatCurrency(DELIVERY_MINIMUM_ORDER_CENTS)}
+              </span>
+            )}
+            <Button
+              className={`bg-brandBackground w-full py-2! gap-3 transition-opacity duration-200 ${!isDeliveryEligible ? "opacity-50" : "opacity-100"
+                }`}
+              onClick={() => handleServiceTypeSelection("DELIVERY")}
+              disabled={!isDeliveryEligible}
+            >
+              <FiTruck size={22} />
+              <span className="text-lg">{content["delivery"]}</span>
+            </Button>
+            <Button
+              className="bg-brandBackground w-full py-2! gap-3"
+              onClick={() => handleServiceTypeSelection("TAKEAWAY")}
+            >
+              <FiShoppingBag size={22} />
+              <span className="text-lg">{content["takeAway"]}</span>
+            </Button>
+          </div>
         </div>
       )}
       {prizeSelectionRequired && (
@@ -1107,17 +1116,17 @@ const PrizeSelectionModal: React.FC<TPrizeSelectionModal> = ({
     : [];
   const pendingSelectedPrizeRequiredSelectionCount = pendingSelectedPrize
     ? Math.max(
-        0,
-        getUniquePrizeProducts(pendingSelectedPrize).length > 0
-          ? pendingSelectedPrize.quantity
-          : 0,
-      )
+      0,
+      getUniquePrizeProducts(pendingSelectedPrize).length > 0
+        ? pendingSelectedPrize.quantity
+        : 0,
+    )
     : 0;
   const isPendingSelectedPrizeReady =
     !!pendingSelectedPrize &&
     (pendingSelectedPrizeRequiredSelectionCount === 0 ||
       pendingSelectedPrizeProductIds.length ===
-        pendingSelectedPrizeRequiredSelectionCount);
+      pendingSelectedPrizeRequiredSelectionCount);
 
   const updatePrizeProductCount = (
     prizeId: string,
@@ -1238,17 +1247,16 @@ const PrizeSelectionModal: React.FC<TPrizeSelectionModal> = ({
             const progressRatio =
               prizeRequiredSelectionCount > 0
                 ? Math.min(
-                    1,
-                    prizeSelectedProductIds.length / prizeRequiredSelectionCount,
-                  )
+                  1,
+                  prizeSelectedProductIds.length / prizeRequiredSelectionCount,
+                )
                 : 0;
 
             return (
               <div
                 key={prize.id}
-                className={`w-full rounded-[12px] bg-white ${
-                  isSelected ? "border-2 border-[#142826]" : ""
-                }`}
+                className={`w-full rounded-[12px] bg-white ${isSelected ? "border-2 border-[#142826]" : ""
+                  }`}
               >
                 <button
                   type="button"
@@ -1266,9 +1274,8 @@ const PrizeSelectionModal: React.FC<TPrizeSelectionModal> = ({
                     </span>
                   </div>
                   <span
-                    className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 ${
-                      isSelected ? "border-[#142826]" : "border-[#CCCCCC]"
-                    }`}
+                    className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 ${isSelected ? "border-[#142826]" : "border-[#CCCCCC]"
+                      }`}
                   >
                     {isSelected && (
                       <span className="h-2.5 w-2.5 rounded-full bg-[#142826]" />
@@ -1286,7 +1293,7 @@ const PrizeSelectionModal: React.FC<TPrizeSelectionModal> = ({
                         const hasReachedRequiredTotal =
                           prizeRequiredSelectionCount > 0 &&
                           prizeSelectedProductIds.length >=
-                            prizeRequiredSelectionCount;
+                          prizeRequiredSelectionCount;
                         const hasAnotherSelectedProduct =
                           prizeSelectedProductIds.some((id) => id !== product.id);
                         const canIncrement =
@@ -1305,17 +1312,15 @@ const PrizeSelectionModal: React.FC<TPrizeSelectionModal> = ({
                               )
                             }
                             disabled={!canIncrement}
-                            className={`flex flex-col items-center gap-2 text-center ${
-                              !canIncrement ? "opacity-80" : ""
-                            }`}
+                            className={`flex flex-col items-center gap-2 text-center ${!canIncrement ? "opacity-80" : ""
+                              }`}
                           >
                             <div className="relative w-full">
                               <ProductImage
                                 alt={resolvePrizeProductTitle(product, lg)}
                                 src={product.photos?.[0]?.url}
-                                className={`aspect-square w-full rounded-[12px] object-cover ${
-                                  productSelectedCount > 0 ? "ring-2 ring-[#142826]" : ""
-                                }`}
+                                className={`aspect-square w-full rounded-[12px] object-cover ${productSelectedCount > 0 ? "ring-2 ring-[#142826]" : ""
+                                  }`}
                               />
                               {productSelectedCount > 0 && (
                                 <div className="absolute right-1 top-1 flex h-6 min-w-6 items-center justify-center rounded-full bg-[#304240] px-1">
@@ -1348,9 +1353,8 @@ const PrizeSelectionModal: React.FC<TPrizeSelectionModal> = ({
           type="button"
           onClick={handleConfirm}
           disabled={!isPendingSelectedPrizeReady}
-          className={`h-[52px] w-full rounded-[8px] border border-[rgba(20,40,38,0.3)] bg-[#304240] text-[18px] font-bold leading-[1.1] text-white ${
-            !isPendingSelectedPrizeReady ? "opacity-50" : ""
-          }`}
+          className={`h-[52px] w-full rounded-[8px] border border-[rgba(20,40,38,0.3)] bg-[#304240] text-[18px] font-bold leading-[1.1] text-white ${!isPendingSelectedPrizeReady ? "opacity-50" : ""
+            }`}
         >
           {content["confirm"] || "Confirm"}
         </button>
@@ -1384,7 +1388,7 @@ const ScheduleSelector: React.FC<TScheduleSelector> = ({
 
   useEffect(() => {
     if (value?.date) {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSelectedDate(value.date);
       return;
     }
@@ -1412,18 +1416,16 @@ const ScheduleSelector: React.FC<TScheduleSelector> = ({
             disabled={scheduleOptions.length === 0}
             aria-invalid={Boolean(error)}
             aria-describedby={error ? errorId : undefined}
-            className={`w-full flex items-center justify-between rounded-xl bg-foreground text-lg px-3 py-3 transition border-2 ${
-              error
+            className={`w-full flex items-center justify-between rounded-xl bg-foreground text-lg px-3 py-3 transition border-2 ${error
                 ? "border-red-500"
                 : "border-foreground"
-            } ${scheduleOptions.length === 0 ? "opacity-50" : ""}`}
+              } ${scheduleOptions.length === 0 ? "opacity-50" : ""}`}
           >
             <div className="flex items-center gap-2 min-w-0">
               <FiCalendar className="text-neutral-500 shrink-0" />
               <span
-                className={`truncate text-left ${
-                  value ? "text-text" : "text-lightText"
-                }`}
+                className={`truncate text-left ${value ? "text-text" : "text-lightText"
+                  }`}
               >
                 {displayValue}
               </span>
@@ -1458,11 +1460,10 @@ const ScheduleSelector: React.FC<TScheduleSelector> = ({
                     key={option.value}
                     type="button"
                     onClick={() => setSelectedDate(option.value)}
-                    className={`rounded-xl border-2 px-3 py-3 text-left transition ${
-                      selectedDate === option.value
+                    className={`rounded-xl border-2 px-3 py-3 text-left transition ${selectedDate === option.value
                         ? "border-brandBackground bg-brandBackground/10"
                         : "border-foreground bg-foreground"
-                    }`}
+                      }`}
                   >
                     <span className="block font-semibold capitalize">
                       {option.label}
@@ -1492,11 +1493,10 @@ const ScheduleSelector: React.FC<TScheduleSelector> = ({
                         });
                         setOpen(false);
                       }}
-                      className={`rounded-xl border-2 px-3 py-3 text-left transition ${
-                        isSelected
+                      className={`rounded-xl border-2 px-3 py-3 text-left transition ${isSelected
                           ? "border-brandBackground bg-brandBackground/10"
                           : "border-foreground bg-foreground"
-                      }`}
+                        }`}
                     >
                       <span className="flex items-center gap-2 font-semibold">
                         <FiClock className="shrink-0" />
@@ -1582,37 +1582,37 @@ export const OrderSummaryModal: React.FC<TOrderSummaryModal> = ({
   const prizeBadgeLabel = content["prize"] || "Prize";
   const orderPrizeSummaryLineItems = isOrderMode
     ? buildPrizeSummaryLineItems({
-        availableProducts:
-          resolvedProgressiveDiscountSnapshot?.selectedPrize?.availableProducts || [],
-        lg,
-        selectedProductCounts:
-          resolvedProgressiveDiscountSnapshot?.selectedPrize?.selectedProductCounts ||
-          [],
-        selectedProductIds:
-          resolvedProgressiveDiscountSnapshot?.selectedPrize?.selectedProductIds || [],
-      })
+      availableProducts:
+        resolvedProgressiveDiscountSnapshot?.selectedPrize?.availableProducts || [],
+      lg,
+      selectedProductCounts:
+        resolvedProgressiveDiscountSnapshot?.selectedPrize?.selectedProductCounts ||
+        [],
+      selectedProductIds:
+        resolvedProgressiveDiscountSnapshot?.selectedPrize?.selectedProductIds || [],
+    })
     : [];
   const cartPrizeSummaryLineItems =
     !isOrderMode &&
-    cart?.selectedPrize?.selectedPrizeId &&
-    data?.progressiveDiscount
+      cart?.selectedPrize?.selectedPrizeId &&
+      data?.progressiveDiscount
       ? (() => {
-          const availablePrizes = data.progressiveDiscount.steps.flatMap(
-            (step) => step.prizes || [],
-          );
-          const selectedPrize = availablePrizes.find(
-            (prize) => prize.id === cart.selectedPrize?.selectedPrizeId,
-          );
-          if (!selectedPrize) return [];
+        const availablePrizes = data.progressiveDiscount.steps.flatMap(
+          (step) => step.prizes || [],
+        );
+        const selectedPrize = availablePrizes.find(
+          (prize) => prize.id === cart.selectedPrize?.selectedPrizeId,
+        );
+        if (!selectedPrize) return [];
 
-          return buildPrizeSummaryLineItems({
-            availableProducts: selectedPrize.products,
-            lg,
-            selectedProductIds:
-              cart.selectedPrize?.selectedProductIdsByPrizeId?.[selectedPrize.id] ||
-              [],
-          });
-        })()
+        return buildPrizeSummaryLineItems({
+          availableProducts: selectedPrize.products,
+          lg,
+          selectedProductIds:
+            cart.selectedPrize?.selectedProductIdsByPrizeId?.[selectedPrize.id] ||
+            [],
+        });
+      })()
       : [];
   const prizeSummaryLineItems = isOrderMode
     ? orderPrizeSummaryLineItems
@@ -1628,10 +1628,10 @@ export const OrderSummaryModal: React.FC<TOrderSummaryModal> = ({
   const cartPricingSummary =
     cart && data
       ? calculateCartWithProgressiveDiscount(
-          data.categories,
-          cart,
-          data.progressiveDiscount,
-        )
+        data.categories,
+        cart,
+        data.progressiveDiscount,
+      )
       : null;
   const baseProductCount = isOrderMode
     ? order?.orderProducts.reduce((sum, item) => sum + item.quantity, 0) ?? 0
@@ -1648,12 +1648,12 @@ export const OrderSummaryModal: React.FC<TOrderSummaryModal> = ({
     : cartPricingSummary?.fullPrice ?? 0;
   const discountedSubtotal = isOrderMode
     ? resolvedProgressiveDiscountSnapshot?.discountedPrice ??
-      order?.subtotalAmount ??
-      orderProductsDiscountedSubtotal
+    order?.subtotalAmount ??
+    orderProductsDiscountedSubtotal
     : cartPricingSummary?.discountedPrice ?? 0;
   const resolvedDiscountAmount = isOrderMode
     ? resolvedProgressiveDiscountSnapshot?.discountAmount ??
-      Math.max(0, subtotal - discountedSubtotal)
+    Math.max(0, subtotal - discountedSubtotal)
     : cartPricingSummary?.discountAmount ?? 0;
   const totalWithoutFees = Math.max(0, subtotal - resolvedDiscountAmount);
   const resolvedTipAmount = isOrderMode
@@ -1661,9 +1661,9 @@ export const OrderSummaryModal: React.FC<TOrderSummaryModal> = ({
     : tipAmount ?? 0;
   const resolvedTotal = isOrderMode
     ? order?.totalAmount ??
-      totalWithoutFees + resolvedDeliveryFee + resolvedTipAmount + resolvedTaxAmount
+    totalWithoutFees + resolvedDeliveryFee + resolvedTipAmount + resolvedTaxAmount
     : total ??
-      totalWithoutFees + resolvedDeliveryFee + resolvedTipAmount + resolvedTaxAmount;
+    totalWithoutFees + resolvedDeliveryFee + resolvedTipAmount + resolvedTaxAmount;
   const title = isOrderMode ? content["billSummary"] : content["cartSummary"];
   const [productsExpanded, setProductsExpanded] = useState(true);
 
@@ -1693,7 +1693,7 @@ export const OrderSummaryModal: React.FC<TOrderSummaryModal> = ({
         >
           <Dialog.Title className="sr-only">{title}</Dialog.Title>
           <div className="flex flex-row items-center gap-3 px-4 py-4 bg-foreground border-[#E6E6E6] border-b justify-between">
-            
+
             <span className="font-semibold text-lg leading-none">{title}</span>
             <Button
               onClick={() => resolvedOnOpenChange(false)}
@@ -1714,94 +1714,93 @@ export const OrderSummaryModal: React.FC<TOrderSummaryModal> = ({
                 </span>
                 <FiChevronDown
                   size={20}
-                  className={`shrink-0 transition-transform ${
-                    productsExpanded ? "rotate-180" : ""
-                  }`}
+                  className={`shrink-0 transition-transform ${productsExpanded ? "rotate-180" : ""
+                    }`}
                 />
               </button>
               {productsExpanded && (
                 <div className="flex flex-col">
                   {isOrderMode
                     ? order?.orderProducts.map((item, index) => {
-                        const productName =
-                          item.product?.translations?.[lg]?.title ||
-                          item.product?.name ||
-                          "";
-                        const lineTotal = item.fullAmount * item.quantity;
-                        const modifierGroups = buildSelectedModifierGroupsFromOrderProduct(
-                          item,
-                          lg,
-                          content["modifiers"] || "Modifiers",
-                        );
+                      const productName =
+                        item.product?.translations?.[lg]?.title ||
+                        item.product?.name ||
+                        "";
+                      const lineTotal = item.fullAmount * item.quantity;
+                      const modifierGroups = buildSelectedModifierGroupsFromOrderProduct(
+                        item,
+                        lg,
+                        content["modifiers"] || "Modifiers",
+                      );
+                      const totalOrderSummaryLines =
+                        (order?.orderProducts.length || 0) +
+                        orderPrizeSummaryLineItems.length;
+
+                      return (
+                        <OrderSummaryLineItem
+                          key={item.id}
+                          comments={item.comments}
+                          modifierGroups={modifierGroups}
+                          name={productName}
+                          price={lineTotal}
+                          quantity={item.quantity}
+                          showDivider={index < (totalOrderSummaryLines - 1)}
+                        />
+                      );
+                    }).concat(
+                      orderPrizeSummaryLineItems.map((item, index) => {
+                        const orderItemsLength = order?.orderProducts.length || 0;
                         const totalOrderSummaryLines =
-                          (order?.orderProducts.length || 0) +
-                          orderPrizeSummaryLineItems.length;
+                          orderItemsLength + orderPrizeSummaryLineItems.length;
+                        const currentLineIndex = orderItemsLength + index;
 
                         return (
                           <OrderSummaryLineItem
-                            key={item.id}
-                            comments={item.comments}
-                            modifierGroups={modifierGroups}
-                            name={productName}
-                            price={lineTotal}
+                            key={`prize-${item.id}-${index}`}
+                            badgeLabel={prizeBadgeLabel}
+                            modifierGroups={[]}
+                            name={item.name}
+                            price={0}
                             quantity={item.quantity}
-                            showDivider={index < (totalOrderSummaryLines - 1)}
+                            showDivider={currentLineIndex < (totalOrderSummaryLines - 1)}
                           />
                         );
-                      }).concat(
-                        orderPrizeSummaryLineItems.map((item, index) => {
-                          const orderItemsLength = order?.orderProducts.length || 0;
-                          const totalOrderSummaryLines =
-                            orderItemsLength + orderPrizeSummaryLineItems.length;
-                          const currentLineIndex = orderItemsLength + index;
-
-                          return (
-                            <OrderSummaryLineItem
-                              key={`prize-${item.id}-${index}`}
-                              badgeLabel={prizeBadgeLabel}
-                              modifierGroups={[]}
-                              name={item.name}
-                              price={0}
-                              quantity={item.quantity}
-                              showDivider={currentLineIndex < (totalOrderSummaryLines - 1)}
-                            />
-                          );
-                        }),
-                      )
+                      }),
+                    )
                     : cart &&
-                      data &&
-                      cart.items.map((item, index) => (
-                        <OrderSummaryItem
-                          cart={cart}
-                          cartItem={item}
-                          content={content}
-                          data={data}
-                          key={item.cartId || item.productId}
-                          lg={lg}
-                          showDivider={
-                            index <
-                            cart.items.length + cartPrizeSummaryLineItems.length - 1
-                          }
-                        />
-                      )).concat(
-                        cartPrizeSummaryLineItems.map((item, index) => {
-                          const currentLineIndex = cart.items.length + index;
-                          const totalCartSummaryLines =
-                            cart.items.length + cartPrizeSummaryLineItems.length;
+                    data &&
+                    cart.items.map((item, index) => (
+                      <OrderSummaryItem
+                        cart={cart}
+                        cartItem={item}
+                        content={content}
+                        data={data}
+                        key={item.cartId || item.productId}
+                        lg={lg}
+                        showDivider={
+                          index <
+                          cart.items.length + cartPrizeSummaryLineItems.length - 1
+                        }
+                      />
+                    )).concat(
+                      cartPrizeSummaryLineItems.map((item, index) => {
+                        const currentLineIndex = cart.items.length + index;
+                        const totalCartSummaryLines =
+                          cart.items.length + cartPrizeSummaryLineItems.length;
 
-                          return (
-                            <OrderSummaryLineItem
-                              key={`prize-${item.id}-${index}`}
-                              badgeLabel={prizeBadgeLabel}
-                              modifierGroups={[]}
-                              name={item.name}
-                              price={0}
-                              quantity={item.quantity}
-                              showDivider={currentLineIndex < (totalCartSummaryLines - 1)}
-                            />
-                          );
-                        }),
-                      )}
+                        return (
+                          <OrderSummaryLineItem
+                            key={`prize-${item.id}-${index}`}
+                            badgeLabel={prizeBadgeLabel}
+                            modifierGroups={[]}
+                            name={item.name}
+                            price={0}
+                            quantity={item.quantity}
+                            showDivider={currentLineIndex < (totalCartSummaryLines - 1)}
+                          />
+                        );
+                      }),
+                    )}
                 </div>
               )}
             </div>
@@ -2060,21 +2059,23 @@ const AddressStep: React.FC<TAddressStep> = ({
   return (
     <>
       <div
-        className="flex flex-col overflow-hidden"
+        className="flex flex-col overflow-hidden items-center"
         style={{
           height: "calc(100dvh - var(--menu-sticky-offset))",
         }}
       >
-        <div className="bg-foreground p-4 border-[#B9BFBF] border-b flex flex-row justify-between">
-          <Button
+        <div className="bg-foreground p-4 border-[#B9BFBF] border-b justify-between flex flex-col items-center w-full">
+          <div className="max-w-[900px] w-full">
+            <Button
             onClick={() => onBack()}
             className="p-0! text-[16px] font-semibold text-text! bg-transparent flex flex-row gap-2 items-center"
           >
             <FiArrowLeft size={18} />
             <span>{content["back"]}</span>
           </Button>
+          </div>
         </div>
-        <div className="pt-6 px-4 flex flex-1 flex-col gap-6 overflow-y-auto">
+        <div className="pt-6 px-4 flex flex-1 flex-col gap-6 overflow-y-auto max-w-[900px] w-full">
           <div className="flex flex-col gap-1.5">
             <span className="font-semibold text-[16px]">
               {content["phone"]}
@@ -2152,7 +2153,7 @@ const AddressStep: React.FC<TAddressStep> = ({
           <Button
             onClick={handleConfirm}
             disabled={loading}
-            className="bg-brandBackground w-full py-3 gap-3"
+            className="bg-brandBackground w-full py-3 gap-3 max-w-[900px]"
           >
             <span className="text-lg">
               {loading ? content["loading"] : content["confirm"]}
@@ -2329,16 +2330,16 @@ const AddressSelector: React.FC<TAddressSelector> = ({
           <div className="flex flex-1 items-start justify-between gap-3">
             <div className="flex min-w-0 flex-col">
               <span className="flex-1">{`${address.street}, ${address.city}`}</span>
-               {typeof address.deliveryFee === "number" && (
-              <div className="shrink-0 self-start whitespace-nowrap text-sm text-lightText">
-                {formatCurrency(address.deliveryFee)} {content["deliveryFee"]}
-              </div>
-            )}
+              {typeof address.deliveryFee === "number" && (
+                <div className="shrink-0 self-start whitespace-nowrap text-sm text-lightText">
+                  {formatCurrency(address.deliveryFee)} {content["deliveryFee"]}
+                </div>
+              )}
               {address.complement && (
                 <div className="text-sm text-lightText">{address.complement}</div>
               )}
             </div>
-           
+
           </div>
           <div
             className={`h-5 w-5 flex items-center justify-center ${address.id === selectedAddress ? "border-brandBackground" : "border-[#CCD0D0]"} border-2 rounded-full`}
@@ -2419,7 +2420,8 @@ const FindAddressModal: React.FC<TFindAddressModal> = ({
 
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
-      <Dialog.Content className="w-dvw h-dvh bg-background fixed top-0">
+      <Dialog.Overlay className="fixed inset-0 z-[79] bg-black/40" />
+      <Dialog.Content className="w-dvw h-dvh bg-background fixed top-0 left-0 z-[80]">
         <Dialog.Title className="sr-only">
           {content["addAddress"]}
         </Dialog.Title>

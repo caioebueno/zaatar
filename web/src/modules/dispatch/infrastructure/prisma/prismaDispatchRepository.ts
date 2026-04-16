@@ -1780,6 +1780,9 @@ class PrismaDispatchRepository implements DispatchRepository {
       }
 
       if (data.queueIndex !== undefined) {
+        // Ensure queue indexes are globally consistent before moving a dispatch.
+        // This fixes any pre-existing duplicates/gaps and guarantees uniqueness.
+        await normalizeDispatchQueueIndexes(tx);
         await moveDispatchToQueueIndex(tx, data.dispatchId, data.queueIndex);
       }
 

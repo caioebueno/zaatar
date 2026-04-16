@@ -670,14 +670,30 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
           });
         } else if (data.orderType === "TAKEAWAY") {
           const dispatchId = randomUUID();
+          const [nextQueueIndexResult] = await tx.$queryRaw<
+            { nextQueueIndex: number }[]
+          >`
+            SELECT COALESCE(MAX(dispatch."queueIndex"), 0)::INTEGER + 1 AS "nextQueueIndex"
+            FROM "Dispatch" dispatch
+          `;
+          const nextQueueIndex = nextQueueIndexResult?.nextQueueIndex ?? 1;
 
-          await tx.dispatch.create({
-            data: {
-              id: dispatchId,
-              dispatched: false,
-              driverId: null,
-            },
-          });
+          await tx.$executeRaw`
+            INSERT INTO "Dispatch" (
+              "id",
+              "queueIndex",
+              "dispatched",
+              "dispatchAt",
+              "driverId"
+            )
+            VALUES (
+              ${dispatchId},
+              ${nextQueueIndex},
+              false,
+              NULL,
+              NULL
+            )
+          `;
           await tx.order.update({
             where: {
               id: createdOrder.id,

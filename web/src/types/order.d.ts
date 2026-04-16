@@ -29,6 +29,7 @@ export type TOrder = {
   type: TOrderType;
   dispatchId?: string;
   dispatchOrderIndex?: number;
+  productionIndex?: number;
   totalAmount?: number;
   subtotalAmount?: number;
   tipAmount?: number;

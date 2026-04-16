@@ -73,3 +73,28 @@ body {
 html {
     scroll-behavior: smooth;
 }
+
+:where(
+    a,
+    button,
+    [role="button"],
+    [data-slot="button"],
+    summary,
+    input[type="button"],
+    input[type="submit"],
+    input[type="reset"],
+    label[for]
+):not([disabled]):not([aria-disabled="true"]) {
+    cursor: pointer;
+}
+
+:where(
+    button,
+    [data-slot="button"],
+    input[type="button"],
+    input[type="submit"],
+    input[type="reset"]
+)[disabled],
+:where([aria-disabled="true"]) {
+    cursor: not-allowed;
+}

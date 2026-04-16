@@ -122,8 +122,19 @@ class PrismaStationRepository implements StationRepository {
       }
     }
 
-    return orders
-      .map((order): TOrder | null => {
+    const mappedOrders = orders
+      .map(
+        (
+          order,
+        ):
+          | {
+              order: TOrder;
+              dispatchId?: string;
+              dispatchOrderIndex: number;
+              orderCreatedAt: number;
+              orderId: string;
+            }
+          | null => {
         const isToday =
           order.createdAt >= window.start && order.createdAt < window.end;
 
@@ -181,7 +192,7 @@ class PrismaStationRepository implements StationRepository {
 
         if (categories.length === 0) return null;
 
-        return {
+        const mappedOrder: TOrder = {
           id: order.id,
           createdAt: order.createdAt.toISOString(),
           scheduleFor:
@@ -227,8 +238,104 @@ class PrismaStationRepository implements StationRepository {
           })),
           preparationStepCategory: categories,
         };
-      })
-      .filter(Boolean) as TOrder[];
+
+        return {
+          order: mappedOrder,
+          dispatchId: order.dispatchId ?? undefined,
+          dispatchOrderIndex:
+            typeof order.dispatchOrderIndex === "number"
+              ? order.dispatchOrderIndex
+              : Number.MAX_SAFE_INTEGER,
+          orderCreatedAt: order.createdAt.getTime(),
+          orderId: order.id,
+        };
+      },
+      )
+      .filter(
+        (
+          item,
+        ): item is {
+          order: TOrder;
+          dispatchId?: string;
+          dispatchOrderIndex: number;
+          orderCreatedAt: number;
+          orderId: string;
+        } => Boolean(item),
+      );
+
+    const dispatchIds = Array.from(
+      new Set(
+        mappedOrders
+          .map((item) => item.dispatchId)
+          .filter((dispatchId): dispatchId is string => Boolean(dispatchId)),
+      ),
+    );
+    const dispatchRows =
+      dispatchIds.length > 0
+        ? await prisma.$queryRaw<
+            { id: string; queueIndex: number | null; createdAt: Date }[]
+          >`
+            SELECT
+              dispatch."id",
+              dispatch."queueIndex",
+              dispatch."createdAt"
+            FROM "Dispatch" dispatch
+            WHERE dispatch."id" IN (${Prisma.join(dispatchIds)})
+          `
+        : [];
+    const dispatchById = new Map(dispatchRows.map((dispatch) => [dispatch.id, dispatch]));
+
+    mappedOrders.sort((left, right) => {
+      const leftDispatch = left.dispatchId
+        ? dispatchById.get(left.dispatchId)
+        : undefined;
+      const rightDispatch = right.dispatchId
+        ? dispatchById.get(right.dispatchId)
+        : undefined;
+      const leftDispatchQueueIndex =
+        typeof leftDispatch?.queueIndex === "number"
+          ? leftDispatch.queueIndex
+          : Number.MAX_SAFE_INTEGER;
+      const rightDispatchQueueIndex =
+        typeof rightDispatch?.queueIndex === "number"
+          ? rightDispatch.queueIndex
+          : Number.MAX_SAFE_INTEGER;
+
+      if (leftDispatchQueueIndex !== rightDispatchQueueIndex) {
+        return leftDispatchQueueIndex - rightDispatchQueueIndex;
+      }
+
+      const leftDispatchCreatedAt =
+        leftDispatch?.createdAt?.getTime() ?? Number.MAX_SAFE_INTEGER;
+      const rightDispatchCreatedAt =
+        rightDispatch?.createdAt?.getTime() ?? Number.MAX_SAFE_INTEGER;
+
+      if (leftDispatchCreatedAt !== rightDispatchCreatedAt) {
+        return leftDispatchCreatedAt - rightDispatchCreatedAt;
+      }
+
+      const leftDispatchId = left.dispatchId ?? "";
+      const rightDispatchId = right.dispatchId ?? "";
+
+      if (leftDispatchId !== rightDispatchId) {
+        return leftDispatchId.localeCompare(rightDispatchId);
+      }
+
+      if (left.dispatchOrderIndex !== right.dispatchOrderIndex) {
+        return left.dispatchOrderIndex - right.dispatchOrderIndex;
+      }
+
+      if (left.orderCreatedAt !== right.orderCreatedAt) {
+        return left.orderCreatedAt - right.orderCreatedAt;
+      }
+
+      return left.orderId.localeCompare(right.orderId);
+    });
+
+    return mappedOrders.map((item, index) => ({
+      ...item.order,
+      productionIndex: index + 1,
+    }));
   }
 
   async createPreparationStepCategories(
