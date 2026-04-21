@@ -11,7 +11,7 @@ const text: {
     myCart: "My Cart",
     buyMore: "Buy More, Save More",
     addMore:
-      "Add more pizzas, sfihas, or drinks to unlock better savings. Spend $60 or more and get a special prize on us.",
+      "Add more pizzas, sfihas, or drinks to unlock better savings. Spend {prizeAmount} or more and get a special prize on us.",
     orderNow: "Order Now!",
     delivery: "Delivery",
     hoursOfOperation: "Hours of operation",
@@ -128,7 +128,7 @@ const text: {
     myCart: "Meu carrinho",
     buyMore: "Compre mais, economize mais",
     addMore:
-      "Adicione mais pizzas, esfihas ou bebidas para desbloquear melhores descontos. Gaste $60 ou mais e ganhe um brinde especial.",
+      "Adicione mais pizzas, esfihas ou bebidas para desbloquear melhores descontos. Gaste {prizeAmount} ou mais e ganhe um brinde especial.",
     orderNow: "Peça agora!",
     delivery: "Entrega",
     hoursOfOperation: "Horário de funcionamento",
@@ -245,7 +245,7 @@ const text: {
     myCart: "Mi carrito",
     buyMore: "Compra más, ahorra más",
     addMore:
-      "Agrega más pizzas, sfihas o bebidas para desbloquear mejores ahorros. Gasta $60 o más y recibe un premio especial de nuestra parte.",
+      "Agrega más pizzas, sfihas o bebidas para desbloquear mejores ahorros. Gasta {prizeAmount} o más y recibe un premio especial de nuestra parte.",
     orderNow: "Ordena ahora",
     delivery: "Entrega",
     hoursOfOperation: "Horario de atención",

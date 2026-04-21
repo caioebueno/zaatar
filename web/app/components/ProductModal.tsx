@@ -141,68 +141,70 @@ const ProductModal: React.FC<TProductModal> = ({
     >
       <DialogContent
         showCloseButton={false}
-        className="w-full h-full p-0 bg-foreground transition-all"
+        className="w-full h-full p-0 bg-foreground transition-all overflow-hidden"
       >
         <DialogTitle className="sr-only">
           {product ? product.name : "Product details"}
         </DialogTitle>
         {product && (
-          <div>
-            <div className="flex flex-col lg:flex-row">
-              <div className="lg:flex-1 lg:p-4">
-              <DialogClose className="absolute top-4 left-4 p-3 rounded-full bg-background">
-                <FiArrowLeft size={18} />
-              </DialogClose>
-              <ProductImage
-                src={productImageUrl}
-                alt={`${product.name} photo`}
-                className="h-100 w-full object-cover bg-background lg:w-full lg:h-auto lg:rounded-xl"
-                quality={85}
-                sizes="(max-width: 1024px) 100vw, 50vw"
-              />
-            </div>
-            <div className="pt-6 px-4 flex flex-col gap-3 leading-4 lg:flex-1 lg:pt-8">
-              <span className="text-2xl font-bold">
-                {product.translations
-                  ? product.translations[lg] && product.translations[lg]["title"] || product.name
-                  : product.name}
-              </span>
-              <p className="text-lightText text-sm">
-                {" "}
-                {product.translations
-                  ?  product.translations[lg] &&  product.translations[lg]["description"] ||
-                    product.description
-                  : product.description}
-              </p>
-              <div className="flex flex-row gap-2 text-[20px]">
-                {product.price && (
-                  <span className="font-extrabold">
-                    {formatCurrency(product.price)}
+          <div className="h-full flex flex-col">
+            <div className="flex-1 min-h-0 overflow-y-auto">
+              <div className="flex flex-col lg:flex-row">
+                <div className="lg:flex-1 lg:p-4">
+                  <DialogClose className="absolute top-4 left-4 p-3 rounded-full bg-background">
+                    <FiArrowLeft size={18} />
+                  </DialogClose>
+                  <ProductImage
+                    src={productImageUrl}
+                    alt={`${product.name} photo`}
+                    className="h-100 w-full object-cover bg-background lg:w-full lg:h-auto lg:rounded-xl"
+                    quality={85}
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                  />
+                </div>
+                <div className="pt-6 px-4 pb-4 flex flex-col gap-3 leading-4 lg:flex-1 lg:pt-8">
+                  <span className="text-2xl font-bold">
+                    {product.translations
+                      ? product.translations[lg] && product.translations[lg]["title"] || product.name
+                      : product.name}
                   </span>
-                )}
-                {product.comparedAtPrice && (
-                  <span className="font-semibold line-through">
-                    {formatCurrency(product.comparedAtPrice)}
-                  </span>
-                )}
-              </div>
-              <div className="flex flex-col gap-2 pt-3">
-                <span className="font-semibold text-[16px]">
-                  {content["comments"]}
-                </span>
-                <textarea
-                  className="bg-background rounded-lg text-[16px] py-3 px-3 border-2 border-background transition focus:border-brandBackground focus:outline-0"
-                  rows={4}
-                  placeholder={content["optional"]}
-                  name=""
-                  id=""
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                ></textarea>
+                  <p className="text-lightText text-sm">
+                    {" "}
+                    {product.translations
+                      ?  product.translations[lg] &&  product.translations[lg]["description"] ||
+                        product.description
+                      : product.description}
+                  </p>
+                  <div className="flex flex-row gap-2 text-[20px]">
+                    {product.price && (
+                      <span className="font-extrabold">
+                        {formatCurrency(product.price)}
+                      </span>
+                    )}
+                    {product.comparedAtPrice && (
+                      <span className="font-semibold line-through">
+                        {formatCurrency(product.comparedAtPrice)}
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex flex-col gap-2 pt-3">
+                    <span className="font-semibold text-[16px]">
+                      {content["comments"]}
+                    </span>
+                    <textarea
+                      className="bg-background rounded-lg text-[16px] py-3 px-3 border-2 border-background transition focus:border-brandBackground focus:outline-0"
+                      rows={4}
+                      placeholder={content["optional"]}
+                      name=""
+                      id=""
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
+                    ></textarea>
+                  </div>
+                </div>
               </div>
             </div>
-            </div>
-            <div className="absolute bottom-0 py-5 px-4 bg-background w-full flex flex-row items-center justify-between lg:justify-end lg:gap-4">
+            <div className="shrink-0 py-5 px-4 bg-background w-full flex flex-row items-center justify-between lg:justify-end lg:gap-4">
               <QuantitySelector
                 onChange={(value) => setQuantity(value)}
                 value={quantity}

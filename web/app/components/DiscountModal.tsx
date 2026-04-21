@@ -1,6 +1,7 @@
 "use client";
 
 // import { useState } from "react";
+import { useMemo } from "react";
 import {
   Dialog,
   DialogContent,
@@ -13,6 +14,7 @@ import {
 import { Button } from "@/components/ui/button"; // your button or shadcn button
 import ProgressiveDiscountBar from "./ProgressiveDiscountBar";
 import TProgressiveDiscount from "../../src/types/progressiveDiscount";
+import formatCurrency from "@/utils/formatCurrecy";
 
 type TDiscountModal = {
   progressiveDiscount: TProgressiveDiscount;
@@ -29,7 +31,27 @@ const DiscountModal: React.FC<TDiscountModal> = ({
   open,
   content,
 }) => {
-  // const [open, setOpen] = useState(false);
+  const giftThresholdInCents = useMemo(() => {
+    const amounts = progressiveDiscount.steps
+      .filter(
+        (step) =>
+          step.type === "GIFT" &&
+          typeof step.amount === "number" &&
+          (step.prizes?.length || 0) > 0,
+      )
+      .map((step) => step.amount as number);
+
+    if (amounts.length === 0) return null;
+    return Math.min(...amounts);
+  }, [progressiveDiscount.steps]);
+
+  const formattedGiftThreshold = formatCurrency(giftThresholdInCents ?? 6000);
+  const addMoreTemplate =
+    content["addMore"] ||
+    "Add more pizzas, sfihas, or drinks to unlock better savings. Spend {prizeAmount} or more and get a special prize on us.";
+  const addMoreMessage = addMoreTemplate.includes("{prizeAmount}")
+    ? addMoreTemplate.replaceAll("{prizeAmount}", formattedGiftThreshold)
+    : addMoreTemplate;
 
   return (
     <Dialog
@@ -46,7 +68,7 @@ const DiscountModal: React.FC<TDiscountModal> = ({
             <span className="text-[22px] font-bold">
               {content["progressiveDiscount"]}
             </span>
-            <span className="font-medium">{content["addMore"]}</span>
+            <span className="font-medium">{addMoreMessage}</span>
           </DialogDescription>
         </DialogHeader>
         <ProgressiveDiscountBar
