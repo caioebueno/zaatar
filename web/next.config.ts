@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
 import path from "node:path";
+import dotenv from "dotenv";
 
-require("dotenv").config({
+dotenv.config({
   path: path.resolve(__dirname, "../.env"), // root env
 });
 
