@@ -123,10 +123,14 @@ export async function POST(request: NextRequest) {
     const createdModifierGroupItem = await prisma.modifierGroupItem.create({
       data: {
         id: modifierGroupItemId,
-        modifierGroupId,
         name,
         description,
         price,
+        modifierGroup: {
+          connect: {
+            id: modifierGroupId,
+          },
+        },
         translations:
           body.translations === undefined
             ? undefined

@@ -122,7 +122,7 @@ function parseImageUrl(value: unknown): string | null {
 
 function parseTranslations(
   value: unknown,
-): Prisma.InputJsonValue | Prisma.JsonNull | undefined {
+): Prisma.InputJsonValue | typeof Prisma.JsonNull | undefined {
   if (value === undefined) return undefined;
   if (value === null) return Prisma.JsonNull;
 
@@ -393,7 +393,7 @@ export async function updateProgressiveDiscountPrize(
 
   const updates: {
     name?: string;
-    translations?: Prisma.InputJsonValue | Prisma.JsonNull;
+    translations?: Prisma.InputJsonValue | typeof Prisma.JsonNull;
     quantity?: number;
     imageUrl?: string | null;
     progressiveDiscountStepId?: string;
