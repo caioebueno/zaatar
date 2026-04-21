@@ -2,6 +2,7 @@
 
 import prisma from "@/prisma";
 import { TOrder, TOrderStatus, TOrderType, TPaymentMethod } from "./types/order";
+import { calculateSalesTaxInCents } from "@/src/constants/pricing";
 
 type OrderRow = {
   id: string;
@@ -108,7 +109,9 @@ const getOrder = async (orderId: string): Promise<TOrder> => {
   const computedTipAmount = Math.round(
     (subtotalForTipCalculation * tipAmount) / 100,
   );
-  const computedTotal = subtotalForTipCalculation + computedTipAmount + deliveryFee;
+  const salesTaxAmount = calculateSalesTaxInCents(subtotalForTipCalculation);
+  const computedTotal =
+    subtotalForTipCalculation + computedTipAmount + deliveryFee + salesTaxAmount;
   const orderProducts = await prisma.orderProducts.findMany({
     where: {
       orderId,

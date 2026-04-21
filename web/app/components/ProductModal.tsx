@@ -27,6 +27,33 @@ type TProductModal = {
   lg: string;
 };
 
+const resolveModifierGroupTitle = (
+  modifierGroup: NonNullable<TProduct["modifierGroups"]>[number] | undefined,
+  lg: string,
+) => {
+  const localizedTranslation = modifierGroup?.translations?.[lg];
+  const englishTranslation = modifierGroup?.translations?.["en"];
+
+  const localizedTitle =
+    localizedTranslation?.title ||
+    localizedTranslation?.name ||
+    (localizedTranslation
+      ? Object.values(localizedTranslation).find(
+          (value) => typeof value === "string" && value.trim().length > 0,
+        )
+      : undefined);
+  const englishTitle =
+    englishTranslation?.title ||
+    englishTranslation?.name ||
+    (englishTranslation
+      ? Object.values(englishTranslation).find(
+          (value) => typeof value === "string" && value.trim().length > 0,
+        )
+      : undefined);
+
+  return localizedTitle || englishTitle || modifierGroup?.title || "Select options";
+};
+
 const ProductModal: React.FC<TProductModal> = ({
   product,
   onClose,
@@ -206,6 +233,7 @@ const ProductModal: React.FC<TProductModal> = ({
               : undefined
           }
           lg={lg}
+          content={content}
           hasNextModifierGroup={
             activeModifierGroupIndex !== null &&
             activeModifierGroupIndex < orderedModifierGroups.length - 1
@@ -222,6 +250,9 @@ type TModifierModal = {
   onOpenChange: (value: boolean) => void;
   modifierId?: string;
   lg: string;
+  content: {
+    [key: string]: string;
+  };
   hasNextModifierGroup?: boolean;
   product: TProduct | null;
   onConfirm: (value: TSelectedModifier[]) => void;
@@ -233,6 +264,7 @@ const ModifierModal: React.FC<TModifierModal> = ({
   product,
   modifierId,
   lg,
+  content,
   hasNextModifierGroup,
   onConfirm,
 }) => {
@@ -310,7 +342,7 @@ const ModifierModal: React.FC<TModifierModal> = ({
         className="w-full max-w-[900px] h-full min-h-0 flex flex-col p-0 bg-foreground transition-all gap-0"
       >
         <DialogTitle className="sr-only">
-          {modifierGroup?.title || "Modifier options"}
+          {resolveModifierGroupTitle(modifierGroup, lg)}
         </DialogTitle>
         <div className="absolute right-4 top-4 z-10">
           <DialogClose asChild>
@@ -325,7 +357,7 @@ const ModifierModal: React.FC<TModifierModal> = ({
         </div>
         <div className="py-8 flex flex-col items-center">
           <span className="text-[22px] font-bold">
-            {modifierGroup?.title || "Select options"}
+            {resolveModifierGroupTitle(modifierGroup, lg)}
           </span>
         </div>
         <div className="flex-1 min-h-0 overflow-y-auto px-4 pb-2">
@@ -348,7 +380,7 @@ const ModifierModal: React.FC<TModifierModal> = ({
               className="bg-background! text-text! flex-1 disabled:opacity-50"
               onClick={handleSkip}
             >
-              No, Thanks
+              {content["noThanks"] || "No, Thanks"}
             </Button>
           )}
           <Button
@@ -356,7 +388,9 @@ const ModifierModal: React.FC<TModifierModal> = ({
             disabled={!canConfirm}
             className="bg-brandBackground py-2 flex-1 disabled:opacity-50"
           >
-            {hasNextModifierGroup ? "Next" : "Add"}
+            {hasNextModifierGroup
+              ? content["next"] || "Next"
+              : content["add"] || "Add"}
           </Button>
         </div>
       </DialogContent>

@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 
+const PRIORITY_LAT = 28.34865140234854;
+const PRIORITY_LON = -81.65148804725864;
+
 type TMapboxFeature = {
   id: string;
   place_name: string;
@@ -12,6 +15,15 @@ type TMapboxFeature = {
     short_code?: string;
   }[];
 };
+
+function getDistanceScore(lat: number, lon: number) {
+  // Fast equirectangular approximation is enough for nearby ranking.
+  const x =
+    (lon - PRIORITY_LON) * Math.cos(((lat + PRIORITY_LAT) / 2) * (Math.PI / 180));
+  const y = lat - PRIORITY_LAT;
+
+  return x * x + y * y;
+}
 
 export async function GET(request: NextRequest) {
   const query = request.nextUrl.searchParams.get("q")?.trim() ?? "";
@@ -35,6 +47,7 @@ export async function GET(request: NextRequest) {
     limit: "8",
     types: "address", // only real addresses
     autocomplete: "true",
+    proximity: `${PRIORITY_LON},${PRIORITY_LAT}`,
   });
 
   const response = await fetch(
@@ -51,7 +64,6 @@ export async function GET(request: NextRequest) {
   }
 
   const data = await response.json();
-  console.log(data);
   const features = data.features as TMapboxFeature[];
 
   const results = features
@@ -80,6 +92,12 @@ export async function GET(request: NextRequest) {
               ?.short_code?.toUpperCase() || "US",
         },
       };
+    })
+    .sort((left, right) => {
+      const leftDistance = getDistanceScore(left.lat, left.lon);
+      const rightDistance = getDistanceScore(right.lat, right.lon);
+
+      return leftDistance - rightDistance;
     });
 
   return NextResponse.json(results);

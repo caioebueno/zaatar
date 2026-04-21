@@ -1,6 +1,11 @@
 import prisma from "@/prisma";
 import { NextResponse } from "next/server";
 
+type ProductVisibleRow = {
+  id: string;
+  visible: boolean;
+};
+
 type ProductRowResponse = {
   id: string;
   createdAt: string;
@@ -22,6 +27,7 @@ type ProductRowResponse = {
   modifierGroups: {
     id: string;
     title: string;
+    translations?: unknown | null;
     required: boolean;
     type: "MULTI" | "SINGLE" | null;
     minSelection: number | null;
@@ -60,6 +66,7 @@ function mapProductRow(product: {
   modifierGroups: {
     id: string;
     title: string;
+    translations?: unknown | null;
     required: boolean;
     type: "MULTI" | "SINGLE" | null;
     minSelection: number | null;
@@ -99,6 +106,9 @@ function mapProductRow(product: {
     modifierGroups: product.modifierGroups.map((modifierGroup) => ({
       id: modifierGroup.id,
       title: modifierGroup.title,
+      translations:
+        (modifierGroup as typeof modifierGroup & { translations?: unknown | null })
+          .translations ?? null,
       required: modifierGroup.required,
       type: modifierGroup.type,
       minSelection: modifierGroup.minSelection,
@@ -127,6 +137,7 @@ export async function GET() {
   try {
     const [
       products,
+      productVisibilityRows,
       categories,
       files,
       modifierGroups,
@@ -178,6 +189,10 @@ export async function GET() {
             },
           ],
         }),
+        prisma.$queryRaw<ProductVisibleRow[]>`
+          SELECT "id", "visible"
+          FROM "Product"
+        `,
         prisma.category.findMany({
           select: {
             id: true,
@@ -205,9 +220,26 @@ export async function GET() {
           },
         }),
         prisma.modifierGroup.findMany({
-          select: {
-            id: true,
-            title: true,
+          include: {
+            items: {
+              select: {
+                id: true,
+                name: true,
+                description: true,
+                price: true,
+                translations: true,
+                createdAt: true,
+                photo: {
+                  select: {
+                    id: true,
+                    url: true,
+                  },
+                },
+              },
+              orderBy: {
+                createdAt: "asc",
+              },
+            },
           },
           orderBy: {
             createdAt: "asc",
@@ -242,12 +274,44 @@ export async function GET() {
         }),
       ]);
 
+    const visibleByProductId = new Map(
+      productVisibilityRows.map((row) => [row.id, row.visible]),
+    );
+
     return NextResponse.json({
-      products: products.map(mapProductRow),
+      products: products.map((product) =>
+        mapProductRow({
+          ...product,
+          visible:
+            visibleByProductId.get(product.id) ??
+            (product as typeof product & { visible?: boolean }).visible,
+        }),
+      ),
       lookup: {
         categories,
         files,
-        modifierGroups,
+        modifierGroups: modifierGroups.map((modifierGroup) => ({
+          id: modifierGroup.id,
+          title: modifierGroup.title,
+          translations:
+            (modifierGroup as typeof modifierGroup & {
+              translations?: unknown | null;
+            }).translations ?? null,
+          items: modifierGroup.items.map((item) => ({
+            id: item.id,
+            name: item.name,
+            description: item.description,
+            price: item.price,
+            translations: item.translations ?? null,
+            photo: item.photo
+              ? {
+                  id: item.photo.id,
+                  url: item.photo.url,
+                }
+              : null,
+            createdAt: item.createdAt.toISOString(),
+          })),
+        })),
         preparationSteps: preparationSteps.map((step) => ({
           id: step.id,
           name: step.name,

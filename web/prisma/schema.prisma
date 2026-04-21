@@ -94,6 +94,7 @@ model ProgressiveDiscountPrize {
   id                        String                            @id
   createdAt                 DateTime                          @default(now())
   name                      String
+  translations              Json?
   quantity                  Int                               @default(1)
   imageUrl                  String?
   progressiveDiscountStep   ProgressiveDiscountStep           @relation(fields: [progressiveDiscountStepId], references: [id], onDelete: Cascade)
@@ -127,6 +128,7 @@ model ModifierGroup {
   id           String              @id
   createdAt    DateTime            @default(now())
   title        String
+  translations Json?
   required     Boolean             @default(false)
   type         ModifierGroupType?
   products     Product[]

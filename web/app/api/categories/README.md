@@ -49,6 +49,11 @@ Schema:
           {
             "id": "string",
             "title": "string",
+            "translations": {
+              "<language>": {
+                "<key>": "string"
+              }
+            },
             "required": "boolean",
             "type": "\"SINGLE\" | \"MULTI\" | null",
             "minSelection": "number | null",

@@ -36,6 +36,27 @@ export function mapProgressiveDiscountPrize(
     id: prize.id,
     createdAt: prize.createdAt.toISOString(),
     name: prize.name,
+    translations:
+      (
+        prize as typeof prize & {
+          translations?: unknown | null;
+        }
+      ).translations &&
+      typeof (
+        prize as typeof prize & {
+          translations?: unknown | null;
+        }
+      ).translations === "object"
+        ? ((
+            prize as typeof prize & {
+              translations?: unknown | null;
+            }
+          ).translations as {
+            [key: string]: {
+              [key: string]: string;
+            };
+          })
+        : undefined,
     quantity: prize.quantity,
     imageUrl: prize.imageUrl,
     progressiveDiscountStepId: prize.progressiveDiscountStepId,

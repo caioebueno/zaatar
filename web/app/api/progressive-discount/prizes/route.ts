@@ -7,6 +7,7 @@ import { NextRequest, NextResponse } from "next/server";
 type PostBody = {
   progressiveDiscountStepId?: unknown;
   name?: unknown;
+  translations?: unknown;
   quantity?: unknown;
   imageUrl?: unknown;
   productIds?: unknown;
@@ -88,6 +89,7 @@ export async function POST(request: NextRequest) {
     const prize = await createProgressiveDiscountPrize({
       progressiveDiscountStepId: body.progressiveDiscountStepId,
       name: body.name,
+      translations: body.translations,
       quantity: body.quantity,
       imageUrl: body.imageUrl,
       productIds: body.productIds,

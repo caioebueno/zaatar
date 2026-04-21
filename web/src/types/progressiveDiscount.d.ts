@@ -19,6 +19,11 @@ type TProgressiveDiscountPrize = {
   id: string;
   createdAt: string;
   name: string;
+  translations?: {
+    [key: string]: {
+      [key: string]: string;
+    };
+  };
   quantity: number;
   imageUrl?: string | null;
   progressiveDiscountStepId: string;

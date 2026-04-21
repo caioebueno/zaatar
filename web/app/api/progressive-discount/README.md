@@ -20,6 +20,7 @@ Creates a prize and attaches it to a progressive discount step.
 Body fields:
 
 - `name` (required string)
+- `translations` (optional JSON object or `null`)
 - `quantity` (optional integer, default `1`)
 - `imageUrl` (optional string or `null`)
 - `progressiveDiscountStepId` (required string)
@@ -32,6 +33,7 @@ Updates an existing prize and can re-attach it to another progressive discount s
 Body fields (all optional):
 
 - `name` (string)
+- `translations` (JSON object or `null`)
 - `quantity` (integer >= 1)
 - `imageUrl` (string or `null`)
 - `progressiveDiscountStepId` (string)
@@ -44,6 +46,11 @@ Body fields (all optional):
   "id": "prize-id",
   "createdAt": "2026-04-08T19:10:00.000Z",
   "name": "3 Sweet Sfihas",
+  "translations": {
+    "es": {
+      "title": "3 sfihas dulces"
+    }
+  },
   "quantity": 3,
   "imageUrl": "https://cdn.example.com/prizes/sweet-sfihas.png",
   "progressiveDiscountStepId": "progressive-discount-step-id",
@@ -86,6 +93,11 @@ Body fields (all optional):
         {
           "id": "prize-id",
           "name": "3 Sweet Sfihas",
+          "translations": {
+            "es": {
+              "title": "3 sfihas dulces"
+            }
+          },
           "quantity": 3,
           "imageUrl": "https://cdn.example.com/prizes/sweet-sfihas.png",
           "progressiveDiscountStepId": "gift-step-id",

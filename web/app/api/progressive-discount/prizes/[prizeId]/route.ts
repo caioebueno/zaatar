@@ -10,6 +10,7 @@ type RouteContext = {
 type PatchBody = {
   progressiveDiscountStepId?: unknown;
   name?: unknown;
+  translations?: unknown;
   quantity?: unknown;
   imageUrl?: unknown;
   productIds?: unknown;
@@ -71,6 +72,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       prizeId,
       progressiveDiscountStepId: body.progressiveDiscountStepId,
       name: body.name,
+      translations: body.translations,
       quantity: body.quantity,
       imageUrl: body.imageUrl,
       productIds: body.productIds,

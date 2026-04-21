@@ -57,6 +57,14 @@ type LookupOption = {
   name?: string;
   title?: string;
   url?: string;
+  photo?: {
+    id: string;
+    url: string;
+  } | null;
+  description?: string | null;
+  price?: number | null;
+  translations?: unknown | null;
+  items?: LookupOption[];
   menuIndex?: number | null;
   createdAt?: string;
   stationId?: string;
@@ -83,11 +91,37 @@ type TranslationEditorEntry = {
   value: string;
 };
 
+type TranslationsEditorTarget =
+  | {
+      kind: "product";
+      rowId: string;
+      label: string;
+    }
+  | {
+      kind: "modifierGroup";
+      rowId: string;
+      modifierGroupId: string;
+      label: string;
+    }
+  | {
+      kind: "modifierGroupItem";
+      rowId: string;
+      modifierGroupId: string;
+      modifierGroupItemId: string;
+      label: string;
+    };
+
 type PreparationStepDraft = {
   name: string;
   stationId: string;
   includeComments: boolean;
   includeModifiers: boolean;
+};
+
+type ModifierGroupItemDraft = {
+  name: string;
+  description: string;
+  price: string;
 };
 
 type TableRenderItem =
@@ -363,6 +397,83 @@ function buildTranslationsTextFromEditorEntries(
   return JSON.stringify(output, null, 2);
 }
 
+function buildTranslationsTextFromUnknown(value: unknown): string {
+  if (typeof value === "string") {
+    try {
+      const parsed = JSON.parse(value);
+      if (
+        parsed &&
+        typeof parsed === "object" &&
+        !Array.isArray(parsed)
+      ) {
+        return JSON.stringify(parsed, null, 2);
+      }
+    } catch {
+      return "";
+    }
+  }
+
+  if (
+    !value ||
+    typeof value !== "object" ||
+    Array.isArray(value)
+  ) {
+    return "";
+  }
+
+  return JSON.stringify(value, null, 2);
+}
+
+function normalizeTranslationsValue(value: unknown): unknown | null {
+  if (value === null || value === undefined) return null;
+
+  if (typeof value === "string") {
+    try {
+      const parsed = JSON.parse(value);
+      if (
+        parsed &&
+        typeof parsed === "object" &&
+        !Array.isArray(parsed)
+      ) {
+        return parsed;
+      }
+    } catch {
+      return null;
+    }
+  }
+
+  if (typeof value === "object" && !Array.isArray(value)) {
+    return value;
+  }
+
+  return null;
+}
+
+function parseTranslationsPayload(
+  translationsText: string,
+): Record<string, Record<string, string>> | null {
+  const normalized = translationsText.trim();
+  if (!normalized) return null;
+
+  let parsed: unknown;
+
+  try {
+    parsed = JSON.parse(normalized);
+  } catch {
+    throw new Error("translations must be valid JSON");
+  }
+
+  if (
+    typeof parsed !== "object" ||
+    parsed === null ||
+    Array.isArray(parsed)
+  ) {
+    throw new Error("translations must be a JSON object");
+  }
+
+  return parsed as Record<string, Record<string, string>>;
+}
+
 function parseIndexValue(value: string): number {
   const parsed = Number(value);
   if (!Number.isFinite(parsed) || parsed < 0) {
@@ -474,14 +585,17 @@ export default function ProductSpreadsheet() {
   const [photoUrlInputByKey, setPhotoUrlInputByKey] = useState<
     Record<string, string>
   >({});
-  const [openTranslationsEditorRowId, setOpenTranslationsEditorRowId] =
-    useState<string | null>(null);
+  const [openTranslationsEditorTarget, setOpenTranslationsEditorTarget] =
+    useState<TranslationsEditorTarget | null>(null);
   const [translationsEditorEntries, setTranslationsEditorEntries] = useState<
     TranslationEditorEntry[]
   >([]);
   const [translationsEditorError, setTranslationsEditorError] = useState<
     string | null
   >(null);
+  const [translationsEditorApplyError, setTranslationsEditorApplyError] =
+    useState<string | null>(null);
+  const [applyingTranslations, setApplyingTranslations] = useState(false);
   const [dragCategoryId, setDragCategoryId] = useState<string | null>(null);
   const [dragProductId, setDragProductId] = useState<string | null>(null);
   const [persistingReorder, setPersistingReorder] = useState(false);
@@ -495,6 +609,22 @@ export default function ProductSpreadsheet() {
   const [savingPreparationStepId, setSavingPreparationStepId] = useState<
     string | null
   >(null);
+  const [openModifierGroupItemsByKey, setOpenModifierGroupItemsByKey] =
+    useState<string | null>(null);
+  const [modifierGroupItemDraftsById, setModifierGroupItemDraftsById] = useState<
+    Record<string, ModifierGroupItemDraft>
+  >({});
+  const [savingModifierGroupItemId, setSavingModifierGroupItemId] = useState<
+    string | null
+  >(null);
+  const [savingModifierGroupItemImageId, setSavingModifierGroupItemImageId] =
+    useState<string | null>(null);
+  const [modifierGroupItemImagePickerByKey, setModifierGroupItemImagePickerByKey] =
+    useState<Record<string, string>>({});
+  const [modifierGroupItemPhotoUrlByKey, setModifierGroupItemPhotoUrlByKey] =
+    useState<Record<string, string>>({});
+  const [creatingModifierGroupItemForGroupId, setCreatingModifierGroupItemForGroupId] =
+    useState<string | null>(null);
 
   const refreshProducts = useCallback(async () => {
     setLoading(true);
@@ -614,26 +744,456 @@ export default function ProductSpreadsheet() {
     [lookup.files, lookup.modifierGroups, lookup.preparationSteps],
   );
 
-  const openTranslationsEditor = useCallback((row: EditableRow) => {
-    try {
-      const entries = parseTranslationsToEditorEntries(row.translationsText);
-      setTranslationsEditorEntries(entries);
-      setTranslationsEditorError(null);
-      setOpenTranslationsEditorRowId(row.id);
-    } catch (error) {
-      setTranslationsEditorEntries([]);
-      setTranslationsEditorError(
-        error instanceof Error ? error.message : "Invalid translations JSON",
+  const openTranslationsEditor = useCallback(
+    (
+      target: TranslationsEditorTarget,
+      translationsText: string,
+    ) => {
+      try {
+        const entries = parseTranslationsToEditorEntries(translationsText);
+        setTranslationsEditorEntries(entries);
+        setTranslationsEditorError(null);
+      } catch (error) {
+        setTranslationsEditorEntries([]);
+        setTranslationsEditorError(
+          error instanceof Error ? error.message : "Invalid translations JSON",
+        );
+      }
+
+      setTranslationsEditorApplyError(null);
+      setOpenTranslationsEditorTarget(target);
+    },
+    [],
+  );
+
+  const openProductTranslationsEditor = useCallback(
+    (row: EditableRow) => {
+      openTranslationsEditor(
+        {
+          kind: "product",
+          rowId: row.id,
+          label: row.name || row.id,
+        },
+        row.translationsText,
       );
-      setOpenTranslationsEditorRowId(row.id);
-    }
-  }, []);
+    },
+    [openTranslationsEditor],
+  );
 
   const closeTranslationsEditor = useCallback(() => {
-    setOpenTranslationsEditorRowId(null);
+    setOpenTranslationsEditorTarget(null);
     setTranslationsEditorEntries([]);
     setTranslationsEditorError(null);
+    setTranslationsEditorApplyError(null);
+    setApplyingTranslations(false);
   }, []);
+
+  const getModifierGroupById = useCallback(
+    (modifierGroupId: string): LookupOption | undefined =>
+      lookup.modifierGroups.find((group) => group.id === modifierGroupId),
+    [lookup.modifierGroups],
+  );
+
+  const getModifierGroupItemById = useCallback(
+    (modifierGroupId: string, itemId: string): LookupOption | undefined =>
+      getModifierGroupById(modifierGroupId)?.items?.find(
+        (item) => item.id === itemId,
+      ),
+    [getModifierGroupById],
+  );
+
+  const saveModifierGroupTranslations = useCallback(
+    async (modifierGroupId: string, translationsText: string) => {
+      const translationsPayload = parseTranslationsPayload(translationsText);
+      const response = await fetch(
+        `/api/modifier-groups/${encodeURIComponent(modifierGroupId)}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            translations: translationsPayload,
+          }),
+        },
+      );
+
+      if (!response.ok) {
+        const responseData = await response.json().catch(() => null);
+        const message =
+          (responseData &&
+            typeof responseData === "object" &&
+            "field" in responseData &&
+            typeof responseData.field === "string" &&
+            responseData.field) ||
+          (responseData &&
+            typeof responseData === "object" &&
+            "error" in responseData &&
+            typeof responseData.error === "string" &&
+            responseData.error) ||
+          "Failed to save modifier group translations";
+        throw new Error(message);
+      }
+
+      const updated = (await response.json()) as {
+        id: string;
+        translations: unknown | null;
+      };
+
+      setLookup((current) => ({
+        ...current,
+        modifierGroups: current.modifierGroups.map((group) =>
+          group.id === updated.id
+            ? {
+                ...group,
+                translations: normalizeTranslationsValue(updated.translations),
+              }
+            : group,
+        ),
+      }));
+    },
+    [],
+  );
+
+  const saveModifierGroupItemTranslations = useCallback(
+    async (modifierGroupItemId: string, translationsText: string) => {
+      const translationsPayload = parseTranslationsPayload(translationsText);
+      const response = await fetch(
+        `/api/modifier-group-items/${encodeURIComponent(modifierGroupItemId)}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            translations: translationsPayload,
+          }),
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to save modifier group item translations");
+      }
+
+      const updated = (await response.json()) as {
+        id: string;
+        modifierGroupId: string | null;
+        translations: unknown | null;
+      };
+
+      if (!updated.modifierGroupId) return;
+
+      setLookup((current) => ({
+        ...current,
+        modifierGroups: current.modifierGroups.map((group) =>
+          group.id === updated.modifierGroupId
+            ? {
+                ...group,
+                items: (group.items || []).map((item) =>
+                  item.id === updated.id
+                    ? {
+                        ...item,
+                        translations: normalizeTranslationsValue(
+                          updated.translations,
+                        ),
+                      }
+                    : item,
+                ),
+              }
+            : group,
+        ),
+      }));
+    },
+    [],
+  );
+
+  const getModifierGroupItemDraft = useCallback(
+    (
+      modifierGroupId: string,
+      modifierGroupItemId: string,
+    ): ModifierGroupItemDraft | undefined => {
+      const existingDraft = modifierGroupItemDraftsById[modifierGroupItemId];
+      if (existingDraft) return existingDraft;
+
+      const modifierGroupItem = getModifierGroupItemById(
+        modifierGroupId,
+        modifierGroupItemId,
+      );
+
+      if (!modifierGroupItem) return undefined;
+
+      return {
+        name: modifierGroupItem.name || "",
+        description: modifierGroupItem.description || "",
+        price:
+          typeof modifierGroupItem.price === "number" &&
+          Number.isFinite(modifierGroupItem.price)
+            ? String(modifierGroupItem.price)
+            : "",
+      };
+    },
+    [getModifierGroupItemById, modifierGroupItemDraftsById],
+  );
+
+  const updateModifierGroupItemDraft = useCallback(
+    (
+      modifierGroupId: string,
+      modifierGroupItemId: string,
+      patch: Partial<ModifierGroupItemDraft>,
+    ) => {
+      setModifierGroupItemDraftsById((current) => {
+        const fallback = getModifierGroupItemDraft(
+          modifierGroupId,
+          modifierGroupItemId,
+        );
+        const nextBase: ModifierGroupItemDraft = fallback || {
+          name: "",
+          description: "",
+          price: "",
+        };
+
+        return {
+          ...current,
+          [modifierGroupItemId]: {
+            ...nextBase,
+            ...patch,
+          },
+        };
+      });
+    },
+    [getModifierGroupItemDraft],
+  );
+
+  const saveModifierGroupItemDraft = useCallback(
+    async (modifierGroupId: string, modifierGroupItemId: string) => {
+      const draft = getModifierGroupItemDraft(modifierGroupId, modifierGroupItemId);
+      if (!draft) return;
+
+      const normalizedName = draft.name.trim();
+      if (!normalizedName) return;
+
+      let parsedPrice: number;
+      try {
+        const normalizedPrice = normalizeNullableNumber(draft.price, "price");
+        parsedPrice = normalizedPrice ?? 0;
+      } catch {
+        return;
+      }
+
+      try {
+        setSavingModifierGroupItemId(modifierGroupItemId);
+        const response = await fetch(
+          `/api/modifier-group-items/${encodeURIComponent(modifierGroupItemId)}`,
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              name: normalizedName,
+              description: draft.description.trim() || null,
+              price: parsedPrice,
+              modifierGroupId,
+            }),
+          },
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to save modifier group item");
+        }
+
+        const updated = (await response.json()) as {
+          id: string;
+          modifierGroupId: string | null;
+          name: string;
+          description: string | null;
+          price: number;
+          translations: unknown | null;
+          photo: {
+            id: string;
+            url: string;
+          } | null;
+        };
+
+        if (!updated.modifierGroupId) return;
+
+        setLookup((current) => ({
+          ...current,
+          modifierGroups: current.modifierGroups.map((group) =>
+            group.id === updated.modifierGroupId
+              ? {
+                  ...group,
+                  items: (group.items || []).map((item) =>
+                    item.id === updated.id
+                      ? {
+                          ...item,
+                          name: updated.name,
+                          description: updated.description,
+                          price: updated.price,
+                          translations: updated.translations,
+                          photo: updated.photo,
+                        }
+                      : item,
+                  ),
+                }
+              : group,
+          ),
+        }));
+      } catch (error) {
+        console.error("Failed to save modifier group item:", error);
+      } finally {
+        setSavingModifierGroupItemId(null);
+      }
+    },
+    [getModifierGroupItemDraft],
+  );
+
+  const createModifierGroupItem = useCallback(
+    async (modifierGroupId: string) => {
+      try {
+        setCreatingModifierGroupItemForGroupId(modifierGroupId);
+        const response = await fetch("/api/modifier-group-items", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            modifierGroupId,
+            name: "New item",
+            description: null,
+            price: 0,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to create modifier group item");
+        }
+
+        const created = (await response.json()) as {
+          id: string;
+          modifierGroupId: string | null;
+          name: string;
+          description: string | null;
+          price: number;
+          translations: unknown | null;
+          photo: {
+            id: string;
+            url: string;
+          } | null;
+        };
+
+        if (!created.modifierGroupId) return;
+
+        setLookup((current) => ({
+          ...current,
+          modifierGroups: current.modifierGroups.map((group) =>
+            group.id === created.modifierGroupId
+              ? {
+                  ...group,
+                  items: [
+                    ...(group.items || []),
+                    {
+                      id: created.id,
+                      name: created.name,
+                      description: created.description,
+                      price: created.price,
+                      translations: created.translations,
+                      photo: created.photo,
+                    },
+                  ],
+                }
+              : group,
+          ),
+        }));
+        setModifierGroupItemDraftsById((current) => ({
+          ...current,
+          [created.id]: {
+            name: created.name,
+            description: created.description || "",
+            price: String(created.price),
+          },
+        }));
+      } catch (error) {
+        console.error("Failed to create modifier group item:", error);
+      } finally {
+        setCreatingModifierGroupItemForGroupId(null);
+      }
+    },
+    [],
+  );
+
+  const updateModifierGroupItemImage = useCallback(
+    async ({
+      modifierGroupId,
+      modifierGroupItemId,
+      fileId,
+      photoUrl,
+    }: {
+      modifierGroupId: string;
+      modifierGroupItemId: string;
+      fileId?: string | null;
+      photoUrl?: string | null;
+    }) => {
+      try {
+        setSavingModifierGroupItemImageId(modifierGroupItemId);
+        const response = await fetch(
+          `/api/modifier-group-items/${encodeURIComponent(modifierGroupItemId)}`,
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(
+              fileId !== undefined
+                ? { fileId }
+                : {
+                    photoUrl,
+                  },
+            ),
+          },
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to update modifier group item image");
+        }
+
+        const updated = (await response.json()) as {
+          id: string;
+          modifierGroupId: string | null;
+          photo: {
+            id: string;
+            url: string;
+          } | null;
+        };
+
+        if (!updated.modifierGroupId) return;
+
+        setLookup((current) => ({
+          ...current,
+          modifierGroups: current.modifierGroups.map((group) =>
+            group.id === modifierGroupId || group.id === updated.modifierGroupId
+              ? {
+                  ...group,
+                  items: (group.items || []).map((item) =>
+                    item.id === updated.id
+                      ? {
+                          ...item,
+                          photo: updated.photo,
+                        }
+                      : item,
+                  ),
+                }
+              : group,
+          ),
+        }));
+      } catch (error) {
+        console.error("Failed to update modifier group item image:", error);
+      } finally {
+        setSavingModifierGroupItemImageId(null);
+      }
+    },
+    [],
+  );
 
   const getPreparationStepDraft = useCallback(
     (preparationStepId: string): PreparationStepDraft | undefined => {
@@ -1101,9 +1661,64 @@ export default function ProductSpreadsheet() {
     );
   }
 
-  const openTranslationsEditorRow = openTranslationsEditorRowId
-    ? rows.find((row) => row.id === openTranslationsEditorRowId)
-    : undefined;
+  const openTranslationsEditorRow =
+    openTranslationsEditorTarget?.kind === "product"
+      ? rows.find((row) => row.id === openTranslationsEditorTarget.rowId)
+      : undefined;
+  const openTranslationsEditorTitle =
+    openTranslationsEditorTarget?.kind === "modifierGroup"
+      ? "Modifier Group Translations JSON Editor"
+      : openTranslationsEditorTarget?.kind === "modifierGroupItem"
+        ? "Modifier Group Item Translations JSON Editor"
+        : "Product Translations JSON Editor";
+  const openTranslationsEditorSubtitle =
+    openTranslationsEditorTarget?.kind === "modifierGroup"
+      ? `Modifier Group: ${openTranslationsEditorTarget.label}`
+      : openTranslationsEditorTarget?.kind === "modifierGroupItem"
+        ? `Modifier Group Item: ${openTranslationsEditorTarget.label}`
+        : openTranslationsEditorRow
+          ? `Product: ${openTranslationsEditorRow.id}`
+          : "";
+
+  const applyTranslationsEditor = async () => {
+    if (!openTranslationsEditorTarget) return;
+
+    const nextTranslationsText =
+      buildTranslationsTextFromEditorEntries(translationsEditorEntries);
+
+    try {
+      setApplyingTranslations(true);
+      setTranslationsEditorApplyError(null);
+
+      if (openTranslationsEditorTarget.kind === "product") {
+        onCellChange(
+          openTranslationsEditorTarget.rowId,
+          "translationsText",
+          nextTranslationsText,
+        );
+      } else if (openTranslationsEditorTarget.kind === "modifierGroup") {
+        await saveModifierGroupTranslations(
+          openTranslationsEditorTarget.modifierGroupId,
+          nextTranslationsText,
+        );
+      } else {
+        await saveModifierGroupItemTranslations(
+          openTranslationsEditorTarget.modifierGroupItemId,
+          nextTranslationsText,
+        );
+      }
+
+      closeTranslationsEditor();
+    } catch (error) {
+      setTranslationsEditorApplyError(
+        error instanceof Error
+          ? error.message
+          : "Failed to apply translations",
+      );
+    } finally {
+      setApplyingTranslations(false);
+    }
+  };
 
   return (
     <div className="h-dvh w-full bg-zinc-100">
@@ -1431,16 +2046,23 @@ export default function ProductSpreadsheet() {
                                 size="sm"
                                 variant={isOpen ? "primary" : "outline"}
                                 onClick={() =>
-                                  setOpenRelationEditor((current) =>
-                                    current &&
-                                    current.rowId === row.id &&
-                                    current.field === relationField
-                                      ? null
-                                      : {
-                                          rowId: row.id,
-                                          field: relationField,
-                                        },
-                                  )
+                                  setOpenRelationEditor((current) => {
+                                    const shouldClose =
+                                      current &&
+                                      current.rowId === row.id &&
+                                      current.field === relationField;
+
+                                    if (shouldClose) {
+                                      setOpenModifierGroupItemsByKey(null);
+                                      return null;
+                                    }
+
+                                    setOpenModifierGroupItemsByKey(null);
+                                    return {
+                                      rowId: row.id,
+                                      field: relationField,
+                                    };
+                                  })
                                 }
                               >
                                 {isOpen ? "Close Sub Table" : "Open Sub Table"}
@@ -1455,7 +2077,7 @@ export default function ProductSpreadsheet() {
                             type="button"
                             size="sm"
                             variant="outline"
-                            onClick={() => openTranslationsEditor(row)}
+                            onClick={() => openProductTranslationsEditor(row)}
                           >
                             Open JSON Editor
                           </Button>
@@ -1495,14 +2117,17 @@ export default function ProductSpreadsheet() {
                               <span className="text-xs font-semibold text-zinc-700">
                                 {openFieldLabel} Sub Table
                               </span>
-                              <Button
-                                type="button"
-                                size="sm"
-                                variant="outline"
-                                onClick={() => setOpenRelationEditor(null)}
-                              >
-                                Close
-                              </Button>
+                                <Button
+                                  type="button"
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={() => {
+                                    setOpenRelationEditor(null);
+                                    setOpenModifierGroupItemsByKey(null);
+                                  }}
+                                >
+                                  Close
+                                </Button>
                             </div>
 
                             <div className="grid lg:grid-cols-[1fr_320px]">
@@ -1582,180 +2207,680 @@ export default function ProductSpreadsheet() {
                                           stepDraft?.name.trim() &&
                                             stepDraft?.stationId.trim(),
                                         );
+                                        const modifierGroup =
+                                          openFieldForRow === "modifierGroupIdsText"
+                                            ? getModifierGroupById(relationId)
+                                            : undefined;
+                                        const modifierGroupItems =
+                                          modifierGroup?.items || [];
+                                        const modifierGroupItemsKey = `${row.id}:${relationId}`;
+                                        const isModifierGroupItemsOpen =
+                                          openFieldForRow === "modifierGroupIdsText" &&
+                                          openModifierGroupItemsByKey ===
+                                            modifierGroupItemsKey;
 
                                         return (
-                                          <tr key={`${row.id}:${openFieldForRow}:${index}`}>
-                                            <td className="border border-zinc-200 px-3 py-2 font-mono text-[11px] text-zinc-600">
-                                              {index + 1}
-                                            </td>
-                                            {openFieldForRow ===
-                                            "preparationStepIdsText" ? (
-                                              <>
-                                                <td className="border border-zinc-200 p-0 align-top focus-within:outline focus-within:outline-2 focus-within:outline-indigo-400 focus-within:outline-offset-[-2px] focus-within:z-20">
-                                                  <select
-                                                    value={stepDraft?.stationId || ""}
-                                                    onChange={(event) =>
-                                                      updatePreparationStepDraft(relationId, {
-                                                        stationId: event.target.value,
-                                                      })
-                                                    }
-                                                    className="h-full min-h-[40px] w-full rounded-none border-0 bg-transparent px-3 py-2 text-[13px] outline-none focus:bg-white"
-                                                  >
-                                                    <option value="">Select station</option>
-                                                    {availableStationOptions.map(
-                                                      (stationOption) => (
-                                                        <option
-                                                          key={stationOption.id}
-                                                          value={stationOption.id}
-                                                        >
-                                                          {stationOption.name}
-                                                        </option>
-                                                      ),
-                                                    )}
-                                                  </select>
-                                                </td>
-                                                <td className="border border-zinc-200 p-0 align-top focus-within:outline focus-within:outline-2 focus-within:outline-indigo-400 focus-within:outline-offset-[-2px] focus-within:z-20">
-                                                  <input
-                                                    value={stepDraft?.name || ""}
-                                                    onChange={(event) =>
-                                                      updatePreparationStepDraft(relationId, {
-                                                        name: event.target.value,
-                                                      })
-                                                    }
-                                                    className="h-full min-h-[40px] w-full rounded-none border-0 bg-transparent px-3 py-2 text-[13px] outline-none focus:bg-white"
-                                                  />
-                                                </td>
-                                                <td className="border border-zinc-200 px-3 py-2">
-                                                  <label className="flex items-center justify-center">
-                                                    <input
-                                                      type="checkbox"
-                                                      checked={Boolean(
-                                                        stepDraft?.includeComments,
-                                                      )}
+                                          <Fragment
+                                            key={`${row.id}:${openFieldForRow}:${relationId}:${index}`}
+                                          >
+                                            <tr>
+                                              <td className="border border-zinc-200 px-3 py-2 font-mono text-[11px] text-zinc-600">
+                                                {index + 1}
+                                              </td>
+                                              {openFieldForRow ===
+                                              "preparationStepIdsText" ? (
+                                                <>
+                                                  <td className="border border-zinc-200 p-0 align-top focus-within:outline focus-within:outline-2 focus-within:outline-indigo-400 focus-within:outline-offset-[-2px] focus-within:z-20">
+                                                    <select
+                                                      value={stepDraft?.stationId || ""}
                                                       onChange={(event) =>
                                                         updatePreparationStepDraft(relationId, {
-                                                          includeComments:
-                                                            event.target.checked,
+                                                          stationId: event.target.value,
                                                         })
                                                       }
-                                                    />
-                                                  </label>
-                                                </td>
-                                                <td className="border border-zinc-200 px-3 py-2">
-                                                  <label className="flex items-center justify-center">
-                                                    <input
-                                                      type="checkbox"
-                                                      checked={Boolean(
-                                                        stepDraft?.includeModifiers,
+                                                      className="h-full min-h-[40px] w-full rounded-none border-0 bg-transparent px-3 py-2 text-[13px] outline-none focus:bg-white"
+                                                    >
+                                                      <option value="">Select station</option>
+                                                      {availableStationOptions.map(
+                                                        (stationOption) => (
+                                                          <option
+                                                            key={stationOption.id}
+                                                            value={stationOption.id}
+                                                          >
+                                                            {stationOption.name}
+                                                          </option>
+                                                        ),
                                                       )}
+                                                    </select>
+                                                  </td>
+                                                  <td className="border border-zinc-200 p-0 align-top focus-within:outline focus-within:outline-2 focus-within:outline-indigo-400 focus-within:outline-offset-[-2px] focus-within:z-20">
+                                                    <input
+                                                      value={stepDraft?.name || ""}
                                                       onChange={(event) =>
                                                         updatePreparationStepDraft(relationId, {
-                                                          includeModifiers:
-                                                            event.target.checked,
+                                                          name: event.target.value,
                                                         })
                                                       }
+                                                      className="h-full min-h-[40px] w-full rounded-none border-0 bg-transparent px-3 py-2 text-[13px] outline-none focus:bg-white"
                                                     />
-                                                  </label>
-                                                </td>
-                                              </>
-                                            ) : openFieldForRow ===
-                                              "photoIdsText" ? (
-                                              <>
-                                                <td className="border border-zinc-200 p-0 align-top focus-within:outline focus-within:outline-2 focus-within:outline-indigo-400 focus-within:outline-offset-[-2px] focus-within:z-20">
-                                                  <input
-                                                    value={relationId}
-                                                    onChange={(event) => {
-                                                      const nextIds = [...openFieldIds];
-                                                      nextIds[index] = event.target.value;
-                                                      setRelationIds(
-                                                        row.id,
-                                                        openFieldForRow,
-                                                        nextIds,
-                                                      );
-                                                    }}
-                                                    className="h-full min-h-[40px] w-full rounded-none border-0 bg-transparent px-3 py-2 text-[13px] outline-none focus:bg-white"
-                                                    placeholder="https://example.com/image.jpg"
-                                                  />
-                                                </td>
-                                                <td className="border border-zinc-200 px-3 py-2">
-                                                  {isValidHttpUrl(relationId) ? (
-                                                    <div
-                                                      className="h-12 w-12 rounded border border-zinc-200 bg-zinc-100 bg-cover bg-center"
-                                                      style={{
-                                                        backgroundImage: `url(${relationId})`,
+                                                  </td>
+                                                  <td className="border border-zinc-200 px-3 py-2">
+                                                    <label className="flex items-center justify-center">
+                                                      <input
+                                                        type="checkbox"
+                                                        checked={Boolean(
+                                                          stepDraft?.includeComments,
+                                                        )}
+                                                        onChange={(event) =>
+                                                          updatePreparationStepDraft(relationId, {
+                                                            includeComments:
+                                                              event.target.checked,
+                                                          })
+                                                        }
+                                                      />
+                                                    </label>
+                                                  </td>
+                                                  <td className="border border-zinc-200 px-3 py-2">
+                                                    <label className="flex items-center justify-center">
+                                                      <input
+                                                        type="checkbox"
+                                                        checked={Boolean(
+                                                          stepDraft?.includeModifiers,
+                                                        )}
+                                                        onChange={(event) =>
+                                                          updatePreparationStepDraft(relationId, {
+                                                            includeModifiers:
+                                                              event.target.checked,
+                                                          })
+                                                        }
+                                                      />
+                                                    </label>
+                                                  </td>
+                                                </>
+                                              ) : openFieldForRow ===
+                                                "photoIdsText" ? (
+                                                <>
+                                                  <td className="border border-zinc-200 p-0 align-top focus-within:outline focus-within:outline-2 focus-within:outline-indigo-400 focus-within:outline-offset-[-2px] focus-within:z-20">
+                                                    <input
+                                                      value={relationId}
+                                                      onChange={(event) => {
+                                                        const nextIds = [...openFieldIds];
+                                                        nextIds[index] =
+                                                          event.target.value;
+                                                        setRelationIds(
+                                                          row.id,
+                                                          openFieldForRow,
+                                                          nextIds,
+                                                        );
                                                       }}
+                                                      className="h-full min-h-[40px] w-full rounded-none border-0 bg-transparent px-3 py-2 text-[13px] outline-none focus:bg-white"
+                                                      placeholder="https://example.com/image.jpg"
                                                     />
-                                                  ) : (
-                                                    <span className="text-zinc-400">-</span>
+                                                  </td>
+                                                  <td className="border border-zinc-200 px-3 py-2">
+                                                    {isValidHttpUrl(relationId) ? (
+                                                      <div
+                                                        className="h-12 w-12 rounded border border-zinc-200 bg-zinc-100 bg-cover bg-center"
+                                                        style={{
+                                                          backgroundImage: `url(${relationId})`,
+                                                        }}
+                                                      />
+                                                    ) : (
+                                                      <span className="text-zinc-400">-</span>
+                                                    )}
+                                                  </td>
+                                                </>
+                                              ) : (
+                                                <>
+                                                  <td className="border border-zinc-200 p-0 align-top focus-within:outline focus-within:outline-2 focus-within:outline-indigo-400 focus-within:outline-offset-[-2px] focus-within:z-20">
+                                                    <input
+                                                      value={relationId}
+                                                      onChange={(event) => {
+                                                        const nextIds = [...openFieldIds];
+                                                        nextIds[index] =
+                                                          event.target.value;
+                                                        setRelationIds(
+                                                          row.id,
+                                                          openFieldForRow,
+                                                          nextIds,
+                                                        );
+                                                      }}
+                                                      className="h-full min-h-[40px] w-full rounded-none border-0 bg-transparent px-3 py-2 text-[13px] font-mono outline-none focus:bg-white"
+                                                    />
+                                                  </td>
+                                                  <td className="border border-zinc-200 px-3 py-2 text-zinc-600">
+                                                    {relationLabel}
+                                                  </td>
+                                                </>
+                                              )}
+                                              <td className="border border-zinc-200 px-2 py-1 align-top">
+                                                <div className="flex flex-wrap gap-1">
+                                                  {openFieldForRow ===
+                                                    "preparationStepIdsText" && (
+                                                    <Button
+                                                      type="button"
+                                                      size="sm"
+                                                      variant="outline"
+                                                      disabled={
+                                                        savingPreparationStepId ===
+                                                          relationId ||
+                                                        !canSavePreparationStep
+                                                      }
+                                                      onClick={() =>
+                                                        void savePreparationStepDraft(
+                                                          relationId,
+                                                        )
+                                                      }
+                                                    >
+                                                      {savingPreparationStepId === relationId
+                                                        ? "Saving..."
+                                                        : "Save Step"}
+                                                    </Button>
                                                   )}
-                                                </td>
-                                              </>
-                                            ) : (
-                                              <>
-                                                <td className="border border-zinc-200 p-0 align-top focus-within:outline focus-within:outline-2 focus-within:outline-indigo-400 focus-within:outline-offset-[-2px] focus-within:z-20">
-                                                  <input
-                                                    value={relationId}
-                                                    onChange={(event) => {
-                                                      const nextIds = [...openFieldIds];
-                                                      nextIds[index] = event.target.value;
-                                                      setRelationIds(
-                                                        row.id,
-                                                        openFieldForRow,
-                                                        nextIds,
-                                                      );
-                                                    }}
-                                                    className="h-full min-h-[40px] w-full rounded-none border-0 bg-transparent px-3 py-2 text-[13px] font-mono outline-none focus:bg-white"
-                                                  />
-                                                </td>
-                                                <td className="border border-zinc-200 px-3 py-2 text-zinc-600">
-                                                  {relationLabel}
-                                                </td>
-                                              </>
-                                            )}
-                                            <td className="border border-zinc-200 px-2 py-1 align-top">
-                                              <div className="flex gap-1">
-                                                {openFieldForRow ===
-                                                  "preparationStepIdsText" && (
+                                                  {openFieldForRow ===
+                                                    "modifierGroupIdsText" && (
+                                                    <>
+                                                      <Button
+                                                        type="button"
+                                                        size="sm"
+                                                        variant="outline"
+                                                        onClick={() =>
+                                                          openTranslationsEditor(
+                                                            {
+                                                              kind: "modifierGroup",
+                                                              rowId: row.id,
+                                                              modifierGroupId: relationId,
+                                                              label:
+                                                                modifierGroup?.title ||
+                                                                relationLabel,
+                                                            },
+                                                            buildTranslationsTextFromUnknown(
+                                                              modifierGroup?.translations,
+                                                            ),
+                                                          )
+                                                        }
+                                                      >
+                                                        JSON Editor
+                                                      </Button>
+                                                      <Button
+                                                        type="button"
+                                                        size="sm"
+                                                        variant={
+                                                          isModifierGroupItemsOpen
+                                                            ? "primary"
+                                                            : "outline"
+                                                        }
+                                                        onClick={() =>
+                                                          setOpenModifierGroupItemsByKey(
+                                                            (current) =>
+                                                              current ===
+                                                              modifierGroupItemsKey
+                                                                ? null
+                                                                : modifierGroupItemsKey,
+                                                          )
+                                                        }
+                                                      >
+                                                        {isModifierGroupItemsOpen
+                                                          ? "Close Items"
+                                                          : "Open Items"}
+                                                      </Button>
+                                                    </>
+                                                  )}
                                                   <Button
                                                     type="button"
                                                     size="sm"
                                                     variant="outline"
-                                                    disabled={
-                                                      savingPreparationStepId === relationId ||
-                                                      !canSavePreparationStep
-                                                    }
-                                                    onClick={() =>
-                                                      void savePreparationStepDraft(
-                                                        relationId,
-                                                      )
-                                                    }
+                                                    onClick={() => {
+                                                      const nextIds = openFieldIds.filter(
+                                                        (_, currentIndex) =>
+                                                          currentIndex !== index,
+                                                      );
+                                                      setRelationIds(
+                                                        row.id,
+                                                        openFieldForRow,
+                                                        nextIds,
+                                                      );
+                                                    }}
                                                   >
-                                                    {savingPreparationStepId === relationId
-                                                      ? "Saving..."
-                                                      : "Save Step"}
+                                                    Detach
                                                   </Button>
-                                                )}
-                                                <Button
-                                                  type="button"
-                                                  size="sm"
-                                                  variant="outline"
-                                                  onClick={() => {
-                                                    const nextIds = openFieldIds.filter(
-                                                      (_, currentIndex) =>
-                                                        currentIndex !== index,
-                                                    );
-                                                    setRelationIds(
-                                                      row.id,
-                                                      openFieldForRow,
-                                                      nextIds,
-                                                    );
-                                                  }}
+                                                </div>
+                                              </td>
+                                            </tr>
+                                            {isModifierGroupItemsOpen && (
+                                              <tr className="bg-zinc-50">
+                                                <td
+                                                  colSpan={4}
+                                                  className="border border-zinc-200 p-0 align-top"
                                                 >
-                                                  Detach
-                                                </Button>
-                                              </div>
-                                            </td>
-                                          </tr>
+                                                  <div className="border border-zinc-200 bg-white flex flex-col">
+                                                    <div className="flex items-center justify-between px-3 py-2 border-b border-zinc-200 bg-zinc-100/90">
+                                                      <span className="text-xs font-semibold text-zinc-700">
+                                                        Modifier Group Items
+                                                      </span>
+                                                      <Button
+                                                        type="button"
+                                                        size="sm"
+                                                        variant="outline"
+                                                        disabled={
+                                                          creatingModifierGroupItemForGroupId ===
+                                                          relationId
+                                                        }
+                                                        onClick={() =>
+                                                          void createModifierGroupItem(
+                                                            relationId,
+                                                          )
+                                                        }
+                                                      >
+                                                        {creatingModifierGroupItemForGroupId ===
+                                                        relationId
+                                                          ? "Adding..."
+                                                          : "Add New Item"}
+                                                      </Button>
+                                                    </div>
+                                                    <div className="overflow-auto">
+                                                      <table className="w-full table-fixed border-collapse text-xs">
+                                                        <thead className="bg-zinc-100/90">
+                                                          <tr>
+                                                            <th className="border border-zinc-200 px-2 py-2 text-left text-[12px] font-semibold text-zinc-600 w-8">
+                                                              #
+                                                            </th>
+                                                            <th className="border border-zinc-200 px-2 py-2 text-left text-[12px] font-semibold text-zinc-600 w-[140px]">
+                                                              Name
+                                                            </th>
+                                                            <th className="border border-zinc-200 px-2 py-2 text-left text-[12px] font-semibold text-zinc-600 w-[180px]">
+                                                              Description
+                                                            </th>
+                                                            <th className="border border-zinc-200 px-2 py-2 text-left text-[12px] font-semibold text-zinc-600 w-[90px]">
+                                                              Price
+                                                            </th>
+                                                            <th className="border border-zinc-200 px-2 py-2 text-left text-[12px] font-semibold text-zinc-600 w-[320px]">
+                                                              Image
+                                                            </th>
+                                                            <th className="border border-zinc-200 px-2 py-2 text-left text-[12px] font-semibold text-zinc-600 w-[110px]">
+                                                              Translations
+                                                            </th>
+                                                            <th className="border border-zinc-200 px-2 py-2 text-left text-[12px] font-semibold text-zinc-600 w-[90px]">
+                                                              Action
+                                                            </th>
+                                                          </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                          {modifierGroupItems.length ===
+                                                          0 ? (
+                                                            <tr>
+                                                              <td
+                                                                colSpan={7}
+                                                                className="border border-zinc-200 px-3 py-2 text-zinc-500"
+                                                              >
+                                                                No items
+                                                              </td>
+                                                            </tr>
+                                                          ) : (
+                                                            modifierGroupItems.map(
+                                                              (item, itemIndex) => {
+                                                                const itemDraft =
+                                                                  getModifierGroupItemDraft(
+                                                                    relationId,
+                                                                    item.id,
+                                                                  );
+                                                                const canSaveItem = Boolean(
+                                                                  itemDraft?.name.trim() &&
+                                                                    itemDraft?.price.trim(),
+                                                                );
+                                                                const modifierGroupItemKey = `${row.id}:${relationId}:${item.id}`;
+                                                                const selectedFileId =
+                                                                  modifierGroupItemImagePickerByKey[
+                                                                    modifierGroupItemKey
+                                                                  ] || "";
+                                                                const selectedFile =
+                                                                  lookup.files.find(
+                                                                    (file) =>
+                                                                      file.id === selectedFileId,
+                                                                  );
+                                                                const photoUrlInput =
+                                                                  modifierGroupItemPhotoUrlByKey[
+                                                                    modifierGroupItemKey
+                                                                  ] || "";
+                                                                const canAttachByPhotoUrl =
+                                                                  isValidHttpUrl(photoUrlInput);
+                                                                const isSavingItemImage =
+                                                                  savingModifierGroupItemImageId ===
+                                                                  item.id;
+
+                                                                return (
+                                                                  <tr
+                                                                    key={`${relationId}:${item.id}`}
+                                                                  >
+                                                                    <td className="border border-zinc-200 px-2 py-2 font-mono text-[11px] text-zinc-600">
+                                                                      {itemIndex + 1}
+                                                                    </td>
+                                                                    <td className="border border-zinc-200 p-0 align-top focus-within:outline focus-within:outline-2 focus-within:outline-indigo-400 focus-within:outline-offset-[-2px] focus-within:z-20">
+                                                                      <input
+                                                                        value={
+                                                                          itemDraft?.name || ""
+                                                                        }
+                                                                        onChange={(event) =>
+                                                                          updateModifierGroupItemDraft(
+                                                                            relationId,
+                                                                            item.id,
+                                                                            {
+                                                                              name: event.target.value,
+                                                                            },
+                                                                          )
+                                                                        }
+                                                                        className="h-full min-h-[38px] w-full rounded-none border-0 bg-transparent px-3 py-2 text-[12px] outline-none focus:bg-white"
+                                                                      />
+                                                                    </td>
+                                                                    <td className="border border-zinc-200 p-0 align-top focus-within:outline focus-within:outline-2 focus-within:outline-indigo-400 focus-within:outline-offset-[-2px] focus-within:z-20">
+                                                                      <input
+                                                                        value={
+                                                                          itemDraft?.description ||
+                                                                          ""
+                                                                        }
+                                                                        onChange={(event) =>
+                                                                          updateModifierGroupItemDraft(
+                                                                            relationId,
+                                                                            item.id,
+                                                                            {
+                                                                              description:
+                                                                                event.target.value,
+                                                                            },
+                                                                          )
+                                                                        }
+                                                                        className="h-full min-h-[38px] w-full rounded-none border-0 bg-transparent px-3 py-2 text-[12px] outline-none focus:bg-white"
+                                                                      />
+                                                                    </td>
+                                                                    <td className="border border-zinc-200 p-0 align-top focus-within:outline focus-within:outline-2 focus-within:outline-indigo-400 focus-within:outline-offset-[-2px] focus-within:z-20">
+                                                                      <input
+                                                                        value={formatCurrencyDigitsInput(
+                                                                          itemDraft?.price || "",
+                                                                        )}
+                                                                        onChange={(event) =>
+                                                                          updateModifierGroupItemDraft(
+                                                                            relationId,
+                                                                            item.id,
+                                                                            {
+                                                                              price:
+                                                                                normalizeCurrencyDigitsInput(
+                                                                                  event.target.value,
+                                                                                ),
+                                                                            },
+                                                                          )
+                                                                        }
+                                                                        className="h-full min-h-[38px] w-full rounded-none border-0 bg-transparent px-3 py-2 text-[12px] outline-none focus:bg-white"
+                                                                      />
+                                                                    </td>
+                                                                    <td className="border border-zinc-200 px-2 py-2 align-top">
+                                                                      <div className="flex flex-col gap-2">
+                                                                        <div className="flex items-center gap-2">
+                                                                          <div className="h-10 w-10 shrink-0 rounded border border-zinc-200 bg-zinc-100 overflow-hidden flex items-center justify-center">
+                                                                            {item.photo?.url ? (
+                                                                              <div
+                                                                                className="h-full w-full bg-cover bg-center"
+                                                                                style={{
+                                                                                  backgroundImage: `url(${item.photo.url})`,
+                                                                                }}
+                                                                                title={
+                                                                                  item.name ||
+                                                                                  "modifier item image"
+                                                                                }
+                                                                              />
+                                                                            ) : (
+                                                                              <span className="text-[10px] text-zinc-400">
+                                                                                No image
+                                                                              </span>
+                                                                            )}
+                                                                          </div>
+                                                                          <div className="text-[11px] text-zinc-600 truncate">
+                                                                            {item.photo?.url || "-"}
+                                                                          </div>
+                                                                        </div>
+                                                                        <div
+                                                                          className="max-h-36 overflow-auto rounded border border-zinc-300 bg-white"
+                                                                        >
+                                                                          {lookup.files.filter((file) => Boolean(file.url))
+                                                                            .length === 0 ? (
+                                                                            <div className="px-2 py-2 text-[11px] text-zinc-500">
+                                                                              No existing images
+                                                                            </div>
+                                                                          ) : (
+                                                                            lookup.files
+                                                                              .filter((file) =>
+                                                                                Boolean(file.url),
+                                                                              )
+                                                                              .map((file) => {
+                                                                                const isSelected =
+                                                                                  selectedFileId ===
+                                                                                  file.id;
+                                                                                return (
+                                                                                  <button
+                                                                                    key={file.id}
+                                                                                    type="button"
+                                                                                    onClick={() =>
+                                                                                      setModifierGroupItemImagePickerByKey(
+                                                                                        (
+                                                                                          current,
+                                                                                        ) => ({
+                                                                                          ...current,
+                                                                                          [modifierGroupItemKey]:
+                                                                                            file.id,
+                                                                                        }),
+                                                                                      )
+                                                                                    }
+                                                                                    className={`w-full border-b last:border-b-0 border-zinc-200 px-2 py-1.5 flex items-center gap-2 text-left text-[11px] cursor-pointer ${
+                                                                                      isSelected
+                                                                                        ? "bg-indigo-50"
+                                                                                        : "hover:bg-zinc-50"
+                                                                                    }`}
+                                                                                  >
+                                                                                    <div
+                                                                                      className="h-8 w-8 shrink-0 rounded border border-zinc-200 bg-zinc-100 overflow-hidden bg-cover bg-center"
+                                                                                      style={{
+                                                                                        backgroundImage: `url(${file.url})`,
+                                                                                      }}
+                                                                                    />
+                                                                                    <span className="truncate text-zinc-700">
+                                                                                      {renderLookupLabel(
+                                                                                        file,
+                                                                                      )}
+                                                                                    </span>
+                                                                                  </button>
+                                                                                );
+                                                                              })
+                                                                          )}
+                                                                        </div>
+                                                                        {selectedFile?.url && (
+                                                                          <div className="flex items-center gap-2">
+                                                                            <div
+                                                                              className="h-8 w-8 shrink-0 rounded border border-zinc-200 bg-zinc-100 overflow-hidden bg-cover bg-center"
+                                                                              style={{
+                                                                                backgroundImage: `url(${selectedFile.url})`,
+                                                                              }}
+                                                                            />
+                                                                            <span className="text-[11px] text-zinc-600 truncate">
+                                                                              {selectedFile.url}
+                                                                            </span>
+                                                                          </div>
+                                                                        )}
+                                                                        <div className="flex items-center gap-2">
+                                                                          <Button
+                                                                            type="button"
+                                                                            size="sm"
+                                                                            variant="outline"
+                                                                            disabled={
+                                                                              !selectedFileId ||
+                                                                              isSavingItemImage
+                                                                            }
+                                                                            onClick={() => {
+                                                                              if (!selectedFileId)
+                                                                                return;
+
+                                                                              void updateModifierGroupItemImage(
+                                                                                {
+                                                                                  modifierGroupId:
+                                                                                    relationId,
+                                                                                  modifierGroupItemId:
+                                                                                    item.id,
+                                                                                  fileId:
+                                                                                    selectedFileId,
+                                                                                },
+                                                                              );
+                                                                              setModifierGroupItemImagePickerByKey(
+                                                                                (current) => ({
+                                                                                  ...current,
+                                                                                  [modifierGroupItemKey]:
+                                                                                    "",
+                                                                                }),
+                                                                              );
+                                                                            }}
+                                                                          >
+                                                                            Attach
+                                                                          </Button>
+                                                                          <Button
+                                                                            type="button"
+                                                                            size="sm"
+                                                                            variant="outline"
+                                                                            disabled={
+                                                                              !item.photo?.id ||
+                                                                              isSavingItemImage
+                                                                            }
+                                                                            onClick={() =>
+                                                                              void updateModifierGroupItemImage(
+                                                                                {
+                                                                                  modifierGroupId:
+                                                                                    relationId,
+                                                                                  modifierGroupItemId:
+                                                                                    item.id,
+                                                                                  fileId: null,
+                                                                                },
+                                                                              )
+                                                                            }
+                                                                          >
+                                                                            Remove
+                                                                          </Button>
+                                                                        </div>
+                                                                        <input
+                                                                          value={photoUrlInput}
+                                                                          onChange={(event) =>
+                                                                            setModifierGroupItemPhotoUrlByKey(
+                                                                              (current) => ({
+                                                                                ...current,
+                                                                                [modifierGroupItemKey]:
+                                                                                  event.target.value,
+                                                                              }),
+                                                                            )
+                                                                          }
+                                                                          placeholder="https://example.com/image.jpg"
+                                                                          className="h-[34px] w-full rounded border border-zinc-300 bg-white px-2 text-[11px] outline-none focus:ring-2 focus:ring-indigo-200"
+                                                                        />
+                                                                        <Button
+                                                                          type="button"
+                                                                          size="sm"
+                                                                          variant="outline"
+                                                                          disabled={
+                                                                            !canAttachByPhotoUrl ||
+                                                                            isSavingItemImage
+                                                                          }
+                                                                          onClick={() => {
+                                                                            const normalizedUrl =
+                                                                              photoUrlInput.trim();
+                                                                            if (
+                                                                              !isValidHttpUrl(
+                                                                                normalizedUrl,
+                                                                              )
+                                                                            )
+                                                                              return;
+
+                                                                            void updateModifierGroupItemImage(
+                                                                              {
+                                                                                modifierGroupId:
+                                                                                  relationId,
+                                                                                modifierGroupItemId:
+                                                                                  item.id,
+                                                                                photoUrl:
+                                                                                  normalizedUrl,
+                                                                              },
+                                                                            );
+                                                                            setModifierGroupItemPhotoUrlByKey(
+                                                                              (current) => ({
+                                                                                ...current,
+                                                                                [modifierGroupItemKey]:
+                                                                                  "",
+                                                                              }),
+                                                                            );
+                                                                          }}
+                                                                        >
+                                                                          {isSavingItemImage
+                                                                            ? "Saving..."
+                                                                            : "Create And Attach"}
+                                                                        </Button>
+                                                                      </div>
+                                                                    </td>
+                                                                    <td className="border border-zinc-200 px-2 py-1">
+                                                                      <Button
+                                                                        type="button"
+                                                                        size="sm"
+                                                                        variant="outline"
+                                                                        onClick={() =>
+                                                                          openTranslationsEditor(
+                                                                            {
+                                                                              kind:
+                                                                                "modifierGroupItem",
+                                                                              rowId: row.id,
+                                                                              modifierGroupId:
+                                                                                relationId,
+                                                                              modifierGroupItemId:
+                                                                                item.id,
+                                                                              label:
+                                                                                item.name ||
+                                                                                item.id,
+                                                                            },
+                                                                            buildTranslationsTextFromUnknown(
+                                                                              item.translations,
+                                                                            ),
+                                                                          )
+                                                                        }
+                                                                      >
+                                                                        JSON Editor
+                                                                      </Button>
+                                                                    </td>
+                                                                    <td className="border border-zinc-200 px-2 py-1">
+                                                                      <Button
+                                                                        type="button"
+                                                                        size="sm"
+                                                                        variant="outline"
+                                                                        disabled={
+                                                                          savingModifierGroupItemId ===
+                                                                            item.id ||
+                                                                          !canSaveItem
+                                                                        }
+                                                                        onClick={() =>
+                                                                          void saveModifierGroupItemDraft(
+                                                                            relationId,
+                                                                            item.id,
+                                                                          )
+                                                                        }
+                                                                      >
+                                                                        {savingModifierGroupItemId ===
+                                                                        item.id
+                                                                          ? "Saving..."
+                                                                          : "Save"}
+                                                                      </Button>
+                                                                    </td>
+                                                                  </tr>
+                                                                );
+                                                              },
+                                                            )
+                                                          )}
+                                                        </tbody>
+                                                      </table>
+                                                    </div>
+                                                  </div>
+                                                </td>
+                                              </tr>
+                                            )}
+                                          </Fragment>
                                         );
                                       })
                                     )}
@@ -1817,28 +2942,55 @@ export default function ProductSpreadsheet() {
                                   </>
                                 ) : openFieldForRow === "photoIdsText" ? (
                                   <>
-                                    <select
-                                      value={pickerValue}
-                                      onChange={(event) =>
-                                        setRelationPickerByKey((current) => ({
-                                          ...current,
-                                          [pickerKey]: event.target.value,
-                                        }))
-                                      }
-                                      className="h-[40px] w-full rounded-md border border-zinc-300 bg-white px-3 text-[13px] outline-none focus:ring-2 focus:ring-indigo-200"
-                                    >
-                                      <option value="">Select existing image</option>
-                                      {attachableLookupOptions
-                                        .filter((option) => Boolean(option.url))
-                                        .map((option) => (
-                                          <option
-                                            key={option.id}
-                                            value={option.url || ""}
-                                          >
-                                            {renderLookupLabel(option)}
-                                          </option>
-                                        ))}
-                                    </select>
+                                    <div className="max-h-52 overflow-auto rounded-md border border-zinc-300 bg-white">
+                                      {attachableLookupOptions.filter((option) =>
+                                        Boolean(option.url),
+                                      ).length === 0 ? (
+                                        <div className="px-3 py-2 text-[12px] text-zinc-500">
+                                          No existing images available
+                                        </div>
+                                      ) : (
+                                        attachableLookupOptions
+                                          .filter((option) => Boolean(option.url))
+                                          .map((option) => {
+                                            const optionUrl = option.url || "";
+                                            const isSelected = pickerValue === optionUrl;
+
+                                            return (
+                                              <button
+                                                key={option.id}
+                                                type="button"
+                                                onClick={() =>
+                                                  setRelationPickerByKey((current) => ({
+                                                    ...current,
+                                                    [pickerKey]: optionUrl,
+                                                  }))
+                                                }
+                                                className={`w-full border-b last:border-b-0 border-zinc-200 px-3 py-2 flex items-center gap-2 text-left cursor-pointer ${
+                                                  isSelected
+                                                    ? "bg-indigo-50"
+                                                    : "hover:bg-zinc-50"
+                                                }`}
+                                              >
+                                                <div
+                                                  className="h-9 w-9 shrink-0 rounded border border-zinc-200 bg-zinc-100 overflow-hidden bg-cover bg-center"
+                                                  style={{
+                                                    backgroundImage: `url(${optionUrl})`,
+                                                  }}
+                                                />
+                                                <div className="min-w-0 flex flex-col">
+                                                  <span className="truncate text-[12px] text-zinc-700">
+                                                    {renderLookupLabel(option)}
+                                                  </span>
+                                                  <span className="truncate text-[11px] text-zinc-500">
+                                                    {optionUrl}
+                                                  </span>
+                                                </div>
+                                              </button>
+                                            );
+                                          })
+                                      )}
+                                    </div>
                                     <Button
                                       type="button"
                                       size="sm"
@@ -1929,21 +3081,6 @@ export default function ProductSpreadsheet() {
                                     >
                                       Add Selected ID
                                     </Button>
-                                    <Button
-                                      type="button"
-                                      size="sm"
-                                      variant="outline"
-                                      onClick={() => {
-                                        const newRelationId = createUuid();
-
-                                        setRelationIds(row.id, openFieldForRow, [
-                                          ...openFieldIds,
-                                          newRelationId,
-                                        ]);
-                                      }}
-                                    >
-                                      Add Empty Row
-                                    </Button>
                                   </>
                                 )}
                               </div>
@@ -1962,16 +3099,16 @@ export default function ProductSpreadsheet() {
 
       </div>
 
-      {openTranslationsEditorRow && (
+      {openTranslationsEditorTarget && (
         <div className="fixed inset-0 z-[100] bg-black/40 p-4">
           <div className="mx-auto w-full max-w-5xl h-[85dvh] rounded-xl bg-white border border-zinc-200 shadow-xl flex flex-col">
             <div className="px-4 py-3 border-b border-zinc-200 flex items-center justify-between">
               <div className="flex flex-col">
                 <span className="text-sm font-semibold text-zinc-800">
-                  Translations JSON Editor
+                  {openTranslationsEditorTitle}
                 </span>
                 <span className="text-[11px] font-mono text-zinc-500">
-                  Product: {openTranslationsEditorRow.id}
+                  {openTranslationsEditorSubtitle}
                 </span>
               </div>
               <Button type="button" size="sm" variant="outline" onClick={closeTranslationsEditor}>
@@ -1983,6 +3120,11 @@ export default function ProductSpreadsheet() {
               {translationsEditorError && (
                 <div className="rounded border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-700">
                   {translationsEditorError}
+                </div>
+              )}
+              {translationsEditorApplyError && (
+                <div className="rounded border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-700">
+                  {translationsEditorApplyError}
                 </div>
               )}
 
@@ -2123,20 +3265,10 @@ export default function ProductSpreadsheet() {
                 <Button
                   type="button"
                   size="sm"
-                  onClick={() => {
-                    const nextTranslationsText =
-                      buildTranslationsTextFromEditorEntries(
-                        translationsEditorEntries,
-                      );
-                    onCellChange(
-                      openTranslationsEditorRow.id,
-                      "translationsText",
-                      nextTranslationsText,
-                    );
-                    closeTranslationsEditor();
-                  }}
+                  disabled={applyingTranslations}
+                  onClick={() => void applyTranslationsEditor()}
                 >
-                  Apply JSON
+                  {applyingTranslations ? "Applying..." : "Apply JSON"}
                 </Button>
               </div>
             </div>

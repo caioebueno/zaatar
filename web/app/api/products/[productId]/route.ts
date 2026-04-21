@@ -23,6 +23,10 @@ type PatchBody = {
   preparationStepIds?: unknown;
 };
 
+type ProductVisibleRow = {
+  visible: boolean;
+};
+
 function mapProductRow(product: {
   id: string;
   createdAt: Date;
@@ -42,6 +46,7 @@ function mapProductRow(product: {
   modifierGroups: {
     id: string;
     title: string;
+    translations?: unknown | null;
     required: boolean;
     type: "MULTI" | "SINGLE" | null;
     minSelection: number | null;
@@ -81,6 +86,9 @@ function mapProductRow(product: {
     modifierGroups: product.modifierGroups.map((modifierGroup) => ({
       id: modifierGroup.id,
       title: modifierGroup.title,
+      translations:
+        (modifierGroup as typeof modifierGroup & { translations?: unknown | null })
+          .translations ?? null,
       required: modifierGroup.required,
       type: modifierGroup.type,
       minSelection: modifierGroup.minSelection,
@@ -261,6 +269,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
 
     const body = (await request.json()) as PatchBody;
     const data: Prisma.ProductUpdateInput = {};
+    let visibleToPersist: boolean | undefined = undefined;
     let hasAnyField = false;
 
     if (body.photoIds !== undefined && body.photoUrls !== undefined) {
@@ -276,11 +285,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     }
 
     if (body.visible !== undefined) {
-      (
-        data as Prisma.ProductUpdateInput & {
-          visible?: boolean;
-        }
-      ).visible = parseBoolean(body.visible, "visible");
+      visibleToPersist = parseBoolean(body.visible, "visible");
       hasAnyField = true;
     }
 
@@ -501,45 +506,79 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       );
     }
 
-    const updatedProduct = await prisma.product.update({
-      where: {
-        id: normalizedProductId,
-      },
-      data,
-      include: {
-        photos: {
-          select: {
-            id: true,
-            name: true,
-            url: true,
-          },
+    const include = {
+      photos: {
+        select: {
+          id: true,
+          name: true,
+          url: true,
         },
-        modifierGroups: {
-          include: {
-            items: {
-              include: {
-                photo: {
-                  select: {
-                    id: true,
-                    url: true,
-                  },
+      },
+      modifierGroups: {
+        include: {
+          items: {
+            include: {
+              photo: {
+                select: {
+                  id: true,
+                  url: true,
                 },
               },
-              orderBy: {
-                createdAt: "asc",
-              },
+            },
+            orderBy: {
+              createdAt: "asc" as const,
             },
           },
         },
-        preparationSteps: {
-          select: {
-            id: true,
-          },
+      },
+      preparationSteps: {
+        select: {
+          id: true,
         },
       },
-    });
+    };
 
-    return NextResponse.json(mapProductRow(updatedProduct));
+    const hasPrismaUpdatableFields = Object.keys(data).length > 0;
+    const updatedProduct = hasPrismaUpdatableFields
+      ? await prisma.product.update({
+          where: {
+            id: normalizedProductId,
+          },
+          data,
+          include,
+        })
+      : await prisma.product.findUnique({
+          where: {
+            id: normalizedProductId,
+          },
+          include,
+        });
+
+    if (!updatedProduct) {
+      return NextResponse.json({ error: "Product not found" }, { status: 404 });
+    }
+
+    if (visibleToPersist !== undefined) {
+      await prisma.$executeRaw`
+        UPDATE "Product"
+        SET "visible" = ${visibleToPersist}
+        WHERE "id" = ${normalizedProductId}
+      `;
+    }
+
+    const [visibleRow] = await prisma.$queryRaw<ProductVisibleRow[]>`
+      SELECT "visible"
+      FROM "Product"
+      WHERE "id" = ${normalizedProductId}
+      LIMIT 1
+    `;
+
+    return NextResponse.json(
+      mapProductRow({
+        ...updatedProduct,
+        visible: visibleRow?.visible ?? visibleToPersist ?? undefined,
+      }),
+    );
   } catch (error) {
     if (error instanceof Error && error.message) {
       return NextResponse.json(

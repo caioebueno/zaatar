@@ -21,6 +21,7 @@ import { buildPreparationStepCategories } from "@/src/modules/station/domain/bui
 import {
   processDispatchAssignmentJobs,
 } from "@/src/modules/dispatch/application/assignDeliveryOrderToDispatchQueue";
+import { calculateSalesTaxInCents } from "@/src/constants/pricing";
 
 type TCreateOrder = {
   cart: TCart;
@@ -107,6 +108,30 @@ function normalizeOrderLanguage(value: unknown): string | undefined {
   }
 
   return normalizedValue;
+}
+
+function resolvePrizeNameForLanguage(
+  prize: {
+    name: string;
+    translations?: {
+      [key: string]: {
+        [key: string]: string;
+      };
+    };
+  },
+  language?: string,
+): string {
+  const normalizedLanguage = language?.trim().toLowerCase();
+
+  if (normalizedLanguage) {
+    const localizedTitle = prize.translations?.[normalizedLanguage]?.title;
+    if (localizedTitle) return localizedTitle;
+  }
+
+  const englishTitle = prize.translations?.["en"]?.title;
+  if (englishTitle) return englishTitle;
+
+  return prize.name;
 }
 
 function toWhatsAppChatId(phone: string): string | undefined {
@@ -405,10 +430,14 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
   const tipAmountInCents = Math.round(
     (cartPricingSummary.discountedPrice * sanitizedTipPercentage) / 100,
   );
+  const salesTaxInCents = calculateSalesTaxInCents(
+    cartPricingSummary.discountedPrice,
+  );
   const orderTotalInCents =
     cartPricingSummary.discountedPrice +
     tipAmountInCents +
-    (data.orderType === "DELIVERY" ? deliveryFeeInCents : 0);
+    (data.orderType === "DELIVERY" ? deliveryFeeInCents : 0) +
+    salesTaxInCents;
   const selectedPrizeSnapshot = (() => {
     if (!data.selectedPrize) return null;
     if (!progressiveDiscount) {
@@ -464,7 +493,7 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
 
     return {
       prizeId: selectedPrize.id,
-      prizeName: selectedPrize.name,
+      prizeName: resolvePrizeNameForLanguage(selectedPrize, language),
       quantity: selectedPrize.quantity,
       selectedProductIds,
       selectedProductCounts: Array.from(selectedProductCountsMap.entries()).map(

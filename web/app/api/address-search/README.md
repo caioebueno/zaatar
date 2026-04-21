@@ -16,6 +16,7 @@ Behavior:
 - searches only US addresses (`country=us`)
 - returns up to 8 results
 - only returns entries that include a house number
+- prioritizes suggestions closer to `28.34865140234854, -81.65148804725864`
 
 ## Response
 

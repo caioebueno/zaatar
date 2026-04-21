@@ -23,6 +23,11 @@ type TProduct = {
 type TModifierGroup = {
   id: string;
   title: string;
+  translations?: {
+    [key: string]: {
+      [key: string]: string;
+    };
+  };
   required: boolean;
   type?: "MULTI" | "SINGLE" | null;
   minSelection?: number | null;

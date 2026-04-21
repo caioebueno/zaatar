@@ -55,6 +55,7 @@ import {
 } from "@/utils/customerSession";
 import text from "@/constants/text";
 import type { TProgressiveDiscountPrize } from "@/src/types/progressiveDiscount";
+import { calculateSalesTaxInCents } from "@/src/constants/pricing";
 
 const montserrat = Montserrat({
   variable: "--font-geist-mono",
@@ -100,6 +101,21 @@ const resolveModifierItemTitle = (
   modifierItem.translations?.["en"]?.title ||
   modifierItem.name;
 
+const resolveModifierGroupTitle = (
+  modifierGroup: {
+    title: string;
+    translations?: {
+      [key: string]: {
+        [key: string]: string;
+      };
+    };
+  },
+  lg: string,
+) =>
+  modifierGroup.translations?.[lg]?.title ||
+  modifierGroup.translations?.["en"]?.title ||
+  modifierGroup.title;
+
 const buildSelectedModifierGroupsFromCartItem = (
   product: TProduct | null | undefined,
   cartItem: TCartItem,
@@ -122,7 +138,7 @@ const buildSelectedModifierGroupsFromCartItem = (
 
       return {
         id: modifierGroup.id,
-        title: modifierGroup.title,
+        title: resolveModifierGroupTitle(modifierGroup, lg),
         items: selectedModifierItems.map((item) => ({
           id: item.id,
           title: resolveModifierItemTitle(item, lg),
@@ -171,7 +187,7 @@ const buildSelectedModifierGroupsFromOrderProduct = (
 
       return {
         id: modifierGroup.id,
-        title: modifierGroup.title,
+        title: resolveModifierGroupTitle(modifierGroup, lg),
         items: groupItems,
       };
     })
@@ -190,6 +206,16 @@ const resolvePrizeProductTitle = (
   prizeProduct.translations?.[lg]?.title ||
   prizeProduct.translations?.["en"]?.title ||
   prizeProduct.name;
+
+const resolvePrizeTitle = (
+  prize: TProgressiveDiscountPrize,
+  lg: string,
+) =>
+  prize.translations?.[lg]?.name ||
+  prize.translations?.[lg]?.title ||
+  prize.translations?.["en"]?.name ||
+  prize.translations?.["en"]?.title ||
+  prize.name;
 
 const getUniquePrizeProducts = (
   prize: TProgressiveDiscountPrize,
@@ -672,6 +698,9 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
     cart.selectedPrize?.selectedProductIdsByPrizeId || {};
   const selectedPrize =
     availablePrizes.find((prize) => prize.id === selectedPrizeId) || null;
+  const selectedPrizeTitle = selectedPrize
+    ? resolvePrizeTitle(selectedPrize, lg)
+    : null;
   const selectedPrizeProductIds = selectedPrize
     ? selectedPrizeProductIdsByPrizeId[selectedPrize.id] || []
     : [];
@@ -694,7 +723,7 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
     customer?.addresses?.find((address) => address.id === selectedAddress) || null;
   const deliveryFee =
     orderType === "DELIVERY" ? selectedDeliveryAddress?.deliveryFee ?? 0 : 0;
-  const taxAmount = 0;
+  const taxAmount = calculateSalesTaxInCents(price.discountedPrice);
   const tipAmount =
     (Number(selectedTip || 0) * price.discountedPrice) / 100;
   const priceWithTip =
@@ -950,13 +979,13 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
             {selectedPrize ? (
               <div className="w-full rounded-[12px] bg-[#E7E9E9] px-4 py-3 flex items-center gap-[10px]">
                 <ProductImage
-                  alt={selectedPrize.name}
+                  alt={selectedPrizeTitle || selectedPrize.name}
                   src={getPrizeImageUrl(selectedPrize)}
                   className="h-[60px] w-[60px] shrink-0 rounded-[8px] object-cover"
                 />
                 <div className="min-w-0 flex-1">
                   <span className="block truncate text-[18px] font-bold leading-[1.1] text-[#0C0C0C]">
-                    {selectedPrize.name}
+                    {selectedPrizeTitle || selectedPrize.name}
                   </span>
                 </div>
                 <button
@@ -1211,7 +1240,8 @@ const PrizeSelectionModal: React.FC<TPrizeSelectionModal> = ({
 
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
-      <Dialog.Content className="w-dvw h-dvh bg-[#E7E9E9] fixed top-0 left-0 z-50 flex flex-col gap-8 p-4">
+      <Dialog.Overlay className="fixed inset-0 z-40 bg-black/40" />
+      <Dialog.Content className="w-dvw h-dvh max-w-[900px] bg-[#E7E9E9] fixed top-0 left-0 right-0 mx-auto z-50 flex flex-col gap-4 p-4 overflow-hidden">
         <Dialog.Title className="sr-only">
           {content["prizeSelection"] || "Prize selection"}
         </Dialog.Title>
@@ -1227,13 +1257,14 @@ const PrizeSelectionModal: React.FC<TPrizeSelectionModal> = ({
             <FiX size={20} />
           </button>
         </div>
-        <div className="flex w-full flex-col gap-2">
+        <div className="flex w-full flex-col gap-2 flex-1 min-h-0 overflow-y-auto pr-1">
           {prizes.map((prize) => {
             const isSelected = pendingPrizeId === prize.id;
             const uniquePrizeProducts = getUniquePrizeProducts(prize);
             const fallbackName = uniquePrizeProducts[0]?.name || "Prize";
+            const localizedPrizeName = resolvePrizeTitle(prize, lg).trim();
             const prizeLabel =
-              prize.name?.trim() || `${prize.quantity} ${fallbackName}`;
+              localizedPrizeName || `${prize.quantity} ${fallbackName}`;
             const prizeRequiredSelectionCount = Math.max(
               0,
               uniquePrizeProducts.length > 0 ? prize.quantity : 0,
@@ -1285,7 +1316,7 @@ const PrizeSelectionModal: React.FC<TPrizeSelectionModal> = ({
 
                 {isSelected && uniquePrizeProducts.length > 0 && (
                   <div className="relative px-4 pb-3">
-                    <div className="grid grid-cols-3 gap-[10px]">
+                    <div className="grid grid-cols-3 sm:grid-cols-5 gap-[10px]">
                       {uniquePrizeProducts.map((product) => {
                         const productSelectedCount = prizeSelectedProductIds.filter(
                           (id) => id === product.id,
@@ -1642,7 +1673,6 @@ export const OrderSummaryModal: React.FC<TOrderSummaryModal> = ({
   );
   const productCount = baseProductCount + prizeProductCount;
   const resolvedDeliveryFee = order?.deliveryFee ?? deliveryFee ?? 0;
-  const resolvedTaxAmount = taxAmount ?? 0;
   const subtotal = isOrderMode
     ? resolvedProgressiveDiscountSnapshot?.fullPrice ?? orderProductsFullSubtotal
     : cartPricingSummary?.fullPrice ?? 0;
@@ -1659,6 +1689,15 @@ export const OrderSummaryModal: React.FC<TOrderSummaryModal> = ({
   const resolvedTipAmount = isOrderMode
     ? Math.round((totalWithoutFees * (order?.tipAmount ?? 0)) / 100)
     : tipAmount ?? 0;
+  const computedSalesTaxAmount = calculateSalesTaxInCents(totalWithoutFees);
+  const resolvedTaxAmount = isOrderMode
+    ? order?.totalAmount != null
+      ? Math.max(
+        0,
+        order.totalAmount - (totalWithoutFees + resolvedDeliveryFee + resolvedTipAmount),
+      )
+      : computedSalesTaxAmount
+    : taxAmount ?? computedSalesTaxAmount;
   const resolvedTotal = isOrderMode
     ? order?.totalAmount ??
     totalWithoutFees + resolvedDeliveryFee + resolvedTipAmount + resolvedTaxAmount

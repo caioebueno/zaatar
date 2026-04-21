@@ -52,7 +52,7 @@ const Confirmation: NextPage<{
     <div className={`${montserrat.className} flex flex-col items-center`}>
       <div className="bg-foreground p-4 border-[#B9BFBF] border-b flex flex-row justify-between w-full">
         <Link
-          href="/menu/en"
+          href={`/menu/${lg}`}
           className="p-0! text-[16px] font-semibold text-text! bg-transparent flex flex-row gap-2 items-center"
         >
           <FiArrowLeft size={18} />

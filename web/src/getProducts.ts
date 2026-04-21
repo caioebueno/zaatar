@@ -18,40 +18,93 @@ type CategoryRow = {
   translations: Prisma.JsonValue | null;
 };
 
+type ModifierGroupTranslationsRow = {
+  id: string;
+  translations: Prisma.JsonValue | null;
+};
+
+type ProductVisibleRow = {
+  id: string;
+  visible: boolean;
+};
+
 export const getProductsFresh = async (): Promise<TGetProductsResponse> => {
-  const prismaCategories = await prisma.$queryRaw<CategoryRow[]>`
-    SELECT "id", "name", "menuIndex", "translations"
-    FROM "Category"
-    ORDER BY
-      COALESCE("menuIndex", 2147483647) ASC,
-      "createdAt" ASC
-  `;
-  const prismaProducts = await prisma.product.findMany({
-    include: {
-      photos: true,
-      modifierGroups: {
-        include: {
-          items: {
-            include: {
-              photo: true,
+  const [
+    prismaCategories,
+    prismaProducts,
+    productVisibilityRows,
+    modifierGroupTranslationsRows,
+    progressiveDiscount,
+  ] = await Promise.all([
+    prisma.$queryRaw<CategoryRow[]>`
+      SELECT "id", "name", "menuIndex", "translations"
+      FROM "Category"
+      ORDER BY
+        COALESCE("menuIndex", 2147483647) ASC,
+        "createdAt" ASC
+    `,
+    prisma.product.findMany({
+      include: {
+        photos: true,
+        modifierGroups: {
+          include: {
+            items: {
+              include: {
+                photo: true,
+              },
             },
           },
         },
       },
-    },
-    orderBy: [
-      {
-        categoryId: "asc",
-      },
-      {
-        categoryIndex: "asc",
-      },
-      {
-        createdAt: "asc",
-      },
-    ],
-  });
-  const progressiveDiscount = await getProgressiveDiscount();
+      orderBy: [
+        {
+          categoryId: "asc",
+        },
+        {
+          categoryIndex: "asc",
+        },
+        {
+          createdAt: "asc",
+        },
+      ],
+    }),
+    prisma.$queryRaw<ProductVisibleRow[]>`
+      SELECT "id", "visible"
+      FROM "Product"
+    `,
+    prisma.$queryRaw<ModifierGroupTranslationsRow[]>`
+      SELECT
+        modifierGroup."id",
+        to_jsonb(modifierGroup) -> 'translations' AS "translations"
+      FROM "ModifierGroup" modifierGroup
+    `,
+    getProgressiveDiscount(),
+  ]);
+
+  const visibleByProductId = new Map(
+    productVisibilityRows.map((row) => [row.id, row.visible]),
+  );
+
+  const modifierGroupTranslationsById = new Map<
+    string,
+    {
+      [key: string]: {
+        [key: string]: string;
+      };
+    } | undefined
+  >(
+    modifierGroupTranslationsRows.map((row) => [
+      row.id,
+      row.translations && typeof row.translations === "object"
+        ? (row.translations as {
+            [key: string]: {
+              [key: string]: string;
+            };
+          })
+        : undefined,
+    ]),
+  );
+
   return {
     progressiveDiscount,
     categories: prismaCategories.map((category) => ({
@@ -69,13 +122,13 @@ export const getProductsFresh = async (): Promise<TGetProductsResponse> => {
           : undefined,
       products: prismaProducts
         .filter((product) => {
-          const productWithVisibility = product as typeof product & {
-            visible?: boolean;
-          };
+          const resolvedVisible =
+            visibleByProductId.get(product.id) ??
+            (product as typeof product & { visible?: boolean }).visible;
 
           return (
             product.categoryId === category.id &&
-            productWithVisibility.visible !== false
+            resolvedVisible !== false
           );
         })
         .sort((left, right) => {
@@ -89,7 +142,10 @@ export const getProductsFresh = async (): Promise<TGetProductsResponse> => {
           return left.createdAt.getTime() - right.createdAt.getTime();
         })
         .map((product) => ({
-        visible: (product as typeof product & { visible?: boolean }).visible ?? true,
+        visible:
+          visibleByProductId.get(product.id) ??
+          (product as typeof product & { visible?: boolean }).visible ??
+          true,
         id: product.id,
         name: product.name,
         translations: product.translations as {
@@ -101,43 +157,58 @@ export const getProductsFresh = async (): Promise<TGetProductsResponse> => {
         price: product.price || undefined,
         categoryIndex: product.categoryIndex ?? undefined,
         comparedAtPrice: product.comparedAtPrice || undefined,
-        modifierGroups: product.modifierGroups.map((item) => ({
-          id: item.id,
-          required: item.required,
-          title: item.title,
-          type: item.type,
-          minSelection: item.minSelection,
-          maxSelection: item.maxSelection,
-          items: item.items.map((modifierItem) => {
-            const modifierItemWithTranslations = modifierItem as typeof modifierItem & {
-              translations: unknown;
-            };
+        modifierGroups: product.modifierGroups.map((item) => {
+          const modifierGroupTranslations = modifierGroupTranslationsById.get(
+            item.id,
+          );
 
-            return {
-              id: modifierItem.id,
-              name: modifierItem.name,
-              description: modifierItem.description || undefined,
-              price: modifierItem.price,
-              ...(modifierItem.photo
-                ? {
-                    photo: {
-                      id: modifierItem.photo.id,
-                      url: modifierItem.photo.url,
-                    },
-                  }
-                : {}),
-              translations:
-                modifierItemWithTranslations.translations &&
-                typeof modifierItemWithTranslations.translations === "object"
-                  ? (modifierItemWithTranslations.translations as {
-                      [key: string]: {
-                        [key: string]: string;
-                      };
-                    })
-                  : undefined,
-            };
-          }),
-        })),
+          return {
+            ...(modifierGroupTranslations
+            ? {
+                translations: modifierGroupTranslations as {
+                  [key: string]: {
+                    [key: string]: string;
+                  };
+                },
+              }
+            : {}),
+            id: item.id,
+            required: item.required,
+            title: item.title,
+            type: item.type,
+            minSelection: item.minSelection,
+            maxSelection: item.maxSelection,
+            items: item.items.map((modifierItem) => {
+              const modifierItemWithTranslations = modifierItem as typeof modifierItem & {
+                translations: unknown;
+              };
+
+              return {
+                id: modifierItem.id,
+                name: modifierItem.name,
+                description: modifierItem.description || undefined,
+                price: modifierItem.price,
+                ...(modifierItem.photo
+                  ? {
+                      photo: {
+                        id: modifierItem.photo.id,
+                        url: modifierItem.photo.url,
+                      },
+                    }
+                  : {}),
+                translations:
+                  modifierItemWithTranslations.translations &&
+                  typeof modifierItemWithTranslations.translations === "object"
+                    ? (modifierItemWithTranslations.translations as {
+                        [key: string]: {
+                          [key: string]: string;
+                        };
+                      })
+                    : undefined,
+              };
+            }),
+          };
+        }),
         photos: product.photos?.map((photo) => ({
           id: photo.id,
           // name: photo.name,

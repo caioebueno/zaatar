@@ -2,6 +2,7 @@
 
 import prisma from "@/prisma";
 import { randomUUID } from "crypto";
+import { Prisma } from "@/src/generated/prisma";
 import {
   mapProgressiveDiscountPrize,
   progressiveDiscountPrizeInclude,
@@ -11,6 +12,7 @@ import type { TProgressiveDiscountPrize } from "@/src/types/progressiveDiscount"
 type CommonInput = {
   progressiveDiscountStepId?: unknown;
   name?: unknown;
+  translations?: unknown;
   quantity?: unknown;
   imageUrl?: unknown;
   productIds?: unknown;
@@ -20,6 +22,11 @@ type CreateProgressiveDiscountPrizeInput = CommonInput;
 
 type UpdateProgressiveDiscountPrizeInput = CommonInput & {
   prizeId: string;
+};
+
+type PrizeTranslationsRow = {
+  id: string;
+  translations: Prisma.JsonValue | null;
 };
 
 function normalizeId(value: unknown, field: string): string {
@@ -113,6 +120,24 @@ function parseImageUrl(value: unknown): string | null {
   return normalizedUrl;
 }
 
+function parseTranslations(
+  value: unknown,
+): Prisma.InputJsonValue | Prisma.JsonNull | undefined {
+  if (value === undefined) return undefined;
+  if (value === null) return Prisma.JsonNull;
+
+  if (typeof value !== "object" || Array.isArray(value)) {
+    throw {
+      code: "INVALID_PARAMS",
+      details: {
+        field: "translations",
+      },
+    };
+  }
+
+  return value as Prisma.InputJsonValue;
+}
+
 function parseProductIds(value: unknown): string[] {
   if (!Array.isArray(value)) {
     throw {
@@ -125,6 +150,52 @@ function parseProductIds(value: unknown): string[] {
 
   const normalizedIds = value.map((item) => normalizeId(item, "productIds"));
   return Array.from(new Set(normalizedIds));
+}
+
+function parsePrizeTranslations(
+  value: unknown,
+): TProgressiveDiscountPrize["translations"] | undefined {
+  if (!value) return undefined;
+
+  if (typeof value === "string") {
+    try {
+      const parsed = JSON.parse(value);
+      if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
+        return parsed as TProgressiveDiscountPrize["translations"];
+      }
+    } catch {
+      return undefined;
+    }
+
+    return undefined;
+  }
+
+  if (typeof value === "object" && !Array.isArray(value)) {
+    return value as TProgressiveDiscountPrize["translations"];
+  }
+
+  return undefined;
+}
+
+async function getPrizeTranslationsByIds(
+  prizeIds: string[],
+): Promise<Map<string, TProgressiveDiscountPrize["translations"] | undefined>> {
+  const normalizedPrizeIds = Array.from(
+    new Set(prizeIds.map((prizeId) => prizeId.trim()).filter(Boolean)),
+  );
+  if (!normalizedPrizeIds.length) {
+    return new Map();
+  }
+
+  const rows = await prisma.$queryRaw<PrizeTranslationsRow[]>`
+    SELECT "id", "translations"
+    FROM "ProgressiveDiscountPrize"
+    WHERE "id" IN (${Prisma.join(normalizedPrizeIds)})
+  `;
+
+  return new Map(
+    rows.map((row) => [row.id, parsePrizeTranslations(row.translations)]),
+  );
 }
 
 async function ensureProgressiveDiscountStepExists(
@@ -219,7 +290,14 @@ async function getPrizeById(prizeId: string): Promise<TProgressiveDiscountPrize>
     };
   }
 
-  return mapProgressiveDiscountPrize(prize);
+  const translationsByPrizeId = await getPrizeTranslationsByIds([prize.id]);
+  const mappedPrize = mapProgressiveDiscountPrize(prize);
+
+  return {
+    ...mappedPrize,
+    translations:
+      translationsByPrizeId.get(mappedPrize.id) ?? mappedPrize.translations,
+  };
 }
 
 export async function listProgressiveDiscountPrizes(input?: {
@@ -246,7 +324,19 @@ export async function listProgressiveDiscountPrizes(input?: {
     include: progressiveDiscountPrizeInclude,
   });
 
-  return prizes.map(mapProgressiveDiscountPrize);
+  const translationsByPrizeId = await getPrizeTranslationsByIds(
+    prizes.map((prize) => prize.id),
+  );
+
+  return prizes.map((prize) => {
+    const mappedPrize = mapProgressiveDiscountPrize(prize);
+
+    return {
+      ...mappedPrize,
+      translations:
+        translationsByPrizeId.get(mappedPrize.id) ?? mappedPrize.translations,
+    };
+  });
 }
 
 export async function createProgressiveDiscountPrize(
@@ -260,6 +350,7 @@ export async function createProgressiveDiscountPrize(
     input.quantity === undefined ? 1 : parseQuantity(input.quantity);
   const imageUrl =
     input.imageUrl === undefined ? null : parseImageUrl(input.imageUrl);
+  const translations = parseTranslations(input.translations);
   const productIds =
     input.productIds === undefined ? [] : parseProductIds(input.productIds);
 
@@ -273,6 +364,7 @@ export async function createProgressiveDiscountPrize(
       data: {
         id: prizeId,
         name,
+        ...(translations === undefined ? {} : { translations }),
         quantity,
         imageUrl,
         progressiveDiscountStepId,
@@ -301,6 +393,7 @@ export async function updateProgressiveDiscountPrize(
 
   const updates: {
     name?: string;
+    translations?: Prisma.InputJsonValue | Prisma.JsonNull;
     quantity?: number;
     imageUrl?: string | null;
     progressiveDiscountStepId?: string;
@@ -308,6 +401,10 @@ export async function updateProgressiveDiscountPrize(
 
   if (input.name !== undefined) {
     updates.name = parseName(input.name);
+  }
+
+  if (input.translations !== undefined) {
+    updates.translations = parseTranslations(input.translations);
   }
 
   if (input.quantity !== undefined) {
