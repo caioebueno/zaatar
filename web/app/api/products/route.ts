@@ -5,12 +5,18 @@ type ProductRowResponse = {
   id: string;
   createdAt: string;
   name: string;
+  visible: boolean;
   description: string | null;
   price: number | null;
   comparedAtPrice: number | null;
   categoryId: string | null;
   categoryIndex: number | null;
   translations: unknown | null;
+  photos: {
+    id: string;
+    name: string;
+    url: string;
+  }[];
   photoIds: string[];
   modifierGroupIds: string[];
   modifierGroups: {
@@ -39,13 +45,18 @@ function mapProductRow(product: {
   id: string;
   createdAt: Date;
   name: string;
+  visible?: boolean;
   description: string | null;
   price: number | null;
   comparedAtPrice: number | null;
   categoryId: string | null;
   categoryIndex: number | null;
   translations: unknown | null;
-  photos: { id: string }[];
+  photos: {
+    id: string;
+    name: string;
+    url: string;
+  }[];
   modifierGroups: {
     id: string;
     title: string;
@@ -71,12 +82,18 @@ function mapProductRow(product: {
     id: product.id,
     createdAt: product.createdAt.toISOString(),
     name: product.name,
+    visible: product.visible !== false,
     description: product.description,
     price: product.price,
     comparedAtPrice: product.comparedAtPrice,
     categoryId: product.categoryId,
     categoryIndex: product.categoryIndex,
     translations: product.translations,
+    photos: product.photos.map((photo) => ({
+      id: photo.id,
+      name: photo.name,
+      url: photo.url,
+    })),
     photoIds: product.photos.map((photo) => photo.id),
     modifierGroupIds: product.modifierGroups.map((modifierGroup) => modifierGroup.id),
     modifierGroups: product.modifierGroups.map((modifierGroup) => ({
@@ -122,6 +139,8 @@ export async function GET() {
             photos: {
               select: {
                 id: true,
+                name: true,
+                url: true,
               },
             },
             modifierGroups: {

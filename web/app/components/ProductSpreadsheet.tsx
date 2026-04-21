@@ -7,12 +7,18 @@ type SpreadsheetRow = {
   id: string;
   createdAt: string;
   name: string;
+  visible: boolean;
   description: string | null;
   price: number | null;
   comparedAtPrice: number | null;
   categoryId: string | null;
   categoryIndex: number | null;
   translations: unknown | null;
+  photos: {
+    id: string;
+    name: string;
+    url: string;
+  }[];
   photoIds: string[];
   modifierGroupIds: string[];
   preparationStepIds: string[];
@@ -22,6 +28,7 @@ type EditableRow = {
   id: string;
   createdAt: string;
   name: string;
+  visible: boolean;
   description: string;
   price: string;
   comparedAtPrice: string;
@@ -39,6 +46,11 @@ type RelationField =
   | "photoIdsText"
   | "modifierGroupIdsText"
   | "preparationStepIdsText";
+
+type EditableTextField = Exclude<
+  keyof EditableRow,
+  "visible" | "statusMessage" | "errorMessage"
+>;
 
 type LookupOption = {
   id: string;
@@ -114,6 +126,7 @@ function toEditableRow(row: SpreadsheetRow): EditableRow {
     id: row.id,
     createdAt: row.createdAt,
     name: row.name,
+    visible: row.visible !== false,
     description: row.description ?? "",
     price: row.price === null ? "" : String(row.price),
     comparedAtPrice:
@@ -126,7 +139,9 @@ function toEditableRow(row: SpreadsheetRow): EditableRow {
     translationsText: row.translations
       ? JSON.stringify(row.translations, null, 2)
       : "",
-    photoIdsText: toIdCsv(row.photoIds),
+    photoIdsText: toIdCsv(
+      row.photos?.map((photo) => photo.url).filter(Boolean) || [],
+    ),
     modifierGroupIdsText: toIdCsv(row.modifierGroupIds),
     preparationStepIdsText: toIdCsv(row.preparationStepIds),
   };
@@ -135,6 +150,7 @@ function toEditableRow(row: SpreadsheetRow): EditableRow {
 function serializeComparableRow(row: EditableRow): string {
   return JSON.stringify({
     name: row.name.trim(),
+    visible: row.visible,
     description: row.description.trim(),
     price: row.price.trim(),
     comparedAtPrice: row.comparedAtPrice.trim(),
@@ -176,13 +192,14 @@ function formatCurrencyDigitsInput(value: string): string {
 
 function parsePayload(row: EditableRow): {
   name: string;
+  visible: boolean;
   description: string | null;
   price: number | null;
   comparedAtPrice: number | null;
   categoryId: string | null;
   categoryIndex: number | null;
   translations: unknown | null;
-  photoIds: string[];
+  photoUrls: string[];
   modifierGroupIds: string[];
   preparationStepIds: string[];
 } {
@@ -213,6 +230,7 @@ function parsePayload(row: EditableRow): {
 
   return {
     name,
+    visible: row.visible,
     description: row.description.trim() || null,
     price: normalizeNullableNumber(row.price, "price"),
     comparedAtPrice: normalizeNullableNumber(
@@ -222,7 +240,7 @@ function parsePayload(row: EditableRow): {
     categoryId: row.categoryId.trim() || null,
     categoryIndex: normalizeNullableNumber(row.categoryIndex, "categoryIndex"),
     translations: parsedTranslations,
-    photoIds: parseIdCsv(row.photoIdsText),
+    photoUrls: parseIdCsv(row.photoIdsText),
     modifierGroupIds: parseIdCsv(row.modifierGroupIdsText),
     preparationStepIds: parseIdCsv(row.preparationStepIdsText),
   };
@@ -354,6 +372,19 @@ function parseIndexValue(value: string): number {
   return parsed;
 }
 
+function isValidHttpUrl(value: string): boolean {
+  const normalized = value.trim();
+
+  if (!normalized) return false;
+
+  try {
+    const parsed = new URL(normalized);
+    return parsed.protocol === "http:" || parsed.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
 function sortRowsByCategoryIndex(rows: EditableRow[]): EditableRow[] {
   return rows.slice().sort((left, right) => {
     const leftIndex = parseIndexValue(left.categoryIndex);
@@ -413,7 +444,7 @@ function reorderIds(ids: string[], draggedId: string, targetId: string): string[
 }
 
 const RELATION_FIELD_LABELS: Record<RelationField, string> = {
-  photoIdsText: "photoIds",
+  photoIdsText: "photos",
   modifierGroupIdsText: "modifierGroupIds",
   preparationStepIdsText: "preparationStepIds",
 };
@@ -438,6 +469,9 @@ export default function ProductSpreadsheet() {
     field: RelationField;
   } | null>(null);
   const [relationPickerByKey, setRelationPickerByKey] = useState<
+    Record<string, string>
+  >({});
+  const [photoUrlInputByKey, setPhotoUrlInputByKey] = useState<
     Record<string, string>
   >({});
   const [openTranslationsEditorRowId, setOpenTranslationsEditorRowId] =
@@ -523,7 +557,7 @@ export default function ProductSpreadsheet() {
   }, [rows, search]);
 
   const onCellChange = useCallback(
-    (id: string, field: keyof EditableRow, value: string) => {
+    (id: string, field: EditableTextField, value: string) => {
       setRows((currentRows) =>
         currentRows.map((row) =>
           row.id === id
@@ -539,6 +573,21 @@ export default function ProductSpreadsheet() {
     },
     [],
   );
+
+  const onVisibleChange = useCallback((id: string, visible: boolean) => {
+    setRows((currentRows) =>
+      currentRows.map((row) =>
+        row.id === id
+          ? {
+              ...row,
+              visible,
+              statusMessage: undefined,
+              errorMessage: undefined,
+            }
+          : row,
+      ),
+    );
+  }, []);
 
   const getRelationIds = useCallback((row: EditableRow, field: RelationField) => {
     return parseIdCsv(row[field]);
@@ -1093,6 +1142,9 @@ export default function ProductSpreadsheet() {
                   name
                 </th>
                 <th className="border border-zinc-200 px-3 py-3 text-left text-[13px] font-semibold text-zinc-600">
+                  visible
+                </th>
+                <th className="border border-zinc-200 px-3 py-3 text-left text-[13px] font-semibold text-zinc-600">
                   createdAt
                 </th>
                 <th className="border border-zinc-200 px-3 py-3 text-left text-[13px] font-semibold text-zinc-600">
@@ -1108,7 +1160,7 @@ export default function ProductSpreadsheet() {
                   categoryId
                 </th>
                 <th className="border border-zinc-200 px-3 py-3 text-left text-[13px] font-semibold text-zinc-600">
-                  photoIds
+                  photos
                 </th>
                 <th className="border border-zinc-200 px-3 py-3 text-left text-[13px] font-semibold text-zinc-600">
                   modifierGroupIds
@@ -1154,7 +1206,7 @@ export default function ProductSpreadsheet() {
                       className="bg-zinc-200/70"
                     >
                       <td
-                        colSpan={11}
+                        colSpan={12}
                         className="border border-zinc-200 px-3 py-2.5 text-left"
                       >
                         <span className="text-[12px] font-semibold text-zinc-700">
@@ -1169,7 +1221,7 @@ export default function ProductSpreadsheet() {
                   return (
                     <tr key="uncategorized-header" className="bg-zinc-100">
                       <td
-                        colSpan={11}
+                        colSpan={12}
                         className="border border-zinc-200 px-3 py-2.5 text-[12px] font-semibold text-zinc-700"
                       >
                         No category | Products: {item.rowCount}
@@ -1209,6 +1261,10 @@ export default function ProductSpreadsheet() {
                 const pickerValue = pickerKey
                   ? relationPickerByKey[pickerKey] || ""
                   : "";
+                const photoUrlInputValue = pickerKey
+                  ? photoUrlInputByKey[pickerKey] || ""
+                  : "";
+                const canAddPhotoUrl = isValidHttpUrl(photoUrlInputValue);
                 const availableStationOptions =
                   openFieldForRow === "preparationStepIdsText"
                     ? lookup.stations.map((station) => ({
@@ -1222,6 +1278,12 @@ export default function ProductSpreadsheet() {
                     ? selectableLookupOptions.filter(
                         (option) => !openFieldIds.includes(option.id),
                       )
+                    : openFieldForRow === "photoIdsText"
+                      ? selectableLookupOptions.filter(
+                          (option) =>
+                            Boolean(option.url) &&
+                            !openFieldIds.includes((option.url || "").trim()),
+                        )
                     : selectableLookupOptions;
 
                 return (
@@ -1257,6 +1319,18 @@ export default function ProductSpreadsheet() {
                           }
                           className="h-full min-h-[42px] w-full rounded-none border-0 bg-transparent px-3 py-2 text-[13px] outline-none focus:bg-white"
                         />
+                      </td>
+                      <td className="border border-zinc-200 px-3 py-2 align-top">
+                        <label className="flex min-h-[42px] items-center gap-2 text-[13px] text-zinc-700">
+                          <input
+                            type="checkbox"
+                            checked={row.visible}
+                            onChange={(event) =>
+                              onVisibleChange(row.id, event.target.checked)
+                            }
+                          />
+                          <span>{row.visible ? "Visible" : "Hidden"}</span>
+                        </label>
                       </td>
                       <td className="border border-zinc-200 px-3 py-2 font-mono text-[11px] align-top whitespace-nowrap text-zinc-600">
                         {new Date(row.createdAt).toLocaleString()}
@@ -1413,7 +1487,7 @@ export default function ProductSpreadsheet() {
                     {openFieldForRow && (
                       <tr className="bg-[#f7f8fc]">
                         <td
-                          colSpan={11}
+                          colSpan={12}
                           className="border border-zinc-200 p-0 align-top"
                         >
                           <div className="border border-zinc-200 bg-white flex flex-col">
@@ -1454,6 +1528,15 @@ export default function ProductSpreadsheet() {
                                             Include Modifiers
                                           </th>
                                         </>
+                                      ) : openFieldForRow === "photoIdsText" ? (
+                                        <>
+                                          <th className="border border-zinc-200 px-3 py-3 text-left text-[13px] font-semibold text-zinc-600">
+                                            Image URL
+                                          </th>
+                                          <th className="border border-zinc-200 px-3 py-3 text-left text-[13px] font-semibold text-zinc-600">
+                                            Preview
+                                          </th>
+                                        </>
                                       ) : (
                                         <>
                                           <th className="border border-zinc-200 px-3 py-3 text-left text-[13px] font-semibold text-zinc-600">
@@ -1476,11 +1559,15 @@ export default function ProductSpreadsheet() {
                                           colSpan={
                                             openFieldForRow === "preparationStepIdsText"
                                               ? 6
+                                              : openFieldForRow === "photoIdsText"
+                                                ? 4
                                               : 4
                                           }
                                           className="border border-zinc-200 px-3 py-2 text-zinc-500"
                                         >
-                                          No relation IDs
+                                          {openFieldForRow === "photoIdsText"
+                                            ? "No images"
+                                            : "No relation IDs"}
                                         </td>
                                       </tr>
                                     ) : (
@@ -1571,6 +1658,38 @@ export default function ProductSpreadsheet() {
                                                   </label>
                                                 </td>
                                               </>
+                                            ) : openFieldForRow ===
+                                              "photoIdsText" ? (
+                                              <>
+                                                <td className="border border-zinc-200 p-0 align-top focus-within:outline focus-within:outline-2 focus-within:outline-indigo-400 focus-within:outline-offset-[-2px] focus-within:z-20">
+                                                  <input
+                                                    value={relationId}
+                                                    onChange={(event) => {
+                                                      const nextIds = [...openFieldIds];
+                                                      nextIds[index] = event.target.value;
+                                                      setRelationIds(
+                                                        row.id,
+                                                        openFieldForRow,
+                                                        nextIds,
+                                                      );
+                                                    }}
+                                                    className="h-full min-h-[40px] w-full rounded-none border-0 bg-transparent px-3 py-2 text-[13px] outline-none focus:bg-white"
+                                                    placeholder="https://example.com/image.jpg"
+                                                  />
+                                                </td>
+                                                <td className="border border-zinc-200 px-3 py-2">
+                                                  {isValidHttpUrl(relationId) ? (
+                                                    <div
+                                                      className="h-12 w-12 rounded border border-zinc-200 bg-zinc-100 bg-cover bg-center"
+                                                      style={{
+                                                        backgroundImage: `url(${relationId})`,
+                                                      }}
+                                                    />
+                                                  ) : (
+                                                    <span className="text-zinc-400">-</span>
+                                                  )}
+                                                </td>
+                                              </>
                                             ) : (
                                               <>
                                                 <td className="border border-zinc-200 p-0 align-top focus-within:outline focus-within:outline-2 focus-within:outline-indigo-400 focus-within:outline-offset-[-2px] focus-within:z-20">
@@ -1646,7 +1765,9 @@ export default function ProductSpreadsheet() {
 
                               <div className="p-2 flex flex-col gap-2 bg-white">
                                 <span className="text-[13px] font-semibold text-zinc-700 px-1">
-                                  Add Relation
+                                  {openFieldForRow === "photoIdsText"
+                                    ? "Add Image"
+                                    : "Add Relation"}
                                 </span>
                                 {openFieldForRow === "preparationStepIdsText" ? (
                                   <>
@@ -1692,6 +1813,82 @@ export default function ProductSpreadsheet() {
                                       }}
                                     >
                                       Add New Row
+                                    </Button>
+                                  </>
+                                ) : openFieldForRow === "photoIdsText" ? (
+                                  <>
+                                    <select
+                                      value={pickerValue}
+                                      onChange={(event) =>
+                                        setRelationPickerByKey((current) => ({
+                                          ...current,
+                                          [pickerKey]: event.target.value,
+                                        }))
+                                      }
+                                      className="h-[40px] w-full rounded-md border border-zinc-300 bg-white px-3 text-[13px] outline-none focus:ring-2 focus:ring-indigo-200"
+                                    >
+                                      <option value="">Select existing image</option>
+                                      {attachableLookupOptions
+                                        .filter((option) => Boolean(option.url))
+                                        .map((option) => (
+                                          <option
+                                            key={option.id}
+                                            value={option.url || ""}
+                                          >
+                                            {renderLookupLabel(option)}
+                                          </option>
+                                        ))}
+                                    </select>
+                                    <Button
+                                      type="button"
+                                      size="sm"
+                                      disabled={!pickerValue}
+                                      onClick={() => {
+                                        if (!pickerValue) return;
+
+                                        setRelationIds(row.id, openFieldForRow, [
+                                          ...openFieldIds,
+                                          pickerValue.trim(),
+                                        ]);
+                                        setRelationPickerByKey((current) => ({
+                                          ...current,
+                                          [pickerKey]: "",
+                                        }));
+                                      }}
+                                    >
+                                      Add Selected Image
+                                    </Button>
+                                    <div className="h-px bg-zinc-200 my-1" />
+                                    <input
+                                      value={photoUrlInputValue}
+                                      onChange={(event) =>
+                                        setPhotoUrlInputByKey((current) => ({
+                                          ...current,
+                                          [pickerKey]: event.target.value,
+                                        }))
+                                      }
+                                      placeholder="https://example.com/new-image.jpg"
+                                      className="h-[40px] w-full rounded-md border border-zinc-300 bg-white px-3 text-[13px] outline-none focus:ring-2 focus:ring-indigo-200"
+                                    />
+                                    <Button
+                                      type="button"
+                                      size="sm"
+                                      disabled={!canAddPhotoUrl}
+                                      onClick={() => {
+                                        const normalizedUrl = photoUrlInputValue.trim();
+                                        if (!isValidHttpUrl(normalizedUrl)) return;
+
+                                        setRelationIds(row.id, openFieldForRow, [
+                                          ...openFieldIds,
+                                          normalizedUrl,
+                                        ]);
+                                        setPhotoUrlInputByKey((current) => ({
+                                          ...current,
+                                          [pickerKey]: "",
+                                        }));
+                                      }}
+                                    >
+                                      Create And Attach Image
                                     </Button>
                                   </>
                                 ) : (

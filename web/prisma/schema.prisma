@@ -230,6 +230,7 @@ model Product {
   id               String                            @id
   createdAt        DateTime                          @default(now())
   name             String
+  visible          Boolean                           @default(true)
   description      String?
   price            Int?
   comparedAtPrice  Int?

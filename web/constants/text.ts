@@ -105,6 +105,18 @@ const text: {
     takeaway: 'Take Away',
     deliveryMinimum: "Delivery available from",
     checkoutError: "We could not place your order. Please try again.",
+    verifyPickup: "Verify pickup instructions",
+    verifyPickupModalTitle: "How to pick up your order",
+    verifyPickupStep1Title: "Check your order number",
+    verifyPickupStep1Description:
+      "Use the order number shown on your confirmation screen.",
+    verifyPickupStep2Title: "Go to the pickup counter",
+    verifyPickupStep2Description:
+      "Come to Zaatar Grill & Pizza and head to the pickup area.",
+    verifyPickupStep3Title: "Confirm and collect",
+    verifyPickupStep3Description:
+      "Show your order number to our team and collect your order.",
+    verifyPickupDone: "Got it",
   },
   pt: {
     information: "Informações",
@@ -205,6 +217,18 @@ const text: {
     quantityShort: "Qtd",
     deliveryMinimum: "Entrega disponível a partir de",
     checkoutError: "Nao foi possivel concluir seu pedido. Tente novamente.",
+    verifyPickup: "Verificar instruções de retirada",
+    verifyPickupModalTitle: "Como retirar seu pedido",
+    verifyPickupStep1Title: "Confira o número do pedido",
+    verifyPickupStep1Description:
+      "Use o número do pedido mostrado na tela de confirmação.",
+    verifyPickupStep2Title: "Vá ao balcão de retirada",
+    verifyPickupStep2Description:
+      "Chegue ao Zaatar Grill & Pizza e vá para a área de retirada.",
+    verifyPickupStep3Title: "Confirme e retire",
+    verifyPickupStep3Description:
+      "Mostre o número do pedido para nossa equipe e retire seu pedido.",
+    verifyPickupDone: "Entendi",
   },
   es: {
     information: "Información",
@@ -308,6 +332,18 @@ const text: {
     takeaway: "Para llevar",
     deliveryMinimum: "Entrega disponible desde",
     checkoutError: "No pudimos completar tu pedido. Inténtalo de nuevo.",
+    verifyPickup: "Ver instrucciones de recogida",
+    verifyPickupModalTitle: "Cómo recoger tu pedido",
+    verifyPickupStep1Title: "Revisa tu número de pedido",
+    verifyPickupStep1Description:
+      "Usa el número de pedido que aparece en la pantalla de confirmación.",
+    verifyPickupStep2Title: "Ve al mostrador de recogida",
+    verifyPickupStep2Description:
+      "Llega a Zaatar Grill & Pizza y dirígete al área de recogida.",
+    verifyPickupStep3Title: "Confirma y recoge",
+    verifyPickupStep3Description:
+      "Muestra tu número de pedido a nuestro equipo y recoge tu pedido.",
+    verifyPickupDone: "Entendido",
   },
 };
 

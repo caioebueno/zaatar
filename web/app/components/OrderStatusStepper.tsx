@@ -88,7 +88,7 @@ const OrderStatusStepper: React.FC<TOrderStatusStepper> = ({
   };
 
   return (
-    <div className="w-full max-w-[900px] px-4 pt-8 pb-6 flex flex-col gap-4">
+    <div className={`w-full max-w-[900px] px-4 pt-8 ${type === 'TAKEAWAY' ? 'pb-2' : 'pb-6'} flex flex-col gap-4`}>
       <div className="flex flex-col gap-6">
         <div className="flex items-center justify-between gap-2 sm:gap-3 px-8">
           {steps.map((step, index) => {

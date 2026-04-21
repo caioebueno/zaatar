@@ -49,7 +49,11 @@ const DiscountModal: React.FC<TDiscountModal> = ({
             <span className="font-medium">{content["addMore"]}</span>
           </DialogDescription>
         </DialogHeader>
-        <ProgressiveDiscountBar progressiveDiscount={progressiveDiscount} />
+        <ProgressiveDiscountBar
+          progressiveDiscount={progressiveDiscount}
+          animateFill={open}
+          demoFill
+        />
         <DialogFooter>
           <Button
             className="font-bold bg-brandBackground py-3 h-full text-background"

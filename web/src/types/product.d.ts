@@ -4,6 +4,7 @@ import { TPreparationStep } from "./station";
 type TProduct = {
   id: string;
   name: string;
+  visible?: boolean;
   photos?: Image[];
   price?: number | null;
   description?: string | null;

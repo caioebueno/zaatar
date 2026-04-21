@@ -18,7 +18,7 @@ type CategoryRow = {
   translations: Prisma.JsonValue | null;
 };
 
-const getProducts = async (): Promise<TGetProductsResponse> => {
+export const getProductsFresh = async (): Promise<TGetProductsResponse> => {
   const prismaCategories = await prisma.$queryRaw<CategoryRow[]>`
     SELECT "id", "name", "menuIndex", "translations"
     FROM "Category"
@@ -68,7 +68,16 @@ const getProducts = async (): Promise<TGetProductsResponse> => {
             })
           : undefined,
       products: prismaProducts
-        .filter((product) => product.categoryId === category.id)
+        .filter((product) => {
+          const productWithVisibility = product as typeof product & {
+            visible?: boolean;
+          };
+
+          return (
+            product.categoryId === category.id &&
+            productWithVisibility.visible !== false
+          );
+        })
         .sort((left, right) => {
           const leftIndex = left.categoryIndex ?? Number.MAX_SAFE_INTEGER;
           const rightIndex = right.categoryIndex ?? Number.MAX_SAFE_INTEGER;
@@ -80,6 +89,7 @@ const getProducts = async (): Promise<TGetProductsResponse> => {
           return left.createdAt.getTime() - right.createdAt.getTime();
         })
         .map((product) => ({
+        visible: (product as typeof product & { visible?: boolean }).visible ?? true,
         id: product.id,
         name: product.name,
         translations: product.translations as {
@@ -137,5 +147,8 @@ const getProducts = async (): Promise<TGetProductsResponse> => {
     })),
   };
 };
+
+const getProducts = async (): Promise<TGetProductsResponse> =>
+  getProductsFresh();
 
 export default getProducts;

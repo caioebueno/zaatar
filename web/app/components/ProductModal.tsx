@@ -307,7 +307,7 @@ const ModifierModal: React.FC<TModifierModal> = ({
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent
         showCloseButton={false}
-        className="w-full h-full min-h-0 flex flex-col p-0 bg-foreground transition-all gap-0"
+        className="w-full max-w-[900px] h-full min-h-0 flex flex-col p-0 bg-foreground transition-all gap-0"
       >
         <DialogTitle className="sr-only">
           {modifierGroup?.title || "Modifier options"}
@@ -329,7 +329,7 @@ const ModifierModal: React.FC<TModifierModal> = ({
           </span>
         </div>
         <div className="flex-1 min-h-0 overflow-y-auto px-4 pb-2">
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 min-[600px]:grid-cols-3 gap-3">
             {modifierGroup?.items.map((item) => (
               <ModifierItem
                 key={item.id}

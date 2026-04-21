@@ -15,7 +15,7 @@ import {
 } from "./types/order";
 import { calculateProductPriceWithProgressiveDiscount } from "../utils/calculateProductPriceWithProgressiveDiscount";
 import { calculateCartWithProgressiveDiscount } from "../utils/calculatePrice";
-import getProducts from "./getProducts";
+import { getProductsFresh } from "./getProducts";
 import { getOrderConfirmedWhatsAppMessage } from "./constants/whatsappMessages";
 import { buildPreparationStepCategories } from "@/src/modules/station/domain/buildPreparationStepCategories";
 import {
@@ -377,7 +377,7 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
     now.getDate() + 1,
   );
   const progressiveDiscount = await getProgressiveDiscount();
-  const productData = await getProducts();
+  const productData = await getProductsFresh();
   const language = normalizeOrderLanguage(data.language);
   const scheduleFor = ensureValidScheduleFor(data.scheduleFor);
   const getCatalogProductById = (productId: string) => {

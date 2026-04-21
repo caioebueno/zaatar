@@ -10,6 +10,7 @@ type RouteContext = {
 
 type PatchBody = {
   name?: unknown;
+  visible?: unknown;
   description?: unknown;
   price?: unknown;
   comparedAtPrice?: unknown;
@@ -17,6 +18,7 @@ type PatchBody = {
   categoryIndex?: unknown;
   translations?: unknown;
   photoIds?: unknown;
+  photoUrls?: unknown;
   modifierGroupIds?: unknown;
   preparationStepIds?: unknown;
 };
@@ -25,13 +27,18 @@ function mapProductRow(product: {
   id: string;
   createdAt: Date;
   name: string;
+  visible?: boolean;
   description: string | null;
   price: number | null;
   comparedAtPrice: number | null;
   categoryId: string | null;
   categoryIndex: number | null;
   translations: unknown | null;
-  photos: { id: string }[];
+  photos: {
+    id: string;
+    name: string;
+    url: string;
+  }[];
   modifierGroups: {
     id: string;
     title: string;
@@ -57,12 +64,18 @@ function mapProductRow(product: {
     id: product.id,
     createdAt: product.createdAt.toISOString(),
     name: product.name,
+    visible: product.visible !== false,
     description: product.description,
     price: product.price,
     comparedAtPrice: product.comparedAtPrice,
     categoryId: product.categoryId,
     categoryIndex: product.categoryIndex,
     translations: product.translations,
+    photos: product.photos.map((photo) => ({
+      id: photo.id,
+      name: photo.name,
+      url: photo.url,
+    })),
     photoIds: product.photos.map((photo) => photo.id),
     modifierGroupIds: product.modifierGroups.map((modifierGroup) => modifierGroup.id),
     modifierGroups: product.modifierGroups.map((modifierGroup) => ({
@@ -135,6 +148,14 @@ function parseNullableInt(
   return value;
 }
 
+function parseBoolean(value: unknown, field: string): boolean {
+  if (typeof value !== "boolean") {
+    throw new Error(field);
+  }
+
+  return value;
+}
+
 function parseIdArray(value: unknown, field: string): string[] {
   if (!Array.isArray(value)) {
     throw new Error(field);
@@ -160,6 +181,72 @@ function parseIdArray(value: unknown, field: string): string[] {
   return normalizedIds;
 }
 
+function parseUrlArray(value: unknown, field: string): string[] {
+  if (!Array.isArray(value)) {
+    throw new Error(field);
+  }
+
+  return Array.from(
+    new Set(
+      value.map((urlValue) => {
+        if (typeof urlValue !== "string") {
+          throw new Error(field);
+        }
+
+        const normalized = urlValue.trim();
+
+        if (!normalized) {
+          throw new Error(field);
+        }
+
+        let parsedUrl: URL;
+
+        try {
+          parsedUrl = new URL(normalized);
+        } catch {
+          throw new Error(field);
+        }
+
+        if (
+          parsedUrl.protocol !== "http:" &&
+          parsedUrl.protocol !== "https:"
+        ) {
+          throw new Error(field);
+        }
+
+        return parsedUrl.toString();
+      }),
+    ),
+  );
+}
+
+function generateId() {
+  if (
+    typeof globalThis !== "undefined" &&
+    globalThis.crypto &&
+    typeof globalThis.crypto.randomUUID === "function"
+  ) {
+    return globalThis.crypto.randomUUID();
+  }
+
+  return `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+}
+
+function buildFileNameFromUrl(urlValue: string): string {
+  try {
+    const parsed = new URL(urlValue);
+    const rawFileName = parsed.pathname.split("/").filter(Boolean).pop();
+
+    if (rawFileName) {
+      return decodeURIComponent(rawFileName);
+    }
+  } catch {
+    // no-op
+  }
+
+  return "product-image";
+}
+
 export async function PATCH(request: NextRequest, context: RouteContext) {
   try {
     const { productId } = await context.params;
@@ -176,8 +263,24 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     const data: Prisma.ProductUpdateInput = {};
     let hasAnyField = false;
 
+    if (body.photoIds !== undefined && body.photoUrls !== undefined) {
+      return NextResponse.json(
+        { error: "Invalid payload", field: "photoUrls" },
+        { status: 400 },
+      );
+    }
+
     if (body.name !== undefined) {
       data.name = parseString(body.name, "name");
+      hasAnyField = true;
+    }
+
+    if (body.visible !== undefined) {
+      (
+        data as Prisma.ProductUpdateInput & {
+          visible?: boolean;
+        }
+      ).visible = parseBoolean(body.visible, "visible");
       hasAnyField = true;
     }
 
@@ -281,6 +384,64 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       hasAnyField = true;
     }
 
+    if (body.photoUrls !== undefined) {
+      const photoUrls = parseUrlArray(body.photoUrls, "photoUrls");
+      const existingFiles = await prisma.file.findMany({
+        where: {
+          url: {
+            in: photoUrls,
+          },
+        },
+        select: {
+          id: true,
+          url: true,
+        },
+      });
+      const existingFileIdByUrl = new Map(
+        existingFiles.map((file) => [file.url, file.id]),
+      );
+      const missingUrls = photoUrls.filter(
+        (urlValue) => !existingFileIdByUrl.has(urlValue),
+      );
+      const createdFiles =
+        missingUrls.length === 0
+          ? []
+          : await Promise.all(
+              missingUrls.map((urlValue) =>
+                prisma.file.create({
+                  data: {
+                    id: generateId(),
+                    name: buildFileNameFromUrl(urlValue),
+                    url: urlValue,
+                    size: 0,
+                  },
+                  select: {
+                    id: true,
+                    url: true,
+                  },
+                }),
+              ),
+            );
+      const createdFileIdByUrl = new Map(
+        createdFiles.map((file) => [file.url, file.id]),
+      );
+      const allPhotoIds = photoUrls.map((urlValue) => {
+        const fileId =
+          existingFileIdByUrl.get(urlValue) || createdFileIdByUrl.get(urlValue);
+
+        if (!fileId) {
+          throw new Error("photoUrls");
+        }
+
+        return fileId;
+      });
+
+      data.photos = {
+        set: allPhotoIds.map((id) => ({ id })),
+      };
+      hasAnyField = true;
+    }
+
     if (body.modifierGroupIds !== undefined) {
       const modifierGroupIds = parseIdArray(
         body.modifierGroupIds,
@@ -349,6 +510,8 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
         photos: {
           select: {
             id: true,
+            name: true,
+            url: true,
           },
         },
         modifierGroups: {

@@ -1,7 +1,6 @@
 import { NextPage } from "next";
 import { Montserrat } from "next/font/google";
-import getProducts from "../../../../src/getProducts";
-import { CartList } from "@/app/components/Price";
+import CartPageContent from "./CartPageContent";
 
 const montserrat = Montserrat({
   variable: "--font-geist-mono",
@@ -13,12 +12,11 @@ const Cart: NextPage<{
     lg: string;
   }>;
 }> = async ({ params }) => {
-  const data = await getProducts();
   const lg = (await params).lg;
-  console.log(data)
+
   return (
     <div className={`${montserrat.className} h-full`}>
-      <CartList data={data} lg={lg} />
+      <CartPageContent lg={lg} />
     </div>
   );
 };

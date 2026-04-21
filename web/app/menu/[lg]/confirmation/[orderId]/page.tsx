@@ -9,6 +9,7 @@ import Link from "next/link";
 import { FiArrowLeft, FiCheck } from "react-icons/fi";
 import { FaWhatsapp } from "react-icons/fa6";
 import text from "@/constants/text";
+import PickupInstructionsButton from "@/app/components/PickupInstructionsButton";
 
 const montserrat = Montserrat({
   variable: "--font-geist-mono",
@@ -58,7 +59,7 @@ const Confirmation: NextPage<{
           <span>{content["back"]}</span>
         </Link>
         <a
-          href={`https://wa.me/15551234567?text=Hi%20I%20want%20to%20know%20more%20about%20order%20${order.number}`}
+          href={`https://wa.me/12393552467?text=Hi%20I%20want%20to%20know%20more%20about%20order%20${order.number}`}
           target="_blank"
           rel="noopener noreferrer"
           className="bg-[#25d366] px-3 py-2 rounded-lg text-white flex flex-row items-center gap-1 font-semibold text-sm"
@@ -83,6 +84,11 @@ const Confirmation: NextPage<{
         status={order.status}
         type={order.type}
       />
+      {order.type === 'TAKEAWAY' && (
+       <div className="px-4 w-full max-w-[900px]">
+         <PickupInstructionsButton content={content} />
+       </div>
+      )}
       <OrderSummaryModal
         content={content}
         lg={lg}
@@ -102,7 +108,7 @@ const Confirmation: NextPage<{
       </div>
       <div className="w-full max-w-[900px] px-4 pb-8 pt-8">
         <a
-          href={`https://wa.me/15551234567?text=Hi%20I%20want%20to%20know%20more%20about%20order%20${order.number}`}
+          href={`https://wa.me/12393552467?text=Hi%20I%20want%20to%20know%20more%20about%20order%20${order.number}`}
           target="_blank"
           rel="noopener noreferrer"
           className="bg-[#25d366] px-4 py-3 rounded-xl text-white flex flex-row items-center justify-center gap-2 font-bold text-lg w-full"
