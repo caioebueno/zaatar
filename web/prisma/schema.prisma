@@ -331,7 +331,7 @@ model Order {
   estimatedDeliveryDurationMinutes Int?
   dispatchOrderIndex          Int?
   amount                      Int
-  customer                    Customer                  @relation(fields: [customerId], references: [id])
+  customer                    Customer?                 @relation(fields: [customerId], references: [id])
   status                      OrderStatus               @default(ACCEPTED)
   type                        OrderType                 @default(DELIVERY)
   paymentMethod               PaymentType               @default(CARD)
@@ -341,7 +341,7 @@ model Order {
   address                     Address?                  @relation(fields: [addressId], references: [id])
   deliveryAddress             DeliveryAddress?          @relation(fields: [deliveryAddressId], references: [id])
   orderProducts               OrderProducts[]
-  customerId                  String
+  customerId                  String?
   externalId                  String?
   dispatchId                  String?
   addressId                   String?

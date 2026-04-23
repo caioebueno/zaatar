@@ -25,7 +25,7 @@ import { calculateSalesTaxInCents } from "@/src/constants/pricing";
 
 type TCreateOrder = {
   cart: TCart;
-  customerId: string;
+  customerId?: string;
   orderType: TOrderType;
   paymentMethod: TPaymentMethod;
   language?: string;
@@ -47,6 +47,7 @@ type CustomerContactRow = {
 type OrderCreationTransactionResult = {
   order: TOrder;
   orderId: string;
+  customerId: string | null;
   orderNumber?: string | null;
 };
 
@@ -533,6 +534,9 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
             AND "createdAt" < ${endOfDay}
         `;
         const nextOrderNumber = (Number(todayOrderCount?.count ?? 0) + 1).toString();
+        const providedCustomerId =
+          typeof data.customerId === "string" ? data.customerId.trim() : "";
+        const resolvedCustomerId = providedCustomerId || null;
 
         const createdOrder = await tx.order.create({
           data: {
@@ -542,7 +546,7 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
             scheduleFor,
             deliveryAddressId:
               data.orderType === "DELIVERY" ? data.addressId : undefined,
-            customerId: data.customerId,
+            ...(resolvedCustomerId ? { customerId: resolvedCustomerId } : {}),
             paymentMethod: data.paymentMethod,
             tipAmount: sanitizedTipPercentage,
             language,
@@ -737,6 +741,7 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
         return {
           order,
           orderId: createdOrder.id,
+          customerId: resolvedCustomerId,
           orderNumber: createdOrder.number,
         };
       },
@@ -768,12 +773,14 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
     throw new Error("ORDER_CREATION_TRANSACTION_FAILED");
   }
 
-  const [customerContact] = await prisma.$queryRaw<CustomerContactRow[]>`
-    SELECT "name", "phone"
-    FROM "Customer"
-    WHERE "id" = ${data.customerId}
-    LIMIT 1
-  `;
+  const [customerContact] = transactionResult.customerId
+    ? await prisma.$queryRaw<CustomerContactRow[]>`
+        SELECT "name", "phone"
+        FROM "Customer"
+        WHERE "id" = ${transactionResult.customerId}
+        LIMIT 1
+      `
+    : [null];
 
   if (data.orderType === "DELIVERY" && data.addressId) {
     after(async () => {

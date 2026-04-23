@@ -262,7 +262,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = (await request.json()) as PostBody;
     const cart = parseCart(body.cart);
-    const customerId = parseRequiredString(body.customerId, "customerId");
+    const customerId = parseOptionalString(body.customerId, "customerId");
     const orderType = parseOrderType(body.orderType);
     const paymentMethod = parsePaymentMethod(body.paymentMethod);
     const language = parseOptionalString(body.language, "language");

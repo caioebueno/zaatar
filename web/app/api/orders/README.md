@@ -9,7 +9,7 @@ Creates a new order.
 Request body:
 
 - `cart` (required)
-- `customerId` (required string)
+- `customerId` (optional string; if omitted, order is created without a linked customer)
 - `orderType` (required `"DELIVERY" | "TAKEAWAY"`)
 - `paymentMethod` (required `"CARD" | "CASH" | "ZELLE"`)
 - `language` (optional string)

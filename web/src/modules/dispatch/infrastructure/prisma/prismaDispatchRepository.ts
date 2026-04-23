@@ -45,7 +45,7 @@ type DispatchOrderRow = {
   dispatchOrderIndex: number | null;
   number: string | null;
   delivered: boolean;
-  customerId: string;
+  customerId: string | null;
   customerName: string | null;
   type: TOrder["type"];
   paymentMethod: TOrder["paymentMethod"];
@@ -216,11 +216,15 @@ function mapDispatch(
           type: orderRow.type,
           paymentMethod: orderRow.paymentMethod,
           dispatchId: orderRow.dispatchIdOnOrder || undefined,
-          costumerId: orderRow.customerId,
-          customer: {
-            id: orderRow.customerId,
-            name: orderRow.customerName,
-          },
+          costumerId: orderRow.customerId || undefined,
+          ...(orderRow.customerId
+            ? {
+                customer: {
+                  id: orderRow.customerId,
+                  name: orderRow.customerName,
+                },
+              }
+            : {}),
           ...(orderRow.deliveryAddressId
             ? {
                 deliveryAddress: {
@@ -434,7 +438,7 @@ async function getDispatchOrders(
       deliveryAddress."customerId" AS "deliveryAddressCustomerId",
       deliveryAddress."deliveryFee" AS "deliveryAddressFee"
     FROM "Order" orders
-    INNER JOIN "Customer" customer
+    LEFT JOIN "Customer" customer
       ON customer."id" = orders."customerId"
     LEFT JOIN "DeliveryAddress" deliveryAddress
       ON deliveryAddress."id" = orders."deliveryAddressId"
