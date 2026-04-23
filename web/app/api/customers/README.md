@@ -2,6 +2,47 @@
 
 ## Endpoint
 
+`POST /api/customers`
+
+Creates a new customer.
+
+Phone behavior:
+
+- `phone` is required
+- phone is normalized to digits only
+- country code is enforced using `WHATSAPP_COUNTRY_CODE` (default `1`)
+- if a customer with the same normalized phone already exists, it updates and returns that customer instead of creating a duplicate profile
+
+Request body:
+
+- `phone` (required string)
+- `name` (optional string or `null`)
+- `email` (optional string or `null`)
+- `address` (optional string or `null`)
+
+Create/update success (`201` for new customer, `200` for existing customer update):
+
+```json
+{
+  "id": "customer-id",
+  "createdAt": "2026-04-13T12:00:00.000Z",
+  "name": "John Doe",
+  "email": "john@example.com",
+  "phone": "14075550123",
+  "address": "Home address",
+  "addresses": []
+}
+```
+
+Validation error (`400`):
+
+```json
+{
+  "error": "Invalid payload",
+  "field": "phone"
+}
+```
+
 `GET /api/customers/search?phone=:phone`
 
 Searches a customer by phone number.

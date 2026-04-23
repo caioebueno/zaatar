@@ -141,13 +141,13 @@ const ProductModal: React.FC<TProductModal> = ({
     >
       <DialogContent
         showCloseButton={false}
-        className="w-full h-full p-0 bg-foreground transition-all overflow-hidden"
+        className="!top-0 !left-0 !translate-x-0 !translate-y-0 !w-screen !max-w-none !h-[100svh] !max-h-[100svh] !p-0 !gap-0 bg-foreground transition-all overflow-hidden rounded-none"
       >
         <DialogTitle className="sr-only">
           {product ? product.name : "Product details"}
         </DialogTitle>
         {product && (
-          <div className="h-full flex flex-col">
+          <div className="h-full flex flex-col max-h-dvh">
             <div className="flex-1 min-h-0 overflow-y-auto">
               <div className="flex flex-col lg:flex-row">
                 <div className="lg:flex-1 lg:p-4">
@@ -157,7 +157,7 @@ const ProductModal: React.FC<TProductModal> = ({
                   <ProductImage
                     src={productImageUrl}
                     alt={`${product.name} photo`}
-                    className="h-100 w-full object-cover bg-background lg:w-full lg:h-auto lg:rounded-xl"
+                    className="h-[300px] w-full object-cover bg-background lg:w-full lg:h-[300px] lg:rounded-xl"
                     quality={85}
                     sizes="(max-width: 1024px) 100vw, 50vw"
                   />
@@ -193,7 +193,7 @@ const ProductModal: React.FC<TProductModal> = ({
                     </span>
                     <textarea
                       className="bg-background rounded-lg text-[16px] py-3 px-3 border-2 border-background transition focus:border-brandBackground focus:outline-0"
-                      rows={4}
+                      rows={3}
                       placeholder={content["optional"]}
                       name=""
                       id=""
@@ -204,7 +204,7 @@ const ProductModal: React.FC<TProductModal> = ({
                 </div>
               </div>
             </div>
-            <div className="shrink-0 py-5 px-4 bg-background w-full flex flex-row items-center justify-between lg:justify-end lg:gap-4">
+            <div className="shrink-0 pt-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] px-4 bg-background w-full flex flex-row items-center justify-between lg:justify-end lg:gap-4">
               <QuantitySelector
                 onChange={(value) => setQuantity(value)}
                 value={quantity}
@@ -341,7 +341,7 @@ const ModifierModal: React.FC<TModifierModal> = ({
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent
         showCloseButton={false}
-        className="w-full max-w-[900px] h-full min-h-0 flex flex-col p-0 bg-foreground transition-all gap-0"
+        className="!top-0 !left-0 !translate-x-0 !translate-y-0 !w-screen sm:!max-w-[900px] !h-[100svh] !max-h-[100svh] !min-h-0 !flex !flex-col !p-0 !gap-0 bg-foreground transition-all"
       >
         <DialogTitle className="sr-only">
           {resolveModifierGroupTitle(modifierGroup, lg)}
@@ -376,7 +376,7 @@ const ModifierModal: React.FC<TModifierModal> = ({
             ))}
           </div>
         </div>
-        <div className="flex flex-row h-fit py-6 px-4 gap-3">
+        <div className="flex flex-row h-fit pt-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] px-4 gap-3">
           {!modifierGroup?.required && (
             <Button
               className="bg-background! text-text! flex-1 disabled:opacity-50"
