@@ -1,15 +1,12 @@
-export function toWhatsAppChatId(phone: string): string | undefined {
-  const normalized = phone.replace(/\D/g, "");
-  if (!normalized) return undefined;
+import { normalizePhoneWithCountryCode } from "./phone";
 
+export function toWhatsAppChatId(phone: string): string | undefined {
   const countryCode = (
     process.env.WHATSAPP_COUNTRY_CODE?.trim() || "1"
   ).replace(/\D/g, "");
 
-  const phoneWithCountryCode =
-    countryCode && !normalized.startsWith(countryCode)
-      ? `${countryCode}${normalized}`
-      : normalized;
+  const phoneWithCountryCode = normalizePhoneWithCountryCode(phone, countryCode);
+  if (!phoneWithCountryCode) return undefined;
 
   return `${phoneWithCountryCode}@c.us`;
 }

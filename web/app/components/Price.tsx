@@ -2133,7 +2133,6 @@ const AddressStep: React.FC<TAddressStep> = ({
               value={phoneValue}
               onChange={(value) => {
                 setPhoneData(value);
-                setPhoneCountry(value.country);
               }}
               block={customer !== null}
             />

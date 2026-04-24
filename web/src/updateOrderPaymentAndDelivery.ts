@@ -1,6 +1,7 @@
 "use server";
 
 import { randomUUID } from "crypto";
+import { Prisma } from "@/src/generated/prisma";
 import prisma from "@/prisma";
 import type { TOrder, TOrderType, TPaymentMethod } from "@/src/types/order";
 import getOrder from "./getOrder";
@@ -376,8 +377,8 @@ export default async function updateOrderPaymentAndDelivery(
 
   const modifierGroupItemIds = Array.from(
     new Set(
-      orderProductChanges.flatMap(
-        (item) => item.selectedModifierGroupItemIds || [],
+      orderProductChanges.flatMap((item) =>
+        item.kind === "delete" ? [] : item.selectedModifierGroupItemIds || [],
       ),
     ),
   );
@@ -540,9 +541,10 @@ export default async function updateOrderPaymentAndDelivery(
 
   await prisma.$transaction(async (tx) => {
     if (hasOrderUpdates) {
+      const orderUpdateData = updates as Prisma.OrderUncheckedUpdateInput;
       await tx.order.update({
         where: { id: orderId },
-        data: updates,
+        data: orderUpdateData,
       });
     }
 

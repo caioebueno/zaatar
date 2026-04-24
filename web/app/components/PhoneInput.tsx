@@ -389,7 +389,7 @@ export default function PhoneInput({
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search country"
-              className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm outline-none"
+              className="w-full rounded-md border border-neutral-300 px-3 py-2 outline-none text-base"
             />
           </div>
 

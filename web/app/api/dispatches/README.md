@@ -112,7 +112,7 @@ Order payload notes:
 - `progressiveDiscountSnapshot` is included when the order has a stored progressive discount snapshot (including selected prize data)
 - `preparationStepCategory` is populated with nested entities:
   category data, steps, and each step's `preparationStepModifiers` (including `modifierGtroupItem` details when available)
-- `customer` is included on each order
+- `customer` is included on each order (including `phone` when available)
 - `deliveryAddress` is included when the order has one
 - `orderProducts` includes the selected product data and modifier selections
 
@@ -152,7 +152,8 @@ Success:
         "costumerId": "customer-1",
         "customer": {
           "id": "customer-1",
-          "name": "John"
+          "name": "John",
+          "phone": "14075550123"
         },
         "progressiveDiscountSnapshot": {
           "progressiveDiscount": {
@@ -278,7 +279,8 @@ Success:
         "costumerId": "customer-2",
         "customer": {
           "id": "customer-2",
-          "name": "Maria"
+          "name": "Maria",
+          "phone": "14075550124"
         },
         "progressiveDiscountSnapshot": null,
         "orderProducts": [],

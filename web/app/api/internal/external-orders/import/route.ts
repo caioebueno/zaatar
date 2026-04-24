@@ -139,6 +139,38 @@ function parseOrdersFromPayload(payload: ImportPayload): ExternalOrder[] {
   return [];
 }
 
+function getErrorReason(error: unknown): string {
+  if (typeof error === "string" && error.trim()) {
+    return error;
+  }
+
+  if (error instanceof Error && error.message) {
+    return error.message;
+  }
+
+  if (error && typeof error === "object") {
+    const reason =
+      "reason" in error && typeof (error as { reason?: unknown }).reason === "string"
+        ? (error as { reason: string }).reason
+        : undefined;
+
+    if (reason) {
+      return reason;
+    }
+
+    const code =
+      "code" in error && typeof (error as { code?: unknown }).code === "string"
+        ? (error as { code: string }).code
+        : undefined;
+
+    if (code) {
+      return code;
+    }
+  }
+
+  return "UNKNOWN_ERROR";
+}
+
 async function resolveCustomerIdTx(
   tx: Prisma.TransactionClient,
   client: ExternalClient | null | undefined,
@@ -216,18 +248,11 @@ async function resolveCustomerIdTx(
 async function createTakeawayDispatchTx(
   tx: Prisma.TransactionClient,
 ): Promise<{ dispatchId: string; dispatchOrderIndex: number }> {
-  const queueIndexAggregation = await tx.dispatch.aggregate({
-    _max: {
-      queueIndex: true,
-    },
-  });
-  const nextQueueIndex = (queueIndexAggregation._max.queueIndex ?? 0) + 1;
   const dispatchId = randomUUID();
 
   await tx.dispatch.create({
     data: {
       id: dispatchId,
-      queueIndex: nextQueueIndex,
       dispatched: false,
       dispatchAt: null,
       driverId: null,
@@ -316,6 +341,8 @@ export async function POST(request: NextRequest) {
     }> = [];
     const deliveryDispatchJobs: Array<{ orderId: string; deliveryAddressId: string }> =
       [];
+    const queueJobErrors: Array<{ orderId: string; reason: string }> = [];
+    let enqueuedDeliveryDispatchJobs = 0;
 
     for (const [index, externalOrder] of externalOrders.entries()) {
       const externalId = resolveExternalId(externalOrder);
@@ -328,62 +355,62 @@ export async function POST(request: NextRequest) {
         continue;
       }
 
-      const result = await prisma.$transaction(async (tx) => {
-        await tx.$executeRaw`
-          SELECT pg_advisory_xact_lock(hashtext(${`external-order:${externalId}`})::bigint)
-        `;
+      try {
+        const result = await prisma.$transaction(async (tx) => {
+          await tx.$executeRaw`
+            SELECT pg_advisory_xact_lock(hashtext(${`external-order:${externalId}`})::bigint)
+          `;
 
-        const existingOrder = await tx.order.findFirst({
-          where: {
-            externalId,
-          },
-          select: {
-            id: true,
-          },
-        });
+          const existingOrder = await tx.order.findFirst({
+            where: {
+              externalId,
+            },
+            select: {
+              id: true,
+            },
+          });
 
-        if (existingOrder) {
-          return {
-            created: false as const,
-            orderId: existingOrder.id,
-          };
-        }
+          if (existingOrder) {
+            return {
+              created: false as const,
+              orderId: existingOrder.id,
+            };
+          }
 
-        const orderType = mapServiceTypeToOrderType(externalOrder.service_type);
-        const paymentMethod = mapPaymentMethod(externalOrder);
-        const customerId = await resolveCustomerIdTx(tx, externalOrder.client);
-        const createdAt = parseIsoDate(externalOrder.created_at) || new Date();
-        const scheduleFor = parseIsoDate(externalOrder.scheduled_delivery_date);
-        const amountInCents = toCents(
-          externalOrder.total_usd ?? externalOrder.total,
-        );
-        const orderNumber = normalizeNonEmptyString(externalOrder.public_id);
-        const deliveryAddressId =
-          orderType === "DELIVERY"
-            ? await resolveDeliveryAddressIdTx(tx, externalOrder)
-            : undefined;
+          const orderType = mapServiceTypeToOrderType(externalOrder.service_type);
+          const paymentMethod = mapPaymentMethod(externalOrder);
+          const customerId = await resolveCustomerIdTx(tx, externalOrder.client);
+          const createdAt = parseIsoDate(externalOrder.created_at) || new Date();
+          const scheduleFor = parseIsoDate(externalOrder.scheduled_delivery_date);
+          const amountInCents = toCents(
+            externalOrder.total_usd ?? externalOrder.total,
+          );
+          const orderNumber = normalizeNonEmptyString(externalOrder.public_id);
+          const deliveryAddressId =
+            orderType === "DELIVERY"
+              ? await resolveDeliveryAddressIdTx(tx, externalOrder)
+              : undefined;
 
-        if (orderType === "DELIVERY" && !deliveryAddressId) {
-          throw {
-            code: "INVALID_PARAMS",
-            details: { field: "address_id" },
-            reason: "DELIVERY_MUST_HAVE_LOCAL_ADDRESS",
-          };
-        }
+          if (orderType === "DELIVERY" && !deliveryAddressId) {
+            throw {
+              code: "INVALID_PARAMS",
+              details: { field: "address_id" },
+              reason: "DELIVERY_MUST_HAVE_LOCAL_ADDRESS",
+            };
+          }
 
-        const takeawayDispatch =
-          orderType === "TAKEAWAY" ? await createTakeawayDispatchTx(tx) : null;
+          const takeawayDispatch =
+            orderType === "TAKEAWAY" ? await createTakeawayDispatchTx(tx) : null;
 
-        const createdOrder = await tx.order.create({
-          data: {
+          const orderCreateData = {
             id: randomUUID(),
             amount: amountInCents,
-            number: orderNumber,
             externalId,
             createdAt,
             scheduleFor: scheduleFor ?? null,
             paymentMethod,
             type: orderType,
+            ...(orderNumber ? { number: orderNumber } : {}),
             ...(customerId ? { customerId } : {}),
             ...(deliveryAddressId ? { deliveryAddressId } : {}),
             ...(takeawayDispatch
@@ -392,38 +419,86 @@ export async function POST(request: NextRequest) {
                   dispatchOrderIndex: takeawayDispatch.dispatchOrderIndex,
                 }
               : {}),
-          },
-          select: {
-            id: true,
-          },
+          };
+
+          const createdOrder = await tx.order.create({
+            data: orderCreateData as Prisma.OrderUncheckedCreateInput,
+            select: {
+              id: true,
+            },
+          });
+
+          return {
+            created: true as const,
+            orderId: createdOrder.id,
+            deliveryAddressId,
+          };
         });
 
-        return {
-          created: true as const,
-          orderId: createdOrder.id,
-          deliveryAddressId,
-        };
-      });
-
-      if (result.created) {
-        createdOrderIds.push(result.orderId);
-        if (result.deliveryAddressId) {
-          deliveryDispatchJobs.push({
-            orderId: result.orderId,
-            deliveryAddressId: result.deliveryAddressId,
-          });
+        if (result.created) {
+          createdOrderIds.push(result.orderId);
+          if (result.deliveryAddressId) {
+            deliveryDispatchJobs.push({
+              orderId: result.orderId,
+              deliveryAddressId: result.deliveryAddressId,
+            });
+          }
+        } else {
+          skippedExistingExternalIds.push(externalId);
         }
-      } else {
-        skippedExistingExternalIds.push(externalId);
+      } catch (error) {
+        if (
+          error instanceof Prisma.PrismaClientKnownRequestError &&
+          error.code === "P2002"
+        ) {
+          skippedExistingExternalIds.push(externalId);
+          continue;
+        }
+
+        const reason = getErrorReason(error);
+        skippedInvalidEntries.push({
+          index,
+          reason,
+        });
+
+        console.error(
+          `POST /api/internal/external-orders/import order failed at index=${index} externalId=${externalId}:`,
+          error,
+        );
       }
     }
 
+    let queueRunError: string | null = null;
+
     if (deliveryDispatchJobs.length > 0) {
       for (const job of deliveryDispatchJobs) {
-        await enqueueAssignDeliveryOrderToDispatch(job);
+        try {
+          await enqueueAssignDeliveryOrderToDispatch(job);
+          enqueuedDeliveryDispatchJobs += 1;
+        } catch (error) {
+          const reason = getErrorReason(error);
+          queueJobErrors.push({
+            orderId: job.orderId,
+            reason,
+          });
+          console.error(
+            `POST /api/internal/external-orders/import failed to enqueue dispatch assignment job for orderId=${job.orderId}:`,
+            error,
+          );
+        }
       }
 
-      await triggerDispatchQueueRun();
+      if (enqueuedDeliveryDispatchJobs > 0) {
+        try {
+          await triggerDispatchQueueRun();
+        } catch (error) {
+          queueRunError = getErrorReason(error);
+          console.error(
+            "POST /api/internal/external-orders/import failed to trigger dispatch queue run:",
+            error,
+          );
+        }
+      }
     }
 
     return NextResponse.json({
@@ -432,15 +507,20 @@ export async function POST(request: NextRequest) {
       skippedExisting: skippedExistingExternalIds.length,
       skippedInvalid: skippedInvalidEntries.length,
       createdOrderIds,
-      enqueuedDeliveryDispatchJobs: deliveryDispatchJobs.length,
+      enqueuedDeliveryDispatchJobs,
+      queueRunTriggered:
+        enqueuedDeliveryDispatchJobs > 0 && queueRunError === null,
+      ...(queueRunError ? { queueRunError } : {}),
+      queueJobErrors,
       skippedExistingExternalIds,
       skippedInvalidEntries,
     });
   } catch (error) {
+    const reason = getErrorReason(error);
     console.error("POST /api/internal/external-orders/import error:", error);
 
     return NextResponse.json(
-      { error: "Internal Server Error" },
+      { error: "Internal Server Error", reason },
       { status: 500 },
     );
   }

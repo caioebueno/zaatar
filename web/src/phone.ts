@@ -10,16 +10,30 @@ export function normalizePhoneWithCountryCode(
   rawPhone: string,
   countryCode = getDefaultCountryCode(),
 ): string | undefined {
+  const raw = rawPhone.trim();
   const normalized = normalizePhoneDigits(rawPhone);
   if (!normalized) return undefined;
 
-  if (!countryCode) return normalized;
+  const normalizedCountryCode = normalizePhoneDigits(countryCode);
 
-  if (normalized.startsWith(countryCode)) {
+  // Keep explicit international numbers as-is (without symbols).
+  if (raw.startsWith("+") || raw.startsWith("00")) {
     return normalized;
   }
 
-  return `${countryCode}${normalized}`;
+  if (!normalizedCountryCode) return normalized;
+
+  if (normalized.startsWith(normalizedCountryCode)) {
+    return normalized;
+  }
+
+  // If it already looks like an international number (e.g. 55...),
+  // do not force the default country code in front.
+  if (normalized.length >= 11) {
+    return normalized;
+  }
+
+  return `${normalizedCountryCode}${normalized}`;
 }
 
 export function buildPhoneCandidates(

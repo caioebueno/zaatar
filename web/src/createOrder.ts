@@ -22,6 +22,7 @@ import {
   processDispatchAssignmentJobs,
 } from "@/src/modules/dispatch/application/assignDeliveryOrderToDispatchQueue";
 import { calculateSalesTaxInCents } from "@/src/constants/pricing";
+import { normalizePhoneWithCountryCode } from "@/src/phone";
 
 type TCreateOrder = {
   cart: TCart;
@@ -136,17 +137,12 @@ function resolvePrizeNameForLanguage(
 }
 
 function toWhatsAppChatId(phone: string): string | undefined {
-  const normalized = phone.replace(/\D/g, "");
-  if (!normalized) return undefined;
-
   const countryCode = (
     process.env.WHATSAPP_COUNTRY_CODE?.trim() || "1"
   ).replace(/\D/g, "");
 
-  const phoneWithCountryCode =
-    countryCode && !normalized.startsWith(countryCode)
-      ? `${countryCode}${normalized}`
-      : normalized;
+  const phoneWithCountryCode = normalizePhoneWithCountryCode(phone, countryCode);
+  if (!phoneWithCountryCode) return undefined;
 
   return `${phoneWithCountryCode}@c.us`;
 }
@@ -538,21 +534,23 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
           typeof data.customerId === "string" ? data.customerId.trim() : "";
         const resolvedCustomerId = providedCustomerId || null;
 
+        const orderCreateData = {
+          id: randomUUID(),
+          amount: 0,
+          number: nextOrderNumber,
+          scheduleFor,
+          deliveryAddressId:
+            data.orderType === "DELIVERY" ? data.addressId : undefined,
+          ...(resolvedCustomerId ? { customerId: resolvedCustomerId } : {}),
+          paymentMethod: data.paymentMethod,
+          tipAmount: sanitizedTipPercentage,
+          language,
+          progressiveDiscountSnapshot: progressiveDiscountSnapshot || undefined,
+          type: data.orderType,
+        } as Prisma.OrderUncheckedCreateInput;
+
         const createdOrder = await tx.order.create({
-          data: {
-            id: randomUUID(),
-            amount: 0,
-            number: nextOrderNumber,
-            scheduleFor,
-            deliveryAddressId:
-              data.orderType === "DELIVERY" ? data.addressId : undefined,
-            ...(resolvedCustomerId ? { customerId: resolvedCustomerId } : {}),
-            paymentMethod: data.paymentMethod,
-            tipAmount: sanitizedTipPercentage,
-            language,
-            progressiveDiscountSnapshot: progressiveDiscountSnapshot || undefined,
-            type: data.orderType,
-          },
+          data: orderCreateData,
         });
 
         for (const item of data.cart.items) {

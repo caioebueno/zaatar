@@ -48,6 +48,7 @@ type DispatchOrderRow = {
   delivered: boolean;
   customerId: string | null;
   customerName: string | null;
+  customerPhone: string | null;
   type: TOrder["type"];
   paymentMethod: TOrder["paymentMethod"];
   tipAmount: number | null;
@@ -227,6 +228,7 @@ function mapDispatch(
                 customer: {
                   id: orderRow.customerId,
                   name: orderRow.customerName,
+                  phone: orderRow.customerPhone,
                 },
               }
             : {}),
@@ -426,6 +428,7 @@ async function getDispatchOrders(
       (orders."deliveredAt" IS NOT NULL) AS "delivered",
       orders."customerId",
       customer."name" AS "customerName",
+      customer."phone" AS "customerPhone",
       orders."type",
       orders."paymentMethod",
       orders."tipAmount",
