@@ -1,4 +1,5 @@
-import moveDispatchOrder from "@/src/moveDispatchOrder";
+import { moveDispatchOrderUseCase } from "@/src/modules/dispatch/application/moveDispatchOrder";
+import { prismaDispatchRepository } from "@/src/modules/dispatch/infrastructure/prisma/prismaDispatchRepository";
 import { NextRequest, NextResponse } from "next/server";
 
 type RouteContext = {
@@ -72,6 +73,12 @@ function mapKnownError(error: unknown) {
       "string"
       ? (error as { details?: { field?: string } }).details?.field
       : undefined;
+  const reason =
+    "details" in error &&
+    typeof (error as { details?: { message?: string } }).details?.message ===
+      "string"
+      ? (error as { details?: { message?: string } }).details?.message
+      : undefined;
   const service =
     "details" in error &&
     typeof (error as { details?: { service?: string } }).details?.service ===
@@ -81,7 +88,11 @@ function mapKnownError(error: unknown) {
 
   if (code === "INVALID_PARAMS") {
     return NextResponse.json(
-      { error: "Invalid payload", ...(field ? { field } : {}) },
+      {
+        error: "Invalid payload",
+        ...(field ? { field } : {}),
+        ...(reason ? { reason } : {}),
+      },
       { status: 400 },
     );
   }
@@ -110,7 +121,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     const body = (await request.json()) as PatchBody;
     const parsedBody = parseBody(body);
 
-    const result = await moveDispatchOrder({
+    const result = await moveDispatchOrderUseCase(prismaDispatchRepository, {
       orderId,
       createNewDispatch: parsedBody.createNewDispatch,
       targetDispatchId: parsedBody.targetDispatchId,

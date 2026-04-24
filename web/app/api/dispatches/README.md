@@ -27,7 +27,7 @@ Reorder dispatch queue example (move this dispatch to first position):
 
 `GET /api/dispatches/next?driverId=:driverId`
 
-Returns the next pending dispatch for the provided driver, including dispatches already marked as dispatched, as long as there are undelivered orders. Prioritizes already-dispatched dispatches first, then by `queueIndex`, then by dispatch time/creation time. Returns `null` when no dispatch is available.
+Returns the next pending dispatch for the provided driver, only among dispatches already marked as dispatched, as long as there are undelivered orders. Prioritizes by `queueIndex`, then by dispatch time/creation time. Returns `null` when no dispatch is available.
 
 `PATCH /api/dispatches/orders/:orderId`
 

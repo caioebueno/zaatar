@@ -221,7 +221,7 @@ async function scanExternalOrders() {
       });
 
       if (!importResponse.ok) {
-        const importErrorBody = await importResponse.text().catch(() => "");
+        const importErrorBody = await importResponse.json().catch(() => "");
         throw new Error(
           `ORDER_IMPORT_FAILED status=${importResponse.status} body=${importErrorBody}`,
         );

@@ -960,12 +960,14 @@ async function assertDispatchCanReceiveOrder(
     orderScheduled,
     field,
     excludeOrderId,
+    skipScheduledIsolation,
   }: {
     dispatchId: string;
     orderType: TOrder["type"];
     orderScheduled: boolean;
     field: string;
     excludeOrderId?: string;
+    skipScheduledIsolation?: boolean;
   },
 ): Promise<void> {
   const composition = await getDispatchOrderComposition(
@@ -994,7 +996,7 @@ async function assertDispatchCanReceiveOrder(
     };
   }
 
-  if (orderScheduled && composition.totalOrders > 0) {
+  if (!skipScheduledIsolation && orderScheduled && composition.totalOrders > 0) {
     throw {
       code: "INVALID_PARAMS",
       details: {
@@ -1269,13 +1271,14 @@ class PrismaDispatchRepository implements DispatchRepository {
         sourceDispatchId !== targetDispatchId &&
         typeof targetDispatchId === "string"
       ) {
-        await assertDispatchCanReceiveOrder(tx, {
-          dispatchId: targetDispatchId,
-          orderType: order.type,
-          orderScheduled: order.scheduleFor !== null,
-          field: "targetDispatchId",
-          excludeOrderId: order.id,
-        });
+      await assertDispatchCanReceiveOrder(tx, {
+        dispatchId: targetDispatchId,
+        orderType: order.type,
+        orderScheduled: order.scheduleFor !== null,
+        field: "targetDispatchId",
+        excludeOrderId: order.id,
+        skipScheduledIsolation: true,
+      });
       }
 
       await tx.$executeRaw`
@@ -1626,6 +1629,7 @@ class PrismaDispatchRepository implements DispatchRepository {
       FROM "Dispatch" dispatch
       LEFT JOIN "Driver" driver ON driver."id" = dispatch."driverId"
       WHERE dispatch."driverId" = ${driverId}
+        AND dispatch."dispatched" = true
         AND EXISTS (
           SELECT 1
           FROM "Order" orders
