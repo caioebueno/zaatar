@@ -681,6 +681,8 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
           language: language ?? null,
           paidAt: null,
           status: "ACCEPTED",
+          tip: sanitizedTipPercentage,
+          tipAmount: sanitizedTipPercentage,
           orderProducts,
           paymentMethod: createdOrder.paymentMethod,
           type: createdOrder.type,

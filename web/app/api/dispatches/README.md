@@ -104,6 +104,8 @@ Order payload notes:
 - `dispatchOrderIndex` is always included as a 1-based position inside the dispatch
 - `scheduleFor` is included as an ISO timestamp when the order is scheduled (otherwise `null`)
 - `language` is included as the order language code when available (for example, `en`, `pt`, `es`)
+- `tip` is included as the tip percentage selected for the order
+- `tipAmount` is also included for backward compatibility
 - `paidAt` is included as an ISO timestamp when the order has been paid (otherwise `null`)
 - `deliveredAt` is included when the order has been marked as delivered
 - `estimatedDeliveryDurationMinutes` is included when available, based on the order position inside the dispatch route
@@ -144,6 +146,8 @@ Success:
         "delivered": false,
         "type": "DELIVERY",
         "paymentMethod": "CARD",
+        "tip": 15,
+        "tipAmount": 15,
         "dispatchId": "dispatch-id",
         "costumerId": "customer-1",
         "customer": {
@@ -268,6 +272,8 @@ Success:
         "delivered": true,
         "type": "DELIVERY",
         "paymentMethod": "CASH",
+        "tip": 0,
+        "tipAmount": 0,
         "dispatchId": "dispatch-id",
         "costumerId": "customer-2",
         "customer": {

@@ -15,6 +15,7 @@ type OrderRow = {
   progressiveDiscountSnapshot: unknown | null;
   dispatchOrderIndex: number | null;
   number: string | null;
+  externalId: string | null;
   status: TOrderStatus;
   type: TOrderType;
   paymentMethod: TPaymentMethod;
@@ -40,6 +41,7 @@ const getOrder = async (orderId: string): Promise<TOrder> => {
       o."progressiveDiscountSnapshot",
       o."dispatchOrderIndex",
       o."number",
+      o."externalId",
       CASE
         WHEN o."deliveredAt" IS NOT NULL THEN 'DELIVERED'
         WHEN EXISTS (
@@ -79,6 +81,7 @@ const getOrder = async (orderId: string): Promise<TOrder> => {
       o."progressiveDiscountSnapshot",
       o."dispatchOrderIndex",
       o."number",
+      o."externalId",
       o."type",
       o."paymentMethod",
       o."amount",
@@ -151,8 +154,10 @@ const getOrder = async (orderId: string): Promise<TOrder> => {
     status: order.status,
     type: order.type,
     number: order.number || undefined,
+    externalId: order.externalId,
     totalAmount: amount > 0 ? amount : computedTotal,
     subtotalAmount,
+    tip: tipAmount,
     tipAmount,
     deliveryFee,
     paymentMethod: order.paymentMethod,

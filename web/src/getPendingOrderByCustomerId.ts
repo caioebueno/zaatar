@@ -8,6 +8,7 @@ export type TPendingOrder = {
   number: string | null;
   status: TOrderStatus;
   type: TOrderType;
+  tip: number | null;
 };
 
 const getPendingOrderByCustomerId = async (
@@ -34,7 +35,8 @@ const getPendingOrderByCustomerId = async (
         ) THEN 'PREPARING'
         ELSE 'ACCEPTED'
       END AS "status",
-      orders."type"
+      orders."type",
+      orders."tipAmount" AS "tip"
     FROM "Order" orders
     WHERE orders."customerId" = ${customerId}
       -- Pending order endpoint should only return non-delivered orders.

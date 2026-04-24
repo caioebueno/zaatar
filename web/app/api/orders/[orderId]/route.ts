@@ -11,6 +11,11 @@ type PatchBody = {
   paidAt?: unknown;
   paymentMethod?: unknown;
   deliveredAt?: unknown;
+  orderType?: unknown;
+  type?: unknown;
+  customerId?: unknown;
+  addressId?: unknown;
+  orderProducts?: unknown;
 };
 
 function mapKnownError(error: unknown) {
@@ -49,6 +54,10 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       paidAt: body.paidAt,
       paymentMethod: body.paymentMethod,
       deliveredAt: body.deliveredAt,
+      orderType: body.orderType ?? body.type,
+      customerId: body.customerId,
+      addressId: body.addressId,
+      orderProducts: body.orderProducts,
     });
 
     return NextResponse.json(order);

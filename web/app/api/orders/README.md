@@ -80,6 +80,18 @@ Updates one or more order fields:
 - `paidAt` (optional `ISO string` or `null`)
 - `paymentMethod` (optional `"CARD" | "CASH" | "ZELLE"`)
 - `deliveredAt` (optional `ISO string` or `null`)
+- `orderType` (optional `"DELIVERY" | "TAKEAWAY"`)
+- `customerId` (optional string or `null`)
+- `addressId` (optional string or `null`; required when resulting `orderType` is `DELIVERY`)
+- `orderProducts` (optional array) can update existing items and create new items:
+  - update existing item: send `id` + any fields to change
+  - remove existing item: send `id` + `remove: true`
+  - create new item: send `productId` (+ optional fields)
+  - each item must include either `id` or `productId` (not both)
+  - `remove` (optional boolean, only for existing item by `id`)
+  - `quantity` (optional positive integer; defaults to `1` for new items)
+  - `comments` (optional string or `null`)
+  - `selectedModifierGroupItemIds` (optional string array; replaces modifier selections for updates, attaches modifiers for new items)
 
 Notes:
 
@@ -106,6 +118,50 @@ Update payment method and delivered timestamp:
 }
 ```
 
+Update delivery type and customer:
+
+```json
+{
+  "orderType": "TAKEAWAY",
+  "customerId": null
+}
+```
+
+Switch to delivery with address:
+
+```json
+{
+  "orderType": "DELIVERY",
+  "addressId": "delivery-address-id",
+  "customerId": "customer-id"
+}
+```
+
+Update order product items:
+
+```json
+{
+  "orderProducts": [
+    {
+      "id": "order-product-1",
+      "quantity": 2,
+      "comments": "Extra crispy",
+      "selectedModifierGroupItemIds": ["modifier-item-1", "modifier-item-2"]
+    },
+    {
+      "id": "order-product-2",
+      "remove": true
+    },
+    {
+      "productId": "product-2",
+      "quantity": 1,
+      "comments": "No onions",
+      "selectedModifierGroupItemIds": ["modifier-item-3"]
+    }
+  ]
+}
+```
+
 Clear delivered timestamp:
 
 ```json
@@ -117,6 +173,11 @@ Clear delivered timestamp:
 ## Response
 
 Success (`200`): returns the updated `TOrder` payload.
+
+Order payload notes:
+
+- `tip` is included as the tip percentage selected for the order
+- `tipAmount` remains included for backward compatibility
 
 Error (`400`):
 

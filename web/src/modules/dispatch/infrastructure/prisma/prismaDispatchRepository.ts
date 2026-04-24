@@ -44,11 +44,13 @@ type DispatchOrderRow = {
   progressiveDiscountSnapshot: unknown | null;
   dispatchOrderIndex: number | null;
   number: string | null;
+  externalId: string | null;
   delivered: boolean;
   customerId: string | null;
   customerName: string | null;
   type: TOrder["type"];
   paymentMethod: TOrder["paymentMethod"];
+  tipAmount: number | null;
   dispatchIdOnOrder: string | null;
   deliveryAddressId: string | null;
   deliveryAddressCreatedAt: Date | null;
@@ -212,9 +214,12 @@ function mapDispatch(
             orderRow.estimatedDeliveryDurationMinutes,
           dispatchOrderIndex: orderRow.dispatchOrderIndex ?? index + 1,
           number: orderRow.number || undefined,
+          externalId: orderRow.externalId,
           delivered: orderRow.delivered,
           type: orderRow.type,
           paymentMethod: orderRow.paymentMethod,
+          tip: orderRow.tipAmount ?? undefined,
+          tipAmount: orderRow.tipAmount ?? undefined,
           dispatchId: orderRow.dispatchIdOnOrder || undefined,
           costumerId: orderRow.customerId || undefined,
           ...(orderRow.customerId
@@ -417,11 +422,13 @@ async function getDispatchOrders(
       orders."progressiveDiscountSnapshot",
       orders."dispatchOrderIndex",
       orders."number",
+      orders."externalId",
       (orders."deliveredAt" IS NOT NULL) AS "delivered",
       orders."customerId",
       customer."name" AS "customerName",
       orders."type",
       orders."paymentMethod",
+      orders."tipAmount",
       orders."dispatchId" AS "dispatchIdOnOrder",
       deliveryAddress."id" AS "deliveryAddressId",
       deliveryAddress."createdAt" AS "deliveryAddressCreatedAt",

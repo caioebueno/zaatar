@@ -202,9 +202,12 @@ class PrismaStationRepository implements StationRepository {
               }
             ).scheduleFor?.toISOString() || null,
           number: order.number ?? undefined,
+          externalId: order.externalId ?? undefined,
           status: orderStatusById.get(order.id) ?? "ACCEPTED",
           type: order.type,
           paymentMethod: order.paymentMethod,
+          tip: order.tipAmount ?? undefined,
+          tipAmount: order.tipAmount ?? undefined,
           addressId: order.addressId ?? undefined,
           customer: {
             id: order.customer.id,

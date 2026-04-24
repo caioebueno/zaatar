@@ -25,6 +25,7 @@ export type TOrder = {
   deliveredAt?: string;
   estimatedDeliveryDurationMinutes?: number | null;
   number?: string;
+  externalId?: string | null;
   status: TOrderStatus;
   type: TOrderType;
   dispatchId?: string;
@@ -32,6 +33,7 @@ export type TOrder = {
   productionIndex?: number;
   totalAmount?: number;
   subtotalAmount?: number;
+  tip?: number;
   tipAmount?: number;
   deliveryFee?: number;
   costumerId?: string;

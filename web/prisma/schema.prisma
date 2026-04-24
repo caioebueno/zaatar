@@ -342,7 +342,7 @@ model Order {
   deliveryAddress             DeliveryAddress?          @relation(fields: [deliveryAddressId], references: [id])
   orderProducts               OrderProducts[]
   customerId                  String?
-  externalId                  String?
+  externalId                  String?                   @unique
   dispatchId                  String?
   addressId                   String?
   deliveryAddressId           String?

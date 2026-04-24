@@ -38,6 +38,8 @@ Success (`200`):
     "status": "PREPARING",
     "type": "DELIVERY",
     "paymentMethod": "CARD",
+    "tip": 15,
+    "tipAmount": 15,
     "customer": {
       "id": "customer-id",
       "name": "John"
