@@ -209,10 +209,14 @@ class PrismaStationRepository implements StationRepository {
           tip: order.tipAmount ?? undefined,
           tipAmount: order.tipAmount ?? undefined,
           addressId: order.addressId ?? undefined,
-          customer: {
-            id: order.customer.id,
-            name: order.customer.name,
-          },
+          ...(order.customer
+            ? {
+                customer: {
+                  id: order.customer.id,
+                  name: order.customer.name,
+                },
+              }
+            : {}),
           orderProducts: order.orderProducts.map((item) => ({
             id: item.id,
             productId: item.productId,
