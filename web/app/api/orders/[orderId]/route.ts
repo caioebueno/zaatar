@@ -11,6 +11,7 @@ type PatchBody = {
   paidAt?: unknown;
   paymentMethod?: unknown;
   deliveredAt?: unknown;
+  canceled?: unknown;
   orderType?: unknown;
   type?: unknown;
   customerId?: unknown;
@@ -54,6 +55,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       paidAt: body.paidAt,
       paymentMethod: body.paymentMethod,
       deliveredAt: body.deliveredAt,
+      canceled: body.canceled,
       orderType: body.orderType ?? body.type,
       customerId: body.customerId,
       addressId: body.addressId,

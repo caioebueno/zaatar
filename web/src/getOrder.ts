@@ -16,6 +16,7 @@ type OrderRow = {
   dispatchOrderIndex: number | null;
   number: string | null;
   externalId: string | null;
+  canceled: boolean;
   status: TOrderStatus;
   type: TOrderType;
   paymentMethod: TPaymentMethod;
@@ -42,6 +43,7 @@ const getOrder = async (orderId: string): Promise<TOrder> => {
       o."dispatchOrderIndex",
       o."number",
       o."externalId",
+      o."canceled",
       CASE
         WHEN o."deliveredAt" IS NOT NULL THEN 'DELIVERED'
         WHEN EXISTS (
@@ -82,6 +84,7 @@ const getOrder = async (orderId: string): Promise<TOrder> => {
       o."dispatchOrderIndex",
       o."number",
       o."externalId",
+      o."canceled",
       o."type",
       o."paymentMethod",
       o."amount",
@@ -155,6 +158,7 @@ const getOrder = async (orderId: string): Promise<TOrder> => {
     type: order.type,
     number: order.number || undefined,
     externalId: order.externalId,
+    canceled: order.canceled,
     totalAmount: amount > 0 ? amount : computedTotal,
     subtotalAmount,
     tip: tipAmount,

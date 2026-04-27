@@ -129,6 +129,11 @@ export type Customer = $Result.DefaultSelection<Prisma.$CustomerPayload>
  */
 export type DeliveryAddress = $Result.DefaultSelection<Prisma.$DeliveryAddressPayload>
 /**
+ * Model ExternalAddress
+ * 
+ */
+export type ExternalAddress = $Result.DefaultSelection<Prisma.$ExternalAddressPayload>
+/**
  * Model Message
  * 
  */
@@ -581,6 +586,16 @@ export class PrismaClient<
     * ```
     */
   get deliveryAddress(): Prisma.DeliveryAddressDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.externalAddress`: Exposes CRUD operations for the **ExternalAddress** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ExternalAddresses
+    * const externalAddresses = await prisma.externalAddress.findMany()
+    * ```
+    */
+  get externalAddress(): Prisma.ExternalAddressDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.message`: Exposes CRUD operations for the **Message** model.
@@ -1078,6 +1093,7 @@ export namespace Prisma {
     Campaign: 'Campaign',
     Customer: 'Customer',
     DeliveryAddress: 'DeliveryAddress',
+    ExternalAddress: 'ExternalAddress',
     Message: 'Message',
     PromotialMessage: 'PromotialMessage',
     Order: 'Order',
@@ -1097,7 +1113,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "station" | "preparationStep" | "preparationStepCategory" | "preparationStepTrack" | "preparationStepModifierTrack" | "progressiveDiscount" | "progressiveDiscountStep" | "progressiveDiscountPrize" | "progressiveDiscountPrizeProduct" | "file" | "modifierGroup" | "modifierGroupItem" | "business" | "branch" | "driver" | "dispatch" | "dispatchAssignmentJob" | "address" | "product" | "category" | "campaign" | "customer" | "deliveryAddress" | "message" | "promotialMessage" | "order" | "orderProducts"
+      modelProps: "station" | "preparationStep" | "preparationStepCategory" | "preparationStepTrack" | "preparationStepModifierTrack" | "progressiveDiscount" | "progressiveDiscountStep" | "progressiveDiscountPrize" | "progressiveDiscountPrizeProduct" | "file" | "modifierGroup" | "modifierGroupItem" | "business" | "branch" | "driver" | "dispatch" | "dispatchAssignmentJob" | "address" | "product" | "category" | "campaign" | "customer" | "deliveryAddress" | "externalAddress" | "message" | "promotialMessage" | "order" | "orderProducts"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2803,6 +2819,80 @@ export namespace Prisma {
           }
         }
       }
+      ExternalAddress: {
+        payload: Prisma.$ExternalAddressPayload<ExtArgs>
+        fields: Prisma.ExternalAddressFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ExternalAddressFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExternalAddressPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ExternalAddressFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExternalAddressPayload>
+          }
+          findFirst: {
+            args: Prisma.ExternalAddressFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExternalAddressPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ExternalAddressFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExternalAddressPayload>
+          }
+          findMany: {
+            args: Prisma.ExternalAddressFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExternalAddressPayload>[]
+          }
+          create: {
+            args: Prisma.ExternalAddressCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExternalAddressPayload>
+          }
+          createMany: {
+            args: Prisma.ExternalAddressCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ExternalAddressCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExternalAddressPayload>[]
+          }
+          delete: {
+            args: Prisma.ExternalAddressDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExternalAddressPayload>
+          }
+          update: {
+            args: Prisma.ExternalAddressUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExternalAddressPayload>
+          }
+          deleteMany: {
+            args: Prisma.ExternalAddressDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ExternalAddressUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ExternalAddressUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExternalAddressPayload>[]
+          }
+          upsert: {
+            args: Prisma.ExternalAddressUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExternalAddressPayload>
+          }
+          aggregate: {
+            args: Prisma.ExternalAddressAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateExternalAddress>
+          }
+          groupBy: {
+            args: Prisma.ExternalAddressGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ExternalAddressGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ExternalAddressCountArgs<ExtArgs>
+            result: $Utils.Optional<ExternalAddressCountAggregateOutputType> | number
+          }
+        }
+      }
       Message: {
         payload: Prisma.$MessagePayload<ExtArgs>
         fields: Prisma.MessageFieldRefs
@@ -3230,6 +3320,7 @@ export namespace Prisma {
     campaign?: CampaignOmit
     customer?: CustomerOmit
     deliveryAddress?: DeliveryAddressOmit
+    externalAddress?: ExternalAddressOmit
     message?: MessageOmit
     promotialMessage?: PromotialMessageOmit
     order?: OrderOmit
@@ -3916,12 +4007,14 @@ export namespace Prisma {
     orders: number
     promotionalMessages: number
     addresses: number
+    externalAddresses: number
   }
 
   export type CustomerCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     orders?: boolean | CustomerCountOutputTypeCountOrdersArgs
     promotionalMessages?: boolean | CustomerCountOutputTypeCountPromotionalMessagesArgs
     addresses?: boolean | CustomerCountOutputTypeCountAddressesArgs
+    externalAddresses?: boolean | CustomerCountOutputTypeCountExternalAddressesArgs
   }
 
   // Custom InputTypes
@@ -3956,6 +4049,13 @@ export namespace Prisma {
     where?: DeliveryAddressWhereInput
   }
 
+  /**
+   * CustomerCountOutputType without action
+   */
+  export type CustomerCountOutputTypeCountExternalAddressesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ExternalAddressWhereInput
+  }
+
 
   /**
    * Count Type DeliveryAddressCountOutputType
@@ -3984,6 +4084,37 @@ export namespace Prisma {
    * DeliveryAddressCountOutputType without action
    */
   export type DeliveryAddressCountOutputTypeCountOrdersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OrderWhereInput
+  }
+
+
+  /**
+   * Count Type ExternalAddressCountOutputType
+   */
+
+  export type ExternalAddressCountOutputType = {
+    orders: number
+  }
+
+  export type ExternalAddressCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    orders?: boolean | ExternalAddressCountOutputTypeCountOrdersArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * ExternalAddressCountOutputType without action
+   */
+  export type ExternalAddressCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExternalAddressCountOutputType
+     */
+    select?: ExternalAddressCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ExternalAddressCountOutputType without action
+   */
+  export type ExternalAddressCountOutputTypeCountOrdersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: OrderWhereInput
   }
 
@@ -11864,6 +11995,7 @@ export namespace Prisma {
     id: number
     createdAt: number
     name: number
+    translations: number
     quantity: number
     imageUrl: number
     progressiveDiscountStepId: number
@@ -11901,6 +12033,7 @@ export namespace Prisma {
     id?: true
     createdAt?: true
     name?: true
+    translations?: true
     quantity?: true
     imageUrl?: true
     progressiveDiscountStepId?: true
@@ -11997,6 +12130,7 @@ export namespace Prisma {
     id: string
     createdAt: Date
     name: string
+    translations: JsonValue | null
     quantity: number
     imageUrl: string | null
     progressiveDiscountStepId: string
@@ -12025,6 +12159,7 @@ export namespace Prisma {
     id?: boolean
     createdAt?: boolean
     name?: boolean
+    translations?: boolean
     quantity?: boolean
     imageUrl?: boolean
     progressiveDiscountStepId?: boolean
@@ -12037,6 +12172,7 @@ export namespace Prisma {
     id?: boolean
     createdAt?: boolean
     name?: boolean
+    translations?: boolean
     quantity?: boolean
     imageUrl?: boolean
     progressiveDiscountStepId?: boolean
@@ -12047,6 +12183,7 @@ export namespace Prisma {
     id?: boolean
     createdAt?: boolean
     name?: boolean
+    translations?: boolean
     quantity?: boolean
     imageUrl?: boolean
     progressiveDiscountStepId?: boolean
@@ -12057,12 +12194,13 @@ export namespace Prisma {
     id?: boolean
     createdAt?: boolean
     name?: boolean
+    translations?: boolean
     quantity?: boolean
     imageUrl?: boolean
     progressiveDiscountStepId?: boolean
   }
 
-  export type ProgressiveDiscountPrizeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "name" | "quantity" | "imageUrl" | "progressiveDiscountStepId", ExtArgs["result"]["progressiveDiscountPrize"]>
+  export type ProgressiveDiscountPrizeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "name" | "translations" | "quantity" | "imageUrl" | "progressiveDiscountStepId", ExtArgs["result"]["progressiveDiscountPrize"]>
   export type ProgressiveDiscountPrizeInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     progressiveDiscountStep?: boolean | ProgressiveDiscountStepDefaultArgs<ExtArgs>
     products?: boolean | ProgressiveDiscountPrize$productsArgs<ExtArgs>
@@ -12085,6 +12223,7 @@ export namespace Prisma {
       id: string
       createdAt: Date
       name: string
+      translations: Prisma.JsonValue | null
       quantity: number
       imageUrl: string | null
       progressiveDiscountStepId: string
@@ -12516,6 +12655,7 @@ export namespace Prisma {
     readonly id: FieldRef<"ProgressiveDiscountPrize", 'String'>
     readonly createdAt: FieldRef<"ProgressiveDiscountPrize", 'DateTime'>
     readonly name: FieldRef<"ProgressiveDiscountPrize", 'String'>
+    readonly translations: FieldRef<"ProgressiveDiscountPrize", 'Json'>
     readonly quantity: FieldRef<"ProgressiveDiscountPrize", 'Int'>
     readonly imageUrl: FieldRef<"ProgressiveDiscountPrize", 'String'>
     readonly progressiveDiscountStepId: FieldRef<"ProgressiveDiscountPrize", 'String'>
@@ -15225,6 +15365,7 @@ export namespace Prisma {
     id: number
     createdAt: number
     title: number
+    translations: number
     required: number
     type: number
     minSelection: number
@@ -15267,6 +15408,7 @@ export namespace Prisma {
     id?: true
     createdAt?: true
     title?: true
+    translations?: true
     required?: true
     type?: true
     minSelection?: true
@@ -15364,6 +15506,7 @@ export namespace Prisma {
     id: string
     createdAt: Date
     title: string
+    translations: JsonValue | null
     required: boolean
     type: $Enums.ModifierGroupType | null
     minSelection: number | null
@@ -15393,6 +15536,7 @@ export namespace Prisma {
     id?: boolean
     createdAt?: boolean
     title?: boolean
+    translations?: boolean
     required?: boolean
     type?: boolean
     minSelection?: boolean
@@ -15406,6 +15550,7 @@ export namespace Prisma {
     id?: boolean
     createdAt?: boolean
     title?: boolean
+    translations?: boolean
     required?: boolean
     type?: boolean
     minSelection?: boolean
@@ -15416,6 +15561,7 @@ export namespace Prisma {
     id?: boolean
     createdAt?: boolean
     title?: boolean
+    translations?: boolean
     required?: boolean
     type?: boolean
     minSelection?: boolean
@@ -15426,13 +15572,14 @@ export namespace Prisma {
     id?: boolean
     createdAt?: boolean
     title?: boolean
+    translations?: boolean
     required?: boolean
     type?: boolean
     minSelection?: boolean
     maxSelection?: boolean
   }
 
-  export type ModifierGroupOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "title" | "required" | "type" | "minSelection" | "maxSelection", ExtArgs["result"]["modifierGroup"]>
+  export type ModifierGroupOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "title" | "translations" | "required" | "type" | "minSelection" | "maxSelection", ExtArgs["result"]["modifierGroup"]>
   export type ModifierGroupInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     products?: boolean | ModifierGroup$productsArgs<ExtArgs>
     items?: boolean | ModifierGroup$itemsArgs<ExtArgs>
@@ -15451,6 +15598,7 @@ export namespace Prisma {
       id: string
       createdAt: Date
       title: string
+      translations: Prisma.JsonValue | null
       required: boolean
       type: $Enums.ModifierGroupType | null
       minSelection: number | null
@@ -15883,6 +16031,7 @@ export namespace Prisma {
     readonly id: FieldRef<"ModifierGroup", 'String'>
     readonly createdAt: FieldRef<"ModifierGroup", 'DateTime'>
     readonly title: FieldRef<"ModifierGroup", 'String'>
+    readonly translations: FieldRef<"ModifierGroup", 'Json'>
     readonly required: FieldRef<"ModifierGroup", 'Boolean'>
     readonly type: FieldRef<"ModifierGroup", 'ModifierGroupType'>
     readonly minSelection: FieldRef<"ModifierGroup", 'Int'>
@@ -20871,11 +21020,13 @@ export namespace Prisma {
   }
 
   export type DispatchAvgAggregateOutputType = {
+    queueIndex: number | null
     estimatedDeliveryDurationMinutes: number | null
     estimatedRoundTripDurationMinutes: number | null
   }
 
   export type DispatchSumAggregateOutputType = {
+    queueIndex: number | null
     estimatedDeliveryDurationMinutes: number | null
     estimatedRoundTripDurationMinutes: number | null
   }
@@ -20883,6 +21034,7 @@ export namespace Prisma {
   export type DispatchMinAggregateOutputType = {
     id: string | null
     createdAt: Date | null
+    queueIndex: number | null
     dispatched: boolean | null
     dispatchAt: Date | null
     estimatedDeliveryDurationMinutes: number | null
@@ -20893,6 +21045,7 @@ export namespace Prisma {
   export type DispatchMaxAggregateOutputType = {
     id: string | null
     createdAt: Date | null
+    queueIndex: number | null
     dispatched: boolean | null
     dispatchAt: Date | null
     estimatedDeliveryDurationMinutes: number | null
@@ -20903,6 +21056,7 @@ export namespace Prisma {
   export type DispatchCountAggregateOutputType = {
     id: number
     createdAt: number
+    queueIndex: number
     dispatched: number
     dispatchAt: number
     estimatedDeliveryDurationMinutes: number
@@ -20913,11 +21067,13 @@ export namespace Prisma {
 
 
   export type DispatchAvgAggregateInputType = {
+    queueIndex?: true
     estimatedDeliveryDurationMinutes?: true
     estimatedRoundTripDurationMinutes?: true
   }
 
   export type DispatchSumAggregateInputType = {
+    queueIndex?: true
     estimatedDeliveryDurationMinutes?: true
     estimatedRoundTripDurationMinutes?: true
   }
@@ -20925,6 +21081,7 @@ export namespace Prisma {
   export type DispatchMinAggregateInputType = {
     id?: true
     createdAt?: true
+    queueIndex?: true
     dispatched?: true
     dispatchAt?: true
     estimatedDeliveryDurationMinutes?: true
@@ -20935,6 +21092,7 @@ export namespace Prisma {
   export type DispatchMaxAggregateInputType = {
     id?: true
     createdAt?: true
+    queueIndex?: true
     dispatched?: true
     dispatchAt?: true
     estimatedDeliveryDurationMinutes?: true
@@ -20945,6 +21103,7 @@ export namespace Prisma {
   export type DispatchCountAggregateInputType = {
     id?: true
     createdAt?: true
+    queueIndex?: true
     dispatched?: true
     dispatchAt?: true
     estimatedDeliveryDurationMinutes?: true
@@ -21042,6 +21201,7 @@ export namespace Prisma {
   export type DispatchGroupByOutputType = {
     id: string
     createdAt: Date
+    queueIndex: number | null
     dispatched: boolean
     dispatchAt: Date | null
     estimatedDeliveryDurationMinutes: number | null
@@ -21071,6 +21231,7 @@ export namespace Prisma {
   export type DispatchSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     createdAt?: boolean
+    queueIndex?: boolean
     dispatched?: boolean
     dispatchAt?: boolean
     estimatedDeliveryDurationMinutes?: boolean
@@ -21084,6 +21245,7 @@ export namespace Prisma {
   export type DispatchSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     createdAt?: boolean
+    queueIndex?: boolean
     dispatched?: boolean
     dispatchAt?: boolean
     estimatedDeliveryDurationMinutes?: boolean
@@ -21095,6 +21257,7 @@ export namespace Prisma {
   export type DispatchSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     createdAt?: boolean
+    queueIndex?: boolean
     dispatched?: boolean
     dispatchAt?: boolean
     estimatedDeliveryDurationMinutes?: boolean
@@ -21106,6 +21269,7 @@ export namespace Prisma {
   export type DispatchSelectScalar = {
     id?: boolean
     createdAt?: boolean
+    queueIndex?: boolean
     dispatched?: boolean
     dispatchAt?: boolean
     estimatedDeliveryDurationMinutes?: boolean
@@ -21113,7 +21277,7 @@ export namespace Prisma {
     driverId?: boolean
   }
 
-  export type DispatchOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "dispatched" | "dispatchAt" | "estimatedDeliveryDurationMinutes" | "estimatedRoundTripDurationMinutes" | "driverId", ExtArgs["result"]["dispatch"]>
+  export type DispatchOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "queueIndex" | "dispatched" | "dispatchAt" | "estimatedDeliveryDurationMinutes" | "estimatedRoundTripDurationMinutes" | "driverId", ExtArgs["result"]["dispatch"]>
   export type DispatchInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     driver?: boolean | Dispatch$driverArgs<ExtArgs>
     orders?: boolean | Dispatch$ordersArgs<ExtArgs>
@@ -21135,6 +21299,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       createdAt: Date
+      queueIndex: number | null
       dispatched: boolean
       dispatchAt: Date | null
       estimatedDeliveryDurationMinutes: number | null
@@ -21567,6 +21732,7 @@ export namespace Prisma {
   interface DispatchFieldRefs {
     readonly id: FieldRef<"Dispatch", 'String'>
     readonly createdAt: FieldRef<"Dispatch", 'DateTime'>
+    readonly queueIndex: FieldRef<"Dispatch", 'Int'>
     readonly dispatched: FieldRef<"Dispatch", 'Boolean'>
     readonly dispatchAt: FieldRef<"Dispatch", 'DateTime'>
     readonly estimatedDeliveryDurationMinutes: FieldRef<"Dispatch", 'Int'>
@@ -24246,6 +24412,7 @@ export namespace Prisma {
     id: string | null
     createdAt: Date | null
     name: string | null
+    visible: boolean | null
     description: string | null
     price: number | null
     comparedAtPrice: number | null
@@ -24257,6 +24424,7 @@ export namespace Prisma {
     id: string | null
     createdAt: Date | null
     name: string | null
+    visible: boolean | null
     description: string | null
     price: number | null
     comparedAtPrice: number | null
@@ -24268,6 +24436,7 @@ export namespace Prisma {
     id: number
     createdAt: number
     name: number
+    visible: number
     description: number
     price: number
     comparedAtPrice: number
@@ -24294,6 +24463,7 @@ export namespace Prisma {
     id?: true
     createdAt?: true
     name?: true
+    visible?: true
     description?: true
     price?: true
     comparedAtPrice?: true
@@ -24305,6 +24475,7 @@ export namespace Prisma {
     id?: true
     createdAt?: true
     name?: true
+    visible?: true
     description?: true
     price?: true
     comparedAtPrice?: true
@@ -24316,6 +24487,7 @@ export namespace Prisma {
     id?: true
     createdAt?: true
     name?: true
+    visible?: true
     description?: true
     price?: true
     comparedAtPrice?: true
@@ -24415,6 +24587,7 @@ export namespace Prisma {
     id: string
     createdAt: Date
     name: string
+    visible: boolean
     description: string | null
     price: number | null
     comparedAtPrice: number | null
@@ -24446,6 +24619,7 @@ export namespace Prisma {
     id?: boolean
     createdAt?: boolean
     name?: boolean
+    visible?: boolean
     description?: boolean
     price?: boolean
     comparedAtPrice?: boolean
@@ -24465,6 +24639,7 @@ export namespace Prisma {
     id?: boolean
     createdAt?: boolean
     name?: boolean
+    visible?: boolean
     description?: boolean
     price?: boolean
     comparedAtPrice?: boolean
@@ -24478,6 +24653,7 @@ export namespace Prisma {
     id?: boolean
     createdAt?: boolean
     name?: boolean
+    visible?: boolean
     description?: boolean
     price?: boolean
     comparedAtPrice?: boolean
@@ -24491,6 +24667,7 @@ export namespace Prisma {
     id?: boolean
     createdAt?: boolean
     name?: boolean
+    visible?: boolean
     description?: boolean
     price?: boolean
     comparedAtPrice?: boolean
@@ -24499,7 +24676,7 @@ export namespace Prisma {
     translations?: boolean
   }
 
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "name" | "description" | "price" | "comparedAtPrice" | "categoryIndex" | "categoryId" | "translations", ExtArgs["result"]["product"]>
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "name" | "visible" | "description" | "price" | "comparedAtPrice" | "categoryIndex" | "categoryId" | "translations", ExtArgs["result"]["product"]>
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     photos?: boolean | Product$photosArgs<ExtArgs>
     modifierGroups?: boolean | Product$modifierGroupsArgs<ExtArgs>
@@ -24530,6 +24707,7 @@ export namespace Prisma {
       id: string
       createdAt: Date
       name: string
+      visible: boolean
       description: string | null
       price: number | null
       comparedAtPrice: number | null
@@ -24968,6 +25146,7 @@ export namespace Prisma {
     readonly id: FieldRef<"Product", 'String'>
     readonly createdAt: FieldRef<"Product", 'DateTime'>
     readonly name: FieldRef<"Product", 'String'>
+    readonly visible: FieldRef<"Product", 'Boolean'>
     readonly description: FieldRef<"Product", 'String'>
     readonly price: FieldRef<"Product", 'Int'>
     readonly comparedAtPrice: FieldRef<"Product", 'Int'>
@@ -27897,6 +28076,7 @@ export namespace Prisma {
     orders?: boolean | Customer$ordersArgs<ExtArgs>
     promotionalMessages?: boolean | Customer$promotionalMessagesArgs<ExtArgs>
     addresses?: boolean | Customer$addressesArgs<ExtArgs>
+    externalAddresses?: boolean | Customer$externalAddressesArgs<ExtArgs>
     _count?: boolean | CustomerCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["customer"]>
 
@@ -27935,6 +28115,7 @@ export namespace Prisma {
     orders?: boolean | Customer$ordersArgs<ExtArgs>
     promotionalMessages?: boolean | Customer$promotionalMessagesArgs<ExtArgs>
     addresses?: boolean | Customer$addressesArgs<ExtArgs>
+    externalAddresses?: boolean | Customer$externalAddressesArgs<ExtArgs>
     _count?: boolean | CustomerCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type CustomerIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -27946,6 +28127,7 @@ export namespace Prisma {
       orders: Prisma.$OrderPayload<ExtArgs>[]
       promotionalMessages: Prisma.$PromotialMessagePayload<ExtArgs>[]
       addresses: Prisma.$DeliveryAddressPayload<ExtArgs>[]
+      externalAddresses: Prisma.$ExternalAddressPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -28352,6 +28534,7 @@ export namespace Prisma {
     orders<T extends Customer$ordersArgs<ExtArgs> = {}>(args?: Subset<T, Customer$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     promotionalMessages<T extends Customer$promotionalMessagesArgs<ExtArgs> = {}>(args?: Subset<T, Customer$promotionalMessagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PromotialMessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     addresses<T extends Customer$addressesArgs<ExtArgs> = {}>(args?: Subset<T, Customer$addressesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DeliveryAddressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    externalAddresses<T extends Customer$externalAddressesArgs<ExtArgs> = {}>(args?: Subset<T, Customer$externalAddressesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExternalAddressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -28850,6 +29033,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: DeliveryAddressScalarFieldEnum | DeliveryAddressScalarFieldEnum[]
+  }
+
+  /**
+   * Customer.externalAddresses
+   */
+  export type Customer$externalAddressesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExternalAddress
+     */
+    select?: ExternalAddressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExternalAddress
+     */
+    omit?: ExternalAddressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExternalAddressInclude<ExtArgs> | null
+    where?: ExternalAddressWhereInput
+    orderBy?: ExternalAddressOrderByWithRelationInput | ExternalAddressOrderByWithRelationInput[]
+    cursor?: ExternalAddressWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ExternalAddressScalarFieldEnum | ExternalAddressScalarFieldEnum[]
   }
 
   /**
@@ -30131,6 +30338,1131 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: DeliveryAddressInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ExternalAddress
+   */
+
+  export type AggregateExternalAddress = {
+    _count: ExternalAddressCountAggregateOutputType | null
+    _min: ExternalAddressMinAggregateOutputType | null
+    _max: ExternalAddressMaxAggregateOutputType | null
+  }
+
+  export type ExternalAddressMinAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    address: string | null
+    lat: string | null
+    lng: string | null
+    customerId: string | null
+  }
+
+  export type ExternalAddressMaxAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    address: string | null
+    lat: string | null
+    lng: string | null
+    customerId: string | null
+  }
+
+  export type ExternalAddressCountAggregateOutputType = {
+    id: number
+    createdAt: number
+    address: number
+    lat: number
+    lng: number
+    customerId: number
+    _all: number
+  }
+
+
+  export type ExternalAddressMinAggregateInputType = {
+    id?: true
+    createdAt?: true
+    address?: true
+    lat?: true
+    lng?: true
+    customerId?: true
+  }
+
+  export type ExternalAddressMaxAggregateInputType = {
+    id?: true
+    createdAt?: true
+    address?: true
+    lat?: true
+    lng?: true
+    customerId?: true
+  }
+
+  export type ExternalAddressCountAggregateInputType = {
+    id?: true
+    createdAt?: true
+    address?: true
+    lat?: true
+    lng?: true
+    customerId?: true
+    _all?: true
+  }
+
+  export type ExternalAddressAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ExternalAddress to aggregate.
+     */
+    where?: ExternalAddressWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ExternalAddresses to fetch.
+     */
+    orderBy?: ExternalAddressOrderByWithRelationInput | ExternalAddressOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ExternalAddressWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ExternalAddresses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ExternalAddresses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ExternalAddresses
+    **/
+    _count?: true | ExternalAddressCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ExternalAddressMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ExternalAddressMaxAggregateInputType
+  }
+
+  export type GetExternalAddressAggregateType<T extends ExternalAddressAggregateArgs> = {
+        [P in keyof T & keyof AggregateExternalAddress]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateExternalAddress[P]>
+      : GetScalarType<T[P], AggregateExternalAddress[P]>
+  }
+
+
+
+
+  export type ExternalAddressGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ExternalAddressWhereInput
+    orderBy?: ExternalAddressOrderByWithAggregationInput | ExternalAddressOrderByWithAggregationInput[]
+    by: ExternalAddressScalarFieldEnum[] | ExternalAddressScalarFieldEnum
+    having?: ExternalAddressScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ExternalAddressCountAggregateInputType | true
+    _min?: ExternalAddressMinAggregateInputType
+    _max?: ExternalAddressMaxAggregateInputType
+  }
+
+  export type ExternalAddressGroupByOutputType = {
+    id: string
+    createdAt: Date
+    address: string | null
+    lat: string | null
+    lng: string | null
+    customerId: string | null
+    _count: ExternalAddressCountAggregateOutputType | null
+    _min: ExternalAddressMinAggregateOutputType | null
+    _max: ExternalAddressMaxAggregateOutputType | null
+  }
+
+  type GetExternalAddressGroupByPayload<T extends ExternalAddressGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ExternalAddressGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ExternalAddressGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ExternalAddressGroupByOutputType[P]>
+            : GetScalarType<T[P], ExternalAddressGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ExternalAddressSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    address?: boolean
+    lat?: boolean
+    lng?: boolean
+    customerId?: boolean
+    customer?: boolean | ExternalAddress$customerArgs<ExtArgs>
+    orders?: boolean | ExternalAddress$ordersArgs<ExtArgs>
+    _count?: boolean | ExternalAddressCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["externalAddress"]>
+
+  export type ExternalAddressSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    address?: boolean
+    lat?: boolean
+    lng?: boolean
+    customerId?: boolean
+    customer?: boolean | ExternalAddress$customerArgs<ExtArgs>
+  }, ExtArgs["result"]["externalAddress"]>
+
+  export type ExternalAddressSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    address?: boolean
+    lat?: boolean
+    lng?: boolean
+    customerId?: boolean
+    customer?: boolean | ExternalAddress$customerArgs<ExtArgs>
+  }, ExtArgs["result"]["externalAddress"]>
+
+  export type ExternalAddressSelectScalar = {
+    id?: boolean
+    createdAt?: boolean
+    address?: boolean
+    lat?: boolean
+    lng?: boolean
+    customerId?: boolean
+  }
+
+  export type ExternalAddressOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "address" | "lat" | "lng" | "customerId", ExtArgs["result"]["externalAddress"]>
+  export type ExternalAddressInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    customer?: boolean | ExternalAddress$customerArgs<ExtArgs>
+    orders?: boolean | ExternalAddress$ordersArgs<ExtArgs>
+    _count?: boolean | ExternalAddressCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type ExternalAddressIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    customer?: boolean | ExternalAddress$customerArgs<ExtArgs>
+  }
+  export type ExternalAddressIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    customer?: boolean | ExternalAddress$customerArgs<ExtArgs>
+  }
+
+  export type $ExternalAddressPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ExternalAddress"
+    objects: {
+      customer: Prisma.$CustomerPayload<ExtArgs> | null
+      orders: Prisma.$OrderPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      createdAt: Date
+      address: string | null
+      lat: string | null
+      lng: string | null
+      customerId: string | null
+    }, ExtArgs["result"]["externalAddress"]>
+    composites: {}
+  }
+
+  type ExternalAddressGetPayload<S extends boolean | null | undefined | ExternalAddressDefaultArgs> = $Result.GetResult<Prisma.$ExternalAddressPayload, S>
+
+  type ExternalAddressCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ExternalAddressFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ExternalAddressCountAggregateInputType | true
+    }
+
+  export interface ExternalAddressDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ExternalAddress'], meta: { name: 'ExternalAddress' } }
+    /**
+     * Find zero or one ExternalAddress that matches the filter.
+     * @param {ExternalAddressFindUniqueArgs} args - Arguments to find a ExternalAddress
+     * @example
+     * // Get one ExternalAddress
+     * const externalAddress = await prisma.externalAddress.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ExternalAddressFindUniqueArgs>(args: SelectSubset<T, ExternalAddressFindUniqueArgs<ExtArgs>>): Prisma__ExternalAddressClient<$Result.GetResult<Prisma.$ExternalAddressPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ExternalAddress that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ExternalAddressFindUniqueOrThrowArgs} args - Arguments to find a ExternalAddress
+     * @example
+     * // Get one ExternalAddress
+     * const externalAddress = await prisma.externalAddress.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ExternalAddressFindUniqueOrThrowArgs>(args: SelectSubset<T, ExternalAddressFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ExternalAddressClient<$Result.GetResult<Prisma.$ExternalAddressPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ExternalAddress that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExternalAddressFindFirstArgs} args - Arguments to find a ExternalAddress
+     * @example
+     * // Get one ExternalAddress
+     * const externalAddress = await prisma.externalAddress.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ExternalAddressFindFirstArgs>(args?: SelectSubset<T, ExternalAddressFindFirstArgs<ExtArgs>>): Prisma__ExternalAddressClient<$Result.GetResult<Prisma.$ExternalAddressPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ExternalAddress that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExternalAddressFindFirstOrThrowArgs} args - Arguments to find a ExternalAddress
+     * @example
+     * // Get one ExternalAddress
+     * const externalAddress = await prisma.externalAddress.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ExternalAddressFindFirstOrThrowArgs>(args?: SelectSubset<T, ExternalAddressFindFirstOrThrowArgs<ExtArgs>>): Prisma__ExternalAddressClient<$Result.GetResult<Prisma.$ExternalAddressPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ExternalAddresses that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExternalAddressFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ExternalAddresses
+     * const externalAddresses = await prisma.externalAddress.findMany()
+     * 
+     * // Get first 10 ExternalAddresses
+     * const externalAddresses = await prisma.externalAddress.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const externalAddressWithIdOnly = await prisma.externalAddress.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ExternalAddressFindManyArgs>(args?: SelectSubset<T, ExternalAddressFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExternalAddressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ExternalAddress.
+     * @param {ExternalAddressCreateArgs} args - Arguments to create a ExternalAddress.
+     * @example
+     * // Create one ExternalAddress
+     * const ExternalAddress = await prisma.externalAddress.create({
+     *   data: {
+     *     // ... data to create a ExternalAddress
+     *   }
+     * })
+     * 
+     */
+    create<T extends ExternalAddressCreateArgs>(args: SelectSubset<T, ExternalAddressCreateArgs<ExtArgs>>): Prisma__ExternalAddressClient<$Result.GetResult<Prisma.$ExternalAddressPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ExternalAddresses.
+     * @param {ExternalAddressCreateManyArgs} args - Arguments to create many ExternalAddresses.
+     * @example
+     * // Create many ExternalAddresses
+     * const externalAddress = await prisma.externalAddress.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ExternalAddressCreateManyArgs>(args?: SelectSubset<T, ExternalAddressCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ExternalAddresses and returns the data saved in the database.
+     * @param {ExternalAddressCreateManyAndReturnArgs} args - Arguments to create many ExternalAddresses.
+     * @example
+     * // Create many ExternalAddresses
+     * const externalAddress = await prisma.externalAddress.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ExternalAddresses and only return the `id`
+     * const externalAddressWithIdOnly = await prisma.externalAddress.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ExternalAddressCreateManyAndReturnArgs>(args?: SelectSubset<T, ExternalAddressCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExternalAddressPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ExternalAddress.
+     * @param {ExternalAddressDeleteArgs} args - Arguments to delete one ExternalAddress.
+     * @example
+     * // Delete one ExternalAddress
+     * const ExternalAddress = await prisma.externalAddress.delete({
+     *   where: {
+     *     // ... filter to delete one ExternalAddress
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ExternalAddressDeleteArgs>(args: SelectSubset<T, ExternalAddressDeleteArgs<ExtArgs>>): Prisma__ExternalAddressClient<$Result.GetResult<Prisma.$ExternalAddressPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ExternalAddress.
+     * @param {ExternalAddressUpdateArgs} args - Arguments to update one ExternalAddress.
+     * @example
+     * // Update one ExternalAddress
+     * const externalAddress = await prisma.externalAddress.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ExternalAddressUpdateArgs>(args: SelectSubset<T, ExternalAddressUpdateArgs<ExtArgs>>): Prisma__ExternalAddressClient<$Result.GetResult<Prisma.$ExternalAddressPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ExternalAddresses.
+     * @param {ExternalAddressDeleteManyArgs} args - Arguments to filter ExternalAddresses to delete.
+     * @example
+     * // Delete a few ExternalAddresses
+     * const { count } = await prisma.externalAddress.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ExternalAddressDeleteManyArgs>(args?: SelectSubset<T, ExternalAddressDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ExternalAddresses.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExternalAddressUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ExternalAddresses
+     * const externalAddress = await prisma.externalAddress.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ExternalAddressUpdateManyArgs>(args: SelectSubset<T, ExternalAddressUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ExternalAddresses and returns the data updated in the database.
+     * @param {ExternalAddressUpdateManyAndReturnArgs} args - Arguments to update many ExternalAddresses.
+     * @example
+     * // Update many ExternalAddresses
+     * const externalAddress = await prisma.externalAddress.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ExternalAddresses and only return the `id`
+     * const externalAddressWithIdOnly = await prisma.externalAddress.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ExternalAddressUpdateManyAndReturnArgs>(args: SelectSubset<T, ExternalAddressUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExternalAddressPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ExternalAddress.
+     * @param {ExternalAddressUpsertArgs} args - Arguments to update or create a ExternalAddress.
+     * @example
+     * // Update or create a ExternalAddress
+     * const externalAddress = await prisma.externalAddress.upsert({
+     *   create: {
+     *     // ... data to create a ExternalAddress
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ExternalAddress we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ExternalAddressUpsertArgs>(args: SelectSubset<T, ExternalAddressUpsertArgs<ExtArgs>>): Prisma__ExternalAddressClient<$Result.GetResult<Prisma.$ExternalAddressPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ExternalAddresses.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExternalAddressCountArgs} args - Arguments to filter ExternalAddresses to count.
+     * @example
+     * // Count the number of ExternalAddresses
+     * const count = await prisma.externalAddress.count({
+     *   where: {
+     *     // ... the filter for the ExternalAddresses we want to count
+     *   }
+     * })
+    **/
+    count<T extends ExternalAddressCountArgs>(
+      args?: Subset<T, ExternalAddressCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ExternalAddressCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ExternalAddress.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExternalAddressAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ExternalAddressAggregateArgs>(args: Subset<T, ExternalAddressAggregateArgs>): Prisma.PrismaPromise<GetExternalAddressAggregateType<T>>
+
+    /**
+     * Group by ExternalAddress.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExternalAddressGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ExternalAddressGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ExternalAddressGroupByArgs['orderBy'] }
+        : { orderBy?: ExternalAddressGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ExternalAddressGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetExternalAddressGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ExternalAddress model
+   */
+  readonly fields: ExternalAddressFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ExternalAddress.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ExternalAddressClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    customer<T extends ExternalAddress$customerArgs<ExtArgs> = {}>(args?: Subset<T, ExternalAddress$customerArgs<ExtArgs>>): Prisma__CustomerClient<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    orders<T extends ExternalAddress$ordersArgs<ExtArgs> = {}>(args?: Subset<T, ExternalAddress$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ExternalAddress model
+   */
+  interface ExternalAddressFieldRefs {
+    readonly id: FieldRef<"ExternalAddress", 'String'>
+    readonly createdAt: FieldRef<"ExternalAddress", 'DateTime'>
+    readonly address: FieldRef<"ExternalAddress", 'String'>
+    readonly lat: FieldRef<"ExternalAddress", 'String'>
+    readonly lng: FieldRef<"ExternalAddress", 'String'>
+    readonly customerId: FieldRef<"ExternalAddress", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ExternalAddress findUnique
+   */
+  export type ExternalAddressFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExternalAddress
+     */
+    select?: ExternalAddressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExternalAddress
+     */
+    omit?: ExternalAddressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExternalAddressInclude<ExtArgs> | null
+    /**
+     * Filter, which ExternalAddress to fetch.
+     */
+    where: ExternalAddressWhereUniqueInput
+  }
+
+  /**
+   * ExternalAddress findUniqueOrThrow
+   */
+  export type ExternalAddressFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExternalAddress
+     */
+    select?: ExternalAddressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExternalAddress
+     */
+    omit?: ExternalAddressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExternalAddressInclude<ExtArgs> | null
+    /**
+     * Filter, which ExternalAddress to fetch.
+     */
+    where: ExternalAddressWhereUniqueInput
+  }
+
+  /**
+   * ExternalAddress findFirst
+   */
+  export type ExternalAddressFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExternalAddress
+     */
+    select?: ExternalAddressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExternalAddress
+     */
+    omit?: ExternalAddressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExternalAddressInclude<ExtArgs> | null
+    /**
+     * Filter, which ExternalAddress to fetch.
+     */
+    where?: ExternalAddressWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ExternalAddresses to fetch.
+     */
+    orderBy?: ExternalAddressOrderByWithRelationInput | ExternalAddressOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ExternalAddresses.
+     */
+    cursor?: ExternalAddressWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ExternalAddresses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ExternalAddresses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ExternalAddresses.
+     */
+    distinct?: ExternalAddressScalarFieldEnum | ExternalAddressScalarFieldEnum[]
+  }
+
+  /**
+   * ExternalAddress findFirstOrThrow
+   */
+  export type ExternalAddressFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExternalAddress
+     */
+    select?: ExternalAddressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExternalAddress
+     */
+    omit?: ExternalAddressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExternalAddressInclude<ExtArgs> | null
+    /**
+     * Filter, which ExternalAddress to fetch.
+     */
+    where?: ExternalAddressWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ExternalAddresses to fetch.
+     */
+    orderBy?: ExternalAddressOrderByWithRelationInput | ExternalAddressOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ExternalAddresses.
+     */
+    cursor?: ExternalAddressWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ExternalAddresses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ExternalAddresses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ExternalAddresses.
+     */
+    distinct?: ExternalAddressScalarFieldEnum | ExternalAddressScalarFieldEnum[]
+  }
+
+  /**
+   * ExternalAddress findMany
+   */
+  export type ExternalAddressFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExternalAddress
+     */
+    select?: ExternalAddressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExternalAddress
+     */
+    omit?: ExternalAddressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExternalAddressInclude<ExtArgs> | null
+    /**
+     * Filter, which ExternalAddresses to fetch.
+     */
+    where?: ExternalAddressWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ExternalAddresses to fetch.
+     */
+    orderBy?: ExternalAddressOrderByWithRelationInput | ExternalAddressOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ExternalAddresses.
+     */
+    cursor?: ExternalAddressWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ExternalAddresses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ExternalAddresses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ExternalAddresses.
+     */
+    distinct?: ExternalAddressScalarFieldEnum | ExternalAddressScalarFieldEnum[]
+  }
+
+  /**
+   * ExternalAddress create
+   */
+  export type ExternalAddressCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExternalAddress
+     */
+    select?: ExternalAddressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExternalAddress
+     */
+    omit?: ExternalAddressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExternalAddressInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ExternalAddress.
+     */
+    data: XOR<ExternalAddressCreateInput, ExternalAddressUncheckedCreateInput>
+  }
+
+  /**
+   * ExternalAddress createMany
+   */
+  export type ExternalAddressCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ExternalAddresses.
+     */
+    data: ExternalAddressCreateManyInput | ExternalAddressCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ExternalAddress createManyAndReturn
+   */
+  export type ExternalAddressCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExternalAddress
+     */
+    select?: ExternalAddressSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExternalAddress
+     */
+    omit?: ExternalAddressOmit<ExtArgs> | null
+    /**
+     * The data used to create many ExternalAddresses.
+     */
+    data: ExternalAddressCreateManyInput | ExternalAddressCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExternalAddressIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ExternalAddress update
+   */
+  export type ExternalAddressUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExternalAddress
+     */
+    select?: ExternalAddressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExternalAddress
+     */
+    omit?: ExternalAddressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExternalAddressInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ExternalAddress.
+     */
+    data: XOR<ExternalAddressUpdateInput, ExternalAddressUncheckedUpdateInput>
+    /**
+     * Choose, which ExternalAddress to update.
+     */
+    where: ExternalAddressWhereUniqueInput
+  }
+
+  /**
+   * ExternalAddress updateMany
+   */
+  export type ExternalAddressUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ExternalAddresses.
+     */
+    data: XOR<ExternalAddressUpdateManyMutationInput, ExternalAddressUncheckedUpdateManyInput>
+    /**
+     * Filter which ExternalAddresses to update
+     */
+    where?: ExternalAddressWhereInput
+    /**
+     * Limit how many ExternalAddresses to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ExternalAddress updateManyAndReturn
+   */
+  export type ExternalAddressUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExternalAddress
+     */
+    select?: ExternalAddressSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExternalAddress
+     */
+    omit?: ExternalAddressOmit<ExtArgs> | null
+    /**
+     * The data used to update ExternalAddresses.
+     */
+    data: XOR<ExternalAddressUpdateManyMutationInput, ExternalAddressUncheckedUpdateManyInput>
+    /**
+     * Filter which ExternalAddresses to update
+     */
+    where?: ExternalAddressWhereInput
+    /**
+     * Limit how many ExternalAddresses to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExternalAddressIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ExternalAddress upsert
+   */
+  export type ExternalAddressUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExternalAddress
+     */
+    select?: ExternalAddressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExternalAddress
+     */
+    omit?: ExternalAddressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExternalAddressInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ExternalAddress to update in case it exists.
+     */
+    where: ExternalAddressWhereUniqueInput
+    /**
+     * In case the ExternalAddress found by the `where` argument doesn't exist, create a new ExternalAddress with this data.
+     */
+    create: XOR<ExternalAddressCreateInput, ExternalAddressUncheckedCreateInput>
+    /**
+     * In case the ExternalAddress was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ExternalAddressUpdateInput, ExternalAddressUncheckedUpdateInput>
+  }
+
+  /**
+   * ExternalAddress delete
+   */
+  export type ExternalAddressDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExternalAddress
+     */
+    select?: ExternalAddressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExternalAddress
+     */
+    omit?: ExternalAddressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExternalAddressInclude<ExtArgs> | null
+    /**
+     * Filter which ExternalAddress to delete.
+     */
+    where: ExternalAddressWhereUniqueInput
+  }
+
+  /**
+   * ExternalAddress deleteMany
+   */
+  export type ExternalAddressDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ExternalAddresses to delete
+     */
+    where?: ExternalAddressWhereInput
+    /**
+     * Limit how many ExternalAddresses to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ExternalAddress.customer
+   */
+  export type ExternalAddress$customerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Customer
+     */
+    select?: CustomerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Customer
+     */
+    omit?: CustomerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerInclude<ExtArgs> | null
+    where?: CustomerWhereInput
+  }
+
+  /**
+   * ExternalAddress.orders
+   */
+  export type ExternalAddress$ordersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Order
+     */
+    select?: OrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Order
+     */
+    omit?: OrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderInclude<ExtArgs> | null
+    where?: OrderWhereInput
+    orderBy?: OrderOrderByWithRelationInput | OrderOrderByWithRelationInput[]
+    cursor?: OrderWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: OrderScalarFieldEnum | OrderScalarFieldEnum[]
+  }
+
+  /**
+   * ExternalAddress without action
+   */
+  export type ExternalAddressDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExternalAddress
+     */
+    select?: ExternalAddressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExternalAddress
+     */
+    omit?: ExternalAddressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExternalAddressInclude<ExtArgs> | null
   }
 
 
@@ -32344,6 +33676,7 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes: number | null
     dispatchOrderIndex: number | null
     amount: number | null
+    canceled: boolean | null
     status: $Enums.OrderStatus | null
     type: $Enums.OrderType | null
     paymentMethod: $Enums.PaymentType | null
@@ -32353,6 +33686,7 @@ export namespace Prisma {
     dispatchId: string | null
     addressId: string | null
     deliveryAddressId: string | null
+    externalAddressId: string | null
   }
 
   export type OrderMaxAggregateOutputType = {
@@ -32366,6 +33700,7 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes: number | null
     dispatchOrderIndex: number | null
     amount: number | null
+    canceled: boolean | null
     status: $Enums.OrderStatus | null
     type: $Enums.OrderType | null
     paymentMethod: $Enums.PaymentType | null
@@ -32375,6 +33710,7 @@ export namespace Prisma {
     dispatchId: string | null
     addressId: string | null
     deliveryAddressId: string | null
+    externalAddressId: string | null
   }
 
   export type OrderCountAggregateOutputType = {
@@ -32388,6 +33724,7 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes: number
     dispatchOrderIndex: number
     amount: number
+    canceled: number
     status: number
     type: number
     paymentMethod: number
@@ -32398,6 +33735,7 @@ export namespace Prisma {
     dispatchId: number
     addressId: number
     deliveryAddressId: number
+    externalAddressId: number
     _all: number
   }
 
@@ -32427,6 +33765,7 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes?: true
     dispatchOrderIndex?: true
     amount?: true
+    canceled?: true
     status?: true
     type?: true
     paymentMethod?: true
@@ -32436,6 +33775,7 @@ export namespace Prisma {
     dispatchId?: true
     addressId?: true
     deliveryAddressId?: true
+    externalAddressId?: true
   }
 
   export type OrderMaxAggregateInputType = {
@@ -32449,6 +33789,7 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes?: true
     dispatchOrderIndex?: true
     amount?: true
+    canceled?: true
     status?: true
     type?: true
     paymentMethod?: true
@@ -32458,6 +33799,7 @@ export namespace Prisma {
     dispatchId?: true
     addressId?: true
     deliveryAddressId?: true
+    externalAddressId?: true
   }
 
   export type OrderCountAggregateInputType = {
@@ -32471,6 +33813,7 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes?: true
     dispatchOrderIndex?: true
     amount?: true
+    canceled?: true
     status?: true
     type?: true
     paymentMethod?: true
@@ -32481,6 +33824,7 @@ export namespace Prisma {
     dispatchId?: true
     addressId?: true
     deliveryAddressId?: true
+    externalAddressId?: true
     _all?: true
   }
 
@@ -32581,16 +33925,18 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes: number | null
     dispatchOrderIndex: number | null
     amount: number
+    canceled: boolean
     status: $Enums.OrderStatus
     type: $Enums.OrderType
     paymentMethod: $Enums.PaymentType
     tipAmount: number | null
     progressiveDiscountSnapshot: JsonValue | null
-    customerId: string
+    customerId: string | null
     externalId: string | null
     dispatchId: string | null
     addressId: string | null
     deliveryAddressId: string | null
+    externalAddressId: string | null
     _count: OrderCountAggregateOutputType | null
     _avg: OrderAvgAggregateOutputType | null
     _sum: OrderSumAggregateOutputType | null
@@ -32623,6 +33969,7 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes?: boolean
     dispatchOrderIndex?: boolean
     amount?: boolean
+    canceled?: boolean
     status?: boolean
     type?: boolean
     paymentMethod?: boolean
@@ -32633,10 +33980,12 @@ export namespace Prisma {
     dispatchId?: boolean
     addressId?: boolean
     deliveryAddressId?: boolean
-    customer?: boolean | CustomerDefaultArgs<ExtArgs>
+    externalAddressId?: boolean
+    customer?: boolean | Order$customerArgs<ExtArgs>
     dispatch?: boolean | Order$dispatchArgs<ExtArgs>
     address?: boolean | Order$addressArgs<ExtArgs>
     deliveryAddress?: boolean | Order$deliveryAddressArgs<ExtArgs>
+    externalAddress?: boolean | Order$externalAddressArgs<ExtArgs>
     orderProducts?: boolean | Order$orderProductsArgs<ExtArgs>
     preparationStepCategories?: boolean | Order$preparationStepCategoriesArgs<ExtArgs>
     _count?: boolean | OrderCountOutputTypeDefaultArgs<ExtArgs>
@@ -32653,6 +34002,7 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes?: boolean
     dispatchOrderIndex?: boolean
     amount?: boolean
+    canceled?: boolean
     status?: boolean
     type?: boolean
     paymentMethod?: boolean
@@ -32663,10 +34013,12 @@ export namespace Prisma {
     dispatchId?: boolean
     addressId?: boolean
     deliveryAddressId?: boolean
-    customer?: boolean | CustomerDefaultArgs<ExtArgs>
+    externalAddressId?: boolean
+    customer?: boolean | Order$customerArgs<ExtArgs>
     dispatch?: boolean | Order$dispatchArgs<ExtArgs>
     address?: boolean | Order$addressArgs<ExtArgs>
     deliveryAddress?: boolean | Order$deliveryAddressArgs<ExtArgs>
+    externalAddress?: boolean | Order$externalAddressArgs<ExtArgs>
   }, ExtArgs["result"]["order"]>
 
   export type OrderSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -32680,6 +34032,7 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes?: boolean
     dispatchOrderIndex?: boolean
     amount?: boolean
+    canceled?: boolean
     status?: boolean
     type?: boolean
     paymentMethod?: boolean
@@ -32690,10 +34043,12 @@ export namespace Prisma {
     dispatchId?: boolean
     addressId?: boolean
     deliveryAddressId?: boolean
-    customer?: boolean | CustomerDefaultArgs<ExtArgs>
+    externalAddressId?: boolean
+    customer?: boolean | Order$customerArgs<ExtArgs>
     dispatch?: boolean | Order$dispatchArgs<ExtArgs>
     address?: boolean | Order$addressArgs<ExtArgs>
     deliveryAddress?: boolean | Order$deliveryAddressArgs<ExtArgs>
+    externalAddress?: boolean | Order$externalAddressArgs<ExtArgs>
   }, ExtArgs["result"]["order"]>
 
   export type OrderSelectScalar = {
@@ -32707,6 +34062,7 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes?: boolean
     dispatchOrderIndex?: boolean
     amount?: boolean
+    canceled?: boolean
     status?: boolean
     type?: boolean
     paymentMethod?: boolean
@@ -32717,38 +34073,43 @@ export namespace Prisma {
     dispatchId?: boolean
     addressId?: boolean
     deliveryAddressId?: boolean
+    externalAddressId?: boolean
   }
 
-  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "number" | "createdAt" | "scheduleFor" | "language" | "paidAt" | "deliveredAt" | "estimatedDeliveryDurationMinutes" | "dispatchOrderIndex" | "amount" | "status" | "type" | "paymentMethod" | "tipAmount" | "progressiveDiscountSnapshot" | "customerId" | "externalId" | "dispatchId" | "addressId" | "deliveryAddressId", ExtArgs["result"]["order"]>
+  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "number" | "createdAt" | "scheduleFor" | "language" | "paidAt" | "deliveredAt" | "estimatedDeliveryDurationMinutes" | "dispatchOrderIndex" | "amount" | "canceled" | "status" | "type" | "paymentMethod" | "tipAmount" | "progressiveDiscountSnapshot" | "customerId" | "externalId" | "dispatchId" | "addressId" | "deliveryAddressId" | "externalAddressId", ExtArgs["result"]["order"]>
   export type OrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    customer?: boolean | CustomerDefaultArgs<ExtArgs>
+    customer?: boolean | Order$customerArgs<ExtArgs>
     dispatch?: boolean | Order$dispatchArgs<ExtArgs>
     address?: boolean | Order$addressArgs<ExtArgs>
     deliveryAddress?: boolean | Order$deliveryAddressArgs<ExtArgs>
+    externalAddress?: boolean | Order$externalAddressArgs<ExtArgs>
     orderProducts?: boolean | Order$orderProductsArgs<ExtArgs>
     preparationStepCategories?: boolean | Order$preparationStepCategoriesArgs<ExtArgs>
     _count?: boolean | OrderCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type OrderIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    customer?: boolean | CustomerDefaultArgs<ExtArgs>
+    customer?: boolean | Order$customerArgs<ExtArgs>
     dispatch?: boolean | Order$dispatchArgs<ExtArgs>
     address?: boolean | Order$addressArgs<ExtArgs>
     deliveryAddress?: boolean | Order$deliveryAddressArgs<ExtArgs>
+    externalAddress?: boolean | Order$externalAddressArgs<ExtArgs>
   }
   export type OrderIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    customer?: boolean | CustomerDefaultArgs<ExtArgs>
+    customer?: boolean | Order$customerArgs<ExtArgs>
     dispatch?: boolean | Order$dispatchArgs<ExtArgs>
     address?: boolean | Order$addressArgs<ExtArgs>
     deliveryAddress?: boolean | Order$deliveryAddressArgs<ExtArgs>
+    externalAddress?: boolean | Order$externalAddressArgs<ExtArgs>
   }
 
   export type $OrderPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Order"
     objects: {
-      customer: Prisma.$CustomerPayload<ExtArgs>
+      customer: Prisma.$CustomerPayload<ExtArgs> | null
       dispatch: Prisma.$DispatchPayload<ExtArgs> | null
       address: Prisma.$AddressPayload<ExtArgs> | null
       deliveryAddress: Prisma.$DeliveryAddressPayload<ExtArgs> | null
+      externalAddress: Prisma.$ExternalAddressPayload<ExtArgs> | null
       orderProducts: Prisma.$OrderProductsPayload<ExtArgs>[]
       preparationStepCategories: Prisma.$PreparationStepCategoryPayload<ExtArgs>[]
     }
@@ -32763,16 +34124,18 @@ export namespace Prisma {
       estimatedDeliveryDurationMinutes: number | null
       dispatchOrderIndex: number | null
       amount: number
+      canceled: boolean
       status: $Enums.OrderStatus
       type: $Enums.OrderType
       paymentMethod: $Enums.PaymentType
       tipAmount: number | null
       progressiveDiscountSnapshot: Prisma.JsonValue | null
-      customerId: string
+      customerId: string | null
       externalId: string | null
       dispatchId: string | null
       addressId: string | null
       deliveryAddressId: string | null
+      externalAddressId: string | null
     }, ExtArgs["result"]["order"]>
     composites: {}
   }
@@ -33167,10 +34530,11 @@ export namespace Prisma {
    */
   export interface Prisma__OrderClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    customer<T extends CustomerDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CustomerDefaultArgs<ExtArgs>>): Prisma__CustomerClient<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    customer<T extends Order$customerArgs<ExtArgs> = {}>(args?: Subset<T, Order$customerArgs<ExtArgs>>): Prisma__CustomerClient<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     dispatch<T extends Order$dispatchArgs<ExtArgs> = {}>(args?: Subset<T, Order$dispatchArgs<ExtArgs>>): Prisma__DispatchClient<$Result.GetResult<Prisma.$DispatchPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     address<T extends Order$addressArgs<ExtArgs> = {}>(args?: Subset<T, Order$addressArgs<ExtArgs>>): Prisma__AddressClient<$Result.GetResult<Prisma.$AddressPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     deliveryAddress<T extends Order$deliveryAddressArgs<ExtArgs> = {}>(args?: Subset<T, Order$deliveryAddressArgs<ExtArgs>>): Prisma__DeliveryAddressClient<$Result.GetResult<Prisma.$DeliveryAddressPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    externalAddress<T extends Order$externalAddressArgs<ExtArgs> = {}>(args?: Subset<T, Order$externalAddressArgs<ExtArgs>>): Prisma__ExternalAddressClient<$Result.GetResult<Prisma.$ExternalAddressPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     orderProducts<T extends Order$orderProductsArgs<ExtArgs> = {}>(args?: Subset<T, Order$orderProductsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderProductsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     preparationStepCategories<T extends Order$preparationStepCategoriesArgs<ExtArgs> = {}>(args?: Subset<T, Order$preparationStepCategoriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PreparationStepCategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -33212,6 +34576,7 @@ export namespace Prisma {
     readonly estimatedDeliveryDurationMinutes: FieldRef<"Order", 'Int'>
     readonly dispatchOrderIndex: FieldRef<"Order", 'Int'>
     readonly amount: FieldRef<"Order", 'Int'>
+    readonly canceled: FieldRef<"Order", 'Boolean'>
     readonly status: FieldRef<"Order", 'OrderStatus'>
     readonly type: FieldRef<"Order", 'OrderType'>
     readonly paymentMethod: FieldRef<"Order", 'PaymentType'>
@@ -33222,6 +34587,7 @@ export namespace Prisma {
     readonly dispatchId: FieldRef<"Order", 'String'>
     readonly addressId: FieldRef<"Order", 'String'>
     readonly deliveryAddressId: FieldRef<"Order", 'String'>
+    readonly externalAddressId: FieldRef<"Order", 'String'>
   }
     
 
@@ -33623,6 +34989,25 @@ export namespace Prisma {
   }
 
   /**
+   * Order.customer
+   */
+  export type Order$customerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Customer
+     */
+    select?: CustomerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Customer
+     */
+    omit?: CustomerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerInclude<ExtArgs> | null
+    where?: CustomerWhereInput
+  }
+
+  /**
    * Order.dispatch
    */
   export type Order$dispatchArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -33677,6 +35062,25 @@ export namespace Prisma {
      */
     include?: DeliveryAddressInclude<ExtArgs> | null
     where?: DeliveryAddressWhereInput
+  }
+
+  /**
+   * Order.externalAddress
+   */
+  export type Order$externalAddressArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExternalAddress
+     */
+    select?: ExternalAddressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExternalAddress
+     */
+    omit?: ExternalAddressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExternalAddressInclude<ExtArgs> | null
+    where?: ExternalAddressWhereInput
   }
 
   /**
@@ -35042,6 +36446,7 @@ export namespace Prisma {
     id: 'id',
     createdAt: 'createdAt',
     name: 'name',
+    translations: 'translations',
     quantity: 'quantity',
     imageUrl: 'imageUrl',
     progressiveDiscountStepId: 'progressiveDiscountStepId'
@@ -35076,6 +36481,7 @@ export namespace Prisma {
     id: 'id',
     createdAt: 'createdAt',
     title: 'title',
+    translations: 'translations',
     required: 'required',
     type: 'type',
     minSelection: 'minSelection',
@@ -35134,6 +36540,7 @@ export namespace Prisma {
   export const DispatchScalarFieldEnum: {
     id: 'id',
     createdAt: 'createdAt',
+    queueIndex: 'queueIndex',
     dispatched: 'dispatched',
     dispatchAt: 'dispatchAt',
     estimatedDeliveryDurationMinutes: 'estimatedDeliveryDurationMinutes',
@@ -35174,6 +36581,7 @@ export namespace Prisma {
     id: 'id',
     createdAt: 'createdAt',
     name: 'name',
+    visible: 'visible',
     description: 'description',
     price: 'price',
     comparedAtPrice: 'comparedAtPrice',
@@ -35238,6 +36646,18 @@ export namespace Prisma {
   export type DeliveryAddressScalarFieldEnum = (typeof DeliveryAddressScalarFieldEnum)[keyof typeof DeliveryAddressScalarFieldEnum]
 
 
+  export const ExternalAddressScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    address: 'address',
+    lat: 'lat',
+    lng: 'lng',
+    customerId: 'customerId'
+  };
+
+  export type ExternalAddressScalarFieldEnum = (typeof ExternalAddressScalarFieldEnum)[keyof typeof ExternalAddressScalarFieldEnum]
+
+
   export const MessageScalarFieldEnum: {
     id: 'id',
     createdAt: 'createdAt',
@@ -35271,6 +36691,7 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes: 'estimatedDeliveryDurationMinutes',
     dispatchOrderIndex: 'dispatchOrderIndex',
     amount: 'amount',
+    canceled: 'canceled',
     status: 'status',
     type: 'type',
     paymentMethod: 'paymentMethod',
@@ -35280,7 +36701,8 @@ export namespace Prisma {
     externalId: 'externalId',
     dispatchId: 'dispatchId',
     addressId: 'addressId',
-    deliveryAddressId: 'deliveryAddressId'
+    deliveryAddressId: 'deliveryAddressId',
+    externalAddressId: 'externalAddressId'
   };
 
   export type OrderScalarFieldEnum = (typeof OrderScalarFieldEnum)[keyof typeof OrderScalarFieldEnum]
@@ -35410,20 +36832,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'ModifierGroupType'
-   */
-  export type EnumModifierGroupTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ModifierGroupType'>
-    
-
-
-  /**
-   * Reference to a field of type 'ModifierGroupType[]'
-   */
-  export type ListEnumModifierGroupTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ModifierGroupType[]'>
-    
-
-
-  /**
    * Reference to a field of type 'Json'
    */
   export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
@@ -35434,6 +36842,20 @@ export namespace Prisma {
    * Reference to a field of type 'QueryMode'
    */
   export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+  /**
+   * Reference to a field of type 'ModifierGroupType'
+   */
+  export type EnumModifierGroupTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ModifierGroupType'>
+    
+
+
+  /**
+   * Reference to a field of type 'ModifierGroupType[]'
+   */
+  export type ListEnumModifierGroupTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ModifierGroupType[]'>
     
 
 
@@ -35930,6 +37352,7 @@ export namespace Prisma {
     id?: StringFilter<"ProgressiveDiscountPrize"> | string
     createdAt?: DateTimeFilter<"ProgressiveDiscountPrize"> | Date | string
     name?: StringFilter<"ProgressiveDiscountPrize"> | string
+    translations?: JsonNullableFilter<"ProgressiveDiscountPrize">
     quantity?: IntFilter<"ProgressiveDiscountPrize"> | number
     imageUrl?: StringNullableFilter<"ProgressiveDiscountPrize"> | string | null
     progressiveDiscountStepId?: StringFilter<"ProgressiveDiscountPrize"> | string
@@ -35941,6 +37364,7 @@ export namespace Prisma {
     id?: SortOrder
     createdAt?: SortOrder
     name?: SortOrder
+    translations?: SortOrderInput | SortOrder
     quantity?: SortOrder
     imageUrl?: SortOrderInput | SortOrder
     progressiveDiscountStepId?: SortOrder
@@ -35955,6 +37379,7 @@ export namespace Prisma {
     NOT?: ProgressiveDiscountPrizeWhereInput | ProgressiveDiscountPrizeWhereInput[]
     createdAt?: DateTimeFilter<"ProgressiveDiscountPrize"> | Date | string
     name?: StringFilter<"ProgressiveDiscountPrize"> | string
+    translations?: JsonNullableFilter<"ProgressiveDiscountPrize">
     quantity?: IntFilter<"ProgressiveDiscountPrize"> | number
     imageUrl?: StringNullableFilter<"ProgressiveDiscountPrize"> | string | null
     progressiveDiscountStepId?: StringFilter<"ProgressiveDiscountPrize"> | string
@@ -35966,6 +37391,7 @@ export namespace Prisma {
     id?: SortOrder
     createdAt?: SortOrder
     name?: SortOrder
+    translations?: SortOrderInput | SortOrder
     quantity?: SortOrder
     imageUrl?: SortOrderInput | SortOrder
     progressiveDiscountStepId?: SortOrder
@@ -35983,6 +37409,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"ProgressiveDiscountPrize"> | string
     createdAt?: DateTimeWithAggregatesFilter<"ProgressiveDiscountPrize"> | Date | string
     name?: StringWithAggregatesFilter<"ProgressiveDiscountPrize"> | string
+    translations?: JsonNullableWithAggregatesFilter<"ProgressiveDiscountPrize">
     quantity?: IntWithAggregatesFilter<"ProgressiveDiscountPrize"> | number
     imageUrl?: StringNullableWithAggregatesFilter<"ProgressiveDiscountPrize"> | string | null
     progressiveDiscountStepId?: StringWithAggregatesFilter<"ProgressiveDiscountPrize"> | string
@@ -36114,6 +37541,7 @@ export namespace Prisma {
     id?: StringFilter<"ModifierGroup"> | string
     createdAt?: DateTimeFilter<"ModifierGroup"> | Date | string
     title?: StringFilter<"ModifierGroup"> | string
+    translations?: JsonNullableFilter<"ModifierGroup">
     required?: BoolFilter<"ModifierGroup"> | boolean
     type?: EnumModifierGroupTypeNullableFilter<"ModifierGroup"> | $Enums.ModifierGroupType | null
     minSelection?: IntNullableFilter<"ModifierGroup"> | number | null
@@ -36126,6 +37554,7 @@ export namespace Prisma {
     id?: SortOrder
     createdAt?: SortOrder
     title?: SortOrder
+    translations?: SortOrderInput | SortOrder
     required?: SortOrder
     type?: SortOrderInput | SortOrder
     minSelection?: SortOrderInput | SortOrder
@@ -36141,6 +37570,7 @@ export namespace Prisma {
     NOT?: ModifierGroupWhereInput | ModifierGroupWhereInput[]
     createdAt?: DateTimeFilter<"ModifierGroup"> | Date | string
     title?: StringFilter<"ModifierGroup"> | string
+    translations?: JsonNullableFilter<"ModifierGroup">
     required?: BoolFilter<"ModifierGroup"> | boolean
     type?: EnumModifierGroupTypeNullableFilter<"ModifierGroup"> | $Enums.ModifierGroupType | null
     minSelection?: IntNullableFilter<"ModifierGroup"> | number | null
@@ -36153,6 +37583,7 @@ export namespace Prisma {
     id?: SortOrder
     createdAt?: SortOrder
     title?: SortOrder
+    translations?: SortOrderInput | SortOrder
     required?: SortOrder
     type?: SortOrderInput | SortOrder
     minSelection?: SortOrderInput | SortOrder
@@ -36171,6 +37602,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"ModifierGroup"> | string
     createdAt?: DateTimeWithAggregatesFilter<"ModifierGroup"> | Date | string
     title?: StringWithAggregatesFilter<"ModifierGroup"> | string
+    translations?: JsonNullableWithAggregatesFilter<"ModifierGroup">
     required?: BoolWithAggregatesFilter<"ModifierGroup"> | boolean
     type?: EnumModifierGroupTypeNullableWithAggregatesFilter<"ModifierGroup"> | $Enums.ModifierGroupType | null
     minSelection?: IntNullableWithAggregatesFilter<"ModifierGroup"> | number | null
@@ -36429,6 +37861,7 @@ export namespace Prisma {
     NOT?: DispatchWhereInput | DispatchWhereInput[]
     id?: StringFilter<"Dispatch"> | string
     createdAt?: DateTimeFilter<"Dispatch"> | Date | string
+    queueIndex?: IntNullableFilter<"Dispatch"> | number | null
     dispatched?: BoolFilter<"Dispatch"> | boolean
     dispatchAt?: DateTimeNullableFilter<"Dispatch"> | Date | string | null
     estimatedDeliveryDurationMinutes?: IntNullableFilter<"Dispatch"> | number | null
@@ -36441,6 +37874,7 @@ export namespace Prisma {
   export type DispatchOrderByWithRelationInput = {
     id?: SortOrder
     createdAt?: SortOrder
+    queueIndex?: SortOrderInput | SortOrder
     dispatched?: SortOrder
     dispatchAt?: SortOrderInput | SortOrder
     estimatedDeliveryDurationMinutes?: SortOrderInput | SortOrder
@@ -36456,6 +37890,7 @@ export namespace Prisma {
     OR?: DispatchWhereInput[]
     NOT?: DispatchWhereInput | DispatchWhereInput[]
     createdAt?: DateTimeFilter<"Dispatch"> | Date | string
+    queueIndex?: IntNullableFilter<"Dispatch"> | number | null
     dispatched?: BoolFilter<"Dispatch"> | boolean
     dispatchAt?: DateTimeNullableFilter<"Dispatch"> | Date | string | null
     estimatedDeliveryDurationMinutes?: IntNullableFilter<"Dispatch"> | number | null
@@ -36468,6 +37903,7 @@ export namespace Prisma {
   export type DispatchOrderByWithAggregationInput = {
     id?: SortOrder
     createdAt?: SortOrder
+    queueIndex?: SortOrderInput | SortOrder
     dispatched?: SortOrder
     dispatchAt?: SortOrderInput | SortOrder
     estimatedDeliveryDurationMinutes?: SortOrderInput | SortOrder
@@ -36486,6 +37922,7 @@ export namespace Prisma {
     NOT?: DispatchScalarWhereWithAggregatesInput | DispatchScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Dispatch"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Dispatch"> | Date | string
+    queueIndex?: IntNullableWithAggregatesFilter<"Dispatch"> | number | null
     dispatched?: BoolWithAggregatesFilter<"Dispatch"> | boolean
     dispatchAt?: DateTimeNullableWithAggregatesFilter<"Dispatch"> | Date | string | null
     estimatedDeliveryDurationMinutes?: IntNullableWithAggregatesFilter<"Dispatch"> | number | null
@@ -36632,6 +38069,7 @@ export namespace Prisma {
     id?: StringFilter<"Product"> | string
     createdAt?: DateTimeFilter<"Product"> | Date | string
     name?: StringFilter<"Product"> | string
+    visible?: BoolFilter<"Product"> | boolean
     description?: StringNullableFilter<"Product"> | string | null
     price?: IntNullableFilter<"Product"> | number | null
     comparedAtPrice?: IntNullableFilter<"Product"> | number | null
@@ -36650,6 +38088,7 @@ export namespace Prisma {
     id?: SortOrder
     createdAt?: SortOrder
     name?: SortOrder
+    visible?: SortOrder
     description?: SortOrderInput | SortOrder
     price?: SortOrderInput | SortOrder
     comparedAtPrice?: SortOrderInput | SortOrder
@@ -36671,6 +38110,7 @@ export namespace Prisma {
     NOT?: ProductWhereInput | ProductWhereInput[]
     createdAt?: DateTimeFilter<"Product"> | Date | string
     name?: StringFilter<"Product"> | string
+    visible?: BoolFilter<"Product"> | boolean
     description?: StringNullableFilter<"Product"> | string | null
     price?: IntNullableFilter<"Product"> | number | null
     comparedAtPrice?: IntNullableFilter<"Product"> | number | null
@@ -36689,6 +38129,7 @@ export namespace Prisma {
     id?: SortOrder
     createdAt?: SortOrder
     name?: SortOrder
+    visible?: SortOrder
     description?: SortOrderInput | SortOrder
     price?: SortOrderInput | SortOrder
     comparedAtPrice?: SortOrderInput | SortOrder
@@ -36709,6 +38150,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Product"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Product"> | Date | string
     name?: StringWithAggregatesFilter<"Product"> | string
+    visible?: BoolWithAggregatesFilter<"Product"> | boolean
     description?: StringNullableWithAggregatesFilter<"Product"> | string | null
     price?: IntNullableWithAggregatesFilter<"Product"> | number | null
     comparedAtPrice?: IntNullableWithAggregatesFilter<"Product"> | number | null
@@ -36836,6 +38278,7 @@ export namespace Prisma {
     orders?: OrderListRelationFilter
     promotionalMessages?: PromotialMessageListRelationFilter
     addresses?: DeliveryAddressListRelationFilter
+    externalAddresses?: ExternalAddressListRelationFilter
   }
 
   export type CustomerOrderByWithRelationInput = {
@@ -36849,6 +38292,7 @@ export namespace Prisma {
     orders?: OrderOrderByRelationAggregateInput
     promotionalMessages?: PromotialMessageOrderByRelationAggregateInput
     addresses?: DeliveryAddressOrderByRelationAggregateInput
+    externalAddresses?: ExternalAddressOrderByRelationAggregateInput
   }
 
   export type CustomerWhereUniqueInput = Prisma.AtLeast<{
@@ -36865,6 +38309,7 @@ export namespace Prisma {
     orders?: OrderListRelationFilter
     promotionalMessages?: PromotialMessageListRelationFilter
     addresses?: DeliveryAddressListRelationFilter
+    externalAddresses?: ExternalAddressListRelationFilter
   }, "id">
 
   export type CustomerOrderByWithAggregationInput = {
@@ -36998,6 +38443,69 @@ export namespace Prisma {
     customerId?: StringNullableWithAggregatesFilter<"DeliveryAddress"> | string | null
   }
 
+  export type ExternalAddressWhereInput = {
+    AND?: ExternalAddressWhereInput | ExternalAddressWhereInput[]
+    OR?: ExternalAddressWhereInput[]
+    NOT?: ExternalAddressWhereInput | ExternalAddressWhereInput[]
+    id?: StringFilter<"ExternalAddress"> | string
+    createdAt?: DateTimeFilter<"ExternalAddress"> | Date | string
+    address?: StringNullableFilter<"ExternalAddress"> | string | null
+    lat?: StringNullableFilter<"ExternalAddress"> | string | null
+    lng?: StringNullableFilter<"ExternalAddress"> | string | null
+    customerId?: StringNullableFilter<"ExternalAddress"> | string | null
+    customer?: XOR<CustomerNullableScalarRelationFilter, CustomerWhereInput> | null
+    orders?: OrderListRelationFilter
+  }
+
+  export type ExternalAddressOrderByWithRelationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    address?: SortOrderInput | SortOrder
+    lat?: SortOrderInput | SortOrder
+    lng?: SortOrderInput | SortOrder
+    customerId?: SortOrderInput | SortOrder
+    customer?: CustomerOrderByWithRelationInput
+    orders?: OrderOrderByRelationAggregateInput
+  }
+
+  export type ExternalAddressWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ExternalAddressWhereInput | ExternalAddressWhereInput[]
+    OR?: ExternalAddressWhereInput[]
+    NOT?: ExternalAddressWhereInput | ExternalAddressWhereInput[]
+    createdAt?: DateTimeFilter<"ExternalAddress"> | Date | string
+    address?: StringNullableFilter<"ExternalAddress"> | string | null
+    lat?: StringNullableFilter<"ExternalAddress"> | string | null
+    lng?: StringNullableFilter<"ExternalAddress"> | string | null
+    customerId?: StringNullableFilter<"ExternalAddress"> | string | null
+    customer?: XOR<CustomerNullableScalarRelationFilter, CustomerWhereInput> | null
+    orders?: OrderListRelationFilter
+  }, "id">
+
+  export type ExternalAddressOrderByWithAggregationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    address?: SortOrderInput | SortOrder
+    lat?: SortOrderInput | SortOrder
+    lng?: SortOrderInput | SortOrder
+    customerId?: SortOrderInput | SortOrder
+    _count?: ExternalAddressCountOrderByAggregateInput
+    _max?: ExternalAddressMaxOrderByAggregateInput
+    _min?: ExternalAddressMinOrderByAggregateInput
+  }
+
+  export type ExternalAddressScalarWhereWithAggregatesInput = {
+    AND?: ExternalAddressScalarWhereWithAggregatesInput | ExternalAddressScalarWhereWithAggregatesInput[]
+    OR?: ExternalAddressScalarWhereWithAggregatesInput[]
+    NOT?: ExternalAddressScalarWhereWithAggregatesInput | ExternalAddressScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ExternalAddress"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"ExternalAddress"> | Date | string
+    address?: StringNullableWithAggregatesFilter<"ExternalAddress"> | string | null
+    lat?: StringNullableWithAggregatesFilter<"ExternalAddress"> | string | null
+    lng?: StringNullableWithAggregatesFilter<"ExternalAddress"> | string | null
+    customerId?: StringNullableWithAggregatesFilter<"ExternalAddress"> | string | null
+  }
+
   export type MessageWhereInput = {
     AND?: MessageWhereInput | MessageWhereInput[]
     OR?: MessageWhereInput[]
@@ -37128,20 +38636,23 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes?: IntNullableFilter<"Order"> | number | null
     dispatchOrderIndex?: IntNullableFilter<"Order"> | number | null
     amount?: IntFilter<"Order"> | number
+    canceled?: BoolFilter<"Order"> | boolean
     status?: EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
     type?: EnumOrderTypeFilter<"Order"> | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFilter<"Order"> | $Enums.PaymentType
     tipAmount?: IntNullableFilter<"Order"> | number | null
     progressiveDiscountSnapshot?: JsonNullableFilter<"Order">
-    customerId?: StringFilter<"Order"> | string
+    customerId?: StringNullableFilter<"Order"> | string | null
     externalId?: StringNullableFilter<"Order"> | string | null
     dispatchId?: StringNullableFilter<"Order"> | string | null
     addressId?: StringNullableFilter<"Order"> | string | null
     deliveryAddressId?: StringNullableFilter<"Order"> | string | null
-    customer?: XOR<CustomerScalarRelationFilter, CustomerWhereInput>
+    externalAddressId?: StringNullableFilter<"Order"> | string | null
+    customer?: XOR<CustomerNullableScalarRelationFilter, CustomerWhereInput> | null
     dispatch?: XOR<DispatchNullableScalarRelationFilter, DispatchWhereInput> | null
     address?: XOR<AddressNullableScalarRelationFilter, AddressWhereInput> | null
     deliveryAddress?: XOR<DeliveryAddressNullableScalarRelationFilter, DeliveryAddressWhereInput> | null
+    externalAddress?: XOR<ExternalAddressNullableScalarRelationFilter, ExternalAddressWhereInput> | null
     orderProducts?: OrderProductsListRelationFilter
     preparationStepCategories?: PreparationStepCategoryListRelationFilter
   }
@@ -37157,26 +38668,30 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes?: SortOrderInput | SortOrder
     dispatchOrderIndex?: SortOrderInput | SortOrder
     amount?: SortOrder
+    canceled?: SortOrder
     status?: SortOrder
     type?: SortOrder
     paymentMethod?: SortOrder
     tipAmount?: SortOrderInput | SortOrder
     progressiveDiscountSnapshot?: SortOrderInput | SortOrder
-    customerId?: SortOrder
+    customerId?: SortOrderInput | SortOrder
     externalId?: SortOrderInput | SortOrder
     dispatchId?: SortOrderInput | SortOrder
     addressId?: SortOrderInput | SortOrder
     deliveryAddressId?: SortOrderInput | SortOrder
+    externalAddressId?: SortOrderInput | SortOrder
     customer?: CustomerOrderByWithRelationInput
     dispatch?: DispatchOrderByWithRelationInput
     address?: AddressOrderByWithRelationInput
     deliveryAddress?: DeliveryAddressOrderByWithRelationInput
+    externalAddress?: ExternalAddressOrderByWithRelationInput
     orderProducts?: OrderProductsOrderByRelationAggregateInput
     preparationStepCategories?: PreparationStepCategoryOrderByRelationAggregateInput
   }
 
   export type OrderWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    externalId?: string
     AND?: OrderWhereInput | OrderWhereInput[]
     OR?: OrderWhereInput[]
     NOT?: OrderWhereInput | OrderWhereInput[]
@@ -37189,23 +38704,25 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes?: IntNullableFilter<"Order"> | number | null
     dispatchOrderIndex?: IntNullableFilter<"Order"> | number | null
     amount?: IntFilter<"Order"> | number
+    canceled?: BoolFilter<"Order"> | boolean
     status?: EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
     type?: EnumOrderTypeFilter<"Order"> | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFilter<"Order"> | $Enums.PaymentType
     tipAmount?: IntNullableFilter<"Order"> | number | null
     progressiveDiscountSnapshot?: JsonNullableFilter<"Order">
-    customerId?: StringFilter<"Order"> | string
-    externalId?: StringNullableFilter<"Order"> | string | null
+    customerId?: StringNullableFilter<"Order"> | string | null
     dispatchId?: StringNullableFilter<"Order"> | string | null
     addressId?: StringNullableFilter<"Order"> | string | null
     deliveryAddressId?: StringNullableFilter<"Order"> | string | null
-    customer?: XOR<CustomerScalarRelationFilter, CustomerWhereInput>
+    externalAddressId?: StringNullableFilter<"Order"> | string | null
+    customer?: XOR<CustomerNullableScalarRelationFilter, CustomerWhereInput> | null
     dispatch?: XOR<DispatchNullableScalarRelationFilter, DispatchWhereInput> | null
     address?: XOR<AddressNullableScalarRelationFilter, AddressWhereInput> | null
     deliveryAddress?: XOR<DeliveryAddressNullableScalarRelationFilter, DeliveryAddressWhereInput> | null
+    externalAddress?: XOR<ExternalAddressNullableScalarRelationFilter, ExternalAddressWhereInput> | null
     orderProducts?: OrderProductsListRelationFilter
     preparationStepCategories?: PreparationStepCategoryListRelationFilter
-  }, "id">
+  }, "id" | "externalId">
 
   export type OrderOrderByWithAggregationInput = {
     id?: SortOrder
@@ -37218,16 +38735,18 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes?: SortOrderInput | SortOrder
     dispatchOrderIndex?: SortOrderInput | SortOrder
     amount?: SortOrder
+    canceled?: SortOrder
     status?: SortOrder
     type?: SortOrder
     paymentMethod?: SortOrder
     tipAmount?: SortOrderInput | SortOrder
     progressiveDiscountSnapshot?: SortOrderInput | SortOrder
-    customerId?: SortOrder
+    customerId?: SortOrderInput | SortOrder
     externalId?: SortOrderInput | SortOrder
     dispatchId?: SortOrderInput | SortOrder
     addressId?: SortOrderInput | SortOrder
     deliveryAddressId?: SortOrderInput | SortOrder
+    externalAddressId?: SortOrderInput | SortOrder
     _count?: OrderCountOrderByAggregateInput
     _avg?: OrderAvgOrderByAggregateInput
     _max?: OrderMaxOrderByAggregateInput
@@ -37249,16 +38768,18 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes?: IntNullableWithAggregatesFilter<"Order"> | number | null
     dispatchOrderIndex?: IntNullableWithAggregatesFilter<"Order"> | number | null
     amount?: IntWithAggregatesFilter<"Order"> | number
+    canceled?: BoolWithAggregatesFilter<"Order"> | boolean
     status?: EnumOrderStatusWithAggregatesFilter<"Order"> | $Enums.OrderStatus
     type?: EnumOrderTypeWithAggregatesFilter<"Order"> | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeWithAggregatesFilter<"Order"> | $Enums.PaymentType
     tipAmount?: IntNullableWithAggregatesFilter<"Order"> | number | null
     progressiveDiscountSnapshot?: JsonNullableWithAggregatesFilter<"Order">
-    customerId?: StringWithAggregatesFilter<"Order"> | string
+    customerId?: StringNullableWithAggregatesFilter<"Order"> | string | null
     externalId?: StringNullableWithAggregatesFilter<"Order"> | string | null
     dispatchId?: StringNullableWithAggregatesFilter<"Order"> | string | null
     addressId?: StringNullableWithAggregatesFilter<"Order"> | string | null
     deliveryAddressId?: StringNullableWithAggregatesFilter<"Order"> | string | null
+    externalAddressId?: StringNullableWithAggregatesFilter<"Order"> | string | null
   }
 
   export type OrderProductsWhereInput = {
@@ -37755,6 +39276,7 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     name: string
+    translations?: NullableJsonNullValueInput | InputJsonValue
     quantity?: number
     imageUrl?: string | null
     progressiveDiscountStep: ProgressiveDiscountStepCreateNestedOneWithoutPrizesInput
@@ -37765,6 +39287,7 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     name: string
+    translations?: NullableJsonNullValueInput | InputJsonValue
     quantity?: number
     imageUrl?: string | null
     progressiveDiscountStepId: string
@@ -37775,6 +39298,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
+    translations?: NullableJsonNullValueInput | InputJsonValue
     quantity?: IntFieldUpdateOperationsInput | number
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     progressiveDiscountStep?: ProgressiveDiscountStepUpdateOneRequiredWithoutPrizesNestedInput
@@ -37785,6 +39309,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
+    translations?: NullableJsonNullValueInput | InputJsonValue
     quantity?: IntFieldUpdateOperationsInput | number
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     progressiveDiscountStepId?: StringFieldUpdateOperationsInput | string
@@ -37795,6 +39320,7 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     name: string
+    translations?: NullableJsonNullValueInput | InputJsonValue
     quantity?: number
     imageUrl?: string | null
     progressiveDiscountStepId: string
@@ -37804,6 +39330,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
+    translations?: NullableJsonNullValueInput | InputJsonValue
     quantity?: IntFieldUpdateOperationsInput | number
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -37812,6 +39339,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
+    translations?: NullableJsonNullValueInput | InputJsonValue
     quantity?: IntFieldUpdateOperationsInput | number
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     progressiveDiscountStepId?: StringFieldUpdateOperationsInput | string
@@ -37934,6 +39462,7 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     title: string
+    translations?: NullableJsonNullValueInput | InputJsonValue
     required?: boolean
     type?: $Enums.ModifierGroupType | null
     minSelection?: number | null
@@ -37946,6 +39475,7 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     title: string
+    translations?: NullableJsonNullValueInput | InputJsonValue
     required?: boolean
     type?: $Enums.ModifierGroupType | null
     minSelection?: number | null
@@ -37958,6 +39488,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     title?: StringFieldUpdateOperationsInput | string
+    translations?: NullableJsonNullValueInput | InputJsonValue
     required?: BoolFieldUpdateOperationsInput | boolean
     type?: NullableEnumModifierGroupTypeFieldUpdateOperationsInput | $Enums.ModifierGroupType | null
     minSelection?: NullableIntFieldUpdateOperationsInput | number | null
@@ -37970,6 +39501,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     title?: StringFieldUpdateOperationsInput | string
+    translations?: NullableJsonNullValueInput | InputJsonValue
     required?: BoolFieldUpdateOperationsInput | boolean
     type?: NullableEnumModifierGroupTypeFieldUpdateOperationsInput | $Enums.ModifierGroupType | null
     minSelection?: NullableIntFieldUpdateOperationsInput | number | null
@@ -37982,6 +39514,7 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     title: string
+    translations?: NullableJsonNullValueInput | InputJsonValue
     required?: boolean
     type?: $Enums.ModifierGroupType | null
     minSelection?: number | null
@@ -37992,6 +39525,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     title?: StringFieldUpdateOperationsInput | string
+    translations?: NullableJsonNullValueInput | InputJsonValue
     required?: BoolFieldUpdateOperationsInput | boolean
     type?: NullableEnumModifierGroupTypeFieldUpdateOperationsInput | $Enums.ModifierGroupType | null
     minSelection?: NullableIntFieldUpdateOperationsInput | number | null
@@ -38002,6 +39536,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     title?: StringFieldUpdateOperationsInput | string
+    translations?: NullableJsonNullValueInput | InputJsonValue
     required?: BoolFieldUpdateOperationsInput | boolean
     type?: NullableEnumModifierGroupTypeFieldUpdateOperationsInput | $Enums.ModifierGroupType | null
     minSelection?: NullableIntFieldUpdateOperationsInput | number | null
@@ -38261,6 +39796,7 @@ export namespace Prisma {
   export type DispatchCreateInput = {
     id: string
     createdAt?: Date | string
+    queueIndex?: number | null
     dispatched?: boolean
     dispatchAt?: Date | string | null
     estimatedDeliveryDurationMinutes?: number | null
@@ -38272,6 +39808,7 @@ export namespace Prisma {
   export type DispatchUncheckedCreateInput = {
     id: string
     createdAt?: Date | string
+    queueIndex?: number | null
     dispatched?: boolean
     dispatchAt?: Date | string | null
     estimatedDeliveryDurationMinutes?: number | null
@@ -38283,6 +39820,7 @@ export namespace Prisma {
   export type DispatchUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    queueIndex?: NullableIntFieldUpdateOperationsInput | number | null
     dispatched?: BoolFieldUpdateOperationsInput | boolean
     dispatchAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
@@ -38294,6 +39832,7 @@ export namespace Prisma {
   export type DispatchUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    queueIndex?: NullableIntFieldUpdateOperationsInput | number | null
     dispatched?: BoolFieldUpdateOperationsInput | boolean
     dispatchAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
@@ -38305,6 +39844,7 @@ export namespace Prisma {
   export type DispatchCreateManyInput = {
     id: string
     createdAt?: Date | string
+    queueIndex?: number | null
     dispatched?: boolean
     dispatchAt?: Date | string | null
     estimatedDeliveryDurationMinutes?: number | null
@@ -38315,6 +39855,7 @@ export namespace Prisma {
   export type DispatchUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    queueIndex?: NullableIntFieldUpdateOperationsInput | number | null
     dispatched?: BoolFieldUpdateOperationsInput | boolean
     dispatchAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
@@ -38324,6 +39865,7 @@ export namespace Prisma {
   export type DispatchUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    queueIndex?: NullableIntFieldUpdateOperationsInput | number | null
     dispatched?: BoolFieldUpdateOperationsInput | boolean
     dispatchAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
@@ -38483,6 +40025,7 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     name: string
+    visible?: boolean
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
@@ -38500,6 +40043,7 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     name: string
+    visible?: boolean
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
@@ -38517,6 +40061,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
+    visible?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
@@ -38534,6 +40079,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
+    visible?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
@@ -38551,6 +40097,7 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     name: string
+    visible?: boolean
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
@@ -38563,6 +40110,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
+    visible?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
@@ -38574,6 +40122,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
+    visible?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
@@ -38703,6 +40252,7 @@ export namespace Prisma {
     orders?: OrderCreateNestedManyWithoutCustomerInput
     promotionalMessages?: PromotialMessageCreateNestedManyWithoutCustomerInput
     addresses?: DeliveryAddressCreateNestedManyWithoutCustomerInput
+    externalAddresses?: ExternalAddressCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUncheckedCreateInput = {
@@ -38716,6 +40266,7 @@ export namespace Prisma {
     orders?: OrderUncheckedCreateNestedManyWithoutCustomerInput
     promotionalMessages?: PromotialMessageUncheckedCreateNestedManyWithoutCustomerInput
     addresses?: DeliveryAddressUncheckedCreateNestedManyWithoutCustomerInput
+    externalAddresses?: ExternalAddressUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUpdateInput = {
@@ -38729,6 +40280,7 @@ export namespace Prisma {
     orders?: OrderUpdateManyWithoutCustomerNestedInput
     promotionalMessages?: PromotialMessageUpdateManyWithoutCustomerNestedInput
     addresses?: DeliveryAddressUpdateManyWithoutCustomerNestedInput
+    externalAddresses?: ExternalAddressUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateInput = {
@@ -38742,6 +40294,7 @@ export namespace Prisma {
     orders?: OrderUncheckedUpdateManyWithoutCustomerNestedInput
     promotionalMessages?: PromotialMessageUncheckedUpdateManyWithoutCustomerNestedInput
     addresses?: DeliveryAddressUncheckedUpdateManyWithoutCustomerNestedInput
+    externalAddresses?: ExternalAddressUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerCreateManyInput = {
@@ -38896,6 +40449,72 @@ export namespace Prisma {
     customerId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type ExternalAddressCreateInput = {
+    id: string
+    createdAt?: Date | string
+    address?: string | null
+    lat?: string | null
+    lng?: string | null
+    customer?: CustomerCreateNestedOneWithoutExternalAddressesInput
+    orders?: OrderCreateNestedManyWithoutExternalAddressInput
+  }
+
+  export type ExternalAddressUncheckedCreateInput = {
+    id: string
+    createdAt?: Date | string
+    address?: string | null
+    lat?: string | null
+    lng?: string | null
+    customerId?: string | null
+    orders?: OrderUncheckedCreateNestedManyWithoutExternalAddressInput
+  }
+
+  export type ExternalAddressUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    lat?: NullableStringFieldUpdateOperationsInput | string | null
+    lng?: NullableStringFieldUpdateOperationsInput | string | null
+    customer?: CustomerUpdateOneWithoutExternalAddressesNestedInput
+    orders?: OrderUpdateManyWithoutExternalAddressNestedInput
+  }
+
+  export type ExternalAddressUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    lat?: NullableStringFieldUpdateOperationsInput | string | null
+    lng?: NullableStringFieldUpdateOperationsInput | string | null
+    customerId?: NullableStringFieldUpdateOperationsInput | string | null
+    orders?: OrderUncheckedUpdateManyWithoutExternalAddressNestedInput
+  }
+
+  export type ExternalAddressCreateManyInput = {
+    id: string
+    createdAt?: Date | string
+    address?: string | null
+    lat?: string | null
+    lng?: string | null
+    customerId?: string | null
+  }
+
+  export type ExternalAddressUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    lat?: NullableStringFieldUpdateOperationsInput | string | null
+    lng?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ExternalAddressUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    lat?: NullableStringFieldUpdateOperationsInput | string | null
+    lng?: NullableStringFieldUpdateOperationsInput | string | null
+    customerId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
   export type MessageCreateInput = {
     id: string
     createdAt?: Date | string
@@ -39020,16 +40639,18 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes?: number | null
     dispatchOrderIndex?: number | null
     amount: number
+    canceled?: boolean
     status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     tipAmount?: number | null
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
     externalId?: string | null
-    customer: CustomerCreateNestedOneWithoutOrdersInput
+    customer?: CustomerCreateNestedOneWithoutOrdersInput
     dispatch?: DispatchCreateNestedOneWithoutOrdersInput
     address?: AddressCreateNestedOneWithoutOrdersInput
     deliveryAddress?: DeliveryAddressCreateNestedOneWithoutOrdersInput
+    externalAddress?: ExternalAddressCreateNestedOneWithoutOrdersInput
     orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryCreateNestedManyWithoutOrderInput
   }
@@ -39045,16 +40666,18 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes?: number | null
     dispatchOrderIndex?: number | null
     amount: number
+    canceled?: boolean
     status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     tipAmount?: number | null
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
-    customerId: string
+    customerId?: string | null
     externalId?: string | null
     dispatchId?: string | null
     addressId?: string | null
     deliveryAddressId?: string | null
+    externalAddressId?: string | null
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryUncheckedCreateNestedManyWithoutOrderInput
   }
@@ -39070,16 +40693,18 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
+    canceled?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
-    customer?: CustomerUpdateOneRequiredWithoutOrdersNestedInput
+    customer?: CustomerUpdateOneWithoutOrdersNestedInput
     dispatch?: DispatchUpdateOneWithoutOrdersNestedInput
     address?: AddressUpdateOneWithoutOrdersNestedInput
     deliveryAddress?: DeliveryAddressUpdateOneWithoutOrdersNestedInput
+    externalAddress?: ExternalAddressUpdateOneWithoutOrdersNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUpdateManyWithoutOrderNestedInput
   }
@@ -39095,16 +40720,18 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
+    canceled?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
-    customerId?: StringFieldUpdateOperationsInput | string
+    customerId?: NullableStringFieldUpdateOperationsInput | string | null
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
     dispatchId?: NullableStringFieldUpdateOperationsInput | string | null
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
+    externalAddressId?: NullableStringFieldUpdateOperationsInput | string | null
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUncheckedUpdateManyWithoutOrderNestedInput
   }
@@ -39120,16 +40747,18 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes?: number | null
     dispatchOrderIndex?: number | null
     amount: number
+    canceled?: boolean
     status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     tipAmount?: number | null
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
-    customerId: string
+    customerId?: string | null
     externalId?: string | null
     dispatchId?: string | null
     addressId?: string | null
     deliveryAddressId?: string | null
+    externalAddressId?: string | null
   }
 
   export type OrderUpdateManyMutationInput = {
@@ -39143,6 +40772,7 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
+    canceled?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
@@ -39162,16 +40792,18 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
+    canceled?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
-    customerId?: StringFieldUpdateOperationsInput | string
+    customerId?: NullableStringFieldUpdateOperationsInput | string | null
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
     dispatchId?: NullableStringFieldUpdateOperationsInput | string | null
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
+    externalAddressId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type OrderProductsCreateInput = {
@@ -39718,6 +41350,29 @@ export namespace Prisma {
     _min?: NestedEnumProgressiveDiscountStepTypeFilter<$PrismaModel>
     _max?: NestedEnumProgressiveDiscountStepTypeFilter<$PrismaModel>
   }
+  export type JsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
 
   export type ProgressiveDiscountStepScalarRelationFilter = {
     is?: ProgressiveDiscountStepWhereInput
@@ -39738,6 +41393,7 @@ export namespace Prisma {
     id?: SortOrder
     createdAt?: SortOrder
     name?: SortOrder
+    translations?: SortOrder
     quantity?: SortOrder
     imageUrl?: SortOrder
     progressiveDiscountStepId?: SortOrder
@@ -39767,6 +41423,32 @@ export namespace Prisma {
 
   export type ProgressiveDiscountPrizeSumOrderByAggregateInput = {
     quantity?: SortOrder
+  }
+  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedJsonNullableFilter<$PrismaModel>
+    _max?: NestedJsonNullableFilter<$PrismaModel>
   }
 
   export type ProgressiveDiscountPrizeScalarRelationFilter = {
@@ -39866,6 +41548,7 @@ export namespace Prisma {
     id?: SortOrder
     createdAt?: SortOrder
     title?: SortOrder
+    translations?: SortOrder
     required?: SortOrder
     type?: SortOrder
     minSelection?: SortOrder
@@ -39910,29 +41593,6 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedEnumModifierGroupTypeNullableFilter<$PrismaModel>
     _max?: NestedEnumModifierGroupTypeNullableFilter<$PrismaModel>
-  }
-  export type JsonNullableFilter<$PrismaModel = never> =
-    | PatchUndefined<
-        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
-        Required<JsonNullableFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
-
-  export type JsonNullableFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string[]
-    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
   export type FileNullableScalarRelationFilter = {
@@ -39992,32 +41652,6 @@ export namespace Prisma {
 
   export type ModifierGroupItemSumOrderByAggregateInput = {
     price?: SortOrder
-  }
-  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
-    | PatchUndefined<
-        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
-        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
-
-  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string[]
-    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedJsonNullableFilter<$PrismaModel>
-    _max?: NestedJsonNullableFilter<$PrismaModel>
   }
 
   export type BranchListRelationFilter = {
@@ -40154,6 +41788,7 @@ export namespace Prisma {
   export type DispatchCountOrderByAggregateInput = {
     id?: SortOrder
     createdAt?: SortOrder
+    queueIndex?: SortOrder
     dispatched?: SortOrder
     dispatchAt?: SortOrder
     estimatedDeliveryDurationMinutes?: SortOrder
@@ -40162,6 +41797,7 @@ export namespace Prisma {
   }
 
   export type DispatchAvgOrderByAggregateInput = {
+    queueIndex?: SortOrder
     estimatedDeliveryDurationMinutes?: SortOrder
     estimatedRoundTripDurationMinutes?: SortOrder
   }
@@ -40169,6 +41805,7 @@ export namespace Prisma {
   export type DispatchMaxOrderByAggregateInput = {
     id?: SortOrder
     createdAt?: SortOrder
+    queueIndex?: SortOrder
     dispatched?: SortOrder
     dispatchAt?: SortOrder
     estimatedDeliveryDurationMinutes?: SortOrder
@@ -40179,6 +41816,7 @@ export namespace Prisma {
   export type DispatchMinOrderByAggregateInput = {
     id?: SortOrder
     createdAt?: SortOrder
+    queueIndex?: SortOrder
     dispatched?: SortOrder
     dispatchAt?: SortOrder
     estimatedDeliveryDurationMinutes?: SortOrder
@@ -40187,6 +41825,7 @@ export namespace Prisma {
   }
 
   export type DispatchSumOrderByAggregateInput = {
+    queueIndex?: SortOrder
     estimatedDeliveryDurationMinutes?: SortOrder
     estimatedRoundTripDurationMinutes?: SortOrder
   }
@@ -40319,6 +41958,7 @@ export namespace Prisma {
     id?: SortOrder
     createdAt?: SortOrder
     name?: SortOrder
+    visible?: SortOrder
     description?: SortOrder
     price?: SortOrder
     comparedAtPrice?: SortOrder
@@ -40337,6 +41977,7 @@ export namespace Prisma {
     id?: SortOrder
     createdAt?: SortOrder
     name?: SortOrder
+    visible?: SortOrder
     description?: SortOrder
     price?: SortOrder
     comparedAtPrice?: SortOrder
@@ -40348,6 +41989,7 @@ export namespace Prisma {
     id?: SortOrder
     createdAt?: SortOrder
     name?: SortOrder
+    visible?: SortOrder
     description?: SortOrder
     price?: SortOrder
     comparedAtPrice?: SortOrder
@@ -40435,7 +42077,17 @@ export namespace Prisma {
     none?: DeliveryAddressWhereInput
   }
 
+  export type ExternalAddressListRelationFilter = {
+    every?: ExternalAddressWhereInput
+    some?: ExternalAddressWhereInput
+    none?: ExternalAddressWhereInput
+  }
+
   export type DeliveryAddressOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ExternalAddressOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -40533,6 +42185,33 @@ export namespace Prisma {
     deliveryFee?: SortOrder
   }
 
+  export type ExternalAddressCountOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    address?: SortOrder
+    lat?: SortOrder
+    lng?: SortOrder
+    customerId?: SortOrder
+  }
+
+  export type ExternalAddressMaxOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    address?: SortOrder
+    lat?: SortOrder
+    lng?: SortOrder
+    customerId?: SortOrder
+  }
+
+  export type ExternalAddressMinOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    address?: SortOrder
+    lat?: SortOrder
+    lng?: SortOrder
+    customerId?: SortOrder
+  }
+
   export type MessageCountOrderByAggregateInput = {
     id?: SortOrder
     createdAt?: SortOrder
@@ -40627,6 +42306,11 @@ export namespace Prisma {
     isNot?: DeliveryAddressWhereInput | null
   }
 
+  export type ExternalAddressNullableScalarRelationFilter = {
+    is?: ExternalAddressWhereInput | null
+    isNot?: ExternalAddressWhereInput | null
+  }
+
   export type OrderCountOrderByAggregateInput = {
     id?: SortOrder
     number?: SortOrder
@@ -40638,6 +42322,7 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes?: SortOrder
     dispatchOrderIndex?: SortOrder
     amount?: SortOrder
+    canceled?: SortOrder
     status?: SortOrder
     type?: SortOrder
     paymentMethod?: SortOrder
@@ -40648,6 +42333,7 @@ export namespace Prisma {
     dispatchId?: SortOrder
     addressId?: SortOrder
     deliveryAddressId?: SortOrder
+    externalAddressId?: SortOrder
   }
 
   export type OrderAvgOrderByAggregateInput = {
@@ -40668,6 +42354,7 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes?: SortOrder
     dispatchOrderIndex?: SortOrder
     amount?: SortOrder
+    canceled?: SortOrder
     status?: SortOrder
     type?: SortOrder
     paymentMethod?: SortOrder
@@ -40677,6 +42364,7 @@ export namespace Prisma {
     dispatchId?: SortOrder
     addressId?: SortOrder
     deliveryAddressId?: SortOrder
+    externalAddressId?: SortOrder
   }
 
   export type OrderMinOrderByAggregateInput = {
@@ -40690,6 +42378,7 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes?: SortOrder
     dispatchOrderIndex?: SortOrder
     amount?: SortOrder
+    canceled?: SortOrder
     status?: SortOrder
     type?: SortOrder
     paymentMethod?: SortOrder
@@ -40699,6 +42388,7 @@ export namespace Prisma {
     dispatchId?: SortOrder
     addressId?: SortOrder
     deliveryAddressId?: SortOrder
+    externalAddressId?: SortOrder
   }
 
   export type OrderSumOrderByAggregateInput = {
@@ -42187,6 +43877,13 @@ export namespace Prisma {
     connect?: DeliveryAddressWhereUniqueInput | DeliveryAddressWhereUniqueInput[]
   }
 
+  export type ExternalAddressCreateNestedManyWithoutCustomerInput = {
+    create?: XOR<ExternalAddressCreateWithoutCustomerInput, ExternalAddressUncheckedCreateWithoutCustomerInput> | ExternalAddressCreateWithoutCustomerInput[] | ExternalAddressUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: ExternalAddressCreateOrConnectWithoutCustomerInput | ExternalAddressCreateOrConnectWithoutCustomerInput[]
+    createMany?: ExternalAddressCreateManyCustomerInputEnvelope
+    connect?: ExternalAddressWhereUniqueInput | ExternalAddressWhereUniqueInput[]
+  }
+
   export type OrderUncheckedCreateNestedManyWithoutCustomerInput = {
     create?: XOR<OrderCreateWithoutCustomerInput, OrderUncheckedCreateWithoutCustomerInput> | OrderCreateWithoutCustomerInput[] | OrderUncheckedCreateWithoutCustomerInput[]
     connectOrCreate?: OrderCreateOrConnectWithoutCustomerInput | OrderCreateOrConnectWithoutCustomerInput[]
@@ -42206,6 +43903,13 @@ export namespace Prisma {
     connectOrCreate?: DeliveryAddressCreateOrConnectWithoutCustomerInput | DeliveryAddressCreateOrConnectWithoutCustomerInput[]
     createMany?: DeliveryAddressCreateManyCustomerInputEnvelope
     connect?: DeliveryAddressWhereUniqueInput | DeliveryAddressWhereUniqueInput[]
+  }
+
+  export type ExternalAddressUncheckedCreateNestedManyWithoutCustomerInput = {
+    create?: XOR<ExternalAddressCreateWithoutCustomerInput, ExternalAddressUncheckedCreateWithoutCustomerInput> | ExternalAddressCreateWithoutCustomerInput[] | ExternalAddressUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: ExternalAddressCreateOrConnectWithoutCustomerInput | ExternalAddressCreateOrConnectWithoutCustomerInput[]
+    createMany?: ExternalAddressCreateManyCustomerInputEnvelope
+    connect?: ExternalAddressWhereUniqueInput | ExternalAddressWhereUniqueInput[]
   }
 
   export type OrderUpdateManyWithoutCustomerNestedInput = {
@@ -42250,6 +43954,20 @@ export namespace Prisma {
     deleteMany?: DeliveryAddressScalarWhereInput | DeliveryAddressScalarWhereInput[]
   }
 
+  export type ExternalAddressUpdateManyWithoutCustomerNestedInput = {
+    create?: XOR<ExternalAddressCreateWithoutCustomerInput, ExternalAddressUncheckedCreateWithoutCustomerInput> | ExternalAddressCreateWithoutCustomerInput[] | ExternalAddressUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: ExternalAddressCreateOrConnectWithoutCustomerInput | ExternalAddressCreateOrConnectWithoutCustomerInput[]
+    upsert?: ExternalAddressUpsertWithWhereUniqueWithoutCustomerInput | ExternalAddressUpsertWithWhereUniqueWithoutCustomerInput[]
+    createMany?: ExternalAddressCreateManyCustomerInputEnvelope
+    set?: ExternalAddressWhereUniqueInput | ExternalAddressWhereUniqueInput[]
+    disconnect?: ExternalAddressWhereUniqueInput | ExternalAddressWhereUniqueInput[]
+    delete?: ExternalAddressWhereUniqueInput | ExternalAddressWhereUniqueInput[]
+    connect?: ExternalAddressWhereUniqueInput | ExternalAddressWhereUniqueInput[]
+    update?: ExternalAddressUpdateWithWhereUniqueWithoutCustomerInput | ExternalAddressUpdateWithWhereUniqueWithoutCustomerInput[]
+    updateMany?: ExternalAddressUpdateManyWithWhereWithoutCustomerInput | ExternalAddressUpdateManyWithWhereWithoutCustomerInput[]
+    deleteMany?: ExternalAddressScalarWhereInput | ExternalAddressScalarWhereInput[]
+  }
+
   export type OrderUncheckedUpdateManyWithoutCustomerNestedInput = {
     create?: XOR<OrderCreateWithoutCustomerInput, OrderUncheckedCreateWithoutCustomerInput> | OrderCreateWithoutCustomerInput[] | OrderUncheckedCreateWithoutCustomerInput[]
     connectOrCreate?: OrderCreateOrConnectWithoutCustomerInput | OrderCreateOrConnectWithoutCustomerInput[]
@@ -42290,6 +44008,20 @@ export namespace Prisma {
     update?: DeliveryAddressUpdateWithWhereUniqueWithoutCustomerInput | DeliveryAddressUpdateWithWhereUniqueWithoutCustomerInput[]
     updateMany?: DeliveryAddressUpdateManyWithWhereWithoutCustomerInput | DeliveryAddressUpdateManyWithWhereWithoutCustomerInput[]
     deleteMany?: DeliveryAddressScalarWhereInput | DeliveryAddressScalarWhereInput[]
+  }
+
+  export type ExternalAddressUncheckedUpdateManyWithoutCustomerNestedInput = {
+    create?: XOR<ExternalAddressCreateWithoutCustomerInput, ExternalAddressUncheckedCreateWithoutCustomerInput> | ExternalAddressCreateWithoutCustomerInput[] | ExternalAddressUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: ExternalAddressCreateOrConnectWithoutCustomerInput | ExternalAddressCreateOrConnectWithoutCustomerInput[]
+    upsert?: ExternalAddressUpsertWithWhereUniqueWithoutCustomerInput | ExternalAddressUpsertWithWhereUniqueWithoutCustomerInput[]
+    createMany?: ExternalAddressCreateManyCustomerInputEnvelope
+    set?: ExternalAddressWhereUniqueInput | ExternalAddressWhereUniqueInput[]
+    disconnect?: ExternalAddressWhereUniqueInput | ExternalAddressWhereUniqueInput[]
+    delete?: ExternalAddressWhereUniqueInput | ExternalAddressWhereUniqueInput[]
+    connect?: ExternalAddressWhereUniqueInput | ExternalAddressWhereUniqueInput[]
+    update?: ExternalAddressUpdateWithWhereUniqueWithoutCustomerInput | ExternalAddressUpdateWithWhereUniqueWithoutCustomerInput[]
+    updateMany?: ExternalAddressUpdateManyWithWhereWithoutCustomerInput | ExternalAddressUpdateManyWithWhereWithoutCustomerInput[]
+    deleteMany?: ExternalAddressScalarWhereInput | ExternalAddressScalarWhereInput[]
   }
 
   export type CustomerCreateNestedOneWithoutAddressesInput = {
@@ -42347,6 +44079,64 @@ export namespace Prisma {
     connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
     update?: OrderUpdateWithWhereUniqueWithoutDeliveryAddressInput | OrderUpdateWithWhereUniqueWithoutDeliveryAddressInput[]
     updateMany?: OrderUpdateManyWithWhereWithoutDeliveryAddressInput | OrderUpdateManyWithWhereWithoutDeliveryAddressInput[]
+    deleteMany?: OrderScalarWhereInput | OrderScalarWhereInput[]
+  }
+
+  export type CustomerCreateNestedOneWithoutExternalAddressesInput = {
+    create?: XOR<CustomerCreateWithoutExternalAddressesInput, CustomerUncheckedCreateWithoutExternalAddressesInput>
+    connectOrCreate?: CustomerCreateOrConnectWithoutExternalAddressesInput
+    connect?: CustomerWhereUniqueInput
+  }
+
+  export type OrderCreateNestedManyWithoutExternalAddressInput = {
+    create?: XOR<OrderCreateWithoutExternalAddressInput, OrderUncheckedCreateWithoutExternalAddressInput> | OrderCreateWithoutExternalAddressInput[] | OrderUncheckedCreateWithoutExternalAddressInput[]
+    connectOrCreate?: OrderCreateOrConnectWithoutExternalAddressInput | OrderCreateOrConnectWithoutExternalAddressInput[]
+    createMany?: OrderCreateManyExternalAddressInputEnvelope
+    connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+  }
+
+  export type OrderUncheckedCreateNestedManyWithoutExternalAddressInput = {
+    create?: XOR<OrderCreateWithoutExternalAddressInput, OrderUncheckedCreateWithoutExternalAddressInput> | OrderCreateWithoutExternalAddressInput[] | OrderUncheckedCreateWithoutExternalAddressInput[]
+    connectOrCreate?: OrderCreateOrConnectWithoutExternalAddressInput | OrderCreateOrConnectWithoutExternalAddressInput[]
+    createMany?: OrderCreateManyExternalAddressInputEnvelope
+    connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+  }
+
+  export type CustomerUpdateOneWithoutExternalAddressesNestedInput = {
+    create?: XOR<CustomerCreateWithoutExternalAddressesInput, CustomerUncheckedCreateWithoutExternalAddressesInput>
+    connectOrCreate?: CustomerCreateOrConnectWithoutExternalAddressesInput
+    upsert?: CustomerUpsertWithoutExternalAddressesInput
+    disconnect?: CustomerWhereInput | boolean
+    delete?: CustomerWhereInput | boolean
+    connect?: CustomerWhereUniqueInput
+    update?: XOR<XOR<CustomerUpdateToOneWithWhereWithoutExternalAddressesInput, CustomerUpdateWithoutExternalAddressesInput>, CustomerUncheckedUpdateWithoutExternalAddressesInput>
+  }
+
+  export type OrderUpdateManyWithoutExternalAddressNestedInput = {
+    create?: XOR<OrderCreateWithoutExternalAddressInput, OrderUncheckedCreateWithoutExternalAddressInput> | OrderCreateWithoutExternalAddressInput[] | OrderUncheckedCreateWithoutExternalAddressInput[]
+    connectOrCreate?: OrderCreateOrConnectWithoutExternalAddressInput | OrderCreateOrConnectWithoutExternalAddressInput[]
+    upsert?: OrderUpsertWithWhereUniqueWithoutExternalAddressInput | OrderUpsertWithWhereUniqueWithoutExternalAddressInput[]
+    createMany?: OrderCreateManyExternalAddressInputEnvelope
+    set?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    disconnect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    delete?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    update?: OrderUpdateWithWhereUniqueWithoutExternalAddressInput | OrderUpdateWithWhereUniqueWithoutExternalAddressInput[]
+    updateMany?: OrderUpdateManyWithWhereWithoutExternalAddressInput | OrderUpdateManyWithWhereWithoutExternalAddressInput[]
+    deleteMany?: OrderScalarWhereInput | OrderScalarWhereInput[]
+  }
+
+  export type OrderUncheckedUpdateManyWithoutExternalAddressNestedInput = {
+    create?: XOR<OrderCreateWithoutExternalAddressInput, OrderUncheckedCreateWithoutExternalAddressInput> | OrderCreateWithoutExternalAddressInput[] | OrderUncheckedCreateWithoutExternalAddressInput[]
+    connectOrCreate?: OrderCreateOrConnectWithoutExternalAddressInput | OrderCreateOrConnectWithoutExternalAddressInput[]
+    upsert?: OrderUpsertWithWhereUniqueWithoutExternalAddressInput | OrderUpsertWithWhereUniqueWithoutExternalAddressInput[]
+    createMany?: OrderCreateManyExternalAddressInputEnvelope
+    set?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    disconnect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    delete?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    update?: OrderUpdateWithWhereUniqueWithoutExternalAddressInput | OrderUpdateWithWhereUniqueWithoutExternalAddressInput[]
+    updateMany?: OrderUpdateManyWithWhereWithoutExternalAddressInput | OrderUpdateManyWithWhereWithoutExternalAddressInput[]
     deleteMany?: OrderScalarWhereInput | OrderScalarWhereInput[]
   }
 
@@ -42460,6 +44250,12 @@ export namespace Prisma {
     connect?: DeliveryAddressWhereUniqueInput
   }
 
+  export type ExternalAddressCreateNestedOneWithoutOrdersInput = {
+    create?: XOR<ExternalAddressCreateWithoutOrdersInput, ExternalAddressUncheckedCreateWithoutOrdersInput>
+    connectOrCreate?: ExternalAddressCreateOrConnectWithoutOrdersInput
+    connect?: ExternalAddressWhereUniqueInput
+  }
+
   export type OrderProductsCreateNestedManyWithoutOrderInput = {
     create?: XOR<OrderProductsCreateWithoutOrderInput, OrderProductsUncheckedCreateWithoutOrderInput> | OrderProductsCreateWithoutOrderInput[] | OrderProductsUncheckedCreateWithoutOrderInput[]
     connectOrCreate?: OrderProductsCreateOrConnectWithoutOrderInput | OrderProductsCreateOrConnectWithoutOrderInput[]
@@ -42500,10 +44296,12 @@ export namespace Prisma {
     set?: $Enums.PaymentType
   }
 
-  export type CustomerUpdateOneRequiredWithoutOrdersNestedInput = {
+  export type CustomerUpdateOneWithoutOrdersNestedInput = {
     create?: XOR<CustomerCreateWithoutOrdersInput, CustomerUncheckedCreateWithoutOrdersInput>
     connectOrCreate?: CustomerCreateOrConnectWithoutOrdersInput
     upsert?: CustomerUpsertWithoutOrdersInput
+    disconnect?: CustomerWhereInput | boolean
+    delete?: CustomerWhereInput | boolean
     connect?: CustomerWhereUniqueInput
     update?: XOR<XOR<CustomerUpdateToOneWithWhereWithoutOrdersInput, CustomerUpdateWithoutOrdersInput>, CustomerUncheckedUpdateWithoutOrdersInput>
   }
@@ -42536,6 +44334,16 @@ export namespace Prisma {
     delete?: DeliveryAddressWhereInput | boolean
     connect?: DeliveryAddressWhereUniqueInput
     update?: XOR<XOR<DeliveryAddressUpdateToOneWithWhereWithoutOrdersInput, DeliveryAddressUpdateWithoutOrdersInput>, DeliveryAddressUncheckedUpdateWithoutOrdersInput>
+  }
+
+  export type ExternalAddressUpdateOneWithoutOrdersNestedInput = {
+    create?: XOR<ExternalAddressCreateWithoutOrdersInput, ExternalAddressUncheckedCreateWithoutOrdersInput>
+    connectOrCreate?: ExternalAddressCreateOrConnectWithoutOrdersInput
+    upsert?: ExternalAddressUpsertWithoutOrdersInput
+    disconnect?: ExternalAddressWhereInput | boolean
+    delete?: ExternalAddressWhereInput | boolean
+    connect?: ExternalAddressWhereUniqueInput
+    update?: XOR<XOR<ExternalAddressUpdateToOneWithWhereWithoutOrdersInput, ExternalAddressUpdateWithoutOrdersInput>, ExternalAddressUncheckedUpdateWithoutOrdersInput>
   }
 
   export type OrderProductsUpdateManyWithoutOrderNestedInput = {
@@ -42854,23 +44662,6 @@ export namespace Prisma {
     _min?: NestedEnumProgressiveDiscountStepTypeFilter<$PrismaModel>
     _max?: NestedEnumProgressiveDiscountStepTypeFilter<$PrismaModel>
   }
-
-  export type NestedEnumModifierGroupTypeNullableFilter<$PrismaModel = never> = {
-    equals?: $Enums.ModifierGroupType | EnumModifierGroupTypeFieldRefInput<$PrismaModel> | null
-    in?: $Enums.ModifierGroupType[] | ListEnumModifierGroupTypeFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.ModifierGroupType[] | ListEnumModifierGroupTypeFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumModifierGroupTypeNullableFilter<$PrismaModel> | $Enums.ModifierGroupType | null
-  }
-
-  export type NestedEnumModifierGroupTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.ModifierGroupType | EnumModifierGroupTypeFieldRefInput<$PrismaModel> | null
-    in?: $Enums.ModifierGroupType[] | ListEnumModifierGroupTypeFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.ModifierGroupType[] | ListEnumModifierGroupTypeFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumModifierGroupTypeNullableWithAggregatesFilter<$PrismaModel> | $Enums.ModifierGroupType | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedEnumModifierGroupTypeNullableFilter<$PrismaModel>
-    _max?: NestedEnumModifierGroupTypeNullableFilter<$PrismaModel>
-  }
   export type NestedJsonNullableFilter<$PrismaModel = never> =
     | PatchUndefined<
         Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
@@ -42893,6 +44684,23 @@ export namespace Prisma {
     gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type NestedEnumModifierGroupTypeNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.ModifierGroupType | EnumModifierGroupTypeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.ModifierGroupType[] | ListEnumModifierGroupTypeFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.ModifierGroupType[] | ListEnumModifierGroupTypeFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumModifierGroupTypeNullableFilter<$PrismaModel> | $Enums.ModifierGroupType | null
+  }
+
+  export type NestedEnumModifierGroupTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ModifierGroupType | EnumModifierGroupTypeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.ModifierGroupType[] | ListEnumModifierGroupTypeFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.ModifierGroupType[] | ListEnumModifierGroupTypeFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumModifierGroupTypeNullableWithAggregatesFilter<$PrismaModel> | $Enums.ModifierGroupType | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumModifierGroupTypeNullableFilter<$PrismaModel>
+    _max?: NestedEnumModifierGroupTypeNullableFilter<$PrismaModel>
   }
 
   export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
@@ -43050,6 +44858,7 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     name: string
+    visible?: boolean
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
@@ -43066,6 +44875,7 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     name: string
+    visible?: boolean
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
@@ -43153,6 +44963,7 @@ export namespace Prisma {
     id?: StringFilter<"Product"> | string
     createdAt?: DateTimeFilter<"Product"> | Date | string
     name?: StringFilter<"Product"> | string
+    visible?: BoolFilter<"Product"> | boolean
     description?: StringNullableFilter<"Product"> | string | null
     price?: IntNullableFilter<"Product"> | number | null
     comparedAtPrice?: IntNullableFilter<"Product"> | number | null
@@ -43246,16 +45057,18 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes?: number | null
     dispatchOrderIndex?: number | null
     amount: number
+    canceled?: boolean
     status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     tipAmount?: number | null
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
     externalId?: string | null
-    customer: CustomerCreateNestedOneWithoutOrdersInput
+    customer?: CustomerCreateNestedOneWithoutOrdersInput
     dispatch?: DispatchCreateNestedOneWithoutOrdersInput
     address?: AddressCreateNestedOneWithoutOrdersInput
     deliveryAddress?: DeliveryAddressCreateNestedOneWithoutOrdersInput
+    externalAddress?: ExternalAddressCreateNestedOneWithoutOrdersInput
     orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
   }
 
@@ -43270,16 +45083,18 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes?: number | null
     dispatchOrderIndex?: number | null
     amount: number
+    canceled?: boolean
     status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     tipAmount?: number | null
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
-    customerId: string
+    customerId?: string | null
     externalId?: string | null
     dispatchId?: string | null
     addressId?: string | null
     deliveryAddressId?: string | null
+    externalAddressId?: string | null
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
   }
 
@@ -43371,16 +45186,18 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
+    canceled?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
-    customer?: CustomerUpdateOneRequiredWithoutOrdersNestedInput
+    customer?: CustomerUpdateOneWithoutOrdersNestedInput
     dispatch?: DispatchUpdateOneWithoutOrdersNestedInput
     address?: AddressUpdateOneWithoutOrdersNestedInput
     deliveryAddress?: DeliveryAddressUpdateOneWithoutOrdersNestedInput
+    externalAddress?: ExternalAddressUpdateOneWithoutOrdersNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
   }
 
@@ -43395,16 +45212,18 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
+    canceled?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
-    customerId?: StringFieldUpdateOperationsInput | string
+    customerId?: NullableStringFieldUpdateOperationsInput | string | null
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
     dispatchId?: NullableStringFieldUpdateOperationsInput | string | null
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
+    externalAddressId?: NullableStringFieldUpdateOperationsInput | string | null
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
   }
 
@@ -43780,6 +45599,7 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     name: string
+    translations?: NullableJsonNullValueInput | InputJsonValue
     quantity?: number
     imageUrl?: string | null
     products?: ProgressiveDiscountPrizeProductCreateNestedManyWithoutPrizeInput
@@ -43789,6 +45609,7 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     name: string
+    translations?: NullableJsonNullValueInput | InputJsonValue
     quantity?: number
     imageUrl?: string | null
     products?: ProgressiveDiscountPrizeProductUncheckedCreateNestedManyWithoutPrizeInput
@@ -43850,6 +45671,7 @@ export namespace Prisma {
     id?: StringFilter<"ProgressiveDiscountPrize"> | string
     createdAt?: DateTimeFilter<"ProgressiveDiscountPrize"> | Date | string
     name?: StringFilter<"ProgressiveDiscountPrize"> | string
+    translations?: JsonNullableFilter<"ProgressiveDiscountPrize">
     quantity?: IntFilter<"ProgressiveDiscountPrize"> | number
     imageUrl?: StringNullableFilter<"ProgressiveDiscountPrize"> | string | null
     progressiveDiscountStepId?: StringFilter<"ProgressiveDiscountPrize"> | string
@@ -43959,6 +45781,7 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     name: string
+    translations?: NullableJsonNullValueInput | InputJsonValue
     quantity?: number
     imageUrl?: string | null
     progressiveDiscountStep: ProgressiveDiscountStepCreateNestedOneWithoutPrizesInput
@@ -43968,6 +45791,7 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     name: string
+    translations?: NullableJsonNullValueInput | InputJsonValue
     quantity?: number
     imageUrl?: string | null
     progressiveDiscountStepId: string
@@ -43982,6 +45806,7 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     name: string
+    visible?: boolean
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
@@ -43998,6 +45823,7 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     name: string
+    visible?: boolean
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
@@ -44030,6 +45856,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
+    translations?: NullableJsonNullValueInput | InputJsonValue
     quantity?: IntFieldUpdateOperationsInput | number
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     progressiveDiscountStep?: ProgressiveDiscountStepUpdateOneRequiredWithoutPrizesNestedInput
@@ -44039,6 +45866,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
+    translations?: NullableJsonNullValueInput | InputJsonValue
     quantity?: IntFieldUpdateOperationsInput | number
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     progressiveDiscountStepId?: StringFieldUpdateOperationsInput | string
@@ -44059,6 +45887,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
+    visible?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
@@ -44075,6 +45904,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
+    visible?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
@@ -44091,6 +45921,7 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     name: string
+    visible?: boolean
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
@@ -44107,6 +45938,7 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     name: string
+    visible?: boolean
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
@@ -44173,6 +46005,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
+    visible?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
@@ -44189,6 +46022,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
+    visible?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
@@ -44235,6 +46069,7 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     name: string
+    visible?: boolean
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
@@ -44251,6 +46086,7 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     name: string
+    visible?: boolean
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
@@ -44361,6 +46197,7 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     title: string
+    translations?: NullableJsonNullValueInput | InputJsonValue
     required?: boolean
     type?: $Enums.ModifierGroupType | null
     minSelection?: number | null
@@ -44372,6 +46209,7 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     title: string
+    translations?: NullableJsonNullValueInput | InputJsonValue
     required?: boolean
     type?: $Enums.ModifierGroupType | null
     minSelection?: number | null
@@ -44479,6 +46317,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     title?: StringFieldUpdateOperationsInput | string
+    translations?: NullableJsonNullValueInput | InputJsonValue
     required?: BoolFieldUpdateOperationsInput | boolean
     type?: NullableEnumModifierGroupTypeFieldUpdateOperationsInput | $Enums.ModifierGroupType | null
     minSelection?: NullableIntFieldUpdateOperationsInput | number | null
@@ -44490,6 +46329,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     title?: StringFieldUpdateOperationsInput | string
+    translations?: NullableJsonNullValueInput | InputJsonValue
     required?: BoolFieldUpdateOperationsInput | boolean
     type?: NullableEnumModifierGroupTypeFieldUpdateOperationsInput | $Enums.ModifierGroupType | null
     minSelection?: NullableIntFieldUpdateOperationsInput | number | null
@@ -44688,6 +46528,7 @@ export namespace Prisma {
   export type DispatchCreateWithoutDriverInput = {
     id: string
     createdAt?: Date | string
+    queueIndex?: number | null
     dispatched?: boolean
     dispatchAt?: Date | string | null
     estimatedDeliveryDurationMinutes?: number | null
@@ -44698,6 +46539,7 @@ export namespace Prisma {
   export type DispatchUncheckedCreateWithoutDriverInput = {
     id: string
     createdAt?: Date | string
+    queueIndex?: number | null
     dispatched?: boolean
     dispatchAt?: Date | string | null
     estimatedDeliveryDurationMinutes?: number | null
@@ -44737,6 +46579,7 @@ export namespace Prisma {
     NOT?: DispatchScalarWhereInput | DispatchScalarWhereInput[]
     id?: StringFilter<"Dispatch"> | string
     createdAt?: DateTimeFilter<"Dispatch"> | Date | string
+    queueIndex?: IntNullableFilter<"Dispatch"> | number | null
     dispatched?: BoolFilter<"Dispatch"> | boolean
     dispatchAt?: DateTimeNullableFilter<"Dispatch"> | Date | string | null
     estimatedDeliveryDurationMinutes?: IntNullableFilter<"Dispatch"> | number | null
@@ -44776,15 +46619,17 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes?: number | null
     dispatchOrderIndex?: number | null
     amount: number
+    canceled?: boolean
     status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     tipAmount?: number | null
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
     externalId?: string | null
-    customer: CustomerCreateNestedOneWithoutOrdersInput
+    customer?: CustomerCreateNestedOneWithoutOrdersInput
     address?: AddressCreateNestedOneWithoutOrdersInput
     deliveryAddress?: DeliveryAddressCreateNestedOneWithoutOrdersInput
+    externalAddress?: ExternalAddressCreateNestedOneWithoutOrdersInput
     orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryCreateNestedManyWithoutOrderInput
   }
@@ -44800,15 +46645,17 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes?: number | null
     dispatchOrderIndex?: number | null
     amount: number
+    canceled?: boolean
     status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     tipAmount?: number | null
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
-    customerId: string
+    customerId?: string | null
     externalId?: string | null
     addressId?: string | null
     deliveryAddressId?: string | null
+    externalAddressId?: string | null
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryUncheckedCreateNestedManyWithoutOrderInput
   }
@@ -44880,16 +46727,18 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes?: IntNullableFilter<"Order"> | number | null
     dispatchOrderIndex?: IntNullableFilter<"Order"> | number | null
     amount?: IntFilter<"Order"> | number
+    canceled?: BoolFilter<"Order"> | boolean
     status?: EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
     type?: EnumOrderTypeFilter<"Order"> | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFilter<"Order"> | $Enums.PaymentType
     tipAmount?: IntNullableFilter<"Order"> | number | null
     progressiveDiscountSnapshot?: JsonNullableFilter<"Order">
-    customerId?: StringFilter<"Order"> | string
+    customerId?: StringNullableFilter<"Order"> | string | null
     externalId?: StringNullableFilter<"Order"> | string | null
     dispatchId?: StringNullableFilter<"Order"> | string | null
     addressId?: StringNullableFilter<"Order"> | string | null
     deliveryAddressId?: StringNullableFilter<"Order"> | string | null
+    externalAddressId?: StringNullableFilter<"Order"> | string | null
   }
 
   export type BranchCreateWithoutAddressInput = {
@@ -44924,15 +46773,17 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes?: number | null
     dispatchOrderIndex?: number | null
     amount: number
+    canceled?: boolean
     status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     tipAmount?: number | null
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
     externalId?: string | null
-    customer: CustomerCreateNestedOneWithoutOrdersInput
+    customer?: CustomerCreateNestedOneWithoutOrdersInput
     dispatch?: DispatchCreateNestedOneWithoutOrdersInput
     deliveryAddress?: DeliveryAddressCreateNestedOneWithoutOrdersInput
+    externalAddress?: ExternalAddressCreateNestedOneWithoutOrdersInput
     orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryCreateNestedManyWithoutOrderInput
   }
@@ -44948,15 +46799,17 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes?: number | null
     dispatchOrderIndex?: number | null
     amount: number
+    canceled?: boolean
     status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     tipAmount?: number | null
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
-    customerId: string
+    customerId?: string | null
     externalId?: string | null
     dispatchId?: string | null
     deliveryAddressId?: string | null
+    externalAddressId?: string | null
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryUncheckedCreateNestedManyWithoutOrderInput
   }
@@ -45046,6 +46899,7 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     title: string
+    translations?: NullableJsonNullValueInput | InputJsonValue
     required?: boolean
     type?: $Enums.ModifierGroupType | null
     minSelection?: number | null
@@ -45057,6 +46911,7 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     title: string
+    translations?: NullableJsonNullValueInput | InputJsonValue
     required?: boolean
     type?: $Enums.ModifierGroupType | null
     minSelection?: number | null
@@ -45222,6 +47077,7 @@ export namespace Prisma {
     id?: StringFilter<"ModifierGroup"> | string
     createdAt?: DateTimeFilter<"ModifierGroup"> | Date | string
     title?: StringFilter<"ModifierGroup"> | string
+    translations?: JsonNullableFilter<"ModifierGroup">
     required?: BoolFilter<"ModifierGroup"> | boolean
     type?: EnumModifierGroupTypeNullableFilter<"ModifierGroup"> | $Enums.ModifierGroupType | null
     minSelection?: IntNullableFilter<"ModifierGroup"> | number | null
@@ -45309,6 +47165,7 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     name: string
+    visible?: boolean
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
@@ -45325,6 +47182,7 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     name: string
+    visible?: boolean
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
@@ -45478,6 +47336,7 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes?: number | null
     dispatchOrderIndex?: number | null
     amount: number
+    canceled?: boolean
     status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
@@ -45487,6 +47346,7 @@ export namespace Prisma {
     dispatch?: DispatchCreateNestedOneWithoutOrdersInput
     address?: AddressCreateNestedOneWithoutOrdersInput
     deliveryAddress?: DeliveryAddressCreateNestedOneWithoutOrdersInput
+    externalAddress?: ExternalAddressCreateNestedOneWithoutOrdersInput
     orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryCreateNestedManyWithoutOrderInput
   }
@@ -45502,6 +47362,7 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes?: number | null
     dispatchOrderIndex?: number | null
     amount: number
+    canceled?: boolean
     status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
@@ -45511,6 +47372,7 @@ export namespace Prisma {
     dispatchId?: string | null
     addressId?: string | null
     deliveryAddressId?: string | null
+    externalAddressId?: string | null
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryUncheckedCreateNestedManyWithoutOrderInput
   }
@@ -45593,6 +47455,34 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ExternalAddressCreateWithoutCustomerInput = {
+    id: string
+    createdAt?: Date | string
+    address?: string | null
+    lat?: string | null
+    lng?: string | null
+    orders?: OrderCreateNestedManyWithoutExternalAddressInput
+  }
+
+  export type ExternalAddressUncheckedCreateWithoutCustomerInput = {
+    id: string
+    createdAt?: Date | string
+    address?: string | null
+    lat?: string | null
+    lng?: string | null
+    orders?: OrderUncheckedCreateNestedManyWithoutExternalAddressInput
+  }
+
+  export type ExternalAddressCreateOrConnectWithoutCustomerInput = {
+    where: ExternalAddressWhereUniqueInput
+    create: XOR<ExternalAddressCreateWithoutCustomerInput, ExternalAddressUncheckedCreateWithoutCustomerInput>
+  }
+
+  export type ExternalAddressCreateManyCustomerInputEnvelope = {
+    data: ExternalAddressCreateManyCustomerInput | ExternalAddressCreateManyCustomerInput[]
+    skipDuplicates?: boolean
+  }
+
   export type OrderUpsertWithWhereUniqueWithoutCustomerInput = {
     where: OrderWhereUniqueInput
     update: XOR<OrderUpdateWithoutCustomerInput, OrderUncheckedUpdateWithoutCustomerInput>
@@ -45661,6 +47551,34 @@ export namespace Prisma {
     customerId?: StringNullableFilter<"DeliveryAddress"> | string | null
   }
 
+  export type ExternalAddressUpsertWithWhereUniqueWithoutCustomerInput = {
+    where: ExternalAddressWhereUniqueInput
+    update: XOR<ExternalAddressUpdateWithoutCustomerInput, ExternalAddressUncheckedUpdateWithoutCustomerInput>
+    create: XOR<ExternalAddressCreateWithoutCustomerInput, ExternalAddressUncheckedCreateWithoutCustomerInput>
+  }
+
+  export type ExternalAddressUpdateWithWhereUniqueWithoutCustomerInput = {
+    where: ExternalAddressWhereUniqueInput
+    data: XOR<ExternalAddressUpdateWithoutCustomerInput, ExternalAddressUncheckedUpdateWithoutCustomerInput>
+  }
+
+  export type ExternalAddressUpdateManyWithWhereWithoutCustomerInput = {
+    where: ExternalAddressScalarWhereInput
+    data: XOR<ExternalAddressUpdateManyMutationInput, ExternalAddressUncheckedUpdateManyWithoutCustomerInput>
+  }
+
+  export type ExternalAddressScalarWhereInput = {
+    AND?: ExternalAddressScalarWhereInput | ExternalAddressScalarWhereInput[]
+    OR?: ExternalAddressScalarWhereInput[]
+    NOT?: ExternalAddressScalarWhereInput | ExternalAddressScalarWhereInput[]
+    id?: StringFilter<"ExternalAddress"> | string
+    createdAt?: DateTimeFilter<"ExternalAddress"> | Date | string
+    address?: StringNullableFilter<"ExternalAddress"> | string | null
+    lat?: StringNullableFilter<"ExternalAddress"> | string | null
+    lng?: StringNullableFilter<"ExternalAddress"> | string | null
+    customerId?: StringNullableFilter<"ExternalAddress"> | string | null
+  }
+
   export type CustomerCreateWithoutAddressesInput = {
     id: string
     createdAt?: Date | string
@@ -45671,6 +47589,7 @@ export namespace Prisma {
     lastMessageSent?: Date | string | null
     orders?: OrderCreateNestedManyWithoutCustomerInput
     promotionalMessages?: PromotialMessageCreateNestedManyWithoutCustomerInput
+    externalAddresses?: ExternalAddressCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUncheckedCreateWithoutAddressesInput = {
@@ -45683,6 +47602,7 @@ export namespace Prisma {
     lastMessageSent?: Date | string | null
     orders?: OrderUncheckedCreateNestedManyWithoutCustomerInput
     promotionalMessages?: PromotialMessageUncheckedCreateNestedManyWithoutCustomerInput
+    externalAddresses?: ExternalAddressUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerCreateOrConnectWithoutAddressesInput = {
@@ -45701,15 +47621,17 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes?: number | null
     dispatchOrderIndex?: number | null
     amount: number
+    canceled?: boolean
     status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     tipAmount?: number | null
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
     externalId?: string | null
-    customer: CustomerCreateNestedOneWithoutOrdersInput
+    customer?: CustomerCreateNestedOneWithoutOrdersInput
     dispatch?: DispatchCreateNestedOneWithoutOrdersInput
     address?: AddressCreateNestedOneWithoutOrdersInput
+    externalAddress?: ExternalAddressCreateNestedOneWithoutOrdersInput
     orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryCreateNestedManyWithoutOrderInput
   }
@@ -45725,15 +47647,17 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes?: number | null
     dispatchOrderIndex?: number | null
     amount: number
+    canceled?: boolean
     status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     tipAmount?: number | null
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
-    customerId: string
+    customerId?: string | null
     externalId?: string | null
     dispatchId?: string | null
     addressId?: string | null
+    externalAddressId?: string | null
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryUncheckedCreateNestedManyWithoutOrderInput
   }
@@ -45769,6 +47693,7 @@ export namespace Prisma {
     lastMessageSent?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     orders?: OrderUpdateManyWithoutCustomerNestedInput
     promotionalMessages?: PromotialMessageUpdateManyWithoutCustomerNestedInput
+    externalAddresses?: ExternalAddressUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateWithoutAddressesInput = {
@@ -45781,6 +47706,7 @@ export namespace Prisma {
     lastMessageSent?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     orders?: OrderUncheckedUpdateManyWithoutCustomerNestedInput
     promotionalMessages?: PromotialMessageUncheckedUpdateManyWithoutCustomerNestedInput
+    externalAddresses?: ExternalAddressUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type OrderUpsertWithWhereUniqueWithoutDeliveryAddressInput = {
@@ -45797,6 +47723,152 @@ export namespace Prisma {
   export type OrderUpdateManyWithWhereWithoutDeliveryAddressInput = {
     where: OrderScalarWhereInput
     data: XOR<OrderUpdateManyMutationInput, OrderUncheckedUpdateManyWithoutDeliveryAddressInput>
+  }
+
+  export type CustomerCreateWithoutExternalAddressesInput = {
+    id: string
+    createdAt?: Date | string
+    name?: string | null
+    email?: string | null
+    phone?: string | null
+    address?: string | null
+    lastMessageSent?: Date | string | null
+    orders?: OrderCreateNestedManyWithoutCustomerInput
+    promotionalMessages?: PromotialMessageCreateNestedManyWithoutCustomerInput
+    addresses?: DeliveryAddressCreateNestedManyWithoutCustomerInput
+  }
+
+  export type CustomerUncheckedCreateWithoutExternalAddressesInput = {
+    id: string
+    createdAt?: Date | string
+    name?: string | null
+    email?: string | null
+    phone?: string | null
+    address?: string | null
+    lastMessageSent?: Date | string | null
+    orders?: OrderUncheckedCreateNestedManyWithoutCustomerInput
+    promotionalMessages?: PromotialMessageUncheckedCreateNestedManyWithoutCustomerInput
+    addresses?: DeliveryAddressUncheckedCreateNestedManyWithoutCustomerInput
+  }
+
+  export type CustomerCreateOrConnectWithoutExternalAddressesInput = {
+    where: CustomerWhereUniqueInput
+    create: XOR<CustomerCreateWithoutExternalAddressesInput, CustomerUncheckedCreateWithoutExternalAddressesInput>
+  }
+
+  export type OrderCreateWithoutExternalAddressInput = {
+    id: string
+    number?: string | null
+    createdAt?: Date | string
+    scheduleFor?: Date | string | null
+    language?: string | null
+    paidAt?: Date | string | null
+    deliveredAt?: Date | string | null
+    estimatedDeliveryDurationMinutes?: number | null
+    dispatchOrderIndex?: number | null
+    amount: number
+    canceled?: boolean
+    status?: $Enums.OrderStatus
+    type?: $Enums.OrderType
+    paymentMethod?: $Enums.PaymentType
+    tipAmount?: number | null
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    externalId?: string | null
+    customer?: CustomerCreateNestedOneWithoutOrdersInput
+    dispatch?: DispatchCreateNestedOneWithoutOrdersInput
+    address?: AddressCreateNestedOneWithoutOrdersInput
+    deliveryAddress?: DeliveryAddressCreateNestedOneWithoutOrdersInput
+    orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
+    preparationStepCategories?: PreparationStepCategoryCreateNestedManyWithoutOrderInput
+  }
+
+  export type OrderUncheckedCreateWithoutExternalAddressInput = {
+    id: string
+    number?: string | null
+    createdAt?: Date | string
+    scheduleFor?: Date | string | null
+    language?: string | null
+    paidAt?: Date | string | null
+    deliveredAt?: Date | string | null
+    estimatedDeliveryDurationMinutes?: number | null
+    dispatchOrderIndex?: number | null
+    amount: number
+    canceled?: boolean
+    status?: $Enums.OrderStatus
+    type?: $Enums.OrderType
+    paymentMethod?: $Enums.PaymentType
+    tipAmount?: number | null
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    customerId?: string | null
+    externalId?: string | null
+    dispatchId?: string | null
+    addressId?: string | null
+    deliveryAddressId?: string | null
+    orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
+    preparationStepCategories?: PreparationStepCategoryUncheckedCreateNestedManyWithoutOrderInput
+  }
+
+  export type OrderCreateOrConnectWithoutExternalAddressInput = {
+    where: OrderWhereUniqueInput
+    create: XOR<OrderCreateWithoutExternalAddressInput, OrderUncheckedCreateWithoutExternalAddressInput>
+  }
+
+  export type OrderCreateManyExternalAddressInputEnvelope = {
+    data: OrderCreateManyExternalAddressInput | OrderCreateManyExternalAddressInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CustomerUpsertWithoutExternalAddressesInput = {
+    update: XOR<CustomerUpdateWithoutExternalAddressesInput, CustomerUncheckedUpdateWithoutExternalAddressesInput>
+    create: XOR<CustomerCreateWithoutExternalAddressesInput, CustomerUncheckedCreateWithoutExternalAddressesInput>
+    where?: CustomerWhereInput
+  }
+
+  export type CustomerUpdateToOneWithWhereWithoutExternalAddressesInput = {
+    where?: CustomerWhereInput
+    data: XOR<CustomerUpdateWithoutExternalAddressesInput, CustomerUncheckedUpdateWithoutExternalAddressesInput>
+  }
+
+  export type CustomerUpdateWithoutExternalAddressesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    lastMessageSent?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    orders?: OrderUpdateManyWithoutCustomerNestedInput
+    promotionalMessages?: PromotialMessageUpdateManyWithoutCustomerNestedInput
+    addresses?: DeliveryAddressUpdateManyWithoutCustomerNestedInput
+  }
+
+  export type CustomerUncheckedUpdateWithoutExternalAddressesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    lastMessageSent?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    orders?: OrderUncheckedUpdateManyWithoutCustomerNestedInput
+    promotionalMessages?: PromotialMessageUncheckedUpdateManyWithoutCustomerNestedInput
+    addresses?: DeliveryAddressUncheckedUpdateManyWithoutCustomerNestedInput
+  }
+
+  export type OrderUpsertWithWhereUniqueWithoutExternalAddressInput = {
+    where: OrderWhereUniqueInput
+    update: XOR<OrderUpdateWithoutExternalAddressInput, OrderUncheckedUpdateWithoutExternalAddressInput>
+    create: XOR<OrderCreateWithoutExternalAddressInput, OrderUncheckedCreateWithoutExternalAddressInput>
+  }
+
+  export type OrderUpdateWithWhereUniqueWithoutExternalAddressInput = {
+    where: OrderWhereUniqueInput
+    data: XOR<OrderUpdateWithoutExternalAddressInput, OrderUncheckedUpdateWithoutExternalAddressInput>
+  }
+
+  export type OrderUpdateManyWithWhereWithoutExternalAddressInput = {
+    where: OrderScalarWhereInput
+    data: XOR<OrderUpdateManyMutationInput, OrderUncheckedUpdateManyWithoutExternalAddressInput>
   }
 
   export type PromotialMessageCreateWithoutMessageInput = {
@@ -45887,6 +47959,7 @@ export namespace Prisma {
     lastMessageSent?: Date | string | null
     orders?: OrderCreateNestedManyWithoutCustomerInput
     addresses?: DeliveryAddressCreateNestedManyWithoutCustomerInput
+    externalAddresses?: ExternalAddressCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUncheckedCreateWithoutPromotionalMessagesInput = {
@@ -45899,6 +47972,7 @@ export namespace Prisma {
     lastMessageSent?: Date | string | null
     orders?: OrderUncheckedCreateNestedManyWithoutCustomerInput
     addresses?: DeliveryAddressUncheckedCreateNestedManyWithoutCustomerInput
+    externalAddresses?: ExternalAddressUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerCreateOrConnectWithoutPromotionalMessagesInput = {
@@ -45977,6 +48051,7 @@ export namespace Prisma {
     lastMessageSent?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     orders?: OrderUpdateManyWithoutCustomerNestedInput
     addresses?: DeliveryAddressUpdateManyWithoutCustomerNestedInput
+    externalAddresses?: ExternalAddressUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateWithoutPromotionalMessagesInput = {
@@ -45989,6 +48064,7 @@ export namespace Prisma {
     lastMessageSent?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     orders?: OrderUncheckedUpdateManyWithoutCustomerNestedInput
     addresses?: DeliveryAddressUncheckedUpdateManyWithoutCustomerNestedInput
+    externalAddresses?: ExternalAddressUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerCreateWithoutOrdersInput = {
@@ -46001,6 +48077,7 @@ export namespace Prisma {
     lastMessageSent?: Date | string | null
     promotionalMessages?: PromotialMessageCreateNestedManyWithoutCustomerInput
     addresses?: DeliveryAddressCreateNestedManyWithoutCustomerInput
+    externalAddresses?: ExternalAddressCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUncheckedCreateWithoutOrdersInput = {
@@ -46013,6 +48090,7 @@ export namespace Prisma {
     lastMessageSent?: Date | string | null
     promotionalMessages?: PromotialMessageUncheckedCreateNestedManyWithoutCustomerInput
     addresses?: DeliveryAddressUncheckedCreateNestedManyWithoutCustomerInput
+    externalAddresses?: ExternalAddressUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerCreateOrConnectWithoutOrdersInput = {
@@ -46023,6 +48101,7 @@ export namespace Prisma {
   export type DispatchCreateWithoutOrdersInput = {
     id: string
     createdAt?: Date | string
+    queueIndex?: number | null
     dispatched?: boolean
     dispatchAt?: Date | string | null
     estimatedDeliveryDurationMinutes?: number | null
@@ -46033,6 +48112,7 @@ export namespace Prisma {
   export type DispatchUncheckedCreateWithoutOrdersInput = {
     id: string
     createdAt?: Date | string
+    queueIndex?: number | null
     dispatched?: boolean
     dispatchAt?: Date | string | null
     estimatedDeliveryDurationMinutes?: number | null
@@ -46103,6 +48183,29 @@ export namespace Prisma {
   export type DeliveryAddressCreateOrConnectWithoutOrdersInput = {
     where: DeliveryAddressWhereUniqueInput
     create: XOR<DeliveryAddressCreateWithoutOrdersInput, DeliveryAddressUncheckedCreateWithoutOrdersInput>
+  }
+
+  export type ExternalAddressCreateWithoutOrdersInput = {
+    id: string
+    createdAt?: Date | string
+    address?: string | null
+    lat?: string | null
+    lng?: string | null
+    customer?: CustomerCreateNestedOneWithoutExternalAddressesInput
+  }
+
+  export type ExternalAddressUncheckedCreateWithoutOrdersInput = {
+    id: string
+    createdAt?: Date | string
+    address?: string | null
+    lat?: string | null
+    lng?: string | null
+    customerId?: string | null
+  }
+
+  export type ExternalAddressCreateOrConnectWithoutOrdersInput = {
+    where: ExternalAddressWhereUniqueInput
+    create: XOR<ExternalAddressCreateWithoutOrdersInput, ExternalAddressUncheckedCreateWithoutOrdersInput>
   }
 
   export type OrderProductsCreateWithoutOrderInput = {
@@ -46184,6 +48287,7 @@ export namespace Prisma {
     lastMessageSent?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     promotionalMessages?: PromotialMessageUpdateManyWithoutCustomerNestedInput
     addresses?: DeliveryAddressUpdateManyWithoutCustomerNestedInput
+    externalAddresses?: ExternalAddressUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateWithoutOrdersInput = {
@@ -46196,6 +48300,7 @@ export namespace Prisma {
     lastMessageSent?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     promotionalMessages?: PromotialMessageUncheckedUpdateManyWithoutCustomerNestedInput
     addresses?: DeliveryAddressUncheckedUpdateManyWithoutCustomerNestedInput
+    externalAddresses?: ExternalAddressUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type DispatchUpsertWithoutOrdersInput = {
@@ -46212,6 +48317,7 @@ export namespace Prisma {
   export type DispatchUpdateWithoutOrdersInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    queueIndex?: NullableIntFieldUpdateOperationsInput | number | null
     dispatched?: BoolFieldUpdateOperationsInput | boolean
     dispatchAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
@@ -46222,6 +48328,7 @@ export namespace Prisma {
   export type DispatchUncheckedUpdateWithoutOrdersInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    queueIndex?: NullableIntFieldUpdateOperationsInput | number | null
     dispatched?: BoolFieldUpdateOperationsInput | boolean
     dispatchAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
@@ -46301,6 +48408,35 @@ export namespace Prisma {
     customerId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type ExternalAddressUpsertWithoutOrdersInput = {
+    update: XOR<ExternalAddressUpdateWithoutOrdersInput, ExternalAddressUncheckedUpdateWithoutOrdersInput>
+    create: XOR<ExternalAddressCreateWithoutOrdersInput, ExternalAddressUncheckedCreateWithoutOrdersInput>
+    where?: ExternalAddressWhereInput
+  }
+
+  export type ExternalAddressUpdateToOneWithWhereWithoutOrdersInput = {
+    where?: ExternalAddressWhereInput
+    data: XOR<ExternalAddressUpdateWithoutOrdersInput, ExternalAddressUncheckedUpdateWithoutOrdersInput>
+  }
+
+  export type ExternalAddressUpdateWithoutOrdersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    lat?: NullableStringFieldUpdateOperationsInput | string | null
+    lng?: NullableStringFieldUpdateOperationsInput | string | null
+    customer?: CustomerUpdateOneWithoutExternalAddressesNestedInput
+  }
+
+  export type ExternalAddressUncheckedUpdateWithoutOrdersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    lat?: NullableStringFieldUpdateOperationsInput | string | null
+    lng?: NullableStringFieldUpdateOperationsInput | string | null
+    customerId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
   export type OrderProductsUpsertWithWhereUniqueWithoutOrderInput = {
     where: OrderProductsWhereUniqueInput
     update: XOR<OrderProductsUpdateWithoutOrderInput, OrderProductsUncheckedUpdateWithoutOrderInput>
@@ -46337,6 +48473,7 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     name: string
+    visible?: boolean
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
@@ -46353,6 +48490,7 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     name: string
+    visible?: boolean
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
@@ -46410,16 +48548,18 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes?: number | null
     dispatchOrderIndex?: number | null
     amount: number
+    canceled?: boolean
     status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     tipAmount?: number | null
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
     externalId?: string | null
-    customer: CustomerCreateNestedOneWithoutOrdersInput
+    customer?: CustomerCreateNestedOneWithoutOrdersInput
     dispatch?: DispatchCreateNestedOneWithoutOrdersInput
     address?: AddressCreateNestedOneWithoutOrdersInput
     deliveryAddress?: DeliveryAddressCreateNestedOneWithoutOrdersInput
+    externalAddress?: ExternalAddressCreateNestedOneWithoutOrdersInput
     preparationStepCategories?: PreparationStepCategoryCreateNestedManyWithoutOrderInput
   }
 
@@ -46434,16 +48574,18 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes?: number | null
     dispatchOrderIndex?: number | null
     amount: number
+    canceled?: boolean
     status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     tipAmount?: number | null
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
-    customerId: string
+    customerId?: string | null
     externalId?: string | null
     dispatchId?: string | null
     addressId?: string | null
     deliveryAddressId?: string | null
+    externalAddressId?: string | null
     preparationStepCategories?: PreparationStepCategoryUncheckedCreateNestedManyWithoutOrderInput
   }
 
@@ -46467,6 +48609,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
+    visible?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
@@ -46483,6 +48626,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
+    visible?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
@@ -46533,16 +48677,18 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
+    canceled?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
-    customer?: CustomerUpdateOneRequiredWithoutOrdersNestedInput
+    customer?: CustomerUpdateOneWithoutOrdersNestedInput
     dispatch?: DispatchUpdateOneWithoutOrdersNestedInput
     address?: AddressUpdateOneWithoutOrdersNestedInput
     deliveryAddress?: DeliveryAddressUpdateOneWithoutOrdersNestedInput
+    externalAddress?: ExternalAddressUpdateOneWithoutOrdersNestedInput
     preparationStepCategories?: PreparationStepCategoryUpdateManyWithoutOrderNestedInput
   }
 
@@ -46557,16 +48703,18 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
+    canceled?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
-    customerId?: StringFieldUpdateOperationsInput | string
+    customerId?: NullableStringFieldUpdateOperationsInput | string | null
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
     dispatchId?: NullableStringFieldUpdateOperationsInput | string | null
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
+    externalAddressId?: NullableStringFieldUpdateOperationsInput | string | null
     preparationStepCategories?: PreparationStepCategoryUncheckedUpdateManyWithoutOrderNestedInput
   }
 
@@ -46620,6 +48768,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
+    visible?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
@@ -46636,6 +48785,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
+    visible?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
@@ -46652,6 +48802,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
+    visible?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
@@ -46800,6 +48951,7 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     name: string
+    translations?: NullableJsonNullValueInput | InputJsonValue
     quantity?: number
     imageUrl?: string | null
   }
@@ -46808,6 +48960,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
+    translations?: NullableJsonNullValueInput | InputJsonValue
     quantity?: IntFieldUpdateOperationsInput | number
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     products?: ProgressiveDiscountPrizeProductUpdateManyWithoutPrizeNestedInput
@@ -46817,6 +48970,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
+    translations?: NullableJsonNullValueInput | InputJsonValue
     quantity?: IntFieldUpdateOperationsInput | number
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     products?: ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutPrizeNestedInput
@@ -46826,6 +48980,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
+    translations?: NullableJsonNullValueInput | InputJsonValue
     quantity?: IntFieldUpdateOperationsInput | number
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -46912,6 +49067,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
+    visible?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
@@ -46928,6 +49084,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
+    visible?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
@@ -46944,6 +49101,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
+    visible?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
@@ -47082,6 +49240,7 @@ export namespace Prisma {
   export type DispatchCreateManyDriverInput = {
     id: string
     createdAt?: Date | string
+    queueIndex?: number | null
     dispatched?: boolean
     dispatchAt?: Date | string | null
     estimatedDeliveryDurationMinutes?: number | null
@@ -47091,6 +49250,7 @@ export namespace Prisma {
   export type DispatchUpdateWithoutDriverInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    queueIndex?: NullableIntFieldUpdateOperationsInput | number | null
     dispatched?: BoolFieldUpdateOperationsInput | boolean
     dispatchAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
@@ -47101,6 +49261,7 @@ export namespace Prisma {
   export type DispatchUncheckedUpdateWithoutDriverInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    queueIndex?: NullableIntFieldUpdateOperationsInput | number | null
     dispatched?: BoolFieldUpdateOperationsInput | boolean
     dispatchAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
@@ -47111,6 +49272,7 @@ export namespace Prisma {
   export type DispatchUncheckedUpdateManyWithoutDriverInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    queueIndex?: NullableIntFieldUpdateOperationsInput | number | null
     dispatched?: BoolFieldUpdateOperationsInput | boolean
     dispatchAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
@@ -47128,15 +49290,17 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes?: number | null
     dispatchOrderIndex?: number | null
     amount: number
+    canceled?: boolean
     status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     tipAmount?: number | null
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
-    customerId: string
+    customerId?: string | null
     externalId?: string | null
     addressId?: string | null
     deliveryAddressId?: string | null
+    externalAddressId?: string | null
   }
 
   export type OrderUpdateWithoutDispatchInput = {
@@ -47150,15 +49314,17 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
+    canceled?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
-    customer?: CustomerUpdateOneRequiredWithoutOrdersNestedInput
+    customer?: CustomerUpdateOneWithoutOrdersNestedInput
     address?: AddressUpdateOneWithoutOrdersNestedInput
     deliveryAddress?: DeliveryAddressUpdateOneWithoutOrdersNestedInput
+    externalAddress?: ExternalAddressUpdateOneWithoutOrdersNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUpdateManyWithoutOrderNestedInput
   }
@@ -47174,15 +49340,17 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
+    canceled?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
-    customerId?: StringFieldUpdateOperationsInput | string
+    customerId?: NullableStringFieldUpdateOperationsInput | string | null
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
+    externalAddressId?: NullableStringFieldUpdateOperationsInput | string | null
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUncheckedUpdateManyWithoutOrderNestedInput
   }
@@ -47198,15 +49366,17 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
+    canceled?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
-    customerId?: StringFieldUpdateOperationsInput | string
+    customerId?: NullableStringFieldUpdateOperationsInput | string | null
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
+    externalAddressId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type OrderCreateManyAddressInput = {
@@ -47220,15 +49390,17 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes?: number | null
     dispatchOrderIndex?: number | null
     amount: number
+    canceled?: boolean
     status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     tipAmount?: number | null
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
-    customerId: string
+    customerId?: string | null
     externalId?: string | null
     dispatchId?: string | null
     deliveryAddressId?: string | null
+    externalAddressId?: string | null
   }
 
   export type OrderUpdateWithoutAddressInput = {
@@ -47242,15 +49414,17 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
+    canceled?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
-    customer?: CustomerUpdateOneRequiredWithoutOrdersNestedInput
+    customer?: CustomerUpdateOneWithoutOrdersNestedInput
     dispatch?: DispatchUpdateOneWithoutOrdersNestedInput
     deliveryAddress?: DeliveryAddressUpdateOneWithoutOrdersNestedInput
+    externalAddress?: ExternalAddressUpdateOneWithoutOrdersNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUpdateManyWithoutOrderNestedInput
   }
@@ -47266,15 +49440,17 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
+    canceled?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
-    customerId?: StringFieldUpdateOperationsInput | string
+    customerId?: NullableStringFieldUpdateOperationsInput | string | null
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
     dispatchId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
+    externalAddressId?: NullableStringFieldUpdateOperationsInput | string | null
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUncheckedUpdateManyWithoutOrderNestedInput
   }
@@ -47290,15 +49466,17 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
+    canceled?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
-    customerId?: StringFieldUpdateOperationsInput | string
+    customerId?: NullableStringFieldUpdateOperationsInput | string | null
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
     dispatchId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
+    externalAddressId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type FileCreateManyProductInput = {
@@ -47355,6 +49533,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     title?: StringFieldUpdateOperationsInput | string
+    translations?: NullableJsonNullValueInput | InputJsonValue
     required?: BoolFieldUpdateOperationsInput | boolean
     type?: NullableEnumModifierGroupTypeFieldUpdateOperationsInput | $Enums.ModifierGroupType | null
     minSelection?: NullableIntFieldUpdateOperationsInput | number | null
@@ -47366,6 +49545,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     title?: StringFieldUpdateOperationsInput | string
+    translations?: NullableJsonNullValueInput | InputJsonValue
     required?: BoolFieldUpdateOperationsInput | boolean
     type?: NullableEnumModifierGroupTypeFieldUpdateOperationsInput | $Enums.ModifierGroupType | null
     minSelection?: NullableIntFieldUpdateOperationsInput | number | null
@@ -47377,6 +49557,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     title?: StringFieldUpdateOperationsInput | string
+    translations?: NullableJsonNullValueInput | InputJsonValue
     required?: BoolFieldUpdateOperationsInput | boolean
     type?: NullableEnumModifierGroupTypeFieldUpdateOperationsInput | $Enums.ModifierGroupType | null
     minSelection?: NullableIntFieldUpdateOperationsInput | number | null
@@ -47466,6 +49647,7 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     name: string
+    visible?: boolean
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
@@ -47484,6 +49666,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
+    visible?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
@@ -47500,6 +49683,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
+    visible?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
@@ -47516,6 +49700,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
+    visible?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
@@ -47585,6 +49770,7 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes?: number | null
     dispatchOrderIndex?: number | null
     amount: number
+    canceled?: boolean
     status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
@@ -47594,6 +49780,7 @@ export namespace Prisma {
     dispatchId?: string | null
     addressId?: string | null
     deliveryAddressId?: string | null
+    externalAddressId?: string | null
   }
 
   export type PromotialMessageCreateManyCustomerInput = {
@@ -47619,6 +49806,14 @@ export namespace Prisma {
     numberComplement?: string | null
   }
 
+  export type ExternalAddressCreateManyCustomerInput = {
+    id: string
+    createdAt?: Date | string
+    address?: string | null
+    lat?: string | null
+    lng?: string | null
+  }
+
   export type OrderUpdateWithoutCustomerInput = {
     id?: StringFieldUpdateOperationsInput | string
     number?: NullableStringFieldUpdateOperationsInput | string | null
@@ -47630,6 +49825,7 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
+    canceled?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
@@ -47639,6 +49835,7 @@ export namespace Prisma {
     dispatch?: DispatchUpdateOneWithoutOrdersNestedInput
     address?: AddressUpdateOneWithoutOrdersNestedInput
     deliveryAddress?: DeliveryAddressUpdateOneWithoutOrdersNestedInput
+    externalAddress?: ExternalAddressUpdateOneWithoutOrdersNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUpdateManyWithoutOrderNestedInput
   }
@@ -47654,6 +49851,7 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
+    canceled?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
@@ -47663,6 +49861,7 @@ export namespace Prisma {
     dispatchId?: NullableStringFieldUpdateOperationsInput | string | null
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
+    externalAddressId?: NullableStringFieldUpdateOperationsInput | string | null
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUncheckedUpdateManyWithoutOrderNestedInput
   }
@@ -47678,6 +49877,7 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
+    canceled?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
@@ -47687,6 +49887,7 @@ export namespace Prisma {
     dispatchId?: NullableStringFieldUpdateOperationsInput | string | null
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
+    externalAddressId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type PromotialMessageUpdateWithoutCustomerInput = {
@@ -47760,6 +49961,32 @@ export namespace Prisma {
     numberComplement?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type ExternalAddressUpdateWithoutCustomerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    lat?: NullableStringFieldUpdateOperationsInput | string | null
+    lng?: NullableStringFieldUpdateOperationsInput | string | null
+    orders?: OrderUpdateManyWithoutExternalAddressNestedInput
+  }
+
+  export type ExternalAddressUncheckedUpdateWithoutCustomerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    lat?: NullableStringFieldUpdateOperationsInput | string | null
+    lng?: NullableStringFieldUpdateOperationsInput | string | null
+    orders?: OrderUncheckedUpdateManyWithoutExternalAddressNestedInput
+  }
+
+  export type ExternalAddressUncheckedUpdateManyWithoutCustomerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    lat?: NullableStringFieldUpdateOperationsInput | string | null
+    lng?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
   export type OrderCreateManyDeliveryAddressInput = {
     id: string
     number?: string | null
@@ -47771,15 +49998,17 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes?: number | null
     dispatchOrderIndex?: number | null
     amount: number
+    canceled?: boolean
     status?: $Enums.OrderStatus
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     tipAmount?: number | null
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
-    customerId: string
+    customerId?: string | null
     externalId?: string | null
     dispatchId?: string | null
     addressId?: string | null
+    externalAddressId?: string | null
   }
 
   export type OrderUpdateWithoutDeliveryAddressInput = {
@@ -47793,15 +50022,17 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
+    canceled?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
-    customer?: CustomerUpdateOneRequiredWithoutOrdersNestedInput
+    customer?: CustomerUpdateOneWithoutOrdersNestedInput
     dispatch?: DispatchUpdateOneWithoutOrdersNestedInput
     address?: AddressUpdateOneWithoutOrdersNestedInput
+    externalAddress?: ExternalAddressUpdateOneWithoutOrdersNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUpdateManyWithoutOrderNestedInput
   }
@@ -47817,15 +50048,17 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
+    canceled?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
-    customerId?: StringFieldUpdateOperationsInput | string
+    customerId?: NullableStringFieldUpdateOperationsInput | string | null
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
     dispatchId?: NullableStringFieldUpdateOperationsInput | string | null
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
+    externalAddressId?: NullableStringFieldUpdateOperationsInput | string | null
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUncheckedUpdateManyWithoutOrderNestedInput
   }
@@ -47841,15 +50074,117 @@ export namespace Prisma {
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
+    canceled?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
-    customerId?: StringFieldUpdateOperationsInput | string
+    customerId?: NullableStringFieldUpdateOperationsInput | string | null
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
     dispatchId?: NullableStringFieldUpdateOperationsInput | string | null
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
+    externalAddressId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type OrderCreateManyExternalAddressInput = {
+    id: string
+    number?: string | null
+    createdAt?: Date | string
+    scheduleFor?: Date | string | null
+    language?: string | null
+    paidAt?: Date | string | null
+    deliveredAt?: Date | string | null
+    estimatedDeliveryDurationMinutes?: number | null
+    dispatchOrderIndex?: number | null
+    amount: number
+    canceled?: boolean
+    status?: $Enums.OrderStatus
+    type?: $Enums.OrderType
+    paymentMethod?: $Enums.PaymentType
+    tipAmount?: number | null
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    customerId?: string | null
+    externalId?: string | null
+    dispatchId?: string | null
+    addressId?: string | null
+    deliveryAddressId?: string | null
+  }
+
+  export type OrderUpdateWithoutExternalAddressInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    number?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    scheduleFor?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
+    amount?: IntFieldUpdateOperationsInput | number
+    canceled?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+    paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
+    tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    customer?: CustomerUpdateOneWithoutOrdersNestedInput
+    dispatch?: DispatchUpdateOneWithoutOrdersNestedInput
+    address?: AddressUpdateOneWithoutOrdersNestedInput
+    deliveryAddress?: DeliveryAddressUpdateOneWithoutOrdersNestedInput
+    orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
+    preparationStepCategories?: PreparationStepCategoryUpdateManyWithoutOrderNestedInput
+  }
+
+  export type OrderUncheckedUpdateWithoutExternalAddressInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    number?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    scheduleFor?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
+    amount?: IntFieldUpdateOperationsInput | number
+    canceled?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+    paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
+    tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    customerId?: NullableStringFieldUpdateOperationsInput | string | null
+    externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    dispatchId?: NullableStringFieldUpdateOperationsInput | string | null
+    addressId?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
+    orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
+    preparationStepCategories?: PreparationStepCategoryUncheckedUpdateManyWithoutOrderNestedInput
+  }
+
+  export type OrderUncheckedUpdateManyWithoutExternalAddressInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    number?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    scheduleFor?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
+    amount?: IntFieldUpdateOperationsInput | number
+    canceled?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+    paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
+    tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    customerId?: NullableStringFieldUpdateOperationsInput | string | null
+    externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    dispatchId?: NullableStringFieldUpdateOperationsInput | string | null
+    addressId?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type PromotialMessageCreateManyMessageInput = {

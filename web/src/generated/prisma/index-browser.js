@@ -180,6 +180,7 @@ exports.Prisma.ProgressiveDiscountPrizeScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
   name: 'name',
+  translations: 'translations',
   quantity: 'quantity',
   imageUrl: 'imageUrl',
   progressiveDiscountStepId: 'progressiveDiscountStepId'
@@ -205,6 +206,7 @@ exports.Prisma.ModifierGroupScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
   title: 'title',
+  translations: 'translations',
   required: 'required',
   type: 'type',
   minSelection: 'minSelection',
@@ -248,6 +250,7 @@ exports.Prisma.DriverScalarFieldEnum = {
 exports.Prisma.DispatchScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
+  queueIndex: 'queueIndex',
   dispatched: 'dispatched',
   dispatchAt: 'dispatchAt',
   estimatedDeliveryDurationMinutes: 'estimatedDeliveryDurationMinutes',
@@ -279,6 +282,7 @@ exports.Prisma.ProductScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
   name: 'name',
+  visible: 'visible',
   description: 'description',
   price: 'price',
   comparedAtPrice: 'comparedAtPrice',
@@ -328,6 +332,15 @@ exports.Prisma.DeliveryAddressScalarFieldEnum = {
   customerId: 'customerId'
 };
 
+exports.Prisma.ExternalAddressScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  address: 'address',
+  lat: 'lat',
+  lng: 'lng',
+  customerId: 'customerId'
+};
+
 exports.Prisma.MessageScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
@@ -355,6 +368,7 @@ exports.Prisma.OrderScalarFieldEnum = {
   estimatedDeliveryDurationMinutes: 'estimatedDeliveryDurationMinutes',
   dispatchOrderIndex: 'dispatchOrderIndex',
   amount: 'amount',
+  canceled: 'canceled',
   status: 'status',
   type: 'type',
   paymentMethod: 'paymentMethod',
@@ -364,7 +378,8 @@ exports.Prisma.OrderScalarFieldEnum = {
   externalId: 'externalId',
   dispatchId: 'dispatchId',
   addressId: 'addressId',
-  deliveryAddressId: 'deliveryAddressId'
+  deliveryAddressId: 'deliveryAddressId',
+  externalAddressId: 'externalAddressId'
 };
 
 exports.Prisma.OrderProductsScalarFieldEnum = {
@@ -462,6 +477,7 @@ exports.Prisma.ModelName = {
   Campaign: 'Campaign',
   Customer: 'Customer',
   DeliveryAddress: 'DeliveryAddress',
+  ExternalAddress: 'ExternalAddress',
   Message: 'Message',
   PromotialMessage: 'PromotialMessage',
   Order: 'Order',

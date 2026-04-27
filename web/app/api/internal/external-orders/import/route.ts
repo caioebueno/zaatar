@@ -2,6 +2,7 @@ import prisma from "@/prisma";
 import {
   buildPhoneCandidates,
   getDefaultCountryCode,
+  normalizePhoneDigits,
   normalizePhoneWithCountryCode,
 } from "@/src/phone";
 import {
@@ -30,12 +31,15 @@ type ExternalOrder = {
   id?: unknown;
   public_id?: unknown;
   service_type?: unknown;
+  address?: unknown;
+  address_id?: unknown;
   payment_method?: unknown;
   payments?: unknown;
   created_at?: unknown;
   scheduled_delivery_date?: unknown;
   total?: unknown;
   total_usd?: unknown;
+  total_tips?: unknown;
   client?: ExternalClient | null;
 };
 
@@ -44,6 +48,23 @@ type ImportPayload =
       data?: ExternalOrder[];
     }
   | ExternalOrder[];
+
+type ExternalAddressData = {
+  address?: string;
+  lat?: string;
+  lng?: string;
+  city?: string;
+  state?: string;
+  zipCode?: string;
+  street?: string;
+  number?: string;
+  complement?: string;
+};
+
+const DEFAULT_IMPORT_ADDRESS_LAT =
+  process.env.DEFAULT_IMPORT_ADDRESS_LAT?.trim() || "28.34883080351401";
+const DEFAULT_IMPORT_ADDRESS_LNG =
+  process.env.DEFAULT_IMPORT_ADDRESS_LNG?.trim() || "-81.65145586075074";
 
 function isAuthorized(request: NextRequest): boolean {
   const secret =
@@ -90,9 +111,37 @@ function toCents(value: unknown): number {
   return 0;
 }
 
-function mapServiceTypeToOrderType(serviceType: unknown): TOrderType {
-  const normalized = normalizeNonEmptyString(serviceType)?.toUpperCase();
-  if (normalized === "DELIVERY") return "DELIVERY";
+function mapServiceTypeToOrderType(order: ExternalOrder): TOrderType {
+  const normalizedServiceType = normalizeNonEmptyString(
+    order.service_type,
+  )?.toUpperCase();
+
+  if (normalizedServiceType) {
+    if (normalizedServiceType.includes("DELIVER")) {
+      return "DELIVERY";
+    }
+
+    if (
+      normalizedServiceType.includes("TAKEAWAY") ||
+      normalizedServiceType.includes("ONSITE") ||
+      normalizedServiceType.includes("PICKUP")
+    ) {
+      return "TAKEAWAY";
+    }
+  }
+
+  // Fallback for providers that send non-standard service type values.
+  // If there is delivery address data, treat the order as DELIVERY.
+  const hasAddressId = Boolean(normalizeNonEmptyString(order.address_id));
+  const hasAddressValue =
+    typeof order.address === "string"
+      ? Boolean(normalizeNonEmptyString(order.address))
+      : Boolean(order.address && typeof order.address === "object");
+
+  if (hasAddressId || hasAddressValue) {
+    return "DELIVERY";
+  }
+
   return "TAKEAWAY";
 }
 
@@ -139,6 +188,99 @@ function parseOrdersFromPayload(payload: ImportPayload): ExternalOrder[] {
   return [];
 }
 
+function normalizeCoordinate(value: unknown): string | undefined {
+  if (typeof value === "number" && Number.isFinite(value)) {
+    return String(value);
+  }
+
+  if (typeof value === "string") {
+    const normalized = value.trim();
+    if (!normalized) return undefined;
+    const parsed = Number(normalized);
+    if (!Number.isFinite(parsed)) return undefined;
+    return String(parsed);
+  }
+
+  return undefined;
+}
+
+function extractExternalAddressData(order: ExternalOrder): ExternalAddressData {
+  const rawAddress = order.address;
+
+  if (typeof rawAddress === "string") {
+    return {
+      address: normalizeNonEmptyString(rawAddress),
+    };
+  }
+
+  if (!rawAddress || typeof rawAddress !== "object" || Array.isArray(rawAddress)) {
+    return {};
+  }
+
+  const addressRecord = rawAddress as Record<string, unknown>;
+
+  const address =
+    normalizeNonEmptyString(addressRecord.address) ||
+    normalizeNonEmptyString(addressRecord.formatted_address) ||
+    normalizeNonEmptyString(addressRecord.full_address) ||
+    normalizeNonEmptyString(addressRecord.description) ||
+    normalizeNonEmptyString(addressRecord.street) ||
+    normalizeNonEmptyString(addressRecord.line_1);
+
+  const lat =
+    normalizeCoordinate(addressRecord.lat) ||
+    normalizeCoordinate(addressRecord.latitude) ||
+    normalizeCoordinate(
+      (addressRecord.location as Record<string, unknown> | undefined)?.lat,
+    ) ||
+    normalizeCoordinate(
+      (addressRecord.location as Record<string, unknown> | undefined)?.latitude,
+    );
+
+  const lng =
+    normalizeCoordinate(addressRecord.lng) ||
+    normalizeCoordinate(addressRecord.longitude) ||
+    normalizeCoordinate(
+      (addressRecord.location as Record<string, unknown> | undefined)?.lng,
+    ) ||
+    normalizeCoordinate(
+      (addressRecord.location as Record<string, unknown> | undefined)?.longitude,
+    );
+
+  const city =
+    normalizeNonEmptyString(addressRecord.city) ||
+    normalizeNonEmptyString(addressRecord.locality);
+  const state =
+    normalizeNonEmptyString(addressRecord.state) ||
+    normalizeNonEmptyString(addressRecord.region);
+  const zipCode =
+    normalizeNonEmptyString(addressRecord.zipCode) ||
+    normalizeNonEmptyString(addressRecord.zip_code) ||
+    normalizeNonEmptyString(addressRecord.postal_code);
+  const street =
+    normalizeNonEmptyString(addressRecord.street) ||
+    normalizeNonEmptyString(addressRecord.line_1) ||
+    normalizeNonEmptyString(addressRecord.road);
+  const number =
+    normalizeNonEmptyString(addressRecord.number) ||
+    normalizeNonEmptyString(addressRecord.street_number);
+  const complement =
+    normalizeNonEmptyString(addressRecord.complement) ||
+    normalizeNonEmptyString(addressRecord.line_2);
+
+  return {
+    ...(address ? { address } : {}),
+    ...(lat ? { lat } : {}),
+    ...(lng ? { lng } : {}),
+    ...(city ? { city } : {}),
+    ...(state ? { state } : {}),
+    ...(zipCode ? { zipCode } : {}),
+    ...(street ? { street } : {}),
+    ...(number ? { number } : {}),
+    ...(complement ? { complement } : {}),
+  };
+}
+
 function getErrorReason(error: unknown): string {
   if (typeof error === "string" && error.trim()) {
     return error;
@@ -180,15 +322,22 @@ async function resolveCustomerIdTx(
   const countryCode =
     normalizeNonEmptyString(client.country_calling_code)?.replace(/\D/g, "") ||
     getDefaultCountryCode();
-  const normalizedPhone = normalizePhoneWithCountryCode(
+  const rawPhone = normalizeNonEmptyString(client.phone_number) || "";
+  const rawPhoneDigits = normalizePhoneDigits(rawPhone);
+
+  if (!rawPhoneDigits) {
+    return undefined;
+  }
+
+  const maybeNormalizedPhone = normalizePhoneWithCountryCode(
     normalizeNonEmptyString(client.phone_number) || "",
     countryCode,
   );
+  const normalizedPhone =
+    countryCode && !rawPhoneDigits.startsWith(countryCode)
+      ? `${countryCode}${rawPhoneDigits}`
+      : maybeNormalizedPhone || rawPhoneDigits;
   const normalizedName = normalizeNonEmptyString(client.name);
-
-  if (!normalizedPhone) {
-    return undefined;
-  }
 
   const phoneCandidates = buildPhoneCandidates(normalizedPhone, countryCode);
   const existingCustomer = await tx.customer.findFirst({
@@ -265,11 +414,14 @@ async function createTakeawayDispatchTx(
   };
 }
 
-async function triggerDispatchQueueRun(): Promise<void> {
+async function triggerDispatchQueueRun(jobsToPrioritize = 1): Promise<void> {
+  const normalizedLimit = Number.isFinite(jobsToPrioritize)
+    ? Math.max(1, Math.floor(jobsToPrioritize))
+    : 1;
   const workerBaseUrl = process.env.DISPATCH_QUEUE_WORKER_BASE_URL?.trim();
 
   if (!workerBaseUrl) {
-    await processDispatchAssignmentJobs(1);
+    await processDispatchAssignmentJobs(normalizedLimit);
     return;
   }
 
@@ -286,13 +438,20 @@ async function triggerDispatchQueueRun(): Promise<void> {
   const response = await fetch(endpoint, {
     method: "POST",
     headers,
+    body: JSON.stringify({
+      limit: normalizedLimit,
+    }),
   });
 
   if (!response.ok) {
     const errorBody = await response.text().catch(() => "");
-    throw new Error(
-      `QUEUE_WORKER_TRIGGER_FAILED status=${response.status} body=${errorBody}`,
+    // Worker trigger failed: fallback to local processing so imports can still
+    // create dispatches immediately.
+    await processDispatchAssignmentJobs(normalizedLimit);
+    console.warn(
+      `QUEUE_WORKER_TRIGGER_FAILED status=${response.status} body=${errorBody} (fell_back_to_local_queue_processing=true)`,
     );
+    return;
   }
 }
 
@@ -300,7 +459,7 @@ async function resolveDeliveryAddressIdTx(
   tx: Prisma.TransactionClient,
   order: ExternalOrder,
 ): Promise<string | undefined> {
-  const rawAddressId = normalizeNonEmptyString((order as { address_id?: unknown }).address_id);
+  const rawAddressId = normalizeNonEmptyString(order.address_id);
   if (!rawAddressId) return undefined;
 
   const localAddress = await tx.deliveryAddress.findUnique({
@@ -313,6 +472,63 @@ async function resolveDeliveryAddressIdTx(
   });
 
   return localAddress?.id;
+}
+
+async function createExternalAddressTx(
+  tx: Prisma.TransactionClient,
+  addressData: ExternalAddressData,
+  customerId?: string,
+): Promise<string> {
+  const createdExternalAddress = await tx.externalAddress.create({
+    data: {
+      id: randomUUID(),
+      ...(addressData.address ? { address: addressData.address } : {}),
+      ...(addressData.lat ? { lat: addressData.lat } : {}),
+      ...(addressData.lng ? { lng: addressData.lng } : {}),
+      ...(customerId ? { customerId } : {}),
+    },
+    select: {
+      id: true,
+    },
+  });
+
+  return createdExternalAddress.id;
+}
+
+async function createDeliveryAddressTx(
+  tx: Prisma.TransactionClient,
+  addressData: ExternalAddressData,
+  customerId?: string,
+): Promise<string> {
+  const lat = addressData.lat ?? DEFAULT_IMPORT_ADDRESS_LAT;
+  const lng = addressData.lng ?? DEFAULT_IMPORT_ADDRESS_LNG;
+  const description = addressData.address ?? "External Delivery Address";
+  const street = addressData.street ?? addressData.address ?? "External Address";
+  const number = addressData.number ?? "N/A";
+  const city = addressData.city ?? "Unknown";
+  const state = addressData.state ?? "Unknown";
+  const zipCode = addressData.zipCode ?? "00000";
+
+  const createdDeliveryAddress = await tx.deliveryAddress.create({
+    data: {
+      id: randomUUID(),
+      lat,
+      lng,
+      description,
+      street,
+      number,
+      city,
+      State: state,
+      zipCode,
+      ...(addressData.complement ? { complement: addressData.complement } : {}),
+      ...(customerId ? { customerId } : {}),
+    },
+    select: {
+      id: true,
+    },
+  });
+
+  return createdDeliveryAddress.id;
 }
 
 export async function POST(request: NextRequest) {
@@ -357,10 +573,6 @@ export async function POST(request: NextRequest) {
 
       try {
         const result = await prisma.$transaction(async (tx) => {
-          await tx.$executeRaw`
-            SELECT pg_advisory_xact_lock(hashtext(${`external-order:${externalId}`})::bigint)
-          `;
-
           const existingOrder = await tx.order.findFirst({
             where: {
               externalId,
@@ -377,7 +589,7 @@ export async function POST(request: NextRequest) {
             };
           }
 
-          const orderType = mapServiceTypeToOrderType(externalOrder.service_type);
+          const orderType = mapServiceTypeToOrderType(externalOrder);
           const paymentMethod = mapPaymentMethod(externalOrder);
           const customerId = await resolveCustomerIdTx(tx, externalOrder.client);
           const createdAt = parseIsoDate(externalOrder.created_at) || new Date();
@@ -385,19 +597,22 @@ export async function POST(request: NextRequest) {
           const amountInCents = toCents(
             externalOrder.total_usd ?? externalOrder.total,
           );
+          const tipAmountInCents = toCents(externalOrder.total_tips);
           const orderNumber = normalizeNonEmptyString(externalOrder.public_id);
-          const deliveryAddressId =
+          const addressData = extractExternalAddressData(externalOrder);
+          const resolvedDeliveryAddressId =
             orderType === "DELIVERY"
               ? await resolveDeliveryAddressIdTx(tx, externalOrder)
               : undefined;
-
-          if (orderType === "DELIVERY" && !deliveryAddressId) {
-            throw {
-              code: "INVALID_PARAMS",
-              details: { field: "address_id" },
-              reason: "DELIVERY_MUST_HAVE_LOCAL_ADDRESS",
-            };
-          }
+          const deliveryAddressId =
+            orderType === "DELIVERY"
+              ? resolvedDeliveryAddressId ||
+                (await createDeliveryAddressTx(tx, addressData, customerId))
+              : undefined;
+          const externalAddressId =
+            orderType === "DELIVERY"
+              ? await createExternalAddressTx(tx, addressData, customerId)
+              : undefined;
 
           const takeawayDispatch =
             orderType === "TAKEAWAY" ? await createTakeawayDispatchTx(tx) : null;
@@ -405,6 +620,7 @@ export async function POST(request: NextRequest) {
           const orderCreateData = {
             id: randomUUID(),
             amount: amountInCents,
+            tipAmount: tipAmountInCents > 0 ? tipAmountInCents : null,
             externalId,
             createdAt,
             scheduleFor: scheduleFor ?? null,
@@ -413,6 +629,7 @@ export async function POST(request: NextRequest) {
             ...(orderNumber ? { number: orderNumber } : {}),
             ...(customerId ? { customerId } : {}),
             ...(deliveryAddressId ? { deliveryAddressId } : {}),
+            ...(externalAddressId ? { externalAddressId } : {}),
             ...(takeawayDispatch
               ? {
                   dispatchId: takeawayDispatch.dispatchId,
@@ -490,7 +707,7 @@ export async function POST(request: NextRequest) {
 
       if (enqueuedDeliveryDispatchJobs > 0) {
         try {
-          await triggerDispatchQueueRun();
+          await triggerDispatchQueueRun(enqueuedDeliveryDispatchJobs);
         } catch (error) {
           queueRunError = getErrorReason(error);
           console.error(

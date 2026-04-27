@@ -94,6 +94,7 @@ model ProgressiveDiscountPrize {
   id                        String                            @id
   createdAt                 DateTime                          @default(now())
   name                      String
+  translations              Json?
   quantity                  Int                               @default(1)
   imageUrl                  String?
   progressiveDiscountStep   ProgressiveDiscountStep           @relation(fields: [progressiveDiscountStepId], references: [id], onDelete: Cascade)
@@ -127,6 +128,7 @@ model ModifierGroup {
   id           String              @id
   createdAt    DateTime            @default(now())
   title        String
+  translations Json?
   required     Boolean             @default(false)
   type         ModifierGroupType?
   products     Product[]
@@ -185,6 +187,7 @@ model Driver {
 model Dispatch {
   id                                String    @id
   createdAt                         DateTime  @default(now())
+  queueIndex                        Int?
   dispatched                        Boolean   @default(false)
   dispatchAt                        DateTime?
   estimatedDeliveryDurationMinutes  Int?
@@ -192,6 +195,8 @@ model Dispatch {
   driver                            Driver?   @relation(fields: [driverId], references: [id])
   driverId                          String?
   orders                            Order[]
+
+  @@index([queueIndex])
 }
 
 enum DispatchAssignmentJobStatus {
@@ -227,6 +232,7 @@ model Product {
   id               String                            @id
   createdAt        DateTime                          @default(now())
   name             String
+  visible          Boolean                           @default(true)
   description      String?
   price            Int?
   comparedAtPrice  Int?
@@ -273,6 +279,7 @@ model Customer {
   orders              Order[]
   promotionalMessages PromotialMessage[]
   addresses           DeliveryAddress[]
+  externalAddresses   ExternalAddress[]
 }
 
 model DeliveryAddress {
@@ -292,6 +299,19 @@ model DeliveryAddress {
   customer         Customer? @relation(fields: [customerId], references: [id])
   customerId       String?
   orders           Order[]
+}
+
+model ExternalAddress {
+  id         String    @id
+  createdAt  DateTime  @default(now())
+  address    String?
+  lat        String?
+  lng        String?
+  customer   Customer? @relation(fields: [customerId], references: [id])
+  customerId String?
+  orders     Order[]
+
+  @@index([customerId])
 }
 
 model Message {
@@ -325,7 +345,8 @@ model Order {
   estimatedDeliveryDurationMinutes Int?
   dispatchOrderIndex               Int?
   amount                           Int
-  customer                         Customer                  @relation(fields: [customerId], references: [id])
+  canceled                         Boolean                   @default(false)
+  customer                         Customer?                 @relation(fields: [customerId], references: [id])
   status                           OrderStatus               @default(ACCEPTED)
   type                             OrderType                 @default(DELIVERY)
   paymentMethod                    PaymentType               @default(CARD)
@@ -334,12 +355,14 @@ model Order {
   dispatch                         Dispatch?                 @relation(fields: [dispatchId], references: [id])
   address                          Address?                  @relation(fields: [addressId], references: [id])
   deliveryAddress                  DeliveryAddress?          @relation(fields: [deliveryAddressId], references: [id])
+  externalAddress                  ExternalAddress?          @relation(fields: [externalAddressId], references: [id])
   orderProducts                    OrderProducts[]
-  customerId                       String
-  externalId                       String?
+  customerId                       String?
+  externalId                       String?                   @unique
   dispatchId                       String?
   addressId                        String?
   deliveryAddressId                String?
+  externalAddressId                String?
   preparationStepCategories        PreparationStepCategory[]
 
   @@index([dispatchId, dispatchOrderIndex])

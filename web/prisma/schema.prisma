@@ -279,6 +279,7 @@ model Customer {
   orders              Order[]
   promotionalMessages PromotialMessage[]
   addresses           DeliveryAddress[]
+  externalAddresses   ExternalAddress[]
 }
 
 model DeliveryAddress {
@@ -298,6 +299,19 @@ model DeliveryAddress {
   customer         Customer? @relation(fields: [customerId], references: [id])
   customerId       String?
   orders           Order[]
+}
+
+model ExternalAddress {
+  id         String    @id
+  createdAt  DateTime  @default(now())
+  address    String?
+  lat        String?
+  lng        String?
+  customer   Customer? @relation(fields: [customerId], references: [id])
+  customerId String?
+  orders     Order[]
+
+  @@index([customerId])
 }
 
 model Message {
@@ -331,6 +345,7 @@ model Order {
   estimatedDeliveryDurationMinutes Int?
   dispatchOrderIndex          Int?
   amount                      Int
+  canceled                    Boolean                   @default(false)
   customer                    Customer?                 @relation(fields: [customerId], references: [id])
   status                      OrderStatus               @default(ACCEPTED)
   type                        OrderType                 @default(DELIVERY)
@@ -340,12 +355,14 @@ model Order {
   dispatch                    Dispatch?                 @relation(fields: [dispatchId], references: [id])
   address                     Address?                  @relation(fields: [addressId], references: [id])
   deliveryAddress             DeliveryAddress?          @relation(fields: [deliveryAddressId], references: [id])
+  externalAddress             ExternalAddress?          @relation(fields: [externalAddressId], references: [id])
   orderProducts               OrderProducts[]
   customerId                  String?
   externalId                  String?                   @unique
   dispatchId                  String?
   addressId                   String?
   deliveryAddressId           String?
+  externalAddressId           String?
   preparationStepCategories   PreparationStepCategory[]
 
   @@index([dispatchId, dispatchOrderIndex])

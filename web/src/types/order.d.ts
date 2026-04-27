@@ -26,6 +26,7 @@ export type TOrder = {
   estimatedDeliveryDurationMinutes?: number | null;
   number?: string;
   externalId?: string | null;
+  canceled?: boolean;
   status: TOrderStatus;
   type: TOrderType;
   dispatchId?: string;

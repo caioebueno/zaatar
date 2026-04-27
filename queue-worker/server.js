@@ -2,6 +2,7 @@ import 'dotenv/config'
 import http from "node:http";
 import cron from "node-cron";
 import axios from "axios";
+import { Pool } from "pg";
 import { processDispatchAssignmentJobs as runDispatchAssignmentJobs } from "./dispatchAssignment.js";
 
 const PORT = Number(process.env.PORT || 4000);
@@ -16,7 +17,7 @@ const EXTERNAL_ORDER_SCAN_SCHEDULE =
 const EXTERNAL_ORDER_SCAN_ON_START =
   process.env.EXTERNAL_ORDER_SCAN_ON_START === "true";
 const DEFAULT_EXTERNAL_ORDER_API_URL =
-  "https://api.olaclick.app/ms-orders/auth/orders?filter[service_types]=TAKEAWAY,ONSITE&filter[status]=PENDING,PREPARING,READY,DELIVERED&filter[max_order_limit]=false&include_pending_and_ongoing=true&per_page=25&page=1";
+  "https://api.olaclick.app/ms-orders/auth/orders?filter[service_types]=TAKEAWAY,DELIVERY,ONSITE&filter[status]=PENDING,PREPARING,READY,DELIVERED&filter[max_order_limit]=false&include_pending_and_ongoing=true&per_page=25&page=1";
 const EXTERNAL_ORDER_API_URL =
   process.env.EXTERNAL_ORDER_API_URL?.trim() || DEFAULT_EXTERNAL_ORDER_API_URL;
 const EXTERNAL_ORDER_API_COMPANY_TOKEN =
@@ -28,6 +29,10 @@ const EXTERNAL_ORDER_API_HEADERS_JSON =
   process.env.EXTERNAL_ORDER_API_HEADERS_JSON?.trim();
 const ORDER_IMPORT_API_URL = process.env.ORDER_IMPORT_API_URL?.trim();
 const ORDER_IMPORT_API_SECRET = process.env.ORDER_IMPORT_API_SECRET?.trim();
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+});
 
 let isProcessing = false;
 let isScanningExternalOrders = false;
@@ -129,12 +134,13 @@ function extractOrdersArrayFromPayload(value) {
   return [];
 }
 
-function normalizeExternalOrderId(order, fallbackIndex) {
+function normalizeExternalOrderId(order) {
   if (!order || typeof order !== "object") {
     return null;
   }
 
   const candidateFields = [
+    order.public_id,
     order.id,
     order.uuid,
     order.orderId,
@@ -154,7 +160,43 @@ function normalizeExternalOrderId(order, fallbackIndex) {
     }
   }
 
-  return `index:${fallbackIndex}`;
+  return null;
+}
+
+async function getExistingOrderExternalIds(externalIds) {
+  if (!Array.isArray(externalIds) || externalIds.length === 0) {
+    return new Set();
+  }
+
+  const dedupedExternalIds = Array.from(
+    new Set(
+      externalIds
+        .map((value) => (typeof value === "string" ? value.trim() : ""))
+        .filter(Boolean),
+    ),
+  );
+
+  if (dedupedExternalIds.length === 0) {
+    return new Set();
+  }
+
+  const { rows } = await pool.query(
+    `
+      SELECT "externalId"
+      FROM "Order"
+      WHERE "externalId" IS NOT NULL
+        AND "externalId" = ANY($1::text[])
+    `,
+    [dedupedExternalIds],
+  );
+
+  return new Set(
+    rows
+      .map((row) =>
+        typeof row.externalId === "string" ? row.externalId.trim() : "",
+      )
+      .filter(Boolean),
+  );
 }
 
 async function scanExternalOrders() {
@@ -193,17 +235,30 @@ async function scanExternalOrders() {
 
     const response = await axios.request(config);
     const payload = response.data;
+    console.log(payload.data?.length);
     const orders = extractOrdersArrayFromPayload(payload);
+    const ordersWithExternalId = [];
     const scannedIds = [];
 
-    for (const [index, order] of orders.entries()) {
-      const normalizedId = normalizeExternalOrderId(order, index);
-      if (normalizedId) {
-        scannedIds.push(normalizedId);
-      }
+    for (const order of orders) {
+      const normalizedExternalId = normalizeExternalOrderId(order);
+      if (!normalizedExternalId) continue;
+      scannedIds.push(normalizedExternalId);
+      ordersWithExternalId.push({
+        order,
+        externalId: normalizedExternalId,
+      });
     }
 
-    if (ORDER_IMPORT_API_URL && orders.length > 0) {
+    const existingExternalIds = await getExistingOrderExternalIds(scannedIds);
+    const ordersToImport = ordersWithExternalId
+      .filter(({ externalId }) => !existingExternalIds.has(externalId))
+      .map(({ order }) => order);
+    const ordersToImportExternalIds = ordersWithExternalId
+      .filter(({ externalId }) => !existingExternalIds.has(externalId))
+      .map(({ externalId }) => externalId);
+
+    if (ORDER_IMPORT_API_URL && ordersToImport.length > 0) {
       const importHeaders = {
         "Content-Type": "application/json",
       };
@@ -217,7 +272,7 @@ async function scanExternalOrders() {
       const importResponse = await fetch(ORDER_IMPORT_API_URL, {
         method: "POST",
         headers: importHeaders,
-        body: JSON.stringify({ data: orders }),
+        body: JSON.stringify({ data: ordersToImport }),
       });
 
       if (!importResponse.ok) {
@@ -245,7 +300,7 @@ async function scanExternalOrders() {
           : null;
 
       console.log(
-        `[queue-worker] External order import completed. created=${lastExternalOrderImportCreatedCount} skippedExisting=${skippedExistingCount} skippedInvalid=${skippedInvalidCount}`,
+        `[queue-worker] External order import completed. sent=${ordersToImport.length} created=${lastExternalOrderImportCreatedCount} skippedExisting=${skippedExistingCount} skippedInvalid=${skippedInvalidCount}`,
       );
 
       if (queueRunError) {
@@ -255,6 +310,12 @@ async function scanExternalOrders() {
       }
     } else if (!ORDER_IMPORT_API_URL) {
       lastExternalOrderImportStatus = "disabled";
+    } else {
+      lastExternalOrderImportStatus = "ok";
+      lastExternalOrderImportCreatedCount = 0;
+      console.log(
+        `[queue-worker] External order import skipped. All scanned orders already exist by externalId.`,
+      );
     }
 
     if (!hasInitializedExternalOrderBaseline) {
@@ -267,7 +328,9 @@ async function scanExternalOrders() {
       return;
     }
 
-    const newOrderIds = scannedIds.filter((id) => !knownExternalOrderIds.has(id));
+    const newOrderIds = ordersToImportExternalIds.filter(
+      (id) => !knownExternalOrderIds.has(id),
+    );
     for (const id of scannedIds) {
       knownExternalOrderIds.add(id);
     }
@@ -303,7 +366,46 @@ function getValidatedJobsPerRun() {
   return JOBS_PER_RUN;
 }
 
-async function processDispatchAssignmentJobs() {
+function normalizeRunLimit(value) {
+  if (typeof value === "number" && Number.isFinite(value)) {
+    const parsed = Math.floor(value);
+    if (parsed > 0) return parsed;
+  }
+
+  if (typeof value === "string" && value.trim()) {
+    const parsed = Number.parseInt(value, 10);
+    if (Number.isInteger(parsed) && parsed > 0) {
+      return parsed;
+    }
+  }
+
+  return undefined;
+}
+
+async function readJsonBody(request) {
+  const chunks = [];
+
+  for await (const chunk of request) {
+    chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
+  }
+
+  if (chunks.length === 0) {
+    return {};
+  }
+
+  const rawBody = Buffer.concat(chunks).toString("utf8").trim();
+  if (!rawBody) {
+    return {};
+  }
+
+  try {
+    return JSON.parse(rawBody);
+  } catch {
+    return {};
+  }
+}
+
+async function processDispatchAssignmentJobs(limitOverride) {
   if (isProcessing) {
     console.log("[queue-worker] Skipping run because a previous run is still active.");
     return;
@@ -312,7 +414,9 @@ async function processDispatchAssignmentJobs() {
   isProcessing = true;
 
   try {
-    const jobsPerRun = getValidatedJobsPerRun();
+    const defaultJobsPerRun = getValidatedJobsPerRun();
+    const normalizedOverrideLimit = normalizeRunLimit(limitOverride);
+    const jobsPerRun = normalizedOverrideLimit || defaultJobsPerRun;
 
     console.log(
       `[queue-worker] Triggering queue processing at ${new Date().toISOString()} with limit=${jobsPerRun}`,
@@ -369,10 +473,18 @@ function handleRequest(request, response) {
       }
     }
 
-    processDispatchAssignmentJobs().finally(() => {
+    readJsonBody(request)
+      .then((payload) => {
+        const runLimit =
+          payload && typeof payload === "object" && payload !== null
+            ? normalizeRunLimit(payload.limit)
+            : undefined;
+        return processDispatchAssignmentJobs(runLimit);
+      })
+      .finally(() => {
       response.writeHead(202, { "Content-Type": "application/json" });
       response.end(JSON.stringify({ accepted: true }));
-    });
+      });
     return;
   }
 

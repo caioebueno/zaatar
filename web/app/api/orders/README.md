@@ -80,6 +80,7 @@ Updates one or more order fields:
 - `paidAt` (optional `ISO string` or `null`)
 - `paymentMethod` (optional `"CARD" | "CASH" | "ZELLE"`)
 - `deliveredAt` (optional `ISO string` or `null`)
+- `canceled` (optional boolean)
 - `orderType` (optional `"DELIVERY" | "TAKEAWAY"`)
 - `customerId` (optional string or `null`)
 - `addressId` (optional string or `null`; required when resulting `orderType` is `DELIVERY`)
@@ -114,7 +115,8 @@ Update payment method and delivered timestamp:
 ```json
 {
   "paymentMethod": "CASH",
-  "deliveredAt": "2026-04-07T15:10:00.000Z"
+  "deliveredAt": "2026-04-07T15:10:00.000Z",
+  "canceled": false
 }
 ```
 

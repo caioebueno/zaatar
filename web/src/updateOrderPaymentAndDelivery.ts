@@ -11,6 +11,7 @@ type UpdateOrderPaymentAndDeliveryInput = {
   paidAt?: unknown;
   paymentMethod?: unknown;
   deliveredAt?: unknown;
+  canceled?: unknown;
   orderType?: unknown;
   customerId?: unknown;
   addressId?: unknown;
@@ -451,6 +452,7 @@ export default async function updateOrderPaymentAndDelivery(
     paidAt?: Date | null;
     paymentMethod?: TPaymentMethod;
     deliveredAt?: Date | null;
+    canceled?: boolean;
     type?: TOrderType;
     customerId?: string | null;
     deliveryAddressId?: string | null;
@@ -468,6 +470,16 @@ export default async function updateOrderPaymentAndDelivery(
   if (data.deliveredAt !== undefined) {
     const parsedDeliveredAt = ensureValidTimestamp(data.deliveredAt, "deliveredAt");
     updates.deliveredAt = parsedDeliveredAt ?? null;
+  }
+
+  if (data.canceled !== undefined) {
+    if (typeof data.canceled !== "boolean") {
+      throw {
+        code: "INVALID_PARAMS",
+        details: { field: "canceled" },
+      };
+    }
+    updates.canceled = data.canceled;
   }
 
   if (data.orderType !== undefined) {
