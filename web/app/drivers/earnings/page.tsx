@@ -369,7 +369,7 @@ export default async function DriverEarningsPage({
                 <table className="w-full min-w-[980px] text-sm">
                   <thead className="bg-zinc-100 text-zinc-600">
                     <tr>
-                      <th className="px-3 py-2 text-left font-semibold">Delivered At</th>
+                      <th className="px-3 py-2 text-left font-semibold">Created At</th>
                       <th className="px-3 py-2 text-left font-semibold">Day</th>
                       <th className="px-3 py-2 text-left font-semibold">Order #</th>
                       <th className="px-3 py-2 text-left font-semibold">External</th>
@@ -384,7 +384,7 @@ export default async function DriverEarningsPage({
                         className="border-t border-zinc-100 hover:bg-zinc-50"
                       >
                         <td className="px-3 py-2 text-zinc-700">
-                          {delivery.deliveredAtLocal}
+                          {delivery.createdAtLocal}
                         </td>
                         <td className="px-3 py-2 text-zinc-900">{delivery.day}</td>
                         <td className="px-3 py-2 text-zinc-900">

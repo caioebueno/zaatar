@@ -28,7 +28,6 @@ export default function OrderingMenuLayout({
               s.parentNode.insertBefore(t,s)}(window, document,'script',
               'https://connect.facebook.net/en_US/fbevents.js');
               fbq('init', '${facebookPixelId}');
-              fbq('track', 'PageView');
             `}
           </Script>
           <Suspense fallback={null}>

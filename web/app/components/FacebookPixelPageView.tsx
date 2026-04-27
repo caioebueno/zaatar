@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname, useSearchParams } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 
 type FbqTrackFunction = (
   command: "track",
@@ -18,18 +18,31 @@ declare global {
 export default function FacebookPixelPageView() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const isFirstRender = useRef(true);
   const searchParamsString = searchParams.toString();
 
   useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
+    let cancelled = false;
 
-    if (typeof window.fbq === "function") {
-      window.fbq("track", "PageView");
-    }
+    const tryTrack = (attempt: number) => {
+      if (cancelled) return;
+
+      if (typeof window.fbq === "function") {
+        window.fbq("track", "PageView");
+        return;
+      }
+
+      if (attempt >= 15) return;
+
+      window.setTimeout(() => {
+        tryTrack(attempt + 1);
+      }, 200);
+    };
+
+    tryTrack(0);
+
+    return () => {
+      cancelled = true;
+    };
   }, [pathname, searchParamsString]);
 
   return null;

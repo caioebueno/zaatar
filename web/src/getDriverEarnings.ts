@@ -34,7 +34,7 @@ type DriverDeliveryRow = {
   driverId: string;
   driverName: string;
   day: string;
-  deliveredAtLocal: string;
+  createdAtLocal: string;
   customerName: string | null;
   deliveryFeeCents: string;
 };
@@ -68,7 +68,7 @@ export type DriverDeliveryEarnings = {
   driverId: string;
   driverName: string;
   day: string;
-  deliveredAtLocal: string;
+  createdAtLocal: string;
   customerName: string | null;
   deliveryFeeCents: number;
 };
@@ -106,7 +106,7 @@ export default async function getDriverEarnings(input: {
       SELECT
         dispatch."driverId" AS "driverId",
         driver."name" AS "driverName",
-        (orders."deliveredAt" AT TIME ZONE ${FLORIDA_TIME_ZONE})::date AS day,
+        (orders."createdAt" AT TIME ZONE ${FLORIDA_TIME_ZONE})::date AS day,
         COALESCE(delivery_address."deliveryFee", 0)::bigint AS "deliveryFeeCents"
       FROM "Order" orders
       INNER JOIN "Dispatch" dispatch ON dispatch."id" = orders."dispatchId"
@@ -116,7 +116,7 @@ export default async function getDriverEarnings(input: {
       WHERE orders."type" = 'DELIVERY'
         AND COALESCE(orders."canceled", false) = false
         AND orders."deliveredAt" IS NOT NULL
-        AND (orders."deliveredAt" AT TIME ZONE ${FLORIDA_TIME_ZONE})::date
+        AND (orders."createdAt" AT TIME ZONE ${FLORIDA_TIME_ZONE})::date
           BETWEEN ${startDate}::date AND ${endDate}::date
     )
     SELECT
@@ -139,7 +139,7 @@ export default async function getDriverEarnings(input: {
     WITH delivery_orders AS (
       SELECT
         dispatch."driverId" AS "driverId",
-        (orders."deliveredAt" AT TIME ZONE ${FLORIDA_TIME_ZONE})::date AS day,
+        (orders."createdAt" AT TIME ZONE ${FLORIDA_TIME_ZONE})::date AS day,
         COALESCE(delivery_address."deliveryFee", 0)::bigint AS "deliveryFeeCents"
       FROM "Order" orders
       INNER JOIN "Dispatch" dispatch ON dispatch."id" = orders."dispatchId"
@@ -148,7 +148,7 @@ export default async function getDriverEarnings(input: {
       WHERE orders."type" = 'DELIVERY'
         AND COALESCE(orders."canceled", false) = false
         AND orders."deliveredAt" IS NOT NULL
-        AND (orders."deliveredAt" AT TIME ZONE ${FLORIDA_TIME_ZONE})::date
+        AND (orders."createdAt" AT TIME ZONE ${FLORIDA_TIME_ZONE})::date
           BETWEEN ${startDate}::date AND ${endDate}::date
     ),
     summary AS (
@@ -192,13 +192,13 @@ export default async function getDriverEarnings(input: {
       dispatch."driverId" AS "driverId",
       driver."name" AS "driverName",
       to_char(
-        (orders."deliveredAt" AT TIME ZONE ${FLORIDA_TIME_ZONE})::date,
+        (orders."createdAt" AT TIME ZONE ${FLORIDA_TIME_ZONE})::date,
         'YYYY-MM-DD'
       ) AS day,
       to_char(
-        orders."deliveredAt" AT TIME ZONE ${FLORIDA_TIME_ZONE},
+        orders."createdAt" AT TIME ZONE ${FLORIDA_TIME_ZONE},
         'YYYY-MM-DD HH24:MI'
-      ) AS "deliveredAtLocal",
+      ) AS "createdAtLocal",
       customer."name" AS "customerName",
       COALESCE(delivery_address."deliveryFee", 0)::text AS "deliveryFeeCents"
     FROM "Order" orders
@@ -210,10 +210,10 @@ export default async function getDriverEarnings(input: {
     WHERE orders."type" = 'DELIVERY'
       AND COALESCE(orders."canceled", false) = false
       AND orders."deliveredAt" IS NOT NULL
-      AND (orders."deliveredAt" AT TIME ZONE ${FLORIDA_TIME_ZONE})::date
+      AND (orders."createdAt" AT TIME ZONE ${FLORIDA_TIME_ZONE})::date
         BETWEEN ${startDate}::date AND ${endDate}::date
     ORDER BY
-      orders."deliveredAt" DESC,
+      orders."createdAt" DESC,
       driver."name" ASC
   `;
 
@@ -246,7 +246,7 @@ export default async function getDriverEarnings(input: {
     driverId: row.driverId,
     driverName: row.driverName,
     day: row.day,
-    deliveredAtLocal: row.deliveredAtLocal,
+    createdAtLocal: row.createdAtLocal,
     customerName: row.customerName,
     deliveryFeeCents: toNumber(row.deliveryFeeCents),
   }));
