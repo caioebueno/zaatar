@@ -1,4 +1,5 @@
 import Script from "next/script";
+import { Suspense } from "react";
 import FacebookPixelPageView from "@/app/components/FacebookPixelPageView";
 
 export default function OrderingMenuLayout({
@@ -30,7 +31,9 @@ export default function OrderingMenuLayout({
               fbq('track', 'PageView');
             `}
           </Script>
-          <FacebookPixelPageView />
+          <Suspense fallback={null}>
+            <FacebookPixelPageView />
+          </Suspense>
           <noscript>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
