@@ -567,6 +567,36 @@ async function ensureInventorySchema(executor: SchemaExecutor) {
         CREATE INDEX IF NOT EXISTS "InventoryStockEvent_place_product_createdAt_idx"
         ON "InventoryStockEvent" ("placeId", "productId", "createdAt")
       `);
+
+      await executor.$executeRawUnsafe(`
+        ALTER TABLE "InventoryPlace"
+        ALTER COLUMN "updatedAt" SET DEFAULT now()
+      `);
+
+      await executor.$executeRawUnsafe(`
+        ALTER TABLE "InventoryProduct"
+        ALTER COLUMN "updatedAt" SET DEFAULT now()
+      `);
+
+      await executor.$executeRawUnsafe(`
+        ALTER TABLE "InventoryStock"
+        ALTER COLUMN "updatedAt" SET DEFAULT now()
+      `);
+
+      await executor.$executeRawUnsafe(`
+        ALTER TABLE "InventoryChecklist"
+        ALTER COLUMN "updatedAt" SET DEFAULT now()
+      `);
+
+      await executor.$executeRawUnsafe(`
+        ALTER TABLE "InventoryChecklistItem"
+        ALTER COLUMN "updatedAt" SET DEFAULT now()
+      `);
+
+      await executor.$executeRawUnsafe(`
+        ALTER TABLE "InventoryAlert"
+        ALTER COLUMN "updatedAt" SET DEFAULT now()
+      `);
     })();
   }
 
