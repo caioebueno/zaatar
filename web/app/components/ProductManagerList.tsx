@@ -649,7 +649,7 @@ export default function ProductManagerList({
         sourceProducts.map((product) => [product.id, product]),
       );
       const reorderedProducts = reorderedIds
-        .map((id, index) => {
+        .map((id, index): ProductManagerProduct | null => {
           const product = sourceProductById.get(id);
           if (!product) return null;
 
@@ -657,7 +657,7 @@ export default function ProductManagerList({
             ...product,
             categoryId: sourceCategoryId,
             categoryIndex: index + 1,
-          } satisfies ProductManagerProduct;
+          };
         })
         .filter((product): product is ProductManagerProduct => product !== null);
 

@@ -21,6 +21,22 @@ type CreatePreparationStepsResult = {
   updated: number;
 };
 
+function parseSeedProducts(value: unknown): ProductSeed[] {
+  if (Array.isArray(value)) {
+    return value as ProductSeed[];
+  }
+
+  if (
+    value &&
+    typeof value === "object" &&
+    Array.isArray((value as { data?: unknown }).data)
+  ) {
+    return (value as { data: ProductSeed[] }).data;
+  }
+
+  return [];
+}
+
 function isPizzaOrSfiha(product: ProductSeed): boolean {
   const candidates = [
     product.name,
@@ -71,7 +87,7 @@ export async function createPizzaAndSfihaPreparationSteps(
   explicitStationId?: string,
 ): Promise<CreatePreparationStepsResult> {
   const stationId = await resolveStationId(explicitStationId);
-  const seededProducts = (productsJson as ProductSeed[]).filter(isPizzaOrSfiha);
+  const seededProducts = parseSeedProducts(productsJson).filter(isPizzaOrSfiha);
 
   const existingProducts = await prisma.product.findMany({
     where: {

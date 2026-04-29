@@ -65,7 +65,9 @@ npm start
 1. Create a new Railway service from this repository.
 2. Set the service root directory to `queue-worker`.
 3. Add environment variables from `.env.example`.
-4. Use the start command:
+4. Build command (runs production Prisma migrations before deploy):
+   - `npm run build`
+5. Use the start command:
    - `npm start`
-5. Use the same `DATABASE_URL` as your app so the worker processes the same queue.
-6. If you want only your web app to trigger `/run`, set `RUN_TRIGGER_SECRET` here and `DISPATCH_QUEUE_RUN_SECRET` in the web app.
+6. Use the same `DATABASE_URL` as your app so the worker processes the same queue.
+7. If you want only your web app to trigger `/run`, set `RUN_TRIGGER_SECRET` here and `DISPATCH_QUEUE_RUN_SECRET` in the web app.
