@@ -399,3 +399,173 @@ model OrderProducts {
   order              Order?              @relation(fields: [orderId], references: [id], onDelete: Cascade)
   orderId            String?
 }
+
+enum InventoryPlaceType {
+  FRIDGE
+  FREEZER
+  SHELF
+  PANTRY
+  OTHER
+}
+
+enum InventoryChecklistStatus {
+  OPEN
+  SUBMITTED
+  REVIEWED
+}
+
+enum InventoryChecklistItemResult {
+  PENDING
+  OK
+  BELOW_MIN
+  REFILL_NEEDED
+  OUT_OF_STOCK
+}
+
+enum InventoryAlertType {
+  LOW_STOCK
+  THRESHOLD
+  REFILL
+}
+
+enum InventoryAlertSeverity {
+  CRITICAL
+  HIGH
+  MEDIUM
+  LOW
+}
+
+enum InventoryAlertStatus {
+  OPEN
+  ACKED
+  RESOLVED
+}
+
+model InventoryPlace {
+  id           String           @id
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+  name         String
+  type         InventoryPlaceType
+  active       Boolean          @default(true)
+  displayOrder Int?
+  notes        String?
+  stocks       InventoryStock[]
+  alerts       InventoryAlert[]
+  checklistItems InventoryChecklistItem[]
+  stockEvents  InventoryStockEvent[]
+}
+
+model InventoryProduct {
+  id                   String                @id
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  name                 String
+  unit                 String
+  active               Boolean               @default(true)
+  minQuantity          Int                   @default(0)
+  alertThreshold       Int?
+  requiresRefill       Boolean               @default(false)
+  notifyBelowThreshold Boolean               @default(false)
+  notes                String?
+  stocks               InventoryStock[]
+  alerts               InventoryAlert[]
+  checklistItems       InventoryChecklistItem[]
+  stockEvents          InventoryStockEvent[]
+}
+
+model InventoryStock {
+  id             String           @id
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  place          InventoryPlace   @relation(fields: [placeId], references: [id], onDelete: Cascade)
+  placeId        String
+  product        InventoryProduct @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId      String
+  currentQuantity Int             @default(0)
+  minQuantity    Int              @default(0)
+  includeInChecklist Boolean      @default(true)
+  lastCheckedAt  DateTime?
+  lastCheckedBy  String?
+
+  @@unique([placeId, productId])
+}
+
+model InventoryChecklist {
+  id          String                 @id
+  createdAt   DateTime               @default(now())
+  updatedAt   DateTime               @updatedAt
+  checkDate   DateTime               @db.Date
+  status      InventoryChecklistStatus @default(OPEN)
+  startedBy   String?
+  submittedBy String?
+  submittedAt DateTime?
+  items       InventoryChecklistItem[]
+  alerts      InventoryAlert[]
+
+  @@unique([checkDate])
+}
+
+model InventoryChecklistItem {
+  id                  String                       @id
+  createdAt           DateTime                     @default(now())
+  updatedAt           DateTime                     @updatedAt
+  checklist           InventoryChecklist           @relation(fields: [checklistId], references: [id], onDelete: Cascade)
+  checklistId         String
+  place               InventoryPlace               @relation(fields: [placeId], references: [id], onDelete: Restrict)
+  placeId             String
+  product             InventoryProduct             @relation(fields: [productId], references: [id], onDelete: Restrict)
+  productId           String
+  expectedMinQuantity Int                          @default(0)
+  countedQuantity     Int?
+  outOfStock          Boolean                      @default(false)
+  result              InventoryChecklistItemResult @default(PENDING)
+  notes               String?
+  checkedAt           DateTime?
+  checkedBy           String?
+  alerts              InventoryAlert[]
+
+  @@unique([checklistId, productId, placeId])
+}
+
+model InventoryAlert {
+  id              String                 @id
+  createdAt       DateTime               @default(now())
+  updatedAt       DateTime               @updatedAt
+  type            InventoryAlertType
+  severity        InventoryAlertSeverity
+  status          InventoryAlertStatus   @default(OPEN)
+  message         String
+  place           InventoryPlace         @relation(fields: [placeId], references: [id], onDelete: Cascade)
+  placeId         String
+  product         InventoryProduct       @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId       String
+  checklist       InventoryChecklist?    @relation(fields: [checklistId], references: [id], onDelete: SetNull)
+  checklistId     String?
+  checklistItem   InventoryChecklistItem? @relation(fields: [checklistItemId], references: [id], onDelete: SetNull)
+  checklistItemId String?
+  triggeredAt     DateTime               @default(now())
+  ackedAt         DateTime?
+  ackedBy         String?
+  resolvedAt      DateTime?
+  resolvedBy      String?
+
+  @@index([status, type])
+}
+
+model InventoryStockEvent {
+  id             String           @id
+  createdAt      DateTime         @default(now())
+  eventType      String
+  place          InventoryPlace   @relation(fields: [placeId], references: [id], onDelete: Cascade)
+  placeId        String
+  product        InventoryProduct @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId      String
+  beforeQuantity Int?
+  afterQuantity  Int?
+  actorId        String?
+  source         String
+  metadata       Json?
+
+  @@index([placeId, productId, createdAt])
+}

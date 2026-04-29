@@ -11,6 +11,10 @@ type RouteContext = {
 type PatchBody = {
   title?: unknown;
   translations?: unknown;
+  required?: unknown;
+  type?: unknown;
+  minSelection?: unknown;
+  maxSelection?: unknown;
 };
 
 function parseString(value: unknown, field: string): string {
@@ -26,6 +30,38 @@ function parseString(value: unknown, field: string): string {
   return normalized;
 }
 
+function parseBoolean(value: unknown, field: string): boolean {
+  if (typeof value !== "boolean") {
+    throw new Error(field);
+  }
+
+  return value;
+}
+
+function parseNullableInt(value: unknown, field: string): number | null {
+  if (value === null) return null;
+  if (typeof value !== "number" || !Number.isFinite(value)) {
+    throw new Error(field);
+  }
+  if (!Number.isInteger(value) || value < 0) {
+    throw new Error(field);
+  }
+
+  return value;
+}
+
+function parseModifierGroupType(
+  value: unknown,
+  field: string,
+): "MULTI" | "SINGLE" | null {
+  if (value === null) return null;
+  if (value !== "MULTI" && value !== "SINGLE") {
+    throw new Error(field);
+  }
+
+  return value;
+}
+
 export async function PATCH(request: NextRequest, context: RouteContext) {
   try {
     const { modifierGroupId } = await context.params;
@@ -38,6 +74,24 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       );
     }
 
+    const existingModifierGroup = await prisma.modifierGroup.findUnique({
+      where: {
+        id: normalizedModifierGroupId,
+      },
+      select: {
+        id: true,
+        minSelection: true,
+        maxSelection: true,
+      },
+    });
+
+    if (!existingModifierGroup) {
+      return NextResponse.json(
+        { error: "Modifier group not found" },
+        { status: 404 },
+      );
+    }
+
     const body = (await request.json()) as PatchBody;
     const data: Prisma.ModifierGroupUpdateInput = {};
     let hasAnyField = false;
@@ -45,6 +99,46 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
 
     if (body.title !== undefined) {
       data.title = parseString(body.title, "title");
+      hasAnyField = true;
+    }
+
+    if (body.required !== undefined) {
+      data.required = parseBoolean(body.required, "required");
+      hasAnyField = true;
+    }
+
+    if (body.type !== undefined) {
+      data.type = parseModifierGroupType(body.type, "type");
+      hasAnyField = true;
+    }
+
+    const nextMinSelection =
+      body.minSelection !== undefined
+        ? parseNullableInt(body.minSelection, "minSelection")
+        : existingModifierGroup.minSelection;
+    const nextMaxSelection =
+      body.maxSelection !== undefined
+        ? parseNullableInt(body.maxSelection, "maxSelection")
+        : existingModifierGroup.maxSelection;
+
+    if (
+      nextMinSelection !== null &&
+      nextMaxSelection !== null &&
+      nextMinSelection > nextMaxSelection
+    ) {
+      return NextResponse.json(
+        { error: "Invalid payload", field: "minSelection" },
+        { status: 400 },
+      );
+    }
+
+    if (body.minSelection !== undefined) {
+      data.minSelection = nextMinSelection;
+      hasAnyField = true;
+    }
+
+    if (body.maxSelection !== undefined) {
+      data.maxSelection = nextMaxSelection;
       hasAnyField = true;
     }
 
@@ -78,22 +172,6 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       `;
     }
 
-    const [existingModifierGroup] = await prisma.$queryRaw<
-      { id: string }[]
-    >`
-      SELECT "id"
-      FROM "ModifierGroup"
-      WHERE "id" = ${normalizedModifierGroupId}
-      LIMIT 1
-    `;
-
-    if (!existingModifierGroup) {
-      return NextResponse.json(
-        { error: "Modifier group not found" },
-        { status: 404 },
-      );
-    }
-
     if (Object.keys(data).length > 0) {
       await prisma.modifierGroup.update({
         where: {
@@ -124,10 +202,21 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       {
         id: string;
         title: string;
+        required: boolean;
+        type: "MULTI" | "SINGLE" | null;
+        minSelection: number | null;
+        maxSelection: number | null;
         translations: unknown | null;
       }[]
     >`
-      SELECT "id", "title", "translations"
+      SELECT
+        "id",
+        "title",
+        "required",
+        "type",
+        "minSelection",
+        "maxSelection",
+        "translations"
       FROM "ModifierGroup"
       WHERE "id" = ${normalizedModifierGroupId}
       LIMIT 1
@@ -136,6 +225,10 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     return NextResponse.json({
       id: updatedModifierGroup.id,
       title: updatedModifierGroup.title,
+      required: updatedModifierGroup.required,
+      type: updatedModifierGroup.type,
+      minSelection: updatedModifierGroup.minSelection,
+      maxSelection: updatedModifierGroup.maxSelection,
       translations: updatedModifierGroup.translations ?? null,
     });
   } catch (error) {
@@ -147,6 +240,53 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     }
 
     console.error("PATCH /api/modifier-groups/[modifierGroupId] error:", error);
+
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 },
+    );
+  }
+}
+
+export async function DELETE(
+  _request: NextRequest,
+  context: RouteContext,
+) {
+  try {
+    const { modifierGroupId } = await context.params;
+    const normalizedModifierGroupId = modifierGroupId.trim();
+
+    if (!normalizedModifierGroupId) {
+      return NextResponse.json(
+        { error: "Invalid payload", field: "modifierGroupId" },
+        { status: 400 },
+      );
+    }
+
+    await prisma.modifierGroup.delete({
+      where: {
+        id: normalizedModifierGroupId,
+      },
+    });
+
+    return NextResponse.json({
+      id: normalizedModifierGroupId,
+      deleted: true,
+    });
+  } catch (error) {
+    if (
+      typeof error === "object" &&
+      error !== null &&
+      "code" in error &&
+      (error as { code?: string }).code === "P2025"
+    ) {
+      return NextResponse.json(
+        { error: "Modifier group not found" },
+        { status: 404 },
+      );
+    }
+
+    console.error("DELETE /api/modifier-groups/[modifierGroupId] error:", error);
 
     return NextResponse.json(
       { error: "Internal Server Error" },

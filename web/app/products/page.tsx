@@ -1,5 +1,14 @@
-import ProductSpreadsheet from "../components/ProductSpreadsheet";
+import ProductManagerList from "../components/ProductManagerList";
+import getProductsManagerList from "@/src/getProductsManagerList";
 
-export default function ProductsPage() {
-  return <ProductSpreadsheet />;
+export default async function ProductsPage() {
+  const products = await getProductsManagerList();
+
+  return (
+    <ProductManagerList
+      initialCategories={products.categories}
+      initialUncategorized={products.uncategorized}
+      initialLookupModifierGroups={products.lookupModifierGroups}
+    />
+  );
 }

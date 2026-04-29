@@ -393,6 +393,102 @@ exports.Prisma.OrderProductsScalarFieldEnum = {
   orderId: 'orderId'
 };
 
+exports.Prisma.InventoryPlaceScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  name: 'name',
+  type: 'type',
+  active: 'active',
+  displayOrder: 'displayOrder',
+  notes: 'notes'
+};
+
+exports.Prisma.InventoryProductScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  name: 'name',
+  unit: 'unit',
+  active: 'active',
+  minQuantity: 'minQuantity',
+  alertThreshold: 'alertThreshold',
+  requiresRefill: 'requiresRefill',
+  notifyBelowThreshold: 'notifyBelowThreshold',
+  notes: 'notes'
+};
+
+exports.Prisma.InventoryStockScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  placeId: 'placeId',
+  productId: 'productId',
+  currentQuantity: 'currentQuantity',
+  includeInChecklist: 'includeInChecklist',
+  lastCheckedAt: 'lastCheckedAt',
+  lastCheckedBy: 'lastCheckedBy'
+};
+
+exports.Prisma.InventoryChecklistScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  checkDate: 'checkDate',
+  status: 'status',
+  startedBy: 'startedBy',
+  submittedBy: 'submittedBy',
+  submittedAt: 'submittedAt'
+};
+
+exports.Prisma.InventoryChecklistItemScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  checklistId: 'checklistId',
+  placeId: 'placeId',
+  productId: 'productId',
+  expectedMinQuantity: 'expectedMinQuantity',
+  countedQuantity: 'countedQuantity',
+  outOfStock: 'outOfStock',
+  result: 'result',
+  notes: 'notes',
+  checkedAt: 'checkedAt',
+  checkedBy: 'checkedBy'
+};
+
+exports.Prisma.InventoryAlertScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  type: 'type',
+  severity: 'severity',
+  status: 'status',
+  message: 'message',
+  placeId: 'placeId',
+  productId: 'productId',
+  checklistId: 'checklistId',
+  checklistItemId: 'checklistItemId',
+  triggeredAt: 'triggeredAt',
+  ackedAt: 'ackedAt',
+  ackedBy: 'ackedBy',
+  resolvedAt: 'resolvedAt',
+  resolvedBy: 'resolvedBy'
+};
+
+exports.Prisma.InventoryStockEventScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  eventType: 'eventType',
+  placeId: 'placeId',
+  productId: 'productId',
+  beforeQuantity: 'beforeQuantity',
+  afterQuantity: 'afterQuantity',
+  actorId: 'actorId',
+  source: 'source',
+  metadata: 'metadata'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -453,6 +549,47 @@ exports.PaymentType = exports.$Enums.PaymentType = {
   ZELLE: 'ZELLE'
 };
 
+exports.InventoryPlaceType = exports.$Enums.InventoryPlaceType = {
+  FRIDGE: 'FRIDGE',
+  FREEZER: 'FREEZER',
+  SHELF: 'SHELF',
+  PANTRY: 'PANTRY',
+  OTHER: 'OTHER'
+};
+
+exports.InventoryChecklistStatus = exports.$Enums.InventoryChecklistStatus = {
+  OPEN: 'OPEN',
+  SUBMITTED: 'SUBMITTED',
+  REVIEWED: 'REVIEWED'
+};
+
+exports.InventoryChecklistItemResult = exports.$Enums.InventoryChecklistItemResult = {
+  PENDING: 'PENDING',
+  OK: 'OK',
+  BELOW_MIN: 'BELOW_MIN',
+  REFILL_NEEDED: 'REFILL_NEEDED',
+  OUT_OF_STOCK: 'OUT_OF_STOCK'
+};
+
+exports.InventoryAlertType = exports.$Enums.InventoryAlertType = {
+  LOW_STOCK: 'LOW_STOCK',
+  THRESHOLD: 'THRESHOLD',
+  REFILL: 'REFILL'
+};
+
+exports.InventoryAlertSeverity = exports.$Enums.InventoryAlertSeverity = {
+  CRITICAL: 'CRITICAL',
+  HIGH: 'HIGH',
+  MEDIUM: 'MEDIUM',
+  LOW: 'LOW'
+};
+
+exports.InventoryAlertStatus = exports.$Enums.InventoryAlertStatus = {
+  OPEN: 'OPEN',
+  ACKED: 'ACKED',
+  RESOLVED: 'RESOLVED'
+};
+
 exports.Prisma.ModelName = {
   Station: 'Station',
   PreparationStep: 'PreparationStep',
@@ -481,7 +618,14 @@ exports.Prisma.ModelName = {
   Message: 'Message',
   PromotialMessage: 'PromotialMessage',
   Order: 'Order',
-  OrderProducts: 'OrderProducts'
+  OrderProducts: 'OrderProducts',
+  InventoryPlace: 'InventoryPlace',
+  InventoryProduct: 'InventoryProduct',
+  InventoryStock: 'InventoryStock',
+  InventoryChecklist: 'InventoryChecklist',
+  InventoryChecklistItem: 'InventoryChecklistItem',
+  InventoryAlert: 'InventoryAlert',
+  InventoryStockEvent: 'InventoryStockEvent'
 };
 
 /**

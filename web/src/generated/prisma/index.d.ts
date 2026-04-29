@@ -153,6 +153,41 @@ export type Order = $Result.DefaultSelection<Prisma.$OrderPayload>
  * 
  */
 export type OrderProducts = $Result.DefaultSelection<Prisma.$OrderProductsPayload>
+/**
+ * Model InventoryPlace
+ * 
+ */
+export type InventoryPlace = $Result.DefaultSelection<Prisma.$InventoryPlacePayload>
+/**
+ * Model InventoryProduct
+ * 
+ */
+export type InventoryProduct = $Result.DefaultSelection<Prisma.$InventoryProductPayload>
+/**
+ * Model InventoryStock
+ * 
+ */
+export type InventoryStock = $Result.DefaultSelection<Prisma.$InventoryStockPayload>
+/**
+ * Model InventoryChecklist
+ * 
+ */
+export type InventoryChecklist = $Result.DefaultSelection<Prisma.$InventoryChecklistPayload>
+/**
+ * Model InventoryChecklistItem
+ * 
+ */
+export type InventoryChecklistItem = $Result.DefaultSelection<Prisma.$InventoryChecklistItemPayload>
+/**
+ * Model InventoryAlert
+ * 
+ */
+export type InventoryAlert = $Result.DefaultSelection<Prisma.$InventoryAlertPayload>
+/**
+ * Model InventoryStockEvent
+ * 
+ */
+export type InventoryStockEvent = $Result.DefaultSelection<Prisma.$InventoryStockEventPayload>
 
 /**
  * Enums
@@ -210,6 +245,65 @@ export const OrderStatus: {
 
 export type OrderStatus = (typeof OrderStatus)[keyof typeof OrderStatus]
 
+
+export const InventoryPlaceType: {
+  FRIDGE: 'FRIDGE',
+  FREEZER: 'FREEZER',
+  SHELF: 'SHELF',
+  PANTRY: 'PANTRY',
+  OTHER: 'OTHER'
+};
+
+export type InventoryPlaceType = (typeof InventoryPlaceType)[keyof typeof InventoryPlaceType]
+
+
+export const InventoryChecklistStatus: {
+  OPEN: 'OPEN',
+  SUBMITTED: 'SUBMITTED',
+  REVIEWED: 'REVIEWED'
+};
+
+export type InventoryChecklistStatus = (typeof InventoryChecklistStatus)[keyof typeof InventoryChecklistStatus]
+
+
+export const InventoryChecklistItemResult: {
+  PENDING: 'PENDING',
+  OK: 'OK',
+  BELOW_MIN: 'BELOW_MIN',
+  REFILL_NEEDED: 'REFILL_NEEDED',
+  OUT_OF_STOCK: 'OUT_OF_STOCK'
+};
+
+export type InventoryChecklistItemResult = (typeof InventoryChecklistItemResult)[keyof typeof InventoryChecklistItemResult]
+
+
+export const InventoryAlertType: {
+  LOW_STOCK: 'LOW_STOCK',
+  THRESHOLD: 'THRESHOLD',
+  REFILL: 'REFILL'
+};
+
+export type InventoryAlertType = (typeof InventoryAlertType)[keyof typeof InventoryAlertType]
+
+
+export const InventoryAlertSeverity: {
+  CRITICAL: 'CRITICAL',
+  HIGH: 'HIGH',
+  MEDIUM: 'MEDIUM',
+  LOW: 'LOW'
+};
+
+export type InventoryAlertSeverity = (typeof InventoryAlertSeverity)[keyof typeof InventoryAlertSeverity]
+
+
+export const InventoryAlertStatus: {
+  OPEN: 'OPEN',
+  ACKED: 'ACKED',
+  RESOLVED: 'RESOLVED'
+};
+
+export type InventoryAlertStatus = (typeof InventoryAlertStatus)[keyof typeof InventoryAlertStatus]
+
 }
 
 export type ProgressiveDiscountStepType = $Enums.ProgressiveDiscountStepType
@@ -235,6 +329,30 @@ export const OrderType: typeof $Enums.OrderType
 export type OrderStatus = $Enums.OrderStatus
 
 export const OrderStatus: typeof $Enums.OrderStatus
+
+export type InventoryPlaceType = $Enums.InventoryPlaceType
+
+export const InventoryPlaceType: typeof $Enums.InventoryPlaceType
+
+export type InventoryChecklistStatus = $Enums.InventoryChecklistStatus
+
+export const InventoryChecklistStatus: typeof $Enums.InventoryChecklistStatus
+
+export type InventoryChecklistItemResult = $Enums.InventoryChecklistItemResult
+
+export const InventoryChecklistItemResult: typeof $Enums.InventoryChecklistItemResult
+
+export type InventoryAlertType = $Enums.InventoryAlertType
+
+export const InventoryAlertType: typeof $Enums.InventoryAlertType
+
+export type InventoryAlertSeverity = $Enums.InventoryAlertSeverity
+
+export const InventoryAlertSeverity: typeof $Enums.InventoryAlertSeverity
+
+export type InventoryAlertStatus = $Enums.InventoryAlertStatus
+
+export const InventoryAlertStatus: typeof $Enums.InventoryAlertStatus
 
 /**
  * ##  Prisma Client ʲˢ
@@ -636,6 +754,76 @@ export class PrismaClient<
     * ```
     */
   get orderProducts(): Prisma.OrderProductsDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.inventoryPlace`: Exposes CRUD operations for the **InventoryPlace** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more InventoryPlaces
+    * const inventoryPlaces = await prisma.inventoryPlace.findMany()
+    * ```
+    */
+  get inventoryPlace(): Prisma.InventoryPlaceDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.inventoryProduct`: Exposes CRUD operations for the **InventoryProduct** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more InventoryProducts
+    * const inventoryProducts = await prisma.inventoryProduct.findMany()
+    * ```
+    */
+  get inventoryProduct(): Prisma.InventoryProductDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.inventoryStock`: Exposes CRUD operations for the **InventoryStock** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more InventoryStocks
+    * const inventoryStocks = await prisma.inventoryStock.findMany()
+    * ```
+    */
+  get inventoryStock(): Prisma.InventoryStockDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.inventoryChecklist`: Exposes CRUD operations for the **InventoryChecklist** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more InventoryChecklists
+    * const inventoryChecklists = await prisma.inventoryChecklist.findMany()
+    * ```
+    */
+  get inventoryChecklist(): Prisma.InventoryChecklistDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.inventoryChecklistItem`: Exposes CRUD operations for the **InventoryChecklistItem** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more InventoryChecklistItems
+    * const inventoryChecklistItems = await prisma.inventoryChecklistItem.findMany()
+    * ```
+    */
+  get inventoryChecklistItem(): Prisma.InventoryChecklistItemDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.inventoryAlert`: Exposes CRUD operations for the **InventoryAlert** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more InventoryAlerts
+    * const inventoryAlerts = await prisma.inventoryAlert.findMany()
+    * ```
+    */
+  get inventoryAlert(): Prisma.InventoryAlertDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.inventoryStockEvent`: Exposes CRUD operations for the **InventoryStockEvent** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more InventoryStockEvents
+    * const inventoryStockEvents = await prisma.inventoryStockEvent.findMany()
+    * ```
+    */
+  get inventoryStockEvent(): Prisma.InventoryStockEventDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1097,7 +1285,14 @@ export namespace Prisma {
     Message: 'Message',
     PromotialMessage: 'PromotialMessage',
     Order: 'Order',
-    OrderProducts: 'OrderProducts'
+    OrderProducts: 'OrderProducts',
+    InventoryPlace: 'InventoryPlace',
+    InventoryProduct: 'InventoryProduct',
+    InventoryStock: 'InventoryStock',
+    InventoryChecklist: 'InventoryChecklist',
+    InventoryChecklistItem: 'InventoryChecklistItem',
+    InventoryAlert: 'InventoryAlert',
+    InventoryStockEvent: 'InventoryStockEvent'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1113,7 +1308,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "station" | "preparationStep" | "preparationStepCategory" | "preparationStepTrack" | "preparationStepModifierTrack" | "progressiveDiscount" | "progressiveDiscountStep" | "progressiveDiscountPrize" | "progressiveDiscountPrizeProduct" | "file" | "modifierGroup" | "modifierGroupItem" | "business" | "branch" | "driver" | "dispatch" | "dispatchAssignmentJob" | "address" | "product" | "category" | "campaign" | "customer" | "deliveryAddress" | "externalAddress" | "message" | "promotialMessage" | "order" | "orderProducts"
+      modelProps: "station" | "preparationStep" | "preparationStepCategory" | "preparationStepTrack" | "preparationStepModifierTrack" | "progressiveDiscount" | "progressiveDiscountStep" | "progressiveDiscountPrize" | "progressiveDiscountPrizeProduct" | "file" | "modifierGroup" | "modifierGroupItem" | "business" | "branch" | "driver" | "dispatch" | "dispatchAssignmentJob" | "address" | "product" | "category" | "campaign" | "customer" | "deliveryAddress" | "externalAddress" | "message" | "promotialMessage" | "order" | "orderProducts" | "inventoryPlace" | "inventoryProduct" | "inventoryStock" | "inventoryChecklist" | "inventoryChecklistItem" | "inventoryAlert" | "inventoryStockEvent"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3189,6 +3384,524 @@ export namespace Prisma {
           }
         }
       }
+      InventoryPlace: {
+        payload: Prisma.$InventoryPlacePayload<ExtArgs>
+        fields: Prisma.InventoryPlaceFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.InventoryPlaceFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryPlacePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.InventoryPlaceFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryPlacePayload>
+          }
+          findFirst: {
+            args: Prisma.InventoryPlaceFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryPlacePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.InventoryPlaceFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryPlacePayload>
+          }
+          findMany: {
+            args: Prisma.InventoryPlaceFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryPlacePayload>[]
+          }
+          create: {
+            args: Prisma.InventoryPlaceCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryPlacePayload>
+          }
+          createMany: {
+            args: Prisma.InventoryPlaceCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.InventoryPlaceCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryPlacePayload>[]
+          }
+          delete: {
+            args: Prisma.InventoryPlaceDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryPlacePayload>
+          }
+          update: {
+            args: Prisma.InventoryPlaceUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryPlacePayload>
+          }
+          deleteMany: {
+            args: Prisma.InventoryPlaceDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.InventoryPlaceUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.InventoryPlaceUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryPlacePayload>[]
+          }
+          upsert: {
+            args: Prisma.InventoryPlaceUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryPlacePayload>
+          }
+          aggregate: {
+            args: Prisma.InventoryPlaceAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateInventoryPlace>
+          }
+          groupBy: {
+            args: Prisma.InventoryPlaceGroupByArgs<ExtArgs>
+            result: $Utils.Optional<InventoryPlaceGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.InventoryPlaceCountArgs<ExtArgs>
+            result: $Utils.Optional<InventoryPlaceCountAggregateOutputType> | number
+          }
+        }
+      }
+      InventoryProduct: {
+        payload: Prisma.$InventoryProductPayload<ExtArgs>
+        fields: Prisma.InventoryProductFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.InventoryProductFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryProductPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.InventoryProductFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryProductPayload>
+          }
+          findFirst: {
+            args: Prisma.InventoryProductFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryProductPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.InventoryProductFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryProductPayload>
+          }
+          findMany: {
+            args: Prisma.InventoryProductFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryProductPayload>[]
+          }
+          create: {
+            args: Prisma.InventoryProductCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryProductPayload>
+          }
+          createMany: {
+            args: Prisma.InventoryProductCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.InventoryProductCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryProductPayload>[]
+          }
+          delete: {
+            args: Prisma.InventoryProductDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryProductPayload>
+          }
+          update: {
+            args: Prisma.InventoryProductUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryProductPayload>
+          }
+          deleteMany: {
+            args: Prisma.InventoryProductDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.InventoryProductUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.InventoryProductUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryProductPayload>[]
+          }
+          upsert: {
+            args: Prisma.InventoryProductUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryProductPayload>
+          }
+          aggregate: {
+            args: Prisma.InventoryProductAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateInventoryProduct>
+          }
+          groupBy: {
+            args: Prisma.InventoryProductGroupByArgs<ExtArgs>
+            result: $Utils.Optional<InventoryProductGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.InventoryProductCountArgs<ExtArgs>
+            result: $Utils.Optional<InventoryProductCountAggregateOutputType> | number
+          }
+        }
+      }
+      InventoryStock: {
+        payload: Prisma.$InventoryStockPayload<ExtArgs>
+        fields: Prisma.InventoryStockFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.InventoryStockFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryStockPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.InventoryStockFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryStockPayload>
+          }
+          findFirst: {
+            args: Prisma.InventoryStockFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryStockPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.InventoryStockFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryStockPayload>
+          }
+          findMany: {
+            args: Prisma.InventoryStockFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryStockPayload>[]
+          }
+          create: {
+            args: Prisma.InventoryStockCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryStockPayload>
+          }
+          createMany: {
+            args: Prisma.InventoryStockCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.InventoryStockCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryStockPayload>[]
+          }
+          delete: {
+            args: Prisma.InventoryStockDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryStockPayload>
+          }
+          update: {
+            args: Prisma.InventoryStockUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryStockPayload>
+          }
+          deleteMany: {
+            args: Prisma.InventoryStockDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.InventoryStockUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.InventoryStockUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryStockPayload>[]
+          }
+          upsert: {
+            args: Prisma.InventoryStockUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryStockPayload>
+          }
+          aggregate: {
+            args: Prisma.InventoryStockAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateInventoryStock>
+          }
+          groupBy: {
+            args: Prisma.InventoryStockGroupByArgs<ExtArgs>
+            result: $Utils.Optional<InventoryStockGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.InventoryStockCountArgs<ExtArgs>
+            result: $Utils.Optional<InventoryStockCountAggregateOutputType> | number
+          }
+        }
+      }
+      InventoryChecklist: {
+        payload: Prisma.$InventoryChecklistPayload<ExtArgs>
+        fields: Prisma.InventoryChecklistFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.InventoryChecklistFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryChecklistPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.InventoryChecklistFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryChecklistPayload>
+          }
+          findFirst: {
+            args: Prisma.InventoryChecklistFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryChecklistPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.InventoryChecklistFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryChecklistPayload>
+          }
+          findMany: {
+            args: Prisma.InventoryChecklistFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryChecklistPayload>[]
+          }
+          create: {
+            args: Prisma.InventoryChecklistCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryChecklistPayload>
+          }
+          createMany: {
+            args: Prisma.InventoryChecklistCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.InventoryChecklistCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryChecklistPayload>[]
+          }
+          delete: {
+            args: Prisma.InventoryChecklistDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryChecklistPayload>
+          }
+          update: {
+            args: Prisma.InventoryChecklistUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryChecklistPayload>
+          }
+          deleteMany: {
+            args: Prisma.InventoryChecklistDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.InventoryChecklistUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.InventoryChecklistUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryChecklistPayload>[]
+          }
+          upsert: {
+            args: Prisma.InventoryChecklistUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryChecklistPayload>
+          }
+          aggregate: {
+            args: Prisma.InventoryChecklistAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateInventoryChecklist>
+          }
+          groupBy: {
+            args: Prisma.InventoryChecklistGroupByArgs<ExtArgs>
+            result: $Utils.Optional<InventoryChecklistGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.InventoryChecklistCountArgs<ExtArgs>
+            result: $Utils.Optional<InventoryChecklistCountAggregateOutputType> | number
+          }
+        }
+      }
+      InventoryChecklistItem: {
+        payload: Prisma.$InventoryChecklistItemPayload<ExtArgs>
+        fields: Prisma.InventoryChecklistItemFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.InventoryChecklistItemFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryChecklistItemPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.InventoryChecklistItemFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryChecklistItemPayload>
+          }
+          findFirst: {
+            args: Prisma.InventoryChecklistItemFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryChecklistItemPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.InventoryChecklistItemFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryChecklistItemPayload>
+          }
+          findMany: {
+            args: Prisma.InventoryChecklistItemFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryChecklistItemPayload>[]
+          }
+          create: {
+            args: Prisma.InventoryChecklistItemCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryChecklistItemPayload>
+          }
+          createMany: {
+            args: Prisma.InventoryChecklistItemCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.InventoryChecklistItemCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryChecklistItemPayload>[]
+          }
+          delete: {
+            args: Prisma.InventoryChecklistItemDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryChecklistItemPayload>
+          }
+          update: {
+            args: Prisma.InventoryChecklistItemUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryChecklistItemPayload>
+          }
+          deleteMany: {
+            args: Prisma.InventoryChecklistItemDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.InventoryChecklistItemUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.InventoryChecklistItemUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryChecklistItemPayload>[]
+          }
+          upsert: {
+            args: Prisma.InventoryChecklistItemUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryChecklistItemPayload>
+          }
+          aggregate: {
+            args: Prisma.InventoryChecklistItemAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateInventoryChecklistItem>
+          }
+          groupBy: {
+            args: Prisma.InventoryChecklistItemGroupByArgs<ExtArgs>
+            result: $Utils.Optional<InventoryChecklistItemGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.InventoryChecklistItemCountArgs<ExtArgs>
+            result: $Utils.Optional<InventoryChecklistItemCountAggregateOutputType> | number
+          }
+        }
+      }
+      InventoryAlert: {
+        payload: Prisma.$InventoryAlertPayload<ExtArgs>
+        fields: Prisma.InventoryAlertFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.InventoryAlertFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryAlertPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.InventoryAlertFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryAlertPayload>
+          }
+          findFirst: {
+            args: Prisma.InventoryAlertFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryAlertPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.InventoryAlertFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryAlertPayload>
+          }
+          findMany: {
+            args: Prisma.InventoryAlertFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryAlertPayload>[]
+          }
+          create: {
+            args: Prisma.InventoryAlertCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryAlertPayload>
+          }
+          createMany: {
+            args: Prisma.InventoryAlertCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.InventoryAlertCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryAlertPayload>[]
+          }
+          delete: {
+            args: Prisma.InventoryAlertDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryAlertPayload>
+          }
+          update: {
+            args: Prisma.InventoryAlertUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryAlertPayload>
+          }
+          deleteMany: {
+            args: Prisma.InventoryAlertDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.InventoryAlertUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.InventoryAlertUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryAlertPayload>[]
+          }
+          upsert: {
+            args: Prisma.InventoryAlertUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryAlertPayload>
+          }
+          aggregate: {
+            args: Prisma.InventoryAlertAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateInventoryAlert>
+          }
+          groupBy: {
+            args: Prisma.InventoryAlertGroupByArgs<ExtArgs>
+            result: $Utils.Optional<InventoryAlertGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.InventoryAlertCountArgs<ExtArgs>
+            result: $Utils.Optional<InventoryAlertCountAggregateOutputType> | number
+          }
+        }
+      }
+      InventoryStockEvent: {
+        payload: Prisma.$InventoryStockEventPayload<ExtArgs>
+        fields: Prisma.InventoryStockEventFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.InventoryStockEventFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryStockEventPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.InventoryStockEventFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryStockEventPayload>
+          }
+          findFirst: {
+            args: Prisma.InventoryStockEventFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryStockEventPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.InventoryStockEventFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryStockEventPayload>
+          }
+          findMany: {
+            args: Prisma.InventoryStockEventFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryStockEventPayload>[]
+          }
+          create: {
+            args: Prisma.InventoryStockEventCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryStockEventPayload>
+          }
+          createMany: {
+            args: Prisma.InventoryStockEventCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.InventoryStockEventCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryStockEventPayload>[]
+          }
+          delete: {
+            args: Prisma.InventoryStockEventDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryStockEventPayload>
+          }
+          update: {
+            args: Prisma.InventoryStockEventUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryStockEventPayload>
+          }
+          deleteMany: {
+            args: Prisma.InventoryStockEventDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.InventoryStockEventUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.InventoryStockEventUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryStockEventPayload>[]
+          }
+          upsert: {
+            args: Prisma.InventoryStockEventUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryStockEventPayload>
+          }
+          aggregate: {
+            args: Prisma.InventoryStockEventAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateInventoryStockEvent>
+          }
+          groupBy: {
+            args: Prisma.InventoryStockEventGroupByArgs<ExtArgs>
+            result: $Utils.Optional<InventoryStockEventGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.InventoryStockEventCountArgs<ExtArgs>
+            result: $Utils.Optional<InventoryStockEventCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -3325,6 +4038,13 @@ export namespace Prisma {
     promotialMessage?: PromotialMessageOmit
     order?: OrderOmit
     orderProducts?: OrderProductsOmit
+    inventoryPlace?: InventoryPlaceOmit
+    inventoryProduct?: InventoryProductOmit
+    inventoryStock?: InventoryStockOmit
+    inventoryChecklist?: InventoryChecklistOmit
+    inventoryChecklistItem?: InventoryChecklistItemOmit
+    inventoryAlert?: InventoryAlertOmit
+    inventoryStockEvent?: InventoryStockEventOmit
   }
 
   /* Types for Logging */
@@ -4218,6 +4938,193 @@ export namespace Prisma {
    */
   export type OrderProductsCountOutputTypeCountModifierGroupItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ModifierGroupItemWhereInput
+  }
+
+
+  /**
+   * Count Type InventoryPlaceCountOutputType
+   */
+
+  export type InventoryPlaceCountOutputType = {
+    stocks: number
+    alerts: number
+    checklistItems: number
+    stockEvents: number
+  }
+
+  export type InventoryPlaceCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    stocks?: boolean | InventoryPlaceCountOutputTypeCountStocksArgs
+    alerts?: boolean | InventoryPlaceCountOutputTypeCountAlertsArgs
+    checklistItems?: boolean | InventoryPlaceCountOutputTypeCountChecklistItemsArgs
+    stockEvents?: boolean | InventoryPlaceCountOutputTypeCountStockEventsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * InventoryPlaceCountOutputType without action
+   */
+  export type InventoryPlaceCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryPlaceCountOutputType
+     */
+    select?: InventoryPlaceCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * InventoryPlaceCountOutputType without action
+   */
+  export type InventoryPlaceCountOutputTypeCountStocksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InventoryStockWhereInput
+  }
+
+  /**
+   * InventoryPlaceCountOutputType without action
+   */
+  export type InventoryPlaceCountOutputTypeCountAlertsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InventoryAlertWhereInput
+  }
+
+  /**
+   * InventoryPlaceCountOutputType without action
+   */
+  export type InventoryPlaceCountOutputTypeCountChecklistItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InventoryChecklistItemWhereInput
+  }
+
+  /**
+   * InventoryPlaceCountOutputType without action
+   */
+  export type InventoryPlaceCountOutputTypeCountStockEventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InventoryStockEventWhereInput
+  }
+
+
+  /**
+   * Count Type InventoryProductCountOutputType
+   */
+
+  export type InventoryProductCountOutputType = {
+    stocks: number
+    alerts: number
+    checklistItems: number
+    stockEvents: number
+  }
+
+  export type InventoryProductCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    stocks?: boolean | InventoryProductCountOutputTypeCountStocksArgs
+    alerts?: boolean | InventoryProductCountOutputTypeCountAlertsArgs
+    checklistItems?: boolean | InventoryProductCountOutputTypeCountChecklistItemsArgs
+    stockEvents?: boolean | InventoryProductCountOutputTypeCountStockEventsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * InventoryProductCountOutputType without action
+   */
+  export type InventoryProductCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryProductCountOutputType
+     */
+    select?: InventoryProductCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * InventoryProductCountOutputType without action
+   */
+  export type InventoryProductCountOutputTypeCountStocksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InventoryStockWhereInput
+  }
+
+  /**
+   * InventoryProductCountOutputType without action
+   */
+  export type InventoryProductCountOutputTypeCountAlertsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InventoryAlertWhereInput
+  }
+
+  /**
+   * InventoryProductCountOutputType without action
+   */
+  export type InventoryProductCountOutputTypeCountChecklistItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InventoryChecklistItemWhereInput
+  }
+
+  /**
+   * InventoryProductCountOutputType without action
+   */
+  export type InventoryProductCountOutputTypeCountStockEventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InventoryStockEventWhereInput
+  }
+
+
+  /**
+   * Count Type InventoryChecklistCountOutputType
+   */
+
+  export type InventoryChecklistCountOutputType = {
+    items: number
+    alerts: number
+  }
+
+  export type InventoryChecklistCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    items?: boolean | InventoryChecklistCountOutputTypeCountItemsArgs
+    alerts?: boolean | InventoryChecklistCountOutputTypeCountAlertsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * InventoryChecklistCountOutputType without action
+   */
+  export type InventoryChecklistCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryChecklistCountOutputType
+     */
+    select?: InventoryChecklistCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * InventoryChecklistCountOutputType without action
+   */
+  export type InventoryChecklistCountOutputTypeCountItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InventoryChecklistItemWhereInput
+  }
+
+  /**
+   * InventoryChecklistCountOutputType without action
+   */
+  export type InventoryChecklistCountOutputTypeCountAlertsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InventoryAlertWhereInput
+  }
+
+
+  /**
+   * Count Type InventoryChecklistItemCountOutputType
+   */
+
+  export type InventoryChecklistItemCountOutputType = {
+    alerts: number
+  }
+
+  export type InventoryChecklistItemCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    alerts?: boolean | InventoryChecklistItemCountOutputTypeCountAlertsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * InventoryChecklistItemCountOutputType without action
+   */
+  export type InventoryChecklistItemCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryChecklistItemCountOutputType
+     */
+    select?: InventoryChecklistItemCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * InventoryChecklistItemCountOutputType without action
+   */
+  export type InventoryChecklistItemCountOutputTypeCountAlertsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InventoryAlertWhereInput
   }
 
 
@@ -36352,6 +37259,8501 @@ export namespace Prisma {
 
 
   /**
+   * Model InventoryPlace
+   */
+
+  export type AggregateInventoryPlace = {
+    _count: InventoryPlaceCountAggregateOutputType | null
+    _avg: InventoryPlaceAvgAggregateOutputType | null
+    _sum: InventoryPlaceSumAggregateOutputType | null
+    _min: InventoryPlaceMinAggregateOutputType | null
+    _max: InventoryPlaceMaxAggregateOutputType | null
+  }
+
+  export type InventoryPlaceAvgAggregateOutputType = {
+    displayOrder: number | null
+  }
+
+  export type InventoryPlaceSumAggregateOutputType = {
+    displayOrder: number | null
+  }
+
+  export type InventoryPlaceMinAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    name: string | null
+    type: $Enums.InventoryPlaceType | null
+    active: boolean | null
+    displayOrder: number | null
+    notes: string | null
+  }
+
+  export type InventoryPlaceMaxAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    name: string | null
+    type: $Enums.InventoryPlaceType | null
+    active: boolean | null
+    displayOrder: number | null
+    notes: string | null
+  }
+
+  export type InventoryPlaceCountAggregateOutputType = {
+    id: number
+    createdAt: number
+    updatedAt: number
+    name: number
+    type: number
+    active: number
+    displayOrder: number
+    notes: number
+    _all: number
+  }
+
+
+  export type InventoryPlaceAvgAggregateInputType = {
+    displayOrder?: true
+  }
+
+  export type InventoryPlaceSumAggregateInputType = {
+    displayOrder?: true
+  }
+
+  export type InventoryPlaceMinAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    name?: true
+    type?: true
+    active?: true
+    displayOrder?: true
+    notes?: true
+  }
+
+  export type InventoryPlaceMaxAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    name?: true
+    type?: true
+    active?: true
+    displayOrder?: true
+    notes?: true
+  }
+
+  export type InventoryPlaceCountAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    name?: true
+    type?: true
+    active?: true
+    displayOrder?: true
+    notes?: true
+    _all?: true
+  }
+
+  export type InventoryPlaceAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which InventoryPlace to aggregate.
+     */
+    where?: InventoryPlaceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InventoryPlaces to fetch.
+     */
+    orderBy?: InventoryPlaceOrderByWithRelationInput | InventoryPlaceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: InventoryPlaceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InventoryPlaces from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InventoryPlaces.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned InventoryPlaces
+    **/
+    _count?: true | InventoryPlaceCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: InventoryPlaceAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: InventoryPlaceSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: InventoryPlaceMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: InventoryPlaceMaxAggregateInputType
+  }
+
+  export type GetInventoryPlaceAggregateType<T extends InventoryPlaceAggregateArgs> = {
+        [P in keyof T & keyof AggregateInventoryPlace]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateInventoryPlace[P]>
+      : GetScalarType<T[P], AggregateInventoryPlace[P]>
+  }
+
+
+
+
+  export type InventoryPlaceGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InventoryPlaceWhereInput
+    orderBy?: InventoryPlaceOrderByWithAggregationInput | InventoryPlaceOrderByWithAggregationInput[]
+    by: InventoryPlaceScalarFieldEnum[] | InventoryPlaceScalarFieldEnum
+    having?: InventoryPlaceScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: InventoryPlaceCountAggregateInputType | true
+    _avg?: InventoryPlaceAvgAggregateInputType
+    _sum?: InventoryPlaceSumAggregateInputType
+    _min?: InventoryPlaceMinAggregateInputType
+    _max?: InventoryPlaceMaxAggregateInputType
+  }
+
+  export type InventoryPlaceGroupByOutputType = {
+    id: string
+    createdAt: Date
+    updatedAt: Date
+    name: string
+    type: $Enums.InventoryPlaceType
+    active: boolean
+    displayOrder: number | null
+    notes: string | null
+    _count: InventoryPlaceCountAggregateOutputType | null
+    _avg: InventoryPlaceAvgAggregateOutputType | null
+    _sum: InventoryPlaceSumAggregateOutputType | null
+    _min: InventoryPlaceMinAggregateOutputType | null
+    _max: InventoryPlaceMaxAggregateOutputType | null
+  }
+
+  type GetInventoryPlaceGroupByPayload<T extends InventoryPlaceGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<InventoryPlaceGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof InventoryPlaceGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], InventoryPlaceGroupByOutputType[P]>
+            : GetScalarType<T[P], InventoryPlaceGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type InventoryPlaceSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    name?: boolean
+    type?: boolean
+    active?: boolean
+    displayOrder?: boolean
+    notes?: boolean
+    stocks?: boolean | InventoryPlace$stocksArgs<ExtArgs>
+    alerts?: boolean | InventoryPlace$alertsArgs<ExtArgs>
+    checklistItems?: boolean | InventoryPlace$checklistItemsArgs<ExtArgs>
+    stockEvents?: boolean | InventoryPlace$stockEventsArgs<ExtArgs>
+    _count?: boolean | InventoryPlaceCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["inventoryPlace"]>
+
+  export type InventoryPlaceSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    name?: boolean
+    type?: boolean
+    active?: boolean
+    displayOrder?: boolean
+    notes?: boolean
+  }, ExtArgs["result"]["inventoryPlace"]>
+
+  export type InventoryPlaceSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    name?: boolean
+    type?: boolean
+    active?: boolean
+    displayOrder?: boolean
+    notes?: boolean
+  }, ExtArgs["result"]["inventoryPlace"]>
+
+  export type InventoryPlaceSelectScalar = {
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    name?: boolean
+    type?: boolean
+    active?: boolean
+    displayOrder?: boolean
+    notes?: boolean
+  }
+
+  export type InventoryPlaceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "name" | "type" | "active" | "displayOrder" | "notes", ExtArgs["result"]["inventoryPlace"]>
+  export type InventoryPlaceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    stocks?: boolean | InventoryPlace$stocksArgs<ExtArgs>
+    alerts?: boolean | InventoryPlace$alertsArgs<ExtArgs>
+    checklistItems?: boolean | InventoryPlace$checklistItemsArgs<ExtArgs>
+    stockEvents?: boolean | InventoryPlace$stockEventsArgs<ExtArgs>
+    _count?: boolean | InventoryPlaceCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type InventoryPlaceIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type InventoryPlaceIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $InventoryPlacePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "InventoryPlace"
+    objects: {
+      stocks: Prisma.$InventoryStockPayload<ExtArgs>[]
+      alerts: Prisma.$InventoryAlertPayload<ExtArgs>[]
+      checklistItems: Prisma.$InventoryChecklistItemPayload<ExtArgs>[]
+      stockEvents: Prisma.$InventoryStockEventPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      createdAt: Date
+      updatedAt: Date
+      name: string
+      type: $Enums.InventoryPlaceType
+      active: boolean
+      displayOrder: number | null
+      notes: string | null
+    }, ExtArgs["result"]["inventoryPlace"]>
+    composites: {}
+  }
+
+  type InventoryPlaceGetPayload<S extends boolean | null | undefined | InventoryPlaceDefaultArgs> = $Result.GetResult<Prisma.$InventoryPlacePayload, S>
+
+  type InventoryPlaceCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<InventoryPlaceFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: InventoryPlaceCountAggregateInputType | true
+    }
+
+  export interface InventoryPlaceDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['InventoryPlace'], meta: { name: 'InventoryPlace' } }
+    /**
+     * Find zero or one InventoryPlace that matches the filter.
+     * @param {InventoryPlaceFindUniqueArgs} args - Arguments to find a InventoryPlace
+     * @example
+     * // Get one InventoryPlace
+     * const inventoryPlace = await prisma.inventoryPlace.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends InventoryPlaceFindUniqueArgs>(args: SelectSubset<T, InventoryPlaceFindUniqueArgs<ExtArgs>>): Prisma__InventoryPlaceClient<$Result.GetResult<Prisma.$InventoryPlacePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one InventoryPlace that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {InventoryPlaceFindUniqueOrThrowArgs} args - Arguments to find a InventoryPlace
+     * @example
+     * // Get one InventoryPlace
+     * const inventoryPlace = await prisma.inventoryPlace.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends InventoryPlaceFindUniqueOrThrowArgs>(args: SelectSubset<T, InventoryPlaceFindUniqueOrThrowArgs<ExtArgs>>): Prisma__InventoryPlaceClient<$Result.GetResult<Prisma.$InventoryPlacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first InventoryPlace that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryPlaceFindFirstArgs} args - Arguments to find a InventoryPlace
+     * @example
+     * // Get one InventoryPlace
+     * const inventoryPlace = await prisma.inventoryPlace.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends InventoryPlaceFindFirstArgs>(args?: SelectSubset<T, InventoryPlaceFindFirstArgs<ExtArgs>>): Prisma__InventoryPlaceClient<$Result.GetResult<Prisma.$InventoryPlacePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first InventoryPlace that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryPlaceFindFirstOrThrowArgs} args - Arguments to find a InventoryPlace
+     * @example
+     * // Get one InventoryPlace
+     * const inventoryPlace = await prisma.inventoryPlace.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends InventoryPlaceFindFirstOrThrowArgs>(args?: SelectSubset<T, InventoryPlaceFindFirstOrThrowArgs<ExtArgs>>): Prisma__InventoryPlaceClient<$Result.GetResult<Prisma.$InventoryPlacePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more InventoryPlaces that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryPlaceFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all InventoryPlaces
+     * const inventoryPlaces = await prisma.inventoryPlace.findMany()
+     * 
+     * // Get first 10 InventoryPlaces
+     * const inventoryPlaces = await prisma.inventoryPlace.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const inventoryPlaceWithIdOnly = await prisma.inventoryPlace.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends InventoryPlaceFindManyArgs>(args?: SelectSubset<T, InventoryPlaceFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryPlacePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a InventoryPlace.
+     * @param {InventoryPlaceCreateArgs} args - Arguments to create a InventoryPlace.
+     * @example
+     * // Create one InventoryPlace
+     * const InventoryPlace = await prisma.inventoryPlace.create({
+     *   data: {
+     *     // ... data to create a InventoryPlace
+     *   }
+     * })
+     * 
+     */
+    create<T extends InventoryPlaceCreateArgs>(args: SelectSubset<T, InventoryPlaceCreateArgs<ExtArgs>>): Prisma__InventoryPlaceClient<$Result.GetResult<Prisma.$InventoryPlacePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many InventoryPlaces.
+     * @param {InventoryPlaceCreateManyArgs} args - Arguments to create many InventoryPlaces.
+     * @example
+     * // Create many InventoryPlaces
+     * const inventoryPlace = await prisma.inventoryPlace.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends InventoryPlaceCreateManyArgs>(args?: SelectSubset<T, InventoryPlaceCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many InventoryPlaces and returns the data saved in the database.
+     * @param {InventoryPlaceCreateManyAndReturnArgs} args - Arguments to create many InventoryPlaces.
+     * @example
+     * // Create many InventoryPlaces
+     * const inventoryPlace = await prisma.inventoryPlace.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many InventoryPlaces and only return the `id`
+     * const inventoryPlaceWithIdOnly = await prisma.inventoryPlace.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends InventoryPlaceCreateManyAndReturnArgs>(args?: SelectSubset<T, InventoryPlaceCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryPlacePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a InventoryPlace.
+     * @param {InventoryPlaceDeleteArgs} args - Arguments to delete one InventoryPlace.
+     * @example
+     * // Delete one InventoryPlace
+     * const InventoryPlace = await prisma.inventoryPlace.delete({
+     *   where: {
+     *     // ... filter to delete one InventoryPlace
+     *   }
+     * })
+     * 
+     */
+    delete<T extends InventoryPlaceDeleteArgs>(args: SelectSubset<T, InventoryPlaceDeleteArgs<ExtArgs>>): Prisma__InventoryPlaceClient<$Result.GetResult<Prisma.$InventoryPlacePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one InventoryPlace.
+     * @param {InventoryPlaceUpdateArgs} args - Arguments to update one InventoryPlace.
+     * @example
+     * // Update one InventoryPlace
+     * const inventoryPlace = await prisma.inventoryPlace.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends InventoryPlaceUpdateArgs>(args: SelectSubset<T, InventoryPlaceUpdateArgs<ExtArgs>>): Prisma__InventoryPlaceClient<$Result.GetResult<Prisma.$InventoryPlacePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more InventoryPlaces.
+     * @param {InventoryPlaceDeleteManyArgs} args - Arguments to filter InventoryPlaces to delete.
+     * @example
+     * // Delete a few InventoryPlaces
+     * const { count } = await prisma.inventoryPlace.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends InventoryPlaceDeleteManyArgs>(args?: SelectSubset<T, InventoryPlaceDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more InventoryPlaces.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryPlaceUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many InventoryPlaces
+     * const inventoryPlace = await prisma.inventoryPlace.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends InventoryPlaceUpdateManyArgs>(args: SelectSubset<T, InventoryPlaceUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more InventoryPlaces and returns the data updated in the database.
+     * @param {InventoryPlaceUpdateManyAndReturnArgs} args - Arguments to update many InventoryPlaces.
+     * @example
+     * // Update many InventoryPlaces
+     * const inventoryPlace = await prisma.inventoryPlace.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more InventoryPlaces and only return the `id`
+     * const inventoryPlaceWithIdOnly = await prisma.inventoryPlace.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends InventoryPlaceUpdateManyAndReturnArgs>(args: SelectSubset<T, InventoryPlaceUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryPlacePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one InventoryPlace.
+     * @param {InventoryPlaceUpsertArgs} args - Arguments to update or create a InventoryPlace.
+     * @example
+     * // Update or create a InventoryPlace
+     * const inventoryPlace = await prisma.inventoryPlace.upsert({
+     *   create: {
+     *     // ... data to create a InventoryPlace
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the InventoryPlace we want to update
+     *   }
+     * })
+     */
+    upsert<T extends InventoryPlaceUpsertArgs>(args: SelectSubset<T, InventoryPlaceUpsertArgs<ExtArgs>>): Prisma__InventoryPlaceClient<$Result.GetResult<Prisma.$InventoryPlacePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of InventoryPlaces.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryPlaceCountArgs} args - Arguments to filter InventoryPlaces to count.
+     * @example
+     * // Count the number of InventoryPlaces
+     * const count = await prisma.inventoryPlace.count({
+     *   where: {
+     *     // ... the filter for the InventoryPlaces we want to count
+     *   }
+     * })
+    **/
+    count<T extends InventoryPlaceCountArgs>(
+      args?: Subset<T, InventoryPlaceCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], InventoryPlaceCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a InventoryPlace.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryPlaceAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends InventoryPlaceAggregateArgs>(args: Subset<T, InventoryPlaceAggregateArgs>): Prisma.PrismaPromise<GetInventoryPlaceAggregateType<T>>
+
+    /**
+     * Group by InventoryPlace.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryPlaceGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends InventoryPlaceGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: InventoryPlaceGroupByArgs['orderBy'] }
+        : { orderBy?: InventoryPlaceGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, InventoryPlaceGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetInventoryPlaceGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the InventoryPlace model
+   */
+  readonly fields: InventoryPlaceFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for InventoryPlace.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__InventoryPlaceClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    stocks<T extends InventoryPlace$stocksArgs<ExtArgs> = {}>(args?: Subset<T, InventoryPlace$stocksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryStockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    alerts<T extends InventoryPlace$alertsArgs<ExtArgs> = {}>(args?: Subset<T, InventoryPlace$alertsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryAlertPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    checklistItems<T extends InventoryPlace$checklistItemsArgs<ExtArgs> = {}>(args?: Subset<T, InventoryPlace$checklistItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryChecklistItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    stockEvents<T extends InventoryPlace$stockEventsArgs<ExtArgs> = {}>(args?: Subset<T, InventoryPlace$stockEventsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryStockEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the InventoryPlace model
+   */
+  interface InventoryPlaceFieldRefs {
+    readonly id: FieldRef<"InventoryPlace", 'String'>
+    readonly createdAt: FieldRef<"InventoryPlace", 'DateTime'>
+    readonly updatedAt: FieldRef<"InventoryPlace", 'DateTime'>
+    readonly name: FieldRef<"InventoryPlace", 'String'>
+    readonly type: FieldRef<"InventoryPlace", 'InventoryPlaceType'>
+    readonly active: FieldRef<"InventoryPlace", 'Boolean'>
+    readonly displayOrder: FieldRef<"InventoryPlace", 'Int'>
+    readonly notes: FieldRef<"InventoryPlace", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * InventoryPlace findUnique
+   */
+  export type InventoryPlaceFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryPlace
+     */
+    select?: InventoryPlaceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryPlace
+     */
+    omit?: InventoryPlaceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryPlaceInclude<ExtArgs> | null
+    /**
+     * Filter, which InventoryPlace to fetch.
+     */
+    where: InventoryPlaceWhereUniqueInput
+  }
+
+  /**
+   * InventoryPlace findUniqueOrThrow
+   */
+  export type InventoryPlaceFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryPlace
+     */
+    select?: InventoryPlaceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryPlace
+     */
+    omit?: InventoryPlaceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryPlaceInclude<ExtArgs> | null
+    /**
+     * Filter, which InventoryPlace to fetch.
+     */
+    where: InventoryPlaceWhereUniqueInput
+  }
+
+  /**
+   * InventoryPlace findFirst
+   */
+  export type InventoryPlaceFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryPlace
+     */
+    select?: InventoryPlaceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryPlace
+     */
+    omit?: InventoryPlaceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryPlaceInclude<ExtArgs> | null
+    /**
+     * Filter, which InventoryPlace to fetch.
+     */
+    where?: InventoryPlaceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InventoryPlaces to fetch.
+     */
+    orderBy?: InventoryPlaceOrderByWithRelationInput | InventoryPlaceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for InventoryPlaces.
+     */
+    cursor?: InventoryPlaceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InventoryPlaces from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InventoryPlaces.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of InventoryPlaces.
+     */
+    distinct?: InventoryPlaceScalarFieldEnum | InventoryPlaceScalarFieldEnum[]
+  }
+
+  /**
+   * InventoryPlace findFirstOrThrow
+   */
+  export type InventoryPlaceFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryPlace
+     */
+    select?: InventoryPlaceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryPlace
+     */
+    omit?: InventoryPlaceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryPlaceInclude<ExtArgs> | null
+    /**
+     * Filter, which InventoryPlace to fetch.
+     */
+    where?: InventoryPlaceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InventoryPlaces to fetch.
+     */
+    orderBy?: InventoryPlaceOrderByWithRelationInput | InventoryPlaceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for InventoryPlaces.
+     */
+    cursor?: InventoryPlaceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InventoryPlaces from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InventoryPlaces.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of InventoryPlaces.
+     */
+    distinct?: InventoryPlaceScalarFieldEnum | InventoryPlaceScalarFieldEnum[]
+  }
+
+  /**
+   * InventoryPlace findMany
+   */
+  export type InventoryPlaceFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryPlace
+     */
+    select?: InventoryPlaceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryPlace
+     */
+    omit?: InventoryPlaceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryPlaceInclude<ExtArgs> | null
+    /**
+     * Filter, which InventoryPlaces to fetch.
+     */
+    where?: InventoryPlaceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InventoryPlaces to fetch.
+     */
+    orderBy?: InventoryPlaceOrderByWithRelationInput | InventoryPlaceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing InventoryPlaces.
+     */
+    cursor?: InventoryPlaceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InventoryPlaces from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InventoryPlaces.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of InventoryPlaces.
+     */
+    distinct?: InventoryPlaceScalarFieldEnum | InventoryPlaceScalarFieldEnum[]
+  }
+
+  /**
+   * InventoryPlace create
+   */
+  export type InventoryPlaceCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryPlace
+     */
+    select?: InventoryPlaceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryPlace
+     */
+    omit?: InventoryPlaceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryPlaceInclude<ExtArgs> | null
+    /**
+     * The data needed to create a InventoryPlace.
+     */
+    data: XOR<InventoryPlaceCreateInput, InventoryPlaceUncheckedCreateInput>
+  }
+
+  /**
+   * InventoryPlace createMany
+   */
+  export type InventoryPlaceCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many InventoryPlaces.
+     */
+    data: InventoryPlaceCreateManyInput | InventoryPlaceCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * InventoryPlace createManyAndReturn
+   */
+  export type InventoryPlaceCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryPlace
+     */
+    select?: InventoryPlaceSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryPlace
+     */
+    omit?: InventoryPlaceOmit<ExtArgs> | null
+    /**
+     * The data used to create many InventoryPlaces.
+     */
+    data: InventoryPlaceCreateManyInput | InventoryPlaceCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * InventoryPlace update
+   */
+  export type InventoryPlaceUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryPlace
+     */
+    select?: InventoryPlaceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryPlace
+     */
+    omit?: InventoryPlaceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryPlaceInclude<ExtArgs> | null
+    /**
+     * The data needed to update a InventoryPlace.
+     */
+    data: XOR<InventoryPlaceUpdateInput, InventoryPlaceUncheckedUpdateInput>
+    /**
+     * Choose, which InventoryPlace to update.
+     */
+    where: InventoryPlaceWhereUniqueInput
+  }
+
+  /**
+   * InventoryPlace updateMany
+   */
+  export type InventoryPlaceUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update InventoryPlaces.
+     */
+    data: XOR<InventoryPlaceUpdateManyMutationInput, InventoryPlaceUncheckedUpdateManyInput>
+    /**
+     * Filter which InventoryPlaces to update
+     */
+    where?: InventoryPlaceWhereInput
+    /**
+     * Limit how many InventoryPlaces to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * InventoryPlace updateManyAndReturn
+   */
+  export type InventoryPlaceUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryPlace
+     */
+    select?: InventoryPlaceSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryPlace
+     */
+    omit?: InventoryPlaceOmit<ExtArgs> | null
+    /**
+     * The data used to update InventoryPlaces.
+     */
+    data: XOR<InventoryPlaceUpdateManyMutationInput, InventoryPlaceUncheckedUpdateManyInput>
+    /**
+     * Filter which InventoryPlaces to update
+     */
+    where?: InventoryPlaceWhereInput
+    /**
+     * Limit how many InventoryPlaces to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * InventoryPlace upsert
+   */
+  export type InventoryPlaceUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryPlace
+     */
+    select?: InventoryPlaceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryPlace
+     */
+    omit?: InventoryPlaceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryPlaceInclude<ExtArgs> | null
+    /**
+     * The filter to search for the InventoryPlace to update in case it exists.
+     */
+    where: InventoryPlaceWhereUniqueInput
+    /**
+     * In case the InventoryPlace found by the `where` argument doesn't exist, create a new InventoryPlace with this data.
+     */
+    create: XOR<InventoryPlaceCreateInput, InventoryPlaceUncheckedCreateInput>
+    /**
+     * In case the InventoryPlace was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<InventoryPlaceUpdateInput, InventoryPlaceUncheckedUpdateInput>
+  }
+
+  /**
+   * InventoryPlace delete
+   */
+  export type InventoryPlaceDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryPlace
+     */
+    select?: InventoryPlaceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryPlace
+     */
+    omit?: InventoryPlaceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryPlaceInclude<ExtArgs> | null
+    /**
+     * Filter which InventoryPlace to delete.
+     */
+    where: InventoryPlaceWhereUniqueInput
+  }
+
+  /**
+   * InventoryPlace deleteMany
+   */
+  export type InventoryPlaceDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which InventoryPlaces to delete
+     */
+    where?: InventoryPlaceWhereInput
+    /**
+     * Limit how many InventoryPlaces to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * InventoryPlace.stocks
+   */
+  export type InventoryPlace$stocksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryStock
+     */
+    select?: InventoryStockSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryStock
+     */
+    omit?: InventoryStockOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryStockInclude<ExtArgs> | null
+    where?: InventoryStockWhereInput
+    orderBy?: InventoryStockOrderByWithRelationInput | InventoryStockOrderByWithRelationInput[]
+    cursor?: InventoryStockWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: InventoryStockScalarFieldEnum | InventoryStockScalarFieldEnum[]
+  }
+
+  /**
+   * InventoryPlace.alerts
+   */
+  export type InventoryPlace$alertsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryAlert
+     */
+    select?: InventoryAlertSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryAlert
+     */
+    omit?: InventoryAlertOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryAlertInclude<ExtArgs> | null
+    where?: InventoryAlertWhereInput
+    orderBy?: InventoryAlertOrderByWithRelationInput | InventoryAlertOrderByWithRelationInput[]
+    cursor?: InventoryAlertWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: InventoryAlertScalarFieldEnum | InventoryAlertScalarFieldEnum[]
+  }
+
+  /**
+   * InventoryPlace.checklistItems
+   */
+  export type InventoryPlace$checklistItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryChecklistItem
+     */
+    select?: InventoryChecklistItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryChecklistItem
+     */
+    omit?: InventoryChecklistItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryChecklistItemInclude<ExtArgs> | null
+    where?: InventoryChecklistItemWhereInput
+    orderBy?: InventoryChecklistItemOrderByWithRelationInput | InventoryChecklistItemOrderByWithRelationInput[]
+    cursor?: InventoryChecklistItemWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: InventoryChecklistItemScalarFieldEnum | InventoryChecklistItemScalarFieldEnum[]
+  }
+
+  /**
+   * InventoryPlace.stockEvents
+   */
+  export type InventoryPlace$stockEventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryStockEvent
+     */
+    select?: InventoryStockEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryStockEvent
+     */
+    omit?: InventoryStockEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryStockEventInclude<ExtArgs> | null
+    where?: InventoryStockEventWhereInput
+    orderBy?: InventoryStockEventOrderByWithRelationInput | InventoryStockEventOrderByWithRelationInput[]
+    cursor?: InventoryStockEventWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: InventoryStockEventScalarFieldEnum | InventoryStockEventScalarFieldEnum[]
+  }
+
+  /**
+   * InventoryPlace without action
+   */
+  export type InventoryPlaceDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryPlace
+     */
+    select?: InventoryPlaceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryPlace
+     */
+    omit?: InventoryPlaceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryPlaceInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model InventoryProduct
+   */
+
+  export type AggregateInventoryProduct = {
+    _count: InventoryProductCountAggregateOutputType | null
+    _avg: InventoryProductAvgAggregateOutputType | null
+    _sum: InventoryProductSumAggregateOutputType | null
+    _min: InventoryProductMinAggregateOutputType | null
+    _max: InventoryProductMaxAggregateOutputType | null
+  }
+
+  export type InventoryProductAvgAggregateOutputType = {
+    minQuantity: number | null
+    alertThreshold: number | null
+  }
+
+  export type InventoryProductSumAggregateOutputType = {
+    minQuantity: number | null
+    alertThreshold: number | null
+  }
+
+  export type InventoryProductMinAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    name: string | null
+    unit: string | null
+    active: boolean | null
+    minQuantity: number | null
+    alertThreshold: number | null
+    requiresRefill: boolean | null
+    notifyBelowThreshold: boolean | null
+    notes: string | null
+  }
+
+  export type InventoryProductMaxAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    name: string | null
+    unit: string | null
+    active: boolean | null
+    minQuantity: number | null
+    alertThreshold: number | null
+    requiresRefill: boolean | null
+    notifyBelowThreshold: boolean | null
+    notes: string | null
+  }
+
+  export type InventoryProductCountAggregateOutputType = {
+    id: number
+    createdAt: number
+    updatedAt: number
+    name: number
+    unit: number
+    active: number
+    minQuantity: number
+    alertThreshold: number
+    requiresRefill: number
+    notifyBelowThreshold: number
+    notes: number
+    _all: number
+  }
+
+
+  export type InventoryProductAvgAggregateInputType = {
+    minQuantity?: true
+    alertThreshold?: true
+  }
+
+  export type InventoryProductSumAggregateInputType = {
+    minQuantity?: true
+    alertThreshold?: true
+  }
+
+  export type InventoryProductMinAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    name?: true
+    unit?: true
+    active?: true
+    minQuantity?: true
+    alertThreshold?: true
+    requiresRefill?: true
+    notifyBelowThreshold?: true
+    notes?: true
+  }
+
+  export type InventoryProductMaxAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    name?: true
+    unit?: true
+    active?: true
+    minQuantity?: true
+    alertThreshold?: true
+    requiresRefill?: true
+    notifyBelowThreshold?: true
+    notes?: true
+  }
+
+  export type InventoryProductCountAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    name?: true
+    unit?: true
+    active?: true
+    minQuantity?: true
+    alertThreshold?: true
+    requiresRefill?: true
+    notifyBelowThreshold?: true
+    notes?: true
+    _all?: true
+  }
+
+  export type InventoryProductAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which InventoryProduct to aggregate.
+     */
+    where?: InventoryProductWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InventoryProducts to fetch.
+     */
+    orderBy?: InventoryProductOrderByWithRelationInput | InventoryProductOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: InventoryProductWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InventoryProducts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InventoryProducts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned InventoryProducts
+    **/
+    _count?: true | InventoryProductCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: InventoryProductAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: InventoryProductSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: InventoryProductMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: InventoryProductMaxAggregateInputType
+  }
+
+  export type GetInventoryProductAggregateType<T extends InventoryProductAggregateArgs> = {
+        [P in keyof T & keyof AggregateInventoryProduct]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateInventoryProduct[P]>
+      : GetScalarType<T[P], AggregateInventoryProduct[P]>
+  }
+
+
+
+
+  export type InventoryProductGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InventoryProductWhereInput
+    orderBy?: InventoryProductOrderByWithAggregationInput | InventoryProductOrderByWithAggregationInput[]
+    by: InventoryProductScalarFieldEnum[] | InventoryProductScalarFieldEnum
+    having?: InventoryProductScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: InventoryProductCountAggregateInputType | true
+    _avg?: InventoryProductAvgAggregateInputType
+    _sum?: InventoryProductSumAggregateInputType
+    _min?: InventoryProductMinAggregateInputType
+    _max?: InventoryProductMaxAggregateInputType
+  }
+
+  export type InventoryProductGroupByOutputType = {
+    id: string
+    createdAt: Date
+    updatedAt: Date
+    name: string
+    unit: string
+    active: boolean
+    minQuantity: number
+    alertThreshold: number | null
+    requiresRefill: boolean
+    notifyBelowThreshold: boolean
+    notes: string | null
+    _count: InventoryProductCountAggregateOutputType | null
+    _avg: InventoryProductAvgAggregateOutputType | null
+    _sum: InventoryProductSumAggregateOutputType | null
+    _min: InventoryProductMinAggregateOutputType | null
+    _max: InventoryProductMaxAggregateOutputType | null
+  }
+
+  type GetInventoryProductGroupByPayload<T extends InventoryProductGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<InventoryProductGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof InventoryProductGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], InventoryProductGroupByOutputType[P]>
+            : GetScalarType<T[P], InventoryProductGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type InventoryProductSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    name?: boolean
+    unit?: boolean
+    active?: boolean
+    minQuantity?: boolean
+    alertThreshold?: boolean
+    requiresRefill?: boolean
+    notifyBelowThreshold?: boolean
+    notes?: boolean
+    stocks?: boolean | InventoryProduct$stocksArgs<ExtArgs>
+    alerts?: boolean | InventoryProduct$alertsArgs<ExtArgs>
+    checklistItems?: boolean | InventoryProduct$checklistItemsArgs<ExtArgs>
+    stockEvents?: boolean | InventoryProduct$stockEventsArgs<ExtArgs>
+    _count?: boolean | InventoryProductCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["inventoryProduct"]>
+
+  export type InventoryProductSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    name?: boolean
+    unit?: boolean
+    active?: boolean
+    minQuantity?: boolean
+    alertThreshold?: boolean
+    requiresRefill?: boolean
+    notifyBelowThreshold?: boolean
+    notes?: boolean
+  }, ExtArgs["result"]["inventoryProduct"]>
+
+  export type InventoryProductSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    name?: boolean
+    unit?: boolean
+    active?: boolean
+    minQuantity?: boolean
+    alertThreshold?: boolean
+    requiresRefill?: boolean
+    notifyBelowThreshold?: boolean
+    notes?: boolean
+  }, ExtArgs["result"]["inventoryProduct"]>
+
+  export type InventoryProductSelectScalar = {
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    name?: boolean
+    unit?: boolean
+    active?: boolean
+    minQuantity?: boolean
+    alertThreshold?: boolean
+    requiresRefill?: boolean
+    notifyBelowThreshold?: boolean
+    notes?: boolean
+  }
+
+  export type InventoryProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "name" | "unit" | "active" | "minQuantity" | "alertThreshold" | "requiresRefill" | "notifyBelowThreshold" | "notes", ExtArgs["result"]["inventoryProduct"]>
+  export type InventoryProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    stocks?: boolean | InventoryProduct$stocksArgs<ExtArgs>
+    alerts?: boolean | InventoryProduct$alertsArgs<ExtArgs>
+    checklistItems?: boolean | InventoryProduct$checklistItemsArgs<ExtArgs>
+    stockEvents?: boolean | InventoryProduct$stockEventsArgs<ExtArgs>
+    _count?: boolean | InventoryProductCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type InventoryProductIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type InventoryProductIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $InventoryProductPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "InventoryProduct"
+    objects: {
+      stocks: Prisma.$InventoryStockPayload<ExtArgs>[]
+      alerts: Prisma.$InventoryAlertPayload<ExtArgs>[]
+      checklistItems: Prisma.$InventoryChecklistItemPayload<ExtArgs>[]
+      stockEvents: Prisma.$InventoryStockEventPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      createdAt: Date
+      updatedAt: Date
+      name: string
+      unit: string
+      active: boolean
+      minQuantity: number
+      alertThreshold: number | null
+      requiresRefill: boolean
+      notifyBelowThreshold: boolean
+      notes: string | null
+    }, ExtArgs["result"]["inventoryProduct"]>
+    composites: {}
+  }
+
+  type InventoryProductGetPayload<S extends boolean | null | undefined | InventoryProductDefaultArgs> = $Result.GetResult<Prisma.$InventoryProductPayload, S>
+
+  type InventoryProductCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<InventoryProductFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: InventoryProductCountAggregateInputType | true
+    }
+
+  export interface InventoryProductDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['InventoryProduct'], meta: { name: 'InventoryProduct' } }
+    /**
+     * Find zero or one InventoryProduct that matches the filter.
+     * @param {InventoryProductFindUniqueArgs} args - Arguments to find a InventoryProduct
+     * @example
+     * // Get one InventoryProduct
+     * const inventoryProduct = await prisma.inventoryProduct.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends InventoryProductFindUniqueArgs>(args: SelectSubset<T, InventoryProductFindUniqueArgs<ExtArgs>>): Prisma__InventoryProductClient<$Result.GetResult<Prisma.$InventoryProductPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one InventoryProduct that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {InventoryProductFindUniqueOrThrowArgs} args - Arguments to find a InventoryProduct
+     * @example
+     * // Get one InventoryProduct
+     * const inventoryProduct = await prisma.inventoryProduct.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends InventoryProductFindUniqueOrThrowArgs>(args: SelectSubset<T, InventoryProductFindUniqueOrThrowArgs<ExtArgs>>): Prisma__InventoryProductClient<$Result.GetResult<Prisma.$InventoryProductPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first InventoryProduct that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryProductFindFirstArgs} args - Arguments to find a InventoryProduct
+     * @example
+     * // Get one InventoryProduct
+     * const inventoryProduct = await prisma.inventoryProduct.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends InventoryProductFindFirstArgs>(args?: SelectSubset<T, InventoryProductFindFirstArgs<ExtArgs>>): Prisma__InventoryProductClient<$Result.GetResult<Prisma.$InventoryProductPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first InventoryProduct that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryProductFindFirstOrThrowArgs} args - Arguments to find a InventoryProduct
+     * @example
+     * // Get one InventoryProduct
+     * const inventoryProduct = await prisma.inventoryProduct.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends InventoryProductFindFirstOrThrowArgs>(args?: SelectSubset<T, InventoryProductFindFirstOrThrowArgs<ExtArgs>>): Prisma__InventoryProductClient<$Result.GetResult<Prisma.$InventoryProductPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more InventoryProducts that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryProductFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all InventoryProducts
+     * const inventoryProducts = await prisma.inventoryProduct.findMany()
+     * 
+     * // Get first 10 InventoryProducts
+     * const inventoryProducts = await prisma.inventoryProduct.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const inventoryProductWithIdOnly = await prisma.inventoryProduct.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends InventoryProductFindManyArgs>(args?: SelectSubset<T, InventoryProductFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryProductPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a InventoryProduct.
+     * @param {InventoryProductCreateArgs} args - Arguments to create a InventoryProduct.
+     * @example
+     * // Create one InventoryProduct
+     * const InventoryProduct = await prisma.inventoryProduct.create({
+     *   data: {
+     *     // ... data to create a InventoryProduct
+     *   }
+     * })
+     * 
+     */
+    create<T extends InventoryProductCreateArgs>(args: SelectSubset<T, InventoryProductCreateArgs<ExtArgs>>): Prisma__InventoryProductClient<$Result.GetResult<Prisma.$InventoryProductPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many InventoryProducts.
+     * @param {InventoryProductCreateManyArgs} args - Arguments to create many InventoryProducts.
+     * @example
+     * // Create many InventoryProducts
+     * const inventoryProduct = await prisma.inventoryProduct.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends InventoryProductCreateManyArgs>(args?: SelectSubset<T, InventoryProductCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many InventoryProducts and returns the data saved in the database.
+     * @param {InventoryProductCreateManyAndReturnArgs} args - Arguments to create many InventoryProducts.
+     * @example
+     * // Create many InventoryProducts
+     * const inventoryProduct = await prisma.inventoryProduct.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many InventoryProducts and only return the `id`
+     * const inventoryProductWithIdOnly = await prisma.inventoryProduct.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends InventoryProductCreateManyAndReturnArgs>(args?: SelectSubset<T, InventoryProductCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryProductPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a InventoryProduct.
+     * @param {InventoryProductDeleteArgs} args - Arguments to delete one InventoryProduct.
+     * @example
+     * // Delete one InventoryProduct
+     * const InventoryProduct = await prisma.inventoryProduct.delete({
+     *   where: {
+     *     // ... filter to delete one InventoryProduct
+     *   }
+     * })
+     * 
+     */
+    delete<T extends InventoryProductDeleteArgs>(args: SelectSubset<T, InventoryProductDeleteArgs<ExtArgs>>): Prisma__InventoryProductClient<$Result.GetResult<Prisma.$InventoryProductPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one InventoryProduct.
+     * @param {InventoryProductUpdateArgs} args - Arguments to update one InventoryProduct.
+     * @example
+     * // Update one InventoryProduct
+     * const inventoryProduct = await prisma.inventoryProduct.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends InventoryProductUpdateArgs>(args: SelectSubset<T, InventoryProductUpdateArgs<ExtArgs>>): Prisma__InventoryProductClient<$Result.GetResult<Prisma.$InventoryProductPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more InventoryProducts.
+     * @param {InventoryProductDeleteManyArgs} args - Arguments to filter InventoryProducts to delete.
+     * @example
+     * // Delete a few InventoryProducts
+     * const { count } = await prisma.inventoryProduct.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends InventoryProductDeleteManyArgs>(args?: SelectSubset<T, InventoryProductDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more InventoryProducts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryProductUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many InventoryProducts
+     * const inventoryProduct = await prisma.inventoryProduct.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends InventoryProductUpdateManyArgs>(args: SelectSubset<T, InventoryProductUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more InventoryProducts and returns the data updated in the database.
+     * @param {InventoryProductUpdateManyAndReturnArgs} args - Arguments to update many InventoryProducts.
+     * @example
+     * // Update many InventoryProducts
+     * const inventoryProduct = await prisma.inventoryProduct.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more InventoryProducts and only return the `id`
+     * const inventoryProductWithIdOnly = await prisma.inventoryProduct.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends InventoryProductUpdateManyAndReturnArgs>(args: SelectSubset<T, InventoryProductUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryProductPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one InventoryProduct.
+     * @param {InventoryProductUpsertArgs} args - Arguments to update or create a InventoryProduct.
+     * @example
+     * // Update or create a InventoryProduct
+     * const inventoryProduct = await prisma.inventoryProduct.upsert({
+     *   create: {
+     *     // ... data to create a InventoryProduct
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the InventoryProduct we want to update
+     *   }
+     * })
+     */
+    upsert<T extends InventoryProductUpsertArgs>(args: SelectSubset<T, InventoryProductUpsertArgs<ExtArgs>>): Prisma__InventoryProductClient<$Result.GetResult<Prisma.$InventoryProductPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of InventoryProducts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryProductCountArgs} args - Arguments to filter InventoryProducts to count.
+     * @example
+     * // Count the number of InventoryProducts
+     * const count = await prisma.inventoryProduct.count({
+     *   where: {
+     *     // ... the filter for the InventoryProducts we want to count
+     *   }
+     * })
+    **/
+    count<T extends InventoryProductCountArgs>(
+      args?: Subset<T, InventoryProductCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], InventoryProductCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a InventoryProduct.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryProductAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends InventoryProductAggregateArgs>(args: Subset<T, InventoryProductAggregateArgs>): Prisma.PrismaPromise<GetInventoryProductAggregateType<T>>
+
+    /**
+     * Group by InventoryProduct.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryProductGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends InventoryProductGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: InventoryProductGroupByArgs['orderBy'] }
+        : { orderBy?: InventoryProductGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, InventoryProductGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetInventoryProductGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the InventoryProduct model
+   */
+  readonly fields: InventoryProductFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for InventoryProduct.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__InventoryProductClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    stocks<T extends InventoryProduct$stocksArgs<ExtArgs> = {}>(args?: Subset<T, InventoryProduct$stocksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryStockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    alerts<T extends InventoryProduct$alertsArgs<ExtArgs> = {}>(args?: Subset<T, InventoryProduct$alertsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryAlertPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    checklistItems<T extends InventoryProduct$checklistItemsArgs<ExtArgs> = {}>(args?: Subset<T, InventoryProduct$checklistItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryChecklistItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    stockEvents<T extends InventoryProduct$stockEventsArgs<ExtArgs> = {}>(args?: Subset<T, InventoryProduct$stockEventsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryStockEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the InventoryProduct model
+   */
+  interface InventoryProductFieldRefs {
+    readonly id: FieldRef<"InventoryProduct", 'String'>
+    readonly createdAt: FieldRef<"InventoryProduct", 'DateTime'>
+    readonly updatedAt: FieldRef<"InventoryProduct", 'DateTime'>
+    readonly name: FieldRef<"InventoryProduct", 'String'>
+    readonly unit: FieldRef<"InventoryProduct", 'String'>
+    readonly active: FieldRef<"InventoryProduct", 'Boolean'>
+    readonly minQuantity: FieldRef<"InventoryProduct", 'Int'>
+    readonly alertThreshold: FieldRef<"InventoryProduct", 'Int'>
+    readonly requiresRefill: FieldRef<"InventoryProduct", 'Boolean'>
+    readonly notifyBelowThreshold: FieldRef<"InventoryProduct", 'Boolean'>
+    readonly notes: FieldRef<"InventoryProduct", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * InventoryProduct findUnique
+   */
+  export type InventoryProductFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryProduct
+     */
+    select?: InventoryProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryProduct
+     */
+    omit?: InventoryProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryProductInclude<ExtArgs> | null
+    /**
+     * Filter, which InventoryProduct to fetch.
+     */
+    where: InventoryProductWhereUniqueInput
+  }
+
+  /**
+   * InventoryProduct findUniqueOrThrow
+   */
+  export type InventoryProductFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryProduct
+     */
+    select?: InventoryProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryProduct
+     */
+    omit?: InventoryProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryProductInclude<ExtArgs> | null
+    /**
+     * Filter, which InventoryProduct to fetch.
+     */
+    where: InventoryProductWhereUniqueInput
+  }
+
+  /**
+   * InventoryProduct findFirst
+   */
+  export type InventoryProductFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryProduct
+     */
+    select?: InventoryProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryProduct
+     */
+    omit?: InventoryProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryProductInclude<ExtArgs> | null
+    /**
+     * Filter, which InventoryProduct to fetch.
+     */
+    where?: InventoryProductWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InventoryProducts to fetch.
+     */
+    orderBy?: InventoryProductOrderByWithRelationInput | InventoryProductOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for InventoryProducts.
+     */
+    cursor?: InventoryProductWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InventoryProducts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InventoryProducts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of InventoryProducts.
+     */
+    distinct?: InventoryProductScalarFieldEnum | InventoryProductScalarFieldEnum[]
+  }
+
+  /**
+   * InventoryProduct findFirstOrThrow
+   */
+  export type InventoryProductFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryProduct
+     */
+    select?: InventoryProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryProduct
+     */
+    omit?: InventoryProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryProductInclude<ExtArgs> | null
+    /**
+     * Filter, which InventoryProduct to fetch.
+     */
+    where?: InventoryProductWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InventoryProducts to fetch.
+     */
+    orderBy?: InventoryProductOrderByWithRelationInput | InventoryProductOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for InventoryProducts.
+     */
+    cursor?: InventoryProductWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InventoryProducts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InventoryProducts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of InventoryProducts.
+     */
+    distinct?: InventoryProductScalarFieldEnum | InventoryProductScalarFieldEnum[]
+  }
+
+  /**
+   * InventoryProduct findMany
+   */
+  export type InventoryProductFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryProduct
+     */
+    select?: InventoryProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryProduct
+     */
+    omit?: InventoryProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryProductInclude<ExtArgs> | null
+    /**
+     * Filter, which InventoryProducts to fetch.
+     */
+    where?: InventoryProductWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InventoryProducts to fetch.
+     */
+    orderBy?: InventoryProductOrderByWithRelationInput | InventoryProductOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing InventoryProducts.
+     */
+    cursor?: InventoryProductWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InventoryProducts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InventoryProducts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of InventoryProducts.
+     */
+    distinct?: InventoryProductScalarFieldEnum | InventoryProductScalarFieldEnum[]
+  }
+
+  /**
+   * InventoryProduct create
+   */
+  export type InventoryProductCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryProduct
+     */
+    select?: InventoryProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryProduct
+     */
+    omit?: InventoryProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryProductInclude<ExtArgs> | null
+    /**
+     * The data needed to create a InventoryProduct.
+     */
+    data: XOR<InventoryProductCreateInput, InventoryProductUncheckedCreateInput>
+  }
+
+  /**
+   * InventoryProduct createMany
+   */
+  export type InventoryProductCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many InventoryProducts.
+     */
+    data: InventoryProductCreateManyInput | InventoryProductCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * InventoryProduct createManyAndReturn
+   */
+  export type InventoryProductCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryProduct
+     */
+    select?: InventoryProductSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryProduct
+     */
+    omit?: InventoryProductOmit<ExtArgs> | null
+    /**
+     * The data used to create many InventoryProducts.
+     */
+    data: InventoryProductCreateManyInput | InventoryProductCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * InventoryProduct update
+   */
+  export type InventoryProductUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryProduct
+     */
+    select?: InventoryProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryProduct
+     */
+    omit?: InventoryProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryProductInclude<ExtArgs> | null
+    /**
+     * The data needed to update a InventoryProduct.
+     */
+    data: XOR<InventoryProductUpdateInput, InventoryProductUncheckedUpdateInput>
+    /**
+     * Choose, which InventoryProduct to update.
+     */
+    where: InventoryProductWhereUniqueInput
+  }
+
+  /**
+   * InventoryProduct updateMany
+   */
+  export type InventoryProductUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update InventoryProducts.
+     */
+    data: XOR<InventoryProductUpdateManyMutationInput, InventoryProductUncheckedUpdateManyInput>
+    /**
+     * Filter which InventoryProducts to update
+     */
+    where?: InventoryProductWhereInput
+    /**
+     * Limit how many InventoryProducts to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * InventoryProduct updateManyAndReturn
+   */
+  export type InventoryProductUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryProduct
+     */
+    select?: InventoryProductSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryProduct
+     */
+    omit?: InventoryProductOmit<ExtArgs> | null
+    /**
+     * The data used to update InventoryProducts.
+     */
+    data: XOR<InventoryProductUpdateManyMutationInput, InventoryProductUncheckedUpdateManyInput>
+    /**
+     * Filter which InventoryProducts to update
+     */
+    where?: InventoryProductWhereInput
+    /**
+     * Limit how many InventoryProducts to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * InventoryProduct upsert
+   */
+  export type InventoryProductUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryProduct
+     */
+    select?: InventoryProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryProduct
+     */
+    omit?: InventoryProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryProductInclude<ExtArgs> | null
+    /**
+     * The filter to search for the InventoryProduct to update in case it exists.
+     */
+    where: InventoryProductWhereUniqueInput
+    /**
+     * In case the InventoryProduct found by the `where` argument doesn't exist, create a new InventoryProduct with this data.
+     */
+    create: XOR<InventoryProductCreateInput, InventoryProductUncheckedCreateInput>
+    /**
+     * In case the InventoryProduct was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<InventoryProductUpdateInput, InventoryProductUncheckedUpdateInput>
+  }
+
+  /**
+   * InventoryProduct delete
+   */
+  export type InventoryProductDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryProduct
+     */
+    select?: InventoryProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryProduct
+     */
+    omit?: InventoryProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryProductInclude<ExtArgs> | null
+    /**
+     * Filter which InventoryProduct to delete.
+     */
+    where: InventoryProductWhereUniqueInput
+  }
+
+  /**
+   * InventoryProduct deleteMany
+   */
+  export type InventoryProductDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which InventoryProducts to delete
+     */
+    where?: InventoryProductWhereInput
+    /**
+     * Limit how many InventoryProducts to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * InventoryProduct.stocks
+   */
+  export type InventoryProduct$stocksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryStock
+     */
+    select?: InventoryStockSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryStock
+     */
+    omit?: InventoryStockOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryStockInclude<ExtArgs> | null
+    where?: InventoryStockWhereInput
+    orderBy?: InventoryStockOrderByWithRelationInput | InventoryStockOrderByWithRelationInput[]
+    cursor?: InventoryStockWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: InventoryStockScalarFieldEnum | InventoryStockScalarFieldEnum[]
+  }
+
+  /**
+   * InventoryProduct.alerts
+   */
+  export type InventoryProduct$alertsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryAlert
+     */
+    select?: InventoryAlertSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryAlert
+     */
+    omit?: InventoryAlertOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryAlertInclude<ExtArgs> | null
+    where?: InventoryAlertWhereInput
+    orderBy?: InventoryAlertOrderByWithRelationInput | InventoryAlertOrderByWithRelationInput[]
+    cursor?: InventoryAlertWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: InventoryAlertScalarFieldEnum | InventoryAlertScalarFieldEnum[]
+  }
+
+  /**
+   * InventoryProduct.checklistItems
+   */
+  export type InventoryProduct$checklistItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryChecklistItem
+     */
+    select?: InventoryChecklistItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryChecklistItem
+     */
+    omit?: InventoryChecklistItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryChecklistItemInclude<ExtArgs> | null
+    where?: InventoryChecklistItemWhereInput
+    orderBy?: InventoryChecklistItemOrderByWithRelationInput | InventoryChecklistItemOrderByWithRelationInput[]
+    cursor?: InventoryChecklistItemWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: InventoryChecklistItemScalarFieldEnum | InventoryChecklistItemScalarFieldEnum[]
+  }
+
+  /**
+   * InventoryProduct.stockEvents
+   */
+  export type InventoryProduct$stockEventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryStockEvent
+     */
+    select?: InventoryStockEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryStockEvent
+     */
+    omit?: InventoryStockEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryStockEventInclude<ExtArgs> | null
+    where?: InventoryStockEventWhereInput
+    orderBy?: InventoryStockEventOrderByWithRelationInput | InventoryStockEventOrderByWithRelationInput[]
+    cursor?: InventoryStockEventWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: InventoryStockEventScalarFieldEnum | InventoryStockEventScalarFieldEnum[]
+  }
+
+  /**
+   * InventoryProduct without action
+   */
+  export type InventoryProductDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryProduct
+     */
+    select?: InventoryProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryProduct
+     */
+    omit?: InventoryProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryProductInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model InventoryStock
+   */
+
+  export type AggregateInventoryStock = {
+    _count: InventoryStockCountAggregateOutputType | null
+    _avg: InventoryStockAvgAggregateOutputType | null
+    _sum: InventoryStockSumAggregateOutputType | null
+    _min: InventoryStockMinAggregateOutputType | null
+    _max: InventoryStockMaxAggregateOutputType | null
+  }
+
+  export type InventoryStockAvgAggregateOutputType = {
+    currentQuantity: number | null
+  }
+
+  export type InventoryStockSumAggregateOutputType = {
+    currentQuantity: number | null
+  }
+
+  export type InventoryStockMinAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    placeId: string | null
+    productId: string | null
+    currentQuantity: number | null
+    includeInChecklist: boolean | null
+    lastCheckedAt: Date | null
+    lastCheckedBy: string | null
+  }
+
+  export type InventoryStockMaxAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    placeId: string | null
+    productId: string | null
+    currentQuantity: number | null
+    includeInChecklist: boolean | null
+    lastCheckedAt: Date | null
+    lastCheckedBy: string | null
+  }
+
+  export type InventoryStockCountAggregateOutputType = {
+    id: number
+    createdAt: number
+    updatedAt: number
+    placeId: number
+    productId: number
+    currentQuantity: number
+    includeInChecklist: number
+    lastCheckedAt: number
+    lastCheckedBy: number
+    _all: number
+  }
+
+
+  export type InventoryStockAvgAggregateInputType = {
+    currentQuantity?: true
+  }
+
+  export type InventoryStockSumAggregateInputType = {
+    currentQuantity?: true
+  }
+
+  export type InventoryStockMinAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    placeId?: true
+    productId?: true
+    currentQuantity?: true
+    includeInChecklist?: true
+    lastCheckedAt?: true
+    lastCheckedBy?: true
+  }
+
+  export type InventoryStockMaxAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    placeId?: true
+    productId?: true
+    currentQuantity?: true
+    includeInChecklist?: true
+    lastCheckedAt?: true
+    lastCheckedBy?: true
+  }
+
+  export type InventoryStockCountAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    placeId?: true
+    productId?: true
+    currentQuantity?: true
+    includeInChecklist?: true
+    lastCheckedAt?: true
+    lastCheckedBy?: true
+    _all?: true
+  }
+
+  export type InventoryStockAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which InventoryStock to aggregate.
+     */
+    where?: InventoryStockWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InventoryStocks to fetch.
+     */
+    orderBy?: InventoryStockOrderByWithRelationInput | InventoryStockOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: InventoryStockWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InventoryStocks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InventoryStocks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned InventoryStocks
+    **/
+    _count?: true | InventoryStockCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: InventoryStockAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: InventoryStockSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: InventoryStockMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: InventoryStockMaxAggregateInputType
+  }
+
+  export type GetInventoryStockAggregateType<T extends InventoryStockAggregateArgs> = {
+        [P in keyof T & keyof AggregateInventoryStock]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateInventoryStock[P]>
+      : GetScalarType<T[P], AggregateInventoryStock[P]>
+  }
+
+
+
+
+  export type InventoryStockGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InventoryStockWhereInput
+    orderBy?: InventoryStockOrderByWithAggregationInput | InventoryStockOrderByWithAggregationInput[]
+    by: InventoryStockScalarFieldEnum[] | InventoryStockScalarFieldEnum
+    having?: InventoryStockScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: InventoryStockCountAggregateInputType | true
+    _avg?: InventoryStockAvgAggregateInputType
+    _sum?: InventoryStockSumAggregateInputType
+    _min?: InventoryStockMinAggregateInputType
+    _max?: InventoryStockMaxAggregateInputType
+  }
+
+  export type InventoryStockGroupByOutputType = {
+    id: string
+    createdAt: Date
+    updatedAt: Date
+    placeId: string
+    productId: string
+    currentQuantity: number
+    includeInChecklist: boolean
+    lastCheckedAt: Date | null
+    lastCheckedBy: string | null
+    _count: InventoryStockCountAggregateOutputType | null
+    _avg: InventoryStockAvgAggregateOutputType | null
+    _sum: InventoryStockSumAggregateOutputType | null
+    _min: InventoryStockMinAggregateOutputType | null
+    _max: InventoryStockMaxAggregateOutputType | null
+  }
+
+  type GetInventoryStockGroupByPayload<T extends InventoryStockGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<InventoryStockGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof InventoryStockGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], InventoryStockGroupByOutputType[P]>
+            : GetScalarType<T[P], InventoryStockGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type InventoryStockSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    placeId?: boolean
+    productId?: boolean
+    currentQuantity?: boolean
+    includeInChecklist?: boolean
+    lastCheckedAt?: boolean
+    lastCheckedBy?: boolean
+    place?: boolean | InventoryPlaceDefaultArgs<ExtArgs>
+    product?: boolean | InventoryProductDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["inventoryStock"]>
+
+  export type InventoryStockSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    placeId?: boolean
+    productId?: boolean
+    currentQuantity?: boolean
+    includeInChecklist?: boolean
+    lastCheckedAt?: boolean
+    lastCheckedBy?: boolean
+    place?: boolean | InventoryPlaceDefaultArgs<ExtArgs>
+    product?: boolean | InventoryProductDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["inventoryStock"]>
+
+  export type InventoryStockSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    placeId?: boolean
+    productId?: boolean
+    currentQuantity?: boolean
+    includeInChecklist?: boolean
+    lastCheckedAt?: boolean
+    lastCheckedBy?: boolean
+    place?: boolean | InventoryPlaceDefaultArgs<ExtArgs>
+    product?: boolean | InventoryProductDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["inventoryStock"]>
+
+  export type InventoryStockSelectScalar = {
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    placeId?: boolean
+    productId?: boolean
+    currentQuantity?: boolean
+    includeInChecklist?: boolean
+    lastCheckedAt?: boolean
+    lastCheckedBy?: boolean
+  }
+
+  export type InventoryStockOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "placeId" | "productId" | "currentQuantity" | "includeInChecklist" | "lastCheckedAt" | "lastCheckedBy", ExtArgs["result"]["inventoryStock"]>
+  export type InventoryStockInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    place?: boolean | InventoryPlaceDefaultArgs<ExtArgs>
+    product?: boolean | InventoryProductDefaultArgs<ExtArgs>
+  }
+  export type InventoryStockIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    place?: boolean | InventoryPlaceDefaultArgs<ExtArgs>
+    product?: boolean | InventoryProductDefaultArgs<ExtArgs>
+  }
+  export type InventoryStockIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    place?: boolean | InventoryPlaceDefaultArgs<ExtArgs>
+    product?: boolean | InventoryProductDefaultArgs<ExtArgs>
+  }
+
+  export type $InventoryStockPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "InventoryStock"
+    objects: {
+      place: Prisma.$InventoryPlacePayload<ExtArgs>
+      product: Prisma.$InventoryProductPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      createdAt: Date
+      updatedAt: Date
+      placeId: string
+      productId: string
+      currentQuantity: number
+      includeInChecklist: boolean
+      lastCheckedAt: Date | null
+      lastCheckedBy: string | null
+    }, ExtArgs["result"]["inventoryStock"]>
+    composites: {}
+  }
+
+  type InventoryStockGetPayload<S extends boolean | null | undefined | InventoryStockDefaultArgs> = $Result.GetResult<Prisma.$InventoryStockPayload, S>
+
+  type InventoryStockCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<InventoryStockFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: InventoryStockCountAggregateInputType | true
+    }
+
+  export interface InventoryStockDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['InventoryStock'], meta: { name: 'InventoryStock' } }
+    /**
+     * Find zero or one InventoryStock that matches the filter.
+     * @param {InventoryStockFindUniqueArgs} args - Arguments to find a InventoryStock
+     * @example
+     * // Get one InventoryStock
+     * const inventoryStock = await prisma.inventoryStock.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends InventoryStockFindUniqueArgs>(args: SelectSubset<T, InventoryStockFindUniqueArgs<ExtArgs>>): Prisma__InventoryStockClient<$Result.GetResult<Prisma.$InventoryStockPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one InventoryStock that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {InventoryStockFindUniqueOrThrowArgs} args - Arguments to find a InventoryStock
+     * @example
+     * // Get one InventoryStock
+     * const inventoryStock = await prisma.inventoryStock.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends InventoryStockFindUniqueOrThrowArgs>(args: SelectSubset<T, InventoryStockFindUniqueOrThrowArgs<ExtArgs>>): Prisma__InventoryStockClient<$Result.GetResult<Prisma.$InventoryStockPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first InventoryStock that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryStockFindFirstArgs} args - Arguments to find a InventoryStock
+     * @example
+     * // Get one InventoryStock
+     * const inventoryStock = await prisma.inventoryStock.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends InventoryStockFindFirstArgs>(args?: SelectSubset<T, InventoryStockFindFirstArgs<ExtArgs>>): Prisma__InventoryStockClient<$Result.GetResult<Prisma.$InventoryStockPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first InventoryStock that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryStockFindFirstOrThrowArgs} args - Arguments to find a InventoryStock
+     * @example
+     * // Get one InventoryStock
+     * const inventoryStock = await prisma.inventoryStock.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends InventoryStockFindFirstOrThrowArgs>(args?: SelectSubset<T, InventoryStockFindFirstOrThrowArgs<ExtArgs>>): Prisma__InventoryStockClient<$Result.GetResult<Prisma.$InventoryStockPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more InventoryStocks that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryStockFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all InventoryStocks
+     * const inventoryStocks = await prisma.inventoryStock.findMany()
+     * 
+     * // Get first 10 InventoryStocks
+     * const inventoryStocks = await prisma.inventoryStock.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const inventoryStockWithIdOnly = await prisma.inventoryStock.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends InventoryStockFindManyArgs>(args?: SelectSubset<T, InventoryStockFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryStockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a InventoryStock.
+     * @param {InventoryStockCreateArgs} args - Arguments to create a InventoryStock.
+     * @example
+     * // Create one InventoryStock
+     * const InventoryStock = await prisma.inventoryStock.create({
+     *   data: {
+     *     // ... data to create a InventoryStock
+     *   }
+     * })
+     * 
+     */
+    create<T extends InventoryStockCreateArgs>(args: SelectSubset<T, InventoryStockCreateArgs<ExtArgs>>): Prisma__InventoryStockClient<$Result.GetResult<Prisma.$InventoryStockPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many InventoryStocks.
+     * @param {InventoryStockCreateManyArgs} args - Arguments to create many InventoryStocks.
+     * @example
+     * // Create many InventoryStocks
+     * const inventoryStock = await prisma.inventoryStock.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends InventoryStockCreateManyArgs>(args?: SelectSubset<T, InventoryStockCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many InventoryStocks and returns the data saved in the database.
+     * @param {InventoryStockCreateManyAndReturnArgs} args - Arguments to create many InventoryStocks.
+     * @example
+     * // Create many InventoryStocks
+     * const inventoryStock = await prisma.inventoryStock.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many InventoryStocks and only return the `id`
+     * const inventoryStockWithIdOnly = await prisma.inventoryStock.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends InventoryStockCreateManyAndReturnArgs>(args?: SelectSubset<T, InventoryStockCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryStockPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a InventoryStock.
+     * @param {InventoryStockDeleteArgs} args - Arguments to delete one InventoryStock.
+     * @example
+     * // Delete one InventoryStock
+     * const InventoryStock = await prisma.inventoryStock.delete({
+     *   where: {
+     *     // ... filter to delete one InventoryStock
+     *   }
+     * })
+     * 
+     */
+    delete<T extends InventoryStockDeleteArgs>(args: SelectSubset<T, InventoryStockDeleteArgs<ExtArgs>>): Prisma__InventoryStockClient<$Result.GetResult<Prisma.$InventoryStockPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one InventoryStock.
+     * @param {InventoryStockUpdateArgs} args - Arguments to update one InventoryStock.
+     * @example
+     * // Update one InventoryStock
+     * const inventoryStock = await prisma.inventoryStock.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends InventoryStockUpdateArgs>(args: SelectSubset<T, InventoryStockUpdateArgs<ExtArgs>>): Prisma__InventoryStockClient<$Result.GetResult<Prisma.$InventoryStockPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more InventoryStocks.
+     * @param {InventoryStockDeleteManyArgs} args - Arguments to filter InventoryStocks to delete.
+     * @example
+     * // Delete a few InventoryStocks
+     * const { count } = await prisma.inventoryStock.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends InventoryStockDeleteManyArgs>(args?: SelectSubset<T, InventoryStockDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more InventoryStocks.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryStockUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many InventoryStocks
+     * const inventoryStock = await prisma.inventoryStock.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends InventoryStockUpdateManyArgs>(args: SelectSubset<T, InventoryStockUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more InventoryStocks and returns the data updated in the database.
+     * @param {InventoryStockUpdateManyAndReturnArgs} args - Arguments to update many InventoryStocks.
+     * @example
+     * // Update many InventoryStocks
+     * const inventoryStock = await prisma.inventoryStock.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more InventoryStocks and only return the `id`
+     * const inventoryStockWithIdOnly = await prisma.inventoryStock.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends InventoryStockUpdateManyAndReturnArgs>(args: SelectSubset<T, InventoryStockUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryStockPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one InventoryStock.
+     * @param {InventoryStockUpsertArgs} args - Arguments to update or create a InventoryStock.
+     * @example
+     * // Update or create a InventoryStock
+     * const inventoryStock = await prisma.inventoryStock.upsert({
+     *   create: {
+     *     // ... data to create a InventoryStock
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the InventoryStock we want to update
+     *   }
+     * })
+     */
+    upsert<T extends InventoryStockUpsertArgs>(args: SelectSubset<T, InventoryStockUpsertArgs<ExtArgs>>): Prisma__InventoryStockClient<$Result.GetResult<Prisma.$InventoryStockPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of InventoryStocks.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryStockCountArgs} args - Arguments to filter InventoryStocks to count.
+     * @example
+     * // Count the number of InventoryStocks
+     * const count = await prisma.inventoryStock.count({
+     *   where: {
+     *     // ... the filter for the InventoryStocks we want to count
+     *   }
+     * })
+    **/
+    count<T extends InventoryStockCountArgs>(
+      args?: Subset<T, InventoryStockCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], InventoryStockCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a InventoryStock.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryStockAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends InventoryStockAggregateArgs>(args: Subset<T, InventoryStockAggregateArgs>): Prisma.PrismaPromise<GetInventoryStockAggregateType<T>>
+
+    /**
+     * Group by InventoryStock.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryStockGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends InventoryStockGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: InventoryStockGroupByArgs['orderBy'] }
+        : { orderBy?: InventoryStockGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, InventoryStockGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetInventoryStockGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the InventoryStock model
+   */
+  readonly fields: InventoryStockFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for InventoryStock.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__InventoryStockClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    place<T extends InventoryPlaceDefaultArgs<ExtArgs> = {}>(args?: Subset<T, InventoryPlaceDefaultArgs<ExtArgs>>): Prisma__InventoryPlaceClient<$Result.GetResult<Prisma.$InventoryPlacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    product<T extends InventoryProductDefaultArgs<ExtArgs> = {}>(args?: Subset<T, InventoryProductDefaultArgs<ExtArgs>>): Prisma__InventoryProductClient<$Result.GetResult<Prisma.$InventoryProductPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the InventoryStock model
+   */
+  interface InventoryStockFieldRefs {
+    readonly id: FieldRef<"InventoryStock", 'String'>
+    readonly createdAt: FieldRef<"InventoryStock", 'DateTime'>
+    readonly updatedAt: FieldRef<"InventoryStock", 'DateTime'>
+    readonly placeId: FieldRef<"InventoryStock", 'String'>
+    readonly productId: FieldRef<"InventoryStock", 'String'>
+    readonly currentQuantity: FieldRef<"InventoryStock", 'Int'>
+    readonly includeInChecklist: FieldRef<"InventoryStock", 'Boolean'>
+    readonly lastCheckedAt: FieldRef<"InventoryStock", 'DateTime'>
+    readonly lastCheckedBy: FieldRef<"InventoryStock", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * InventoryStock findUnique
+   */
+  export type InventoryStockFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryStock
+     */
+    select?: InventoryStockSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryStock
+     */
+    omit?: InventoryStockOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryStockInclude<ExtArgs> | null
+    /**
+     * Filter, which InventoryStock to fetch.
+     */
+    where: InventoryStockWhereUniqueInput
+  }
+
+  /**
+   * InventoryStock findUniqueOrThrow
+   */
+  export type InventoryStockFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryStock
+     */
+    select?: InventoryStockSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryStock
+     */
+    omit?: InventoryStockOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryStockInclude<ExtArgs> | null
+    /**
+     * Filter, which InventoryStock to fetch.
+     */
+    where: InventoryStockWhereUniqueInput
+  }
+
+  /**
+   * InventoryStock findFirst
+   */
+  export type InventoryStockFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryStock
+     */
+    select?: InventoryStockSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryStock
+     */
+    omit?: InventoryStockOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryStockInclude<ExtArgs> | null
+    /**
+     * Filter, which InventoryStock to fetch.
+     */
+    where?: InventoryStockWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InventoryStocks to fetch.
+     */
+    orderBy?: InventoryStockOrderByWithRelationInput | InventoryStockOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for InventoryStocks.
+     */
+    cursor?: InventoryStockWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InventoryStocks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InventoryStocks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of InventoryStocks.
+     */
+    distinct?: InventoryStockScalarFieldEnum | InventoryStockScalarFieldEnum[]
+  }
+
+  /**
+   * InventoryStock findFirstOrThrow
+   */
+  export type InventoryStockFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryStock
+     */
+    select?: InventoryStockSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryStock
+     */
+    omit?: InventoryStockOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryStockInclude<ExtArgs> | null
+    /**
+     * Filter, which InventoryStock to fetch.
+     */
+    where?: InventoryStockWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InventoryStocks to fetch.
+     */
+    orderBy?: InventoryStockOrderByWithRelationInput | InventoryStockOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for InventoryStocks.
+     */
+    cursor?: InventoryStockWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InventoryStocks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InventoryStocks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of InventoryStocks.
+     */
+    distinct?: InventoryStockScalarFieldEnum | InventoryStockScalarFieldEnum[]
+  }
+
+  /**
+   * InventoryStock findMany
+   */
+  export type InventoryStockFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryStock
+     */
+    select?: InventoryStockSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryStock
+     */
+    omit?: InventoryStockOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryStockInclude<ExtArgs> | null
+    /**
+     * Filter, which InventoryStocks to fetch.
+     */
+    where?: InventoryStockWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InventoryStocks to fetch.
+     */
+    orderBy?: InventoryStockOrderByWithRelationInput | InventoryStockOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing InventoryStocks.
+     */
+    cursor?: InventoryStockWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InventoryStocks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InventoryStocks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of InventoryStocks.
+     */
+    distinct?: InventoryStockScalarFieldEnum | InventoryStockScalarFieldEnum[]
+  }
+
+  /**
+   * InventoryStock create
+   */
+  export type InventoryStockCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryStock
+     */
+    select?: InventoryStockSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryStock
+     */
+    omit?: InventoryStockOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryStockInclude<ExtArgs> | null
+    /**
+     * The data needed to create a InventoryStock.
+     */
+    data: XOR<InventoryStockCreateInput, InventoryStockUncheckedCreateInput>
+  }
+
+  /**
+   * InventoryStock createMany
+   */
+  export type InventoryStockCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many InventoryStocks.
+     */
+    data: InventoryStockCreateManyInput | InventoryStockCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * InventoryStock createManyAndReturn
+   */
+  export type InventoryStockCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryStock
+     */
+    select?: InventoryStockSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryStock
+     */
+    omit?: InventoryStockOmit<ExtArgs> | null
+    /**
+     * The data used to create many InventoryStocks.
+     */
+    data: InventoryStockCreateManyInput | InventoryStockCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryStockIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * InventoryStock update
+   */
+  export type InventoryStockUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryStock
+     */
+    select?: InventoryStockSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryStock
+     */
+    omit?: InventoryStockOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryStockInclude<ExtArgs> | null
+    /**
+     * The data needed to update a InventoryStock.
+     */
+    data: XOR<InventoryStockUpdateInput, InventoryStockUncheckedUpdateInput>
+    /**
+     * Choose, which InventoryStock to update.
+     */
+    where: InventoryStockWhereUniqueInput
+  }
+
+  /**
+   * InventoryStock updateMany
+   */
+  export type InventoryStockUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update InventoryStocks.
+     */
+    data: XOR<InventoryStockUpdateManyMutationInput, InventoryStockUncheckedUpdateManyInput>
+    /**
+     * Filter which InventoryStocks to update
+     */
+    where?: InventoryStockWhereInput
+    /**
+     * Limit how many InventoryStocks to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * InventoryStock updateManyAndReturn
+   */
+  export type InventoryStockUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryStock
+     */
+    select?: InventoryStockSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryStock
+     */
+    omit?: InventoryStockOmit<ExtArgs> | null
+    /**
+     * The data used to update InventoryStocks.
+     */
+    data: XOR<InventoryStockUpdateManyMutationInput, InventoryStockUncheckedUpdateManyInput>
+    /**
+     * Filter which InventoryStocks to update
+     */
+    where?: InventoryStockWhereInput
+    /**
+     * Limit how many InventoryStocks to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryStockIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * InventoryStock upsert
+   */
+  export type InventoryStockUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryStock
+     */
+    select?: InventoryStockSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryStock
+     */
+    omit?: InventoryStockOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryStockInclude<ExtArgs> | null
+    /**
+     * The filter to search for the InventoryStock to update in case it exists.
+     */
+    where: InventoryStockWhereUniqueInput
+    /**
+     * In case the InventoryStock found by the `where` argument doesn't exist, create a new InventoryStock with this data.
+     */
+    create: XOR<InventoryStockCreateInput, InventoryStockUncheckedCreateInput>
+    /**
+     * In case the InventoryStock was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<InventoryStockUpdateInput, InventoryStockUncheckedUpdateInput>
+  }
+
+  /**
+   * InventoryStock delete
+   */
+  export type InventoryStockDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryStock
+     */
+    select?: InventoryStockSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryStock
+     */
+    omit?: InventoryStockOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryStockInclude<ExtArgs> | null
+    /**
+     * Filter which InventoryStock to delete.
+     */
+    where: InventoryStockWhereUniqueInput
+  }
+
+  /**
+   * InventoryStock deleteMany
+   */
+  export type InventoryStockDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which InventoryStocks to delete
+     */
+    where?: InventoryStockWhereInput
+    /**
+     * Limit how many InventoryStocks to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * InventoryStock without action
+   */
+  export type InventoryStockDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryStock
+     */
+    select?: InventoryStockSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryStock
+     */
+    omit?: InventoryStockOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryStockInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model InventoryChecklist
+   */
+
+  export type AggregateInventoryChecklist = {
+    _count: InventoryChecklistCountAggregateOutputType | null
+    _min: InventoryChecklistMinAggregateOutputType | null
+    _max: InventoryChecklistMaxAggregateOutputType | null
+  }
+
+  export type InventoryChecklistMinAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    checkDate: Date | null
+    status: $Enums.InventoryChecklistStatus | null
+    startedBy: string | null
+    submittedBy: string | null
+    submittedAt: Date | null
+  }
+
+  export type InventoryChecklistMaxAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    checkDate: Date | null
+    status: $Enums.InventoryChecklistStatus | null
+    startedBy: string | null
+    submittedBy: string | null
+    submittedAt: Date | null
+  }
+
+  export type InventoryChecklistCountAggregateOutputType = {
+    id: number
+    createdAt: number
+    updatedAt: number
+    checkDate: number
+    status: number
+    startedBy: number
+    submittedBy: number
+    submittedAt: number
+    _all: number
+  }
+
+
+  export type InventoryChecklistMinAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    checkDate?: true
+    status?: true
+    startedBy?: true
+    submittedBy?: true
+    submittedAt?: true
+  }
+
+  export type InventoryChecklistMaxAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    checkDate?: true
+    status?: true
+    startedBy?: true
+    submittedBy?: true
+    submittedAt?: true
+  }
+
+  export type InventoryChecklistCountAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    checkDate?: true
+    status?: true
+    startedBy?: true
+    submittedBy?: true
+    submittedAt?: true
+    _all?: true
+  }
+
+  export type InventoryChecklistAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which InventoryChecklist to aggregate.
+     */
+    where?: InventoryChecklistWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InventoryChecklists to fetch.
+     */
+    orderBy?: InventoryChecklistOrderByWithRelationInput | InventoryChecklistOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: InventoryChecklistWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InventoryChecklists from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InventoryChecklists.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned InventoryChecklists
+    **/
+    _count?: true | InventoryChecklistCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: InventoryChecklistMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: InventoryChecklistMaxAggregateInputType
+  }
+
+  export type GetInventoryChecklistAggregateType<T extends InventoryChecklistAggregateArgs> = {
+        [P in keyof T & keyof AggregateInventoryChecklist]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateInventoryChecklist[P]>
+      : GetScalarType<T[P], AggregateInventoryChecklist[P]>
+  }
+
+
+
+
+  export type InventoryChecklistGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InventoryChecklistWhereInput
+    orderBy?: InventoryChecklistOrderByWithAggregationInput | InventoryChecklistOrderByWithAggregationInput[]
+    by: InventoryChecklistScalarFieldEnum[] | InventoryChecklistScalarFieldEnum
+    having?: InventoryChecklistScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: InventoryChecklistCountAggregateInputType | true
+    _min?: InventoryChecklistMinAggregateInputType
+    _max?: InventoryChecklistMaxAggregateInputType
+  }
+
+  export type InventoryChecklistGroupByOutputType = {
+    id: string
+    createdAt: Date
+    updatedAt: Date
+    checkDate: Date
+    status: $Enums.InventoryChecklistStatus
+    startedBy: string | null
+    submittedBy: string | null
+    submittedAt: Date | null
+    _count: InventoryChecklistCountAggregateOutputType | null
+    _min: InventoryChecklistMinAggregateOutputType | null
+    _max: InventoryChecklistMaxAggregateOutputType | null
+  }
+
+  type GetInventoryChecklistGroupByPayload<T extends InventoryChecklistGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<InventoryChecklistGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof InventoryChecklistGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], InventoryChecklistGroupByOutputType[P]>
+            : GetScalarType<T[P], InventoryChecklistGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type InventoryChecklistSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    checkDate?: boolean
+    status?: boolean
+    startedBy?: boolean
+    submittedBy?: boolean
+    submittedAt?: boolean
+    items?: boolean | InventoryChecklist$itemsArgs<ExtArgs>
+    alerts?: boolean | InventoryChecklist$alertsArgs<ExtArgs>
+    _count?: boolean | InventoryChecklistCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["inventoryChecklist"]>
+
+  export type InventoryChecklistSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    checkDate?: boolean
+    status?: boolean
+    startedBy?: boolean
+    submittedBy?: boolean
+    submittedAt?: boolean
+  }, ExtArgs["result"]["inventoryChecklist"]>
+
+  export type InventoryChecklistSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    checkDate?: boolean
+    status?: boolean
+    startedBy?: boolean
+    submittedBy?: boolean
+    submittedAt?: boolean
+  }, ExtArgs["result"]["inventoryChecklist"]>
+
+  export type InventoryChecklistSelectScalar = {
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    checkDate?: boolean
+    status?: boolean
+    startedBy?: boolean
+    submittedBy?: boolean
+    submittedAt?: boolean
+  }
+
+  export type InventoryChecklistOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "checkDate" | "status" | "startedBy" | "submittedBy" | "submittedAt", ExtArgs["result"]["inventoryChecklist"]>
+  export type InventoryChecklistInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    items?: boolean | InventoryChecklist$itemsArgs<ExtArgs>
+    alerts?: boolean | InventoryChecklist$alertsArgs<ExtArgs>
+    _count?: boolean | InventoryChecklistCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type InventoryChecklistIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type InventoryChecklistIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $InventoryChecklistPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "InventoryChecklist"
+    objects: {
+      items: Prisma.$InventoryChecklistItemPayload<ExtArgs>[]
+      alerts: Prisma.$InventoryAlertPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      createdAt: Date
+      updatedAt: Date
+      checkDate: Date
+      status: $Enums.InventoryChecklistStatus
+      startedBy: string | null
+      submittedBy: string | null
+      submittedAt: Date | null
+    }, ExtArgs["result"]["inventoryChecklist"]>
+    composites: {}
+  }
+
+  type InventoryChecklistGetPayload<S extends boolean | null | undefined | InventoryChecklistDefaultArgs> = $Result.GetResult<Prisma.$InventoryChecklistPayload, S>
+
+  type InventoryChecklistCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<InventoryChecklistFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: InventoryChecklistCountAggregateInputType | true
+    }
+
+  export interface InventoryChecklistDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['InventoryChecklist'], meta: { name: 'InventoryChecklist' } }
+    /**
+     * Find zero or one InventoryChecklist that matches the filter.
+     * @param {InventoryChecklistFindUniqueArgs} args - Arguments to find a InventoryChecklist
+     * @example
+     * // Get one InventoryChecklist
+     * const inventoryChecklist = await prisma.inventoryChecklist.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends InventoryChecklistFindUniqueArgs>(args: SelectSubset<T, InventoryChecklistFindUniqueArgs<ExtArgs>>): Prisma__InventoryChecklistClient<$Result.GetResult<Prisma.$InventoryChecklistPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one InventoryChecklist that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {InventoryChecklistFindUniqueOrThrowArgs} args - Arguments to find a InventoryChecklist
+     * @example
+     * // Get one InventoryChecklist
+     * const inventoryChecklist = await prisma.inventoryChecklist.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends InventoryChecklistFindUniqueOrThrowArgs>(args: SelectSubset<T, InventoryChecklistFindUniqueOrThrowArgs<ExtArgs>>): Prisma__InventoryChecklistClient<$Result.GetResult<Prisma.$InventoryChecklistPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first InventoryChecklist that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryChecklistFindFirstArgs} args - Arguments to find a InventoryChecklist
+     * @example
+     * // Get one InventoryChecklist
+     * const inventoryChecklist = await prisma.inventoryChecklist.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends InventoryChecklistFindFirstArgs>(args?: SelectSubset<T, InventoryChecklistFindFirstArgs<ExtArgs>>): Prisma__InventoryChecklistClient<$Result.GetResult<Prisma.$InventoryChecklistPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first InventoryChecklist that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryChecklistFindFirstOrThrowArgs} args - Arguments to find a InventoryChecklist
+     * @example
+     * // Get one InventoryChecklist
+     * const inventoryChecklist = await prisma.inventoryChecklist.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends InventoryChecklistFindFirstOrThrowArgs>(args?: SelectSubset<T, InventoryChecklistFindFirstOrThrowArgs<ExtArgs>>): Prisma__InventoryChecklistClient<$Result.GetResult<Prisma.$InventoryChecklistPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more InventoryChecklists that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryChecklistFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all InventoryChecklists
+     * const inventoryChecklists = await prisma.inventoryChecklist.findMany()
+     * 
+     * // Get first 10 InventoryChecklists
+     * const inventoryChecklists = await prisma.inventoryChecklist.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const inventoryChecklistWithIdOnly = await prisma.inventoryChecklist.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends InventoryChecklistFindManyArgs>(args?: SelectSubset<T, InventoryChecklistFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryChecklistPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a InventoryChecklist.
+     * @param {InventoryChecklistCreateArgs} args - Arguments to create a InventoryChecklist.
+     * @example
+     * // Create one InventoryChecklist
+     * const InventoryChecklist = await prisma.inventoryChecklist.create({
+     *   data: {
+     *     // ... data to create a InventoryChecklist
+     *   }
+     * })
+     * 
+     */
+    create<T extends InventoryChecklistCreateArgs>(args: SelectSubset<T, InventoryChecklistCreateArgs<ExtArgs>>): Prisma__InventoryChecklistClient<$Result.GetResult<Prisma.$InventoryChecklistPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many InventoryChecklists.
+     * @param {InventoryChecklistCreateManyArgs} args - Arguments to create many InventoryChecklists.
+     * @example
+     * // Create many InventoryChecklists
+     * const inventoryChecklist = await prisma.inventoryChecklist.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends InventoryChecklistCreateManyArgs>(args?: SelectSubset<T, InventoryChecklistCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many InventoryChecklists and returns the data saved in the database.
+     * @param {InventoryChecklistCreateManyAndReturnArgs} args - Arguments to create many InventoryChecklists.
+     * @example
+     * // Create many InventoryChecklists
+     * const inventoryChecklist = await prisma.inventoryChecklist.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many InventoryChecklists and only return the `id`
+     * const inventoryChecklistWithIdOnly = await prisma.inventoryChecklist.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends InventoryChecklistCreateManyAndReturnArgs>(args?: SelectSubset<T, InventoryChecklistCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryChecklistPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a InventoryChecklist.
+     * @param {InventoryChecklistDeleteArgs} args - Arguments to delete one InventoryChecklist.
+     * @example
+     * // Delete one InventoryChecklist
+     * const InventoryChecklist = await prisma.inventoryChecklist.delete({
+     *   where: {
+     *     // ... filter to delete one InventoryChecklist
+     *   }
+     * })
+     * 
+     */
+    delete<T extends InventoryChecklistDeleteArgs>(args: SelectSubset<T, InventoryChecklistDeleteArgs<ExtArgs>>): Prisma__InventoryChecklistClient<$Result.GetResult<Prisma.$InventoryChecklistPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one InventoryChecklist.
+     * @param {InventoryChecklistUpdateArgs} args - Arguments to update one InventoryChecklist.
+     * @example
+     * // Update one InventoryChecklist
+     * const inventoryChecklist = await prisma.inventoryChecklist.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends InventoryChecklistUpdateArgs>(args: SelectSubset<T, InventoryChecklistUpdateArgs<ExtArgs>>): Prisma__InventoryChecklistClient<$Result.GetResult<Prisma.$InventoryChecklistPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more InventoryChecklists.
+     * @param {InventoryChecklistDeleteManyArgs} args - Arguments to filter InventoryChecklists to delete.
+     * @example
+     * // Delete a few InventoryChecklists
+     * const { count } = await prisma.inventoryChecklist.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends InventoryChecklistDeleteManyArgs>(args?: SelectSubset<T, InventoryChecklistDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more InventoryChecklists.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryChecklistUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many InventoryChecklists
+     * const inventoryChecklist = await prisma.inventoryChecklist.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends InventoryChecklistUpdateManyArgs>(args: SelectSubset<T, InventoryChecklistUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more InventoryChecklists and returns the data updated in the database.
+     * @param {InventoryChecklistUpdateManyAndReturnArgs} args - Arguments to update many InventoryChecklists.
+     * @example
+     * // Update many InventoryChecklists
+     * const inventoryChecklist = await prisma.inventoryChecklist.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more InventoryChecklists and only return the `id`
+     * const inventoryChecklistWithIdOnly = await prisma.inventoryChecklist.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends InventoryChecklistUpdateManyAndReturnArgs>(args: SelectSubset<T, InventoryChecklistUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryChecklistPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one InventoryChecklist.
+     * @param {InventoryChecklistUpsertArgs} args - Arguments to update or create a InventoryChecklist.
+     * @example
+     * // Update or create a InventoryChecklist
+     * const inventoryChecklist = await prisma.inventoryChecklist.upsert({
+     *   create: {
+     *     // ... data to create a InventoryChecklist
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the InventoryChecklist we want to update
+     *   }
+     * })
+     */
+    upsert<T extends InventoryChecklistUpsertArgs>(args: SelectSubset<T, InventoryChecklistUpsertArgs<ExtArgs>>): Prisma__InventoryChecklistClient<$Result.GetResult<Prisma.$InventoryChecklistPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of InventoryChecklists.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryChecklistCountArgs} args - Arguments to filter InventoryChecklists to count.
+     * @example
+     * // Count the number of InventoryChecklists
+     * const count = await prisma.inventoryChecklist.count({
+     *   where: {
+     *     // ... the filter for the InventoryChecklists we want to count
+     *   }
+     * })
+    **/
+    count<T extends InventoryChecklistCountArgs>(
+      args?: Subset<T, InventoryChecklistCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], InventoryChecklistCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a InventoryChecklist.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryChecklistAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends InventoryChecklistAggregateArgs>(args: Subset<T, InventoryChecklistAggregateArgs>): Prisma.PrismaPromise<GetInventoryChecklistAggregateType<T>>
+
+    /**
+     * Group by InventoryChecklist.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryChecklistGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends InventoryChecklistGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: InventoryChecklistGroupByArgs['orderBy'] }
+        : { orderBy?: InventoryChecklistGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, InventoryChecklistGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetInventoryChecklistGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the InventoryChecklist model
+   */
+  readonly fields: InventoryChecklistFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for InventoryChecklist.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__InventoryChecklistClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    items<T extends InventoryChecklist$itemsArgs<ExtArgs> = {}>(args?: Subset<T, InventoryChecklist$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryChecklistItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    alerts<T extends InventoryChecklist$alertsArgs<ExtArgs> = {}>(args?: Subset<T, InventoryChecklist$alertsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryAlertPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the InventoryChecklist model
+   */
+  interface InventoryChecklistFieldRefs {
+    readonly id: FieldRef<"InventoryChecklist", 'String'>
+    readonly createdAt: FieldRef<"InventoryChecklist", 'DateTime'>
+    readonly updatedAt: FieldRef<"InventoryChecklist", 'DateTime'>
+    readonly checkDate: FieldRef<"InventoryChecklist", 'DateTime'>
+    readonly status: FieldRef<"InventoryChecklist", 'InventoryChecklistStatus'>
+    readonly startedBy: FieldRef<"InventoryChecklist", 'String'>
+    readonly submittedBy: FieldRef<"InventoryChecklist", 'String'>
+    readonly submittedAt: FieldRef<"InventoryChecklist", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * InventoryChecklist findUnique
+   */
+  export type InventoryChecklistFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryChecklist
+     */
+    select?: InventoryChecklistSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryChecklist
+     */
+    omit?: InventoryChecklistOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryChecklistInclude<ExtArgs> | null
+    /**
+     * Filter, which InventoryChecklist to fetch.
+     */
+    where: InventoryChecklistWhereUniqueInput
+  }
+
+  /**
+   * InventoryChecklist findUniqueOrThrow
+   */
+  export type InventoryChecklistFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryChecklist
+     */
+    select?: InventoryChecklistSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryChecklist
+     */
+    omit?: InventoryChecklistOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryChecklistInclude<ExtArgs> | null
+    /**
+     * Filter, which InventoryChecklist to fetch.
+     */
+    where: InventoryChecklistWhereUniqueInput
+  }
+
+  /**
+   * InventoryChecklist findFirst
+   */
+  export type InventoryChecklistFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryChecklist
+     */
+    select?: InventoryChecklistSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryChecklist
+     */
+    omit?: InventoryChecklistOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryChecklistInclude<ExtArgs> | null
+    /**
+     * Filter, which InventoryChecklist to fetch.
+     */
+    where?: InventoryChecklistWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InventoryChecklists to fetch.
+     */
+    orderBy?: InventoryChecklistOrderByWithRelationInput | InventoryChecklistOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for InventoryChecklists.
+     */
+    cursor?: InventoryChecklistWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InventoryChecklists from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InventoryChecklists.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of InventoryChecklists.
+     */
+    distinct?: InventoryChecklistScalarFieldEnum | InventoryChecklistScalarFieldEnum[]
+  }
+
+  /**
+   * InventoryChecklist findFirstOrThrow
+   */
+  export type InventoryChecklistFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryChecklist
+     */
+    select?: InventoryChecklistSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryChecklist
+     */
+    omit?: InventoryChecklistOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryChecklistInclude<ExtArgs> | null
+    /**
+     * Filter, which InventoryChecklist to fetch.
+     */
+    where?: InventoryChecklistWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InventoryChecklists to fetch.
+     */
+    orderBy?: InventoryChecklistOrderByWithRelationInput | InventoryChecklistOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for InventoryChecklists.
+     */
+    cursor?: InventoryChecklistWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InventoryChecklists from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InventoryChecklists.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of InventoryChecklists.
+     */
+    distinct?: InventoryChecklistScalarFieldEnum | InventoryChecklistScalarFieldEnum[]
+  }
+
+  /**
+   * InventoryChecklist findMany
+   */
+  export type InventoryChecklistFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryChecklist
+     */
+    select?: InventoryChecklistSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryChecklist
+     */
+    omit?: InventoryChecklistOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryChecklistInclude<ExtArgs> | null
+    /**
+     * Filter, which InventoryChecklists to fetch.
+     */
+    where?: InventoryChecklistWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InventoryChecklists to fetch.
+     */
+    orderBy?: InventoryChecklistOrderByWithRelationInput | InventoryChecklistOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing InventoryChecklists.
+     */
+    cursor?: InventoryChecklistWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InventoryChecklists from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InventoryChecklists.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of InventoryChecklists.
+     */
+    distinct?: InventoryChecklistScalarFieldEnum | InventoryChecklistScalarFieldEnum[]
+  }
+
+  /**
+   * InventoryChecklist create
+   */
+  export type InventoryChecklistCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryChecklist
+     */
+    select?: InventoryChecklistSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryChecklist
+     */
+    omit?: InventoryChecklistOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryChecklistInclude<ExtArgs> | null
+    /**
+     * The data needed to create a InventoryChecklist.
+     */
+    data: XOR<InventoryChecklistCreateInput, InventoryChecklistUncheckedCreateInput>
+  }
+
+  /**
+   * InventoryChecklist createMany
+   */
+  export type InventoryChecklistCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many InventoryChecklists.
+     */
+    data: InventoryChecklistCreateManyInput | InventoryChecklistCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * InventoryChecklist createManyAndReturn
+   */
+  export type InventoryChecklistCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryChecklist
+     */
+    select?: InventoryChecklistSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryChecklist
+     */
+    omit?: InventoryChecklistOmit<ExtArgs> | null
+    /**
+     * The data used to create many InventoryChecklists.
+     */
+    data: InventoryChecklistCreateManyInput | InventoryChecklistCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * InventoryChecklist update
+   */
+  export type InventoryChecklistUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryChecklist
+     */
+    select?: InventoryChecklistSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryChecklist
+     */
+    omit?: InventoryChecklistOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryChecklistInclude<ExtArgs> | null
+    /**
+     * The data needed to update a InventoryChecklist.
+     */
+    data: XOR<InventoryChecklistUpdateInput, InventoryChecklistUncheckedUpdateInput>
+    /**
+     * Choose, which InventoryChecklist to update.
+     */
+    where: InventoryChecklistWhereUniqueInput
+  }
+
+  /**
+   * InventoryChecklist updateMany
+   */
+  export type InventoryChecklistUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update InventoryChecklists.
+     */
+    data: XOR<InventoryChecklistUpdateManyMutationInput, InventoryChecklistUncheckedUpdateManyInput>
+    /**
+     * Filter which InventoryChecklists to update
+     */
+    where?: InventoryChecklistWhereInput
+    /**
+     * Limit how many InventoryChecklists to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * InventoryChecklist updateManyAndReturn
+   */
+  export type InventoryChecklistUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryChecklist
+     */
+    select?: InventoryChecklistSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryChecklist
+     */
+    omit?: InventoryChecklistOmit<ExtArgs> | null
+    /**
+     * The data used to update InventoryChecklists.
+     */
+    data: XOR<InventoryChecklistUpdateManyMutationInput, InventoryChecklistUncheckedUpdateManyInput>
+    /**
+     * Filter which InventoryChecklists to update
+     */
+    where?: InventoryChecklistWhereInput
+    /**
+     * Limit how many InventoryChecklists to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * InventoryChecklist upsert
+   */
+  export type InventoryChecklistUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryChecklist
+     */
+    select?: InventoryChecklistSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryChecklist
+     */
+    omit?: InventoryChecklistOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryChecklistInclude<ExtArgs> | null
+    /**
+     * The filter to search for the InventoryChecklist to update in case it exists.
+     */
+    where: InventoryChecklistWhereUniqueInput
+    /**
+     * In case the InventoryChecklist found by the `where` argument doesn't exist, create a new InventoryChecklist with this data.
+     */
+    create: XOR<InventoryChecklistCreateInput, InventoryChecklistUncheckedCreateInput>
+    /**
+     * In case the InventoryChecklist was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<InventoryChecklistUpdateInput, InventoryChecklistUncheckedUpdateInput>
+  }
+
+  /**
+   * InventoryChecklist delete
+   */
+  export type InventoryChecklistDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryChecklist
+     */
+    select?: InventoryChecklistSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryChecklist
+     */
+    omit?: InventoryChecklistOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryChecklistInclude<ExtArgs> | null
+    /**
+     * Filter which InventoryChecklist to delete.
+     */
+    where: InventoryChecklistWhereUniqueInput
+  }
+
+  /**
+   * InventoryChecklist deleteMany
+   */
+  export type InventoryChecklistDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which InventoryChecklists to delete
+     */
+    where?: InventoryChecklistWhereInput
+    /**
+     * Limit how many InventoryChecklists to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * InventoryChecklist.items
+   */
+  export type InventoryChecklist$itemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryChecklistItem
+     */
+    select?: InventoryChecklistItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryChecklistItem
+     */
+    omit?: InventoryChecklistItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryChecklistItemInclude<ExtArgs> | null
+    where?: InventoryChecklistItemWhereInput
+    orderBy?: InventoryChecklistItemOrderByWithRelationInput | InventoryChecklistItemOrderByWithRelationInput[]
+    cursor?: InventoryChecklistItemWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: InventoryChecklistItemScalarFieldEnum | InventoryChecklistItemScalarFieldEnum[]
+  }
+
+  /**
+   * InventoryChecklist.alerts
+   */
+  export type InventoryChecklist$alertsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryAlert
+     */
+    select?: InventoryAlertSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryAlert
+     */
+    omit?: InventoryAlertOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryAlertInclude<ExtArgs> | null
+    where?: InventoryAlertWhereInput
+    orderBy?: InventoryAlertOrderByWithRelationInput | InventoryAlertOrderByWithRelationInput[]
+    cursor?: InventoryAlertWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: InventoryAlertScalarFieldEnum | InventoryAlertScalarFieldEnum[]
+  }
+
+  /**
+   * InventoryChecklist without action
+   */
+  export type InventoryChecklistDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryChecklist
+     */
+    select?: InventoryChecklistSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryChecklist
+     */
+    omit?: InventoryChecklistOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryChecklistInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model InventoryChecklistItem
+   */
+
+  export type AggregateInventoryChecklistItem = {
+    _count: InventoryChecklistItemCountAggregateOutputType | null
+    _avg: InventoryChecklistItemAvgAggregateOutputType | null
+    _sum: InventoryChecklistItemSumAggregateOutputType | null
+    _min: InventoryChecklistItemMinAggregateOutputType | null
+    _max: InventoryChecklistItemMaxAggregateOutputType | null
+  }
+
+  export type InventoryChecklistItemAvgAggregateOutputType = {
+    expectedMinQuantity: number | null
+    countedQuantity: number | null
+  }
+
+  export type InventoryChecklistItemSumAggregateOutputType = {
+    expectedMinQuantity: number | null
+    countedQuantity: number | null
+  }
+
+  export type InventoryChecklistItemMinAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    checklistId: string | null
+    placeId: string | null
+    productId: string | null
+    expectedMinQuantity: number | null
+    countedQuantity: number | null
+    outOfStock: boolean | null
+    result: $Enums.InventoryChecklistItemResult | null
+    notes: string | null
+    checkedAt: Date | null
+    checkedBy: string | null
+  }
+
+  export type InventoryChecklistItemMaxAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    checklistId: string | null
+    placeId: string | null
+    productId: string | null
+    expectedMinQuantity: number | null
+    countedQuantity: number | null
+    outOfStock: boolean | null
+    result: $Enums.InventoryChecklistItemResult | null
+    notes: string | null
+    checkedAt: Date | null
+    checkedBy: string | null
+  }
+
+  export type InventoryChecklistItemCountAggregateOutputType = {
+    id: number
+    createdAt: number
+    updatedAt: number
+    checklistId: number
+    placeId: number
+    productId: number
+    expectedMinQuantity: number
+    countedQuantity: number
+    outOfStock: number
+    result: number
+    notes: number
+    checkedAt: number
+    checkedBy: number
+    _all: number
+  }
+
+
+  export type InventoryChecklistItemAvgAggregateInputType = {
+    expectedMinQuantity?: true
+    countedQuantity?: true
+  }
+
+  export type InventoryChecklistItemSumAggregateInputType = {
+    expectedMinQuantity?: true
+    countedQuantity?: true
+  }
+
+  export type InventoryChecklistItemMinAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    checklistId?: true
+    placeId?: true
+    productId?: true
+    expectedMinQuantity?: true
+    countedQuantity?: true
+    outOfStock?: true
+    result?: true
+    notes?: true
+    checkedAt?: true
+    checkedBy?: true
+  }
+
+  export type InventoryChecklistItemMaxAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    checklistId?: true
+    placeId?: true
+    productId?: true
+    expectedMinQuantity?: true
+    countedQuantity?: true
+    outOfStock?: true
+    result?: true
+    notes?: true
+    checkedAt?: true
+    checkedBy?: true
+  }
+
+  export type InventoryChecklistItemCountAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    checklistId?: true
+    placeId?: true
+    productId?: true
+    expectedMinQuantity?: true
+    countedQuantity?: true
+    outOfStock?: true
+    result?: true
+    notes?: true
+    checkedAt?: true
+    checkedBy?: true
+    _all?: true
+  }
+
+  export type InventoryChecklistItemAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which InventoryChecklistItem to aggregate.
+     */
+    where?: InventoryChecklistItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InventoryChecklistItems to fetch.
+     */
+    orderBy?: InventoryChecklistItemOrderByWithRelationInput | InventoryChecklistItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: InventoryChecklistItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InventoryChecklistItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InventoryChecklistItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned InventoryChecklistItems
+    **/
+    _count?: true | InventoryChecklistItemCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: InventoryChecklistItemAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: InventoryChecklistItemSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: InventoryChecklistItemMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: InventoryChecklistItemMaxAggregateInputType
+  }
+
+  export type GetInventoryChecklistItemAggregateType<T extends InventoryChecklistItemAggregateArgs> = {
+        [P in keyof T & keyof AggregateInventoryChecklistItem]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateInventoryChecklistItem[P]>
+      : GetScalarType<T[P], AggregateInventoryChecklistItem[P]>
+  }
+
+
+
+
+  export type InventoryChecklistItemGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InventoryChecklistItemWhereInput
+    orderBy?: InventoryChecklistItemOrderByWithAggregationInput | InventoryChecklistItemOrderByWithAggregationInput[]
+    by: InventoryChecklistItemScalarFieldEnum[] | InventoryChecklistItemScalarFieldEnum
+    having?: InventoryChecklistItemScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: InventoryChecklistItemCountAggregateInputType | true
+    _avg?: InventoryChecklistItemAvgAggregateInputType
+    _sum?: InventoryChecklistItemSumAggregateInputType
+    _min?: InventoryChecklistItemMinAggregateInputType
+    _max?: InventoryChecklistItemMaxAggregateInputType
+  }
+
+  export type InventoryChecklistItemGroupByOutputType = {
+    id: string
+    createdAt: Date
+    updatedAt: Date
+    checklistId: string
+    placeId: string
+    productId: string
+    expectedMinQuantity: number
+    countedQuantity: number | null
+    outOfStock: boolean
+    result: $Enums.InventoryChecklistItemResult
+    notes: string | null
+    checkedAt: Date | null
+    checkedBy: string | null
+    _count: InventoryChecklistItemCountAggregateOutputType | null
+    _avg: InventoryChecklistItemAvgAggregateOutputType | null
+    _sum: InventoryChecklistItemSumAggregateOutputType | null
+    _min: InventoryChecklistItemMinAggregateOutputType | null
+    _max: InventoryChecklistItemMaxAggregateOutputType | null
+  }
+
+  type GetInventoryChecklistItemGroupByPayload<T extends InventoryChecklistItemGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<InventoryChecklistItemGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof InventoryChecklistItemGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], InventoryChecklistItemGroupByOutputType[P]>
+            : GetScalarType<T[P], InventoryChecklistItemGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type InventoryChecklistItemSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    checklistId?: boolean
+    placeId?: boolean
+    productId?: boolean
+    expectedMinQuantity?: boolean
+    countedQuantity?: boolean
+    outOfStock?: boolean
+    result?: boolean
+    notes?: boolean
+    checkedAt?: boolean
+    checkedBy?: boolean
+    checklist?: boolean | InventoryChecklistDefaultArgs<ExtArgs>
+    place?: boolean | InventoryPlaceDefaultArgs<ExtArgs>
+    product?: boolean | InventoryProductDefaultArgs<ExtArgs>
+    alerts?: boolean | InventoryChecklistItem$alertsArgs<ExtArgs>
+    _count?: boolean | InventoryChecklistItemCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["inventoryChecklistItem"]>
+
+  export type InventoryChecklistItemSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    checklistId?: boolean
+    placeId?: boolean
+    productId?: boolean
+    expectedMinQuantity?: boolean
+    countedQuantity?: boolean
+    outOfStock?: boolean
+    result?: boolean
+    notes?: boolean
+    checkedAt?: boolean
+    checkedBy?: boolean
+    checklist?: boolean | InventoryChecklistDefaultArgs<ExtArgs>
+    place?: boolean | InventoryPlaceDefaultArgs<ExtArgs>
+    product?: boolean | InventoryProductDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["inventoryChecklistItem"]>
+
+  export type InventoryChecklistItemSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    checklistId?: boolean
+    placeId?: boolean
+    productId?: boolean
+    expectedMinQuantity?: boolean
+    countedQuantity?: boolean
+    outOfStock?: boolean
+    result?: boolean
+    notes?: boolean
+    checkedAt?: boolean
+    checkedBy?: boolean
+    checklist?: boolean | InventoryChecklistDefaultArgs<ExtArgs>
+    place?: boolean | InventoryPlaceDefaultArgs<ExtArgs>
+    product?: boolean | InventoryProductDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["inventoryChecklistItem"]>
+
+  export type InventoryChecklistItemSelectScalar = {
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    checklistId?: boolean
+    placeId?: boolean
+    productId?: boolean
+    expectedMinQuantity?: boolean
+    countedQuantity?: boolean
+    outOfStock?: boolean
+    result?: boolean
+    notes?: boolean
+    checkedAt?: boolean
+    checkedBy?: boolean
+  }
+
+  export type InventoryChecklistItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "checklistId" | "placeId" | "productId" | "expectedMinQuantity" | "countedQuantity" | "outOfStock" | "result" | "notes" | "checkedAt" | "checkedBy", ExtArgs["result"]["inventoryChecklistItem"]>
+  export type InventoryChecklistItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    checklist?: boolean | InventoryChecklistDefaultArgs<ExtArgs>
+    place?: boolean | InventoryPlaceDefaultArgs<ExtArgs>
+    product?: boolean | InventoryProductDefaultArgs<ExtArgs>
+    alerts?: boolean | InventoryChecklistItem$alertsArgs<ExtArgs>
+    _count?: boolean | InventoryChecklistItemCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type InventoryChecklistItemIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    checklist?: boolean | InventoryChecklistDefaultArgs<ExtArgs>
+    place?: boolean | InventoryPlaceDefaultArgs<ExtArgs>
+    product?: boolean | InventoryProductDefaultArgs<ExtArgs>
+  }
+  export type InventoryChecklistItemIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    checklist?: boolean | InventoryChecklistDefaultArgs<ExtArgs>
+    place?: boolean | InventoryPlaceDefaultArgs<ExtArgs>
+    product?: boolean | InventoryProductDefaultArgs<ExtArgs>
+  }
+
+  export type $InventoryChecklistItemPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "InventoryChecklistItem"
+    objects: {
+      checklist: Prisma.$InventoryChecklistPayload<ExtArgs>
+      place: Prisma.$InventoryPlacePayload<ExtArgs>
+      product: Prisma.$InventoryProductPayload<ExtArgs>
+      alerts: Prisma.$InventoryAlertPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      createdAt: Date
+      updatedAt: Date
+      checklistId: string
+      placeId: string
+      productId: string
+      expectedMinQuantity: number
+      countedQuantity: number | null
+      outOfStock: boolean
+      result: $Enums.InventoryChecklistItemResult
+      notes: string | null
+      checkedAt: Date | null
+      checkedBy: string | null
+    }, ExtArgs["result"]["inventoryChecklistItem"]>
+    composites: {}
+  }
+
+  type InventoryChecklistItemGetPayload<S extends boolean | null | undefined | InventoryChecklistItemDefaultArgs> = $Result.GetResult<Prisma.$InventoryChecklistItemPayload, S>
+
+  type InventoryChecklistItemCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<InventoryChecklistItemFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: InventoryChecklistItemCountAggregateInputType | true
+    }
+
+  export interface InventoryChecklistItemDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['InventoryChecklistItem'], meta: { name: 'InventoryChecklistItem' } }
+    /**
+     * Find zero or one InventoryChecklistItem that matches the filter.
+     * @param {InventoryChecklistItemFindUniqueArgs} args - Arguments to find a InventoryChecklistItem
+     * @example
+     * // Get one InventoryChecklistItem
+     * const inventoryChecklistItem = await prisma.inventoryChecklistItem.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends InventoryChecklistItemFindUniqueArgs>(args: SelectSubset<T, InventoryChecklistItemFindUniqueArgs<ExtArgs>>): Prisma__InventoryChecklistItemClient<$Result.GetResult<Prisma.$InventoryChecklistItemPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one InventoryChecklistItem that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {InventoryChecklistItemFindUniqueOrThrowArgs} args - Arguments to find a InventoryChecklistItem
+     * @example
+     * // Get one InventoryChecklistItem
+     * const inventoryChecklistItem = await prisma.inventoryChecklistItem.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends InventoryChecklistItemFindUniqueOrThrowArgs>(args: SelectSubset<T, InventoryChecklistItemFindUniqueOrThrowArgs<ExtArgs>>): Prisma__InventoryChecklistItemClient<$Result.GetResult<Prisma.$InventoryChecklistItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first InventoryChecklistItem that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryChecklistItemFindFirstArgs} args - Arguments to find a InventoryChecklistItem
+     * @example
+     * // Get one InventoryChecklistItem
+     * const inventoryChecklistItem = await prisma.inventoryChecklistItem.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends InventoryChecklistItemFindFirstArgs>(args?: SelectSubset<T, InventoryChecklistItemFindFirstArgs<ExtArgs>>): Prisma__InventoryChecklistItemClient<$Result.GetResult<Prisma.$InventoryChecklistItemPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first InventoryChecklistItem that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryChecklistItemFindFirstOrThrowArgs} args - Arguments to find a InventoryChecklistItem
+     * @example
+     * // Get one InventoryChecklistItem
+     * const inventoryChecklistItem = await prisma.inventoryChecklistItem.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends InventoryChecklistItemFindFirstOrThrowArgs>(args?: SelectSubset<T, InventoryChecklistItemFindFirstOrThrowArgs<ExtArgs>>): Prisma__InventoryChecklistItemClient<$Result.GetResult<Prisma.$InventoryChecklistItemPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more InventoryChecklistItems that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryChecklistItemFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all InventoryChecklistItems
+     * const inventoryChecklistItems = await prisma.inventoryChecklistItem.findMany()
+     * 
+     * // Get first 10 InventoryChecklistItems
+     * const inventoryChecklistItems = await prisma.inventoryChecklistItem.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const inventoryChecklistItemWithIdOnly = await prisma.inventoryChecklistItem.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends InventoryChecklistItemFindManyArgs>(args?: SelectSubset<T, InventoryChecklistItemFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryChecklistItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a InventoryChecklistItem.
+     * @param {InventoryChecklistItemCreateArgs} args - Arguments to create a InventoryChecklistItem.
+     * @example
+     * // Create one InventoryChecklistItem
+     * const InventoryChecklistItem = await prisma.inventoryChecklistItem.create({
+     *   data: {
+     *     // ... data to create a InventoryChecklistItem
+     *   }
+     * })
+     * 
+     */
+    create<T extends InventoryChecklistItemCreateArgs>(args: SelectSubset<T, InventoryChecklistItemCreateArgs<ExtArgs>>): Prisma__InventoryChecklistItemClient<$Result.GetResult<Prisma.$InventoryChecklistItemPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many InventoryChecklistItems.
+     * @param {InventoryChecklistItemCreateManyArgs} args - Arguments to create many InventoryChecklistItems.
+     * @example
+     * // Create many InventoryChecklistItems
+     * const inventoryChecklistItem = await prisma.inventoryChecklistItem.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends InventoryChecklistItemCreateManyArgs>(args?: SelectSubset<T, InventoryChecklistItemCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many InventoryChecklistItems and returns the data saved in the database.
+     * @param {InventoryChecklistItemCreateManyAndReturnArgs} args - Arguments to create many InventoryChecklistItems.
+     * @example
+     * // Create many InventoryChecklistItems
+     * const inventoryChecklistItem = await prisma.inventoryChecklistItem.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many InventoryChecklistItems and only return the `id`
+     * const inventoryChecklistItemWithIdOnly = await prisma.inventoryChecklistItem.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends InventoryChecklistItemCreateManyAndReturnArgs>(args?: SelectSubset<T, InventoryChecklistItemCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryChecklistItemPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a InventoryChecklistItem.
+     * @param {InventoryChecklistItemDeleteArgs} args - Arguments to delete one InventoryChecklistItem.
+     * @example
+     * // Delete one InventoryChecklistItem
+     * const InventoryChecklistItem = await prisma.inventoryChecklistItem.delete({
+     *   where: {
+     *     // ... filter to delete one InventoryChecklistItem
+     *   }
+     * })
+     * 
+     */
+    delete<T extends InventoryChecklistItemDeleteArgs>(args: SelectSubset<T, InventoryChecklistItemDeleteArgs<ExtArgs>>): Prisma__InventoryChecklistItemClient<$Result.GetResult<Prisma.$InventoryChecklistItemPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one InventoryChecklistItem.
+     * @param {InventoryChecklistItemUpdateArgs} args - Arguments to update one InventoryChecklistItem.
+     * @example
+     * // Update one InventoryChecklistItem
+     * const inventoryChecklistItem = await prisma.inventoryChecklistItem.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends InventoryChecklistItemUpdateArgs>(args: SelectSubset<T, InventoryChecklistItemUpdateArgs<ExtArgs>>): Prisma__InventoryChecklistItemClient<$Result.GetResult<Prisma.$InventoryChecklistItemPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more InventoryChecklistItems.
+     * @param {InventoryChecklistItemDeleteManyArgs} args - Arguments to filter InventoryChecklistItems to delete.
+     * @example
+     * // Delete a few InventoryChecklistItems
+     * const { count } = await prisma.inventoryChecklistItem.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends InventoryChecklistItemDeleteManyArgs>(args?: SelectSubset<T, InventoryChecklistItemDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more InventoryChecklistItems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryChecklistItemUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many InventoryChecklistItems
+     * const inventoryChecklistItem = await prisma.inventoryChecklistItem.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends InventoryChecklistItemUpdateManyArgs>(args: SelectSubset<T, InventoryChecklistItemUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more InventoryChecklistItems and returns the data updated in the database.
+     * @param {InventoryChecklistItemUpdateManyAndReturnArgs} args - Arguments to update many InventoryChecklistItems.
+     * @example
+     * // Update many InventoryChecklistItems
+     * const inventoryChecklistItem = await prisma.inventoryChecklistItem.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more InventoryChecklistItems and only return the `id`
+     * const inventoryChecklistItemWithIdOnly = await prisma.inventoryChecklistItem.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends InventoryChecklistItemUpdateManyAndReturnArgs>(args: SelectSubset<T, InventoryChecklistItemUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryChecklistItemPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one InventoryChecklistItem.
+     * @param {InventoryChecklistItemUpsertArgs} args - Arguments to update or create a InventoryChecklistItem.
+     * @example
+     * // Update or create a InventoryChecklistItem
+     * const inventoryChecklistItem = await prisma.inventoryChecklistItem.upsert({
+     *   create: {
+     *     // ... data to create a InventoryChecklistItem
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the InventoryChecklistItem we want to update
+     *   }
+     * })
+     */
+    upsert<T extends InventoryChecklistItemUpsertArgs>(args: SelectSubset<T, InventoryChecklistItemUpsertArgs<ExtArgs>>): Prisma__InventoryChecklistItemClient<$Result.GetResult<Prisma.$InventoryChecklistItemPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of InventoryChecklistItems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryChecklistItemCountArgs} args - Arguments to filter InventoryChecklistItems to count.
+     * @example
+     * // Count the number of InventoryChecklistItems
+     * const count = await prisma.inventoryChecklistItem.count({
+     *   where: {
+     *     // ... the filter for the InventoryChecklistItems we want to count
+     *   }
+     * })
+    **/
+    count<T extends InventoryChecklistItemCountArgs>(
+      args?: Subset<T, InventoryChecklistItemCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], InventoryChecklistItemCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a InventoryChecklistItem.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryChecklistItemAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends InventoryChecklistItemAggregateArgs>(args: Subset<T, InventoryChecklistItemAggregateArgs>): Prisma.PrismaPromise<GetInventoryChecklistItemAggregateType<T>>
+
+    /**
+     * Group by InventoryChecklistItem.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryChecklistItemGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends InventoryChecklistItemGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: InventoryChecklistItemGroupByArgs['orderBy'] }
+        : { orderBy?: InventoryChecklistItemGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, InventoryChecklistItemGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetInventoryChecklistItemGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the InventoryChecklistItem model
+   */
+  readonly fields: InventoryChecklistItemFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for InventoryChecklistItem.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__InventoryChecklistItemClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    checklist<T extends InventoryChecklistDefaultArgs<ExtArgs> = {}>(args?: Subset<T, InventoryChecklistDefaultArgs<ExtArgs>>): Prisma__InventoryChecklistClient<$Result.GetResult<Prisma.$InventoryChecklistPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    place<T extends InventoryPlaceDefaultArgs<ExtArgs> = {}>(args?: Subset<T, InventoryPlaceDefaultArgs<ExtArgs>>): Prisma__InventoryPlaceClient<$Result.GetResult<Prisma.$InventoryPlacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    product<T extends InventoryProductDefaultArgs<ExtArgs> = {}>(args?: Subset<T, InventoryProductDefaultArgs<ExtArgs>>): Prisma__InventoryProductClient<$Result.GetResult<Prisma.$InventoryProductPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    alerts<T extends InventoryChecklistItem$alertsArgs<ExtArgs> = {}>(args?: Subset<T, InventoryChecklistItem$alertsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryAlertPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the InventoryChecklistItem model
+   */
+  interface InventoryChecklistItemFieldRefs {
+    readonly id: FieldRef<"InventoryChecklistItem", 'String'>
+    readonly createdAt: FieldRef<"InventoryChecklistItem", 'DateTime'>
+    readonly updatedAt: FieldRef<"InventoryChecklistItem", 'DateTime'>
+    readonly checklistId: FieldRef<"InventoryChecklistItem", 'String'>
+    readonly placeId: FieldRef<"InventoryChecklistItem", 'String'>
+    readonly productId: FieldRef<"InventoryChecklistItem", 'String'>
+    readonly expectedMinQuantity: FieldRef<"InventoryChecklistItem", 'Int'>
+    readonly countedQuantity: FieldRef<"InventoryChecklistItem", 'Int'>
+    readonly outOfStock: FieldRef<"InventoryChecklistItem", 'Boolean'>
+    readonly result: FieldRef<"InventoryChecklistItem", 'InventoryChecklistItemResult'>
+    readonly notes: FieldRef<"InventoryChecklistItem", 'String'>
+    readonly checkedAt: FieldRef<"InventoryChecklistItem", 'DateTime'>
+    readonly checkedBy: FieldRef<"InventoryChecklistItem", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * InventoryChecklistItem findUnique
+   */
+  export type InventoryChecklistItemFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryChecklistItem
+     */
+    select?: InventoryChecklistItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryChecklistItem
+     */
+    omit?: InventoryChecklistItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryChecklistItemInclude<ExtArgs> | null
+    /**
+     * Filter, which InventoryChecklistItem to fetch.
+     */
+    where: InventoryChecklistItemWhereUniqueInput
+  }
+
+  /**
+   * InventoryChecklistItem findUniqueOrThrow
+   */
+  export type InventoryChecklistItemFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryChecklistItem
+     */
+    select?: InventoryChecklistItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryChecklistItem
+     */
+    omit?: InventoryChecklistItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryChecklistItemInclude<ExtArgs> | null
+    /**
+     * Filter, which InventoryChecklistItem to fetch.
+     */
+    where: InventoryChecklistItemWhereUniqueInput
+  }
+
+  /**
+   * InventoryChecklistItem findFirst
+   */
+  export type InventoryChecklistItemFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryChecklistItem
+     */
+    select?: InventoryChecklistItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryChecklistItem
+     */
+    omit?: InventoryChecklistItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryChecklistItemInclude<ExtArgs> | null
+    /**
+     * Filter, which InventoryChecklistItem to fetch.
+     */
+    where?: InventoryChecklistItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InventoryChecklistItems to fetch.
+     */
+    orderBy?: InventoryChecklistItemOrderByWithRelationInput | InventoryChecklistItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for InventoryChecklistItems.
+     */
+    cursor?: InventoryChecklistItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InventoryChecklistItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InventoryChecklistItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of InventoryChecklistItems.
+     */
+    distinct?: InventoryChecklistItemScalarFieldEnum | InventoryChecklistItemScalarFieldEnum[]
+  }
+
+  /**
+   * InventoryChecklistItem findFirstOrThrow
+   */
+  export type InventoryChecklistItemFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryChecklistItem
+     */
+    select?: InventoryChecklistItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryChecklistItem
+     */
+    omit?: InventoryChecklistItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryChecklistItemInclude<ExtArgs> | null
+    /**
+     * Filter, which InventoryChecklistItem to fetch.
+     */
+    where?: InventoryChecklistItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InventoryChecklistItems to fetch.
+     */
+    orderBy?: InventoryChecklistItemOrderByWithRelationInput | InventoryChecklistItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for InventoryChecklistItems.
+     */
+    cursor?: InventoryChecklistItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InventoryChecklistItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InventoryChecklistItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of InventoryChecklistItems.
+     */
+    distinct?: InventoryChecklistItemScalarFieldEnum | InventoryChecklistItemScalarFieldEnum[]
+  }
+
+  /**
+   * InventoryChecklistItem findMany
+   */
+  export type InventoryChecklistItemFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryChecklistItem
+     */
+    select?: InventoryChecklistItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryChecklistItem
+     */
+    omit?: InventoryChecklistItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryChecklistItemInclude<ExtArgs> | null
+    /**
+     * Filter, which InventoryChecklistItems to fetch.
+     */
+    where?: InventoryChecklistItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InventoryChecklistItems to fetch.
+     */
+    orderBy?: InventoryChecklistItemOrderByWithRelationInput | InventoryChecklistItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing InventoryChecklistItems.
+     */
+    cursor?: InventoryChecklistItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InventoryChecklistItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InventoryChecklistItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of InventoryChecklistItems.
+     */
+    distinct?: InventoryChecklistItemScalarFieldEnum | InventoryChecklistItemScalarFieldEnum[]
+  }
+
+  /**
+   * InventoryChecklistItem create
+   */
+  export type InventoryChecklistItemCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryChecklistItem
+     */
+    select?: InventoryChecklistItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryChecklistItem
+     */
+    omit?: InventoryChecklistItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryChecklistItemInclude<ExtArgs> | null
+    /**
+     * The data needed to create a InventoryChecklistItem.
+     */
+    data: XOR<InventoryChecklistItemCreateInput, InventoryChecklistItemUncheckedCreateInput>
+  }
+
+  /**
+   * InventoryChecklistItem createMany
+   */
+  export type InventoryChecklistItemCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many InventoryChecklistItems.
+     */
+    data: InventoryChecklistItemCreateManyInput | InventoryChecklistItemCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * InventoryChecklistItem createManyAndReturn
+   */
+  export type InventoryChecklistItemCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryChecklistItem
+     */
+    select?: InventoryChecklistItemSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryChecklistItem
+     */
+    omit?: InventoryChecklistItemOmit<ExtArgs> | null
+    /**
+     * The data used to create many InventoryChecklistItems.
+     */
+    data: InventoryChecklistItemCreateManyInput | InventoryChecklistItemCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryChecklistItemIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * InventoryChecklistItem update
+   */
+  export type InventoryChecklistItemUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryChecklistItem
+     */
+    select?: InventoryChecklistItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryChecklistItem
+     */
+    omit?: InventoryChecklistItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryChecklistItemInclude<ExtArgs> | null
+    /**
+     * The data needed to update a InventoryChecklistItem.
+     */
+    data: XOR<InventoryChecklistItemUpdateInput, InventoryChecklistItemUncheckedUpdateInput>
+    /**
+     * Choose, which InventoryChecklistItem to update.
+     */
+    where: InventoryChecklistItemWhereUniqueInput
+  }
+
+  /**
+   * InventoryChecklistItem updateMany
+   */
+  export type InventoryChecklistItemUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update InventoryChecklistItems.
+     */
+    data: XOR<InventoryChecklistItemUpdateManyMutationInput, InventoryChecklistItemUncheckedUpdateManyInput>
+    /**
+     * Filter which InventoryChecklistItems to update
+     */
+    where?: InventoryChecklistItemWhereInput
+    /**
+     * Limit how many InventoryChecklistItems to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * InventoryChecklistItem updateManyAndReturn
+   */
+  export type InventoryChecklistItemUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryChecklistItem
+     */
+    select?: InventoryChecklistItemSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryChecklistItem
+     */
+    omit?: InventoryChecklistItemOmit<ExtArgs> | null
+    /**
+     * The data used to update InventoryChecklistItems.
+     */
+    data: XOR<InventoryChecklistItemUpdateManyMutationInput, InventoryChecklistItemUncheckedUpdateManyInput>
+    /**
+     * Filter which InventoryChecklistItems to update
+     */
+    where?: InventoryChecklistItemWhereInput
+    /**
+     * Limit how many InventoryChecklistItems to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryChecklistItemIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * InventoryChecklistItem upsert
+   */
+  export type InventoryChecklistItemUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryChecklistItem
+     */
+    select?: InventoryChecklistItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryChecklistItem
+     */
+    omit?: InventoryChecklistItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryChecklistItemInclude<ExtArgs> | null
+    /**
+     * The filter to search for the InventoryChecklistItem to update in case it exists.
+     */
+    where: InventoryChecklistItemWhereUniqueInput
+    /**
+     * In case the InventoryChecklistItem found by the `where` argument doesn't exist, create a new InventoryChecklistItem with this data.
+     */
+    create: XOR<InventoryChecklistItemCreateInput, InventoryChecklistItemUncheckedCreateInput>
+    /**
+     * In case the InventoryChecklistItem was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<InventoryChecklistItemUpdateInput, InventoryChecklistItemUncheckedUpdateInput>
+  }
+
+  /**
+   * InventoryChecklistItem delete
+   */
+  export type InventoryChecklistItemDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryChecklistItem
+     */
+    select?: InventoryChecklistItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryChecklistItem
+     */
+    omit?: InventoryChecklistItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryChecklistItemInclude<ExtArgs> | null
+    /**
+     * Filter which InventoryChecklistItem to delete.
+     */
+    where: InventoryChecklistItemWhereUniqueInput
+  }
+
+  /**
+   * InventoryChecklistItem deleteMany
+   */
+  export type InventoryChecklistItemDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which InventoryChecklistItems to delete
+     */
+    where?: InventoryChecklistItemWhereInput
+    /**
+     * Limit how many InventoryChecklistItems to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * InventoryChecklistItem.alerts
+   */
+  export type InventoryChecklistItem$alertsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryAlert
+     */
+    select?: InventoryAlertSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryAlert
+     */
+    omit?: InventoryAlertOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryAlertInclude<ExtArgs> | null
+    where?: InventoryAlertWhereInput
+    orderBy?: InventoryAlertOrderByWithRelationInput | InventoryAlertOrderByWithRelationInput[]
+    cursor?: InventoryAlertWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: InventoryAlertScalarFieldEnum | InventoryAlertScalarFieldEnum[]
+  }
+
+  /**
+   * InventoryChecklistItem without action
+   */
+  export type InventoryChecklistItemDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryChecklistItem
+     */
+    select?: InventoryChecklistItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryChecklistItem
+     */
+    omit?: InventoryChecklistItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryChecklistItemInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model InventoryAlert
+   */
+
+  export type AggregateInventoryAlert = {
+    _count: InventoryAlertCountAggregateOutputType | null
+    _min: InventoryAlertMinAggregateOutputType | null
+    _max: InventoryAlertMaxAggregateOutputType | null
+  }
+
+  export type InventoryAlertMinAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    type: $Enums.InventoryAlertType | null
+    severity: $Enums.InventoryAlertSeverity | null
+    status: $Enums.InventoryAlertStatus | null
+    message: string | null
+    placeId: string | null
+    productId: string | null
+    checklistId: string | null
+    checklistItemId: string | null
+    triggeredAt: Date | null
+    ackedAt: Date | null
+    ackedBy: string | null
+    resolvedAt: Date | null
+    resolvedBy: string | null
+  }
+
+  export type InventoryAlertMaxAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    type: $Enums.InventoryAlertType | null
+    severity: $Enums.InventoryAlertSeverity | null
+    status: $Enums.InventoryAlertStatus | null
+    message: string | null
+    placeId: string | null
+    productId: string | null
+    checklistId: string | null
+    checklistItemId: string | null
+    triggeredAt: Date | null
+    ackedAt: Date | null
+    ackedBy: string | null
+    resolvedAt: Date | null
+    resolvedBy: string | null
+  }
+
+  export type InventoryAlertCountAggregateOutputType = {
+    id: number
+    createdAt: number
+    updatedAt: number
+    type: number
+    severity: number
+    status: number
+    message: number
+    placeId: number
+    productId: number
+    checklistId: number
+    checklistItemId: number
+    triggeredAt: number
+    ackedAt: number
+    ackedBy: number
+    resolvedAt: number
+    resolvedBy: number
+    _all: number
+  }
+
+
+  export type InventoryAlertMinAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    type?: true
+    severity?: true
+    status?: true
+    message?: true
+    placeId?: true
+    productId?: true
+    checklistId?: true
+    checklistItemId?: true
+    triggeredAt?: true
+    ackedAt?: true
+    ackedBy?: true
+    resolvedAt?: true
+    resolvedBy?: true
+  }
+
+  export type InventoryAlertMaxAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    type?: true
+    severity?: true
+    status?: true
+    message?: true
+    placeId?: true
+    productId?: true
+    checklistId?: true
+    checklistItemId?: true
+    triggeredAt?: true
+    ackedAt?: true
+    ackedBy?: true
+    resolvedAt?: true
+    resolvedBy?: true
+  }
+
+  export type InventoryAlertCountAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    type?: true
+    severity?: true
+    status?: true
+    message?: true
+    placeId?: true
+    productId?: true
+    checklistId?: true
+    checklistItemId?: true
+    triggeredAt?: true
+    ackedAt?: true
+    ackedBy?: true
+    resolvedAt?: true
+    resolvedBy?: true
+    _all?: true
+  }
+
+  export type InventoryAlertAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which InventoryAlert to aggregate.
+     */
+    where?: InventoryAlertWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InventoryAlerts to fetch.
+     */
+    orderBy?: InventoryAlertOrderByWithRelationInput | InventoryAlertOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: InventoryAlertWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InventoryAlerts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InventoryAlerts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned InventoryAlerts
+    **/
+    _count?: true | InventoryAlertCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: InventoryAlertMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: InventoryAlertMaxAggregateInputType
+  }
+
+  export type GetInventoryAlertAggregateType<T extends InventoryAlertAggregateArgs> = {
+        [P in keyof T & keyof AggregateInventoryAlert]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateInventoryAlert[P]>
+      : GetScalarType<T[P], AggregateInventoryAlert[P]>
+  }
+
+
+
+
+  export type InventoryAlertGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InventoryAlertWhereInput
+    orderBy?: InventoryAlertOrderByWithAggregationInput | InventoryAlertOrderByWithAggregationInput[]
+    by: InventoryAlertScalarFieldEnum[] | InventoryAlertScalarFieldEnum
+    having?: InventoryAlertScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: InventoryAlertCountAggregateInputType | true
+    _min?: InventoryAlertMinAggregateInputType
+    _max?: InventoryAlertMaxAggregateInputType
+  }
+
+  export type InventoryAlertGroupByOutputType = {
+    id: string
+    createdAt: Date
+    updatedAt: Date
+    type: $Enums.InventoryAlertType
+    severity: $Enums.InventoryAlertSeverity
+    status: $Enums.InventoryAlertStatus
+    message: string
+    placeId: string
+    productId: string
+    checklistId: string | null
+    checklistItemId: string | null
+    triggeredAt: Date
+    ackedAt: Date | null
+    ackedBy: string | null
+    resolvedAt: Date | null
+    resolvedBy: string | null
+    _count: InventoryAlertCountAggregateOutputType | null
+    _min: InventoryAlertMinAggregateOutputType | null
+    _max: InventoryAlertMaxAggregateOutputType | null
+  }
+
+  type GetInventoryAlertGroupByPayload<T extends InventoryAlertGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<InventoryAlertGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof InventoryAlertGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], InventoryAlertGroupByOutputType[P]>
+            : GetScalarType<T[P], InventoryAlertGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type InventoryAlertSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    type?: boolean
+    severity?: boolean
+    status?: boolean
+    message?: boolean
+    placeId?: boolean
+    productId?: boolean
+    checklistId?: boolean
+    checklistItemId?: boolean
+    triggeredAt?: boolean
+    ackedAt?: boolean
+    ackedBy?: boolean
+    resolvedAt?: boolean
+    resolvedBy?: boolean
+    place?: boolean | InventoryPlaceDefaultArgs<ExtArgs>
+    product?: boolean | InventoryProductDefaultArgs<ExtArgs>
+    checklist?: boolean | InventoryAlert$checklistArgs<ExtArgs>
+    checklistItem?: boolean | InventoryAlert$checklistItemArgs<ExtArgs>
+  }, ExtArgs["result"]["inventoryAlert"]>
+
+  export type InventoryAlertSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    type?: boolean
+    severity?: boolean
+    status?: boolean
+    message?: boolean
+    placeId?: boolean
+    productId?: boolean
+    checklistId?: boolean
+    checklistItemId?: boolean
+    triggeredAt?: boolean
+    ackedAt?: boolean
+    ackedBy?: boolean
+    resolvedAt?: boolean
+    resolvedBy?: boolean
+    place?: boolean | InventoryPlaceDefaultArgs<ExtArgs>
+    product?: boolean | InventoryProductDefaultArgs<ExtArgs>
+    checklist?: boolean | InventoryAlert$checklistArgs<ExtArgs>
+    checklistItem?: boolean | InventoryAlert$checklistItemArgs<ExtArgs>
+  }, ExtArgs["result"]["inventoryAlert"]>
+
+  export type InventoryAlertSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    type?: boolean
+    severity?: boolean
+    status?: boolean
+    message?: boolean
+    placeId?: boolean
+    productId?: boolean
+    checklistId?: boolean
+    checklistItemId?: boolean
+    triggeredAt?: boolean
+    ackedAt?: boolean
+    ackedBy?: boolean
+    resolvedAt?: boolean
+    resolvedBy?: boolean
+    place?: boolean | InventoryPlaceDefaultArgs<ExtArgs>
+    product?: boolean | InventoryProductDefaultArgs<ExtArgs>
+    checklist?: boolean | InventoryAlert$checklistArgs<ExtArgs>
+    checklistItem?: boolean | InventoryAlert$checklistItemArgs<ExtArgs>
+  }, ExtArgs["result"]["inventoryAlert"]>
+
+  export type InventoryAlertSelectScalar = {
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    type?: boolean
+    severity?: boolean
+    status?: boolean
+    message?: boolean
+    placeId?: boolean
+    productId?: boolean
+    checklistId?: boolean
+    checklistItemId?: boolean
+    triggeredAt?: boolean
+    ackedAt?: boolean
+    ackedBy?: boolean
+    resolvedAt?: boolean
+    resolvedBy?: boolean
+  }
+
+  export type InventoryAlertOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "type" | "severity" | "status" | "message" | "placeId" | "productId" | "checklistId" | "checklistItemId" | "triggeredAt" | "ackedAt" | "ackedBy" | "resolvedAt" | "resolvedBy", ExtArgs["result"]["inventoryAlert"]>
+  export type InventoryAlertInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    place?: boolean | InventoryPlaceDefaultArgs<ExtArgs>
+    product?: boolean | InventoryProductDefaultArgs<ExtArgs>
+    checklist?: boolean | InventoryAlert$checklistArgs<ExtArgs>
+    checklistItem?: boolean | InventoryAlert$checklistItemArgs<ExtArgs>
+  }
+  export type InventoryAlertIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    place?: boolean | InventoryPlaceDefaultArgs<ExtArgs>
+    product?: boolean | InventoryProductDefaultArgs<ExtArgs>
+    checklist?: boolean | InventoryAlert$checklistArgs<ExtArgs>
+    checklistItem?: boolean | InventoryAlert$checklistItemArgs<ExtArgs>
+  }
+  export type InventoryAlertIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    place?: boolean | InventoryPlaceDefaultArgs<ExtArgs>
+    product?: boolean | InventoryProductDefaultArgs<ExtArgs>
+    checklist?: boolean | InventoryAlert$checklistArgs<ExtArgs>
+    checklistItem?: boolean | InventoryAlert$checklistItemArgs<ExtArgs>
+  }
+
+  export type $InventoryAlertPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "InventoryAlert"
+    objects: {
+      place: Prisma.$InventoryPlacePayload<ExtArgs>
+      product: Prisma.$InventoryProductPayload<ExtArgs>
+      checklist: Prisma.$InventoryChecklistPayload<ExtArgs> | null
+      checklistItem: Prisma.$InventoryChecklistItemPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      createdAt: Date
+      updatedAt: Date
+      type: $Enums.InventoryAlertType
+      severity: $Enums.InventoryAlertSeverity
+      status: $Enums.InventoryAlertStatus
+      message: string
+      placeId: string
+      productId: string
+      checklistId: string | null
+      checklistItemId: string | null
+      triggeredAt: Date
+      ackedAt: Date | null
+      ackedBy: string | null
+      resolvedAt: Date | null
+      resolvedBy: string | null
+    }, ExtArgs["result"]["inventoryAlert"]>
+    composites: {}
+  }
+
+  type InventoryAlertGetPayload<S extends boolean | null | undefined | InventoryAlertDefaultArgs> = $Result.GetResult<Prisma.$InventoryAlertPayload, S>
+
+  type InventoryAlertCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<InventoryAlertFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: InventoryAlertCountAggregateInputType | true
+    }
+
+  export interface InventoryAlertDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['InventoryAlert'], meta: { name: 'InventoryAlert' } }
+    /**
+     * Find zero or one InventoryAlert that matches the filter.
+     * @param {InventoryAlertFindUniqueArgs} args - Arguments to find a InventoryAlert
+     * @example
+     * // Get one InventoryAlert
+     * const inventoryAlert = await prisma.inventoryAlert.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends InventoryAlertFindUniqueArgs>(args: SelectSubset<T, InventoryAlertFindUniqueArgs<ExtArgs>>): Prisma__InventoryAlertClient<$Result.GetResult<Prisma.$InventoryAlertPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one InventoryAlert that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {InventoryAlertFindUniqueOrThrowArgs} args - Arguments to find a InventoryAlert
+     * @example
+     * // Get one InventoryAlert
+     * const inventoryAlert = await prisma.inventoryAlert.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends InventoryAlertFindUniqueOrThrowArgs>(args: SelectSubset<T, InventoryAlertFindUniqueOrThrowArgs<ExtArgs>>): Prisma__InventoryAlertClient<$Result.GetResult<Prisma.$InventoryAlertPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first InventoryAlert that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryAlertFindFirstArgs} args - Arguments to find a InventoryAlert
+     * @example
+     * // Get one InventoryAlert
+     * const inventoryAlert = await prisma.inventoryAlert.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends InventoryAlertFindFirstArgs>(args?: SelectSubset<T, InventoryAlertFindFirstArgs<ExtArgs>>): Prisma__InventoryAlertClient<$Result.GetResult<Prisma.$InventoryAlertPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first InventoryAlert that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryAlertFindFirstOrThrowArgs} args - Arguments to find a InventoryAlert
+     * @example
+     * // Get one InventoryAlert
+     * const inventoryAlert = await prisma.inventoryAlert.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends InventoryAlertFindFirstOrThrowArgs>(args?: SelectSubset<T, InventoryAlertFindFirstOrThrowArgs<ExtArgs>>): Prisma__InventoryAlertClient<$Result.GetResult<Prisma.$InventoryAlertPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more InventoryAlerts that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryAlertFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all InventoryAlerts
+     * const inventoryAlerts = await prisma.inventoryAlert.findMany()
+     * 
+     * // Get first 10 InventoryAlerts
+     * const inventoryAlerts = await prisma.inventoryAlert.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const inventoryAlertWithIdOnly = await prisma.inventoryAlert.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends InventoryAlertFindManyArgs>(args?: SelectSubset<T, InventoryAlertFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryAlertPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a InventoryAlert.
+     * @param {InventoryAlertCreateArgs} args - Arguments to create a InventoryAlert.
+     * @example
+     * // Create one InventoryAlert
+     * const InventoryAlert = await prisma.inventoryAlert.create({
+     *   data: {
+     *     // ... data to create a InventoryAlert
+     *   }
+     * })
+     * 
+     */
+    create<T extends InventoryAlertCreateArgs>(args: SelectSubset<T, InventoryAlertCreateArgs<ExtArgs>>): Prisma__InventoryAlertClient<$Result.GetResult<Prisma.$InventoryAlertPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many InventoryAlerts.
+     * @param {InventoryAlertCreateManyArgs} args - Arguments to create many InventoryAlerts.
+     * @example
+     * // Create many InventoryAlerts
+     * const inventoryAlert = await prisma.inventoryAlert.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends InventoryAlertCreateManyArgs>(args?: SelectSubset<T, InventoryAlertCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many InventoryAlerts and returns the data saved in the database.
+     * @param {InventoryAlertCreateManyAndReturnArgs} args - Arguments to create many InventoryAlerts.
+     * @example
+     * // Create many InventoryAlerts
+     * const inventoryAlert = await prisma.inventoryAlert.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many InventoryAlerts and only return the `id`
+     * const inventoryAlertWithIdOnly = await prisma.inventoryAlert.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends InventoryAlertCreateManyAndReturnArgs>(args?: SelectSubset<T, InventoryAlertCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryAlertPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a InventoryAlert.
+     * @param {InventoryAlertDeleteArgs} args - Arguments to delete one InventoryAlert.
+     * @example
+     * // Delete one InventoryAlert
+     * const InventoryAlert = await prisma.inventoryAlert.delete({
+     *   where: {
+     *     // ... filter to delete one InventoryAlert
+     *   }
+     * })
+     * 
+     */
+    delete<T extends InventoryAlertDeleteArgs>(args: SelectSubset<T, InventoryAlertDeleteArgs<ExtArgs>>): Prisma__InventoryAlertClient<$Result.GetResult<Prisma.$InventoryAlertPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one InventoryAlert.
+     * @param {InventoryAlertUpdateArgs} args - Arguments to update one InventoryAlert.
+     * @example
+     * // Update one InventoryAlert
+     * const inventoryAlert = await prisma.inventoryAlert.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends InventoryAlertUpdateArgs>(args: SelectSubset<T, InventoryAlertUpdateArgs<ExtArgs>>): Prisma__InventoryAlertClient<$Result.GetResult<Prisma.$InventoryAlertPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more InventoryAlerts.
+     * @param {InventoryAlertDeleteManyArgs} args - Arguments to filter InventoryAlerts to delete.
+     * @example
+     * // Delete a few InventoryAlerts
+     * const { count } = await prisma.inventoryAlert.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends InventoryAlertDeleteManyArgs>(args?: SelectSubset<T, InventoryAlertDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more InventoryAlerts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryAlertUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many InventoryAlerts
+     * const inventoryAlert = await prisma.inventoryAlert.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends InventoryAlertUpdateManyArgs>(args: SelectSubset<T, InventoryAlertUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more InventoryAlerts and returns the data updated in the database.
+     * @param {InventoryAlertUpdateManyAndReturnArgs} args - Arguments to update many InventoryAlerts.
+     * @example
+     * // Update many InventoryAlerts
+     * const inventoryAlert = await prisma.inventoryAlert.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more InventoryAlerts and only return the `id`
+     * const inventoryAlertWithIdOnly = await prisma.inventoryAlert.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends InventoryAlertUpdateManyAndReturnArgs>(args: SelectSubset<T, InventoryAlertUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryAlertPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one InventoryAlert.
+     * @param {InventoryAlertUpsertArgs} args - Arguments to update or create a InventoryAlert.
+     * @example
+     * // Update or create a InventoryAlert
+     * const inventoryAlert = await prisma.inventoryAlert.upsert({
+     *   create: {
+     *     // ... data to create a InventoryAlert
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the InventoryAlert we want to update
+     *   }
+     * })
+     */
+    upsert<T extends InventoryAlertUpsertArgs>(args: SelectSubset<T, InventoryAlertUpsertArgs<ExtArgs>>): Prisma__InventoryAlertClient<$Result.GetResult<Prisma.$InventoryAlertPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of InventoryAlerts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryAlertCountArgs} args - Arguments to filter InventoryAlerts to count.
+     * @example
+     * // Count the number of InventoryAlerts
+     * const count = await prisma.inventoryAlert.count({
+     *   where: {
+     *     // ... the filter for the InventoryAlerts we want to count
+     *   }
+     * })
+    **/
+    count<T extends InventoryAlertCountArgs>(
+      args?: Subset<T, InventoryAlertCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], InventoryAlertCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a InventoryAlert.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryAlertAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends InventoryAlertAggregateArgs>(args: Subset<T, InventoryAlertAggregateArgs>): Prisma.PrismaPromise<GetInventoryAlertAggregateType<T>>
+
+    /**
+     * Group by InventoryAlert.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryAlertGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends InventoryAlertGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: InventoryAlertGroupByArgs['orderBy'] }
+        : { orderBy?: InventoryAlertGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, InventoryAlertGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetInventoryAlertGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the InventoryAlert model
+   */
+  readonly fields: InventoryAlertFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for InventoryAlert.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__InventoryAlertClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    place<T extends InventoryPlaceDefaultArgs<ExtArgs> = {}>(args?: Subset<T, InventoryPlaceDefaultArgs<ExtArgs>>): Prisma__InventoryPlaceClient<$Result.GetResult<Prisma.$InventoryPlacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    product<T extends InventoryProductDefaultArgs<ExtArgs> = {}>(args?: Subset<T, InventoryProductDefaultArgs<ExtArgs>>): Prisma__InventoryProductClient<$Result.GetResult<Prisma.$InventoryProductPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    checklist<T extends InventoryAlert$checklistArgs<ExtArgs> = {}>(args?: Subset<T, InventoryAlert$checklistArgs<ExtArgs>>): Prisma__InventoryChecklistClient<$Result.GetResult<Prisma.$InventoryChecklistPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    checklistItem<T extends InventoryAlert$checklistItemArgs<ExtArgs> = {}>(args?: Subset<T, InventoryAlert$checklistItemArgs<ExtArgs>>): Prisma__InventoryChecklistItemClient<$Result.GetResult<Prisma.$InventoryChecklistItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the InventoryAlert model
+   */
+  interface InventoryAlertFieldRefs {
+    readonly id: FieldRef<"InventoryAlert", 'String'>
+    readonly createdAt: FieldRef<"InventoryAlert", 'DateTime'>
+    readonly updatedAt: FieldRef<"InventoryAlert", 'DateTime'>
+    readonly type: FieldRef<"InventoryAlert", 'InventoryAlertType'>
+    readonly severity: FieldRef<"InventoryAlert", 'InventoryAlertSeverity'>
+    readonly status: FieldRef<"InventoryAlert", 'InventoryAlertStatus'>
+    readonly message: FieldRef<"InventoryAlert", 'String'>
+    readonly placeId: FieldRef<"InventoryAlert", 'String'>
+    readonly productId: FieldRef<"InventoryAlert", 'String'>
+    readonly checklistId: FieldRef<"InventoryAlert", 'String'>
+    readonly checklistItemId: FieldRef<"InventoryAlert", 'String'>
+    readonly triggeredAt: FieldRef<"InventoryAlert", 'DateTime'>
+    readonly ackedAt: FieldRef<"InventoryAlert", 'DateTime'>
+    readonly ackedBy: FieldRef<"InventoryAlert", 'String'>
+    readonly resolvedAt: FieldRef<"InventoryAlert", 'DateTime'>
+    readonly resolvedBy: FieldRef<"InventoryAlert", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * InventoryAlert findUnique
+   */
+  export type InventoryAlertFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryAlert
+     */
+    select?: InventoryAlertSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryAlert
+     */
+    omit?: InventoryAlertOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryAlertInclude<ExtArgs> | null
+    /**
+     * Filter, which InventoryAlert to fetch.
+     */
+    where: InventoryAlertWhereUniqueInput
+  }
+
+  /**
+   * InventoryAlert findUniqueOrThrow
+   */
+  export type InventoryAlertFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryAlert
+     */
+    select?: InventoryAlertSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryAlert
+     */
+    omit?: InventoryAlertOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryAlertInclude<ExtArgs> | null
+    /**
+     * Filter, which InventoryAlert to fetch.
+     */
+    where: InventoryAlertWhereUniqueInput
+  }
+
+  /**
+   * InventoryAlert findFirst
+   */
+  export type InventoryAlertFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryAlert
+     */
+    select?: InventoryAlertSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryAlert
+     */
+    omit?: InventoryAlertOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryAlertInclude<ExtArgs> | null
+    /**
+     * Filter, which InventoryAlert to fetch.
+     */
+    where?: InventoryAlertWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InventoryAlerts to fetch.
+     */
+    orderBy?: InventoryAlertOrderByWithRelationInput | InventoryAlertOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for InventoryAlerts.
+     */
+    cursor?: InventoryAlertWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InventoryAlerts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InventoryAlerts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of InventoryAlerts.
+     */
+    distinct?: InventoryAlertScalarFieldEnum | InventoryAlertScalarFieldEnum[]
+  }
+
+  /**
+   * InventoryAlert findFirstOrThrow
+   */
+  export type InventoryAlertFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryAlert
+     */
+    select?: InventoryAlertSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryAlert
+     */
+    omit?: InventoryAlertOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryAlertInclude<ExtArgs> | null
+    /**
+     * Filter, which InventoryAlert to fetch.
+     */
+    where?: InventoryAlertWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InventoryAlerts to fetch.
+     */
+    orderBy?: InventoryAlertOrderByWithRelationInput | InventoryAlertOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for InventoryAlerts.
+     */
+    cursor?: InventoryAlertWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InventoryAlerts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InventoryAlerts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of InventoryAlerts.
+     */
+    distinct?: InventoryAlertScalarFieldEnum | InventoryAlertScalarFieldEnum[]
+  }
+
+  /**
+   * InventoryAlert findMany
+   */
+  export type InventoryAlertFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryAlert
+     */
+    select?: InventoryAlertSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryAlert
+     */
+    omit?: InventoryAlertOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryAlertInclude<ExtArgs> | null
+    /**
+     * Filter, which InventoryAlerts to fetch.
+     */
+    where?: InventoryAlertWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InventoryAlerts to fetch.
+     */
+    orderBy?: InventoryAlertOrderByWithRelationInput | InventoryAlertOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing InventoryAlerts.
+     */
+    cursor?: InventoryAlertWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InventoryAlerts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InventoryAlerts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of InventoryAlerts.
+     */
+    distinct?: InventoryAlertScalarFieldEnum | InventoryAlertScalarFieldEnum[]
+  }
+
+  /**
+   * InventoryAlert create
+   */
+  export type InventoryAlertCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryAlert
+     */
+    select?: InventoryAlertSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryAlert
+     */
+    omit?: InventoryAlertOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryAlertInclude<ExtArgs> | null
+    /**
+     * The data needed to create a InventoryAlert.
+     */
+    data: XOR<InventoryAlertCreateInput, InventoryAlertUncheckedCreateInput>
+  }
+
+  /**
+   * InventoryAlert createMany
+   */
+  export type InventoryAlertCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many InventoryAlerts.
+     */
+    data: InventoryAlertCreateManyInput | InventoryAlertCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * InventoryAlert createManyAndReturn
+   */
+  export type InventoryAlertCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryAlert
+     */
+    select?: InventoryAlertSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryAlert
+     */
+    omit?: InventoryAlertOmit<ExtArgs> | null
+    /**
+     * The data used to create many InventoryAlerts.
+     */
+    data: InventoryAlertCreateManyInput | InventoryAlertCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryAlertIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * InventoryAlert update
+   */
+  export type InventoryAlertUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryAlert
+     */
+    select?: InventoryAlertSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryAlert
+     */
+    omit?: InventoryAlertOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryAlertInclude<ExtArgs> | null
+    /**
+     * The data needed to update a InventoryAlert.
+     */
+    data: XOR<InventoryAlertUpdateInput, InventoryAlertUncheckedUpdateInput>
+    /**
+     * Choose, which InventoryAlert to update.
+     */
+    where: InventoryAlertWhereUniqueInput
+  }
+
+  /**
+   * InventoryAlert updateMany
+   */
+  export type InventoryAlertUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update InventoryAlerts.
+     */
+    data: XOR<InventoryAlertUpdateManyMutationInput, InventoryAlertUncheckedUpdateManyInput>
+    /**
+     * Filter which InventoryAlerts to update
+     */
+    where?: InventoryAlertWhereInput
+    /**
+     * Limit how many InventoryAlerts to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * InventoryAlert updateManyAndReturn
+   */
+  export type InventoryAlertUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryAlert
+     */
+    select?: InventoryAlertSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryAlert
+     */
+    omit?: InventoryAlertOmit<ExtArgs> | null
+    /**
+     * The data used to update InventoryAlerts.
+     */
+    data: XOR<InventoryAlertUpdateManyMutationInput, InventoryAlertUncheckedUpdateManyInput>
+    /**
+     * Filter which InventoryAlerts to update
+     */
+    where?: InventoryAlertWhereInput
+    /**
+     * Limit how many InventoryAlerts to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryAlertIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * InventoryAlert upsert
+   */
+  export type InventoryAlertUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryAlert
+     */
+    select?: InventoryAlertSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryAlert
+     */
+    omit?: InventoryAlertOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryAlertInclude<ExtArgs> | null
+    /**
+     * The filter to search for the InventoryAlert to update in case it exists.
+     */
+    where: InventoryAlertWhereUniqueInput
+    /**
+     * In case the InventoryAlert found by the `where` argument doesn't exist, create a new InventoryAlert with this data.
+     */
+    create: XOR<InventoryAlertCreateInput, InventoryAlertUncheckedCreateInput>
+    /**
+     * In case the InventoryAlert was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<InventoryAlertUpdateInput, InventoryAlertUncheckedUpdateInput>
+  }
+
+  /**
+   * InventoryAlert delete
+   */
+  export type InventoryAlertDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryAlert
+     */
+    select?: InventoryAlertSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryAlert
+     */
+    omit?: InventoryAlertOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryAlertInclude<ExtArgs> | null
+    /**
+     * Filter which InventoryAlert to delete.
+     */
+    where: InventoryAlertWhereUniqueInput
+  }
+
+  /**
+   * InventoryAlert deleteMany
+   */
+  export type InventoryAlertDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which InventoryAlerts to delete
+     */
+    where?: InventoryAlertWhereInput
+    /**
+     * Limit how many InventoryAlerts to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * InventoryAlert.checklist
+   */
+  export type InventoryAlert$checklistArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryChecklist
+     */
+    select?: InventoryChecklistSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryChecklist
+     */
+    omit?: InventoryChecklistOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryChecklistInclude<ExtArgs> | null
+    where?: InventoryChecklistWhereInput
+  }
+
+  /**
+   * InventoryAlert.checklistItem
+   */
+  export type InventoryAlert$checklistItemArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryChecklistItem
+     */
+    select?: InventoryChecklistItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryChecklistItem
+     */
+    omit?: InventoryChecklistItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryChecklistItemInclude<ExtArgs> | null
+    where?: InventoryChecklistItemWhereInput
+  }
+
+  /**
+   * InventoryAlert without action
+   */
+  export type InventoryAlertDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryAlert
+     */
+    select?: InventoryAlertSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryAlert
+     */
+    omit?: InventoryAlertOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryAlertInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model InventoryStockEvent
+   */
+
+  export type AggregateInventoryStockEvent = {
+    _count: InventoryStockEventCountAggregateOutputType | null
+    _avg: InventoryStockEventAvgAggregateOutputType | null
+    _sum: InventoryStockEventSumAggregateOutputType | null
+    _min: InventoryStockEventMinAggregateOutputType | null
+    _max: InventoryStockEventMaxAggregateOutputType | null
+  }
+
+  export type InventoryStockEventAvgAggregateOutputType = {
+    beforeQuantity: number | null
+    afterQuantity: number | null
+  }
+
+  export type InventoryStockEventSumAggregateOutputType = {
+    beforeQuantity: number | null
+    afterQuantity: number | null
+  }
+
+  export type InventoryStockEventMinAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    eventType: string | null
+    placeId: string | null
+    productId: string | null
+    beforeQuantity: number | null
+    afterQuantity: number | null
+    actorId: string | null
+    source: string | null
+  }
+
+  export type InventoryStockEventMaxAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    eventType: string | null
+    placeId: string | null
+    productId: string | null
+    beforeQuantity: number | null
+    afterQuantity: number | null
+    actorId: string | null
+    source: string | null
+  }
+
+  export type InventoryStockEventCountAggregateOutputType = {
+    id: number
+    createdAt: number
+    eventType: number
+    placeId: number
+    productId: number
+    beforeQuantity: number
+    afterQuantity: number
+    actorId: number
+    source: number
+    metadata: number
+    _all: number
+  }
+
+
+  export type InventoryStockEventAvgAggregateInputType = {
+    beforeQuantity?: true
+    afterQuantity?: true
+  }
+
+  export type InventoryStockEventSumAggregateInputType = {
+    beforeQuantity?: true
+    afterQuantity?: true
+  }
+
+  export type InventoryStockEventMinAggregateInputType = {
+    id?: true
+    createdAt?: true
+    eventType?: true
+    placeId?: true
+    productId?: true
+    beforeQuantity?: true
+    afterQuantity?: true
+    actorId?: true
+    source?: true
+  }
+
+  export type InventoryStockEventMaxAggregateInputType = {
+    id?: true
+    createdAt?: true
+    eventType?: true
+    placeId?: true
+    productId?: true
+    beforeQuantity?: true
+    afterQuantity?: true
+    actorId?: true
+    source?: true
+  }
+
+  export type InventoryStockEventCountAggregateInputType = {
+    id?: true
+    createdAt?: true
+    eventType?: true
+    placeId?: true
+    productId?: true
+    beforeQuantity?: true
+    afterQuantity?: true
+    actorId?: true
+    source?: true
+    metadata?: true
+    _all?: true
+  }
+
+  export type InventoryStockEventAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which InventoryStockEvent to aggregate.
+     */
+    where?: InventoryStockEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InventoryStockEvents to fetch.
+     */
+    orderBy?: InventoryStockEventOrderByWithRelationInput | InventoryStockEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: InventoryStockEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InventoryStockEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InventoryStockEvents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned InventoryStockEvents
+    **/
+    _count?: true | InventoryStockEventCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: InventoryStockEventAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: InventoryStockEventSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: InventoryStockEventMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: InventoryStockEventMaxAggregateInputType
+  }
+
+  export type GetInventoryStockEventAggregateType<T extends InventoryStockEventAggregateArgs> = {
+        [P in keyof T & keyof AggregateInventoryStockEvent]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateInventoryStockEvent[P]>
+      : GetScalarType<T[P], AggregateInventoryStockEvent[P]>
+  }
+
+
+
+
+  export type InventoryStockEventGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InventoryStockEventWhereInput
+    orderBy?: InventoryStockEventOrderByWithAggregationInput | InventoryStockEventOrderByWithAggregationInput[]
+    by: InventoryStockEventScalarFieldEnum[] | InventoryStockEventScalarFieldEnum
+    having?: InventoryStockEventScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: InventoryStockEventCountAggregateInputType | true
+    _avg?: InventoryStockEventAvgAggregateInputType
+    _sum?: InventoryStockEventSumAggregateInputType
+    _min?: InventoryStockEventMinAggregateInputType
+    _max?: InventoryStockEventMaxAggregateInputType
+  }
+
+  export type InventoryStockEventGroupByOutputType = {
+    id: string
+    createdAt: Date
+    eventType: string
+    placeId: string
+    productId: string
+    beforeQuantity: number | null
+    afterQuantity: number | null
+    actorId: string | null
+    source: string
+    metadata: JsonValue | null
+    _count: InventoryStockEventCountAggregateOutputType | null
+    _avg: InventoryStockEventAvgAggregateOutputType | null
+    _sum: InventoryStockEventSumAggregateOutputType | null
+    _min: InventoryStockEventMinAggregateOutputType | null
+    _max: InventoryStockEventMaxAggregateOutputType | null
+  }
+
+  type GetInventoryStockEventGroupByPayload<T extends InventoryStockEventGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<InventoryStockEventGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof InventoryStockEventGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], InventoryStockEventGroupByOutputType[P]>
+            : GetScalarType<T[P], InventoryStockEventGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type InventoryStockEventSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    eventType?: boolean
+    placeId?: boolean
+    productId?: boolean
+    beforeQuantity?: boolean
+    afterQuantity?: boolean
+    actorId?: boolean
+    source?: boolean
+    metadata?: boolean
+    place?: boolean | InventoryPlaceDefaultArgs<ExtArgs>
+    product?: boolean | InventoryProductDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["inventoryStockEvent"]>
+
+  export type InventoryStockEventSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    eventType?: boolean
+    placeId?: boolean
+    productId?: boolean
+    beforeQuantity?: boolean
+    afterQuantity?: boolean
+    actorId?: boolean
+    source?: boolean
+    metadata?: boolean
+    place?: boolean | InventoryPlaceDefaultArgs<ExtArgs>
+    product?: boolean | InventoryProductDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["inventoryStockEvent"]>
+
+  export type InventoryStockEventSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    eventType?: boolean
+    placeId?: boolean
+    productId?: boolean
+    beforeQuantity?: boolean
+    afterQuantity?: boolean
+    actorId?: boolean
+    source?: boolean
+    metadata?: boolean
+    place?: boolean | InventoryPlaceDefaultArgs<ExtArgs>
+    product?: boolean | InventoryProductDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["inventoryStockEvent"]>
+
+  export type InventoryStockEventSelectScalar = {
+    id?: boolean
+    createdAt?: boolean
+    eventType?: boolean
+    placeId?: boolean
+    productId?: boolean
+    beforeQuantity?: boolean
+    afterQuantity?: boolean
+    actorId?: boolean
+    source?: boolean
+    metadata?: boolean
+  }
+
+  export type InventoryStockEventOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "eventType" | "placeId" | "productId" | "beforeQuantity" | "afterQuantity" | "actorId" | "source" | "metadata", ExtArgs["result"]["inventoryStockEvent"]>
+  export type InventoryStockEventInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    place?: boolean | InventoryPlaceDefaultArgs<ExtArgs>
+    product?: boolean | InventoryProductDefaultArgs<ExtArgs>
+  }
+  export type InventoryStockEventIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    place?: boolean | InventoryPlaceDefaultArgs<ExtArgs>
+    product?: boolean | InventoryProductDefaultArgs<ExtArgs>
+  }
+  export type InventoryStockEventIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    place?: boolean | InventoryPlaceDefaultArgs<ExtArgs>
+    product?: boolean | InventoryProductDefaultArgs<ExtArgs>
+  }
+
+  export type $InventoryStockEventPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "InventoryStockEvent"
+    objects: {
+      place: Prisma.$InventoryPlacePayload<ExtArgs>
+      product: Prisma.$InventoryProductPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      createdAt: Date
+      eventType: string
+      placeId: string
+      productId: string
+      beforeQuantity: number | null
+      afterQuantity: number | null
+      actorId: string | null
+      source: string
+      metadata: Prisma.JsonValue | null
+    }, ExtArgs["result"]["inventoryStockEvent"]>
+    composites: {}
+  }
+
+  type InventoryStockEventGetPayload<S extends boolean | null | undefined | InventoryStockEventDefaultArgs> = $Result.GetResult<Prisma.$InventoryStockEventPayload, S>
+
+  type InventoryStockEventCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<InventoryStockEventFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: InventoryStockEventCountAggregateInputType | true
+    }
+
+  export interface InventoryStockEventDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['InventoryStockEvent'], meta: { name: 'InventoryStockEvent' } }
+    /**
+     * Find zero or one InventoryStockEvent that matches the filter.
+     * @param {InventoryStockEventFindUniqueArgs} args - Arguments to find a InventoryStockEvent
+     * @example
+     * // Get one InventoryStockEvent
+     * const inventoryStockEvent = await prisma.inventoryStockEvent.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends InventoryStockEventFindUniqueArgs>(args: SelectSubset<T, InventoryStockEventFindUniqueArgs<ExtArgs>>): Prisma__InventoryStockEventClient<$Result.GetResult<Prisma.$InventoryStockEventPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one InventoryStockEvent that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {InventoryStockEventFindUniqueOrThrowArgs} args - Arguments to find a InventoryStockEvent
+     * @example
+     * // Get one InventoryStockEvent
+     * const inventoryStockEvent = await prisma.inventoryStockEvent.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends InventoryStockEventFindUniqueOrThrowArgs>(args: SelectSubset<T, InventoryStockEventFindUniqueOrThrowArgs<ExtArgs>>): Prisma__InventoryStockEventClient<$Result.GetResult<Prisma.$InventoryStockEventPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first InventoryStockEvent that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryStockEventFindFirstArgs} args - Arguments to find a InventoryStockEvent
+     * @example
+     * // Get one InventoryStockEvent
+     * const inventoryStockEvent = await prisma.inventoryStockEvent.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends InventoryStockEventFindFirstArgs>(args?: SelectSubset<T, InventoryStockEventFindFirstArgs<ExtArgs>>): Prisma__InventoryStockEventClient<$Result.GetResult<Prisma.$InventoryStockEventPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first InventoryStockEvent that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryStockEventFindFirstOrThrowArgs} args - Arguments to find a InventoryStockEvent
+     * @example
+     * // Get one InventoryStockEvent
+     * const inventoryStockEvent = await prisma.inventoryStockEvent.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends InventoryStockEventFindFirstOrThrowArgs>(args?: SelectSubset<T, InventoryStockEventFindFirstOrThrowArgs<ExtArgs>>): Prisma__InventoryStockEventClient<$Result.GetResult<Prisma.$InventoryStockEventPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more InventoryStockEvents that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryStockEventFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all InventoryStockEvents
+     * const inventoryStockEvents = await prisma.inventoryStockEvent.findMany()
+     * 
+     * // Get first 10 InventoryStockEvents
+     * const inventoryStockEvents = await prisma.inventoryStockEvent.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const inventoryStockEventWithIdOnly = await prisma.inventoryStockEvent.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends InventoryStockEventFindManyArgs>(args?: SelectSubset<T, InventoryStockEventFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryStockEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a InventoryStockEvent.
+     * @param {InventoryStockEventCreateArgs} args - Arguments to create a InventoryStockEvent.
+     * @example
+     * // Create one InventoryStockEvent
+     * const InventoryStockEvent = await prisma.inventoryStockEvent.create({
+     *   data: {
+     *     // ... data to create a InventoryStockEvent
+     *   }
+     * })
+     * 
+     */
+    create<T extends InventoryStockEventCreateArgs>(args: SelectSubset<T, InventoryStockEventCreateArgs<ExtArgs>>): Prisma__InventoryStockEventClient<$Result.GetResult<Prisma.$InventoryStockEventPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many InventoryStockEvents.
+     * @param {InventoryStockEventCreateManyArgs} args - Arguments to create many InventoryStockEvents.
+     * @example
+     * // Create many InventoryStockEvents
+     * const inventoryStockEvent = await prisma.inventoryStockEvent.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends InventoryStockEventCreateManyArgs>(args?: SelectSubset<T, InventoryStockEventCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many InventoryStockEvents and returns the data saved in the database.
+     * @param {InventoryStockEventCreateManyAndReturnArgs} args - Arguments to create many InventoryStockEvents.
+     * @example
+     * // Create many InventoryStockEvents
+     * const inventoryStockEvent = await prisma.inventoryStockEvent.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many InventoryStockEvents and only return the `id`
+     * const inventoryStockEventWithIdOnly = await prisma.inventoryStockEvent.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends InventoryStockEventCreateManyAndReturnArgs>(args?: SelectSubset<T, InventoryStockEventCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryStockEventPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a InventoryStockEvent.
+     * @param {InventoryStockEventDeleteArgs} args - Arguments to delete one InventoryStockEvent.
+     * @example
+     * // Delete one InventoryStockEvent
+     * const InventoryStockEvent = await prisma.inventoryStockEvent.delete({
+     *   where: {
+     *     // ... filter to delete one InventoryStockEvent
+     *   }
+     * })
+     * 
+     */
+    delete<T extends InventoryStockEventDeleteArgs>(args: SelectSubset<T, InventoryStockEventDeleteArgs<ExtArgs>>): Prisma__InventoryStockEventClient<$Result.GetResult<Prisma.$InventoryStockEventPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one InventoryStockEvent.
+     * @param {InventoryStockEventUpdateArgs} args - Arguments to update one InventoryStockEvent.
+     * @example
+     * // Update one InventoryStockEvent
+     * const inventoryStockEvent = await prisma.inventoryStockEvent.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends InventoryStockEventUpdateArgs>(args: SelectSubset<T, InventoryStockEventUpdateArgs<ExtArgs>>): Prisma__InventoryStockEventClient<$Result.GetResult<Prisma.$InventoryStockEventPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more InventoryStockEvents.
+     * @param {InventoryStockEventDeleteManyArgs} args - Arguments to filter InventoryStockEvents to delete.
+     * @example
+     * // Delete a few InventoryStockEvents
+     * const { count } = await prisma.inventoryStockEvent.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends InventoryStockEventDeleteManyArgs>(args?: SelectSubset<T, InventoryStockEventDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more InventoryStockEvents.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryStockEventUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many InventoryStockEvents
+     * const inventoryStockEvent = await prisma.inventoryStockEvent.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends InventoryStockEventUpdateManyArgs>(args: SelectSubset<T, InventoryStockEventUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more InventoryStockEvents and returns the data updated in the database.
+     * @param {InventoryStockEventUpdateManyAndReturnArgs} args - Arguments to update many InventoryStockEvents.
+     * @example
+     * // Update many InventoryStockEvents
+     * const inventoryStockEvent = await prisma.inventoryStockEvent.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more InventoryStockEvents and only return the `id`
+     * const inventoryStockEventWithIdOnly = await prisma.inventoryStockEvent.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends InventoryStockEventUpdateManyAndReturnArgs>(args: SelectSubset<T, InventoryStockEventUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryStockEventPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one InventoryStockEvent.
+     * @param {InventoryStockEventUpsertArgs} args - Arguments to update or create a InventoryStockEvent.
+     * @example
+     * // Update or create a InventoryStockEvent
+     * const inventoryStockEvent = await prisma.inventoryStockEvent.upsert({
+     *   create: {
+     *     // ... data to create a InventoryStockEvent
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the InventoryStockEvent we want to update
+     *   }
+     * })
+     */
+    upsert<T extends InventoryStockEventUpsertArgs>(args: SelectSubset<T, InventoryStockEventUpsertArgs<ExtArgs>>): Prisma__InventoryStockEventClient<$Result.GetResult<Prisma.$InventoryStockEventPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of InventoryStockEvents.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryStockEventCountArgs} args - Arguments to filter InventoryStockEvents to count.
+     * @example
+     * // Count the number of InventoryStockEvents
+     * const count = await prisma.inventoryStockEvent.count({
+     *   where: {
+     *     // ... the filter for the InventoryStockEvents we want to count
+     *   }
+     * })
+    **/
+    count<T extends InventoryStockEventCountArgs>(
+      args?: Subset<T, InventoryStockEventCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], InventoryStockEventCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a InventoryStockEvent.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryStockEventAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends InventoryStockEventAggregateArgs>(args: Subset<T, InventoryStockEventAggregateArgs>): Prisma.PrismaPromise<GetInventoryStockEventAggregateType<T>>
+
+    /**
+     * Group by InventoryStockEvent.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryStockEventGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends InventoryStockEventGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: InventoryStockEventGroupByArgs['orderBy'] }
+        : { orderBy?: InventoryStockEventGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, InventoryStockEventGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetInventoryStockEventGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the InventoryStockEvent model
+   */
+  readonly fields: InventoryStockEventFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for InventoryStockEvent.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__InventoryStockEventClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    place<T extends InventoryPlaceDefaultArgs<ExtArgs> = {}>(args?: Subset<T, InventoryPlaceDefaultArgs<ExtArgs>>): Prisma__InventoryPlaceClient<$Result.GetResult<Prisma.$InventoryPlacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    product<T extends InventoryProductDefaultArgs<ExtArgs> = {}>(args?: Subset<T, InventoryProductDefaultArgs<ExtArgs>>): Prisma__InventoryProductClient<$Result.GetResult<Prisma.$InventoryProductPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the InventoryStockEvent model
+   */
+  interface InventoryStockEventFieldRefs {
+    readonly id: FieldRef<"InventoryStockEvent", 'String'>
+    readonly createdAt: FieldRef<"InventoryStockEvent", 'DateTime'>
+    readonly eventType: FieldRef<"InventoryStockEvent", 'String'>
+    readonly placeId: FieldRef<"InventoryStockEvent", 'String'>
+    readonly productId: FieldRef<"InventoryStockEvent", 'String'>
+    readonly beforeQuantity: FieldRef<"InventoryStockEvent", 'Int'>
+    readonly afterQuantity: FieldRef<"InventoryStockEvent", 'Int'>
+    readonly actorId: FieldRef<"InventoryStockEvent", 'String'>
+    readonly source: FieldRef<"InventoryStockEvent", 'String'>
+    readonly metadata: FieldRef<"InventoryStockEvent", 'Json'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * InventoryStockEvent findUnique
+   */
+  export type InventoryStockEventFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryStockEvent
+     */
+    select?: InventoryStockEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryStockEvent
+     */
+    omit?: InventoryStockEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryStockEventInclude<ExtArgs> | null
+    /**
+     * Filter, which InventoryStockEvent to fetch.
+     */
+    where: InventoryStockEventWhereUniqueInput
+  }
+
+  /**
+   * InventoryStockEvent findUniqueOrThrow
+   */
+  export type InventoryStockEventFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryStockEvent
+     */
+    select?: InventoryStockEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryStockEvent
+     */
+    omit?: InventoryStockEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryStockEventInclude<ExtArgs> | null
+    /**
+     * Filter, which InventoryStockEvent to fetch.
+     */
+    where: InventoryStockEventWhereUniqueInput
+  }
+
+  /**
+   * InventoryStockEvent findFirst
+   */
+  export type InventoryStockEventFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryStockEvent
+     */
+    select?: InventoryStockEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryStockEvent
+     */
+    omit?: InventoryStockEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryStockEventInclude<ExtArgs> | null
+    /**
+     * Filter, which InventoryStockEvent to fetch.
+     */
+    where?: InventoryStockEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InventoryStockEvents to fetch.
+     */
+    orderBy?: InventoryStockEventOrderByWithRelationInput | InventoryStockEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for InventoryStockEvents.
+     */
+    cursor?: InventoryStockEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InventoryStockEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InventoryStockEvents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of InventoryStockEvents.
+     */
+    distinct?: InventoryStockEventScalarFieldEnum | InventoryStockEventScalarFieldEnum[]
+  }
+
+  /**
+   * InventoryStockEvent findFirstOrThrow
+   */
+  export type InventoryStockEventFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryStockEvent
+     */
+    select?: InventoryStockEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryStockEvent
+     */
+    omit?: InventoryStockEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryStockEventInclude<ExtArgs> | null
+    /**
+     * Filter, which InventoryStockEvent to fetch.
+     */
+    where?: InventoryStockEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InventoryStockEvents to fetch.
+     */
+    orderBy?: InventoryStockEventOrderByWithRelationInput | InventoryStockEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for InventoryStockEvents.
+     */
+    cursor?: InventoryStockEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InventoryStockEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InventoryStockEvents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of InventoryStockEvents.
+     */
+    distinct?: InventoryStockEventScalarFieldEnum | InventoryStockEventScalarFieldEnum[]
+  }
+
+  /**
+   * InventoryStockEvent findMany
+   */
+  export type InventoryStockEventFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryStockEvent
+     */
+    select?: InventoryStockEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryStockEvent
+     */
+    omit?: InventoryStockEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryStockEventInclude<ExtArgs> | null
+    /**
+     * Filter, which InventoryStockEvents to fetch.
+     */
+    where?: InventoryStockEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InventoryStockEvents to fetch.
+     */
+    orderBy?: InventoryStockEventOrderByWithRelationInput | InventoryStockEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing InventoryStockEvents.
+     */
+    cursor?: InventoryStockEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InventoryStockEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InventoryStockEvents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of InventoryStockEvents.
+     */
+    distinct?: InventoryStockEventScalarFieldEnum | InventoryStockEventScalarFieldEnum[]
+  }
+
+  /**
+   * InventoryStockEvent create
+   */
+  export type InventoryStockEventCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryStockEvent
+     */
+    select?: InventoryStockEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryStockEvent
+     */
+    omit?: InventoryStockEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryStockEventInclude<ExtArgs> | null
+    /**
+     * The data needed to create a InventoryStockEvent.
+     */
+    data: XOR<InventoryStockEventCreateInput, InventoryStockEventUncheckedCreateInput>
+  }
+
+  /**
+   * InventoryStockEvent createMany
+   */
+  export type InventoryStockEventCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many InventoryStockEvents.
+     */
+    data: InventoryStockEventCreateManyInput | InventoryStockEventCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * InventoryStockEvent createManyAndReturn
+   */
+  export type InventoryStockEventCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryStockEvent
+     */
+    select?: InventoryStockEventSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryStockEvent
+     */
+    omit?: InventoryStockEventOmit<ExtArgs> | null
+    /**
+     * The data used to create many InventoryStockEvents.
+     */
+    data: InventoryStockEventCreateManyInput | InventoryStockEventCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryStockEventIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * InventoryStockEvent update
+   */
+  export type InventoryStockEventUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryStockEvent
+     */
+    select?: InventoryStockEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryStockEvent
+     */
+    omit?: InventoryStockEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryStockEventInclude<ExtArgs> | null
+    /**
+     * The data needed to update a InventoryStockEvent.
+     */
+    data: XOR<InventoryStockEventUpdateInput, InventoryStockEventUncheckedUpdateInput>
+    /**
+     * Choose, which InventoryStockEvent to update.
+     */
+    where: InventoryStockEventWhereUniqueInput
+  }
+
+  /**
+   * InventoryStockEvent updateMany
+   */
+  export type InventoryStockEventUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update InventoryStockEvents.
+     */
+    data: XOR<InventoryStockEventUpdateManyMutationInput, InventoryStockEventUncheckedUpdateManyInput>
+    /**
+     * Filter which InventoryStockEvents to update
+     */
+    where?: InventoryStockEventWhereInput
+    /**
+     * Limit how many InventoryStockEvents to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * InventoryStockEvent updateManyAndReturn
+   */
+  export type InventoryStockEventUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryStockEvent
+     */
+    select?: InventoryStockEventSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryStockEvent
+     */
+    omit?: InventoryStockEventOmit<ExtArgs> | null
+    /**
+     * The data used to update InventoryStockEvents.
+     */
+    data: XOR<InventoryStockEventUpdateManyMutationInput, InventoryStockEventUncheckedUpdateManyInput>
+    /**
+     * Filter which InventoryStockEvents to update
+     */
+    where?: InventoryStockEventWhereInput
+    /**
+     * Limit how many InventoryStockEvents to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryStockEventIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * InventoryStockEvent upsert
+   */
+  export type InventoryStockEventUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryStockEvent
+     */
+    select?: InventoryStockEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryStockEvent
+     */
+    omit?: InventoryStockEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryStockEventInclude<ExtArgs> | null
+    /**
+     * The filter to search for the InventoryStockEvent to update in case it exists.
+     */
+    where: InventoryStockEventWhereUniqueInput
+    /**
+     * In case the InventoryStockEvent found by the `where` argument doesn't exist, create a new InventoryStockEvent with this data.
+     */
+    create: XOR<InventoryStockEventCreateInput, InventoryStockEventUncheckedCreateInput>
+    /**
+     * In case the InventoryStockEvent was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<InventoryStockEventUpdateInput, InventoryStockEventUncheckedUpdateInput>
+  }
+
+  /**
+   * InventoryStockEvent delete
+   */
+  export type InventoryStockEventDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryStockEvent
+     */
+    select?: InventoryStockEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryStockEvent
+     */
+    omit?: InventoryStockEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryStockEventInclude<ExtArgs> | null
+    /**
+     * Filter which InventoryStockEvent to delete.
+     */
+    where: InventoryStockEventWhereUniqueInput
+  }
+
+  /**
+   * InventoryStockEvent deleteMany
+   */
+  export type InventoryStockEventDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which InventoryStockEvents to delete
+     */
+    where?: InventoryStockEventWhereInput
+    /**
+     * Limit how many InventoryStockEvents to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * InventoryStockEvent without action
+   */
+  export type InventoryStockEventDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryStockEvent
+     */
+    select?: InventoryStockEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryStockEvent
+     */
+    omit?: InventoryStockEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryStockEventInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -36722,6 +46124,123 @@ export namespace Prisma {
   export type OrderProductsScalarFieldEnum = (typeof OrderProductsScalarFieldEnum)[keyof typeof OrderProductsScalarFieldEnum]
 
 
+  export const InventoryPlaceScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    name: 'name',
+    type: 'type',
+    active: 'active',
+    displayOrder: 'displayOrder',
+    notes: 'notes'
+  };
+
+  export type InventoryPlaceScalarFieldEnum = (typeof InventoryPlaceScalarFieldEnum)[keyof typeof InventoryPlaceScalarFieldEnum]
+
+
+  export const InventoryProductScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    name: 'name',
+    unit: 'unit',
+    active: 'active',
+    minQuantity: 'minQuantity',
+    alertThreshold: 'alertThreshold',
+    requiresRefill: 'requiresRefill',
+    notifyBelowThreshold: 'notifyBelowThreshold',
+    notes: 'notes'
+  };
+
+  export type InventoryProductScalarFieldEnum = (typeof InventoryProductScalarFieldEnum)[keyof typeof InventoryProductScalarFieldEnum]
+
+
+  export const InventoryStockScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    placeId: 'placeId',
+    productId: 'productId',
+    currentQuantity: 'currentQuantity',
+    includeInChecklist: 'includeInChecklist',
+    lastCheckedAt: 'lastCheckedAt',
+    lastCheckedBy: 'lastCheckedBy'
+  };
+
+  export type InventoryStockScalarFieldEnum = (typeof InventoryStockScalarFieldEnum)[keyof typeof InventoryStockScalarFieldEnum]
+
+
+  export const InventoryChecklistScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    checkDate: 'checkDate',
+    status: 'status',
+    startedBy: 'startedBy',
+    submittedBy: 'submittedBy',
+    submittedAt: 'submittedAt'
+  };
+
+  export type InventoryChecklistScalarFieldEnum = (typeof InventoryChecklistScalarFieldEnum)[keyof typeof InventoryChecklistScalarFieldEnum]
+
+
+  export const InventoryChecklistItemScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    checklistId: 'checklistId',
+    placeId: 'placeId',
+    productId: 'productId',
+    expectedMinQuantity: 'expectedMinQuantity',
+    countedQuantity: 'countedQuantity',
+    outOfStock: 'outOfStock',
+    result: 'result',
+    notes: 'notes',
+    checkedAt: 'checkedAt',
+    checkedBy: 'checkedBy'
+  };
+
+  export type InventoryChecklistItemScalarFieldEnum = (typeof InventoryChecklistItemScalarFieldEnum)[keyof typeof InventoryChecklistItemScalarFieldEnum]
+
+
+  export const InventoryAlertScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    type: 'type',
+    severity: 'severity',
+    status: 'status',
+    message: 'message',
+    placeId: 'placeId',
+    productId: 'productId',
+    checklistId: 'checklistId',
+    checklistItemId: 'checklistItemId',
+    triggeredAt: 'triggeredAt',
+    ackedAt: 'ackedAt',
+    ackedBy: 'ackedBy',
+    resolvedAt: 'resolvedAt',
+    resolvedBy: 'resolvedBy'
+  };
+
+  export type InventoryAlertScalarFieldEnum = (typeof InventoryAlertScalarFieldEnum)[keyof typeof InventoryAlertScalarFieldEnum]
+
+
+  export const InventoryStockEventScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    eventType: 'eventType',
+    placeId: 'placeId',
+    productId: 'productId',
+    beforeQuantity: 'beforeQuantity',
+    afterQuantity: 'afterQuantity',
+    actorId: 'actorId',
+    source: 'source',
+    metadata: 'metadata'
+  };
+
+  export type InventoryStockEventScalarFieldEnum = (typeof InventoryStockEventScalarFieldEnum)[keyof typeof InventoryStockEventScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -36912,6 +46431,90 @@ export namespace Prisma {
    * Reference to a field of type 'PaymentType[]'
    */
   export type ListEnumPaymentTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'InventoryPlaceType'
+   */
+  export type EnumInventoryPlaceTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InventoryPlaceType'>
+    
+
+
+  /**
+   * Reference to a field of type 'InventoryPlaceType[]'
+   */
+  export type ListEnumInventoryPlaceTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InventoryPlaceType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'InventoryChecklistStatus'
+   */
+  export type EnumInventoryChecklistStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InventoryChecklistStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'InventoryChecklistStatus[]'
+   */
+  export type ListEnumInventoryChecklistStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InventoryChecklistStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'InventoryChecklistItemResult'
+   */
+  export type EnumInventoryChecklistItemResultFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InventoryChecklistItemResult'>
+    
+
+
+  /**
+   * Reference to a field of type 'InventoryChecklistItemResult[]'
+   */
+  export type ListEnumInventoryChecklistItemResultFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InventoryChecklistItemResult[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'InventoryAlertType'
+   */
+  export type EnumInventoryAlertTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InventoryAlertType'>
+    
+
+
+  /**
+   * Reference to a field of type 'InventoryAlertType[]'
+   */
+  export type ListEnumInventoryAlertTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InventoryAlertType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'InventoryAlertSeverity'
+   */
+  export type EnumInventoryAlertSeverityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InventoryAlertSeverity'>
+    
+
+
+  /**
+   * Reference to a field of type 'InventoryAlertSeverity[]'
+   */
+  export type ListEnumInventoryAlertSeverityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InventoryAlertSeverity[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'InventoryAlertStatus'
+   */
+  export type EnumInventoryAlertStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InventoryAlertStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'InventoryAlertStatus[]'
+   */
+  export type ListEnumInventoryAlertStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InventoryAlertStatus[]'>
     
 
 
@@ -38858,6 +48461,648 @@ export namespace Prisma {
     fullAmount?: IntWithAggregatesFilter<"OrderProducts"> | number
     amount?: IntWithAggregatesFilter<"OrderProducts"> | number
     orderId?: StringNullableWithAggregatesFilter<"OrderProducts"> | string | null
+  }
+
+  export type InventoryPlaceWhereInput = {
+    AND?: InventoryPlaceWhereInput | InventoryPlaceWhereInput[]
+    OR?: InventoryPlaceWhereInput[]
+    NOT?: InventoryPlaceWhereInput | InventoryPlaceWhereInput[]
+    id?: StringFilter<"InventoryPlace"> | string
+    createdAt?: DateTimeFilter<"InventoryPlace"> | Date | string
+    updatedAt?: DateTimeFilter<"InventoryPlace"> | Date | string
+    name?: StringFilter<"InventoryPlace"> | string
+    type?: EnumInventoryPlaceTypeFilter<"InventoryPlace"> | $Enums.InventoryPlaceType
+    active?: BoolFilter<"InventoryPlace"> | boolean
+    displayOrder?: IntNullableFilter<"InventoryPlace"> | number | null
+    notes?: StringNullableFilter<"InventoryPlace"> | string | null
+    stocks?: InventoryStockListRelationFilter
+    alerts?: InventoryAlertListRelationFilter
+    checklistItems?: InventoryChecklistItemListRelationFilter
+    stockEvents?: InventoryStockEventListRelationFilter
+  }
+
+  export type InventoryPlaceOrderByWithRelationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    name?: SortOrder
+    type?: SortOrder
+    active?: SortOrder
+    displayOrder?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
+    stocks?: InventoryStockOrderByRelationAggregateInput
+    alerts?: InventoryAlertOrderByRelationAggregateInput
+    checklistItems?: InventoryChecklistItemOrderByRelationAggregateInput
+    stockEvents?: InventoryStockEventOrderByRelationAggregateInput
+  }
+
+  export type InventoryPlaceWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: InventoryPlaceWhereInput | InventoryPlaceWhereInput[]
+    OR?: InventoryPlaceWhereInput[]
+    NOT?: InventoryPlaceWhereInput | InventoryPlaceWhereInput[]
+    createdAt?: DateTimeFilter<"InventoryPlace"> | Date | string
+    updatedAt?: DateTimeFilter<"InventoryPlace"> | Date | string
+    name?: StringFilter<"InventoryPlace"> | string
+    type?: EnumInventoryPlaceTypeFilter<"InventoryPlace"> | $Enums.InventoryPlaceType
+    active?: BoolFilter<"InventoryPlace"> | boolean
+    displayOrder?: IntNullableFilter<"InventoryPlace"> | number | null
+    notes?: StringNullableFilter<"InventoryPlace"> | string | null
+    stocks?: InventoryStockListRelationFilter
+    alerts?: InventoryAlertListRelationFilter
+    checklistItems?: InventoryChecklistItemListRelationFilter
+    stockEvents?: InventoryStockEventListRelationFilter
+  }, "id">
+
+  export type InventoryPlaceOrderByWithAggregationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    name?: SortOrder
+    type?: SortOrder
+    active?: SortOrder
+    displayOrder?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
+    _count?: InventoryPlaceCountOrderByAggregateInput
+    _avg?: InventoryPlaceAvgOrderByAggregateInput
+    _max?: InventoryPlaceMaxOrderByAggregateInput
+    _min?: InventoryPlaceMinOrderByAggregateInput
+    _sum?: InventoryPlaceSumOrderByAggregateInput
+  }
+
+  export type InventoryPlaceScalarWhereWithAggregatesInput = {
+    AND?: InventoryPlaceScalarWhereWithAggregatesInput | InventoryPlaceScalarWhereWithAggregatesInput[]
+    OR?: InventoryPlaceScalarWhereWithAggregatesInput[]
+    NOT?: InventoryPlaceScalarWhereWithAggregatesInput | InventoryPlaceScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"InventoryPlace"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"InventoryPlace"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"InventoryPlace"> | Date | string
+    name?: StringWithAggregatesFilter<"InventoryPlace"> | string
+    type?: EnumInventoryPlaceTypeWithAggregatesFilter<"InventoryPlace"> | $Enums.InventoryPlaceType
+    active?: BoolWithAggregatesFilter<"InventoryPlace"> | boolean
+    displayOrder?: IntNullableWithAggregatesFilter<"InventoryPlace"> | number | null
+    notes?: StringNullableWithAggregatesFilter<"InventoryPlace"> | string | null
+  }
+
+  export type InventoryProductWhereInput = {
+    AND?: InventoryProductWhereInput | InventoryProductWhereInput[]
+    OR?: InventoryProductWhereInput[]
+    NOT?: InventoryProductWhereInput | InventoryProductWhereInput[]
+    id?: StringFilter<"InventoryProduct"> | string
+    createdAt?: DateTimeFilter<"InventoryProduct"> | Date | string
+    updatedAt?: DateTimeFilter<"InventoryProduct"> | Date | string
+    name?: StringFilter<"InventoryProduct"> | string
+    unit?: StringFilter<"InventoryProduct"> | string
+    active?: BoolFilter<"InventoryProduct"> | boolean
+    minQuantity?: IntFilter<"InventoryProduct"> | number
+    alertThreshold?: IntNullableFilter<"InventoryProduct"> | number | null
+    requiresRefill?: BoolFilter<"InventoryProduct"> | boolean
+    notifyBelowThreshold?: BoolFilter<"InventoryProduct"> | boolean
+    notes?: StringNullableFilter<"InventoryProduct"> | string | null
+    stocks?: InventoryStockListRelationFilter
+    alerts?: InventoryAlertListRelationFilter
+    checklistItems?: InventoryChecklistItemListRelationFilter
+    stockEvents?: InventoryStockEventListRelationFilter
+  }
+
+  export type InventoryProductOrderByWithRelationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    name?: SortOrder
+    unit?: SortOrder
+    active?: SortOrder
+    minQuantity?: SortOrder
+    alertThreshold?: SortOrderInput | SortOrder
+    requiresRefill?: SortOrder
+    notifyBelowThreshold?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    stocks?: InventoryStockOrderByRelationAggregateInput
+    alerts?: InventoryAlertOrderByRelationAggregateInput
+    checklistItems?: InventoryChecklistItemOrderByRelationAggregateInput
+    stockEvents?: InventoryStockEventOrderByRelationAggregateInput
+  }
+
+  export type InventoryProductWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: InventoryProductWhereInput | InventoryProductWhereInput[]
+    OR?: InventoryProductWhereInput[]
+    NOT?: InventoryProductWhereInput | InventoryProductWhereInput[]
+    createdAt?: DateTimeFilter<"InventoryProduct"> | Date | string
+    updatedAt?: DateTimeFilter<"InventoryProduct"> | Date | string
+    name?: StringFilter<"InventoryProduct"> | string
+    unit?: StringFilter<"InventoryProduct"> | string
+    active?: BoolFilter<"InventoryProduct"> | boolean
+    minQuantity?: IntFilter<"InventoryProduct"> | number
+    alertThreshold?: IntNullableFilter<"InventoryProduct"> | number | null
+    requiresRefill?: BoolFilter<"InventoryProduct"> | boolean
+    notifyBelowThreshold?: BoolFilter<"InventoryProduct"> | boolean
+    notes?: StringNullableFilter<"InventoryProduct"> | string | null
+    stocks?: InventoryStockListRelationFilter
+    alerts?: InventoryAlertListRelationFilter
+    checklistItems?: InventoryChecklistItemListRelationFilter
+    stockEvents?: InventoryStockEventListRelationFilter
+  }, "id">
+
+  export type InventoryProductOrderByWithAggregationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    name?: SortOrder
+    unit?: SortOrder
+    active?: SortOrder
+    minQuantity?: SortOrder
+    alertThreshold?: SortOrderInput | SortOrder
+    requiresRefill?: SortOrder
+    notifyBelowThreshold?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    _count?: InventoryProductCountOrderByAggregateInput
+    _avg?: InventoryProductAvgOrderByAggregateInput
+    _max?: InventoryProductMaxOrderByAggregateInput
+    _min?: InventoryProductMinOrderByAggregateInput
+    _sum?: InventoryProductSumOrderByAggregateInput
+  }
+
+  export type InventoryProductScalarWhereWithAggregatesInput = {
+    AND?: InventoryProductScalarWhereWithAggregatesInput | InventoryProductScalarWhereWithAggregatesInput[]
+    OR?: InventoryProductScalarWhereWithAggregatesInput[]
+    NOT?: InventoryProductScalarWhereWithAggregatesInput | InventoryProductScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"InventoryProduct"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"InventoryProduct"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"InventoryProduct"> | Date | string
+    name?: StringWithAggregatesFilter<"InventoryProduct"> | string
+    unit?: StringWithAggregatesFilter<"InventoryProduct"> | string
+    active?: BoolWithAggregatesFilter<"InventoryProduct"> | boolean
+    minQuantity?: IntWithAggregatesFilter<"InventoryProduct"> | number
+    alertThreshold?: IntNullableWithAggregatesFilter<"InventoryProduct"> | number | null
+    requiresRefill?: BoolWithAggregatesFilter<"InventoryProduct"> | boolean
+    notifyBelowThreshold?: BoolWithAggregatesFilter<"InventoryProduct"> | boolean
+    notes?: StringNullableWithAggregatesFilter<"InventoryProduct"> | string | null
+  }
+
+  export type InventoryStockWhereInput = {
+    AND?: InventoryStockWhereInput | InventoryStockWhereInput[]
+    OR?: InventoryStockWhereInput[]
+    NOT?: InventoryStockWhereInput | InventoryStockWhereInput[]
+    id?: StringFilter<"InventoryStock"> | string
+    createdAt?: DateTimeFilter<"InventoryStock"> | Date | string
+    updatedAt?: DateTimeFilter<"InventoryStock"> | Date | string
+    placeId?: StringFilter<"InventoryStock"> | string
+    productId?: StringFilter<"InventoryStock"> | string
+    currentQuantity?: IntFilter<"InventoryStock"> | number
+    includeInChecklist?: BoolFilter<"InventoryStock"> | boolean
+    lastCheckedAt?: DateTimeNullableFilter<"InventoryStock"> | Date | string | null
+    lastCheckedBy?: StringNullableFilter<"InventoryStock"> | string | null
+    place?: XOR<InventoryPlaceScalarRelationFilter, InventoryPlaceWhereInput>
+    product?: XOR<InventoryProductScalarRelationFilter, InventoryProductWhereInput>
+  }
+
+  export type InventoryStockOrderByWithRelationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    placeId?: SortOrder
+    productId?: SortOrder
+    currentQuantity?: SortOrder
+    includeInChecklist?: SortOrder
+    lastCheckedAt?: SortOrderInput | SortOrder
+    lastCheckedBy?: SortOrderInput | SortOrder
+    place?: InventoryPlaceOrderByWithRelationInput
+    product?: InventoryProductOrderByWithRelationInput
+  }
+
+  export type InventoryStockWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    placeId_productId?: InventoryStockPlaceIdProductIdCompoundUniqueInput
+    AND?: InventoryStockWhereInput | InventoryStockWhereInput[]
+    OR?: InventoryStockWhereInput[]
+    NOT?: InventoryStockWhereInput | InventoryStockWhereInput[]
+    createdAt?: DateTimeFilter<"InventoryStock"> | Date | string
+    updatedAt?: DateTimeFilter<"InventoryStock"> | Date | string
+    placeId?: StringFilter<"InventoryStock"> | string
+    productId?: StringFilter<"InventoryStock"> | string
+    currentQuantity?: IntFilter<"InventoryStock"> | number
+    includeInChecklist?: BoolFilter<"InventoryStock"> | boolean
+    lastCheckedAt?: DateTimeNullableFilter<"InventoryStock"> | Date | string | null
+    lastCheckedBy?: StringNullableFilter<"InventoryStock"> | string | null
+    place?: XOR<InventoryPlaceScalarRelationFilter, InventoryPlaceWhereInput>
+    product?: XOR<InventoryProductScalarRelationFilter, InventoryProductWhereInput>
+  }, "id" | "placeId_productId">
+
+  export type InventoryStockOrderByWithAggregationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    placeId?: SortOrder
+    productId?: SortOrder
+    currentQuantity?: SortOrder
+    includeInChecklist?: SortOrder
+    lastCheckedAt?: SortOrderInput | SortOrder
+    lastCheckedBy?: SortOrderInput | SortOrder
+    _count?: InventoryStockCountOrderByAggregateInput
+    _avg?: InventoryStockAvgOrderByAggregateInput
+    _max?: InventoryStockMaxOrderByAggregateInput
+    _min?: InventoryStockMinOrderByAggregateInput
+    _sum?: InventoryStockSumOrderByAggregateInput
+  }
+
+  export type InventoryStockScalarWhereWithAggregatesInput = {
+    AND?: InventoryStockScalarWhereWithAggregatesInput | InventoryStockScalarWhereWithAggregatesInput[]
+    OR?: InventoryStockScalarWhereWithAggregatesInput[]
+    NOT?: InventoryStockScalarWhereWithAggregatesInput | InventoryStockScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"InventoryStock"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"InventoryStock"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"InventoryStock"> | Date | string
+    placeId?: StringWithAggregatesFilter<"InventoryStock"> | string
+    productId?: StringWithAggregatesFilter<"InventoryStock"> | string
+    currentQuantity?: IntWithAggregatesFilter<"InventoryStock"> | number
+    includeInChecklist?: BoolWithAggregatesFilter<"InventoryStock"> | boolean
+    lastCheckedAt?: DateTimeNullableWithAggregatesFilter<"InventoryStock"> | Date | string | null
+    lastCheckedBy?: StringNullableWithAggregatesFilter<"InventoryStock"> | string | null
+  }
+
+  export type InventoryChecklistWhereInput = {
+    AND?: InventoryChecklistWhereInput | InventoryChecklistWhereInput[]
+    OR?: InventoryChecklistWhereInput[]
+    NOT?: InventoryChecklistWhereInput | InventoryChecklistWhereInput[]
+    id?: StringFilter<"InventoryChecklist"> | string
+    createdAt?: DateTimeFilter<"InventoryChecklist"> | Date | string
+    updatedAt?: DateTimeFilter<"InventoryChecklist"> | Date | string
+    checkDate?: DateTimeFilter<"InventoryChecklist"> | Date | string
+    status?: EnumInventoryChecklistStatusFilter<"InventoryChecklist"> | $Enums.InventoryChecklistStatus
+    startedBy?: StringNullableFilter<"InventoryChecklist"> | string | null
+    submittedBy?: StringNullableFilter<"InventoryChecklist"> | string | null
+    submittedAt?: DateTimeNullableFilter<"InventoryChecklist"> | Date | string | null
+    items?: InventoryChecklistItemListRelationFilter
+    alerts?: InventoryAlertListRelationFilter
+  }
+
+  export type InventoryChecklistOrderByWithRelationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    checkDate?: SortOrder
+    status?: SortOrder
+    startedBy?: SortOrderInput | SortOrder
+    submittedBy?: SortOrderInput | SortOrder
+    submittedAt?: SortOrderInput | SortOrder
+    items?: InventoryChecklistItemOrderByRelationAggregateInput
+    alerts?: InventoryAlertOrderByRelationAggregateInput
+  }
+
+  export type InventoryChecklistWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    checkDate?: Date | string
+    AND?: InventoryChecklistWhereInput | InventoryChecklistWhereInput[]
+    OR?: InventoryChecklistWhereInput[]
+    NOT?: InventoryChecklistWhereInput | InventoryChecklistWhereInput[]
+    createdAt?: DateTimeFilter<"InventoryChecklist"> | Date | string
+    updatedAt?: DateTimeFilter<"InventoryChecklist"> | Date | string
+    status?: EnumInventoryChecklistStatusFilter<"InventoryChecklist"> | $Enums.InventoryChecklistStatus
+    startedBy?: StringNullableFilter<"InventoryChecklist"> | string | null
+    submittedBy?: StringNullableFilter<"InventoryChecklist"> | string | null
+    submittedAt?: DateTimeNullableFilter<"InventoryChecklist"> | Date | string | null
+    items?: InventoryChecklistItemListRelationFilter
+    alerts?: InventoryAlertListRelationFilter
+  }, "id" | "checkDate">
+
+  export type InventoryChecklistOrderByWithAggregationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    checkDate?: SortOrder
+    status?: SortOrder
+    startedBy?: SortOrderInput | SortOrder
+    submittedBy?: SortOrderInput | SortOrder
+    submittedAt?: SortOrderInput | SortOrder
+    _count?: InventoryChecklistCountOrderByAggregateInput
+    _max?: InventoryChecklistMaxOrderByAggregateInput
+    _min?: InventoryChecklistMinOrderByAggregateInput
+  }
+
+  export type InventoryChecklistScalarWhereWithAggregatesInput = {
+    AND?: InventoryChecklistScalarWhereWithAggregatesInput | InventoryChecklistScalarWhereWithAggregatesInput[]
+    OR?: InventoryChecklistScalarWhereWithAggregatesInput[]
+    NOT?: InventoryChecklistScalarWhereWithAggregatesInput | InventoryChecklistScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"InventoryChecklist"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"InventoryChecklist"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"InventoryChecklist"> | Date | string
+    checkDate?: DateTimeWithAggregatesFilter<"InventoryChecklist"> | Date | string
+    status?: EnumInventoryChecklistStatusWithAggregatesFilter<"InventoryChecklist"> | $Enums.InventoryChecklistStatus
+    startedBy?: StringNullableWithAggregatesFilter<"InventoryChecklist"> | string | null
+    submittedBy?: StringNullableWithAggregatesFilter<"InventoryChecklist"> | string | null
+    submittedAt?: DateTimeNullableWithAggregatesFilter<"InventoryChecklist"> | Date | string | null
+  }
+
+  export type InventoryChecklistItemWhereInput = {
+    AND?: InventoryChecklistItemWhereInput | InventoryChecklistItemWhereInput[]
+    OR?: InventoryChecklistItemWhereInput[]
+    NOT?: InventoryChecklistItemWhereInput | InventoryChecklistItemWhereInput[]
+    id?: StringFilter<"InventoryChecklistItem"> | string
+    createdAt?: DateTimeFilter<"InventoryChecklistItem"> | Date | string
+    updatedAt?: DateTimeFilter<"InventoryChecklistItem"> | Date | string
+    checklistId?: StringFilter<"InventoryChecklistItem"> | string
+    placeId?: StringFilter<"InventoryChecklistItem"> | string
+    productId?: StringFilter<"InventoryChecklistItem"> | string
+    expectedMinQuantity?: IntFilter<"InventoryChecklistItem"> | number
+    countedQuantity?: IntNullableFilter<"InventoryChecklistItem"> | number | null
+    outOfStock?: BoolFilter<"InventoryChecklistItem"> | boolean
+    result?: EnumInventoryChecklistItemResultFilter<"InventoryChecklistItem"> | $Enums.InventoryChecklistItemResult
+    notes?: StringNullableFilter<"InventoryChecklistItem"> | string | null
+    checkedAt?: DateTimeNullableFilter<"InventoryChecklistItem"> | Date | string | null
+    checkedBy?: StringNullableFilter<"InventoryChecklistItem"> | string | null
+    checklist?: XOR<InventoryChecklistScalarRelationFilter, InventoryChecklistWhereInput>
+    place?: XOR<InventoryPlaceScalarRelationFilter, InventoryPlaceWhereInput>
+    product?: XOR<InventoryProductScalarRelationFilter, InventoryProductWhereInput>
+    alerts?: InventoryAlertListRelationFilter
+  }
+
+  export type InventoryChecklistItemOrderByWithRelationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    checklistId?: SortOrder
+    placeId?: SortOrder
+    productId?: SortOrder
+    expectedMinQuantity?: SortOrder
+    countedQuantity?: SortOrderInput | SortOrder
+    outOfStock?: SortOrder
+    result?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    checkedAt?: SortOrderInput | SortOrder
+    checkedBy?: SortOrderInput | SortOrder
+    checklist?: InventoryChecklistOrderByWithRelationInput
+    place?: InventoryPlaceOrderByWithRelationInput
+    product?: InventoryProductOrderByWithRelationInput
+    alerts?: InventoryAlertOrderByRelationAggregateInput
+  }
+
+  export type InventoryChecklistItemWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    checklistId_productId_placeId?: InventoryChecklistItemChecklistIdProductIdPlaceIdCompoundUniqueInput
+    AND?: InventoryChecklistItemWhereInput | InventoryChecklistItemWhereInput[]
+    OR?: InventoryChecklistItemWhereInput[]
+    NOT?: InventoryChecklistItemWhereInput | InventoryChecklistItemWhereInput[]
+    createdAt?: DateTimeFilter<"InventoryChecklistItem"> | Date | string
+    updatedAt?: DateTimeFilter<"InventoryChecklistItem"> | Date | string
+    checklistId?: StringFilter<"InventoryChecklistItem"> | string
+    placeId?: StringFilter<"InventoryChecklistItem"> | string
+    productId?: StringFilter<"InventoryChecklistItem"> | string
+    expectedMinQuantity?: IntFilter<"InventoryChecklistItem"> | number
+    countedQuantity?: IntNullableFilter<"InventoryChecklistItem"> | number | null
+    outOfStock?: BoolFilter<"InventoryChecklistItem"> | boolean
+    result?: EnumInventoryChecklistItemResultFilter<"InventoryChecklistItem"> | $Enums.InventoryChecklistItemResult
+    notes?: StringNullableFilter<"InventoryChecklistItem"> | string | null
+    checkedAt?: DateTimeNullableFilter<"InventoryChecklistItem"> | Date | string | null
+    checkedBy?: StringNullableFilter<"InventoryChecklistItem"> | string | null
+    checklist?: XOR<InventoryChecklistScalarRelationFilter, InventoryChecklistWhereInput>
+    place?: XOR<InventoryPlaceScalarRelationFilter, InventoryPlaceWhereInput>
+    product?: XOR<InventoryProductScalarRelationFilter, InventoryProductWhereInput>
+    alerts?: InventoryAlertListRelationFilter
+  }, "id" | "checklistId_productId_placeId">
+
+  export type InventoryChecklistItemOrderByWithAggregationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    checklistId?: SortOrder
+    placeId?: SortOrder
+    productId?: SortOrder
+    expectedMinQuantity?: SortOrder
+    countedQuantity?: SortOrderInput | SortOrder
+    outOfStock?: SortOrder
+    result?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    checkedAt?: SortOrderInput | SortOrder
+    checkedBy?: SortOrderInput | SortOrder
+    _count?: InventoryChecklistItemCountOrderByAggregateInput
+    _avg?: InventoryChecklistItemAvgOrderByAggregateInput
+    _max?: InventoryChecklistItemMaxOrderByAggregateInput
+    _min?: InventoryChecklistItemMinOrderByAggregateInput
+    _sum?: InventoryChecklistItemSumOrderByAggregateInput
+  }
+
+  export type InventoryChecklistItemScalarWhereWithAggregatesInput = {
+    AND?: InventoryChecklistItemScalarWhereWithAggregatesInput | InventoryChecklistItemScalarWhereWithAggregatesInput[]
+    OR?: InventoryChecklistItemScalarWhereWithAggregatesInput[]
+    NOT?: InventoryChecklistItemScalarWhereWithAggregatesInput | InventoryChecklistItemScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"InventoryChecklistItem"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"InventoryChecklistItem"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"InventoryChecklistItem"> | Date | string
+    checklistId?: StringWithAggregatesFilter<"InventoryChecklistItem"> | string
+    placeId?: StringWithAggregatesFilter<"InventoryChecklistItem"> | string
+    productId?: StringWithAggregatesFilter<"InventoryChecklistItem"> | string
+    expectedMinQuantity?: IntWithAggregatesFilter<"InventoryChecklistItem"> | number
+    countedQuantity?: IntNullableWithAggregatesFilter<"InventoryChecklistItem"> | number | null
+    outOfStock?: BoolWithAggregatesFilter<"InventoryChecklistItem"> | boolean
+    result?: EnumInventoryChecklistItemResultWithAggregatesFilter<"InventoryChecklistItem"> | $Enums.InventoryChecklistItemResult
+    notes?: StringNullableWithAggregatesFilter<"InventoryChecklistItem"> | string | null
+    checkedAt?: DateTimeNullableWithAggregatesFilter<"InventoryChecklistItem"> | Date | string | null
+    checkedBy?: StringNullableWithAggregatesFilter<"InventoryChecklistItem"> | string | null
+  }
+
+  export type InventoryAlertWhereInput = {
+    AND?: InventoryAlertWhereInput | InventoryAlertWhereInput[]
+    OR?: InventoryAlertWhereInput[]
+    NOT?: InventoryAlertWhereInput | InventoryAlertWhereInput[]
+    id?: StringFilter<"InventoryAlert"> | string
+    createdAt?: DateTimeFilter<"InventoryAlert"> | Date | string
+    updatedAt?: DateTimeFilter<"InventoryAlert"> | Date | string
+    type?: EnumInventoryAlertTypeFilter<"InventoryAlert"> | $Enums.InventoryAlertType
+    severity?: EnumInventoryAlertSeverityFilter<"InventoryAlert"> | $Enums.InventoryAlertSeverity
+    status?: EnumInventoryAlertStatusFilter<"InventoryAlert"> | $Enums.InventoryAlertStatus
+    message?: StringFilter<"InventoryAlert"> | string
+    placeId?: StringFilter<"InventoryAlert"> | string
+    productId?: StringFilter<"InventoryAlert"> | string
+    checklistId?: StringNullableFilter<"InventoryAlert"> | string | null
+    checklistItemId?: StringNullableFilter<"InventoryAlert"> | string | null
+    triggeredAt?: DateTimeFilter<"InventoryAlert"> | Date | string
+    ackedAt?: DateTimeNullableFilter<"InventoryAlert"> | Date | string | null
+    ackedBy?: StringNullableFilter<"InventoryAlert"> | string | null
+    resolvedAt?: DateTimeNullableFilter<"InventoryAlert"> | Date | string | null
+    resolvedBy?: StringNullableFilter<"InventoryAlert"> | string | null
+    place?: XOR<InventoryPlaceScalarRelationFilter, InventoryPlaceWhereInput>
+    product?: XOR<InventoryProductScalarRelationFilter, InventoryProductWhereInput>
+    checklist?: XOR<InventoryChecklistNullableScalarRelationFilter, InventoryChecklistWhereInput> | null
+    checklistItem?: XOR<InventoryChecklistItemNullableScalarRelationFilter, InventoryChecklistItemWhereInput> | null
+  }
+
+  export type InventoryAlertOrderByWithRelationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    type?: SortOrder
+    severity?: SortOrder
+    status?: SortOrder
+    message?: SortOrder
+    placeId?: SortOrder
+    productId?: SortOrder
+    checklistId?: SortOrderInput | SortOrder
+    checklistItemId?: SortOrderInput | SortOrder
+    triggeredAt?: SortOrder
+    ackedAt?: SortOrderInput | SortOrder
+    ackedBy?: SortOrderInput | SortOrder
+    resolvedAt?: SortOrderInput | SortOrder
+    resolvedBy?: SortOrderInput | SortOrder
+    place?: InventoryPlaceOrderByWithRelationInput
+    product?: InventoryProductOrderByWithRelationInput
+    checklist?: InventoryChecklistOrderByWithRelationInput
+    checklistItem?: InventoryChecklistItemOrderByWithRelationInput
+  }
+
+  export type InventoryAlertWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: InventoryAlertWhereInput | InventoryAlertWhereInput[]
+    OR?: InventoryAlertWhereInput[]
+    NOT?: InventoryAlertWhereInput | InventoryAlertWhereInput[]
+    createdAt?: DateTimeFilter<"InventoryAlert"> | Date | string
+    updatedAt?: DateTimeFilter<"InventoryAlert"> | Date | string
+    type?: EnumInventoryAlertTypeFilter<"InventoryAlert"> | $Enums.InventoryAlertType
+    severity?: EnumInventoryAlertSeverityFilter<"InventoryAlert"> | $Enums.InventoryAlertSeverity
+    status?: EnumInventoryAlertStatusFilter<"InventoryAlert"> | $Enums.InventoryAlertStatus
+    message?: StringFilter<"InventoryAlert"> | string
+    placeId?: StringFilter<"InventoryAlert"> | string
+    productId?: StringFilter<"InventoryAlert"> | string
+    checklistId?: StringNullableFilter<"InventoryAlert"> | string | null
+    checklistItemId?: StringNullableFilter<"InventoryAlert"> | string | null
+    triggeredAt?: DateTimeFilter<"InventoryAlert"> | Date | string
+    ackedAt?: DateTimeNullableFilter<"InventoryAlert"> | Date | string | null
+    ackedBy?: StringNullableFilter<"InventoryAlert"> | string | null
+    resolvedAt?: DateTimeNullableFilter<"InventoryAlert"> | Date | string | null
+    resolvedBy?: StringNullableFilter<"InventoryAlert"> | string | null
+    place?: XOR<InventoryPlaceScalarRelationFilter, InventoryPlaceWhereInput>
+    product?: XOR<InventoryProductScalarRelationFilter, InventoryProductWhereInput>
+    checklist?: XOR<InventoryChecklistNullableScalarRelationFilter, InventoryChecklistWhereInput> | null
+    checklistItem?: XOR<InventoryChecklistItemNullableScalarRelationFilter, InventoryChecklistItemWhereInput> | null
+  }, "id">
+
+  export type InventoryAlertOrderByWithAggregationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    type?: SortOrder
+    severity?: SortOrder
+    status?: SortOrder
+    message?: SortOrder
+    placeId?: SortOrder
+    productId?: SortOrder
+    checklistId?: SortOrderInput | SortOrder
+    checklistItemId?: SortOrderInput | SortOrder
+    triggeredAt?: SortOrder
+    ackedAt?: SortOrderInput | SortOrder
+    ackedBy?: SortOrderInput | SortOrder
+    resolvedAt?: SortOrderInput | SortOrder
+    resolvedBy?: SortOrderInput | SortOrder
+    _count?: InventoryAlertCountOrderByAggregateInput
+    _max?: InventoryAlertMaxOrderByAggregateInput
+    _min?: InventoryAlertMinOrderByAggregateInput
+  }
+
+  export type InventoryAlertScalarWhereWithAggregatesInput = {
+    AND?: InventoryAlertScalarWhereWithAggregatesInput | InventoryAlertScalarWhereWithAggregatesInput[]
+    OR?: InventoryAlertScalarWhereWithAggregatesInput[]
+    NOT?: InventoryAlertScalarWhereWithAggregatesInput | InventoryAlertScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"InventoryAlert"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"InventoryAlert"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"InventoryAlert"> | Date | string
+    type?: EnumInventoryAlertTypeWithAggregatesFilter<"InventoryAlert"> | $Enums.InventoryAlertType
+    severity?: EnumInventoryAlertSeverityWithAggregatesFilter<"InventoryAlert"> | $Enums.InventoryAlertSeverity
+    status?: EnumInventoryAlertStatusWithAggregatesFilter<"InventoryAlert"> | $Enums.InventoryAlertStatus
+    message?: StringWithAggregatesFilter<"InventoryAlert"> | string
+    placeId?: StringWithAggregatesFilter<"InventoryAlert"> | string
+    productId?: StringWithAggregatesFilter<"InventoryAlert"> | string
+    checklistId?: StringNullableWithAggregatesFilter<"InventoryAlert"> | string | null
+    checklistItemId?: StringNullableWithAggregatesFilter<"InventoryAlert"> | string | null
+    triggeredAt?: DateTimeWithAggregatesFilter<"InventoryAlert"> | Date | string
+    ackedAt?: DateTimeNullableWithAggregatesFilter<"InventoryAlert"> | Date | string | null
+    ackedBy?: StringNullableWithAggregatesFilter<"InventoryAlert"> | string | null
+    resolvedAt?: DateTimeNullableWithAggregatesFilter<"InventoryAlert"> | Date | string | null
+    resolvedBy?: StringNullableWithAggregatesFilter<"InventoryAlert"> | string | null
+  }
+
+  export type InventoryStockEventWhereInput = {
+    AND?: InventoryStockEventWhereInput | InventoryStockEventWhereInput[]
+    OR?: InventoryStockEventWhereInput[]
+    NOT?: InventoryStockEventWhereInput | InventoryStockEventWhereInput[]
+    id?: StringFilter<"InventoryStockEvent"> | string
+    createdAt?: DateTimeFilter<"InventoryStockEvent"> | Date | string
+    eventType?: StringFilter<"InventoryStockEvent"> | string
+    placeId?: StringFilter<"InventoryStockEvent"> | string
+    productId?: StringFilter<"InventoryStockEvent"> | string
+    beforeQuantity?: IntNullableFilter<"InventoryStockEvent"> | number | null
+    afterQuantity?: IntNullableFilter<"InventoryStockEvent"> | number | null
+    actorId?: StringNullableFilter<"InventoryStockEvent"> | string | null
+    source?: StringFilter<"InventoryStockEvent"> | string
+    metadata?: JsonNullableFilter<"InventoryStockEvent">
+    place?: XOR<InventoryPlaceScalarRelationFilter, InventoryPlaceWhereInput>
+    product?: XOR<InventoryProductScalarRelationFilter, InventoryProductWhereInput>
+  }
+
+  export type InventoryStockEventOrderByWithRelationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    eventType?: SortOrder
+    placeId?: SortOrder
+    productId?: SortOrder
+    beforeQuantity?: SortOrderInput | SortOrder
+    afterQuantity?: SortOrderInput | SortOrder
+    actorId?: SortOrderInput | SortOrder
+    source?: SortOrder
+    metadata?: SortOrderInput | SortOrder
+    place?: InventoryPlaceOrderByWithRelationInput
+    product?: InventoryProductOrderByWithRelationInput
+  }
+
+  export type InventoryStockEventWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: InventoryStockEventWhereInput | InventoryStockEventWhereInput[]
+    OR?: InventoryStockEventWhereInput[]
+    NOT?: InventoryStockEventWhereInput | InventoryStockEventWhereInput[]
+    createdAt?: DateTimeFilter<"InventoryStockEvent"> | Date | string
+    eventType?: StringFilter<"InventoryStockEvent"> | string
+    placeId?: StringFilter<"InventoryStockEvent"> | string
+    productId?: StringFilter<"InventoryStockEvent"> | string
+    beforeQuantity?: IntNullableFilter<"InventoryStockEvent"> | number | null
+    afterQuantity?: IntNullableFilter<"InventoryStockEvent"> | number | null
+    actorId?: StringNullableFilter<"InventoryStockEvent"> | string | null
+    source?: StringFilter<"InventoryStockEvent"> | string
+    metadata?: JsonNullableFilter<"InventoryStockEvent">
+    place?: XOR<InventoryPlaceScalarRelationFilter, InventoryPlaceWhereInput>
+    product?: XOR<InventoryProductScalarRelationFilter, InventoryProductWhereInput>
+  }, "id">
+
+  export type InventoryStockEventOrderByWithAggregationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    eventType?: SortOrder
+    placeId?: SortOrder
+    productId?: SortOrder
+    beforeQuantity?: SortOrderInput | SortOrder
+    afterQuantity?: SortOrderInput | SortOrder
+    actorId?: SortOrderInput | SortOrder
+    source?: SortOrder
+    metadata?: SortOrderInput | SortOrder
+    _count?: InventoryStockEventCountOrderByAggregateInput
+    _avg?: InventoryStockEventAvgOrderByAggregateInput
+    _max?: InventoryStockEventMaxOrderByAggregateInput
+    _min?: InventoryStockEventMinOrderByAggregateInput
+    _sum?: InventoryStockEventSumOrderByAggregateInput
+  }
+
+  export type InventoryStockEventScalarWhereWithAggregatesInput = {
+    AND?: InventoryStockEventScalarWhereWithAggregatesInput | InventoryStockEventScalarWhereWithAggregatesInput[]
+    OR?: InventoryStockEventScalarWhereWithAggregatesInput[]
+    NOT?: InventoryStockEventScalarWhereWithAggregatesInput | InventoryStockEventScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"InventoryStockEvent"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"InventoryStockEvent"> | Date | string
+    eventType?: StringWithAggregatesFilter<"InventoryStockEvent"> | string
+    placeId?: StringWithAggregatesFilter<"InventoryStockEvent"> | string
+    productId?: StringWithAggregatesFilter<"InventoryStockEvent"> | string
+    beforeQuantity?: IntNullableWithAggregatesFilter<"InventoryStockEvent"> | number | null
+    afterQuantity?: IntNullableWithAggregatesFilter<"InventoryStockEvent"> | number | null
+    actorId?: StringNullableWithAggregatesFilter<"InventoryStockEvent"> | string | null
+    source?: StringWithAggregatesFilter<"InventoryStockEvent"> | string
+    metadata?: JsonNullableWithAggregatesFilter<"InventoryStockEvent">
   }
 
   export type StationCreateInput = {
@@ -40885,6 +51130,711 @@ export namespace Prisma {
     orderId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type InventoryPlaceCreateInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    type: $Enums.InventoryPlaceType
+    active?: boolean
+    displayOrder?: number | null
+    notes?: string | null
+    stocks?: InventoryStockCreateNestedManyWithoutPlaceInput
+    alerts?: InventoryAlertCreateNestedManyWithoutPlaceInput
+    checklistItems?: InventoryChecklistItemCreateNestedManyWithoutPlaceInput
+    stockEvents?: InventoryStockEventCreateNestedManyWithoutPlaceInput
+  }
+
+  export type InventoryPlaceUncheckedCreateInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    type: $Enums.InventoryPlaceType
+    active?: boolean
+    displayOrder?: number | null
+    notes?: string | null
+    stocks?: InventoryStockUncheckedCreateNestedManyWithoutPlaceInput
+    alerts?: InventoryAlertUncheckedCreateNestedManyWithoutPlaceInput
+    checklistItems?: InventoryChecklistItemUncheckedCreateNestedManyWithoutPlaceInput
+    stockEvents?: InventoryStockEventUncheckedCreateNestedManyWithoutPlaceInput
+  }
+
+  export type InventoryPlaceUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: EnumInventoryPlaceTypeFieldUpdateOperationsInput | $Enums.InventoryPlaceType
+    active?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: NullableIntFieldUpdateOperationsInput | number | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    stocks?: InventoryStockUpdateManyWithoutPlaceNestedInput
+    alerts?: InventoryAlertUpdateManyWithoutPlaceNestedInput
+    checklistItems?: InventoryChecklistItemUpdateManyWithoutPlaceNestedInput
+    stockEvents?: InventoryStockEventUpdateManyWithoutPlaceNestedInput
+  }
+
+  export type InventoryPlaceUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: EnumInventoryPlaceTypeFieldUpdateOperationsInput | $Enums.InventoryPlaceType
+    active?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: NullableIntFieldUpdateOperationsInput | number | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    stocks?: InventoryStockUncheckedUpdateManyWithoutPlaceNestedInput
+    alerts?: InventoryAlertUncheckedUpdateManyWithoutPlaceNestedInput
+    checklistItems?: InventoryChecklistItemUncheckedUpdateManyWithoutPlaceNestedInput
+    stockEvents?: InventoryStockEventUncheckedUpdateManyWithoutPlaceNestedInput
+  }
+
+  export type InventoryPlaceCreateManyInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    type: $Enums.InventoryPlaceType
+    active?: boolean
+    displayOrder?: number | null
+    notes?: string | null
+  }
+
+  export type InventoryPlaceUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: EnumInventoryPlaceTypeFieldUpdateOperationsInput | $Enums.InventoryPlaceType
+    active?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: NullableIntFieldUpdateOperationsInput | number | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type InventoryPlaceUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: EnumInventoryPlaceTypeFieldUpdateOperationsInput | $Enums.InventoryPlaceType
+    active?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: NullableIntFieldUpdateOperationsInput | number | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type InventoryProductCreateInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    unit: string
+    active?: boolean
+    minQuantity?: number
+    alertThreshold?: number | null
+    requiresRefill?: boolean
+    notifyBelowThreshold?: boolean
+    notes?: string | null
+    stocks?: InventoryStockCreateNestedManyWithoutProductInput
+    alerts?: InventoryAlertCreateNestedManyWithoutProductInput
+    checklistItems?: InventoryChecklistItemCreateNestedManyWithoutProductInput
+    stockEvents?: InventoryStockEventCreateNestedManyWithoutProductInput
+  }
+
+  export type InventoryProductUncheckedCreateInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    unit: string
+    active?: boolean
+    minQuantity?: number
+    alertThreshold?: number | null
+    requiresRefill?: boolean
+    notifyBelowThreshold?: boolean
+    notes?: string | null
+    stocks?: InventoryStockUncheckedCreateNestedManyWithoutProductInput
+    alerts?: InventoryAlertUncheckedCreateNestedManyWithoutProductInput
+    checklistItems?: InventoryChecklistItemUncheckedCreateNestedManyWithoutProductInput
+    stockEvents?: InventoryStockEventUncheckedCreateNestedManyWithoutProductInput
+  }
+
+  export type InventoryProductUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    unit?: StringFieldUpdateOperationsInput | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    minQuantity?: IntFieldUpdateOperationsInput | number
+    alertThreshold?: NullableIntFieldUpdateOperationsInput | number | null
+    requiresRefill?: BoolFieldUpdateOperationsInput | boolean
+    notifyBelowThreshold?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    stocks?: InventoryStockUpdateManyWithoutProductNestedInput
+    alerts?: InventoryAlertUpdateManyWithoutProductNestedInput
+    checklistItems?: InventoryChecklistItemUpdateManyWithoutProductNestedInput
+    stockEvents?: InventoryStockEventUpdateManyWithoutProductNestedInput
+  }
+
+  export type InventoryProductUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    unit?: StringFieldUpdateOperationsInput | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    minQuantity?: IntFieldUpdateOperationsInput | number
+    alertThreshold?: NullableIntFieldUpdateOperationsInput | number | null
+    requiresRefill?: BoolFieldUpdateOperationsInput | boolean
+    notifyBelowThreshold?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    stocks?: InventoryStockUncheckedUpdateManyWithoutProductNestedInput
+    alerts?: InventoryAlertUncheckedUpdateManyWithoutProductNestedInput
+    checklistItems?: InventoryChecklistItemUncheckedUpdateManyWithoutProductNestedInput
+    stockEvents?: InventoryStockEventUncheckedUpdateManyWithoutProductNestedInput
+  }
+
+  export type InventoryProductCreateManyInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    unit: string
+    active?: boolean
+    minQuantity?: number
+    alertThreshold?: number | null
+    requiresRefill?: boolean
+    notifyBelowThreshold?: boolean
+    notes?: string | null
+  }
+
+  export type InventoryProductUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    unit?: StringFieldUpdateOperationsInput | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    minQuantity?: IntFieldUpdateOperationsInput | number
+    alertThreshold?: NullableIntFieldUpdateOperationsInput | number | null
+    requiresRefill?: BoolFieldUpdateOperationsInput | boolean
+    notifyBelowThreshold?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type InventoryProductUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    unit?: StringFieldUpdateOperationsInput | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    minQuantity?: IntFieldUpdateOperationsInput | number
+    alertThreshold?: NullableIntFieldUpdateOperationsInput | number | null
+    requiresRefill?: BoolFieldUpdateOperationsInput | boolean
+    notifyBelowThreshold?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type InventoryStockCreateInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    currentQuantity?: number
+    includeInChecklist?: boolean
+    lastCheckedAt?: Date | string | null
+    lastCheckedBy?: string | null
+    place: InventoryPlaceCreateNestedOneWithoutStocksInput
+    product: InventoryProductCreateNestedOneWithoutStocksInput
+  }
+
+  export type InventoryStockUncheckedCreateInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    placeId: string
+    productId: string
+    currentQuantity?: number
+    includeInChecklist?: boolean
+    lastCheckedAt?: Date | string | null
+    lastCheckedBy?: string | null
+  }
+
+  export type InventoryStockUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    currentQuantity?: IntFieldUpdateOperationsInput | number
+    includeInChecklist?: BoolFieldUpdateOperationsInput | boolean
+    lastCheckedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastCheckedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    place?: InventoryPlaceUpdateOneRequiredWithoutStocksNestedInput
+    product?: InventoryProductUpdateOneRequiredWithoutStocksNestedInput
+  }
+
+  export type InventoryStockUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    placeId?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    currentQuantity?: IntFieldUpdateOperationsInput | number
+    includeInChecklist?: BoolFieldUpdateOperationsInput | boolean
+    lastCheckedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastCheckedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type InventoryStockCreateManyInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    placeId: string
+    productId: string
+    currentQuantity?: number
+    includeInChecklist?: boolean
+    lastCheckedAt?: Date | string | null
+    lastCheckedBy?: string | null
+  }
+
+  export type InventoryStockUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    currentQuantity?: IntFieldUpdateOperationsInput | number
+    includeInChecklist?: BoolFieldUpdateOperationsInput | boolean
+    lastCheckedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastCheckedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type InventoryStockUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    placeId?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    currentQuantity?: IntFieldUpdateOperationsInput | number
+    includeInChecklist?: BoolFieldUpdateOperationsInput | boolean
+    lastCheckedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastCheckedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type InventoryChecklistCreateInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    checkDate: Date | string
+    status?: $Enums.InventoryChecklistStatus
+    startedBy?: string | null
+    submittedBy?: string | null
+    submittedAt?: Date | string | null
+    items?: InventoryChecklistItemCreateNestedManyWithoutChecklistInput
+    alerts?: InventoryAlertCreateNestedManyWithoutChecklistInput
+  }
+
+  export type InventoryChecklistUncheckedCreateInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    checkDate: Date | string
+    status?: $Enums.InventoryChecklistStatus
+    startedBy?: string | null
+    submittedBy?: string | null
+    submittedAt?: Date | string | null
+    items?: InventoryChecklistItemUncheckedCreateNestedManyWithoutChecklistInput
+    alerts?: InventoryAlertUncheckedCreateNestedManyWithoutChecklistInput
+  }
+
+  export type InventoryChecklistUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    checkDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumInventoryChecklistStatusFieldUpdateOperationsInput | $Enums.InventoryChecklistStatus
+    startedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    items?: InventoryChecklistItemUpdateManyWithoutChecklistNestedInput
+    alerts?: InventoryAlertUpdateManyWithoutChecklistNestedInput
+  }
+
+  export type InventoryChecklistUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    checkDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumInventoryChecklistStatusFieldUpdateOperationsInput | $Enums.InventoryChecklistStatus
+    startedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    items?: InventoryChecklistItemUncheckedUpdateManyWithoutChecklistNestedInput
+    alerts?: InventoryAlertUncheckedUpdateManyWithoutChecklistNestedInput
+  }
+
+  export type InventoryChecklistCreateManyInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    checkDate: Date | string
+    status?: $Enums.InventoryChecklistStatus
+    startedBy?: string | null
+    submittedBy?: string | null
+    submittedAt?: Date | string | null
+  }
+
+  export type InventoryChecklistUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    checkDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumInventoryChecklistStatusFieldUpdateOperationsInput | $Enums.InventoryChecklistStatus
+    startedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type InventoryChecklistUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    checkDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumInventoryChecklistStatusFieldUpdateOperationsInput | $Enums.InventoryChecklistStatus
+    startedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type InventoryChecklistItemCreateInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    expectedMinQuantity?: number
+    countedQuantity?: number | null
+    outOfStock?: boolean
+    result?: $Enums.InventoryChecklistItemResult
+    notes?: string | null
+    checkedAt?: Date | string | null
+    checkedBy?: string | null
+    checklist: InventoryChecklistCreateNestedOneWithoutItemsInput
+    place: InventoryPlaceCreateNestedOneWithoutChecklistItemsInput
+    product: InventoryProductCreateNestedOneWithoutChecklistItemsInput
+    alerts?: InventoryAlertCreateNestedManyWithoutChecklistItemInput
+  }
+
+  export type InventoryChecklistItemUncheckedCreateInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    checklistId: string
+    placeId: string
+    productId: string
+    expectedMinQuantity?: number
+    countedQuantity?: number | null
+    outOfStock?: boolean
+    result?: $Enums.InventoryChecklistItemResult
+    notes?: string | null
+    checkedAt?: Date | string | null
+    checkedBy?: string | null
+    alerts?: InventoryAlertUncheckedCreateNestedManyWithoutChecklistItemInput
+  }
+
+  export type InventoryChecklistItemUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expectedMinQuantity?: IntFieldUpdateOperationsInput | number
+    countedQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    outOfStock?: BoolFieldUpdateOperationsInput | boolean
+    result?: EnumInventoryChecklistItemResultFieldUpdateOperationsInput | $Enums.InventoryChecklistItemResult
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    checkedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    checklist?: InventoryChecklistUpdateOneRequiredWithoutItemsNestedInput
+    place?: InventoryPlaceUpdateOneRequiredWithoutChecklistItemsNestedInput
+    product?: InventoryProductUpdateOneRequiredWithoutChecklistItemsNestedInput
+    alerts?: InventoryAlertUpdateManyWithoutChecklistItemNestedInput
+  }
+
+  export type InventoryChecklistItemUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    checklistId?: StringFieldUpdateOperationsInput | string
+    placeId?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    expectedMinQuantity?: IntFieldUpdateOperationsInput | number
+    countedQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    outOfStock?: BoolFieldUpdateOperationsInput | boolean
+    result?: EnumInventoryChecklistItemResultFieldUpdateOperationsInput | $Enums.InventoryChecklistItemResult
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    checkedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    alerts?: InventoryAlertUncheckedUpdateManyWithoutChecklistItemNestedInput
+  }
+
+  export type InventoryChecklistItemCreateManyInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    checklistId: string
+    placeId: string
+    productId: string
+    expectedMinQuantity?: number
+    countedQuantity?: number | null
+    outOfStock?: boolean
+    result?: $Enums.InventoryChecklistItemResult
+    notes?: string | null
+    checkedAt?: Date | string | null
+    checkedBy?: string | null
+  }
+
+  export type InventoryChecklistItemUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expectedMinQuantity?: IntFieldUpdateOperationsInput | number
+    countedQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    outOfStock?: BoolFieldUpdateOperationsInput | boolean
+    result?: EnumInventoryChecklistItemResultFieldUpdateOperationsInput | $Enums.InventoryChecklistItemResult
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    checkedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type InventoryChecklistItemUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    checklistId?: StringFieldUpdateOperationsInput | string
+    placeId?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    expectedMinQuantity?: IntFieldUpdateOperationsInput | number
+    countedQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    outOfStock?: BoolFieldUpdateOperationsInput | boolean
+    result?: EnumInventoryChecklistItemResultFieldUpdateOperationsInput | $Enums.InventoryChecklistItemResult
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    checkedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type InventoryAlertCreateInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    type: $Enums.InventoryAlertType
+    severity: $Enums.InventoryAlertSeverity
+    status?: $Enums.InventoryAlertStatus
+    message: string
+    triggeredAt?: Date | string
+    ackedAt?: Date | string | null
+    ackedBy?: string | null
+    resolvedAt?: Date | string | null
+    resolvedBy?: string | null
+    place: InventoryPlaceCreateNestedOneWithoutAlertsInput
+    product: InventoryProductCreateNestedOneWithoutAlertsInput
+    checklist?: InventoryChecklistCreateNestedOneWithoutAlertsInput
+    checklistItem?: InventoryChecklistItemCreateNestedOneWithoutAlertsInput
+  }
+
+  export type InventoryAlertUncheckedCreateInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    type: $Enums.InventoryAlertType
+    severity: $Enums.InventoryAlertSeverity
+    status?: $Enums.InventoryAlertStatus
+    message: string
+    placeId: string
+    productId: string
+    checklistId?: string | null
+    checklistItemId?: string | null
+    triggeredAt?: Date | string
+    ackedAt?: Date | string | null
+    ackedBy?: string | null
+    resolvedAt?: Date | string | null
+    resolvedBy?: string | null
+  }
+
+  export type InventoryAlertUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumInventoryAlertTypeFieldUpdateOperationsInput | $Enums.InventoryAlertType
+    severity?: EnumInventoryAlertSeverityFieldUpdateOperationsInput | $Enums.InventoryAlertSeverity
+    status?: EnumInventoryAlertStatusFieldUpdateOperationsInput | $Enums.InventoryAlertStatus
+    message?: StringFieldUpdateOperationsInput | string
+    triggeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ackedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    ackedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    place?: InventoryPlaceUpdateOneRequiredWithoutAlertsNestedInput
+    product?: InventoryProductUpdateOneRequiredWithoutAlertsNestedInput
+    checklist?: InventoryChecklistUpdateOneWithoutAlertsNestedInput
+    checklistItem?: InventoryChecklistItemUpdateOneWithoutAlertsNestedInput
+  }
+
+  export type InventoryAlertUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumInventoryAlertTypeFieldUpdateOperationsInput | $Enums.InventoryAlertType
+    severity?: EnumInventoryAlertSeverityFieldUpdateOperationsInput | $Enums.InventoryAlertSeverity
+    status?: EnumInventoryAlertStatusFieldUpdateOperationsInput | $Enums.InventoryAlertStatus
+    message?: StringFieldUpdateOperationsInput | string
+    placeId?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    checklistId?: NullableStringFieldUpdateOperationsInput | string | null
+    checklistItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    triggeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ackedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    ackedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type InventoryAlertCreateManyInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    type: $Enums.InventoryAlertType
+    severity: $Enums.InventoryAlertSeverity
+    status?: $Enums.InventoryAlertStatus
+    message: string
+    placeId: string
+    productId: string
+    checklistId?: string | null
+    checklistItemId?: string | null
+    triggeredAt?: Date | string
+    ackedAt?: Date | string | null
+    ackedBy?: string | null
+    resolvedAt?: Date | string | null
+    resolvedBy?: string | null
+  }
+
+  export type InventoryAlertUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumInventoryAlertTypeFieldUpdateOperationsInput | $Enums.InventoryAlertType
+    severity?: EnumInventoryAlertSeverityFieldUpdateOperationsInput | $Enums.InventoryAlertSeverity
+    status?: EnumInventoryAlertStatusFieldUpdateOperationsInput | $Enums.InventoryAlertStatus
+    message?: StringFieldUpdateOperationsInput | string
+    triggeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ackedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    ackedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type InventoryAlertUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumInventoryAlertTypeFieldUpdateOperationsInput | $Enums.InventoryAlertType
+    severity?: EnumInventoryAlertSeverityFieldUpdateOperationsInput | $Enums.InventoryAlertSeverity
+    status?: EnumInventoryAlertStatusFieldUpdateOperationsInput | $Enums.InventoryAlertStatus
+    message?: StringFieldUpdateOperationsInput | string
+    placeId?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    checklistId?: NullableStringFieldUpdateOperationsInput | string | null
+    checklistItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    triggeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ackedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    ackedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type InventoryStockEventCreateInput = {
+    id: string
+    createdAt?: Date | string
+    eventType: string
+    beforeQuantity?: number | null
+    afterQuantity?: number | null
+    actorId?: string | null
+    source: string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    place: InventoryPlaceCreateNestedOneWithoutStockEventsInput
+    product: InventoryProductCreateNestedOneWithoutStockEventsInput
+  }
+
+  export type InventoryStockEventUncheckedCreateInput = {
+    id: string
+    createdAt?: Date | string
+    eventType: string
+    placeId: string
+    productId: string
+    beforeQuantity?: number | null
+    afterQuantity?: number | null
+    actorId?: string | null
+    source: string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type InventoryStockEventUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    eventType?: StringFieldUpdateOperationsInput | string
+    beforeQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    afterQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    actorId?: NullableStringFieldUpdateOperationsInput | string | null
+    source?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    place?: InventoryPlaceUpdateOneRequiredWithoutStockEventsNestedInput
+    product?: InventoryProductUpdateOneRequiredWithoutStockEventsNestedInput
+  }
+
+  export type InventoryStockEventUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    eventType?: StringFieldUpdateOperationsInput | string
+    placeId?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    beforeQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    afterQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    actorId?: NullableStringFieldUpdateOperationsInput | string | null
+    source?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type InventoryStockEventCreateManyInput = {
+    id: string
+    createdAt?: Date | string
+    eventType: string
+    placeId: string
+    productId: string
+    beforeQuantity?: number | null
+    afterQuantity?: number | null
+    actorId?: string | null
+    source: string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type InventoryStockEventUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    eventType?: StringFieldUpdateOperationsInput | string
+    beforeQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    afterQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    actorId?: NullableStringFieldUpdateOperationsInput | string | null
+    source?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type InventoryStockEventUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    eventType?: StringFieldUpdateOperationsInput | string
+    placeId?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    beforeQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    afterQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    actorId?: NullableStringFieldUpdateOperationsInput | string | null
+    source?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -42476,6 +53426,516 @@ export namespace Prisma {
     quantity?: SortOrder
     fullAmount?: SortOrder
     amount?: SortOrder
+  }
+
+  export type EnumInventoryPlaceTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.InventoryPlaceType | EnumInventoryPlaceTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.InventoryPlaceType[] | ListEnumInventoryPlaceTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.InventoryPlaceType[] | ListEnumInventoryPlaceTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumInventoryPlaceTypeFilter<$PrismaModel> | $Enums.InventoryPlaceType
+  }
+
+  export type InventoryStockListRelationFilter = {
+    every?: InventoryStockWhereInput
+    some?: InventoryStockWhereInput
+    none?: InventoryStockWhereInput
+  }
+
+  export type InventoryAlertListRelationFilter = {
+    every?: InventoryAlertWhereInput
+    some?: InventoryAlertWhereInput
+    none?: InventoryAlertWhereInput
+  }
+
+  export type InventoryChecklistItemListRelationFilter = {
+    every?: InventoryChecklistItemWhereInput
+    some?: InventoryChecklistItemWhereInput
+    none?: InventoryChecklistItemWhereInput
+  }
+
+  export type InventoryStockEventListRelationFilter = {
+    every?: InventoryStockEventWhereInput
+    some?: InventoryStockEventWhereInput
+    none?: InventoryStockEventWhereInput
+  }
+
+  export type InventoryStockOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type InventoryAlertOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type InventoryChecklistItemOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type InventoryStockEventOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type InventoryPlaceCountOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    name?: SortOrder
+    type?: SortOrder
+    active?: SortOrder
+    displayOrder?: SortOrder
+    notes?: SortOrder
+  }
+
+  export type InventoryPlaceAvgOrderByAggregateInput = {
+    displayOrder?: SortOrder
+  }
+
+  export type InventoryPlaceMaxOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    name?: SortOrder
+    type?: SortOrder
+    active?: SortOrder
+    displayOrder?: SortOrder
+    notes?: SortOrder
+  }
+
+  export type InventoryPlaceMinOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    name?: SortOrder
+    type?: SortOrder
+    active?: SortOrder
+    displayOrder?: SortOrder
+    notes?: SortOrder
+  }
+
+  export type InventoryPlaceSumOrderByAggregateInput = {
+    displayOrder?: SortOrder
+  }
+
+  export type EnumInventoryPlaceTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.InventoryPlaceType | EnumInventoryPlaceTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.InventoryPlaceType[] | ListEnumInventoryPlaceTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.InventoryPlaceType[] | ListEnumInventoryPlaceTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumInventoryPlaceTypeWithAggregatesFilter<$PrismaModel> | $Enums.InventoryPlaceType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumInventoryPlaceTypeFilter<$PrismaModel>
+    _max?: NestedEnumInventoryPlaceTypeFilter<$PrismaModel>
+  }
+
+  export type InventoryProductCountOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    name?: SortOrder
+    unit?: SortOrder
+    active?: SortOrder
+    minQuantity?: SortOrder
+    alertThreshold?: SortOrder
+    requiresRefill?: SortOrder
+    notifyBelowThreshold?: SortOrder
+    notes?: SortOrder
+  }
+
+  export type InventoryProductAvgOrderByAggregateInput = {
+    minQuantity?: SortOrder
+    alertThreshold?: SortOrder
+  }
+
+  export type InventoryProductMaxOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    name?: SortOrder
+    unit?: SortOrder
+    active?: SortOrder
+    minQuantity?: SortOrder
+    alertThreshold?: SortOrder
+    requiresRefill?: SortOrder
+    notifyBelowThreshold?: SortOrder
+    notes?: SortOrder
+  }
+
+  export type InventoryProductMinOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    name?: SortOrder
+    unit?: SortOrder
+    active?: SortOrder
+    minQuantity?: SortOrder
+    alertThreshold?: SortOrder
+    requiresRefill?: SortOrder
+    notifyBelowThreshold?: SortOrder
+    notes?: SortOrder
+  }
+
+  export type InventoryProductSumOrderByAggregateInput = {
+    minQuantity?: SortOrder
+    alertThreshold?: SortOrder
+  }
+
+  export type InventoryPlaceScalarRelationFilter = {
+    is?: InventoryPlaceWhereInput
+    isNot?: InventoryPlaceWhereInput
+  }
+
+  export type InventoryProductScalarRelationFilter = {
+    is?: InventoryProductWhereInput
+    isNot?: InventoryProductWhereInput
+  }
+
+  export type InventoryStockPlaceIdProductIdCompoundUniqueInput = {
+    placeId: string
+    productId: string
+  }
+
+  export type InventoryStockCountOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    placeId?: SortOrder
+    productId?: SortOrder
+    currentQuantity?: SortOrder
+    includeInChecklist?: SortOrder
+    lastCheckedAt?: SortOrder
+    lastCheckedBy?: SortOrder
+  }
+
+  export type InventoryStockAvgOrderByAggregateInput = {
+    currentQuantity?: SortOrder
+  }
+
+  export type InventoryStockMaxOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    placeId?: SortOrder
+    productId?: SortOrder
+    currentQuantity?: SortOrder
+    includeInChecklist?: SortOrder
+    lastCheckedAt?: SortOrder
+    lastCheckedBy?: SortOrder
+  }
+
+  export type InventoryStockMinOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    placeId?: SortOrder
+    productId?: SortOrder
+    currentQuantity?: SortOrder
+    includeInChecklist?: SortOrder
+    lastCheckedAt?: SortOrder
+    lastCheckedBy?: SortOrder
+  }
+
+  export type InventoryStockSumOrderByAggregateInput = {
+    currentQuantity?: SortOrder
+  }
+
+  export type EnumInventoryChecklistStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.InventoryChecklistStatus | EnumInventoryChecklistStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.InventoryChecklistStatus[] | ListEnumInventoryChecklistStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.InventoryChecklistStatus[] | ListEnumInventoryChecklistStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumInventoryChecklistStatusFilter<$PrismaModel> | $Enums.InventoryChecklistStatus
+  }
+
+  export type InventoryChecklistCountOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    checkDate?: SortOrder
+    status?: SortOrder
+    startedBy?: SortOrder
+    submittedBy?: SortOrder
+    submittedAt?: SortOrder
+  }
+
+  export type InventoryChecklistMaxOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    checkDate?: SortOrder
+    status?: SortOrder
+    startedBy?: SortOrder
+    submittedBy?: SortOrder
+    submittedAt?: SortOrder
+  }
+
+  export type InventoryChecklistMinOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    checkDate?: SortOrder
+    status?: SortOrder
+    startedBy?: SortOrder
+    submittedBy?: SortOrder
+    submittedAt?: SortOrder
+  }
+
+  export type EnumInventoryChecklistStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.InventoryChecklistStatus | EnumInventoryChecklistStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.InventoryChecklistStatus[] | ListEnumInventoryChecklistStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.InventoryChecklistStatus[] | ListEnumInventoryChecklistStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumInventoryChecklistStatusWithAggregatesFilter<$PrismaModel> | $Enums.InventoryChecklistStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumInventoryChecklistStatusFilter<$PrismaModel>
+    _max?: NestedEnumInventoryChecklistStatusFilter<$PrismaModel>
+  }
+
+  export type EnumInventoryChecklistItemResultFilter<$PrismaModel = never> = {
+    equals?: $Enums.InventoryChecklistItemResult | EnumInventoryChecklistItemResultFieldRefInput<$PrismaModel>
+    in?: $Enums.InventoryChecklistItemResult[] | ListEnumInventoryChecklistItemResultFieldRefInput<$PrismaModel>
+    notIn?: $Enums.InventoryChecklistItemResult[] | ListEnumInventoryChecklistItemResultFieldRefInput<$PrismaModel>
+    not?: NestedEnumInventoryChecklistItemResultFilter<$PrismaModel> | $Enums.InventoryChecklistItemResult
+  }
+
+  export type InventoryChecklistScalarRelationFilter = {
+    is?: InventoryChecklistWhereInput
+    isNot?: InventoryChecklistWhereInput
+  }
+
+  export type InventoryChecklistItemChecklistIdProductIdPlaceIdCompoundUniqueInput = {
+    checklistId: string
+    productId: string
+    placeId: string
+  }
+
+  export type InventoryChecklistItemCountOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    checklistId?: SortOrder
+    placeId?: SortOrder
+    productId?: SortOrder
+    expectedMinQuantity?: SortOrder
+    countedQuantity?: SortOrder
+    outOfStock?: SortOrder
+    result?: SortOrder
+    notes?: SortOrder
+    checkedAt?: SortOrder
+    checkedBy?: SortOrder
+  }
+
+  export type InventoryChecklistItemAvgOrderByAggregateInput = {
+    expectedMinQuantity?: SortOrder
+    countedQuantity?: SortOrder
+  }
+
+  export type InventoryChecklistItemMaxOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    checklistId?: SortOrder
+    placeId?: SortOrder
+    productId?: SortOrder
+    expectedMinQuantity?: SortOrder
+    countedQuantity?: SortOrder
+    outOfStock?: SortOrder
+    result?: SortOrder
+    notes?: SortOrder
+    checkedAt?: SortOrder
+    checkedBy?: SortOrder
+  }
+
+  export type InventoryChecklistItemMinOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    checklistId?: SortOrder
+    placeId?: SortOrder
+    productId?: SortOrder
+    expectedMinQuantity?: SortOrder
+    countedQuantity?: SortOrder
+    outOfStock?: SortOrder
+    result?: SortOrder
+    notes?: SortOrder
+    checkedAt?: SortOrder
+    checkedBy?: SortOrder
+  }
+
+  export type InventoryChecklistItemSumOrderByAggregateInput = {
+    expectedMinQuantity?: SortOrder
+    countedQuantity?: SortOrder
+  }
+
+  export type EnumInventoryChecklistItemResultWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.InventoryChecklistItemResult | EnumInventoryChecklistItemResultFieldRefInput<$PrismaModel>
+    in?: $Enums.InventoryChecklistItemResult[] | ListEnumInventoryChecklistItemResultFieldRefInput<$PrismaModel>
+    notIn?: $Enums.InventoryChecklistItemResult[] | ListEnumInventoryChecklistItemResultFieldRefInput<$PrismaModel>
+    not?: NestedEnumInventoryChecklistItemResultWithAggregatesFilter<$PrismaModel> | $Enums.InventoryChecklistItemResult
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumInventoryChecklistItemResultFilter<$PrismaModel>
+    _max?: NestedEnumInventoryChecklistItemResultFilter<$PrismaModel>
+  }
+
+  export type EnumInventoryAlertTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.InventoryAlertType | EnumInventoryAlertTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.InventoryAlertType[] | ListEnumInventoryAlertTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.InventoryAlertType[] | ListEnumInventoryAlertTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumInventoryAlertTypeFilter<$PrismaModel> | $Enums.InventoryAlertType
+  }
+
+  export type EnumInventoryAlertSeverityFilter<$PrismaModel = never> = {
+    equals?: $Enums.InventoryAlertSeverity | EnumInventoryAlertSeverityFieldRefInput<$PrismaModel>
+    in?: $Enums.InventoryAlertSeverity[] | ListEnumInventoryAlertSeverityFieldRefInput<$PrismaModel>
+    notIn?: $Enums.InventoryAlertSeverity[] | ListEnumInventoryAlertSeverityFieldRefInput<$PrismaModel>
+    not?: NestedEnumInventoryAlertSeverityFilter<$PrismaModel> | $Enums.InventoryAlertSeverity
+  }
+
+  export type EnumInventoryAlertStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.InventoryAlertStatus | EnumInventoryAlertStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.InventoryAlertStatus[] | ListEnumInventoryAlertStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.InventoryAlertStatus[] | ListEnumInventoryAlertStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumInventoryAlertStatusFilter<$PrismaModel> | $Enums.InventoryAlertStatus
+  }
+
+  export type InventoryChecklistNullableScalarRelationFilter = {
+    is?: InventoryChecklistWhereInput | null
+    isNot?: InventoryChecklistWhereInput | null
+  }
+
+  export type InventoryChecklistItemNullableScalarRelationFilter = {
+    is?: InventoryChecklistItemWhereInput | null
+    isNot?: InventoryChecklistItemWhereInput | null
+  }
+
+  export type InventoryAlertCountOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    type?: SortOrder
+    severity?: SortOrder
+    status?: SortOrder
+    message?: SortOrder
+    placeId?: SortOrder
+    productId?: SortOrder
+    checklistId?: SortOrder
+    checklistItemId?: SortOrder
+    triggeredAt?: SortOrder
+    ackedAt?: SortOrder
+    ackedBy?: SortOrder
+    resolvedAt?: SortOrder
+    resolvedBy?: SortOrder
+  }
+
+  export type InventoryAlertMaxOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    type?: SortOrder
+    severity?: SortOrder
+    status?: SortOrder
+    message?: SortOrder
+    placeId?: SortOrder
+    productId?: SortOrder
+    checklistId?: SortOrder
+    checklistItemId?: SortOrder
+    triggeredAt?: SortOrder
+    ackedAt?: SortOrder
+    ackedBy?: SortOrder
+    resolvedAt?: SortOrder
+    resolvedBy?: SortOrder
+  }
+
+  export type InventoryAlertMinOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    type?: SortOrder
+    severity?: SortOrder
+    status?: SortOrder
+    message?: SortOrder
+    placeId?: SortOrder
+    productId?: SortOrder
+    checklistId?: SortOrder
+    checklistItemId?: SortOrder
+    triggeredAt?: SortOrder
+    ackedAt?: SortOrder
+    ackedBy?: SortOrder
+    resolvedAt?: SortOrder
+    resolvedBy?: SortOrder
+  }
+
+  export type EnumInventoryAlertTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.InventoryAlertType | EnumInventoryAlertTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.InventoryAlertType[] | ListEnumInventoryAlertTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.InventoryAlertType[] | ListEnumInventoryAlertTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumInventoryAlertTypeWithAggregatesFilter<$PrismaModel> | $Enums.InventoryAlertType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumInventoryAlertTypeFilter<$PrismaModel>
+    _max?: NestedEnumInventoryAlertTypeFilter<$PrismaModel>
+  }
+
+  export type EnumInventoryAlertSeverityWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.InventoryAlertSeverity | EnumInventoryAlertSeverityFieldRefInput<$PrismaModel>
+    in?: $Enums.InventoryAlertSeverity[] | ListEnumInventoryAlertSeverityFieldRefInput<$PrismaModel>
+    notIn?: $Enums.InventoryAlertSeverity[] | ListEnumInventoryAlertSeverityFieldRefInput<$PrismaModel>
+    not?: NestedEnumInventoryAlertSeverityWithAggregatesFilter<$PrismaModel> | $Enums.InventoryAlertSeverity
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumInventoryAlertSeverityFilter<$PrismaModel>
+    _max?: NestedEnumInventoryAlertSeverityFilter<$PrismaModel>
+  }
+
+  export type EnumInventoryAlertStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.InventoryAlertStatus | EnumInventoryAlertStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.InventoryAlertStatus[] | ListEnumInventoryAlertStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.InventoryAlertStatus[] | ListEnumInventoryAlertStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumInventoryAlertStatusWithAggregatesFilter<$PrismaModel> | $Enums.InventoryAlertStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumInventoryAlertStatusFilter<$PrismaModel>
+    _max?: NestedEnumInventoryAlertStatusFilter<$PrismaModel>
+  }
+
+  export type InventoryStockEventCountOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    eventType?: SortOrder
+    placeId?: SortOrder
+    productId?: SortOrder
+    beforeQuantity?: SortOrder
+    afterQuantity?: SortOrder
+    actorId?: SortOrder
+    source?: SortOrder
+    metadata?: SortOrder
+  }
+
+  export type InventoryStockEventAvgOrderByAggregateInput = {
+    beforeQuantity?: SortOrder
+    afterQuantity?: SortOrder
+  }
+
+  export type InventoryStockEventMaxOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    eventType?: SortOrder
+    placeId?: SortOrder
+    productId?: SortOrder
+    beforeQuantity?: SortOrder
+    afterQuantity?: SortOrder
+    actorId?: SortOrder
+    source?: SortOrder
+  }
+
+  export type InventoryStockEventMinOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    eventType?: SortOrder
+    placeId?: SortOrder
+    productId?: SortOrder
+    beforeQuantity?: SortOrder
+    afterQuantity?: SortOrder
+    actorId?: SortOrder
+    source?: SortOrder
+  }
+
+  export type InventoryStockEventSumOrderByAggregateInput = {
+    beforeQuantity?: SortOrder
+    afterQuantity?: SortOrder
   }
 
   export type PreparationStepCreateNestedManyWithoutStationInput = {
@@ -44470,6 +55930,650 @@ export namespace Prisma {
     deleteMany?: ModifierGroupItemScalarWhereInput | ModifierGroupItemScalarWhereInput[]
   }
 
+  export type InventoryStockCreateNestedManyWithoutPlaceInput = {
+    create?: XOR<InventoryStockCreateWithoutPlaceInput, InventoryStockUncheckedCreateWithoutPlaceInput> | InventoryStockCreateWithoutPlaceInput[] | InventoryStockUncheckedCreateWithoutPlaceInput[]
+    connectOrCreate?: InventoryStockCreateOrConnectWithoutPlaceInput | InventoryStockCreateOrConnectWithoutPlaceInput[]
+    createMany?: InventoryStockCreateManyPlaceInputEnvelope
+    connect?: InventoryStockWhereUniqueInput | InventoryStockWhereUniqueInput[]
+  }
+
+  export type InventoryAlertCreateNestedManyWithoutPlaceInput = {
+    create?: XOR<InventoryAlertCreateWithoutPlaceInput, InventoryAlertUncheckedCreateWithoutPlaceInput> | InventoryAlertCreateWithoutPlaceInput[] | InventoryAlertUncheckedCreateWithoutPlaceInput[]
+    connectOrCreate?: InventoryAlertCreateOrConnectWithoutPlaceInput | InventoryAlertCreateOrConnectWithoutPlaceInput[]
+    createMany?: InventoryAlertCreateManyPlaceInputEnvelope
+    connect?: InventoryAlertWhereUniqueInput | InventoryAlertWhereUniqueInput[]
+  }
+
+  export type InventoryChecklistItemCreateNestedManyWithoutPlaceInput = {
+    create?: XOR<InventoryChecklistItemCreateWithoutPlaceInput, InventoryChecklistItemUncheckedCreateWithoutPlaceInput> | InventoryChecklistItemCreateWithoutPlaceInput[] | InventoryChecklistItemUncheckedCreateWithoutPlaceInput[]
+    connectOrCreate?: InventoryChecklistItemCreateOrConnectWithoutPlaceInput | InventoryChecklistItemCreateOrConnectWithoutPlaceInput[]
+    createMany?: InventoryChecklistItemCreateManyPlaceInputEnvelope
+    connect?: InventoryChecklistItemWhereUniqueInput | InventoryChecklistItemWhereUniqueInput[]
+  }
+
+  export type InventoryStockEventCreateNestedManyWithoutPlaceInput = {
+    create?: XOR<InventoryStockEventCreateWithoutPlaceInput, InventoryStockEventUncheckedCreateWithoutPlaceInput> | InventoryStockEventCreateWithoutPlaceInput[] | InventoryStockEventUncheckedCreateWithoutPlaceInput[]
+    connectOrCreate?: InventoryStockEventCreateOrConnectWithoutPlaceInput | InventoryStockEventCreateOrConnectWithoutPlaceInput[]
+    createMany?: InventoryStockEventCreateManyPlaceInputEnvelope
+    connect?: InventoryStockEventWhereUniqueInput | InventoryStockEventWhereUniqueInput[]
+  }
+
+  export type InventoryStockUncheckedCreateNestedManyWithoutPlaceInput = {
+    create?: XOR<InventoryStockCreateWithoutPlaceInput, InventoryStockUncheckedCreateWithoutPlaceInput> | InventoryStockCreateWithoutPlaceInput[] | InventoryStockUncheckedCreateWithoutPlaceInput[]
+    connectOrCreate?: InventoryStockCreateOrConnectWithoutPlaceInput | InventoryStockCreateOrConnectWithoutPlaceInput[]
+    createMany?: InventoryStockCreateManyPlaceInputEnvelope
+    connect?: InventoryStockWhereUniqueInput | InventoryStockWhereUniqueInput[]
+  }
+
+  export type InventoryAlertUncheckedCreateNestedManyWithoutPlaceInput = {
+    create?: XOR<InventoryAlertCreateWithoutPlaceInput, InventoryAlertUncheckedCreateWithoutPlaceInput> | InventoryAlertCreateWithoutPlaceInput[] | InventoryAlertUncheckedCreateWithoutPlaceInput[]
+    connectOrCreate?: InventoryAlertCreateOrConnectWithoutPlaceInput | InventoryAlertCreateOrConnectWithoutPlaceInput[]
+    createMany?: InventoryAlertCreateManyPlaceInputEnvelope
+    connect?: InventoryAlertWhereUniqueInput | InventoryAlertWhereUniqueInput[]
+  }
+
+  export type InventoryChecklistItemUncheckedCreateNestedManyWithoutPlaceInput = {
+    create?: XOR<InventoryChecklistItemCreateWithoutPlaceInput, InventoryChecklistItemUncheckedCreateWithoutPlaceInput> | InventoryChecklistItemCreateWithoutPlaceInput[] | InventoryChecklistItemUncheckedCreateWithoutPlaceInput[]
+    connectOrCreate?: InventoryChecklistItemCreateOrConnectWithoutPlaceInput | InventoryChecklistItemCreateOrConnectWithoutPlaceInput[]
+    createMany?: InventoryChecklistItemCreateManyPlaceInputEnvelope
+    connect?: InventoryChecklistItemWhereUniqueInput | InventoryChecklistItemWhereUniqueInput[]
+  }
+
+  export type InventoryStockEventUncheckedCreateNestedManyWithoutPlaceInput = {
+    create?: XOR<InventoryStockEventCreateWithoutPlaceInput, InventoryStockEventUncheckedCreateWithoutPlaceInput> | InventoryStockEventCreateWithoutPlaceInput[] | InventoryStockEventUncheckedCreateWithoutPlaceInput[]
+    connectOrCreate?: InventoryStockEventCreateOrConnectWithoutPlaceInput | InventoryStockEventCreateOrConnectWithoutPlaceInput[]
+    createMany?: InventoryStockEventCreateManyPlaceInputEnvelope
+    connect?: InventoryStockEventWhereUniqueInput | InventoryStockEventWhereUniqueInput[]
+  }
+
+  export type EnumInventoryPlaceTypeFieldUpdateOperationsInput = {
+    set?: $Enums.InventoryPlaceType
+  }
+
+  export type InventoryStockUpdateManyWithoutPlaceNestedInput = {
+    create?: XOR<InventoryStockCreateWithoutPlaceInput, InventoryStockUncheckedCreateWithoutPlaceInput> | InventoryStockCreateWithoutPlaceInput[] | InventoryStockUncheckedCreateWithoutPlaceInput[]
+    connectOrCreate?: InventoryStockCreateOrConnectWithoutPlaceInput | InventoryStockCreateOrConnectWithoutPlaceInput[]
+    upsert?: InventoryStockUpsertWithWhereUniqueWithoutPlaceInput | InventoryStockUpsertWithWhereUniqueWithoutPlaceInput[]
+    createMany?: InventoryStockCreateManyPlaceInputEnvelope
+    set?: InventoryStockWhereUniqueInput | InventoryStockWhereUniqueInput[]
+    disconnect?: InventoryStockWhereUniqueInput | InventoryStockWhereUniqueInput[]
+    delete?: InventoryStockWhereUniqueInput | InventoryStockWhereUniqueInput[]
+    connect?: InventoryStockWhereUniqueInput | InventoryStockWhereUniqueInput[]
+    update?: InventoryStockUpdateWithWhereUniqueWithoutPlaceInput | InventoryStockUpdateWithWhereUniqueWithoutPlaceInput[]
+    updateMany?: InventoryStockUpdateManyWithWhereWithoutPlaceInput | InventoryStockUpdateManyWithWhereWithoutPlaceInput[]
+    deleteMany?: InventoryStockScalarWhereInput | InventoryStockScalarWhereInput[]
+  }
+
+  export type InventoryAlertUpdateManyWithoutPlaceNestedInput = {
+    create?: XOR<InventoryAlertCreateWithoutPlaceInput, InventoryAlertUncheckedCreateWithoutPlaceInput> | InventoryAlertCreateWithoutPlaceInput[] | InventoryAlertUncheckedCreateWithoutPlaceInput[]
+    connectOrCreate?: InventoryAlertCreateOrConnectWithoutPlaceInput | InventoryAlertCreateOrConnectWithoutPlaceInput[]
+    upsert?: InventoryAlertUpsertWithWhereUniqueWithoutPlaceInput | InventoryAlertUpsertWithWhereUniqueWithoutPlaceInput[]
+    createMany?: InventoryAlertCreateManyPlaceInputEnvelope
+    set?: InventoryAlertWhereUniqueInput | InventoryAlertWhereUniqueInput[]
+    disconnect?: InventoryAlertWhereUniqueInput | InventoryAlertWhereUniqueInput[]
+    delete?: InventoryAlertWhereUniqueInput | InventoryAlertWhereUniqueInput[]
+    connect?: InventoryAlertWhereUniqueInput | InventoryAlertWhereUniqueInput[]
+    update?: InventoryAlertUpdateWithWhereUniqueWithoutPlaceInput | InventoryAlertUpdateWithWhereUniqueWithoutPlaceInput[]
+    updateMany?: InventoryAlertUpdateManyWithWhereWithoutPlaceInput | InventoryAlertUpdateManyWithWhereWithoutPlaceInput[]
+    deleteMany?: InventoryAlertScalarWhereInput | InventoryAlertScalarWhereInput[]
+  }
+
+  export type InventoryChecklistItemUpdateManyWithoutPlaceNestedInput = {
+    create?: XOR<InventoryChecklistItemCreateWithoutPlaceInput, InventoryChecklistItemUncheckedCreateWithoutPlaceInput> | InventoryChecklistItemCreateWithoutPlaceInput[] | InventoryChecklistItemUncheckedCreateWithoutPlaceInput[]
+    connectOrCreate?: InventoryChecklistItemCreateOrConnectWithoutPlaceInput | InventoryChecklistItemCreateOrConnectWithoutPlaceInput[]
+    upsert?: InventoryChecklistItemUpsertWithWhereUniqueWithoutPlaceInput | InventoryChecklistItemUpsertWithWhereUniqueWithoutPlaceInput[]
+    createMany?: InventoryChecklistItemCreateManyPlaceInputEnvelope
+    set?: InventoryChecklistItemWhereUniqueInput | InventoryChecklistItemWhereUniqueInput[]
+    disconnect?: InventoryChecklistItemWhereUniqueInput | InventoryChecklistItemWhereUniqueInput[]
+    delete?: InventoryChecklistItemWhereUniqueInput | InventoryChecklistItemWhereUniqueInput[]
+    connect?: InventoryChecklistItemWhereUniqueInput | InventoryChecklistItemWhereUniqueInput[]
+    update?: InventoryChecklistItemUpdateWithWhereUniqueWithoutPlaceInput | InventoryChecklistItemUpdateWithWhereUniqueWithoutPlaceInput[]
+    updateMany?: InventoryChecklistItemUpdateManyWithWhereWithoutPlaceInput | InventoryChecklistItemUpdateManyWithWhereWithoutPlaceInput[]
+    deleteMany?: InventoryChecklistItemScalarWhereInput | InventoryChecklistItemScalarWhereInput[]
+  }
+
+  export type InventoryStockEventUpdateManyWithoutPlaceNestedInput = {
+    create?: XOR<InventoryStockEventCreateWithoutPlaceInput, InventoryStockEventUncheckedCreateWithoutPlaceInput> | InventoryStockEventCreateWithoutPlaceInput[] | InventoryStockEventUncheckedCreateWithoutPlaceInput[]
+    connectOrCreate?: InventoryStockEventCreateOrConnectWithoutPlaceInput | InventoryStockEventCreateOrConnectWithoutPlaceInput[]
+    upsert?: InventoryStockEventUpsertWithWhereUniqueWithoutPlaceInput | InventoryStockEventUpsertWithWhereUniqueWithoutPlaceInput[]
+    createMany?: InventoryStockEventCreateManyPlaceInputEnvelope
+    set?: InventoryStockEventWhereUniqueInput | InventoryStockEventWhereUniqueInput[]
+    disconnect?: InventoryStockEventWhereUniqueInput | InventoryStockEventWhereUniqueInput[]
+    delete?: InventoryStockEventWhereUniqueInput | InventoryStockEventWhereUniqueInput[]
+    connect?: InventoryStockEventWhereUniqueInput | InventoryStockEventWhereUniqueInput[]
+    update?: InventoryStockEventUpdateWithWhereUniqueWithoutPlaceInput | InventoryStockEventUpdateWithWhereUniqueWithoutPlaceInput[]
+    updateMany?: InventoryStockEventUpdateManyWithWhereWithoutPlaceInput | InventoryStockEventUpdateManyWithWhereWithoutPlaceInput[]
+    deleteMany?: InventoryStockEventScalarWhereInput | InventoryStockEventScalarWhereInput[]
+  }
+
+  export type InventoryStockUncheckedUpdateManyWithoutPlaceNestedInput = {
+    create?: XOR<InventoryStockCreateWithoutPlaceInput, InventoryStockUncheckedCreateWithoutPlaceInput> | InventoryStockCreateWithoutPlaceInput[] | InventoryStockUncheckedCreateWithoutPlaceInput[]
+    connectOrCreate?: InventoryStockCreateOrConnectWithoutPlaceInput | InventoryStockCreateOrConnectWithoutPlaceInput[]
+    upsert?: InventoryStockUpsertWithWhereUniqueWithoutPlaceInput | InventoryStockUpsertWithWhereUniqueWithoutPlaceInput[]
+    createMany?: InventoryStockCreateManyPlaceInputEnvelope
+    set?: InventoryStockWhereUniqueInput | InventoryStockWhereUniqueInput[]
+    disconnect?: InventoryStockWhereUniqueInput | InventoryStockWhereUniqueInput[]
+    delete?: InventoryStockWhereUniqueInput | InventoryStockWhereUniqueInput[]
+    connect?: InventoryStockWhereUniqueInput | InventoryStockWhereUniqueInput[]
+    update?: InventoryStockUpdateWithWhereUniqueWithoutPlaceInput | InventoryStockUpdateWithWhereUniqueWithoutPlaceInput[]
+    updateMany?: InventoryStockUpdateManyWithWhereWithoutPlaceInput | InventoryStockUpdateManyWithWhereWithoutPlaceInput[]
+    deleteMany?: InventoryStockScalarWhereInput | InventoryStockScalarWhereInput[]
+  }
+
+  export type InventoryAlertUncheckedUpdateManyWithoutPlaceNestedInput = {
+    create?: XOR<InventoryAlertCreateWithoutPlaceInput, InventoryAlertUncheckedCreateWithoutPlaceInput> | InventoryAlertCreateWithoutPlaceInput[] | InventoryAlertUncheckedCreateWithoutPlaceInput[]
+    connectOrCreate?: InventoryAlertCreateOrConnectWithoutPlaceInput | InventoryAlertCreateOrConnectWithoutPlaceInput[]
+    upsert?: InventoryAlertUpsertWithWhereUniqueWithoutPlaceInput | InventoryAlertUpsertWithWhereUniqueWithoutPlaceInput[]
+    createMany?: InventoryAlertCreateManyPlaceInputEnvelope
+    set?: InventoryAlertWhereUniqueInput | InventoryAlertWhereUniqueInput[]
+    disconnect?: InventoryAlertWhereUniqueInput | InventoryAlertWhereUniqueInput[]
+    delete?: InventoryAlertWhereUniqueInput | InventoryAlertWhereUniqueInput[]
+    connect?: InventoryAlertWhereUniqueInput | InventoryAlertWhereUniqueInput[]
+    update?: InventoryAlertUpdateWithWhereUniqueWithoutPlaceInput | InventoryAlertUpdateWithWhereUniqueWithoutPlaceInput[]
+    updateMany?: InventoryAlertUpdateManyWithWhereWithoutPlaceInput | InventoryAlertUpdateManyWithWhereWithoutPlaceInput[]
+    deleteMany?: InventoryAlertScalarWhereInput | InventoryAlertScalarWhereInput[]
+  }
+
+  export type InventoryChecklistItemUncheckedUpdateManyWithoutPlaceNestedInput = {
+    create?: XOR<InventoryChecklistItemCreateWithoutPlaceInput, InventoryChecklistItemUncheckedCreateWithoutPlaceInput> | InventoryChecklistItemCreateWithoutPlaceInput[] | InventoryChecklistItemUncheckedCreateWithoutPlaceInput[]
+    connectOrCreate?: InventoryChecklistItemCreateOrConnectWithoutPlaceInput | InventoryChecklistItemCreateOrConnectWithoutPlaceInput[]
+    upsert?: InventoryChecklistItemUpsertWithWhereUniqueWithoutPlaceInput | InventoryChecklistItemUpsertWithWhereUniqueWithoutPlaceInput[]
+    createMany?: InventoryChecklistItemCreateManyPlaceInputEnvelope
+    set?: InventoryChecklistItemWhereUniqueInput | InventoryChecklistItemWhereUniqueInput[]
+    disconnect?: InventoryChecklistItemWhereUniqueInput | InventoryChecklistItemWhereUniqueInput[]
+    delete?: InventoryChecklistItemWhereUniqueInput | InventoryChecklistItemWhereUniqueInput[]
+    connect?: InventoryChecklistItemWhereUniqueInput | InventoryChecklistItemWhereUniqueInput[]
+    update?: InventoryChecklistItemUpdateWithWhereUniqueWithoutPlaceInput | InventoryChecklistItemUpdateWithWhereUniqueWithoutPlaceInput[]
+    updateMany?: InventoryChecklistItemUpdateManyWithWhereWithoutPlaceInput | InventoryChecklistItemUpdateManyWithWhereWithoutPlaceInput[]
+    deleteMany?: InventoryChecklistItemScalarWhereInput | InventoryChecklistItemScalarWhereInput[]
+  }
+
+  export type InventoryStockEventUncheckedUpdateManyWithoutPlaceNestedInput = {
+    create?: XOR<InventoryStockEventCreateWithoutPlaceInput, InventoryStockEventUncheckedCreateWithoutPlaceInput> | InventoryStockEventCreateWithoutPlaceInput[] | InventoryStockEventUncheckedCreateWithoutPlaceInput[]
+    connectOrCreate?: InventoryStockEventCreateOrConnectWithoutPlaceInput | InventoryStockEventCreateOrConnectWithoutPlaceInput[]
+    upsert?: InventoryStockEventUpsertWithWhereUniqueWithoutPlaceInput | InventoryStockEventUpsertWithWhereUniqueWithoutPlaceInput[]
+    createMany?: InventoryStockEventCreateManyPlaceInputEnvelope
+    set?: InventoryStockEventWhereUniqueInput | InventoryStockEventWhereUniqueInput[]
+    disconnect?: InventoryStockEventWhereUniqueInput | InventoryStockEventWhereUniqueInput[]
+    delete?: InventoryStockEventWhereUniqueInput | InventoryStockEventWhereUniqueInput[]
+    connect?: InventoryStockEventWhereUniqueInput | InventoryStockEventWhereUniqueInput[]
+    update?: InventoryStockEventUpdateWithWhereUniqueWithoutPlaceInput | InventoryStockEventUpdateWithWhereUniqueWithoutPlaceInput[]
+    updateMany?: InventoryStockEventUpdateManyWithWhereWithoutPlaceInput | InventoryStockEventUpdateManyWithWhereWithoutPlaceInput[]
+    deleteMany?: InventoryStockEventScalarWhereInput | InventoryStockEventScalarWhereInput[]
+  }
+
+  export type InventoryStockCreateNestedManyWithoutProductInput = {
+    create?: XOR<InventoryStockCreateWithoutProductInput, InventoryStockUncheckedCreateWithoutProductInput> | InventoryStockCreateWithoutProductInput[] | InventoryStockUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: InventoryStockCreateOrConnectWithoutProductInput | InventoryStockCreateOrConnectWithoutProductInput[]
+    createMany?: InventoryStockCreateManyProductInputEnvelope
+    connect?: InventoryStockWhereUniqueInput | InventoryStockWhereUniqueInput[]
+  }
+
+  export type InventoryAlertCreateNestedManyWithoutProductInput = {
+    create?: XOR<InventoryAlertCreateWithoutProductInput, InventoryAlertUncheckedCreateWithoutProductInput> | InventoryAlertCreateWithoutProductInput[] | InventoryAlertUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: InventoryAlertCreateOrConnectWithoutProductInput | InventoryAlertCreateOrConnectWithoutProductInput[]
+    createMany?: InventoryAlertCreateManyProductInputEnvelope
+    connect?: InventoryAlertWhereUniqueInput | InventoryAlertWhereUniqueInput[]
+  }
+
+  export type InventoryChecklistItemCreateNestedManyWithoutProductInput = {
+    create?: XOR<InventoryChecklistItemCreateWithoutProductInput, InventoryChecklistItemUncheckedCreateWithoutProductInput> | InventoryChecklistItemCreateWithoutProductInput[] | InventoryChecklistItemUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: InventoryChecklistItemCreateOrConnectWithoutProductInput | InventoryChecklistItemCreateOrConnectWithoutProductInput[]
+    createMany?: InventoryChecklistItemCreateManyProductInputEnvelope
+    connect?: InventoryChecklistItemWhereUniqueInput | InventoryChecklistItemWhereUniqueInput[]
+  }
+
+  export type InventoryStockEventCreateNestedManyWithoutProductInput = {
+    create?: XOR<InventoryStockEventCreateWithoutProductInput, InventoryStockEventUncheckedCreateWithoutProductInput> | InventoryStockEventCreateWithoutProductInput[] | InventoryStockEventUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: InventoryStockEventCreateOrConnectWithoutProductInput | InventoryStockEventCreateOrConnectWithoutProductInput[]
+    createMany?: InventoryStockEventCreateManyProductInputEnvelope
+    connect?: InventoryStockEventWhereUniqueInput | InventoryStockEventWhereUniqueInput[]
+  }
+
+  export type InventoryStockUncheckedCreateNestedManyWithoutProductInput = {
+    create?: XOR<InventoryStockCreateWithoutProductInput, InventoryStockUncheckedCreateWithoutProductInput> | InventoryStockCreateWithoutProductInput[] | InventoryStockUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: InventoryStockCreateOrConnectWithoutProductInput | InventoryStockCreateOrConnectWithoutProductInput[]
+    createMany?: InventoryStockCreateManyProductInputEnvelope
+    connect?: InventoryStockWhereUniqueInput | InventoryStockWhereUniqueInput[]
+  }
+
+  export type InventoryAlertUncheckedCreateNestedManyWithoutProductInput = {
+    create?: XOR<InventoryAlertCreateWithoutProductInput, InventoryAlertUncheckedCreateWithoutProductInput> | InventoryAlertCreateWithoutProductInput[] | InventoryAlertUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: InventoryAlertCreateOrConnectWithoutProductInput | InventoryAlertCreateOrConnectWithoutProductInput[]
+    createMany?: InventoryAlertCreateManyProductInputEnvelope
+    connect?: InventoryAlertWhereUniqueInput | InventoryAlertWhereUniqueInput[]
+  }
+
+  export type InventoryChecklistItemUncheckedCreateNestedManyWithoutProductInput = {
+    create?: XOR<InventoryChecklistItemCreateWithoutProductInput, InventoryChecklistItemUncheckedCreateWithoutProductInput> | InventoryChecklistItemCreateWithoutProductInput[] | InventoryChecklistItemUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: InventoryChecklistItemCreateOrConnectWithoutProductInput | InventoryChecklistItemCreateOrConnectWithoutProductInput[]
+    createMany?: InventoryChecklistItemCreateManyProductInputEnvelope
+    connect?: InventoryChecklistItemWhereUniqueInput | InventoryChecklistItemWhereUniqueInput[]
+  }
+
+  export type InventoryStockEventUncheckedCreateNestedManyWithoutProductInput = {
+    create?: XOR<InventoryStockEventCreateWithoutProductInput, InventoryStockEventUncheckedCreateWithoutProductInput> | InventoryStockEventCreateWithoutProductInput[] | InventoryStockEventUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: InventoryStockEventCreateOrConnectWithoutProductInput | InventoryStockEventCreateOrConnectWithoutProductInput[]
+    createMany?: InventoryStockEventCreateManyProductInputEnvelope
+    connect?: InventoryStockEventWhereUniqueInput | InventoryStockEventWhereUniqueInput[]
+  }
+
+  export type InventoryStockUpdateManyWithoutProductNestedInput = {
+    create?: XOR<InventoryStockCreateWithoutProductInput, InventoryStockUncheckedCreateWithoutProductInput> | InventoryStockCreateWithoutProductInput[] | InventoryStockUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: InventoryStockCreateOrConnectWithoutProductInput | InventoryStockCreateOrConnectWithoutProductInput[]
+    upsert?: InventoryStockUpsertWithWhereUniqueWithoutProductInput | InventoryStockUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: InventoryStockCreateManyProductInputEnvelope
+    set?: InventoryStockWhereUniqueInput | InventoryStockWhereUniqueInput[]
+    disconnect?: InventoryStockWhereUniqueInput | InventoryStockWhereUniqueInput[]
+    delete?: InventoryStockWhereUniqueInput | InventoryStockWhereUniqueInput[]
+    connect?: InventoryStockWhereUniqueInput | InventoryStockWhereUniqueInput[]
+    update?: InventoryStockUpdateWithWhereUniqueWithoutProductInput | InventoryStockUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: InventoryStockUpdateManyWithWhereWithoutProductInput | InventoryStockUpdateManyWithWhereWithoutProductInput[]
+    deleteMany?: InventoryStockScalarWhereInput | InventoryStockScalarWhereInput[]
+  }
+
+  export type InventoryAlertUpdateManyWithoutProductNestedInput = {
+    create?: XOR<InventoryAlertCreateWithoutProductInput, InventoryAlertUncheckedCreateWithoutProductInput> | InventoryAlertCreateWithoutProductInput[] | InventoryAlertUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: InventoryAlertCreateOrConnectWithoutProductInput | InventoryAlertCreateOrConnectWithoutProductInput[]
+    upsert?: InventoryAlertUpsertWithWhereUniqueWithoutProductInput | InventoryAlertUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: InventoryAlertCreateManyProductInputEnvelope
+    set?: InventoryAlertWhereUniqueInput | InventoryAlertWhereUniqueInput[]
+    disconnect?: InventoryAlertWhereUniqueInput | InventoryAlertWhereUniqueInput[]
+    delete?: InventoryAlertWhereUniqueInput | InventoryAlertWhereUniqueInput[]
+    connect?: InventoryAlertWhereUniqueInput | InventoryAlertWhereUniqueInput[]
+    update?: InventoryAlertUpdateWithWhereUniqueWithoutProductInput | InventoryAlertUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: InventoryAlertUpdateManyWithWhereWithoutProductInput | InventoryAlertUpdateManyWithWhereWithoutProductInput[]
+    deleteMany?: InventoryAlertScalarWhereInput | InventoryAlertScalarWhereInput[]
+  }
+
+  export type InventoryChecklistItemUpdateManyWithoutProductNestedInput = {
+    create?: XOR<InventoryChecklistItemCreateWithoutProductInput, InventoryChecklistItemUncheckedCreateWithoutProductInput> | InventoryChecklistItemCreateWithoutProductInput[] | InventoryChecklistItemUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: InventoryChecklistItemCreateOrConnectWithoutProductInput | InventoryChecklistItemCreateOrConnectWithoutProductInput[]
+    upsert?: InventoryChecklistItemUpsertWithWhereUniqueWithoutProductInput | InventoryChecklistItemUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: InventoryChecklistItemCreateManyProductInputEnvelope
+    set?: InventoryChecklistItemWhereUniqueInput | InventoryChecklistItemWhereUniqueInput[]
+    disconnect?: InventoryChecklistItemWhereUniqueInput | InventoryChecklistItemWhereUniqueInput[]
+    delete?: InventoryChecklistItemWhereUniqueInput | InventoryChecklistItemWhereUniqueInput[]
+    connect?: InventoryChecklistItemWhereUniqueInput | InventoryChecklistItemWhereUniqueInput[]
+    update?: InventoryChecklistItemUpdateWithWhereUniqueWithoutProductInput | InventoryChecklistItemUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: InventoryChecklistItemUpdateManyWithWhereWithoutProductInput | InventoryChecklistItemUpdateManyWithWhereWithoutProductInput[]
+    deleteMany?: InventoryChecklistItemScalarWhereInput | InventoryChecklistItemScalarWhereInput[]
+  }
+
+  export type InventoryStockEventUpdateManyWithoutProductNestedInput = {
+    create?: XOR<InventoryStockEventCreateWithoutProductInput, InventoryStockEventUncheckedCreateWithoutProductInput> | InventoryStockEventCreateWithoutProductInput[] | InventoryStockEventUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: InventoryStockEventCreateOrConnectWithoutProductInput | InventoryStockEventCreateOrConnectWithoutProductInput[]
+    upsert?: InventoryStockEventUpsertWithWhereUniqueWithoutProductInput | InventoryStockEventUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: InventoryStockEventCreateManyProductInputEnvelope
+    set?: InventoryStockEventWhereUniqueInput | InventoryStockEventWhereUniqueInput[]
+    disconnect?: InventoryStockEventWhereUniqueInput | InventoryStockEventWhereUniqueInput[]
+    delete?: InventoryStockEventWhereUniqueInput | InventoryStockEventWhereUniqueInput[]
+    connect?: InventoryStockEventWhereUniqueInput | InventoryStockEventWhereUniqueInput[]
+    update?: InventoryStockEventUpdateWithWhereUniqueWithoutProductInput | InventoryStockEventUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: InventoryStockEventUpdateManyWithWhereWithoutProductInput | InventoryStockEventUpdateManyWithWhereWithoutProductInput[]
+    deleteMany?: InventoryStockEventScalarWhereInput | InventoryStockEventScalarWhereInput[]
+  }
+
+  export type InventoryStockUncheckedUpdateManyWithoutProductNestedInput = {
+    create?: XOR<InventoryStockCreateWithoutProductInput, InventoryStockUncheckedCreateWithoutProductInput> | InventoryStockCreateWithoutProductInput[] | InventoryStockUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: InventoryStockCreateOrConnectWithoutProductInput | InventoryStockCreateOrConnectWithoutProductInput[]
+    upsert?: InventoryStockUpsertWithWhereUniqueWithoutProductInput | InventoryStockUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: InventoryStockCreateManyProductInputEnvelope
+    set?: InventoryStockWhereUniqueInput | InventoryStockWhereUniqueInput[]
+    disconnect?: InventoryStockWhereUniqueInput | InventoryStockWhereUniqueInput[]
+    delete?: InventoryStockWhereUniqueInput | InventoryStockWhereUniqueInput[]
+    connect?: InventoryStockWhereUniqueInput | InventoryStockWhereUniqueInput[]
+    update?: InventoryStockUpdateWithWhereUniqueWithoutProductInput | InventoryStockUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: InventoryStockUpdateManyWithWhereWithoutProductInput | InventoryStockUpdateManyWithWhereWithoutProductInput[]
+    deleteMany?: InventoryStockScalarWhereInput | InventoryStockScalarWhereInput[]
+  }
+
+  export type InventoryAlertUncheckedUpdateManyWithoutProductNestedInput = {
+    create?: XOR<InventoryAlertCreateWithoutProductInput, InventoryAlertUncheckedCreateWithoutProductInput> | InventoryAlertCreateWithoutProductInput[] | InventoryAlertUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: InventoryAlertCreateOrConnectWithoutProductInput | InventoryAlertCreateOrConnectWithoutProductInput[]
+    upsert?: InventoryAlertUpsertWithWhereUniqueWithoutProductInput | InventoryAlertUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: InventoryAlertCreateManyProductInputEnvelope
+    set?: InventoryAlertWhereUniqueInput | InventoryAlertWhereUniqueInput[]
+    disconnect?: InventoryAlertWhereUniqueInput | InventoryAlertWhereUniqueInput[]
+    delete?: InventoryAlertWhereUniqueInput | InventoryAlertWhereUniqueInput[]
+    connect?: InventoryAlertWhereUniqueInput | InventoryAlertWhereUniqueInput[]
+    update?: InventoryAlertUpdateWithWhereUniqueWithoutProductInput | InventoryAlertUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: InventoryAlertUpdateManyWithWhereWithoutProductInput | InventoryAlertUpdateManyWithWhereWithoutProductInput[]
+    deleteMany?: InventoryAlertScalarWhereInput | InventoryAlertScalarWhereInput[]
+  }
+
+  export type InventoryChecklistItemUncheckedUpdateManyWithoutProductNestedInput = {
+    create?: XOR<InventoryChecklistItemCreateWithoutProductInput, InventoryChecklistItemUncheckedCreateWithoutProductInput> | InventoryChecklistItemCreateWithoutProductInput[] | InventoryChecklistItemUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: InventoryChecklistItemCreateOrConnectWithoutProductInput | InventoryChecklistItemCreateOrConnectWithoutProductInput[]
+    upsert?: InventoryChecklistItemUpsertWithWhereUniqueWithoutProductInput | InventoryChecklistItemUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: InventoryChecklistItemCreateManyProductInputEnvelope
+    set?: InventoryChecklistItemWhereUniqueInput | InventoryChecklistItemWhereUniqueInput[]
+    disconnect?: InventoryChecklistItemWhereUniqueInput | InventoryChecklistItemWhereUniqueInput[]
+    delete?: InventoryChecklistItemWhereUniqueInput | InventoryChecklistItemWhereUniqueInput[]
+    connect?: InventoryChecklistItemWhereUniqueInput | InventoryChecklistItemWhereUniqueInput[]
+    update?: InventoryChecklistItemUpdateWithWhereUniqueWithoutProductInput | InventoryChecklistItemUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: InventoryChecklistItemUpdateManyWithWhereWithoutProductInput | InventoryChecklistItemUpdateManyWithWhereWithoutProductInput[]
+    deleteMany?: InventoryChecklistItemScalarWhereInput | InventoryChecklistItemScalarWhereInput[]
+  }
+
+  export type InventoryStockEventUncheckedUpdateManyWithoutProductNestedInput = {
+    create?: XOR<InventoryStockEventCreateWithoutProductInput, InventoryStockEventUncheckedCreateWithoutProductInput> | InventoryStockEventCreateWithoutProductInput[] | InventoryStockEventUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: InventoryStockEventCreateOrConnectWithoutProductInput | InventoryStockEventCreateOrConnectWithoutProductInput[]
+    upsert?: InventoryStockEventUpsertWithWhereUniqueWithoutProductInput | InventoryStockEventUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: InventoryStockEventCreateManyProductInputEnvelope
+    set?: InventoryStockEventWhereUniqueInput | InventoryStockEventWhereUniqueInput[]
+    disconnect?: InventoryStockEventWhereUniqueInput | InventoryStockEventWhereUniqueInput[]
+    delete?: InventoryStockEventWhereUniqueInput | InventoryStockEventWhereUniqueInput[]
+    connect?: InventoryStockEventWhereUniqueInput | InventoryStockEventWhereUniqueInput[]
+    update?: InventoryStockEventUpdateWithWhereUniqueWithoutProductInput | InventoryStockEventUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: InventoryStockEventUpdateManyWithWhereWithoutProductInput | InventoryStockEventUpdateManyWithWhereWithoutProductInput[]
+    deleteMany?: InventoryStockEventScalarWhereInput | InventoryStockEventScalarWhereInput[]
+  }
+
+  export type InventoryPlaceCreateNestedOneWithoutStocksInput = {
+    create?: XOR<InventoryPlaceCreateWithoutStocksInput, InventoryPlaceUncheckedCreateWithoutStocksInput>
+    connectOrCreate?: InventoryPlaceCreateOrConnectWithoutStocksInput
+    connect?: InventoryPlaceWhereUniqueInput
+  }
+
+  export type InventoryProductCreateNestedOneWithoutStocksInput = {
+    create?: XOR<InventoryProductCreateWithoutStocksInput, InventoryProductUncheckedCreateWithoutStocksInput>
+    connectOrCreate?: InventoryProductCreateOrConnectWithoutStocksInput
+    connect?: InventoryProductWhereUniqueInput
+  }
+
+  export type InventoryPlaceUpdateOneRequiredWithoutStocksNestedInput = {
+    create?: XOR<InventoryPlaceCreateWithoutStocksInput, InventoryPlaceUncheckedCreateWithoutStocksInput>
+    connectOrCreate?: InventoryPlaceCreateOrConnectWithoutStocksInput
+    upsert?: InventoryPlaceUpsertWithoutStocksInput
+    connect?: InventoryPlaceWhereUniqueInput
+    update?: XOR<XOR<InventoryPlaceUpdateToOneWithWhereWithoutStocksInput, InventoryPlaceUpdateWithoutStocksInput>, InventoryPlaceUncheckedUpdateWithoutStocksInput>
+  }
+
+  export type InventoryProductUpdateOneRequiredWithoutStocksNestedInput = {
+    create?: XOR<InventoryProductCreateWithoutStocksInput, InventoryProductUncheckedCreateWithoutStocksInput>
+    connectOrCreate?: InventoryProductCreateOrConnectWithoutStocksInput
+    upsert?: InventoryProductUpsertWithoutStocksInput
+    connect?: InventoryProductWhereUniqueInput
+    update?: XOR<XOR<InventoryProductUpdateToOneWithWhereWithoutStocksInput, InventoryProductUpdateWithoutStocksInput>, InventoryProductUncheckedUpdateWithoutStocksInput>
+  }
+
+  export type InventoryChecklistItemCreateNestedManyWithoutChecklistInput = {
+    create?: XOR<InventoryChecklistItemCreateWithoutChecklistInput, InventoryChecklistItemUncheckedCreateWithoutChecklistInput> | InventoryChecklistItemCreateWithoutChecklistInput[] | InventoryChecklistItemUncheckedCreateWithoutChecklistInput[]
+    connectOrCreate?: InventoryChecklistItemCreateOrConnectWithoutChecklistInput | InventoryChecklistItemCreateOrConnectWithoutChecklistInput[]
+    createMany?: InventoryChecklistItemCreateManyChecklistInputEnvelope
+    connect?: InventoryChecklistItemWhereUniqueInput | InventoryChecklistItemWhereUniqueInput[]
+  }
+
+  export type InventoryAlertCreateNestedManyWithoutChecklistInput = {
+    create?: XOR<InventoryAlertCreateWithoutChecklistInput, InventoryAlertUncheckedCreateWithoutChecklistInput> | InventoryAlertCreateWithoutChecklistInput[] | InventoryAlertUncheckedCreateWithoutChecklistInput[]
+    connectOrCreate?: InventoryAlertCreateOrConnectWithoutChecklistInput | InventoryAlertCreateOrConnectWithoutChecklistInput[]
+    createMany?: InventoryAlertCreateManyChecklistInputEnvelope
+    connect?: InventoryAlertWhereUniqueInput | InventoryAlertWhereUniqueInput[]
+  }
+
+  export type InventoryChecklistItemUncheckedCreateNestedManyWithoutChecklistInput = {
+    create?: XOR<InventoryChecklistItemCreateWithoutChecklistInput, InventoryChecklistItemUncheckedCreateWithoutChecklistInput> | InventoryChecklistItemCreateWithoutChecklistInput[] | InventoryChecklistItemUncheckedCreateWithoutChecklistInput[]
+    connectOrCreate?: InventoryChecklistItemCreateOrConnectWithoutChecklistInput | InventoryChecklistItemCreateOrConnectWithoutChecklistInput[]
+    createMany?: InventoryChecklistItemCreateManyChecklistInputEnvelope
+    connect?: InventoryChecklistItemWhereUniqueInput | InventoryChecklistItemWhereUniqueInput[]
+  }
+
+  export type InventoryAlertUncheckedCreateNestedManyWithoutChecklistInput = {
+    create?: XOR<InventoryAlertCreateWithoutChecklistInput, InventoryAlertUncheckedCreateWithoutChecklistInput> | InventoryAlertCreateWithoutChecklistInput[] | InventoryAlertUncheckedCreateWithoutChecklistInput[]
+    connectOrCreate?: InventoryAlertCreateOrConnectWithoutChecklistInput | InventoryAlertCreateOrConnectWithoutChecklistInput[]
+    createMany?: InventoryAlertCreateManyChecklistInputEnvelope
+    connect?: InventoryAlertWhereUniqueInput | InventoryAlertWhereUniqueInput[]
+  }
+
+  export type EnumInventoryChecklistStatusFieldUpdateOperationsInput = {
+    set?: $Enums.InventoryChecklistStatus
+  }
+
+  export type InventoryChecklistItemUpdateManyWithoutChecklistNestedInput = {
+    create?: XOR<InventoryChecklistItemCreateWithoutChecklistInput, InventoryChecklistItemUncheckedCreateWithoutChecklistInput> | InventoryChecklistItemCreateWithoutChecklistInput[] | InventoryChecklistItemUncheckedCreateWithoutChecklistInput[]
+    connectOrCreate?: InventoryChecklistItemCreateOrConnectWithoutChecklistInput | InventoryChecklistItemCreateOrConnectWithoutChecklistInput[]
+    upsert?: InventoryChecklistItemUpsertWithWhereUniqueWithoutChecklistInput | InventoryChecklistItemUpsertWithWhereUniqueWithoutChecklistInput[]
+    createMany?: InventoryChecklistItemCreateManyChecklistInputEnvelope
+    set?: InventoryChecklistItemWhereUniqueInput | InventoryChecklistItemWhereUniqueInput[]
+    disconnect?: InventoryChecklistItemWhereUniqueInput | InventoryChecklistItemWhereUniqueInput[]
+    delete?: InventoryChecklistItemWhereUniqueInput | InventoryChecklistItemWhereUniqueInput[]
+    connect?: InventoryChecklistItemWhereUniqueInput | InventoryChecklistItemWhereUniqueInput[]
+    update?: InventoryChecklistItemUpdateWithWhereUniqueWithoutChecklistInput | InventoryChecklistItemUpdateWithWhereUniqueWithoutChecklistInput[]
+    updateMany?: InventoryChecklistItemUpdateManyWithWhereWithoutChecklistInput | InventoryChecklistItemUpdateManyWithWhereWithoutChecklistInput[]
+    deleteMany?: InventoryChecklistItemScalarWhereInput | InventoryChecklistItemScalarWhereInput[]
+  }
+
+  export type InventoryAlertUpdateManyWithoutChecklistNestedInput = {
+    create?: XOR<InventoryAlertCreateWithoutChecklistInput, InventoryAlertUncheckedCreateWithoutChecklistInput> | InventoryAlertCreateWithoutChecklistInput[] | InventoryAlertUncheckedCreateWithoutChecklistInput[]
+    connectOrCreate?: InventoryAlertCreateOrConnectWithoutChecklistInput | InventoryAlertCreateOrConnectWithoutChecklistInput[]
+    upsert?: InventoryAlertUpsertWithWhereUniqueWithoutChecklistInput | InventoryAlertUpsertWithWhereUniqueWithoutChecklistInput[]
+    createMany?: InventoryAlertCreateManyChecklistInputEnvelope
+    set?: InventoryAlertWhereUniqueInput | InventoryAlertWhereUniqueInput[]
+    disconnect?: InventoryAlertWhereUniqueInput | InventoryAlertWhereUniqueInput[]
+    delete?: InventoryAlertWhereUniqueInput | InventoryAlertWhereUniqueInput[]
+    connect?: InventoryAlertWhereUniqueInput | InventoryAlertWhereUniqueInput[]
+    update?: InventoryAlertUpdateWithWhereUniqueWithoutChecklistInput | InventoryAlertUpdateWithWhereUniqueWithoutChecklistInput[]
+    updateMany?: InventoryAlertUpdateManyWithWhereWithoutChecklistInput | InventoryAlertUpdateManyWithWhereWithoutChecklistInput[]
+    deleteMany?: InventoryAlertScalarWhereInput | InventoryAlertScalarWhereInput[]
+  }
+
+  export type InventoryChecklistItemUncheckedUpdateManyWithoutChecklistNestedInput = {
+    create?: XOR<InventoryChecklistItemCreateWithoutChecklistInput, InventoryChecklistItemUncheckedCreateWithoutChecklistInput> | InventoryChecklistItemCreateWithoutChecklistInput[] | InventoryChecklistItemUncheckedCreateWithoutChecklistInput[]
+    connectOrCreate?: InventoryChecklistItemCreateOrConnectWithoutChecklistInput | InventoryChecklistItemCreateOrConnectWithoutChecklistInput[]
+    upsert?: InventoryChecklistItemUpsertWithWhereUniqueWithoutChecklistInput | InventoryChecklistItemUpsertWithWhereUniqueWithoutChecklistInput[]
+    createMany?: InventoryChecklistItemCreateManyChecklistInputEnvelope
+    set?: InventoryChecklistItemWhereUniqueInput | InventoryChecklistItemWhereUniqueInput[]
+    disconnect?: InventoryChecklistItemWhereUniqueInput | InventoryChecklistItemWhereUniqueInput[]
+    delete?: InventoryChecklistItemWhereUniqueInput | InventoryChecklistItemWhereUniqueInput[]
+    connect?: InventoryChecklistItemWhereUniqueInput | InventoryChecklistItemWhereUniqueInput[]
+    update?: InventoryChecklistItemUpdateWithWhereUniqueWithoutChecklistInput | InventoryChecklistItemUpdateWithWhereUniqueWithoutChecklistInput[]
+    updateMany?: InventoryChecklistItemUpdateManyWithWhereWithoutChecklistInput | InventoryChecklistItemUpdateManyWithWhereWithoutChecklistInput[]
+    deleteMany?: InventoryChecklistItemScalarWhereInput | InventoryChecklistItemScalarWhereInput[]
+  }
+
+  export type InventoryAlertUncheckedUpdateManyWithoutChecklistNestedInput = {
+    create?: XOR<InventoryAlertCreateWithoutChecklistInput, InventoryAlertUncheckedCreateWithoutChecklistInput> | InventoryAlertCreateWithoutChecklistInput[] | InventoryAlertUncheckedCreateWithoutChecklistInput[]
+    connectOrCreate?: InventoryAlertCreateOrConnectWithoutChecklistInput | InventoryAlertCreateOrConnectWithoutChecklistInput[]
+    upsert?: InventoryAlertUpsertWithWhereUniqueWithoutChecklistInput | InventoryAlertUpsertWithWhereUniqueWithoutChecklistInput[]
+    createMany?: InventoryAlertCreateManyChecklistInputEnvelope
+    set?: InventoryAlertWhereUniqueInput | InventoryAlertWhereUniqueInput[]
+    disconnect?: InventoryAlertWhereUniqueInput | InventoryAlertWhereUniqueInput[]
+    delete?: InventoryAlertWhereUniqueInput | InventoryAlertWhereUniqueInput[]
+    connect?: InventoryAlertWhereUniqueInput | InventoryAlertWhereUniqueInput[]
+    update?: InventoryAlertUpdateWithWhereUniqueWithoutChecklistInput | InventoryAlertUpdateWithWhereUniqueWithoutChecklistInput[]
+    updateMany?: InventoryAlertUpdateManyWithWhereWithoutChecklistInput | InventoryAlertUpdateManyWithWhereWithoutChecklistInput[]
+    deleteMany?: InventoryAlertScalarWhereInput | InventoryAlertScalarWhereInput[]
+  }
+
+  export type InventoryChecklistCreateNestedOneWithoutItemsInput = {
+    create?: XOR<InventoryChecklistCreateWithoutItemsInput, InventoryChecklistUncheckedCreateWithoutItemsInput>
+    connectOrCreate?: InventoryChecklistCreateOrConnectWithoutItemsInput
+    connect?: InventoryChecklistWhereUniqueInput
+  }
+
+  export type InventoryPlaceCreateNestedOneWithoutChecklistItemsInput = {
+    create?: XOR<InventoryPlaceCreateWithoutChecklistItemsInput, InventoryPlaceUncheckedCreateWithoutChecklistItemsInput>
+    connectOrCreate?: InventoryPlaceCreateOrConnectWithoutChecklistItemsInput
+    connect?: InventoryPlaceWhereUniqueInput
+  }
+
+  export type InventoryProductCreateNestedOneWithoutChecklistItemsInput = {
+    create?: XOR<InventoryProductCreateWithoutChecklistItemsInput, InventoryProductUncheckedCreateWithoutChecklistItemsInput>
+    connectOrCreate?: InventoryProductCreateOrConnectWithoutChecklistItemsInput
+    connect?: InventoryProductWhereUniqueInput
+  }
+
+  export type InventoryAlertCreateNestedManyWithoutChecklistItemInput = {
+    create?: XOR<InventoryAlertCreateWithoutChecklistItemInput, InventoryAlertUncheckedCreateWithoutChecklistItemInput> | InventoryAlertCreateWithoutChecklistItemInput[] | InventoryAlertUncheckedCreateWithoutChecklistItemInput[]
+    connectOrCreate?: InventoryAlertCreateOrConnectWithoutChecklistItemInput | InventoryAlertCreateOrConnectWithoutChecklistItemInput[]
+    createMany?: InventoryAlertCreateManyChecklistItemInputEnvelope
+    connect?: InventoryAlertWhereUniqueInput | InventoryAlertWhereUniqueInput[]
+  }
+
+  export type InventoryAlertUncheckedCreateNestedManyWithoutChecklistItemInput = {
+    create?: XOR<InventoryAlertCreateWithoutChecklistItemInput, InventoryAlertUncheckedCreateWithoutChecklistItemInput> | InventoryAlertCreateWithoutChecklistItemInput[] | InventoryAlertUncheckedCreateWithoutChecklistItemInput[]
+    connectOrCreate?: InventoryAlertCreateOrConnectWithoutChecklistItemInput | InventoryAlertCreateOrConnectWithoutChecklistItemInput[]
+    createMany?: InventoryAlertCreateManyChecklistItemInputEnvelope
+    connect?: InventoryAlertWhereUniqueInput | InventoryAlertWhereUniqueInput[]
+  }
+
+  export type EnumInventoryChecklistItemResultFieldUpdateOperationsInput = {
+    set?: $Enums.InventoryChecklistItemResult
+  }
+
+  export type InventoryChecklistUpdateOneRequiredWithoutItemsNestedInput = {
+    create?: XOR<InventoryChecklistCreateWithoutItemsInput, InventoryChecklistUncheckedCreateWithoutItemsInput>
+    connectOrCreate?: InventoryChecklistCreateOrConnectWithoutItemsInput
+    upsert?: InventoryChecklistUpsertWithoutItemsInput
+    connect?: InventoryChecklistWhereUniqueInput
+    update?: XOR<XOR<InventoryChecklistUpdateToOneWithWhereWithoutItemsInput, InventoryChecklistUpdateWithoutItemsInput>, InventoryChecklistUncheckedUpdateWithoutItemsInput>
+  }
+
+  export type InventoryPlaceUpdateOneRequiredWithoutChecklistItemsNestedInput = {
+    create?: XOR<InventoryPlaceCreateWithoutChecklistItemsInput, InventoryPlaceUncheckedCreateWithoutChecklistItemsInput>
+    connectOrCreate?: InventoryPlaceCreateOrConnectWithoutChecklistItemsInput
+    upsert?: InventoryPlaceUpsertWithoutChecklistItemsInput
+    connect?: InventoryPlaceWhereUniqueInput
+    update?: XOR<XOR<InventoryPlaceUpdateToOneWithWhereWithoutChecklistItemsInput, InventoryPlaceUpdateWithoutChecklistItemsInput>, InventoryPlaceUncheckedUpdateWithoutChecklistItemsInput>
+  }
+
+  export type InventoryProductUpdateOneRequiredWithoutChecklistItemsNestedInput = {
+    create?: XOR<InventoryProductCreateWithoutChecklistItemsInput, InventoryProductUncheckedCreateWithoutChecklistItemsInput>
+    connectOrCreate?: InventoryProductCreateOrConnectWithoutChecklistItemsInput
+    upsert?: InventoryProductUpsertWithoutChecklistItemsInput
+    connect?: InventoryProductWhereUniqueInput
+    update?: XOR<XOR<InventoryProductUpdateToOneWithWhereWithoutChecklistItemsInput, InventoryProductUpdateWithoutChecklistItemsInput>, InventoryProductUncheckedUpdateWithoutChecklistItemsInput>
+  }
+
+  export type InventoryAlertUpdateManyWithoutChecklistItemNestedInput = {
+    create?: XOR<InventoryAlertCreateWithoutChecklistItemInput, InventoryAlertUncheckedCreateWithoutChecklistItemInput> | InventoryAlertCreateWithoutChecklistItemInput[] | InventoryAlertUncheckedCreateWithoutChecklistItemInput[]
+    connectOrCreate?: InventoryAlertCreateOrConnectWithoutChecklistItemInput | InventoryAlertCreateOrConnectWithoutChecklistItemInput[]
+    upsert?: InventoryAlertUpsertWithWhereUniqueWithoutChecklistItemInput | InventoryAlertUpsertWithWhereUniqueWithoutChecklistItemInput[]
+    createMany?: InventoryAlertCreateManyChecklistItemInputEnvelope
+    set?: InventoryAlertWhereUniqueInput | InventoryAlertWhereUniqueInput[]
+    disconnect?: InventoryAlertWhereUniqueInput | InventoryAlertWhereUniqueInput[]
+    delete?: InventoryAlertWhereUniqueInput | InventoryAlertWhereUniqueInput[]
+    connect?: InventoryAlertWhereUniqueInput | InventoryAlertWhereUniqueInput[]
+    update?: InventoryAlertUpdateWithWhereUniqueWithoutChecklistItemInput | InventoryAlertUpdateWithWhereUniqueWithoutChecklistItemInput[]
+    updateMany?: InventoryAlertUpdateManyWithWhereWithoutChecklistItemInput | InventoryAlertUpdateManyWithWhereWithoutChecklistItemInput[]
+    deleteMany?: InventoryAlertScalarWhereInput | InventoryAlertScalarWhereInput[]
+  }
+
+  export type InventoryAlertUncheckedUpdateManyWithoutChecklistItemNestedInput = {
+    create?: XOR<InventoryAlertCreateWithoutChecklistItemInput, InventoryAlertUncheckedCreateWithoutChecklistItemInput> | InventoryAlertCreateWithoutChecklistItemInput[] | InventoryAlertUncheckedCreateWithoutChecklistItemInput[]
+    connectOrCreate?: InventoryAlertCreateOrConnectWithoutChecklistItemInput | InventoryAlertCreateOrConnectWithoutChecklistItemInput[]
+    upsert?: InventoryAlertUpsertWithWhereUniqueWithoutChecklistItemInput | InventoryAlertUpsertWithWhereUniqueWithoutChecklistItemInput[]
+    createMany?: InventoryAlertCreateManyChecklistItemInputEnvelope
+    set?: InventoryAlertWhereUniqueInput | InventoryAlertWhereUniqueInput[]
+    disconnect?: InventoryAlertWhereUniqueInput | InventoryAlertWhereUniqueInput[]
+    delete?: InventoryAlertWhereUniqueInput | InventoryAlertWhereUniqueInput[]
+    connect?: InventoryAlertWhereUniqueInput | InventoryAlertWhereUniqueInput[]
+    update?: InventoryAlertUpdateWithWhereUniqueWithoutChecklistItemInput | InventoryAlertUpdateWithWhereUniqueWithoutChecklistItemInput[]
+    updateMany?: InventoryAlertUpdateManyWithWhereWithoutChecklistItemInput | InventoryAlertUpdateManyWithWhereWithoutChecklistItemInput[]
+    deleteMany?: InventoryAlertScalarWhereInput | InventoryAlertScalarWhereInput[]
+  }
+
+  export type InventoryPlaceCreateNestedOneWithoutAlertsInput = {
+    create?: XOR<InventoryPlaceCreateWithoutAlertsInput, InventoryPlaceUncheckedCreateWithoutAlertsInput>
+    connectOrCreate?: InventoryPlaceCreateOrConnectWithoutAlertsInput
+    connect?: InventoryPlaceWhereUniqueInput
+  }
+
+  export type InventoryProductCreateNestedOneWithoutAlertsInput = {
+    create?: XOR<InventoryProductCreateWithoutAlertsInput, InventoryProductUncheckedCreateWithoutAlertsInput>
+    connectOrCreate?: InventoryProductCreateOrConnectWithoutAlertsInput
+    connect?: InventoryProductWhereUniqueInput
+  }
+
+  export type InventoryChecklistCreateNestedOneWithoutAlertsInput = {
+    create?: XOR<InventoryChecklistCreateWithoutAlertsInput, InventoryChecklistUncheckedCreateWithoutAlertsInput>
+    connectOrCreate?: InventoryChecklistCreateOrConnectWithoutAlertsInput
+    connect?: InventoryChecklistWhereUniqueInput
+  }
+
+  export type InventoryChecklistItemCreateNestedOneWithoutAlertsInput = {
+    create?: XOR<InventoryChecklistItemCreateWithoutAlertsInput, InventoryChecklistItemUncheckedCreateWithoutAlertsInput>
+    connectOrCreate?: InventoryChecklistItemCreateOrConnectWithoutAlertsInput
+    connect?: InventoryChecklistItemWhereUniqueInput
+  }
+
+  export type EnumInventoryAlertTypeFieldUpdateOperationsInput = {
+    set?: $Enums.InventoryAlertType
+  }
+
+  export type EnumInventoryAlertSeverityFieldUpdateOperationsInput = {
+    set?: $Enums.InventoryAlertSeverity
+  }
+
+  export type EnumInventoryAlertStatusFieldUpdateOperationsInput = {
+    set?: $Enums.InventoryAlertStatus
+  }
+
+  export type InventoryPlaceUpdateOneRequiredWithoutAlertsNestedInput = {
+    create?: XOR<InventoryPlaceCreateWithoutAlertsInput, InventoryPlaceUncheckedCreateWithoutAlertsInput>
+    connectOrCreate?: InventoryPlaceCreateOrConnectWithoutAlertsInput
+    upsert?: InventoryPlaceUpsertWithoutAlertsInput
+    connect?: InventoryPlaceWhereUniqueInput
+    update?: XOR<XOR<InventoryPlaceUpdateToOneWithWhereWithoutAlertsInput, InventoryPlaceUpdateWithoutAlertsInput>, InventoryPlaceUncheckedUpdateWithoutAlertsInput>
+  }
+
+  export type InventoryProductUpdateOneRequiredWithoutAlertsNestedInput = {
+    create?: XOR<InventoryProductCreateWithoutAlertsInput, InventoryProductUncheckedCreateWithoutAlertsInput>
+    connectOrCreate?: InventoryProductCreateOrConnectWithoutAlertsInput
+    upsert?: InventoryProductUpsertWithoutAlertsInput
+    connect?: InventoryProductWhereUniqueInput
+    update?: XOR<XOR<InventoryProductUpdateToOneWithWhereWithoutAlertsInput, InventoryProductUpdateWithoutAlertsInput>, InventoryProductUncheckedUpdateWithoutAlertsInput>
+  }
+
+  export type InventoryChecklistUpdateOneWithoutAlertsNestedInput = {
+    create?: XOR<InventoryChecklistCreateWithoutAlertsInput, InventoryChecklistUncheckedCreateWithoutAlertsInput>
+    connectOrCreate?: InventoryChecklistCreateOrConnectWithoutAlertsInput
+    upsert?: InventoryChecklistUpsertWithoutAlertsInput
+    disconnect?: InventoryChecklistWhereInput | boolean
+    delete?: InventoryChecklistWhereInput | boolean
+    connect?: InventoryChecklistWhereUniqueInput
+    update?: XOR<XOR<InventoryChecklistUpdateToOneWithWhereWithoutAlertsInput, InventoryChecklistUpdateWithoutAlertsInput>, InventoryChecklistUncheckedUpdateWithoutAlertsInput>
+  }
+
+  export type InventoryChecklistItemUpdateOneWithoutAlertsNestedInput = {
+    create?: XOR<InventoryChecklistItemCreateWithoutAlertsInput, InventoryChecklistItemUncheckedCreateWithoutAlertsInput>
+    connectOrCreate?: InventoryChecklistItemCreateOrConnectWithoutAlertsInput
+    upsert?: InventoryChecklistItemUpsertWithoutAlertsInput
+    disconnect?: InventoryChecklistItemWhereInput | boolean
+    delete?: InventoryChecklistItemWhereInput | boolean
+    connect?: InventoryChecklistItemWhereUniqueInput
+    update?: XOR<XOR<InventoryChecklistItemUpdateToOneWithWhereWithoutAlertsInput, InventoryChecklistItemUpdateWithoutAlertsInput>, InventoryChecklistItemUncheckedUpdateWithoutAlertsInput>
+  }
+
+  export type InventoryPlaceCreateNestedOneWithoutStockEventsInput = {
+    create?: XOR<InventoryPlaceCreateWithoutStockEventsInput, InventoryPlaceUncheckedCreateWithoutStockEventsInput>
+    connectOrCreate?: InventoryPlaceCreateOrConnectWithoutStockEventsInput
+    connect?: InventoryPlaceWhereUniqueInput
+  }
+
+  export type InventoryProductCreateNestedOneWithoutStockEventsInput = {
+    create?: XOR<InventoryProductCreateWithoutStockEventsInput, InventoryProductUncheckedCreateWithoutStockEventsInput>
+    connectOrCreate?: InventoryProductCreateOrConnectWithoutStockEventsInput
+    connect?: InventoryProductWhereUniqueInput
+  }
+
+  export type InventoryPlaceUpdateOneRequiredWithoutStockEventsNestedInput = {
+    create?: XOR<InventoryPlaceCreateWithoutStockEventsInput, InventoryPlaceUncheckedCreateWithoutStockEventsInput>
+    connectOrCreate?: InventoryPlaceCreateOrConnectWithoutStockEventsInput
+    upsert?: InventoryPlaceUpsertWithoutStockEventsInput
+    connect?: InventoryPlaceWhereUniqueInput
+    update?: XOR<XOR<InventoryPlaceUpdateToOneWithWhereWithoutStockEventsInput, InventoryPlaceUpdateWithoutStockEventsInput>, InventoryPlaceUncheckedUpdateWithoutStockEventsInput>
+  }
+
+  export type InventoryProductUpdateOneRequiredWithoutStockEventsNestedInput = {
+    create?: XOR<InventoryProductCreateWithoutStockEventsInput, InventoryProductUncheckedCreateWithoutStockEventsInput>
+    connectOrCreate?: InventoryProductCreateOrConnectWithoutStockEventsInput
+    upsert?: InventoryProductUpsertWithoutStockEventsInput
+    connect?: InventoryProductWhereUniqueInput
+    update?: XOR<XOR<InventoryProductUpdateToOneWithWhereWithoutStockEventsInput, InventoryProductUpdateWithoutStockEventsInput>, InventoryProductUncheckedUpdateWithoutStockEventsInput>
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -44794,6 +56898,108 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumPaymentTypeFilter<$PrismaModel>
     _max?: NestedEnumPaymentTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumInventoryPlaceTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.InventoryPlaceType | EnumInventoryPlaceTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.InventoryPlaceType[] | ListEnumInventoryPlaceTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.InventoryPlaceType[] | ListEnumInventoryPlaceTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumInventoryPlaceTypeFilter<$PrismaModel> | $Enums.InventoryPlaceType
+  }
+
+  export type NestedEnumInventoryPlaceTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.InventoryPlaceType | EnumInventoryPlaceTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.InventoryPlaceType[] | ListEnumInventoryPlaceTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.InventoryPlaceType[] | ListEnumInventoryPlaceTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumInventoryPlaceTypeWithAggregatesFilter<$PrismaModel> | $Enums.InventoryPlaceType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumInventoryPlaceTypeFilter<$PrismaModel>
+    _max?: NestedEnumInventoryPlaceTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumInventoryChecklistStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.InventoryChecklistStatus | EnumInventoryChecklistStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.InventoryChecklistStatus[] | ListEnumInventoryChecklistStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.InventoryChecklistStatus[] | ListEnumInventoryChecklistStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumInventoryChecklistStatusFilter<$PrismaModel> | $Enums.InventoryChecklistStatus
+  }
+
+  export type NestedEnumInventoryChecklistStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.InventoryChecklistStatus | EnumInventoryChecklistStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.InventoryChecklistStatus[] | ListEnumInventoryChecklistStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.InventoryChecklistStatus[] | ListEnumInventoryChecklistStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumInventoryChecklistStatusWithAggregatesFilter<$PrismaModel> | $Enums.InventoryChecklistStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumInventoryChecklistStatusFilter<$PrismaModel>
+    _max?: NestedEnumInventoryChecklistStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumInventoryChecklistItemResultFilter<$PrismaModel = never> = {
+    equals?: $Enums.InventoryChecklistItemResult | EnumInventoryChecklistItemResultFieldRefInput<$PrismaModel>
+    in?: $Enums.InventoryChecklistItemResult[] | ListEnumInventoryChecklistItemResultFieldRefInput<$PrismaModel>
+    notIn?: $Enums.InventoryChecklistItemResult[] | ListEnumInventoryChecklistItemResultFieldRefInput<$PrismaModel>
+    not?: NestedEnumInventoryChecklistItemResultFilter<$PrismaModel> | $Enums.InventoryChecklistItemResult
+  }
+
+  export type NestedEnumInventoryChecklistItemResultWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.InventoryChecklistItemResult | EnumInventoryChecklistItemResultFieldRefInput<$PrismaModel>
+    in?: $Enums.InventoryChecklistItemResult[] | ListEnumInventoryChecklistItemResultFieldRefInput<$PrismaModel>
+    notIn?: $Enums.InventoryChecklistItemResult[] | ListEnumInventoryChecklistItemResultFieldRefInput<$PrismaModel>
+    not?: NestedEnumInventoryChecklistItemResultWithAggregatesFilter<$PrismaModel> | $Enums.InventoryChecklistItemResult
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumInventoryChecklistItemResultFilter<$PrismaModel>
+    _max?: NestedEnumInventoryChecklistItemResultFilter<$PrismaModel>
+  }
+
+  export type NestedEnumInventoryAlertTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.InventoryAlertType | EnumInventoryAlertTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.InventoryAlertType[] | ListEnumInventoryAlertTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.InventoryAlertType[] | ListEnumInventoryAlertTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumInventoryAlertTypeFilter<$PrismaModel> | $Enums.InventoryAlertType
+  }
+
+  export type NestedEnumInventoryAlertSeverityFilter<$PrismaModel = never> = {
+    equals?: $Enums.InventoryAlertSeverity | EnumInventoryAlertSeverityFieldRefInput<$PrismaModel>
+    in?: $Enums.InventoryAlertSeverity[] | ListEnumInventoryAlertSeverityFieldRefInput<$PrismaModel>
+    notIn?: $Enums.InventoryAlertSeverity[] | ListEnumInventoryAlertSeverityFieldRefInput<$PrismaModel>
+    not?: NestedEnumInventoryAlertSeverityFilter<$PrismaModel> | $Enums.InventoryAlertSeverity
+  }
+
+  export type NestedEnumInventoryAlertStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.InventoryAlertStatus | EnumInventoryAlertStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.InventoryAlertStatus[] | ListEnumInventoryAlertStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.InventoryAlertStatus[] | ListEnumInventoryAlertStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumInventoryAlertStatusFilter<$PrismaModel> | $Enums.InventoryAlertStatus
+  }
+
+  export type NestedEnumInventoryAlertTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.InventoryAlertType | EnumInventoryAlertTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.InventoryAlertType[] | ListEnumInventoryAlertTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.InventoryAlertType[] | ListEnumInventoryAlertTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumInventoryAlertTypeWithAggregatesFilter<$PrismaModel> | $Enums.InventoryAlertType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumInventoryAlertTypeFilter<$PrismaModel>
+    _max?: NestedEnumInventoryAlertTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumInventoryAlertSeverityWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.InventoryAlertSeverity | EnumInventoryAlertSeverityFieldRefInput<$PrismaModel>
+    in?: $Enums.InventoryAlertSeverity[] | ListEnumInventoryAlertSeverityFieldRefInput<$PrismaModel>
+    notIn?: $Enums.InventoryAlertSeverity[] | ListEnumInventoryAlertSeverityFieldRefInput<$PrismaModel>
+    not?: NestedEnumInventoryAlertSeverityWithAggregatesFilter<$PrismaModel> | $Enums.InventoryAlertSeverity
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumInventoryAlertSeverityFilter<$PrismaModel>
+    _max?: NestedEnumInventoryAlertSeverityFilter<$PrismaModel>
+  }
+
+  export type NestedEnumInventoryAlertStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.InventoryAlertStatus | EnumInventoryAlertStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.InventoryAlertStatus[] | ListEnumInventoryAlertStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.InventoryAlertStatus[] | ListEnumInventoryAlertStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumInventoryAlertStatusWithAggregatesFilter<$PrismaModel> | $Enums.InventoryAlertStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumInventoryAlertStatusFilter<$PrismaModel>
+    _max?: NestedEnumInventoryAlertStatusFilter<$PrismaModel>
   }
 
   export type PreparationStepCreateWithoutStationInput = {
@@ -48718,6 +60924,1528 @@ export namespace Prisma {
     preparationStepCategories?: PreparationStepCategoryUncheckedUpdateManyWithoutOrderNestedInput
   }
 
+  export type InventoryStockCreateWithoutPlaceInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    currentQuantity?: number
+    includeInChecklist?: boolean
+    lastCheckedAt?: Date | string | null
+    lastCheckedBy?: string | null
+    product: InventoryProductCreateNestedOneWithoutStocksInput
+  }
+
+  export type InventoryStockUncheckedCreateWithoutPlaceInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    productId: string
+    currentQuantity?: number
+    includeInChecklist?: boolean
+    lastCheckedAt?: Date | string | null
+    lastCheckedBy?: string | null
+  }
+
+  export type InventoryStockCreateOrConnectWithoutPlaceInput = {
+    where: InventoryStockWhereUniqueInput
+    create: XOR<InventoryStockCreateWithoutPlaceInput, InventoryStockUncheckedCreateWithoutPlaceInput>
+  }
+
+  export type InventoryStockCreateManyPlaceInputEnvelope = {
+    data: InventoryStockCreateManyPlaceInput | InventoryStockCreateManyPlaceInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type InventoryAlertCreateWithoutPlaceInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    type: $Enums.InventoryAlertType
+    severity: $Enums.InventoryAlertSeverity
+    status?: $Enums.InventoryAlertStatus
+    message: string
+    triggeredAt?: Date | string
+    ackedAt?: Date | string | null
+    ackedBy?: string | null
+    resolvedAt?: Date | string | null
+    resolvedBy?: string | null
+    product: InventoryProductCreateNestedOneWithoutAlertsInput
+    checklist?: InventoryChecklistCreateNestedOneWithoutAlertsInput
+    checklistItem?: InventoryChecklistItemCreateNestedOneWithoutAlertsInput
+  }
+
+  export type InventoryAlertUncheckedCreateWithoutPlaceInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    type: $Enums.InventoryAlertType
+    severity: $Enums.InventoryAlertSeverity
+    status?: $Enums.InventoryAlertStatus
+    message: string
+    productId: string
+    checklistId?: string | null
+    checklistItemId?: string | null
+    triggeredAt?: Date | string
+    ackedAt?: Date | string | null
+    ackedBy?: string | null
+    resolvedAt?: Date | string | null
+    resolvedBy?: string | null
+  }
+
+  export type InventoryAlertCreateOrConnectWithoutPlaceInput = {
+    where: InventoryAlertWhereUniqueInput
+    create: XOR<InventoryAlertCreateWithoutPlaceInput, InventoryAlertUncheckedCreateWithoutPlaceInput>
+  }
+
+  export type InventoryAlertCreateManyPlaceInputEnvelope = {
+    data: InventoryAlertCreateManyPlaceInput | InventoryAlertCreateManyPlaceInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type InventoryChecklistItemCreateWithoutPlaceInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    expectedMinQuantity?: number
+    countedQuantity?: number | null
+    outOfStock?: boolean
+    result?: $Enums.InventoryChecklistItemResult
+    notes?: string | null
+    checkedAt?: Date | string | null
+    checkedBy?: string | null
+    checklist: InventoryChecklistCreateNestedOneWithoutItemsInput
+    product: InventoryProductCreateNestedOneWithoutChecklistItemsInput
+    alerts?: InventoryAlertCreateNestedManyWithoutChecklistItemInput
+  }
+
+  export type InventoryChecklistItemUncheckedCreateWithoutPlaceInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    checklistId: string
+    productId: string
+    expectedMinQuantity?: number
+    countedQuantity?: number | null
+    outOfStock?: boolean
+    result?: $Enums.InventoryChecklistItemResult
+    notes?: string | null
+    checkedAt?: Date | string | null
+    checkedBy?: string | null
+    alerts?: InventoryAlertUncheckedCreateNestedManyWithoutChecklistItemInput
+  }
+
+  export type InventoryChecklistItemCreateOrConnectWithoutPlaceInput = {
+    where: InventoryChecklistItemWhereUniqueInput
+    create: XOR<InventoryChecklistItemCreateWithoutPlaceInput, InventoryChecklistItemUncheckedCreateWithoutPlaceInput>
+  }
+
+  export type InventoryChecklistItemCreateManyPlaceInputEnvelope = {
+    data: InventoryChecklistItemCreateManyPlaceInput | InventoryChecklistItemCreateManyPlaceInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type InventoryStockEventCreateWithoutPlaceInput = {
+    id: string
+    createdAt?: Date | string
+    eventType: string
+    beforeQuantity?: number | null
+    afterQuantity?: number | null
+    actorId?: string | null
+    source: string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    product: InventoryProductCreateNestedOneWithoutStockEventsInput
+  }
+
+  export type InventoryStockEventUncheckedCreateWithoutPlaceInput = {
+    id: string
+    createdAt?: Date | string
+    eventType: string
+    productId: string
+    beforeQuantity?: number | null
+    afterQuantity?: number | null
+    actorId?: string | null
+    source: string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type InventoryStockEventCreateOrConnectWithoutPlaceInput = {
+    where: InventoryStockEventWhereUniqueInput
+    create: XOR<InventoryStockEventCreateWithoutPlaceInput, InventoryStockEventUncheckedCreateWithoutPlaceInput>
+  }
+
+  export type InventoryStockEventCreateManyPlaceInputEnvelope = {
+    data: InventoryStockEventCreateManyPlaceInput | InventoryStockEventCreateManyPlaceInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type InventoryStockUpsertWithWhereUniqueWithoutPlaceInput = {
+    where: InventoryStockWhereUniqueInput
+    update: XOR<InventoryStockUpdateWithoutPlaceInput, InventoryStockUncheckedUpdateWithoutPlaceInput>
+    create: XOR<InventoryStockCreateWithoutPlaceInput, InventoryStockUncheckedCreateWithoutPlaceInput>
+  }
+
+  export type InventoryStockUpdateWithWhereUniqueWithoutPlaceInput = {
+    where: InventoryStockWhereUniqueInput
+    data: XOR<InventoryStockUpdateWithoutPlaceInput, InventoryStockUncheckedUpdateWithoutPlaceInput>
+  }
+
+  export type InventoryStockUpdateManyWithWhereWithoutPlaceInput = {
+    where: InventoryStockScalarWhereInput
+    data: XOR<InventoryStockUpdateManyMutationInput, InventoryStockUncheckedUpdateManyWithoutPlaceInput>
+  }
+
+  export type InventoryStockScalarWhereInput = {
+    AND?: InventoryStockScalarWhereInput | InventoryStockScalarWhereInput[]
+    OR?: InventoryStockScalarWhereInput[]
+    NOT?: InventoryStockScalarWhereInput | InventoryStockScalarWhereInput[]
+    id?: StringFilter<"InventoryStock"> | string
+    createdAt?: DateTimeFilter<"InventoryStock"> | Date | string
+    updatedAt?: DateTimeFilter<"InventoryStock"> | Date | string
+    placeId?: StringFilter<"InventoryStock"> | string
+    productId?: StringFilter<"InventoryStock"> | string
+    currentQuantity?: IntFilter<"InventoryStock"> | number
+    includeInChecklist?: BoolFilter<"InventoryStock"> | boolean
+    lastCheckedAt?: DateTimeNullableFilter<"InventoryStock"> | Date | string | null
+    lastCheckedBy?: StringNullableFilter<"InventoryStock"> | string | null
+  }
+
+  export type InventoryAlertUpsertWithWhereUniqueWithoutPlaceInput = {
+    where: InventoryAlertWhereUniqueInput
+    update: XOR<InventoryAlertUpdateWithoutPlaceInput, InventoryAlertUncheckedUpdateWithoutPlaceInput>
+    create: XOR<InventoryAlertCreateWithoutPlaceInput, InventoryAlertUncheckedCreateWithoutPlaceInput>
+  }
+
+  export type InventoryAlertUpdateWithWhereUniqueWithoutPlaceInput = {
+    where: InventoryAlertWhereUniqueInput
+    data: XOR<InventoryAlertUpdateWithoutPlaceInput, InventoryAlertUncheckedUpdateWithoutPlaceInput>
+  }
+
+  export type InventoryAlertUpdateManyWithWhereWithoutPlaceInput = {
+    where: InventoryAlertScalarWhereInput
+    data: XOR<InventoryAlertUpdateManyMutationInput, InventoryAlertUncheckedUpdateManyWithoutPlaceInput>
+  }
+
+  export type InventoryAlertScalarWhereInput = {
+    AND?: InventoryAlertScalarWhereInput | InventoryAlertScalarWhereInput[]
+    OR?: InventoryAlertScalarWhereInput[]
+    NOT?: InventoryAlertScalarWhereInput | InventoryAlertScalarWhereInput[]
+    id?: StringFilter<"InventoryAlert"> | string
+    createdAt?: DateTimeFilter<"InventoryAlert"> | Date | string
+    updatedAt?: DateTimeFilter<"InventoryAlert"> | Date | string
+    type?: EnumInventoryAlertTypeFilter<"InventoryAlert"> | $Enums.InventoryAlertType
+    severity?: EnumInventoryAlertSeverityFilter<"InventoryAlert"> | $Enums.InventoryAlertSeverity
+    status?: EnumInventoryAlertStatusFilter<"InventoryAlert"> | $Enums.InventoryAlertStatus
+    message?: StringFilter<"InventoryAlert"> | string
+    placeId?: StringFilter<"InventoryAlert"> | string
+    productId?: StringFilter<"InventoryAlert"> | string
+    checklistId?: StringNullableFilter<"InventoryAlert"> | string | null
+    checklistItemId?: StringNullableFilter<"InventoryAlert"> | string | null
+    triggeredAt?: DateTimeFilter<"InventoryAlert"> | Date | string
+    ackedAt?: DateTimeNullableFilter<"InventoryAlert"> | Date | string | null
+    ackedBy?: StringNullableFilter<"InventoryAlert"> | string | null
+    resolvedAt?: DateTimeNullableFilter<"InventoryAlert"> | Date | string | null
+    resolvedBy?: StringNullableFilter<"InventoryAlert"> | string | null
+  }
+
+  export type InventoryChecklistItemUpsertWithWhereUniqueWithoutPlaceInput = {
+    where: InventoryChecklistItemWhereUniqueInput
+    update: XOR<InventoryChecklistItemUpdateWithoutPlaceInput, InventoryChecklistItemUncheckedUpdateWithoutPlaceInput>
+    create: XOR<InventoryChecklistItemCreateWithoutPlaceInput, InventoryChecklistItemUncheckedCreateWithoutPlaceInput>
+  }
+
+  export type InventoryChecklistItemUpdateWithWhereUniqueWithoutPlaceInput = {
+    where: InventoryChecklistItemWhereUniqueInput
+    data: XOR<InventoryChecklistItemUpdateWithoutPlaceInput, InventoryChecklistItemUncheckedUpdateWithoutPlaceInput>
+  }
+
+  export type InventoryChecklistItemUpdateManyWithWhereWithoutPlaceInput = {
+    where: InventoryChecklistItemScalarWhereInput
+    data: XOR<InventoryChecklistItemUpdateManyMutationInput, InventoryChecklistItemUncheckedUpdateManyWithoutPlaceInput>
+  }
+
+  export type InventoryChecklistItemScalarWhereInput = {
+    AND?: InventoryChecklistItemScalarWhereInput | InventoryChecklistItemScalarWhereInput[]
+    OR?: InventoryChecklistItemScalarWhereInput[]
+    NOT?: InventoryChecklistItemScalarWhereInput | InventoryChecklistItemScalarWhereInput[]
+    id?: StringFilter<"InventoryChecklistItem"> | string
+    createdAt?: DateTimeFilter<"InventoryChecklistItem"> | Date | string
+    updatedAt?: DateTimeFilter<"InventoryChecklistItem"> | Date | string
+    checklistId?: StringFilter<"InventoryChecklistItem"> | string
+    placeId?: StringFilter<"InventoryChecklistItem"> | string
+    productId?: StringFilter<"InventoryChecklistItem"> | string
+    expectedMinQuantity?: IntFilter<"InventoryChecklistItem"> | number
+    countedQuantity?: IntNullableFilter<"InventoryChecklistItem"> | number | null
+    outOfStock?: BoolFilter<"InventoryChecklistItem"> | boolean
+    result?: EnumInventoryChecklistItemResultFilter<"InventoryChecklistItem"> | $Enums.InventoryChecklistItemResult
+    notes?: StringNullableFilter<"InventoryChecklistItem"> | string | null
+    checkedAt?: DateTimeNullableFilter<"InventoryChecklistItem"> | Date | string | null
+    checkedBy?: StringNullableFilter<"InventoryChecklistItem"> | string | null
+  }
+
+  export type InventoryStockEventUpsertWithWhereUniqueWithoutPlaceInput = {
+    where: InventoryStockEventWhereUniqueInput
+    update: XOR<InventoryStockEventUpdateWithoutPlaceInput, InventoryStockEventUncheckedUpdateWithoutPlaceInput>
+    create: XOR<InventoryStockEventCreateWithoutPlaceInput, InventoryStockEventUncheckedCreateWithoutPlaceInput>
+  }
+
+  export type InventoryStockEventUpdateWithWhereUniqueWithoutPlaceInput = {
+    where: InventoryStockEventWhereUniqueInput
+    data: XOR<InventoryStockEventUpdateWithoutPlaceInput, InventoryStockEventUncheckedUpdateWithoutPlaceInput>
+  }
+
+  export type InventoryStockEventUpdateManyWithWhereWithoutPlaceInput = {
+    where: InventoryStockEventScalarWhereInput
+    data: XOR<InventoryStockEventUpdateManyMutationInput, InventoryStockEventUncheckedUpdateManyWithoutPlaceInput>
+  }
+
+  export type InventoryStockEventScalarWhereInput = {
+    AND?: InventoryStockEventScalarWhereInput | InventoryStockEventScalarWhereInput[]
+    OR?: InventoryStockEventScalarWhereInput[]
+    NOT?: InventoryStockEventScalarWhereInput | InventoryStockEventScalarWhereInput[]
+    id?: StringFilter<"InventoryStockEvent"> | string
+    createdAt?: DateTimeFilter<"InventoryStockEvent"> | Date | string
+    eventType?: StringFilter<"InventoryStockEvent"> | string
+    placeId?: StringFilter<"InventoryStockEvent"> | string
+    productId?: StringFilter<"InventoryStockEvent"> | string
+    beforeQuantity?: IntNullableFilter<"InventoryStockEvent"> | number | null
+    afterQuantity?: IntNullableFilter<"InventoryStockEvent"> | number | null
+    actorId?: StringNullableFilter<"InventoryStockEvent"> | string | null
+    source?: StringFilter<"InventoryStockEvent"> | string
+    metadata?: JsonNullableFilter<"InventoryStockEvent">
+  }
+
+  export type InventoryStockCreateWithoutProductInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    currentQuantity?: number
+    includeInChecklist?: boolean
+    lastCheckedAt?: Date | string | null
+    lastCheckedBy?: string | null
+    place: InventoryPlaceCreateNestedOneWithoutStocksInput
+  }
+
+  export type InventoryStockUncheckedCreateWithoutProductInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    placeId: string
+    currentQuantity?: number
+    includeInChecklist?: boolean
+    lastCheckedAt?: Date | string | null
+    lastCheckedBy?: string | null
+  }
+
+  export type InventoryStockCreateOrConnectWithoutProductInput = {
+    where: InventoryStockWhereUniqueInput
+    create: XOR<InventoryStockCreateWithoutProductInput, InventoryStockUncheckedCreateWithoutProductInput>
+  }
+
+  export type InventoryStockCreateManyProductInputEnvelope = {
+    data: InventoryStockCreateManyProductInput | InventoryStockCreateManyProductInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type InventoryAlertCreateWithoutProductInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    type: $Enums.InventoryAlertType
+    severity: $Enums.InventoryAlertSeverity
+    status?: $Enums.InventoryAlertStatus
+    message: string
+    triggeredAt?: Date | string
+    ackedAt?: Date | string | null
+    ackedBy?: string | null
+    resolvedAt?: Date | string | null
+    resolvedBy?: string | null
+    place: InventoryPlaceCreateNestedOneWithoutAlertsInput
+    checklist?: InventoryChecklistCreateNestedOneWithoutAlertsInput
+    checklistItem?: InventoryChecklistItemCreateNestedOneWithoutAlertsInput
+  }
+
+  export type InventoryAlertUncheckedCreateWithoutProductInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    type: $Enums.InventoryAlertType
+    severity: $Enums.InventoryAlertSeverity
+    status?: $Enums.InventoryAlertStatus
+    message: string
+    placeId: string
+    checklistId?: string | null
+    checklistItemId?: string | null
+    triggeredAt?: Date | string
+    ackedAt?: Date | string | null
+    ackedBy?: string | null
+    resolvedAt?: Date | string | null
+    resolvedBy?: string | null
+  }
+
+  export type InventoryAlertCreateOrConnectWithoutProductInput = {
+    where: InventoryAlertWhereUniqueInput
+    create: XOR<InventoryAlertCreateWithoutProductInput, InventoryAlertUncheckedCreateWithoutProductInput>
+  }
+
+  export type InventoryAlertCreateManyProductInputEnvelope = {
+    data: InventoryAlertCreateManyProductInput | InventoryAlertCreateManyProductInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type InventoryChecklistItemCreateWithoutProductInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    expectedMinQuantity?: number
+    countedQuantity?: number | null
+    outOfStock?: boolean
+    result?: $Enums.InventoryChecklistItemResult
+    notes?: string | null
+    checkedAt?: Date | string | null
+    checkedBy?: string | null
+    checklist: InventoryChecklistCreateNestedOneWithoutItemsInput
+    place: InventoryPlaceCreateNestedOneWithoutChecklistItemsInput
+    alerts?: InventoryAlertCreateNestedManyWithoutChecklistItemInput
+  }
+
+  export type InventoryChecklistItemUncheckedCreateWithoutProductInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    checklistId: string
+    placeId: string
+    expectedMinQuantity?: number
+    countedQuantity?: number | null
+    outOfStock?: boolean
+    result?: $Enums.InventoryChecklistItemResult
+    notes?: string | null
+    checkedAt?: Date | string | null
+    checkedBy?: string | null
+    alerts?: InventoryAlertUncheckedCreateNestedManyWithoutChecklistItemInput
+  }
+
+  export type InventoryChecklistItemCreateOrConnectWithoutProductInput = {
+    where: InventoryChecklistItemWhereUniqueInput
+    create: XOR<InventoryChecklistItemCreateWithoutProductInput, InventoryChecklistItemUncheckedCreateWithoutProductInput>
+  }
+
+  export type InventoryChecklistItemCreateManyProductInputEnvelope = {
+    data: InventoryChecklistItemCreateManyProductInput | InventoryChecklistItemCreateManyProductInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type InventoryStockEventCreateWithoutProductInput = {
+    id: string
+    createdAt?: Date | string
+    eventType: string
+    beforeQuantity?: number | null
+    afterQuantity?: number | null
+    actorId?: string | null
+    source: string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    place: InventoryPlaceCreateNestedOneWithoutStockEventsInput
+  }
+
+  export type InventoryStockEventUncheckedCreateWithoutProductInput = {
+    id: string
+    createdAt?: Date | string
+    eventType: string
+    placeId: string
+    beforeQuantity?: number | null
+    afterQuantity?: number | null
+    actorId?: string | null
+    source: string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type InventoryStockEventCreateOrConnectWithoutProductInput = {
+    where: InventoryStockEventWhereUniqueInput
+    create: XOR<InventoryStockEventCreateWithoutProductInput, InventoryStockEventUncheckedCreateWithoutProductInput>
+  }
+
+  export type InventoryStockEventCreateManyProductInputEnvelope = {
+    data: InventoryStockEventCreateManyProductInput | InventoryStockEventCreateManyProductInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type InventoryStockUpsertWithWhereUniqueWithoutProductInput = {
+    where: InventoryStockWhereUniqueInput
+    update: XOR<InventoryStockUpdateWithoutProductInput, InventoryStockUncheckedUpdateWithoutProductInput>
+    create: XOR<InventoryStockCreateWithoutProductInput, InventoryStockUncheckedCreateWithoutProductInput>
+  }
+
+  export type InventoryStockUpdateWithWhereUniqueWithoutProductInput = {
+    where: InventoryStockWhereUniqueInput
+    data: XOR<InventoryStockUpdateWithoutProductInput, InventoryStockUncheckedUpdateWithoutProductInput>
+  }
+
+  export type InventoryStockUpdateManyWithWhereWithoutProductInput = {
+    where: InventoryStockScalarWhereInput
+    data: XOR<InventoryStockUpdateManyMutationInput, InventoryStockUncheckedUpdateManyWithoutProductInput>
+  }
+
+  export type InventoryAlertUpsertWithWhereUniqueWithoutProductInput = {
+    where: InventoryAlertWhereUniqueInput
+    update: XOR<InventoryAlertUpdateWithoutProductInput, InventoryAlertUncheckedUpdateWithoutProductInput>
+    create: XOR<InventoryAlertCreateWithoutProductInput, InventoryAlertUncheckedCreateWithoutProductInput>
+  }
+
+  export type InventoryAlertUpdateWithWhereUniqueWithoutProductInput = {
+    where: InventoryAlertWhereUniqueInput
+    data: XOR<InventoryAlertUpdateWithoutProductInput, InventoryAlertUncheckedUpdateWithoutProductInput>
+  }
+
+  export type InventoryAlertUpdateManyWithWhereWithoutProductInput = {
+    where: InventoryAlertScalarWhereInput
+    data: XOR<InventoryAlertUpdateManyMutationInput, InventoryAlertUncheckedUpdateManyWithoutProductInput>
+  }
+
+  export type InventoryChecklistItemUpsertWithWhereUniqueWithoutProductInput = {
+    where: InventoryChecklistItemWhereUniqueInput
+    update: XOR<InventoryChecklistItemUpdateWithoutProductInput, InventoryChecklistItemUncheckedUpdateWithoutProductInput>
+    create: XOR<InventoryChecklistItemCreateWithoutProductInput, InventoryChecklistItemUncheckedCreateWithoutProductInput>
+  }
+
+  export type InventoryChecklistItemUpdateWithWhereUniqueWithoutProductInput = {
+    where: InventoryChecklistItemWhereUniqueInput
+    data: XOR<InventoryChecklistItemUpdateWithoutProductInput, InventoryChecklistItemUncheckedUpdateWithoutProductInput>
+  }
+
+  export type InventoryChecklistItemUpdateManyWithWhereWithoutProductInput = {
+    where: InventoryChecklistItemScalarWhereInput
+    data: XOR<InventoryChecklistItemUpdateManyMutationInput, InventoryChecklistItemUncheckedUpdateManyWithoutProductInput>
+  }
+
+  export type InventoryStockEventUpsertWithWhereUniqueWithoutProductInput = {
+    where: InventoryStockEventWhereUniqueInput
+    update: XOR<InventoryStockEventUpdateWithoutProductInput, InventoryStockEventUncheckedUpdateWithoutProductInput>
+    create: XOR<InventoryStockEventCreateWithoutProductInput, InventoryStockEventUncheckedCreateWithoutProductInput>
+  }
+
+  export type InventoryStockEventUpdateWithWhereUniqueWithoutProductInput = {
+    where: InventoryStockEventWhereUniqueInput
+    data: XOR<InventoryStockEventUpdateWithoutProductInput, InventoryStockEventUncheckedUpdateWithoutProductInput>
+  }
+
+  export type InventoryStockEventUpdateManyWithWhereWithoutProductInput = {
+    where: InventoryStockEventScalarWhereInput
+    data: XOR<InventoryStockEventUpdateManyMutationInput, InventoryStockEventUncheckedUpdateManyWithoutProductInput>
+  }
+
+  export type InventoryPlaceCreateWithoutStocksInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    type: $Enums.InventoryPlaceType
+    active?: boolean
+    displayOrder?: number | null
+    notes?: string | null
+    alerts?: InventoryAlertCreateNestedManyWithoutPlaceInput
+    checklistItems?: InventoryChecklistItemCreateNestedManyWithoutPlaceInput
+    stockEvents?: InventoryStockEventCreateNestedManyWithoutPlaceInput
+  }
+
+  export type InventoryPlaceUncheckedCreateWithoutStocksInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    type: $Enums.InventoryPlaceType
+    active?: boolean
+    displayOrder?: number | null
+    notes?: string | null
+    alerts?: InventoryAlertUncheckedCreateNestedManyWithoutPlaceInput
+    checklistItems?: InventoryChecklistItemUncheckedCreateNestedManyWithoutPlaceInput
+    stockEvents?: InventoryStockEventUncheckedCreateNestedManyWithoutPlaceInput
+  }
+
+  export type InventoryPlaceCreateOrConnectWithoutStocksInput = {
+    where: InventoryPlaceWhereUniqueInput
+    create: XOR<InventoryPlaceCreateWithoutStocksInput, InventoryPlaceUncheckedCreateWithoutStocksInput>
+  }
+
+  export type InventoryProductCreateWithoutStocksInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    unit: string
+    active?: boolean
+    minQuantity?: number
+    alertThreshold?: number | null
+    requiresRefill?: boolean
+    notifyBelowThreshold?: boolean
+    notes?: string | null
+    alerts?: InventoryAlertCreateNestedManyWithoutProductInput
+    checklistItems?: InventoryChecklistItemCreateNestedManyWithoutProductInput
+    stockEvents?: InventoryStockEventCreateNestedManyWithoutProductInput
+  }
+
+  export type InventoryProductUncheckedCreateWithoutStocksInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    unit: string
+    active?: boolean
+    minQuantity?: number
+    alertThreshold?: number | null
+    requiresRefill?: boolean
+    notifyBelowThreshold?: boolean
+    notes?: string | null
+    alerts?: InventoryAlertUncheckedCreateNestedManyWithoutProductInput
+    checklistItems?: InventoryChecklistItemUncheckedCreateNestedManyWithoutProductInput
+    stockEvents?: InventoryStockEventUncheckedCreateNestedManyWithoutProductInput
+  }
+
+  export type InventoryProductCreateOrConnectWithoutStocksInput = {
+    where: InventoryProductWhereUniqueInput
+    create: XOR<InventoryProductCreateWithoutStocksInput, InventoryProductUncheckedCreateWithoutStocksInput>
+  }
+
+  export type InventoryPlaceUpsertWithoutStocksInput = {
+    update: XOR<InventoryPlaceUpdateWithoutStocksInput, InventoryPlaceUncheckedUpdateWithoutStocksInput>
+    create: XOR<InventoryPlaceCreateWithoutStocksInput, InventoryPlaceUncheckedCreateWithoutStocksInput>
+    where?: InventoryPlaceWhereInput
+  }
+
+  export type InventoryPlaceUpdateToOneWithWhereWithoutStocksInput = {
+    where?: InventoryPlaceWhereInput
+    data: XOR<InventoryPlaceUpdateWithoutStocksInput, InventoryPlaceUncheckedUpdateWithoutStocksInput>
+  }
+
+  export type InventoryPlaceUpdateWithoutStocksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: EnumInventoryPlaceTypeFieldUpdateOperationsInput | $Enums.InventoryPlaceType
+    active?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: NullableIntFieldUpdateOperationsInput | number | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    alerts?: InventoryAlertUpdateManyWithoutPlaceNestedInput
+    checklistItems?: InventoryChecklistItemUpdateManyWithoutPlaceNestedInput
+    stockEvents?: InventoryStockEventUpdateManyWithoutPlaceNestedInput
+  }
+
+  export type InventoryPlaceUncheckedUpdateWithoutStocksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: EnumInventoryPlaceTypeFieldUpdateOperationsInput | $Enums.InventoryPlaceType
+    active?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: NullableIntFieldUpdateOperationsInput | number | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    alerts?: InventoryAlertUncheckedUpdateManyWithoutPlaceNestedInput
+    checklistItems?: InventoryChecklistItemUncheckedUpdateManyWithoutPlaceNestedInput
+    stockEvents?: InventoryStockEventUncheckedUpdateManyWithoutPlaceNestedInput
+  }
+
+  export type InventoryProductUpsertWithoutStocksInput = {
+    update: XOR<InventoryProductUpdateWithoutStocksInput, InventoryProductUncheckedUpdateWithoutStocksInput>
+    create: XOR<InventoryProductCreateWithoutStocksInput, InventoryProductUncheckedCreateWithoutStocksInput>
+    where?: InventoryProductWhereInput
+  }
+
+  export type InventoryProductUpdateToOneWithWhereWithoutStocksInput = {
+    where?: InventoryProductWhereInput
+    data: XOR<InventoryProductUpdateWithoutStocksInput, InventoryProductUncheckedUpdateWithoutStocksInput>
+  }
+
+  export type InventoryProductUpdateWithoutStocksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    unit?: StringFieldUpdateOperationsInput | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    minQuantity?: IntFieldUpdateOperationsInput | number
+    alertThreshold?: NullableIntFieldUpdateOperationsInput | number | null
+    requiresRefill?: BoolFieldUpdateOperationsInput | boolean
+    notifyBelowThreshold?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    alerts?: InventoryAlertUpdateManyWithoutProductNestedInput
+    checklistItems?: InventoryChecklistItemUpdateManyWithoutProductNestedInput
+    stockEvents?: InventoryStockEventUpdateManyWithoutProductNestedInput
+  }
+
+  export type InventoryProductUncheckedUpdateWithoutStocksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    unit?: StringFieldUpdateOperationsInput | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    minQuantity?: IntFieldUpdateOperationsInput | number
+    alertThreshold?: NullableIntFieldUpdateOperationsInput | number | null
+    requiresRefill?: BoolFieldUpdateOperationsInput | boolean
+    notifyBelowThreshold?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    alerts?: InventoryAlertUncheckedUpdateManyWithoutProductNestedInput
+    checklistItems?: InventoryChecklistItemUncheckedUpdateManyWithoutProductNestedInput
+    stockEvents?: InventoryStockEventUncheckedUpdateManyWithoutProductNestedInput
+  }
+
+  export type InventoryChecklistItemCreateWithoutChecklistInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    expectedMinQuantity?: number
+    countedQuantity?: number | null
+    outOfStock?: boolean
+    result?: $Enums.InventoryChecklistItemResult
+    notes?: string | null
+    checkedAt?: Date | string | null
+    checkedBy?: string | null
+    place: InventoryPlaceCreateNestedOneWithoutChecklistItemsInput
+    product: InventoryProductCreateNestedOneWithoutChecklistItemsInput
+    alerts?: InventoryAlertCreateNestedManyWithoutChecklistItemInput
+  }
+
+  export type InventoryChecklistItemUncheckedCreateWithoutChecklistInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    placeId: string
+    productId: string
+    expectedMinQuantity?: number
+    countedQuantity?: number | null
+    outOfStock?: boolean
+    result?: $Enums.InventoryChecklistItemResult
+    notes?: string | null
+    checkedAt?: Date | string | null
+    checkedBy?: string | null
+    alerts?: InventoryAlertUncheckedCreateNestedManyWithoutChecklistItemInput
+  }
+
+  export type InventoryChecklistItemCreateOrConnectWithoutChecklistInput = {
+    where: InventoryChecklistItemWhereUniqueInput
+    create: XOR<InventoryChecklistItemCreateWithoutChecklistInput, InventoryChecklistItemUncheckedCreateWithoutChecklistInput>
+  }
+
+  export type InventoryChecklistItemCreateManyChecklistInputEnvelope = {
+    data: InventoryChecklistItemCreateManyChecklistInput | InventoryChecklistItemCreateManyChecklistInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type InventoryAlertCreateWithoutChecklistInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    type: $Enums.InventoryAlertType
+    severity: $Enums.InventoryAlertSeverity
+    status?: $Enums.InventoryAlertStatus
+    message: string
+    triggeredAt?: Date | string
+    ackedAt?: Date | string | null
+    ackedBy?: string | null
+    resolvedAt?: Date | string | null
+    resolvedBy?: string | null
+    place: InventoryPlaceCreateNestedOneWithoutAlertsInput
+    product: InventoryProductCreateNestedOneWithoutAlertsInput
+    checklistItem?: InventoryChecklistItemCreateNestedOneWithoutAlertsInput
+  }
+
+  export type InventoryAlertUncheckedCreateWithoutChecklistInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    type: $Enums.InventoryAlertType
+    severity: $Enums.InventoryAlertSeverity
+    status?: $Enums.InventoryAlertStatus
+    message: string
+    placeId: string
+    productId: string
+    checklistItemId?: string | null
+    triggeredAt?: Date | string
+    ackedAt?: Date | string | null
+    ackedBy?: string | null
+    resolvedAt?: Date | string | null
+    resolvedBy?: string | null
+  }
+
+  export type InventoryAlertCreateOrConnectWithoutChecklistInput = {
+    where: InventoryAlertWhereUniqueInput
+    create: XOR<InventoryAlertCreateWithoutChecklistInput, InventoryAlertUncheckedCreateWithoutChecklistInput>
+  }
+
+  export type InventoryAlertCreateManyChecklistInputEnvelope = {
+    data: InventoryAlertCreateManyChecklistInput | InventoryAlertCreateManyChecklistInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type InventoryChecklistItemUpsertWithWhereUniqueWithoutChecklistInput = {
+    where: InventoryChecklistItemWhereUniqueInput
+    update: XOR<InventoryChecklistItemUpdateWithoutChecklistInput, InventoryChecklistItemUncheckedUpdateWithoutChecklistInput>
+    create: XOR<InventoryChecklistItemCreateWithoutChecklistInput, InventoryChecklistItemUncheckedCreateWithoutChecklistInput>
+  }
+
+  export type InventoryChecklistItemUpdateWithWhereUniqueWithoutChecklistInput = {
+    where: InventoryChecklistItemWhereUniqueInput
+    data: XOR<InventoryChecklistItemUpdateWithoutChecklistInput, InventoryChecklistItemUncheckedUpdateWithoutChecklistInput>
+  }
+
+  export type InventoryChecklistItemUpdateManyWithWhereWithoutChecklistInput = {
+    where: InventoryChecklistItemScalarWhereInput
+    data: XOR<InventoryChecklistItemUpdateManyMutationInput, InventoryChecklistItemUncheckedUpdateManyWithoutChecklistInput>
+  }
+
+  export type InventoryAlertUpsertWithWhereUniqueWithoutChecklistInput = {
+    where: InventoryAlertWhereUniqueInput
+    update: XOR<InventoryAlertUpdateWithoutChecklistInput, InventoryAlertUncheckedUpdateWithoutChecklistInput>
+    create: XOR<InventoryAlertCreateWithoutChecklistInput, InventoryAlertUncheckedCreateWithoutChecklistInput>
+  }
+
+  export type InventoryAlertUpdateWithWhereUniqueWithoutChecklistInput = {
+    where: InventoryAlertWhereUniqueInput
+    data: XOR<InventoryAlertUpdateWithoutChecklistInput, InventoryAlertUncheckedUpdateWithoutChecklistInput>
+  }
+
+  export type InventoryAlertUpdateManyWithWhereWithoutChecklistInput = {
+    where: InventoryAlertScalarWhereInput
+    data: XOR<InventoryAlertUpdateManyMutationInput, InventoryAlertUncheckedUpdateManyWithoutChecklistInput>
+  }
+
+  export type InventoryChecklistCreateWithoutItemsInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    checkDate: Date | string
+    status?: $Enums.InventoryChecklistStatus
+    startedBy?: string | null
+    submittedBy?: string | null
+    submittedAt?: Date | string | null
+    alerts?: InventoryAlertCreateNestedManyWithoutChecklistInput
+  }
+
+  export type InventoryChecklistUncheckedCreateWithoutItemsInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    checkDate: Date | string
+    status?: $Enums.InventoryChecklistStatus
+    startedBy?: string | null
+    submittedBy?: string | null
+    submittedAt?: Date | string | null
+    alerts?: InventoryAlertUncheckedCreateNestedManyWithoutChecklistInput
+  }
+
+  export type InventoryChecklistCreateOrConnectWithoutItemsInput = {
+    where: InventoryChecklistWhereUniqueInput
+    create: XOR<InventoryChecklistCreateWithoutItemsInput, InventoryChecklistUncheckedCreateWithoutItemsInput>
+  }
+
+  export type InventoryPlaceCreateWithoutChecklistItemsInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    type: $Enums.InventoryPlaceType
+    active?: boolean
+    displayOrder?: number | null
+    notes?: string | null
+    stocks?: InventoryStockCreateNestedManyWithoutPlaceInput
+    alerts?: InventoryAlertCreateNestedManyWithoutPlaceInput
+    stockEvents?: InventoryStockEventCreateNestedManyWithoutPlaceInput
+  }
+
+  export type InventoryPlaceUncheckedCreateWithoutChecklistItemsInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    type: $Enums.InventoryPlaceType
+    active?: boolean
+    displayOrder?: number | null
+    notes?: string | null
+    stocks?: InventoryStockUncheckedCreateNestedManyWithoutPlaceInput
+    alerts?: InventoryAlertUncheckedCreateNestedManyWithoutPlaceInput
+    stockEvents?: InventoryStockEventUncheckedCreateNestedManyWithoutPlaceInput
+  }
+
+  export type InventoryPlaceCreateOrConnectWithoutChecklistItemsInput = {
+    where: InventoryPlaceWhereUniqueInput
+    create: XOR<InventoryPlaceCreateWithoutChecklistItemsInput, InventoryPlaceUncheckedCreateWithoutChecklistItemsInput>
+  }
+
+  export type InventoryProductCreateWithoutChecklistItemsInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    unit: string
+    active?: boolean
+    minQuantity?: number
+    alertThreshold?: number | null
+    requiresRefill?: boolean
+    notifyBelowThreshold?: boolean
+    notes?: string | null
+    stocks?: InventoryStockCreateNestedManyWithoutProductInput
+    alerts?: InventoryAlertCreateNestedManyWithoutProductInput
+    stockEvents?: InventoryStockEventCreateNestedManyWithoutProductInput
+  }
+
+  export type InventoryProductUncheckedCreateWithoutChecklistItemsInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    unit: string
+    active?: boolean
+    minQuantity?: number
+    alertThreshold?: number | null
+    requiresRefill?: boolean
+    notifyBelowThreshold?: boolean
+    notes?: string | null
+    stocks?: InventoryStockUncheckedCreateNestedManyWithoutProductInput
+    alerts?: InventoryAlertUncheckedCreateNestedManyWithoutProductInput
+    stockEvents?: InventoryStockEventUncheckedCreateNestedManyWithoutProductInput
+  }
+
+  export type InventoryProductCreateOrConnectWithoutChecklistItemsInput = {
+    where: InventoryProductWhereUniqueInput
+    create: XOR<InventoryProductCreateWithoutChecklistItemsInput, InventoryProductUncheckedCreateWithoutChecklistItemsInput>
+  }
+
+  export type InventoryAlertCreateWithoutChecklistItemInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    type: $Enums.InventoryAlertType
+    severity: $Enums.InventoryAlertSeverity
+    status?: $Enums.InventoryAlertStatus
+    message: string
+    triggeredAt?: Date | string
+    ackedAt?: Date | string | null
+    ackedBy?: string | null
+    resolvedAt?: Date | string | null
+    resolvedBy?: string | null
+    place: InventoryPlaceCreateNestedOneWithoutAlertsInput
+    product: InventoryProductCreateNestedOneWithoutAlertsInput
+    checklist?: InventoryChecklistCreateNestedOneWithoutAlertsInput
+  }
+
+  export type InventoryAlertUncheckedCreateWithoutChecklistItemInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    type: $Enums.InventoryAlertType
+    severity: $Enums.InventoryAlertSeverity
+    status?: $Enums.InventoryAlertStatus
+    message: string
+    placeId: string
+    productId: string
+    checklistId?: string | null
+    triggeredAt?: Date | string
+    ackedAt?: Date | string | null
+    ackedBy?: string | null
+    resolvedAt?: Date | string | null
+    resolvedBy?: string | null
+  }
+
+  export type InventoryAlertCreateOrConnectWithoutChecklistItemInput = {
+    where: InventoryAlertWhereUniqueInput
+    create: XOR<InventoryAlertCreateWithoutChecklistItemInput, InventoryAlertUncheckedCreateWithoutChecklistItemInput>
+  }
+
+  export type InventoryAlertCreateManyChecklistItemInputEnvelope = {
+    data: InventoryAlertCreateManyChecklistItemInput | InventoryAlertCreateManyChecklistItemInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type InventoryChecklistUpsertWithoutItemsInput = {
+    update: XOR<InventoryChecklistUpdateWithoutItemsInput, InventoryChecklistUncheckedUpdateWithoutItemsInput>
+    create: XOR<InventoryChecklistCreateWithoutItemsInput, InventoryChecklistUncheckedCreateWithoutItemsInput>
+    where?: InventoryChecklistWhereInput
+  }
+
+  export type InventoryChecklistUpdateToOneWithWhereWithoutItemsInput = {
+    where?: InventoryChecklistWhereInput
+    data: XOR<InventoryChecklistUpdateWithoutItemsInput, InventoryChecklistUncheckedUpdateWithoutItemsInput>
+  }
+
+  export type InventoryChecklistUpdateWithoutItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    checkDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumInventoryChecklistStatusFieldUpdateOperationsInput | $Enums.InventoryChecklistStatus
+    startedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    alerts?: InventoryAlertUpdateManyWithoutChecklistNestedInput
+  }
+
+  export type InventoryChecklistUncheckedUpdateWithoutItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    checkDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumInventoryChecklistStatusFieldUpdateOperationsInput | $Enums.InventoryChecklistStatus
+    startedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    alerts?: InventoryAlertUncheckedUpdateManyWithoutChecklistNestedInput
+  }
+
+  export type InventoryPlaceUpsertWithoutChecklistItemsInput = {
+    update: XOR<InventoryPlaceUpdateWithoutChecklistItemsInput, InventoryPlaceUncheckedUpdateWithoutChecklistItemsInput>
+    create: XOR<InventoryPlaceCreateWithoutChecklistItemsInput, InventoryPlaceUncheckedCreateWithoutChecklistItemsInput>
+    where?: InventoryPlaceWhereInput
+  }
+
+  export type InventoryPlaceUpdateToOneWithWhereWithoutChecklistItemsInput = {
+    where?: InventoryPlaceWhereInput
+    data: XOR<InventoryPlaceUpdateWithoutChecklistItemsInput, InventoryPlaceUncheckedUpdateWithoutChecklistItemsInput>
+  }
+
+  export type InventoryPlaceUpdateWithoutChecklistItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: EnumInventoryPlaceTypeFieldUpdateOperationsInput | $Enums.InventoryPlaceType
+    active?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: NullableIntFieldUpdateOperationsInput | number | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    stocks?: InventoryStockUpdateManyWithoutPlaceNestedInput
+    alerts?: InventoryAlertUpdateManyWithoutPlaceNestedInput
+    stockEvents?: InventoryStockEventUpdateManyWithoutPlaceNestedInput
+  }
+
+  export type InventoryPlaceUncheckedUpdateWithoutChecklistItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: EnumInventoryPlaceTypeFieldUpdateOperationsInput | $Enums.InventoryPlaceType
+    active?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: NullableIntFieldUpdateOperationsInput | number | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    stocks?: InventoryStockUncheckedUpdateManyWithoutPlaceNestedInput
+    alerts?: InventoryAlertUncheckedUpdateManyWithoutPlaceNestedInput
+    stockEvents?: InventoryStockEventUncheckedUpdateManyWithoutPlaceNestedInput
+  }
+
+  export type InventoryProductUpsertWithoutChecklistItemsInput = {
+    update: XOR<InventoryProductUpdateWithoutChecklistItemsInput, InventoryProductUncheckedUpdateWithoutChecklistItemsInput>
+    create: XOR<InventoryProductCreateWithoutChecklistItemsInput, InventoryProductUncheckedCreateWithoutChecklistItemsInput>
+    where?: InventoryProductWhereInput
+  }
+
+  export type InventoryProductUpdateToOneWithWhereWithoutChecklistItemsInput = {
+    where?: InventoryProductWhereInput
+    data: XOR<InventoryProductUpdateWithoutChecklistItemsInput, InventoryProductUncheckedUpdateWithoutChecklistItemsInput>
+  }
+
+  export type InventoryProductUpdateWithoutChecklistItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    unit?: StringFieldUpdateOperationsInput | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    minQuantity?: IntFieldUpdateOperationsInput | number
+    alertThreshold?: NullableIntFieldUpdateOperationsInput | number | null
+    requiresRefill?: BoolFieldUpdateOperationsInput | boolean
+    notifyBelowThreshold?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    stocks?: InventoryStockUpdateManyWithoutProductNestedInput
+    alerts?: InventoryAlertUpdateManyWithoutProductNestedInput
+    stockEvents?: InventoryStockEventUpdateManyWithoutProductNestedInput
+  }
+
+  export type InventoryProductUncheckedUpdateWithoutChecklistItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    unit?: StringFieldUpdateOperationsInput | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    minQuantity?: IntFieldUpdateOperationsInput | number
+    alertThreshold?: NullableIntFieldUpdateOperationsInput | number | null
+    requiresRefill?: BoolFieldUpdateOperationsInput | boolean
+    notifyBelowThreshold?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    stocks?: InventoryStockUncheckedUpdateManyWithoutProductNestedInput
+    alerts?: InventoryAlertUncheckedUpdateManyWithoutProductNestedInput
+    stockEvents?: InventoryStockEventUncheckedUpdateManyWithoutProductNestedInput
+  }
+
+  export type InventoryAlertUpsertWithWhereUniqueWithoutChecklistItemInput = {
+    where: InventoryAlertWhereUniqueInput
+    update: XOR<InventoryAlertUpdateWithoutChecklistItemInput, InventoryAlertUncheckedUpdateWithoutChecklistItemInput>
+    create: XOR<InventoryAlertCreateWithoutChecklistItemInput, InventoryAlertUncheckedCreateWithoutChecklistItemInput>
+  }
+
+  export type InventoryAlertUpdateWithWhereUniqueWithoutChecklistItemInput = {
+    where: InventoryAlertWhereUniqueInput
+    data: XOR<InventoryAlertUpdateWithoutChecklistItemInput, InventoryAlertUncheckedUpdateWithoutChecklistItemInput>
+  }
+
+  export type InventoryAlertUpdateManyWithWhereWithoutChecklistItemInput = {
+    where: InventoryAlertScalarWhereInput
+    data: XOR<InventoryAlertUpdateManyMutationInput, InventoryAlertUncheckedUpdateManyWithoutChecklistItemInput>
+  }
+
+  export type InventoryPlaceCreateWithoutAlertsInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    type: $Enums.InventoryPlaceType
+    active?: boolean
+    displayOrder?: number | null
+    notes?: string | null
+    stocks?: InventoryStockCreateNestedManyWithoutPlaceInput
+    checklistItems?: InventoryChecklistItemCreateNestedManyWithoutPlaceInput
+    stockEvents?: InventoryStockEventCreateNestedManyWithoutPlaceInput
+  }
+
+  export type InventoryPlaceUncheckedCreateWithoutAlertsInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    type: $Enums.InventoryPlaceType
+    active?: boolean
+    displayOrder?: number | null
+    notes?: string | null
+    stocks?: InventoryStockUncheckedCreateNestedManyWithoutPlaceInput
+    checklistItems?: InventoryChecklistItemUncheckedCreateNestedManyWithoutPlaceInput
+    stockEvents?: InventoryStockEventUncheckedCreateNestedManyWithoutPlaceInput
+  }
+
+  export type InventoryPlaceCreateOrConnectWithoutAlertsInput = {
+    where: InventoryPlaceWhereUniqueInput
+    create: XOR<InventoryPlaceCreateWithoutAlertsInput, InventoryPlaceUncheckedCreateWithoutAlertsInput>
+  }
+
+  export type InventoryProductCreateWithoutAlertsInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    unit: string
+    active?: boolean
+    minQuantity?: number
+    alertThreshold?: number | null
+    requiresRefill?: boolean
+    notifyBelowThreshold?: boolean
+    notes?: string | null
+    stocks?: InventoryStockCreateNestedManyWithoutProductInput
+    checklistItems?: InventoryChecklistItemCreateNestedManyWithoutProductInput
+    stockEvents?: InventoryStockEventCreateNestedManyWithoutProductInput
+  }
+
+  export type InventoryProductUncheckedCreateWithoutAlertsInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    unit: string
+    active?: boolean
+    minQuantity?: number
+    alertThreshold?: number | null
+    requiresRefill?: boolean
+    notifyBelowThreshold?: boolean
+    notes?: string | null
+    stocks?: InventoryStockUncheckedCreateNestedManyWithoutProductInput
+    checklistItems?: InventoryChecklistItemUncheckedCreateNestedManyWithoutProductInput
+    stockEvents?: InventoryStockEventUncheckedCreateNestedManyWithoutProductInput
+  }
+
+  export type InventoryProductCreateOrConnectWithoutAlertsInput = {
+    where: InventoryProductWhereUniqueInput
+    create: XOR<InventoryProductCreateWithoutAlertsInput, InventoryProductUncheckedCreateWithoutAlertsInput>
+  }
+
+  export type InventoryChecklistCreateWithoutAlertsInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    checkDate: Date | string
+    status?: $Enums.InventoryChecklistStatus
+    startedBy?: string | null
+    submittedBy?: string | null
+    submittedAt?: Date | string | null
+    items?: InventoryChecklistItemCreateNestedManyWithoutChecklistInput
+  }
+
+  export type InventoryChecklistUncheckedCreateWithoutAlertsInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    checkDate: Date | string
+    status?: $Enums.InventoryChecklistStatus
+    startedBy?: string | null
+    submittedBy?: string | null
+    submittedAt?: Date | string | null
+    items?: InventoryChecklistItemUncheckedCreateNestedManyWithoutChecklistInput
+  }
+
+  export type InventoryChecklistCreateOrConnectWithoutAlertsInput = {
+    where: InventoryChecklistWhereUniqueInput
+    create: XOR<InventoryChecklistCreateWithoutAlertsInput, InventoryChecklistUncheckedCreateWithoutAlertsInput>
+  }
+
+  export type InventoryChecklistItemCreateWithoutAlertsInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    expectedMinQuantity?: number
+    countedQuantity?: number | null
+    outOfStock?: boolean
+    result?: $Enums.InventoryChecklistItemResult
+    notes?: string | null
+    checkedAt?: Date | string | null
+    checkedBy?: string | null
+    checklist: InventoryChecklistCreateNestedOneWithoutItemsInput
+    place: InventoryPlaceCreateNestedOneWithoutChecklistItemsInput
+    product: InventoryProductCreateNestedOneWithoutChecklistItemsInput
+  }
+
+  export type InventoryChecklistItemUncheckedCreateWithoutAlertsInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    checklistId: string
+    placeId: string
+    productId: string
+    expectedMinQuantity?: number
+    countedQuantity?: number | null
+    outOfStock?: boolean
+    result?: $Enums.InventoryChecklistItemResult
+    notes?: string | null
+    checkedAt?: Date | string | null
+    checkedBy?: string | null
+  }
+
+  export type InventoryChecklistItemCreateOrConnectWithoutAlertsInput = {
+    where: InventoryChecklistItemWhereUniqueInput
+    create: XOR<InventoryChecklistItemCreateWithoutAlertsInput, InventoryChecklistItemUncheckedCreateWithoutAlertsInput>
+  }
+
+  export type InventoryPlaceUpsertWithoutAlertsInput = {
+    update: XOR<InventoryPlaceUpdateWithoutAlertsInput, InventoryPlaceUncheckedUpdateWithoutAlertsInput>
+    create: XOR<InventoryPlaceCreateWithoutAlertsInput, InventoryPlaceUncheckedCreateWithoutAlertsInput>
+    where?: InventoryPlaceWhereInput
+  }
+
+  export type InventoryPlaceUpdateToOneWithWhereWithoutAlertsInput = {
+    where?: InventoryPlaceWhereInput
+    data: XOR<InventoryPlaceUpdateWithoutAlertsInput, InventoryPlaceUncheckedUpdateWithoutAlertsInput>
+  }
+
+  export type InventoryPlaceUpdateWithoutAlertsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: EnumInventoryPlaceTypeFieldUpdateOperationsInput | $Enums.InventoryPlaceType
+    active?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: NullableIntFieldUpdateOperationsInput | number | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    stocks?: InventoryStockUpdateManyWithoutPlaceNestedInput
+    checklistItems?: InventoryChecklistItemUpdateManyWithoutPlaceNestedInput
+    stockEvents?: InventoryStockEventUpdateManyWithoutPlaceNestedInput
+  }
+
+  export type InventoryPlaceUncheckedUpdateWithoutAlertsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: EnumInventoryPlaceTypeFieldUpdateOperationsInput | $Enums.InventoryPlaceType
+    active?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: NullableIntFieldUpdateOperationsInput | number | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    stocks?: InventoryStockUncheckedUpdateManyWithoutPlaceNestedInput
+    checklistItems?: InventoryChecklistItemUncheckedUpdateManyWithoutPlaceNestedInput
+    stockEvents?: InventoryStockEventUncheckedUpdateManyWithoutPlaceNestedInput
+  }
+
+  export type InventoryProductUpsertWithoutAlertsInput = {
+    update: XOR<InventoryProductUpdateWithoutAlertsInput, InventoryProductUncheckedUpdateWithoutAlertsInput>
+    create: XOR<InventoryProductCreateWithoutAlertsInput, InventoryProductUncheckedCreateWithoutAlertsInput>
+    where?: InventoryProductWhereInput
+  }
+
+  export type InventoryProductUpdateToOneWithWhereWithoutAlertsInput = {
+    where?: InventoryProductWhereInput
+    data: XOR<InventoryProductUpdateWithoutAlertsInput, InventoryProductUncheckedUpdateWithoutAlertsInput>
+  }
+
+  export type InventoryProductUpdateWithoutAlertsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    unit?: StringFieldUpdateOperationsInput | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    minQuantity?: IntFieldUpdateOperationsInput | number
+    alertThreshold?: NullableIntFieldUpdateOperationsInput | number | null
+    requiresRefill?: BoolFieldUpdateOperationsInput | boolean
+    notifyBelowThreshold?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    stocks?: InventoryStockUpdateManyWithoutProductNestedInput
+    checklistItems?: InventoryChecklistItemUpdateManyWithoutProductNestedInput
+    stockEvents?: InventoryStockEventUpdateManyWithoutProductNestedInput
+  }
+
+  export type InventoryProductUncheckedUpdateWithoutAlertsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    unit?: StringFieldUpdateOperationsInput | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    minQuantity?: IntFieldUpdateOperationsInput | number
+    alertThreshold?: NullableIntFieldUpdateOperationsInput | number | null
+    requiresRefill?: BoolFieldUpdateOperationsInput | boolean
+    notifyBelowThreshold?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    stocks?: InventoryStockUncheckedUpdateManyWithoutProductNestedInput
+    checklistItems?: InventoryChecklistItemUncheckedUpdateManyWithoutProductNestedInput
+    stockEvents?: InventoryStockEventUncheckedUpdateManyWithoutProductNestedInput
+  }
+
+  export type InventoryChecklistUpsertWithoutAlertsInput = {
+    update: XOR<InventoryChecklistUpdateWithoutAlertsInput, InventoryChecklistUncheckedUpdateWithoutAlertsInput>
+    create: XOR<InventoryChecklistCreateWithoutAlertsInput, InventoryChecklistUncheckedCreateWithoutAlertsInput>
+    where?: InventoryChecklistWhereInput
+  }
+
+  export type InventoryChecklistUpdateToOneWithWhereWithoutAlertsInput = {
+    where?: InventoryChecklistWhereInput
+    data: XOR<InventoryChecklistUpdateWithoutAlertsInput, InventoryChecklistUncheckedUpdateWithoutAlertsInput>
+  }
+
+  export type InventoryChecklistUpdateWithoutAlertsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    checkDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumInventoryChecklistStatusFieldUpdateOperationsInput | $Enums.InventoryChecklistStatus
+    startedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    items?: InventoryChecklistItemUpdateManyWithoutChecklistNestedInput
+  }
+
+  export type InventoryChecklistUncheckedUpdateWithoutAlertsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    checkDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumInventoryChecklistStatusFieldUpdateOperationsInput | $Enums.InventoryChecklistStatus
+    startedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    items?: InventoryChecklistItemUncheckedUpdateManyWithoutChecklistNestedInput
+  }
+
+  export type InventoryChecklistItemUpsertWithoutAlertsInput = {
+    update: XOR<InventoryChecklistItemUpdateWithoutAlertsInput, InventoryChecklistItemUncheckedUpdateWithoutAlertsInput>
+    create: XOR<InventoryChecklistItemCreateWithoutAlertsInput, InventoryChecklistItemUncheckedCreateWithoutAlertsInput>
+    where?: InventoryChecklistItemWhereInput
+  }
+
+  export type InventoryChecklistItemUpdateToOneWithWhereWithoutAlertsInput = {
+    where?: InventoryChecklistItemWhereInput
+    data: XOR<InventoryChecklistItemUpdateWithoutAlertsInput, InventoryChecklistItemUncheckedUpdateWithoutAlertsInput>
+  }
+
+  export type InventoryChecklistItemUpdateWithoutAlertsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expectedMinQuantity?: IntFieldUpdateOperationsInput | number
+    countedQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    outOfStock?: BoolFieldUpdateOperationsInput | boolean
+    result?: EnumInventoryChecklistItemResultFieldUpdateOperationsInput | $Enums.InventoryChecklistItemResult
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    checkedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    checklist?: InventoryChecklistUpdateOneRequiredWithoutItemsNestedInput
+    place?: InventoryPlaceUpdateOneRequiredWithoutChecklistItemsNestedInput
+    product?: InventoryProductUpdateOneRequiredWithoutChecklistItemsNestedInput
+  }
+
+  export type InventoryChecklistItemUncheckedUpdateWithoutAlertsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    checklistId?: StringFieldUpdateOperationsInput | string
+    placeId?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    expectedMinQuantity?: IntFieldUpdateOperationsInput | number
+    countedQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    outOfStock?: BoolFieldUpdateOperationsInput | boolean
+    result?: EnumInventoryChecklistItemResultFieldUpdateOperationsInput | $Enums.InventoryChecklistItemResult
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    checkedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type InventoryPlaceCreateWithoutStockEventsInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    type: $Enums.InventoryPlaceType
+    active?: boolean
+    displayOrder?: number | null
+    notes?: string | null
+    stocks?: InventoryStockCreateNestedManyWithoutPlaceInput
+    alerts?: InventoryAlertCreateNestedManyWithoutPlaceInput
+    checklistItems?: InventoryChecklistItemCreateNestedManyWithoutPlaceInput
+  }
+
+  export type InventoryPlaceUncheckedCreateWithoutStockEventsInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    type: $Enums.InventoryPlaceType
+    active?: boolean
+    displayOrder?: number | null
+    notes?: string | null
+    stocks?: InventoryStockUncheckedCreateNestedManyWithoutPlaceInput
+    alerts?: InventoryAlertUncheckedCreateNestedManyWithoutPlaceInput
+    checklistItems?: InventoryChecklistItemUncheckedCreateNestedManyWithoutPlaceInput
+  }
+
+  export type InventoryPlaceCreateOrConnectWithoutStockEventsInput = {
+    where: InventoryPlaceWhereUniqueInput
+    create: XOR<InventoryPlaceCreateWithoutStockEventsInput, InventoryPlaceUncheckedCreateWithoutStockEventsInput>
+  }
+
+  export type InventoryProductCreateWithoutStockEventsInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    unit: string
+    active?: boolean
+    minQuantity?: number
+    alertThreshold?: number | null
+    requiresRefill?: boolean
+    notifyBelowThreshold?: boolean
+    notes?: string | null
+    stocks?: InventoryStockCreateNestedManyWithoutProductInput
+    alerts?: InventoryAlertCreateNestedManyWithoutProductInput
+    checklistItems?: InventoryChecklistItemCreateNestedManyWithoutProductInput
+  }
+
+  export type InventoryProductUncheckedCreateWithoutStockEventsInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    unit: string
+    active?: boolean
+    minQuantity?: number
+    alertThreshold?: number | null
+    requiresRefill?: boolean
+    notifyBelowThreshold?: boolean
+    notes?: string | null
+    stocks?: InventoryStockUncheckedCreateNestedManyWithoutProductInput
+    alerts?: InventoryAlertUncheckedCreateNestedManyWithoutProductInput
+    checklistItems?: InventoryChecklistItemUncheckedCreateNestedManyWithoutProductInput
+  }
+
+  export type InventoryProductCreateOrConnectWithoutStockEventsInput = {
+    where: InventoryProductWhereUniqueInput
+    create: XOR<InventoryProductCreateWithoutStockEventsInput, InventoryProductUncheckedCreateWithoutStockEventsInput>
+  }
+
+  export type InventoryPlaceUpsertWithoutStockEventsInput = {
+    update: XOR<InventoryPlaceUpdateWithoutStockEventsInput, InventoryPlaceUncheckedUpdateWithoutStockEventsInput>
+    create: XOR<InventoryPlaceCreateWithoutStockEventsInput, InventoryPlaceUncheckedCreateWithoutStockEventsInput>
+    where?: InventoryPlaceWhereInput
+  }
+
+  export type InventoryPlaceUpdateToOneWithWhereWithoutStockEventsInput = {
+    where?: InventoryPlaceWhereInput
+    data: XOR<InventoryPlaceUpdateWithoutStockEventsInput, InventoryPlaceUncheckedUpdateWithoutStockEventsInput>
+  }
+
+  export type InventoryPlaceUpdateWithoutStockEventsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: EnumInventoryPlaceTypeFieldUpdateOperationsInput | $Enums.InventoryPlaceType
+    active?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: NullableIntFieldUpdateOperationsInput | number | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    stocks?: InventoryStockUpdateManyWithoutPlaceNestedInput
+    alerts?: InventoryAlertUpdateManyWithoutPlaceNestedInput
+    checklistItems?: InventoryChecklistItemUpdateManyWithoutPlaceNestedInput
+  }
+
+  export type InventoryPlaceUncheckedUpdateWithoutStockEventsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: EnumInventoryPlaceTypeFieldUpdateOperationsInput | $Enums.InventoryPlaceType
+    active?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: NullableIntFieldUpdateOperationsInput | number | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    stocks?: InventoryStockUncheckedUpdateManyWithoutPlaceNestedInput
+    alerts?: InventoryAlertUncheckedUpdateManyWithoutPlaceNestedInput
+    checklistItems?: InventoryChecklistItemUncheckedUpdateManyWithoutPlaceNestedInput
+  }
+
+  export type InventoryProductUpsertWithoutStockEventsInput = {
+    update: XOR<InventoryProductUpdateWithoutStockEventsInput, InventoryProductUncheckedUpdateWithoutStockEventsInput>
+    create: XOR<InventoryProductCreateWithoutStockEventsInput, InventoryProductUncheckedCreateWithoutStockEventsInput>
+    where?: InventoryProductWhereInput
+  }
+
+  export type InventoryProductUpdateToOneWithWhereWithoutStockEventsInput = {
+    where?: InventoryProductWhereInput
+    data: XOR<InventoryProductUpdateWithoutStockEventsInput, InventoryProductUncheckedUpdateWithoutStockEventsInput>
+  }
+
+  export type InventoryProductUpdateWithoutStockEventsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    unit?: StringFieldUpdateOperationsInput | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    minQuantity?: IntFieldUpdateOperationsInput | number
+    alertThreshold?: NullableIntFieldUpdateOperationsInput | number | null
+    requiresRefill?: BoolFieldUpdateOperationsInput | boolean
+    notifyBelowThreshold?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    stocks?: InventoryStockUpdateManyWithoutProductNestedInput
+    alerts?: InventoryAlertUpdateManyWithoutProductNestedInput
+    checklistItems?: InventoryChecklistItemUpdateManyWithoutProductNestedInput
+  }
+
+  export type InventoryProductUncheckedUpdateWithoutStockEventsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    unit?: StringFieldUpdateOperationsInput | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    minQuantity?: IntFieldUpdateOperationsInput | number
+    alertThreshold?: NullableIntFieldUpdateOperationsInput | number | null
+    requiresRefill?: BoolFieldUpdateOperationsInput | boolean
+    notifyBelowThreshold?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    stocks?: InventoryStockUncheckedUpdateManyWithoutProductNestedInput
+    alerts?: InventoryAlertUncheckedUpdateManyWithoutProductNestedInput
+    checklistItems?: InventoryChecklistItemUncheckedUpdateManyWithoutProductNestedInput
+  }
+
   export type PreparationStepCreateManyStationInput = {
     id: string
     createdAt?: Date | string
@@ -50320,6 +64048,664 @@ export namespace Prisma {
     translations?: NullableJsonNullValueInput | InputJsonValue
     modifierGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     fileId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type InventoryStockCreateManyPlaceInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    productId: string
+    currentQuantity?: number
+    includeInChecklist?: boolean
+    lastCheckedAt?: Date | string | null
+    lastCheckedBy?: string | null
+  }
+
+  export type InventoryAlertCreateManyPlaceInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    type: $Enums.InventoryAlertType
+    severity: $Enums.InventoryAlertSeverity
+    status?: $Enums.InventoryAlertStatus
+    message: string
+    productId: string
+    checklistId?: string | null
+    checklistItemId?: string | null
+    triggeredAt?: Date | string
+    ackedAt?: Date | string | null
+    ackedBy?: string | null
+    resolvedAt?: Date | string | null
+    resolvedBy?: string | null
+  }
+
+  export type InventoryChecklistItemCreateManyPlaceInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    checklistId: string
+    productId: string
+    expectedMinQuantity?: number
+    countedQuantity?: number | null
+    outOfStock?: boolean
+    result?: $Enums.InventoryChecklistItemResult
+    notes?: string | null
+    checkedAt?: Date | string | null
+    checkedBy?: string | null
+  }
+
+  export type InventoryStockEventCreateManyPlaceInput = {
+    id: string
+    createdAt?: Date | string
+    eventType: string
+    productId: string
+    beforeQuantity?: number | null
+    afterQuantity?: number | null
+    actorId?: string | null
+    source: string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type InventoryStockUpdateWithoutPlaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    currentQuantity?: IntFieldUpdateOperationsInput | number
+    includeInChecklist?: BoolFieldUpdateOperationsInput | boolean
+    lastCheckedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastCheckedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    product?: InventoryProductUpdateOneRequiredWithoutStocksNestedInput
+  }
+
+  export type InventoryStockUncheckedUpdateWithoutPlaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    productId?: StringFieldUpdateOperationsInput | string
+    currentQuantity?: IntFieldUpdateOperationsInput | number
+    includeInChecklist?: BoolFieldUpdateOperationsInput | boolean
+    lastCheckedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastCheckedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type InventoryStockUncheckedUpdateManyWithoutPlaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    productId?: StringFieldUpdateOperationsInput | string
+    currentQuantity?: IntFieldUpdateOperationsInput | number
+    includeInChecklist?: BoolFieldUpdateOperationsInput | boolean
+    lastCheckedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastCheckedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type InventoryAlertUpdateWithoutPlaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumInventoryAlertTypeFieldUpdateOperationsInput | $Enums.InventoryAlertType
+    severity?: EnumInventoryAlertSeverityFieldUpdateOperationsInput | $Enums.InventoryAlertSeverity
+    status?: EnumInventoryAlertStatusFieldUpdateOperationsInput | $Enums.InventoryAlertStatus
+    message?: StringFieldUpdateOperationsInput | string
+    triggeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ackedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    ackedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    product?: InventoryProductUpdateOneRequiredWithoutAlertsNestedInput
+    checklist?: InventoryChecklistUpdateOneWithoutAlertsNestedInput
+    checklistItem?: InventoryChecklistItemUpdateOneWithoutAlertsNestedInput
+  }
+
+  export type InventoryAlertUncheckedUpdateWithoutPlaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumInventoryAlertTypeFieldUpdateOperationsInput | $Enums.InventoryAlertType
+    severity?: EnumInventoryAlertSeverityFieldUpdateOperationsInput | $Enums.InventoryAlertSeverity
+    status?: EnumInventoryAlertStatusFieldUpdateOperationsInput | $Enums.InventoryAlertStatus
+    message?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    checklistId?: NullableStringFieldUpdateOperationsInput | string | null
+    checklistItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    triggeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ackedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    ackedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type InventoryAlertUncheckedUpdateManyWithoutPlaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumInventoryAlertTypeFieldUpdateOperationsInput | $Enums.InventoryAlertType
+    severity?: EnumInventoryAlertSeverityFieldUpdateOperationsInput | $Enums.InventoryAlertSeverity
+    status?: EnumInventoryAlertStatusFieldUpdateOperationsInput | $Enums.InventoryAlertStatus
+    message?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    checklistId?: NullableStringFieldUpdateOperationsInput | string | null
+    checklistItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    triggeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ackedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    ackedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type InventoryChecklistItemUpdateWithoutPlaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expectedMinQuantity?: IntFieldUpdateOperationsInput | number
+    countedQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    outOfStock?: BoolFieldUpdateOperationsInput | boolean
+    result?: EnumInventoryChecklistItemResultFieldUpdateOperationsInput | $Enums.InventoryChecklistItemResult
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    checkedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    checklist?: InventoryChecklistUpdateOneRequiredWithoutItemsNestedInput
+    product?: InventoryProductUpdateOneRequiredWithoutChecklistItemsNestedInput
+    alerts?: InventoryAlertUpdateManyWithoutChecklistItemNestedInput
+  }
+
+  export type InventoryChecklistItemUncheckedUpdateWithoutPlaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    checklistId?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    expectedMinQuantity?: IntFieldUpdateOperationsInput | number
+    countedQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    outOfStock?: BoolFieldUpdateOperationsInput | boolean
+    result?: EnumInventoryChecklistItemResultFieldUpdateOperationsInput | $Enums.InventoryChecklistItemResult
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    checkedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    alerts?: InventoryAlertUncheckedUpdateManyWithoutChecklistItemNestedInput
+  }
+
+  export type InventoryChecklistItemUncheckedUpdateManyWithoutPlaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    checklistId?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    expectedMinQuantity?: IntFieldUpdateOperationsInput | number
+    countedQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    outOfStock?: BoolFieldUpdateOperationsInput | boolean
+    result?: EnumInventoryChecklistItemResultFieldUpdateOperationsInput | $Enums.InventoryChecklistItemResult
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    checkedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type InventoryStockEventUpdateWithoutPlaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    eventType?: StringFieldUpdateOperationsInput | string
+    beforeQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    afterQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    actorId?: NullableStringFieldUpdateOperationsInput | string | null
+    source?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    product?: InventoryProductUpdateOneRequiredWithoutStockEventsNestedInput
+  }
+
+  export type InventoryStockEventUncheckedUpdateWithoutPlaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    eventType?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    beforeQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    afterQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    actorId?: NullableStringFieldUpdateOperationsInput | string | null
+    source?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type InventoryStockEventUncheckedUpdateManyWithoutPlaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    eventType?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    beforeQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    afterQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    actorId?: NullableStringFieldUpdateOperationsInput | string | null
+    source?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type InventoryStockCreateManyProductInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    placeId: string
+    currentQuantity?: number
+    includeInChecklist?: boolean
+    lastCheckedAt?: Date | string | null
+    lastCheckedBy?: string | null
+  }
+
+  export type InventoryAlertCreateManyProductInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    type: $Enums.InventoryAlertType
+    severity: $Enums.InventoryAlertSeverity
+    status?: $Enums.InventoryAlertStatus
+    message: string
+    placeId: string
+    checklistId?: string | null
+    checklistItemId?: string | null
+    triggeredAt?: Date | string
+    ackedAt?: Date | string | null
+    ackedBy?: string | null
+    resolvedAt?: Date | string | null
+    resolvedBy?: string | null
+  }
+
+  export type InventoryChecklistItemCreateManyProductInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    checklistId: string
+    placeId: string
+    expectedMinQuantity?: number
+    countedQuantity?: number | null
+    outOfStock?: boolean
+    result?: $Enums.InventoryChecklistItemResult
+    notes?: string | null
+    checkedAt?: Date | string | null
+    checkedBy?: string | null
+  }
+
+  export type InventoryStockEventCreateManyProductInput = {
+    id: string
+    createdAt?: Date | string
+    eventType: string
+    placeId: string
+    beforeQuantity?: number | null
+    afterQuantity?: number | null
+    actorId?: string | null
+    source: string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type InventoryStockUpdateWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    currentQuantity?: IntFieldUpdateOperationsInput | number
+    includeInChecklist?: BoolFieldUpdateOperationsInput | boolean
+    lastCheckedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastCheckedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    place?: InventoryPlaceUpdateOneRequiredWithoutStocksNestedInput
+  }
+
+  export type InventoryStockUncheckedUpdateWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    placeId?: StringFieldUpdateOperationsInput | string
+    currentQuantity?: IntFieldUpdateOperationsInput | number
+    includeInChecklist?: BoolFieldUpdateOperationsInput | boolean
+    lastCheckedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastCheckedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type InventoryStockUncheckedUpdateManyWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    placeId?: StringFieldUpdateOperationsInput | string
+    currentQuantity?: IntFieldUpdateOperationsInput | number
+    includeInChecklist?: BoolFieldUpdateOperationsInput | boolean
+    lastCheckedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastCheckedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type InventoryAlertUpdateWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumInventoryAlertTypeFieldUpdateOperationsInput | $Enums.InventoryAlertType
+    severity?: EnumInventoryAlertSeverityFieldUpdateOperationsInput | $Enums.InventoryAlertSeverity
+    status?: EnumInventoryAlertStatusFieldUpdateOperationsInput | $Enums.InventoryAlertStatus
+    message?: StringFieldUpdateOperationsInput | string
+    triggeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ackedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    ackedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    place?: InventoryPlaceUpdateOneRequiredWithoutAlertsNestedInput
+    checklist?: InventoryChecklistUpdateOneWithoutAlertsNestedInput
+    checklistItem?: InventoryChecklistItemUpdateOneWithoutAlertsNestedInput
+  }
+
+  export type InventoryAlertUncheckedUpdateWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumInventoryAlertTypeFieldUpdateOperationsInput | $Enums.InventoryAlertType
+    severity?: EnumInventoryAlertSeverityFieldUpdateOperationsInput | $Enums.InventoryAlertSeverity
+    status?: EnumInventoryAlertStatusFieldUpdateOperationsInput | $Enums.InventoryAlertStatus
+    message?: StringFieldUpdateOperationsInput | string
+    placeId?: StringFieldUpdateOperationsInput | string
+    checklistId?: NullableStringFieldUpdateOperationsInput | string | null
+    checklistItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    triggeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ackedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    ackedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type InventoryAlertUncheckedUpdateManyWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumInventoryAlertTypeFieldUpdateOperationsInput | $Enums.InventoryAlertType
+    severity?: EnumInventoryAlertSeverityFieldUpdateOperationsInput | $Enums.InventoryAlertSeverity
+    status?: EnumInventoryAlertStatusFieldUpdateOperationsInput | $Enums.InventoryAlertStatus
+    message?: StringFieldUpdateOperationsInput | string
+    placeId?: StringFieldUpdateOperationsInput | string
+    checklistId?: NullableStringFieldUpdateOperationsInput | string | null
+    checklistItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    triggeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ackedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    ackedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type InventoryChecklistItemUpdateWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expectedMinQuantity?: IntFieldUpdateOperationsInput | number
+    countedQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    outOfStock?: BoolFieldUpdateOperationsInput | boolean
+    result?: EnumInventoryChecklistItemResultFieldUpdateOperationsInput | $Enums.InventoryChecklistItemResult
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    checkedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    checklist?: InventoryChecklistUpdateOneRequiredWithoutItemsNestedInput
+    place?: InventoryPlaceUpdateOneRequiredWithoutChecklistItemsNestedInput
+    alerts?: InventoryAlertUpdateManyWithoutChecklistItemNestedInput
+  }
+
+  export type InventoryChecklistItemUncheckedUpdateWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    checklistId?: StringFieldUpdateOperationsInput | string
+    placeId?: StringFieldUpdateOperationsInput | string
+    expectedMinQuantity?: IntFieldUpdateOperationsInput | number
+    countedQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    outOfStock?: BoolFieldUpdateOperationsInput | boolean
+    result?: EnumInventoryChecklistItemResultFieldUpdateOperationsInput | $Enums.InventoryChecklistItemResult
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    checkedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    alerts?: InventoryAlertUncheckedUpdateManyWithoutChecklistItemNestedInput
+  }
+
+  export type InventoryChecklistItemUncheckedUpdateManyWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    checklistId?: StringFieldUpdateOperationsInput | string
+    placeId?: StringFieldUpdateOperationsInput | string
+    expectedMinQuantity?: IntFieldUpdateOperationsInput | number
+    countedQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    outOfStock?: BoolFieldUpdateOperationsInput | boolean
+    result?: EnumInventoryChecklistItemResultFieldUpdateOperationsInput | $Enums.InventoryChecklistItemResult
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    checkedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type InventoryStockEventUpdateWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    eventType?: StringFieldUpdateOperationsInput | string
+    beforeQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    afterQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    actorId?: NullableStringFieldUpdateOperationsInput | string | null
+    source?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    place?: InventoryPlaceUpdateOneRequiredWithoutStockEventsNestedInput
+  }
+
+  export type InventoryStockEventUncheckedUpdateWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    eventType?: StringFieldUpdateOperationsInput | string
+    placeId?: StringFieldUpdateOperationsInput | string
+    beforeQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    afterQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    actorId?: NullableStringFieldUpdateOperationsInput | string | null
+    source?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type InventoryStockEventUncheckedUpdateManyWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    eventType?: StringFieldUpdateOperationsInput | string
+    placeId?: StringFieldUpdateOperationsInput | string
+    beforeQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    afterQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    actorId?: NullableStringFieldUpdateOperationsInput | string | null
+    source?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type InventoryChecklistItemCreateManyChecklistInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    placeId: string
+    productId: string
+    expectedMinQuantity?: number
+    countedQuantity?: number | null
+    outOfStock?: boolean
+    result?: $Enums.InventoryChecklistItemResult
+    notes?: string | null
+    checkedAt?: Date | string | null
+    checkedBy?: string | null
+  }
+
+  export type InventoryAlertCreateManyChecklistInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    type: $Enums.InventoryAlertType
+    severity: $Enums.InventoryAlertSeverity
+    status?: $Enums.InventoryAlertStatus
+    message: string
+    placeId: string
+    productId: string
+    checklistItemId?: string | null
+    triggeredAt?: Date | string
+    ackedAt?: Date | string | null
+    ackedBy?: string | null
+    resolvedAt?: Date | string | null
+    resolvedBy?: string | null
+  }
+
+  export type InventoryChecklistItemUpdateWithoutChecklistInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expectedMinQuantity?: IntFieldUpdateOperationsInput | number
+    countedQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    outOfStock?: BoolFieldUpdateOperationsInput | boolean
+    result?: EnumInventoryChecklistItemResultFieldUpdateOperationsInput | $Enums.InventoryChecklistItemResult
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    checkedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    place?: InventoryPlaceUpdateOneRequiredWithoutChecklistItemsNestedInput
+    product?: InventoryProductUpdateOneRequiredWithoutChecklistItemsNestedInput
+    alerts?: InventoryAlertUpdateManyWithoutChecklistItemNestedInput
+  }
+
+  export type InventoryChecklistItemUncheckedUpdateWithoutChecklistInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    placeId?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    expectedMinQuantity?: IntFieldUpdateOperationsInput | number
+    countedQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    outOfStock?: BoolFieldUpdateOperationsInput | boolean
+    result?: EnumInventoryChecklistItemResultFieldUpdateOperationsInput | $Enums.InventoryChecklistItemResult
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    checkedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    alerts?: InventoryAlertUncheckedUpdateManyWithoutChecklistItemNestedInput
+  }
+
+  export type InventoryChecklistItemUncheckedUpdateManyWithoutChecklistInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    placeId?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    expectedMinQuantity?: IntFieldUpdateOperationsInput | number
+    countedQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    outOfStock?: BoolFieldUpdateOperationsInput | boolean
+    result?: EnumInventoryChecklistItemResultFieldUpdateOperationsInput | $Enums.InventoryChecklistItemResult
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    checkedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type InventoryAlertUpdateWithoutChecklistInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumInventoryAlertTypeFieldUpdateOperationsInput | $Enums.InventoryAlertType
+    severity?: EnumInventoryAlertSeverityFieldUpdateOperationsInput | $Enums.InventoryAlertSeverity
+    status?: EnumInventoryAlertStatusFieldUpdateOperationsInput | $Enums.InventoryAlertStatus
+    message?: StringFieldUpdateOperationsInput | string
+    triggeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ackedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    ackedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    place?: InventoryPlaceUpdateOneRequiredWithoutAlertsNestedInput
+    product?: InventoryProductUpdateOneRequiredWithoutAlertsNestedInput
+    checklistItem?: InventoryChecklistItemUpdateOneWithoutAlertsNestedInput
+  }
+
+  export type InventoryAlertUncheckedUpdateWithoutChecklistInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumInventoryAlertTypeFieldUpdateOperationsInput | $Enums.InventoryAlertType
+    severity?: EnumInventoryAlertSeverityFieldUpdateOperationsInput | $Enums.InventoryAlertSeverity
+    status?: EnumInventoryAlertStatusFieldUpdateOperationsInput | $Enums.InventoryAlertStatus
+    message?: StringFieldUpdateOperationsInput | string
+    placeId?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    checklistItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    triggeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ackedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    ackedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type InventoryAlertUncheckedUpdateManyWithoutChecklistInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumInventoryAlertTypeFieldUpdateOperationsInput | $Enums.InventoryAlertType
+    severity?: EnumInventoryAlertSeverityFieldUpdateOperationsInput | $Enums.InventoryAlertSeverity
+    status?: EnumInventoryAlertStatusFieldUpdateOperationsInput | $Enums.InventoryAlertStatus
+    message?: StringFieldUpdateOperationsInput | string
+    placeId?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    checklistItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    triggeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ackedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    ackedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type InventoryAlertCreateManyChecklistItemInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    type: $Enums.InventoryAlertType
+    severity: $Enums.InventoryAlertSeverity
+    status?: $Enums.InventoryAlertStatus
+    message: string
+    placeId: string
+    productId: string
+    checklistId?: string | null
+    triggeredAt?: Date | string
+    ackedAt?: Date | string | null
+    ackedBy?: string | null
+    resolvedAt?: Date | string | null
+    resolvedBy?: string | null
+  }
+
+  export type InventoryAlertUpdateWithoutChecklistItemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumInventoryAlertTypeFieldUpdateOperationsInput | $Enums.InventoryAlertType
+    severity?: EnumInventoryAlertSeverityFieldUpdateOperationsInput | $Enums.InventoryAlertSeverity
+    status?: EnumInventoryAlertStatusFieldUpdateOperationsInput | $Enums.InventoryAlertStatus
+    message?: StringFieldUpdateOperationsInput | string
+    triggeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ackedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    ackedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    place?: InventoryPlaceUpdateOneRequiredWithoutAlertsNestedInput
+    product?: InventoryProductUpdateOneRequiredWithoutAlertsNestedInput
+    checklist?: InventoryChecklistUpdateOneWithoutAlertsNestedInput
+  }
+
+  export type InventoryAlertUncheckedUpdateWithoutChecklistItemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumInventoryAlertTypeFieldUpdateOperationsInput | $Enums.InventoryAlertType
+    severity?: EnumInventoryAlertSeverityFieldUpdateOperationsInput | $Enums.InventoryAlertSeverity
+    status?: EnumInventoryAlertStatusFieldUpdateOperationsInput | $Enums.InventoryAlertStatus
+    message?: StringFieldUpdateOperationsInput | string
+    placeId?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    checklistId?: NullableStringFieldUpdateOperationsInput | string | null
+    triggeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ackedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    ackedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type InventoryAlertUncheckedUpdateManyWithoutChecklistItemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumInventoryAlertTypeFieldUpdateOperationsInput | $Enums.InventoryAlertType
+    severity?: EnumInventoryAlertSeverityFieldUpdateOperationsInput | $Enums.InventoryAlertSeverity
+    status?: EnumInventoryAlertStatusFieldUpdateOperationsInput | $Enums.InventoryAlertStatus
+    message?: StringFieldUpdateOperationsInput | string
+    placeId?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    checklistId?: NullableStringFieldUpdateOperationsInput | string | null
+    triggeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ackedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    ackedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
 

@@ -307,6 +307,52 @@ function parseOrderProductUpdates(value: unknown): ParsedOrderProductChange[] | 
   });
 }
 
+async function normalizeDispatchOrderIndexes(
+  tx: Prisma.TransactionClient,
+  dispatchId: string,
+): Promise<void> {
+  await tx.$executeRaw`
+    WITH ranked_orders AS (
+      SELECT
+        orders."id",
+        ROW_NUMBER() OVER (
+          ORDER BY
+            COALESCE(orders."dispatchOrderIndex", 2147483647) ASC,
+            orders."createdAt" ASC,
+            orders."id" ASC
+        ) AS "nextIndex"
+      FROM "Order" orders
+      WHERE orders."dispatchId" = ${dispatchId}
+    )
+    UPDATE "Order" orders
+    SET "dispatchOrderIndex" = ranked_orders."nextIndex"
+    FROM ranked_orders
+    WHERE orders."id" = ranked_orders."id"
+  `;
+}
+
+async function normalizeDispatchQueueIndexes(
+  tx: Prisma.TransactionClient,
+): Promise<void> {
+  await tx.$executeRaw`
+    WITH ranked_dispatches AS (
+      SELECT
+        dispatch."id",
+        ROW_NUMBER() OVER (
+          ORDER BY
+            COALESCE(dispatch."queueIndex", 2147483647) ASC,
+            dispatch."createdAt" ASC,
+            dispatch."id" ASC
+        ) AS "nextQueueIndex"
+      FROM "Dispatch" dispatch
+    )
+    UPDATE "Dispatch" dispatch
+    SET "queueIndex" = ranked_dispatches."nextQueueIndex"
+    FROM ranked_dispatches
+    WHERE dispatch."id" = ranked_dispatches."id"
+  `;
+}
+
 export default async function updateOrderPaymentAndDelivery(
   data: UpdateOrderPaymentAndDeliveryInput,
 ): Promise<TOrder> {
@@ -552,6 +598,45 @@ export default async function updateOrderPaymentAndDelivery(
   }
 
   await prisma.$transaction(async (tx) => {
+    if (updates.canceled === true) {
+      const [orderDispatch] = await tx.$queryRaw<{ dispatchId: string | null }[]>`
+        SELECT "dispatchId"
+        FROM "Order"
+        WHERE "id" = ${orderId}
+        LIMIT 1
+      `;
+
+      const sourceDispatchId = orderDispatch?.dispatchId ?? null;
+
+      if (sourceDispatchId) {
+        await tx.$executeRaw`
+          UPDATE "Order"
+          SET
+            "dispatchId" = NULL,
+            "dispatchOrderIndex" = NULL
+          WHERE "id" = ${orderId}
+        `;
+
+        await normalizeDispatchOrderIndexes(tx, sourceDispatchId);
+
+        const [sourceCountResult] = await tx.$queryRaw<{ count: bigint }[]>`
+          SELECT COUNT(*)::BIGINT AS "count"
+          FROM "Order"
+          WHERE "dispatchId" = ${sourceDispatchId}
+        `;
+
+        const sourceOrderCount = Number(sourceCountResult?.count ?? 0);
+
+        if (sourceOrderCount === 0) {
+          await tx.$executeRaw`
+            DELETE FROM "Dispatch"
+            WHERE "id" = ${sourceDispatchId}
+          `;
+          await normalizeDispatchQueueIndexes(tx);
+        }
+      }
+    }
+
     if (hasOrderUpdates) {
       const orderUpdateData = updates as Prisma.OrderUncheckedUpdateInput;
       await tx.order.update({

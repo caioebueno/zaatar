@@ -325,3 +325,50 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     );
   }
 }
+
+export async function DELETE(
+  _request: NextRequest,
+  context: RouteContext,
+) {
+  try {
+    const { itemId } = await context.params;
+    const normalizedItemId = itemId.trim();
+
+    if (!normalizedItemId) {
+      return NextResponse.json(
+        { error: "Invalid payload", field: "itemId" },
+        { status: 400 },
+      );
+    }
+
+    await prisma.modifierGroupItem.delete({
+      where: {
+        id: normalizedItemId,
+      },
+    });
+
+    return NextResponse.json({
+      id: normalizedItemId,
+      deleted: true,
+    });
+  } catch (error) {
+    if (
+      typeof error === "object" &&
+      error !== null &&
+      "code" in error &&
+      (error as { code?: string }).code === "P2025"
+    ) {
+      return NextResponse.json(
+        { error: "Modifier group item not found" },
+        { status: 404 },
+      );
+    }
+
+    console.error("DELETE /api/modifier-group-items/[itemId] error:", error);
+
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 },
+    );
+  }
+}
