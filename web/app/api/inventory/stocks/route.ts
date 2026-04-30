@@ -33,6 +33,7 @@ export async function POST(request: NextRequest) {
       productId?: unknown;
       currentQuantity?: unknown;
       minQuantity?: unknown;
+      notifyBelowThreshold?: unknown;
       includeInChecklist?: unknown;
       actorId?: unknown;
       source?: unknown;
@@ -45,6 +46,10 @@ export async function POST(request: NextRequest) {
       productId: parseString(body.productId, "productId"),
       currentQuantity: parseRequiredInt(body.currentQuantity, "currentQuantity"),
       minQuantity: minQuantity === null ? undefined : minQuantity,
+      notifyBelowThreshold: parseOptionalBoolean(
+        body.notifyBelowThreshold,
+        "notifyBelowThreshold",
+      ),
       includeInChecklist: parseOptionalBoolean(
         body.includeInChecklist,
         "includeInChecklist",

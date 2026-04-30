@@ -63,7 +63,6 @@ type ProductRow = {
   minQuantity: number;
   alertThreshold: number | null;
   requiresRefill: boolean;
-  notifyBelowThreshold: boolean;
   notes: string | null;
 };
 
@@ -77,6 +76,7 @@ type StockRow = {
   productName: string;
   currentQuantity: number;
   minQuantity: number;
+  notifyBelowThreshold: boolean;
   includeInChecklist: boolean;
   lastCheckedAt: Date | null;
   lastCheckedBy: string | null;
@@ -243,7 +243,6 @@ function mapProduct(row: ProductRow): InventoryProduct {
     minQuantity: row.minQuantity,
     alertThreshold: row.alertThreshold,
     requiresRefill: row.requiresRefill,
-    notifyBelowThreshold: row.notifyBelowThreshold,
     notes: row.notes,
   };
 }
@@ -259,6 +258,7 @@ function mapStock(row: StockRow): InventoryStock {
     productName: row.productName,
     currentQuantity: row.currentQuantity,
     minQuantity: row.minQuantity,
+    notifyBelowThreshold: row.notifyBelowThreshold,
     includeInChecklist: row.includeInChecklist,
     lastCheckedAt: row.lastCheckedAt ? row.lastCheckedAt.toISOString() : null,
     lastCheckedBy: row.lastCheckedBy,
@@ -281,6 +281,7 @@ async function getStockRowByPlaceAndProduct(
       pr."name" as "productName",
       s."currentQuantity",
       s."minQuantity",
+      s."notifyBelowThreshold",
       s."includeInChecklist",
       s."lastCheckedAt",
       s."lastCheckedBy"
@@ -406,7 +407,6 @@ async function ensureInventorySchema(executor: SchemaExecutor) {
           "minQuantity" integer NOT NULL DEFAULT 0,
           "alertThreshold" integer,
           "requiresRefill" boolean NOT NULL DEFAULT false,
-          "notifyBelowThreshold" boolean NOT NULL DEFAULT false,
           "notes" text
         )
       `);
@@ -420,6 +420,7 @@ async function ensureInventorySchema(executor: SchemaExecutor) {
           "productId" text NOT NULL,
           "currentQuantity" integer NOT NULL DEFAULT 0,
           "minQuantity" integer NOT NULL DEFAULT 0,
+          "notifyBelowThreshold" boolean NOT NULL DEFAULT false,
           "includeInChecklist" boolean NOT NULL DEFAULT true,
           "lastCheckedAt" timestamptz,
           "lastCheckedBy" text,
@@ -450,12 +451,35 @@ async function ensureInventorySchema(executor: SchemaExecutor) {
       `);
 
       await executor.$executeRawUnsafe(`
+        ALTER TABLE "InventoryStock"
+        ADD COLUMN IF NOT EXISTS "notifyBelowThreshold" boolean NOT NULL DEFAULT false
+      `);
+
+      await executor.$executeRawUnsafe(`
         UPDATE "InventoryStock" s
         SET "minQuantity" = p."minQuantity"
         FROM "InventoryProduct" p
         WHERE s."productId" = p."id"
           AND s."minQuantity" = 0
           AND p."minQuantity" > 0
+      `);
+
+      await executor.$executeRawUnsafe(`
+        DO $$
+        BEGIN
+          IF EXISTS (
+            SELECT 1
+            FROM information_schema.columns
+            WHERE table_schema = 'public'
+              AND table_name = 'InventoryProduct'
+              AND column_name = 'notifyBelowThreshold'
+          ) THEN
+            UPDATE "InventoryStock" s
+            SET "notifyBelowThreshold" = p."notifyBelowThreshold"
+            FROM "InventoryProduct" p
+            WHERE s."productId" = p."id";
+          END IF;
+        END $$;
       `);
 
       await executor.$executeRawUnsafe(`
@@ -814,7 +838,6 @@ class PrismaInventoryRepository implements InventoryRepository {
         "minQuantity",
         "alertThreshold",
         "requiresRefill",
-        "notifyBelowThreshold",
         "notes"
       FROM "InventoryProduct"
       ORDER BY "name" ASC
@@ -835,7 +858,6 @@ class PrismaInventoryRepository implements InventoryRepository {
         "minQuantity",
         "alertThreshold",
         "requiresRefill",
-        "notifyBelowThreshold",
         "notes"
       ) VALUES (
         ${randomUUID()},
@@ -845,7 +867,6 @@ class PrismaInventoryRepository implements InventoryRepository {
         ${input.minQuantity},
         ${input.alertThreshold ?? null},
         ${input.requiresRefill ?? false},
-        ${input.notifyBelowThreshold ?? false},
         ${input.notes ?? null}
       )
       RETURNING
@@ -858,7 +879,6 @@ class PrismaInventoryRepository implements InventoryRepository {
         "minQuantity",
         "alertThreshold",
         "requiresRefill",
-        "notifyBelowThreshold",
         "notes"
     `;
 
@@ -879,7 +899,6 @@ class PrismaInventoryRepository implements InventoryRepository {
         "minQuantity",
         "alertThreshold",
         "requiresRefill",
-        "notifyBelowThreshold",
         "notes"
       FROM "InventoryProduct"
       WHERE "id" = ${input.productId}
@@ -906,9 +925,6 @@ class PrismaInventoryRepository implements InventoryRepository {
             : input.alertThreshold
         },
         "requiresRefill" = ${input.requiresRefill ?? existing.requiresRefill},
-        "notifyBelowThreshold" = ${
-          input.notifyBelowThreshold ?? existing.notifyBelowThreshold
-        },
         "notes" = ${input.notes === undefined ? existing.notes : input.notes},
         "updatedAt" = now()
       WHERE "id" = ${input.productId}
@@ -922,7 +938,6 @@ class PrismaInventoryRepository implements InventoryRepository {
         "minQuantity",
         "alertThreshold",
         "requiresRefill",
-        "notifyBelowThreshold",
         "notes"
     `;
 
@@ -944,6 +959,7 @@ class PrismaInventoryRepository implements InventoryRepository {
           pr."name" as "productName",
           s."currentQuantity",
           s."minQuantity",
+          s."notifyBelowThreshold",
           s."includeInChecklist",
           s."lastCheckedAt",
           s."lastCheckedBy"
@@ -968,6 +984,7 @@ class PrismaInventoryRepository implements InventoryRepository {
         pr."name" as "productName",
         s."currentQuantity",
         s."minQuantity",
+        s."notifyBelowThreshold",
         s."includeInChecklist",
         s."lastCheckedAt",
         s."lastCheckedBy"
@@ -1013,10 +1030,11 @@ class PrismaInventoryRepository implements InventoryRepository {
         {
           currentQuantity: number | null;
           minQuantity: number | null;
+          notifyBelowThreshold: boolean | null;
           includeInChecklist: boolean;
         }[]
       >`
-        SELECT "currentQuantity", "minQuantity", "includeInChecklist"
+        SELECT "currentQuantity", "minQuantity", "notifyBelowThreshold", "includeInChecklist"
         FROM "InventoryStock"
         WHERE "placeId" = ${input.placeId} AND "productId" = ${input.productId}
         LIMIT 1
@@ -1026,6 +1044,10 @@ class PrismaInventoryRepository implements InventoryRepository {
         input.includeInChecklist ?? existing?.includeInChecklist ?? true;
       const minQuantityToPersist =
         input.minQuantity ?? existing?.minQuantity ?? product.minQuantity ?? 0;
+      const notifyBelowThresholdToPersist =
+        input.notifyBelowThreshold ??
+        existing?.notifyBelowThreshold ??
+        false;
 
       await tx.$queryRaw`
         INSERT INTO "InventoryStock" (
@@ -1034,6 +1056,7 @@ class PrismaInventoryRepository implements InventoryRepository {
           "productId",
           "currentQuantity",
           "minQuantity",
+          "notifyBelowThreshold",
           "includeInChecklist",
           "lastCheckedAt",
           "lastCheckedBy"
@@ -1043,6 +1066,7 @@ class PrismaInventoryRepository implements InventoryRepository {
           ${input.productId},
           ${input.currentQuantity},
           ${minQuantityToPersist},
+          ${notifyBelowThresholdToPersist},
           ${includeInChecklistToPersist},
           now(),
           ${input.actorId ?? null}
@@ -1051,6 +1075,7 @@ class PrismaInventoryRepository implements InventoryRepository {
         DO UPDATE SET
           "currentQuantity" = EXCLUDED."currentQuantity",
           "minQuantity" = EXCLUDED."minQuantity",
+          "notifyBelowThreshold" = EXCLUDED."notifyBelowThreshold",
           "includeInChecklist" = EXCLUDED."includeInChecklist",
           "lastCheckedAt" = now(),
           "lastCheckedBy" = EXCLUDED."lastCheckedBy",
@@ -1080,6 +1105,7 @@ class PrismaInventoryRepository implements InventoryRepository {
           ${JSON.stringify({
             via: "inventory-stock-upsert",
             minQuantity: minQuantityToPersist,
+            notifyBelowThreshold: notifyBelowThresholdToPersist,
           })}::jsonb
         )
       `;
@@ -1095,6 +1121,7 @@ class PrismaInventoryRepository implements InventoryRepository {
           pr."name" as "productName",
           s."currentQuantity",
           s."minQuantity",
+          s."notifyBelowThreshold",
           s."includeInChecklist",
           s."lastCheckedAt",
           s."lastCheckedBy"
@@ -1287,9 +1314,9 @@ class PrismaInventoryRepository implements InventoryRepository {
       }
 
       const [fromStockBefore] = await tx.$queryRaw<
-        { currentQuantity: number; minQuantity: number }[]
+        { currentQuantity: number; minQuantity: number; notifyBelowThreshold: boolean }[]
       >`
-        SELECT "currentQuantity", "minQuantity"
+        SELECT "currentQuantity", "minQuantity", "notifyBelowThreshold"
         FROM "InventoryStock"
         WHERE "placeId" = ${input.fromPlaceId}
           AND "productId" = ${input.productId}
@@ -1309,9 +1336,9 @@ class PrismaInventoryRepository implements InventoryRepository {
       }
 
       const [toStockBefore] = await tx.$queryRaw<
-        { currentQuantity: number; minQuantity: number }[]
+        { currentQuantity: number; minQuantity: number; notifyBelowThreshold: boolean }[]
       >`
-        SELECT "currentQuantity", "minQuantity"
+        SELECT "currentQuantity", "minQuantity", "notifyBelowThreshold"
         FROM "InventoryStock"
         WHERE "placeId" = ${input.toPlaceId}
           AND "productId" = ${input.productId}
@@ -1340,6 +1367,7 @@ class PrismaInventoryRepository implements InventoryRepository {
           "productId",
           "currentQuantity",
           "minQuantity",
+          "notifyBelowThreshold",
           "lastCheckedAt",
           "lastCheckedBy"
         ) VALUES (
@@ -1348,6 +1376,7 @@ class PrismaInventoryRepository implements InventoryRepository {
           ${input.productId},
           ${nextToQuantity},
           ${toStockBefore?.minQuantity ?? product.minQuantity},
+          ${toStockBefore?.notifyBelowThreshold ?? false},
           now(),
           ${input.actorId ?? null}
         )
@@ -1752,12 +1781,15 @@ class PrismaInventoryRepository implements InventoryRepository {
           i."expectedMinQuantity",
           pr."alertThreshold",
           pr."requiresRefill",
-          pr."notifyBelowThreshold",
+          COALESCE(s."notifyBelowThreshold", false) as "notifyBelowThreshold",
           i."countedQuantity",
           i."id" as "checklistItemId"
         FROM "InventoryChecklistItem" i
         INNER JOIN "InventoryPlace" p ON p."id" = i."placeId"
         INNER JOIN "InventoryProduct" pr ON pr."id" = i."productId"
+        LEFT JOIN "InventoryStock" s
+          ON s."placeId" = i."placeId"
+          AND s."productId" = i."productId"
         WHERE i."checklistId" = ${input.checklistId}
       `;
 

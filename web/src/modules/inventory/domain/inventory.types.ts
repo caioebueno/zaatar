@@ -36,7 +36,6 @@ export type InventoryProduct = {
   minQuantity: number;
   alertThreshold: number | null;
   requiresRefill: boolean;
-  notifyBelowThreshold: boolean;
   notes: string | null;
 };
 
@@ -50,6 +49,7 @@ export type InventoryStock = {
   productName: string;
   currentQuantity: number;
   minQuantity: number;
+  notifyBelowThreshold: boolean;
   includeInChecklist: boolean;
   lastCheckedAt: string | null;
   lastCheckedBy: string | null;
@@ -146,7 +146,6 @@ export type CreateInventoryProductInput = {
   minQuantity: number;
   alertThreshold?: number | null;
   requiresRefill?: boolean;
-  notifyBelowThreshold?: boolean;
   notes?: string | null;
 };
 
@@ -158,7 +157,6 @@ export type UpdateInventoryProductInput = {
   minQuantity?: number;
   alertThreshold?: number | null;
   requiresRefill?: boolean;
-  notifyBelowThreshold?: boolean;
   notes?: string | null;
 };
 
@@ -167,6 +165,7 @@ export type UpsertInventoryStockInput = {
   productId: string;
   currentQuantity: number;
   minQuantity?: number;
+  notifyBelowThreshold?: boolean;
   includeInChecklist?: boolean;
   actorId?: string | null;
   source?: "MANUAL" | "CHECKLIST" | "SYSTEM";

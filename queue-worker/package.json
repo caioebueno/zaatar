@@ -4,7 +4,6 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "npx --yes prisma migrate deploy --schema ../web/prisma/schema.prisma",
     "start": "node server.js"
   },
   "engines": {

@@ -29,7 +29,6 @@ export async function POST(request: NextRequest) {
       minQuantity?: unknown;
       alertThreshold?: unknown;
       requiresRefill?: unknown;
-      notifyBelowThreshold?: unknown;
       notes?: unknown;
     };
 
@@ -40,10 +39,6 @@ export async function POST(request: NextRequest) {
       minQuantity: parseRequiredInt(body.minQuantity, "minQuantity"),
       alertThreshold: parseOptionalNullableInt(body.alertThreshold, "alertThreshold"),
       requiresRefill: parseOptionalBoolean(body.requiresRefill, "requiresRefill"),
-      notifyBelowThreshold: parseOptionalBoolean(
-        body.notifyBelowThreshold,
-        "notifyBelowThreshold",
-      ),
       notes: parseNullableString(body.notes, "notes"),
     });
 

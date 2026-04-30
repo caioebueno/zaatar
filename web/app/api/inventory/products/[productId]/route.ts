@@ -26,7 +26,6 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       minQuantity?: unknown;
       alertThreshold?: unknown;
       requiresRefill?: unknown;
-      notifyBelowThreshold?: unknown;
       notes?: unknown;
     };
 
@@ -40,10 +39,6 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       minQuantity: minQuantity === null ? undefined : minQuantity,
       alertThreshold: parseOptionalNullableInt(body.alertThreshold, "alertThreshold"),
       requiresRefill: parseOptionalBoolean(body.requiresRefill, "requiresRefill"),
-      notifyBelowThreshold: parseOptionalBoolean(
-        body.notifyBelowThreshold,
-        "notifyBelowThreshold",
-      ),
       notes: parseNullableString(body.notes, "notes"),
     });
 

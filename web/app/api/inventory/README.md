@@ -126,7 +126,6 @@ The API uses a consistent error shape.
   "minQuantity": 10,
   "alertThreshold": 5,
   "requiresRefill": false,
-  "notifyBelowThreshold": true,
   "notes": "string|null"
 }
 ```
@@ -146,6 +145,7 @@ The API uses a consistent error shape.
   "productName": "string",
   "currentQuantity": 12,
   "minQuantity": 5,
+  "notifyBelowThreshold": true,
   "includeInChecklist": true,
   "lastCheckedAt": "ISO_DATETIME|null",
   "lastCheckedBy": "string|null"
@@ -288,13 +288,12 @@ Request body:
   "minQuantity": 10,
   "alertThreshold": 6,
   "requiresRefill": true,
-  "notifyBelowThreshold": true,
   "notes": "Keep chilled"
 }
 ```
 
 - Required: `name`, `unit`, `minQuantity`
-- Optional: `active`, `alertThreshold`, `requiresRefill`, `notifyBelowThreshold`, `notes`
+- Optional: `active`, `alertThreshold`, `requiresRefill`, `notes`
 - Response `201`: `InventoryProduct`
 
 ### `PATCH /api/inventory/products/:productId`
@@ -309,7 +308,6 @@ Request body (all fields optional):
   "minQuantity": 12,
   "alertThreshold": null,
   "requiresRefill": true,
-  "notifyBelowThreshold": false,
   "notes": null
 }
 ```
@@ -346,6 +344,7 @@ Request body:
   "productId": "string",
   "currentQuantity": 8,
   "minQuantity": 5,
+  "notifyBelowThreshold": true,
   "includeInChecklist": true,
   "actorId": "worker-id",
   "source": "MANUAL"
@@ -353,8 +352,9 @@ Request body:
 ```
 
 - Required: `placeId`, `productId`, `currentQuantity`
-- Optional: `minQuantity`, `includeInChecklist`, `actorId`, `source`
+- Optional: `minQuantity`, `notifyBelowThreshold`, `includeInChecklist`, `actorId`, `source`
 - `minQuantity` is the place+product minimum (e.g. cheese fridge `5`, cheese freezer `10`).
+- `notifyBelowThreshold` controls threshold alerts for that specific place+product stock row.
 - If `minQuantity` is omitted when creating a new stock row, backend uses `InventoryProduct.minQuantity`.
 - `source`: `MANUAL | CHECKLIST | SYSTEM` (defaults to `MANUAL`)
 - Response `200`: `InventoryStock`

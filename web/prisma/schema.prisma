@@ -466,7 +466,6 @@ model InventoryProduct {
   minQuantity          Int                   @default(0)
   alertThreshold       Int?
   requiresRefill       Boolean               @default(false)
-  notifyBelowThreshold Boolean               @default(false)
   notes                String?
   stocks               InventoryStock[]
   alerts               InventoryAlert[]
@@ -484,6 +483,7 @@ model InventoryStock {
   productId      String
   currentQuantity Int             @default(0)
   minQuantity    Int              @default(0)
+  notifyBelowThreshold Boolean    @default(false)
   includeInChecklist Boolean      @default(true)
   lastCheckedAt  DateTime?
   lastCheckedBy  String?
@@ -550,7 +550,7 @@ model InventoryAlert {
   resolvedAt      DateTime?
   resolvedBy      String?
 
-  @@index([status, type])
+  @@index([status, type], map: "InventoryAlert_status_idx")
 }
 
 model InventoryStockEvent {
