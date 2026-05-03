@@ -18,6 +18,8 @@ export function calculateProductPriceWithProgressiveDiscount(
   progressiveDiscount: TProgressiveDiscount | null,
   cart: TCart,
   categories: TCategory[],
+  additionalProducts?: TProduct[],
+  excludedFromProgressiveDiscountProductIds?: string[],
   options?: {
     cartItem?: TCartItem;
   },
@@ -41,6 +43,42 @@ export function calculateProductPriceWithProgressiveDiscount(
     );
   };
 
+  const getComboSelectionUnitPrice = (product: TProduct, cartItem?: TCartItem) => {
+    if (!cartItem?.comboSelections?.length || !product.comboSlots?.length) {
+      return 0;
+    }
+
+    const slotOptionExtraPriceByKey = new Map<string, number>();
+
+    for (const slot of product.comboSlots) {
+      for (const option of slot.options) {
+        slotOptionExtraPriceByKey.set(
+          `${slot.id}:${option.productId}`,
+          option.extraPrice,
+        );
+      }
+    }
+
+    return cartItem.comboSelections.reduce((sum, selection) => {
+      const key = `${selection.slotId}:${selection.optionProductId}`;
+      const optionExtraPrice = slotOptionExtraPriceByKey.get(key);
+      const resolvedExtraPrice =
+        typeof optionExtraPrice === "number"
+          ? optionExtraPrice
+          : typeof selection.extraPrice === "number"
+            ? selection.extraPrice
+            : 0;
+      const quantity =
+        typeof selection.quantity === "number" &&
+        Number.isInteger(selection.quantity) &&
+        selection.quantity > 0
+          ? selection.quantity
+          : 1;
+
+      return sum + resolvedExtraPrice * quantity;
+    }, 0);
+  };
+
   const productMap = new Map<string, TProduct>();
 
   for (const category of categories) {
@@ -49,11 +87,21 @@ export function calculateProductPriceWithProgressiveDiscount(
     }
   }
 
+  for (const product of additionalProducts ?? []) {
+    if (!productMap.has(product.id)) {
+      productMap.set(product.id, product);
+    }
+  }
+
+  const excludedProductIdSet = new Set(
+    excludedFromProgressiveDiscountProductIds ?? [],
+  );
+
   const product = productMap.get(productId);
 
   if (!product) return null;
 
-  let cartFullPrice = 0;
+  let cartProgressiveDiscountBaseFullPrice = 0;
 
   for (const item of cart.items) {
     const cartProduct = productMap.get(item.productId);
@@ -66,28 +114,43 @@ export function calculateProductPriceWithProgressiveDiscount(
 
     const price = typeof cartProduct.price === "number" ? cartProduct.price : 0;
     const modifierUnitPrice = getModifierUnitPrice(cartProduct, item);
+    const comboSelectionUnitPrice = getComboSelectionUnitPrice(cartProduct, item);
 
     const compared =
       typeof cartProduct.comparedAtPrice === "number"
         ? cartProduct.comparedAtPrice
         : price;
+    const itemFullPrice =
+      (compared + modifierUnitPrice + comboSelectionUnitPrice) * quantity;
 
-    cartFullPrice += (compared + modifierUnitPrice) * quantity;
+    if (!excludedProductIdSet.has(item.productId)) {
+      cartProgressiveDiscountBaseFullPrice += itemFullPrice;
+    }
   }
 
   const productBasePrice = typeof product.price === "number" ? product.price : 0;
   const productModifierUnitPrice = getModifierUnitPrice(product, options?.cartItem);
-  const productActualPrice = productBasePrice + productModifierUnitPrice;
+  const productComboSelectionUnitPrice = getComboSelectionUnitPrice(
+    product,
+    options?.cartItem,
+  );
+  const productActualPrice =
+    productBasePrice + productModifierUnitPrice + productComboSelectionUnitPrice;
 
   const productBaseFullPrice =
     typeof product.comparedAtPrice === "number"
       ? product.comparedAtPrice
       : productBasePrice;
 
-  const productFullPrice = productBaseFullPrice + productModifierUnitPrice;
+  const productFullPrice =
+    productBaseFullPrice + productModifierUnitPrice + productComboSelectionUnitPrice;
+  const productExcludedFromProgressiveDiscount = excludedProductIdSet.has(productId);
 
   const thresholdCartFullPrice =
-    options?.cartItem === undefined ? cartFullPrice + productFullPrice : cartFullPrice;
+    options?.cartItem === undefined
+      ? cartProgressiveDiscountBaseFullPrice +
+        (productExcludedFromProgressiveDiscount ? 0 : productFullPrice)
+      : cartProgressiveDiscountBaseFullPrice;
 
   const nextCartFullPrice = Number(thresholdCartFullPrice.toFixed(2));
 
@@ -108,6 +171,7 @@ export function calculateProductPriceWithProgressiveDiscount(
   let discountedPrice = productActualPrice;
 
   if (
+    !productExcludedFromProgressiveDiscount &&
     appliedStep?.type === "PERCENTAGEDISCOUNT" &&
     typeof appliedStep.discount === "number"
   ) {

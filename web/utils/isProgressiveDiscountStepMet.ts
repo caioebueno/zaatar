@@ -7,6 +7,8 @@ export function isProgressiveDiscountStepMet(
   step: TProgressiveDiscountStep,
   cart: TCart,
   categories: TCategory[],
+  additionalProducts?: TProduct[],
+  excludedFromProgressiveDiscountProductIds?: string[],
 ): boolean {
   if (typeof step.amount !== "number") {
     return false;
@@ -20,9 +22,23 @@ export function isProgressiveDiscountStepMet(
     }
   }
 
+  for (const product of additionalProducts ?? []) {
+    if (!productMap.has(product.id)) {
+      productMap.set(product.id, product);
+    }
+  }
+
+  const excludedProductIdSet = new Set(
+    excludedFromProgressiveDiscountProductIds ?? [],
+  );
+
   let cartTotal = 0;
 
   for (const item of cart.items) {
+    if (excludedProductIdSet.has(item.productId)) {
+      continue;
+    }
+
     const product = productMap.get(item.productId);
     if (!product) continue;
 

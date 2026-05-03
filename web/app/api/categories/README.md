@@ -4,6 +4,19 @@
 
 `GET /api/categories`
 
+Optional query param:
+- `menuId`: returns only categories attached to that menu. If omitted, API uses the default menu (`default`).
+
+`POST /api/categories`
+
+Creates a new section and links it to a menu.
+
+Payload:
+- `name` (required string)
+- `menuId` (required string)
+- `menuIndex` (optional number | null)
+- `id` (optional string)
+
 Returns categories with nested products, ordered by:
 
 1. category `menuIndex` (ascending, `null` last)
@@ -129,3 +142,13 @@ Server error:
   "error": "Internal Server Error"
 }
 ```
+
+## Update Category Order / Menu
+
+`PATCH /api/categories/:categoryId`
+
+Payload supports:
+- `menuIndex?: number | null`
+- `menuId?: string`
+
+At least one of `menuIndex` or `menuId` is required.

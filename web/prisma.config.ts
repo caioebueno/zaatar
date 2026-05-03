@@ -7,7 +7,7 @@ export default defineConfig({
     path: "prisma/migrations", // Location for migration files
   },
   datasource: {
-    // url: env("DATABASE_URL"), // Reference to the DATABASE_URL environment variable
-    url: "postgresql://postgres:mEytvhMcyBqCFUFSTKLbpwsCsznXziFr@yamabiko.proxy.rlwy.net:31210/railway",
+    url: env("DATABASE_URL"), // Reference to the DATABASE_URL environment variable
+    // url: "postgresql://postgres:mEytvhMcyBqCFUFSTKLbpwsCsznXziFr@yamabiko.proxy.rlwy.net:31210/railway",
   },
 });

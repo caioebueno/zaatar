@@ -29,6 +29,8 @@ const CartBar: React.FC<TCartBar> = ({
     data.categories,
     cart,
     data.progressiveDiscount,
+    data.activePromotion?.products,
+    data.promotionProductIds,
   );
 
   const [animate, setAnimate] = useState(false);
@@ -62,7 +64,9 @@ const CartBar: React.FC<TCartBar> = ({
             progressiveDiscount={data.progressiveDiscount}
             cart={cart}
             categories={data.categories}
-            countPrice={price.discountedPrice}
+            additionalProducts={data.activePromotion?.products}
+            excludedFromProgressiveDiscountProductIds={data.promotionProductIds}
+            countPrice={price.progressiveDiscountBaseFullPrice}
           />
         </div>
       )}

@@ -15,21 +15,54 @@ type PatchBody = {
   price?: unknown;
   comparedAtPrice?: unknown;
   categoryId?: unknown;
+  categoryIds?: unknown;
   categoryIndex?: unknown;
   translations?: unknown;
   photoIds?: unknown;
   photoUrls?: unknown;
   modifierGroupIds?: unknown;
   preparationStepIds?: unknown;
+  itemType?: unknown;
+  comboSlots?: unknown;
+  comboItems?: unknown;
 };
 
 type ProductVisibleRow = {
   visible: boolean;
 };
 
+type ProductCategoryEntry = {
+  productId: string;
+  categoryId: string;
+  categoryIndex: number | null;
+};
+
+type ProductItemType = "PRODUCT" | "COMBO";
+
+type ComboSlotOptionInput = {
+  productId: string;
+  extraPrice: number;
+  sortIndex: number | null;
+};
+
+type LegacyComboItemInput = {
+  productId: string;
+  quantity: number;
+};
+
+type ComboSlotInput = {
+  name: string;
+  minSelect: number;
+  maxSelect: number;
+  allowDuplicates: boolean;
+  sortIndex: number | null;
+  options: ComboSlotOptionInput[];
+};
+
 function mapProductRow(product: {
   id: string;
   createdAt: Date;
+  itemType: ProductItemType;
   name: string;
   visible?: boolean;
   description: string | null;
@@ -64,10 +97,27 @@ function mapProductRow(product: {
     }[];
   }[];
   preparationSteps: { id: string }[];
-}) {
+  comboSlots: {
+    id: string;
+    name: string;
+    minSelect: number;
+    maxSelect: number;
+    allowDuplicates: boolean;
+    sortIndex: number | null;
+    options: {
+      productId: string;
+      extraPrice: number;
+      sortIndex: number | null;
+      product: {
+        name: string;
+      };
+    }[];
+  }[];
+}, productCategoryEntries: ProductCategoryEntry[]) {
   return {
     id: product.id,
     createdAt: product.createdAt.toISOString(),
+    itemType: product.itemType,
     name: product.name,
     visible: product.visible !== false,
     description: product.description,
@@ -75,6 +125,11 @@ function mapProductRow(product: {
     comparedAtPrice: product.comparedAtPrice,
     categoryId: product.categoryId,
     categoryIndex: product.categoryIndex,
+    categoryIds: productCategoryEntries.map((entry) => entry.categoryId),
+    categoryEntries: productCategoryEntries.map((entry) => ({
+      categoryId: entry.categoryId,
+      categoryIndex: entry.categoryIndex,
+    })),
     translations: product.translations,
     photos: product.photos.map((photo) => ({
       id: photo.id,
@@ -110,6 +165,35 @@ function mapProductRow(product: {
     preparationStepIds: product.preparationSteps.map(
       (preparationStep) => preparationStep.id,
     ),
+    comboSlots: product.comboSlots.map((comboSlot) => ({
+      id: comboSlot.id,
+      name: comboSlot.name,
+      minSelect: comboSlot.minSelect,
+      maxSelect: comboSlot.maxSelect,
+      allowDuplicates: comboSlot.allowDuplicates,
+      sortIndex: comboSlot.sortIndex,
+      options: comboSlot.options.map((option) => ({
+        productId: option.productId,
+        productName: option.product.name,
+        extraPrice: option.extraPrice,
+        sortIndex: option.sortIndex,
+      })),
+    })),
+    comboItems: product.comboSlots
+      .map((slot) => {
+        const firstOption = slot.options[0];
+        if (!firstOption) return null;
+
+        return {
+          productId: firstOption.productId,
+          productName: firstOption.product.name,
+          quantity: Math.max(1, slot.maxSelect),
+        };
+      })
+      .filter(
+        (item): item is { productId: string; productName: string; quantity: number } =>
+          item !== null,
+      ),
   };
 }
 
@@ -164,6 +248,14 @@ function parseBoolean(value: unknown, field: string): boolean {
   return value;
 }
 
+function parseProductItemType(value: unknown, field: string): ProductItemType {
+  if (value === "PRODUCT" || value === "COMBO") {
+    return value;
+  }
+
+  throw new Error(field);
+}
+
 function parseIdArray(value: unknown, field: string): string[] {
   if (!Array.isArray(value)) {
     throw new Error(field);
@@ -187,6 +279,149 @@ function parseIdArray(value: unknown, field: string): string[] {
   );
 
   return normalizedIds;
+}
+
+function parseComboSlots(value: unknown, field: string): ComboSlotInput[] {
+  if (!Array.isArray(value)) {
+    throw new Error(field);
+  }
+
+  return value.map((row, slotIndex) => {
+    if (!row || typeof row !== "object" || Array.isArray(row)) {
+      throw new Error(field);
+    }
+
+    const record = row as {
+      name?: unknown;
+      minSelect?: unknown;
+      maxSelect?: unknown;
+      allowDuplicates?: unknown;
+      sortIndex?: unknown;
+      options?: unknown;
+    };
+
+    if (typeof record.name !== "string" || !record.name.trim()) {
+      throw new Error(field);
+    }
+
+    if (
+      typeof record.minSelect !== "number" ||
+      !Number.isInteger(record.minSelect) ||
+      record.minSelect < 0
+    ) {
+      throw new Error(field);
+    }
+
+    if (
+      typeof record.maxSelect !== "number" ||
+      !Number.isInteger(record.maxSelect) ||
+      record.maxSelect < record.minSelect
+    ) {
+      throw new Error(field);
+    }
+
+    const allowDuplicates =
+      record.allowDuplicates === undefined
+        ? true
+        : parseBoolean(record.allowDuplicates, field);
+    const sortIndex =
+      record.sortIndex === undefined
+        ? null
+        : parseNullableInt(record.sortIndex, field);
+
+    if (!Array.isArray(record.options) || record.options.length === 0) {
+      throw new Error(field);
+    }
+
+    const uniqueOptionsByProductId = new Map<string, ComboSlotOptionInput>();
+
+    for (let optionIndex = 0; optionIndex < record.options.length; optionIndex += 1) {
+      const option = record.options[optionIndex];
+      if (!option || typeof option !== "object" || Array.isArray(option)) {
+        throw new Error(field);
+      }
+
+      const optionRecord = option as {
+        productId?: unknown;
+        extraPrice?: unknown;
+        sortIndex?: unknown;
+      };
+
+      if (typeof optionRecord.productId !== "string" || !optionRecord.productId.trim()) {
+        throw new Error(field);
+      }
+
+      const extraPrice =
+        optionRecord.extraPrice === undefined
+          ? 0
+          : parseNullableInt(optionRecord.extraPrice, field);
+      const optionSortIndex =
+        optionRecord.sortIndex === undefined
+          ? null
+          : parseNullableInt(optionRecord.sortIndex, field);
+
+      uniqueOptionsByProductId.set(optionRecord.productId.trim(), {
+        productId: optionRecord.productId.trim(),
+        extraPrice: extraPrice ?? 0,
+        sortIndex: optionSortIndex ?? optionIndex + 1,
+      });
+    }
+
+    const options = Array.from(uniqueOptionsByProductId.values());
+
+    if (!allowDuplicates && record.maxSelect > options.length) {
+      throw new Error(field);
+    }
+
+    return {
+      name: record.name.trim(),
+      minSelect: record.minSelect,
+      maxSelect: record.maxSelect,
+      allowDuplicates,
+      sortIndex: sortIndex ?? slotIndex + 1,
+      options,
+    };
+  });
+}
+
+function parseLegacyComboItems(
+  value: unknown,
+  field: string,
+): LegacyComboItemInput[] {
+  if (!Array.isArray(value)) {
+    throw new Error(field);
+  }
+
+  const items = new Map<string, LegacyComboItemInput>();
+
+  for (const row of value) {
+    if (!row || typeof row !== "object" || Array.isArray(row)) {
+      throw new Error(field);
+    }
+
+    const record = row as {
+      productId?: unknown;
+      quantity?: unknown;
+    };
+
+    if (typeof record.productId !== "string" || !record.productId.trim()) {
+      throw new Error(field);
+    }
+    if (
+      typeof record.quantity !== "number" ||
+      !Number.isInteger(record.quantity) ||
+      record.quantity <= 0
+    ) {
+      throw new Error(field);
+    }
+
+    items.set(record.productId.trim(), {
+      productId: record.productId.trim(),
+      quantity: record.quantity,
+    });
+  }
+
+  return Array.from(items.values());
 }
 
 function parseUrlArray(value: unknown, field: string): string[] {
@@ -267,9 +502,25 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       );
     }
 
+    const existingProduct = await prisma.product.findUnique({
+      where: {
+        id: normalizedProductId,
+      },
+      select: {
+        id: true,
+        itemType: true,
+      },
+    });
+
+    if (!existingProduct) {
+      return NextResponse.json({ error: "Product not found" }, { status: 404 });
+    }
+
     const body = (await request.json()) as PatchBody;
     const data: Prisma.ProductUpdateInput = {};
     let visibleToPersist: boolean | undefined = undefined;
+    let itemTypeToPersist: ProductItemType | undefined = undefined;
+    let comboSlotsToPersist: ComboSlotInput[] | null = null;
     let hasAnyField = false;
 
     if (body.photoIds !== undefined && body.photoUrls !== undefined) {
@@ -307,8 +558,43 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       hasAnyField = true;
     }
 
+    if (body.itemType !== undefined) {
+      itemTypeToPersist = parseProductItemType(body.itemType, "itemType");
+      data.itemType = itemTypeToPersist;
+      hasAnyField = true;
+    }
+
+    if (body.comboSlots !== undefined || body.comboItems !== undefined) {
+      if (body.comboSlots !== undefined) {
+        comboSlotsToPersist = parseComboSlots(body.comboSlots, "comboSlots");
+      } else {
+        const legacyComboItems = parseLegacyComboItems(body.comboItems, "comboItems");
+        comboSlotsToPersist = legacyComboItems.map((item, index) => ({
+          name: `Item ${index + 1}`,
+          minSelect: item.quantity,
+          maxSelect: item.quantity,
+          allowDuplicates: false,
+          sortIndex: index + 1,
+          options: [
+            {
+              productId: item.productId,
+              extraPrice: 0,
+              sortIndex: 1,
+            },
+          ],
+        }));
+      }
+      hasAnyField = true;
+    }
+
     if (body.categoryIndex !== undefined) {
       data.categoryIndex = parseNullableInt(body.categoryIndex, "categoryIndex");
+      hasAnyField = true;
+    }
+
+    let categoryIdsFromBody: string[] | null = null;
+    if (body.categoryIds !== undefined) {
+      categoryIdsFromBody = parseIdArray(body.categoryIds, "categoryIds");
       hasAnyField = true;
     }
 
@@ -364,6 +650,35 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       }
 
       hasAnyField = true;
+    }
+
+    let categoryIdsToLink: string[] | null = null;
+    if (categoryIdsFromBody !== null || body.categoryId !== undefined) {
+      categoryIdsToLink = Array.from(
+        new Set([
+          ...(categoryIdsFromBody ?? []),
+          ...(typeof body.categoryId === "string" && body.categoryId.trim()
+            ? [body.categoryId.trim()]
+            : []),
+        ]),
+      );
+
+      if (categoryIdsToLink.length > 0) {
+        const categoryCount = await prisma.category.count({
+          where: {
+            id: {
+              in: categoryIdsToLink,
+            },
+          },
+        });
+
+        if (categoryCount !== categoryIdsToLink.length) {
+          return NextResponse.json(
+            { error: "Invalid payload", field: "categoryIds" },
+            { status: 400 },
+          );
+        }
+      }
     }
 
     if (body.photoIds !== undefined) {
@@ -499,6 +814,55 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       hasAnyField = true;
     }
 
+    const resolvedItemType = itemTypeToPersist ?? existingProduct.itemType;
+
+    if (
+      comboSlotsToPersist !== null &&
+      resolvedItemType !== "COMBO" &&
+      comboSlotsToPersist.length > 0
+    ) {
+      return NextResponse.json(
+        { error: "Invalid payload", field: "comboSlots" },
+        { status: 400 },
+      );
+    }
+
+    if (
+      comboSlotsToPersist !== null &&
+      comboSlotsToPersist.some((slot) =>
+        slot.options.some((option) => option.productId === normalizedProductId),
+      )
+    ) {
+      return NextResponse.json(
+        { error: "Invalid payload", field: "comboSlots" },
+        { status: 400 },
+      );
+    }
+
+    if (comboSlotsToPersist !== null && comboSlotsToPersist.length > 0) {
+      const comboProductIds = Array.from(
+        new Set(
+          comboSlotsToPersist.flatMap((slot) =>
+            slot.options.map((option) => option.productId),
+          ),
+        ),
+      );
+      const comboProductCount = await prisma.product.count({
+        where: {
+          id: {
+            in: comboProductIds,
+          },
+        },
+      });
+
+      if (comboProductCount !== comboProductIds.length) {
+        return NextResponse.json(
+          { error: "Invalid payload", field: "comboSlots" },
+          { status: 400 },
+        );
+      }
+    }
+
     if (!hasAnyField) {
       return NextResponse.json(
         { error: "Invalid payload", field: "body" },
@@ -536,6 +900,30 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
           id: true,
         },
       },
+      comboSlots: {
+        select: {
+          id: true,
+          name: true,
+          minSelect: true,
+          maxSelect: true,
+          allowDuplicates: true,
+          sortIndex: true,
+          options: {
+            select: {
+              productId: true,
+              extraPrice: true,
+              sortIndex: true,
+              product: {
+                select: {
+                  name: true,
+                },
+              },
+            },
+            orderBy: [{ sortIndex: "asc" as const }, { createdAt: "asc" as const }],
+          },
+        },
+        orderBy: [{ sortIndex: "asc" as const }, { createdAt: "asc" as const }],
+      },
     };
 
     const hasPrismaUpdatableFields = Object.keys(data).length > 0;
@@ -566,6 +954,93 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       `;
     }
 
+    if (categoryIdsToLink !== null) {
+      await prisma.$transaction(async (tx) => {
+        if (categoryIdsToLink.length === 0) {
+          await tx.$executeRaw`
+            DELETE FROM "ProductCategory"
+            WHERE "productId" = ${normalizedProductId}
+          `;
+        } else {
+          await tx.$executeRaw`
+            DELETE FROM "ProductCategory"
+            WHERE "productId" = ${normalizedProductId}
+              AND "categoryId" NOT IN (${Prisma.join(categoryIdsToLink)})
+          `;
+        }
+
+        for (const linkedCategoryId of categoryIdsToLink) {
+          const parsedCategoryIndex =
+            body.categoryIndex !== undefined
+              ? parseNullableInt(body.categoryIndex, "categoryIndex")
+              : null;
+
+          await tx.$executeRaw`
+            INSERT INTO "ProductCategory" ("productId", "categoryId", "categoryIndex")
+            VALUES (${normalizedProductId}, ${linkedCategoryId}, ${parsedCategoryIndex})
+            ON CONFLICT ("productId", "categoryId")
+            DO UPDATE SET
+              "categoryIndex" = COALESCE(
+                EXCLUDED."categoryIndex",
+                "ProductCategory"."categoryIndex"
+              )
+          `;
+        }
+      });
+    } else if (
+      body.categoryIndex !== undefined &&
+      updatedProduct.categoryId
+    ) {
+      const parsedCategoryIndex = parseNullableInt(body.categoryIndex, "categoryIndex");
+      await prisma.$executeRaw`
+        INSERT INTO "ProductCategory" ("productId", "categoryId", "categoryIndex")
+        VALUES (${normalizedProductId}, ${updatedProduct.categoryId}, ${parsedCategoryIndex})
+        ON CONFLICT ("productId", "categoryId")
+        DO UPDATE SET "categoryIndex" = EXCLUDED."categoryIndex"
+      `;
+    }
+
+    if (resolvedItemType === "PRODUCT" || comboSlotsToPersist !== null) {
+      await prisma.$transaction(async (tx) => {
+        await tx.comboSlot.deleteMany({
+          where: {
+            comboId: normalizedProductId,
+          },
+        });
+
+        if (resolvedItemType === "COMBO" && comboSlotsToPersist && comboSlotsToPersist.length > 0) {
+          for (let slotIndex = 0; slotIndex < comboSlotsToPersist.length; slotIndex += 1) {
+            const slot = comboSlotsToPersist[slotIndex];
+            const slotId = generateId();
+
+            await tx.comboSlot.create({
+              data: {
+                id: slotId,
+                comboId: normalizedProductId,
+                name: slot.name,
+                minSelect: slot.minSelect,
+                maxSelect: slot.maxSelect,
+                allowDuplicates: slot.allowDuplicates,
+                sortIndex: slot.sortIndex ?? slotIndex + 1,
+              },
+            });
+
+            if (slot.options.length > 0) {
+              await tx.comboSlotOption.createMany({
+                data: slot.options.map((option, optionIndex) => ({
+                  id: generateId(),
+                  slotId,
+                  productId: option.productId,
+                  extraPrice: option.extraPrice,
+                  sortIndex: option.sortIndex ?? optionIndex + 1,
+                })),
+              });
+            }
+          }
+        }
+      });
+    }
+
     const [visibleRow] = await prisma.$queryRaw<ProductVisibleRow[]>`
       SELECT "visible"
       FROM "Product"
@@ -573,11 +1048,29 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       LIMIT 1
     `;
 
+    const refreshedProduct = await prisma.product.findUniqueOrThrow({
+      where: {
+        id: normalizedProductId,
+      },
+      include,
+    });
+    const productCategoryRows = await prisma.$queryRaw<ProductCategoryEntry[]>`
+      SELECT "productId", "categoryId", "categoryIndex"
+      FROM "ProductCategory"
+      WHERE "productId" = ${normalizedProductId}
+      ORDER BY
+        COALESCE("categoryIndex", 2147483647) ASC,
+        "createdAt" ASC
+    `;
+
     return NextResponse.json(
-      mapProductRow({
-        ...updatedProduct,
-        visible: visibleRow?.visible ?? visibleToPersist ?? undefined,
-      }),
+      mapProductRow(
+        {
+          ...refreshedProduct,
+          visible: visibleRow?.visible ?? visibleToPersist ?? refreshedProduct.visible,
+        },
+        productCategoryRows,
+      ),
     );
   } catch (error) {
     if (error instanceof Error && error.message) {

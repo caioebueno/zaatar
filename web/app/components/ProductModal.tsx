@@ -4,21 +4,28 @@ import {
   DialogContent,
   DialogTitle,
 } from "@/components/ui/dialog";
-import TProduct, { TModifierGroupItem } from "../../src/types/product";
+import TProduct, {
+  TComboSlot,
+  TComboSlotOption,
+  TModifierGroupItem,
+} from "../../src/types/product";
 import formatCurrency from "@/utils/formatCurrecy";
 import Button from "./Button";
 import ProductImage from "./ProductImage";
 import { FiArrowLeft, FiMinus, FiPlus, FiTrash2, FiX } from "react-icons/fi";
-import { useMemo, useState } from "react";
-import { TSelectedModifier } from "@/types/cart";
+import { useEffect, useMemo, useState } from "react";
+import { TSelectedComboSlotOption, TSelectedModifier } from "@/types/cart";
+import { FiAlertCircle } from "react-icons/fi";
 
 type TProductModal = {
   product: TProduct | null;
+  isExclusiveDeal?: boolean;
   onClose: () => void;
   onAdd: (
     productId: string,
     quantity: number,
     selectedModifiers: TSelectedModifier[],
+    selectedComboSelections: TSelectedComboSlotOption[],
     description?: string,
   ) => void;
   content: {
@@ -54,19 +61,64 @@ const resolveModifierGroupTitle = (
   return localizedTitle || englishTitle || modifierGroup?.title || "Select options";
 };
 
+const resolveComboSlotTitle = (comboSlot: TComboSlot | undefined, index: number) =>
+  comboSlot?.name?.trim() || `Select option ${index + 1}`;
+
+const sortComboSelections = (selections: TSelectedComboSlotOption[]) =>
+  [...selections].sort((a, b) => {
+    const aKey = `${a.slotId}:${a.optionProductId}`;
+    const bKey = `${b.slotId}:${b.optionProductId}`;
+    return aKey.localeCompare(bKey);
+  });
+
+const isSameComboSelection = (
+  left: TSelectedComboSlotOption[],
+  right: TSelectedComboSlotOption[],
+) => {
+  const sortedLeft = sortComboSelections(left);
+  const sortedRight = sortComboSelections(right);
+
+  if (sortedLeft.length !== sortedRight.length) return false;
+
+  return sortedLeft.every((item, index) => {
+    const other = sortedRight[index];
+    return (
+      item.slotId === other.slotId &&
+      item.optionProductId === other.optionProductId &&
+      item.quantity === other.quantity &&
+      (item.extraPrice ?? 0) === (other.extraPrice ?? 0)
+    );
+  });
+};
+
 const ProductModal: React.FC<TProductModal> = ({
   product,
+  isExclusiveDeal = false,
   onClose,
   onAdd,
   content,
   lg,
 }) => {
+  const exclusiveDealDisclaimerByLocale: Record<string, string> = {
+    en: "Exclusive deal. Does not count toward progressive discount.",
+    pt: "Oferta exclusiva. Nao conta para desconto progressivo.",
+    es: "Oferta exclusiva. No cuenta para descuento progresivo.",
+  };
+  const exclusiveDealDisclaimer =
+    exclusiveDealDisclaimerByLocale[lg] ?? exclusiveDealDisclaimerByLocale.en;
+
   const [quantity, setQuantity] = useState(1);
   const [activeModifierGroupIndex, setActiveModifierGroupIndex] = useState<
     number | null
   >(null);
   const [pendingModifiers, setPendingModifiers] = useState<TSelectedModifier[]>(
     [],
+  );
+  const [selectedComboSelections, setSelectedComboSelections] = useState<
+    TSelectedComboSlotOption[]
+  >([]);
+  const [activeComboSlotIndex, setActiveComboSlotIndex] = useState<number | null>(
+    null,
   );
   const [description, setDescription] = useState("");
 
@@ -79,18 +131,65 @@ const ProductModal: React.FC<TProductModal> = ({
     [product?.modifierGroups],
   );
 
+  const orderedComboSlots = useMemo(
+    () =>
+      [...(product?.comboSlots ?? [])].sort((a, b) => {
+        const leftIndex = a.sortIndex ?? Number.MAX_SAFE_INTEGER;
+        const rightIndex = b.sortIndex ?? Number.MAX_SAFE_INTEGER;
+
+        if (leftIndex !== rightIndex) return leftIndex - rightIndex;
+        return a.id.localeCompare(b.id);
+      }),
+    [product?.comboSlots],
+  );
+
+  const selectionCountBySlotId = useMemo(() => {
+    const selectionMap = new Map<string, number>();
+
+    for (const selection of selectedComboSelections) {
+      const currentCount = selectionMap.get(selection.slotId) ?? 0;
+      selectionMap.set(selection.slotId, currentCount + selection.quantity);
+    }
+
+    return selectionMap;
+  }, [selectedComboSelections]);
+
+  const missingRequiredComboSlotIndex = useMemo(() => {
+    for (let index = 0; index < orderedComboSlots.length; index += 1) {
+      const slot = orderedComboSlots[index];
+      const selectedCount = selectionCountBySlotId.get(slot.id) ?? 0;
+      const requiredCount = Math.max(0, slot.minSelect ?? 0);
+
+      if (selectedCount < requiredCount) {
+        return index;
+      }
+    }
+
+    return -1;
+  }, [orderedComboSlots, selectionCountBySlotId]);
+
   const handleConfirm = () => {
     if (!product) return;
+
+    if (product.itemType === "COMBO" && orderedComboSlots.length > 0) {
+      if (missingRequiredComboSlotIndex >= 0) {
+        setActiveComboSlotIndex(missingRequiredComboSlotIndex);
+        return;
+      }
+    }
+
     if (orderedModifierGroups.length > 0) {
       setPendingModifiers([]);
       setActiveModifierGroupIndex(0);
     } else {
       setPendingModifiers([]);
       setActiveModifierGroupIndex(null);
+      setActiveComboSlotIndex(null);
       onAdd(
         product.id,
         quantity,
         [],
+        selectedComboSelections,
         description.length > 0 ? description : undefined,
       );
     }
@@ -101,6 +200,8 @@ const ProductModal: React.FC<TProductModal> = ({
     setDescription("");
     setActiveModifierGroupIndex(null);
     setPendingModifiers([]);
+    setSelectedComboSelections([]);
+    setActiveComboSlotIndex(null);
     onClose();
   };
 
@@ -123,14 +224,44 @@ const ProductModal: React.FC<TProductModal> = ({
       product.id,
       quantity,
       nextModifiers,
+      selectedComboSelections,
       description.length > 0 ? description : undefined,
     );
   };
 
+  const handleSaveComboSlotSelections = (
+    slot: TComboSlot,
+    selections: TSelectedComboSlotOption[],
+  ) => {
+    setSelectedComboSelections((currentSelections) => {
+      const remainingSelections = currentSelections.filter(
+        (selection) => selection.slotId !== slot.id,
+      );
+      const nextSelections = [...remainingSelections, ...selections];
+
+      if (isSameComboSelection(currentSelections, nextSelections)) {
+        return currentSelections;
+      }
+
+      return nextSelections;
+    });
+    setActiveComboSlotIndex(null);
+  };
+
   const productImageUrl = product?.photos?.[0]?.url ?? null;
+  const productDescription = product
+    ? product.translations
+      ? product.translations[lg] && product.translations[lg]["description"]
+        ? product.translations[lg]["description"]
+        : product.description
+      : product.description
+    : null;
+  const hasProductDescription =
+    typeof productDescription === "string" && productDescription.trim().length > 0;
   const isProductModalOpen = product !== null;
   const isModifierModalOpen =
     isProductModalOpen && activeModifierGroupIndex !== null;
+  const isComboSlotModalOpen = isProductModalOpen && activeComboSlotIndex !== null;
 
   return (
     <Dialog
@@ -163,18 +294,22 @@ const ProductModal: React.FC<TProductModal> = ({
                   />
                 </div>
                 <div className="pt-6 px-4 pb-4 flex flex-col gap-3 leading-4 lg:flex-1 lg:pt-8">
+                  {isExclusiveDeal && (
+                    <div className="rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-sm font-bold leading-5 text-amber-900">
+                      <div className="flex items-center gap-2">
+                        <FiAlertCircle className="h-4 w-4 shrink-0" />
+                        <span>{exclusiveDealDisclaimer}</span>
+                      </div>
+                    </div>
+                  )}
                   <span className="text-2xl font-bold">
                     {product.translations
                       ? product.translations[lg] && product.translations[lg]["title"] || product.name
                       : product.name}
                   </span>
-                  <p className="text-lightText text-sm">
-                    {" "}
-                    {product.translations
-                      ?  product.translations[lg] &&  product.translations[lg]["description"] ||
-                        product.description
-                      : product.description}
-                  </p>
+                  {hasProductDescription && (
+                    <p className="text-lightText text-sm">{productDescription}</p>
+                  )}
                   <div className="flex flex-row gap-2 text-[20px]">
                     {product.price && (
                       <span className="font-extrabold">
@@ -187,6 +322,71 @@ const ProductModal: React.FC<TProductModal> = ({
                       </span>
                     )}
                   </div>
+                  {product.itemType === "COMBO" && orderedComboSlots.length > 0 && (
+                    <div className="flex flex-col gap-3 pt-2">
+                      {orderedComboSlots.map((slot, slotIndex) => {
+                        const slotSelections = selectedComboSelections.filter(
+                          (selection) => selection.slotId === slot.id,
+                        );
+                        const slotSelectedCount = selectionCountBySlotId.get(slot.id) ?? 0;
+                        const slotRequiredCount = Math.max(0, slot.minSelect ?? 0);
+                        const slotHasRequiredSelection =
+                          slotRequiredCount === 0 ||
+                          slotSelectedCount >= slotRequiredCount;
+                        const slotLabel =
+                          slotSelections.length > 0
+                            ? slotSelections
+                                .map((selection) => {
+                                  const optionLabel =
+                                    selection.optionProductName || "Selected option";
+                                  return selection.quantity > 1
+                                    ? `${optionLabel} x${selection.quantity}`
+                                    : optionLabel;
+                                })
+                                .join(", ")
+                            : resolveComboSlotTitle(slot, slotIndex);
+
+                        return (
+                          <button
+                            key={slot.id}
+                            type="button"
+                            onClick={() => setActiveComboSlotIndex(slotIndex)}
+                            className={`w-full rounded-3xl border bg-background px-4 py-4 transition ${
+                              slotHasRequiredSelection
+                                ? "border-[#BFC5C4]"
+                                : "border-brandBackground border-[3px]"
+                            }`}
+                          >
+                            <div className="flex items-center gap-3">
+                              <span
+                                className={`flex h-11 w-11 items-center justify-center rounded-full text-lg font-extrabold ${
+                                  slotHasRequiredSelection
+                                    ? "bg-[#D1D4D3] text-[#636A69]"
+                                    : "bg-brandBackground text-white"
+                                }`}
+                              >
+                                {slotIndex + 1}
+                              </span>
+                              <div className="min-w-0 flex-1 text-left">
+                                <div className="truncate text-[17px] font-semibold text-[#303636]">
+                                  {slotLabel}
+                                </div>
+                              </div>
+                              <span
+                                className={`flex h-10 w-10 items-center justify-center rounded-full text-3xl leading-none ${
+                                  slotHasRequiredSelection
+                                    ? "bg-[#D1D4D3] text-white"
+                                    : "bg-brandBackground text-white"
+                                }`}
+                              >
+                                +
+                              </span>
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
                   <div className="flex flex-col gap-2 pt-3">
                     <span className="font-semibold text-[16px]">
                       {content["comments"]}
@@ -242,6 +442,225 @@ const ProductModal: React.FC<TProductModal> = ({
           }
           onConfirm={handleModifier}
         />
+        <ComboSlotModal
+          key={orderedComboSlots[activeComboSlotIndex ?? -1]?.id || "none"}
+          open={isComboSlotModalOpen}
+          onOpenChange={(value) => {
+            if (value === false) {
+              setActiveComboSlotIndex(null);
+            }
+          }}
+          slot={
+            activeComboSlotIndex !== null
+              ? orderedComboSlots[activeComboSlotIndex]
+              : undefined
+          }
+          selectedComboSelections={selectedComboSelections}
+          content={content}
+          onConfirm={(slot, selections) =>
+            handleSaveComboSlotSelections(slot, selections)
+          }
+        />
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+type TComboSlotModal = {
+  open: boolean;
+  onOpenChange: (value: boolean) => void;
+  slot?: TComboSlot;
+  selectedComboSelections: TSelectedComboSlotOption[];
+  content: {
+    [key: string]: string;
+  };
+  onConfirm: (
+    slot: TComboSlot,
+    selections: TSelectedComboSlotOption[],
+  ) => void;
+};
+
+const ComboSlotModal: React.FC<TComboSlotModal> = ({
+  open,
+  onOpenChange,
+  slot,
+  selectedComboSelections,
+  content,
+  onConfirm,
+}) => {
+  const [selectionQuantityByProductId, setSelectionQuantityByProductId] = useState<
+    Record<string, number>
+  >({});
+
+  const sortedSlotOptions = useMemo(() => {
+    if (!slot) return [];
+
+    return [...slot.options].sort((leftOption, rightOption) => {
+      const leftIndex = leftOption.sortIndex ?? Number.MAX_SAFE_INTEGER;
+      const rightIndex = rightOption.sortIndex ?? Number.MAX_SAFE_INTEGER;
+
+      if (leftIndex !== rightIndex) return leftIndex - rightIndex;
+      return leftOption.productId.localeCompare(rightOption.productId);
+    });
+  }, [slot]);
+
+  const totalSelectedCount = useMemo(
+    () =>
+      Object.values(selectionQuantityByProductId).reduce(
+        (sum, quantity) => sum + quantity,
+        0,
+      ),
+    [selectionQuantityByProductId],
+  );
+
+  const minSelection = Math.max(0, slot?.minSelect ?? 0);
+  const maxSelection = Math.max(minSelection, slot?.maxSelect ?? minSelection);
+  const canConfirm = totalSelectedCount >= minSelection;
+
+  const buildSelectionStateFromProp = () => {
+    if (!slot) return {};
+
+    const nextState: Record<string, number> = {};
+
+    for (const selection of selectedComboSelections) {
+      if (selection.slotId !== slot.id) continue;
+      const normalizedQuantity =
+        typeof selection.quantity === "number" &&
+        Number.isInteger(selection.quantity) &&
+        selection.quantity > 0
+          ? selection.quantity
+          : 1;
+
+      nextState[selection.optionProductId] =
+        (nextState[selection.optionProductId] ?? 0) + normalizedQuantity;
+    }
+
+    return nextState;
+  };
+
+  useEffect(() => {
+    if (!open) return;
+    setSelectionQuantityByProductId(buildSelectionStateFromProp());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, slot?.id, selectedComboSelections]);
+
+  const handleOpenChange = (nextOpen: boolean) => {
+    if (!nextOpen) {
+      setSelectionQuantityByProductId({});
+    } else {
+      setSelectionQuantityByProductId(buildSelectionStateFromProp());
+    }
+
+    onOpenChange(nextOpen);
+  };
+
+  const selectOption = (option: TComboSlotOption) => {
+    setSelectionQuantityByProductId({
+      [option.productId]: 1,
+    });
+  };
+
+  const handleConfirm = () => {
+    if (!slot) return;
+    if (!canConfirm) return;
+
+    const nextSelections = Object.entries(selectionQuantityByProductId)
+      .filter(([, quantity]) => quantity > 0)
+      .map(([productId, quantity]) => {
+        const option = slot.options.find((item) => item.productId === productId);
+        const optionPrice = option?.extraPrice ?? 0;
+        const optionName = option?.productName || "Selected option";
+
+        return {
+          slotId: slot.id,
+          optionProductId: productId,
+          quantity,
+          extraPrice: optionPrice,
+          slotName: slot.name,
+          optionProductName: optionName,
+        };
+      });
+
+    onConfirm(slot, nextSelections);
+  };
+
+  const handleSkip = () => {
+    if (!slot || minSelection > 0) return;
+    onConfirm(slot, []);
+  };
+
+  const slotTitle = slot?.name || "Select options";
+
+  return (
+    <Dialog open={open} onOpenChange={handleOpenChange}>
+      <DialogContent
+        showCloseButton={false}
+        className="!top-0 !left-0 !translate-x-0 !translate-y-0 !w-screen sm:!max-w-[900px] !h-[100svh] !max-h-[100svh] !min-h-0 !flex !flex-col !p-0 !gap-0 bg-foreground transition-all"
+      >
+        <DialogTitle className="sr-only">{slotTitle}</DialogTitle>
+        <div className="absolute right-4 top-4 z-10">
+          <DialogClose asChild>
+            <button
+              type="button"
+              className="rounded-full bg-background p-2 text-text"
+              aria-label="Close combo slot modal"
+            >
+              <FiX size={18} />
+            </button>
+          </DialogClose>
+        </div>
+        <div className="p-4 flex flex-col items-center">
+          <span className="text-[22px] font-bold text-center">{slotTitle}</span>
+        </div>
+        <div className="flex-1 min-h-0 overflow-y-auto px-4 pb-2">
+          <div className="grid grid-cols-2 gap-3">
+            {sortedSlotOptions.map((option) => {
+              const selectedQuantity = selectionQuantityByProductId[option.productId] ?? 0;
+              const active = selectedQuantity > 0;
+
+              return (
+                <div
+                  key={option.id}
+                  className={`${active ? "border-brandBackground" : "border-background"} cursor-pointer transition bg-background border-2 rounded-xl px-4 py-3 flex flex-col gap-2`}
+                  onClick={() => selectOption(option)}
+                >
+                  {option.productPhotoUrl ? (
+                    <ProductImage
+                      src={option.productPhotoUrl}
+                      alt={`${option.productName} photo`}
+                      className="w-full rounded-lg object-cover bg-white aspect-[4/3]"
+                      quality={80}
+                      sizes="(max-width: 640px) 100vw, 40vw"
+                    />
+                  ) : null}
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="font-bold text-[16px]">{option.productName}</span>
+                  </div>
+                  <div className="text-sm font-semibold text-lightText">
+                    {option.extraPrice > 0 ? `+${formatCurrency(option.extraPrice)}` : ""}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+        <div className="flex flex-row h-fit p-4 gap-3">
+          {minSelection === 0 && (
+            <Button
+              className="bg-background! text-text! flex-1 disabled:opacity-50"
+              onClick={handleSkip}
+            >
+              {content["noThanks"] || "No, Thanks"}
+            </Button>
+          )}
+          <Button
+            onClick={handleConfirm}
+            disabled={!canConfirm}
+            className="bg-brandBackground py-2 flex-1 disabled:opacity-50"
+          >
+            {content["confirm"] || "Confirm"}
+          </Button>
+        </div>
       </DialogContent>
     </Dialog>
   );

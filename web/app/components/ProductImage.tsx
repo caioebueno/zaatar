@@ -14,6 +14,18 @@ type TProductImage = {
   src?: string | null;
 };
 
+function normalizeProductImageSrc(src: string): string {
+  try {
+    const parsed = new URL(src);
+    if (parsed.pathname.startsWith("/api/bucket/")) {
+      return `${parsed.pathname}${parsed.search}${parsed.hash}`;
+    }
+    return src;
+  } catch {
+    return src;
+  }
+}
+
 const ProductImage: React.FC<TProductImage> = ({
   alt,
   className,
@@ -23,10 +35,12 @@ const ProductImage: React.FC<TProductImage> = ({
   sizes,
   src,
 }) => {
-  if (src) {
+  const normalizedSrc = src ? normalizeProductImageSrc(src) : null;
+
+  if (normalizedSrc) {
     return (
       <Image
-        src={src}
+        src={normalizedSrc}
         alt={alt}
         width={1200}
         height={1200}

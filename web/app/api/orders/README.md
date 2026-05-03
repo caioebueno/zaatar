@@ -12,6 +12,7 @@ Request body:
 - `customerId` (optional string; if omitted, order is created without a linked customer)
 - `orderType` (required `"DELIVERY" | "TAKEAWAY"`)
 - `paymentMethod` (required `"CARD" | "CASH" | "ZELLE"`)
+- `menuId` (optional string; uses this menu catalog for product validation/pricing. If omitted, API falls back to menu cookie/default menu.)
 - `language` (optional string)
 - `scheduleFor` (optional ISO string)
 - `addressId` (required for `DELIVERY`, optional for `TAKEAWAY`)

@@ -5,6 +5,7 @@ import TProgressiveDiscount, {
 import { FiStar } from "react-icons/fi";
 import TCart from "@/types/cart";
 import TCategory from "../../src/types/category";
+import TProduct from "../../src/types/product";
 import { getProgressiveDiscountStepProgress } from "@/utils/getProgressiveDiscountStepProgress";
 import type { CSSProperties } from "react";
 
@@ -12,6 +13,8 @@ type TProgressiveDiscountBar = {
   progressiveDiscount: TProgressiveDiscount;
   cart?: TCart;
   categories?: TCategory[];
+  additionalProducts?: TProduct[];
+  excludedFromProgressiveDiscountProductIds?: string[];
   countPrice?: number;
   animateFill?: boolean;
   demoFill?: boolean;
@@ -21,6 +24,8 @@ const ProgressiveDiscountBar: React.FC<TProgressiveDiscountBar> = ({
   progressiveDiscount,
   cart,
   categories,
+  additionalProducts,
+  excludedFromProgressiveDiscountProductIds,
   countPrice,
   animateFill = false,
   demoFill = false,
@@ -88,6 +93,10 @@ const ProgressiveDiscountBar: React.FC<TProgressiveDiscountBar> = ({
           key={step.id}
           cart={cart}
           categories={categories}
+          additionalProducts={additionalProducts}
+          excludedFromProgressiveDiscountProductIds={
+            excludedFromProgressiveDiscountProductIds
+          }
           countPrice={countPrice}
           progressiveDiscountSteps={progressiveDiscount.steps}
           animateFill={animateFill}
@@ -104,6 +113,8 @@ type TProgressiveDiscountBarStep = {
   progressiveDiscountSteps?: TProgressiveDiscountStep[];
   cart?: TCart;
   categories?: TCategory[];
+  additionalProducts?: TProduct[];
+  excludedFromProgressiveDiscountProductIds?: string[];
   countPrice?: number;
   animateFill?: boolean;
   demoFill?: boolean;
@@ -114,6 +125,8 @@ const ProgressiveDiscountBarStep: React.FC<TProgressiveDiscountBarStep> = ({
   progressiveDiscountStep,
   cart,
   categories,
+  additionalProducts,
+  excludedFromProgressiveDiscountProductIds,
   countPrice,
   progressiveDiscountSteps,
   animateFill = false,
@@ -122,7 +135,13 @@ const ProgressiveDiscountBarStep: React.FC<TProgressiveDiscountBarStep> = ({
 }) => {
   const active =
     cart && categories
-      ? isProgressiveDiscountStepMet(progressiveDiscountStep, cart, categories)
+      ? isProgressiveDiscountStepMet(
+        progressiveDiscountStep,
+        cart,
+        categories,
+        additionalProducts,
+        excludedFromProgressiveDiscountProductIds,
+      )
       : false;
 
   const progress =

@@ -3,6 +3,7 @@
 import TCart, {
   TCartItem,
   TCartPrizeSelection,
+  TSelectedComboSlotOption,
   TSelectedModifier,
 } from "@/types/cart";
 import {
@@ -60,12 +61,49 @@ function areModifiersEqual(
   });
 }
 
+function sortComboSelections(comboSelections?: TSelectedComboSlotOption[]) {
+  return [...(comboSelections ?? [])]
+    .map((selection) => ({
+      ...selection,
+      quantity:
+        typeof selection.quantity === "number" && Number.isInteger(selection.quantity)
+          ? selection.quantity
+          : 1,
+    }))
+    .sort((a, b) => {
+      const aKey = `${a.slotId}:${a.optionProductId}:${a.quantity}:${a.extraPrice ?? 0}`;
+      const bKey = `${b.slotId}:${b.optionProductId}:${b.quantity}:${b.extraPrice ?? 0}`;
+      return aKey.localeCompare(bKey);
+    });
+}
+
+function areComboSelectionsEqual(
+  a?: TSelectedComboSlotOption[],
+  b?: TSelectedComboSlotOption[],
+): boolean {
+  const sortedA = sortComboSelections(a);
+  const sortedB = sortComboSelections(b);
+
+  if (sortedA.length !== sortedB.length) return false;
+
+  return sortedA.every((item, index) => {
+    const other = sortedB[index];
+    return (
+      item.slotId === other.slotId &&
+      item.optionProductId === other.optionProductId &&
+      item.quantity === other.quantity &&
+      (item.extraPrice ?? 0) === (other.extraPrice ?? 0)
+    );
+  });
+}
+
 function areCartItemsMergeable(a: TCartItem, b: TCartItem): boolean {
   return (
     a.productId === b.productId &&
     normalizeDescription(a.description) ===
       normalizeDescription(b.description) &&
-    areModifiersEqual(a.modifiers, b.modifiers)
+    areModifiersEqual(a.modifiers, b.modifiers) &&
+    areComboSelectionsEqual(a.comboSelections, b.comboSelections)
   );
 }
 
@@ -74,6 +112,24 @@ function ensureCartItemId(item: TCartItem): TCartItem {
     ...item,
     cartId: item.cartId || generateCartItemId(),
     modifiers: item.modifiers ?? [],
+    comboSelections: (item.comboSelections ?? [])
+      .filter(
+        (selection) =>
+          selection &&
+          typeof selection.slotId === "string" &&
+          selection.slotId.trim().length > 0 &&
+          typeof selection.optionProductId === "string" &&
+          selection.optionProductId.trim().length > 0,
+      )
+      .map((selection) => ({
+        ...selection,
+        quantity:
+          typeof selection.quantity === "number" &&
+          Number.isInteger(selection.quantity) &&
+          selection.quantity > 0
+            ? selection.quantity
+            : 1,
+      })),
     description: normalizeDescription(item.description) || undefined,
   };
 }

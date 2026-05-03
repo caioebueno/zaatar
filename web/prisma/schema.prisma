@@ -229,36 +229,152 @@ model Address {
 }
 
 model Product {
-  id               String                            @id
-  createdAt        DateTime                          @default(now())
-  name             String
-  visible          Boolean                           @default(true)
-  description      String?
-  price            Int?
-  comparedAtPrice  Int?
-  categoryIndex    Int?
-  photos           File[]
-  modifierGroups   ModifierGroup[]
-  category         Category?                         @relation(fields: [categoryId], references: [id])
-  categoryId       String?
-  OrderProducts    OrderProducts[]
-  prizeProducts    ProgressiveDiscountPrizeProduct[]
-  translations     Json?
-  preparationSteps PreparationStep[]
+  id                String                            @id
+  createdAt         DateTime                          @default(now())
+  itemType          ProductItemType                   @default(PRODUCT)
+  name              String
+  visible           Boolean                           @default(true)
+  description       String?
+  price             Int?
+  comparedAtPrice   Int?
+  categoryIndex     Int?
+  photos            File[]
+  modifierGroups    ModifierGroup[]
+  category          Category?                         @relation(fields: [categoryId], references: [id])
+  categoryId        String?
+  productCategories ProductCategory[]
+  comboSlots        ComboSlot[]                       @relation("ComboProduct")
+  comboSlotOptions  ComboSlotOption[]                 @relation("ComboOptionProduct")
+  exclusivePromotionProducts ExclusivePromotionProduct[]
+  OrderProducts     OrderProducts[]
+  prizeProducts     ProgressiveDiscountPrizeProduct[]
+  translations      Json?
+  preparationSteps  PreparationStep[]
 
   @@index([categoryId, categoryIndex])
+}
+
+model ExclusivePromotion {
+  id        String                      @id
+  createdAt DateTime                    @default(now())
+  updatedAt DateTime                    @updatedAt
+  name      String
+  active    Boolean                     @default(true)
+  expireAt  DateTime?
+  validWeekdays ExclusivePromotionWeekday[] @default([])
+  products  ExclusivePromotionProduct[]
+}
+
+enum ExclusivePromotionWeekday {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
+}
+
+model ExclusivePromotionProduct {
+  promotion   ExclusivePromotion @relation(fields: [promotionId], references: [id], onDelete: Cascade)
+  promotionId String
+  product     Product            @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId   String
+  createdAt   DateTime           @default(now())
+
+  @@id([promotionId, productId])
+  @@index([productId])
+}
+
+enum ProductItemType {
+  PRODUCT
+  COMBO
+}
+
+model Menu {
+  id             String         @id
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  name           String
+  active         Boolean        @default(true)
+  isDefault      Boolean        @default(false)
+  categories     Category[]
+  menuCategories MenuCategory[]
+
+  @@index([isDefault])
 }
 
 model Category {
   id                        String                    @id
   createdAt                 DateTime                  @default(now())
   name                      String
+  menu                      Menu                      @relation(fields: [menuId], references: [id])
+  menuId                    String
   menuIndex                 Int?
   translations              Json?
   products                  Product[]
+  productCategories         ProductCategory[]
+  menuCategories            MenuCategory[]
   preparationStepCategories PreparationStepCategory[]
 
-  @@index([menuIndex])
+  @@index([menuId, menuIndex])
+}
+
+model MenuCategory {
+  menu       Menu     @relation(fields: [menuId], references: [id], onDelete: Cascade)
+  menuId     String
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId String
+  menuIndex  Int?
+  createdAt  DateTime @default(now())
+
+  @@id([menuId, categoryId])
+  @@index([menuId, menuIndex])
+  @@index([categoryId])
+}
+
+model ProductCategory {
+  product       Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId     String
+  category      Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId    String
+  categoryIndex Int?
+  createdAt     DateTime @default(now())
+
+  @@id([productId, categoryId])
+  @@index([categoryId, categoryIndex])
+  @@index([productId])
+}
+
+model ComboSlot {
+  id              String            @id
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  combo           Product           @relation("ComboProduct", fields: [comboId], references: [id], onDelete: Cascade)
+  comboId         String
+  name            String
+  minSelect       Int               @default(1)
+  maxSelect       Int               @default(1)
+  allowDuplicates Boolean           @default(true)
+  sortIndex       Int?
+  options         ComboSlotOption[]
+
+  @@index([comboId, sortIndex])
+}
+
+model ComboSlotOption {
+  id         String   @id
+  createdAt  DateTime @default(now())
+  slot       ComboSlot @relation(fields: [slotId], references: [id], onDelete: Cascade)
+  slotId     String
+  product    Product  @relation("ComboOptionProduct", fields: [productId], references: [id], onDelete: Restrict)
+  productId  String
+  extraPrice Int      @default(0)
+  sortIndex  Int?
+
+  @@unique([slotId, productId])
+  @@index([slotId, sortIndex])
+  @@index([productId])
 }
 
 model Campaign {
@@ -335,35 +451,35 @@ model PromotialMessage {
 }
 
 model Order {
-  id                          String                    @id
-  number                      String?
-  createdAt                   DateTime                  @default(now())
-  scheduleFor                 DateTime?
-  language                    String?
-  paidAt                      DateTime?
-  deliveredAt                 DateTime?
+  id                               String                    @id
+  number                           String?
+  createdAt                        DateTime                  @default(now())
+  scheduleFor                      DateTime?
+  language                         String?
+  paidAt                           DateTime?
+  deliveredAt                      DateTime?
   estimatedDeliveryDurationMinutes Int?
-  dispatchOrderIndex          Int?
-  amount                      Int
-  canceled                    Boolean                   @default(false)
-  customer                    Customer?                 @relation(fields: [customerId], references: [id])
-  status                      OrderStatus               @default(ACCEPTED)
-  type                        OrderType                 @default(DELIVERY)
-  paymentMethod               PaymentType               @default(CARD)
-  tipAmount                   Int?
-  progressiveDiscountSnapshot Json?
-  dispatch                    Dispatch?                 @relation(fields: [dispatchId], references: [id])
-  address                     Address?                  @relation(fields: [addressId], references: [id])
-  deliveryAddress             DeliveryAddress?          @relation(fields: [deliveryAddressId], references: [id])
-  externalAddress             ExternalAddress?          @relation(fields: [externalAddressId], references: [id])
-  orderProducts               OrderProducts[]
-  customerId                  String?
-  externalId                  String?                   @unique
-  dispatchId                  String?
-  addressId                   String?
-  deliveryAddressId           String?
-  externalAddressId           String?
-  preparationStepCategories   PreparationStepCategory[]
+  dispatchOrderIndex               Int?
+  amount                           Int
+  canceled                         Boolean                   @default(false)
+  customer                         Customer?                 @relation(fields: [customerId], references: [id])
+  status                           OrderStatus               @default(ACCEPTED)
+  type                             OrderType                 @default(DELIVERY)
+  paymentMethod                    PaymentType               @default(CARD)
+  tipAmount                        Int?
+  progressiveDiscountSnapshot      Json?
+  dispatch                         Dispatch?                 @relation(fields: [dispatchId], references: [id])
+  address                          Address?                  @relation(fields: [addressId], references: [id])
+  deliveryAddress                  DeliveryAddress?          @relation(fields: [deliveryAddressId], references: [id])
+  externalAddress                  ExternalAddress?          @relation(fields: [externalAddressId], references: [id])
+  orderProducts                    OrderProducts[]
+  customerId                       String?
+  externalId                       String?                   @unique
+  dispatchId                       String?
+  addressId                        String?
+  deliveryAddressId                String?
+  externalAddressId                String?
+  preparationStepCategories        PreparationStepCategory[]
 
   @@index([dispatchId, dispatchOrderIndex])
 }
@@ -442,64 +558,64 @@ enum InventoryAlertStatus {
 }
 
 model InventoryPlace {
-  id           String           @id
-  createdAt    DateTime         @default(now())
-  updatedAt    DateTime         @updatedAt
-  name         String
-  type         InventoryPlaceType
-  active       Boolean          @default(true)
-  displayOrder Int?
-  notes        String?
-  stocks       InventoryStock[]
-  alerts       InventoryAlert[]
+  id             String                   @id
+  createdAt      DateTime                 @default(now()) @db.Timestamptz(6)
+  updatedAt      DateTime                 @updatedAt @db.Timestamptz(6)
+  name           String
+  type           String
+  active         Boolean                  @default(true)
+  displayOrder   Int?
+  notes          String?
+  stocks         InventoryStock[]
+  alerts         InventoryAlert[]
   checklistItems InventoryChecklistItem[]
-  stockEvents  InventoryStockEvent[]
+  stockEvents    InventoryStockEvent[]
 }
 
 model InventoryProduct {
-  id                   String                @id
-  createdAt            DateTime              @default(now())
-  updatedAt            DateTime              @updatedAt
-  name                 String
-  unit                 String
-  active               Boolean               @default(true)
-  minQuantity          Int                   @default(0)
-  alertThreshold       Int?
-  requiresRefill       Boolean               @default(false)
-  notes                String?
-  stocks               InventoryStock[]
-  alerts               InventoryAlert[]
-  checklistItems       InventoryChecklistItem[]
-  stockEvents          InventoryStockEvent[]
+  id             String                   @id
+  createdAt      DateTime                 @default(now()) @db.Timestamptz(6)
+  updatedAt      DateTime                 @updatedAt @db.Timestamptz(6)
+  name           String
+  unit           String
+  active         Boolean                  @default(true)
+  minQuantity    Int                      @default(0)
+  alertThreshold Int?
+  requiresRefill Boolean                  @default(false)
+  notes          String?
+  stocks         InventoryStock[]
+  alerts         InventoryAlert[]
+  checklistItems InventoryChecklistItem[]
+  stockEvents    InventoryStockEvent[]
 }
 
 model InventoryStock {
-  id             String           @id
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
-  place          InventoryPlace   @relation(fields: [placeId], references: [id], onDelete: Cascade)
-  placeId        String
-  product        InventoryProduct @relation(fields: [productId], references: [id], onDelete: Cascade)
-  productId      String
-  currentQuantity Int             @default(0)
-  minQuantity    Int              @default(0)
-  notifyBelowThreshold Boolean    @default(false)
-  includeInChecklist Boolean      @default(true)
-  lastCheckedAt  DateTime?
-  lastCheckedBy  String?
+  id                   String           @id
+  createdAt            DateTime         @default(now()) @db.Timestamptz(6)
+  updatedAt            DateTime         @updatedAt @db.Timestamptz(6)
+  place                InventoryPlace   @relation(fields: [placeId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  placeId              String
+  product              InventoryProduct @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  productId            String
+  currentQuantity      Int              @default(0)
+  minQuantity          Int              @default(0)
+  notifyBelowThreshold Boolean          @default(false)
+  includeInChecklist   Boolean          @default(true)
+  lastCheckedAt        DateTime?        @db.Timestamptz(6)
+  lastCheckedBy        String?
 
   @@unique([placeId, productId])
 }
 
 model InventoryChecklist {
-  id          String                 @id
-  createdAt   DateTime               @default(now())
-  updatedAt   DateTime               @updatedAt
-  checkDate   DateTime               @db.Date
-  status      InventoryChecklistStatus @default(OPEN)
+  id          String                   @id
+  createdAt   DateTime                 @default(now()) @db.Timestamptz(6)
+  updatedAt   DateTime                 @updatedAt @db.Timestamptz(6)
+  checkDate   DateTime                 @db.Date
+  status      String                   @default("OPEN")
   startedBy   String?
   submittedBy String?
-  submittedAt DateTime?
+  submittedAt DateTime?                @db.Timestamptz(6)
   items       InventoryChecklistItem[]
   alerts      InventoryAlert[]
 
@@ -508,46 +624,46 @@ model InventoryChecklist {
 
 model InventoryChecklistItem {
   id                  String                       @id
-  createdAt           DateTime                     @default(now())
-  updatedAt           DateTime                     @updatedAt
-  checklist           InventoryChecklist           @relation(fields: [checklistId], references: [id], onDelete: Cascade)
+  createdAt           DateTime                     @default(now()) @db.Timestamptz(6)
+  updatedAt           DateTime                     @updatedAt @db.Timestamptz(6)
+  checklist           InventoryChecklist           @relation(fields: [checklistId], references: [id], onDelete: Cascade, onUpdate: NoAction)
   checklistId         String
-  place               InventoryPlace               @relation(fields: [placeId], references: [id], onDelete: Restrict)
+  place               InventoryPlace               @relation(fields: [placeId], references: [id], onDelete: Restrict, onUpdate: NoAction)
   placeId             String
-  product             InventoryProduct             @relation(fields: [productId], references: [id], onDelete: Restrict)
+  product             InventoryProduct             @relation(fields: [productId], references: [id], onDelete: Restrict, onUpdate: NoAction)
   productId           String
   expectedMinQuantity Int                          @default(0)
   countedQuantity     Int?
   outOfStock          Boolean                      @default(false)
-  result              InventoryChecklistItemResult @default(PENDING)
+  result              String                       @default("PENDING")
   notes               String?
-  checkedAt           DateTime?
+  checkedAt           DateTime?                    @db.Timestamptz(6)
   checkedBy           String?
   alerts              InventoryAlert[]
 
-  @@unique([checklistId, productId, placeId])
+  @@unique([checklistId, productId, placeId], map: "InventoryChecklistItem_checklist_product_place_key")
 }
 
 model InventoryAlert {
-  id              String                 @id
-  createdAt       DateTime               @default(now())
-  updatedAt       DateTime               @updatedAt
-  type            InventoryAlertType
-  severity        InventoryAlertSeverity
-  status          InventoryAlertStatus   @default(OPEN)
+  id              String                  @id
+  createdAt       DateTime                @default(now()) @db.Timestamptz(6)
+  updatedAt       DateTime                @updatedAt @db.Timestamptz(6)
+  type            String
+  severity        String
+  status          String                  @default("OPEN")
   message         String
-  place           InventoryPlace         @relation(fields: [placeId], references: [id], onDelete: Cascade)
+  place           InventoryPlace          @relation(fields: [placeId], references: [id], onDelete: Cascade, onUpdate: NoAction)
   placeId         String
-  product         InventoryProduct       @relation(fields: [productId], references: [id], onDelete: Cascade)
+  product         InventoryProduct        @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: NoAction)
   productId       String
-  checklist       InventoryChecklist?    @relation(fields: [checklistId], references: [id], onDelete: SetNull)
+  checklist       InventoryChecklist?     @relation(fields: [checklistId], references: [id], onDelete: SetNull, onUpdate: NoAction)
   checklistId     String?
-  checklistItem   InventoryChecklistItem? @relation(fields: [checklistItemId], references: [id], onDelete: SetNull)
+  checklistItem   InventoryChecklistItem? @relation(fields: [checklistItemId], references: [id], onDelete: SetNull, onUpdate: NoAction)
   checklistItemId String?
-  triggeredAt     DateTime               @default(now())
-  ackedAt         DateTime?
+  triggeredAt     DateTime                @default(now()) @db.Timestamptz(6)
+  ackedAt         DateTime?               @db.Timestamptz(6)
   ackedBy         String?
-  resolvedAt      DateTime?
+  resolvedAt      DateTime?               @db.Timestamptz(6)
   resolvedBy      String?
 
   @@index([status, type], map: "InventoryAlert_status_idx")
@@ -555,11 +671,11 @@ model InventoryAlert {
 
 model InventoryStockEvent {
   id             String           @id
-  createdAt      DateTime         @default(now())
+  createdAt      DateTime         @default(now()) @db.Timestamptz(6)
   eventType      String
-  place          InventoryPlace   @relation(fields: [placeId], references: [id], onDelete: Cascade)
+  place          InventoryPlace   @relation(fields: [placeId], references: [id], onDelete: Cascade, onUpdate: NoAction)
   placeId        String
-  product        InventoryProduct @relation(fields: [productId], references: [id], onDelete: Cascade)
+  product        InventoryProduct @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: NoAction)
   productId      String
   beforeQuantity Int?
   afterQuantity  Int?
@@ -567,5 +683,5 @@ model InventoryStockEvent {
   source         String
   metadata       Json?
 
-  @@index([placeId, productId, createdAt])
+  @@index([placeId, productId, createdAt], map: "InventoryStockEvent_place_product_createdAt_idx")
 }

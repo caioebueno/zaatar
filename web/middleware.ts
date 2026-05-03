@@ -1,7 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
+import {
+  MENU_ID_COOKIE_NAME,
+  MENU_ID_HEADER_NAME,
+  PROMOTION_ID_COOKIE_NAME,
+  PROMOTION_ID_HEADER_NAME,
+} from "./src/constants/menu";
 
 const CORS_METHODS = "GET,POST,PUT,PATCH,DELETE,OPTIONS";
 const CORS_HEADERS = "Content-Type, Authorization";
+const MENU_CONTEXT_COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 365;
 
 function getAllowedOrigins(): string[] {
   const raw = process.env.CORS_ALLOWED_ORIGINS;
@@ -53,7 +60,14 @@ function applyCorsHeaders(response: NextResponse, request: NextRequest): void {
 }
 
 export function middleware(request: NextRequest) {
+  const isApiRoute = request.nextUrl.pathname.startsWith("/api");
+  const isMenuRoute = request.nextUrl.pathname.startsWith("/menu");
+
   if (request.method === "OPTIONS") {
+    if (!isApiRoute) {
+      return NextResponse.next();
+    }
+
     const preflightResponse = new NextResponse(null, { status: 204 });
 
     applyCorsHeaders(preflightResponse, request);
@@ -61,12 +75,56 @@ export function middleware(request: NextRequest) {
     return preflightResponse;
   }
 
-  const response = NextResponse.next();
-  applyCorsHeaders(response, request);
+  const requestHeaders = new Headers(request.headers);
+  const menuIdFromQuery = isMenuRoute
+    ? request.nextUrl.searchParams.get("menuId")?.trim() || ""
+    : "";
+  const hasPromotionIdQueryParam = isMenuRoute
+    ? request.nextUrl.searchParams.has("promotionId")
+    : false;
+  const promotionIdFromQuery = isMenuRoute
+    ? request.nextUrl.searchParams.get("promotionId")?.trim() || ""
+    : "";
+
+  if (menuIdFromQuery) {
+    requestHeaders.set(MENU_ID_HEADER_NAME, menuIdFromQuery);
+  }
+  if (hasPromotionIdQueryParam) {
+    requestHeaders.set(PROMOTION_ID_HEADER_NAME, promotionIdFromQuery);
+  }
+
+  const response = NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
+
+  if (isApiRoute) {
+    applyCorsHeaders(response, request);
+  }
+
+  if (menuIdFromQuery) {
+    response.cookies.set(MENU_ID_COOKIE_NAME, menuIdFromQuery, {
+      sameSite: "lax",
+      path: "/",
+      maxAge: MENU_CONTEXT_COOKIE_MAX_AGE_SECONDS,
+    });
+  }
+  if (hasPromotionIdQueryParam) {
+    if (promotionIdFromQuery) {
+      response.cookies.set(PROMOTION_ID_COOKIE_NAME, promotionIdFromQuery, {
+        sameSite: "lax",
+        path: "/",
+        maxAge: MENU_CONTEXT_COOKIE_MAX_AGE_SECONDS,
+      });
+    } else {
+      response.cookies.delete(PROMOTION_ID_COOKIE_NAME);
+    }
+  }
 
   return response;
 }
 
 export const config = {
-  matcher: ["/api/:path*"],
+  matcher: ["/api/:path*", "/menu/:path*"],
 };

@@ -10,12 +10,15 @@ import TProduct from "../../src/types/product";
 import TCategory from "../../src/types/category";
 import TProgressiveDiscount from "../../src/types/progressiveDiscount";
 import DiscountModal from "./DiscountModal";
-import { forwardRef, useEffect, useRef, useState } from "react";
+import { forwardRef, useEffect, useMemo, useRef, useState } from "react";
 import CartBar from "./CartBar";
 import ProductImage from "./ProductImage";
 import ProductModal from "./ProductModal";
 import { useCart } from "./CartContext";
-import TCart, { TSelectedModifier } from "@/types/cart";
+import TCart, {
+  TSelectedComboSlotOption,
+  TSelectedModifier,
+} from "@/types/cart";
 import { Button } from "@/components/ui/button";
 import { FiInfo, FiMapPin } from "react-icons/fi";
 import InformationModal from "./InformationModal";
@@ -29,11 +32,15 @@ const ADDRESS_MAPS_URL = "https://maps.app.goo.gl/daqTiXJTTGwVeH4Z6";
 export function findProductById(
   categories: TCategory[],
   productId: string,
+  additionalProducts?: TProduct[],
 ): TProduct | null {
   for (const category of categories) {
     const product = category.products.find((p) => p.id === productId);
     if (product) return product;
   }
+
+  const fallbackProduct = additionalProducts?.find((p) => p.id === productId);
+  if (fallbackProduct) return fallbackProduct;
 
   return null;
 }
@@ -42,6 +49,24 @@ type TMenuPage = {
   data: TGetProductsResponse;
   lg: string;
 };
+
+type PromotionProductPreview = {
+  id: string;
+  product: TProduct;
+  categoryId: string;
+};
+
+function getProductTitle(product: TProduct, lg: string): string {
+  if (product.translations?.[lg]?.title) {
+    return product.translations[lg].title as string;
+  }
+
+  if (product.translations?.en?.title) {
+    return product.translations.en.title as string;
+  }
+
+  return product.name;
+}
 
 const MenuPage: React.FC<TMenuPage> = ({ data, lg }) => {
   const [openDiscountModal, setOpenDiscountModal] = useState(true);
@@ -149,20 +174,81 @@ const MenuPage: React.FC<TMenuPage> = ({ data, lg }) => {
     };
   }, [data.categories]);
 
+  const promotionLabelByLocale: Record<string, { title: string; eyebrow: string }> = {
+    en: {
+      title: "Promotions",
+      eyebrow: "Exclusive Promotion",
+    },
+    pt: {
+      title: "Promoções",
+      eyebrow: "Promoção Exclusiva",
+    },
+    es: {
+      title: "Promociones",
+      eyebrow: "Promoción Exclusiva",
+    },
+  };
+  const promotionLabel = promotionLabelByLocale[lg] ?? promotionLabelByLocale.en;
+  const exclusiveDealProductIdSet = useMemo(
+    () =>
+      new Set([
+        ...(data.promotionProductIds ?? []),
+        ...(data.activePromotion?.products?.map((product) => product.id) ?? []),
+      ]),
+    [data.promotionProductIds, data.activePromotion?.products],
+  );
+  const promotionProducts = useMemo(() => {
+    if (!data.activePromotion?.products?.length) {
+      return [];
+    }
+
+    const uniqueByProductId = new Map<string, PromotionProductPreview>();
+    const categoryByProductId = new Map<string, string>();
+
+    for (const category of data.categories) {
+      for (const product of category.products) {
+        categoryByProductId.set(product.id, category.id);
+      }
+    }
+
+    for (const product of data.activePromotion.products) {
+      if (uniqueByProductId.has(product.id)) continue;
+      const categoryId = categoryByProductId.get(product.id) ?? "";
+
+      uniqueByProductId.set(product.id, {
+        id: product.id,
+        product,
+        categoryId,
+      });
+    }
+
+    return Array.from(uniqueByProductId.values()).slice(0, 12);
+  }, [data.activePromotion, data.categories]);
+
+  const promotionSectionTitle = data.activePromotion?.name ?? promotionLabel.title;
   const selectedProduct = selectedProductId
-    ? findProductById(data.categories, selectedProductId)
+    ? findProductById(
+      data.categories,
+      selectedProductId,
+      data.activePromotion?.products,
+    )
     : null;
+  const selectedProductIsExclusiveDeal = selectedProduct
+    ? exclusiveDealProductIdSet.has(selectedProduct.id)
+    : false;
 
   const addProduct = (
     productId: string,
     quantity: number,
     selectedModifiers: TSelectedModifier[],
+    comboSelections: TSelectedComboSlotOption[],
     description?: string,
   ) => {
     addItem({
       productId,
       quantity,
       modifiers: selectedModifiers,
+      comboSelections,
       description: description,
     });
     setSelectedProductId(null);
@@ -271,6 +357,68 @@ const MenuPage: React.FC<TMenuPage> = ({ data, lg }) => {
         onCategorySelect={setActiveCategoryId}
       />
       <div className="px-4 pb-55 flex flex-col max-w-[900px] lg:px-0">
+        {promotionProducts.length > 0 && (
+          <section className="pt-6 -mx-4 lg:mx-0">
+            <div className="rounded-none bg-transparent px-4 text-[#0f2722] md:px-0">
+              <div className="flex flex-col gap-1 items-center">
+                <p className="text-xl font-bold text-white bg-brandBackground w-fit px-3 py-1.5 rounded-xl">
+                  {promotionLabel.eyebrow}
+                </p>
+                {/* <div>
+                  <h2 className="text-[24px] font-black tracking-[-0.02em]">
+                    {promotionSectionTitle}
+                  </h2>
+                </div> */}
+              </div>
+
+              <div className="mt-4 flex gap-3 overflow-x-auto pb-1 md:gap-4 md:grid md:grid-cols-2">
+                {promotionProducts.map((promotionProduct) => {
+                  const product = promotionProduct.product;
+                  const productTitle = getProductTitle(product, lg);
+                  const displayPrice =
+                    typeof product.price === "number" ? product.price : null;
+                  const strikePrice = product.comparedAtPrice ?? null;
+
+                  return (
+                    <button
+                      key={promotionProduct.id}
+                      type="button"
+                      onClick={() => setSelectedProductId(promotionProduct.id)}
+                      className="group relative w-full snap-start overflow-hidden rounded-2xl bg-[#e8efee] text-left text-[#0f2722]"
+                    >
+                      <ProductImage
+                        src={product.photos?.[0]?.url ?? null}
+                        className="aspect-[16/7] w-full object-cover bg-[#d8dfdc]"
+                        alt={productTitle}
+                        quality={45}
+                        sizes="(max-width: 768px) 230px, 230px"
+                      />
+                      <div className="p-3">
+                        <p className="line-clamp-1 text-base font-bold">{productTitle}</p>
+                        <div className="mt-1 flex items-center gap-2">
+                          {displayPrice !== null && (
+                            <span className="text-xl font-black">
+                              {formatCurrency(displayPrice)}
+                            </span>
+                          )}
+                          {strikePrice !== null && displayPrice !== null && strikePrice > displayPrice && (
+                            <span className="text-sm font-semibold text-[#5a6a66] line-through">
+                              {formatCurrency(strikePrice)}
+                            </span>
+                          )}
+                        </div>
+                        {/* <p className="mt-1 text-xs font-semibold text-[#2f6a5b]">
+                          Tap to select
+                        </p> */}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </section>
+        )}
+
         {data.categories.map((category) => (
           <CategoryItem
             category={category}
@@ -279,6 +427,7 @@ const MenuPage: React.FC<TMenuPage> = ({ data, lg }) => {
             cart={cart}
             categories={data.categories}
             progressiveDiscount={data.progressiveDiscount}
+            promotionProductIds={data.promotionProductIds}
             lg={lg}
           />
         ))}
@@ -300,6 +449,7 @@ const MenuPage: React.FC<TMenuPage> = ({ data, lg }) => {
       <ProductModal
         key={selectedProduct?.id ?? "none"}
         product={selectedProduct}
+        isExclusiveDeal={selectedProductIsExclusiveDeal}
         onClose={() => setSelectedProductId(null)}
         onAdd={addProduct}
         content={content}
@@ -418,6 +568,7 @@ type TCategoryItem = {
   cart: TCart;
   categories: TCategory[];
   progressiveDiscount: TProgressiveDiscount | null;
+  promotionProductIds?: string[];
   lg: string;
 };
 
@@ -427,6 +578,7 @@ const CategoryItem: React.FC<TCategoryItem> = ({
   cart,
   categories,
   progressiveDiscount,
+  promotionProductIds,
   lg,
 }) => {
   const categoryTitle =
@@ -446,6 +598,7 @@ const CategoryItem: React.FC<TCategoryItem> = ({
             cart={cart}
             categories={categories}
             progressiveDiscount={progressiveDiscount}
+            promotionProductIds={promotionProductIds}
             lg={lg}
           />
         ))}
@@ -460,6 +613,7 @@ type TProductItem = {
   cart: TCart;
   categories: TCategory[];
   progressiveDiscount: TProgressiveDiscount | null;
+  promotionProductIds?: string[];
   lg: string;
 };
 
@@ -469,6 +623,7 @@ const ProductItem: React.FC<TProductItem> = ({
   cart,
   categories,
   progressiveDiscount,
+  promotionProductIds,
   lg,
 }) => {
   const firstImageUrl = product.photos?.[0]?.url ?? null;
@@ -477,6 +632,8 @@ const ProductItem: React.FC<TProductItem> = ({
     progressiveDiscount,
     cart,
     categories,
+    undefined,
+    promotionProductIds,
   );
   const displayPrice =
     pricePreview?.discountedPrice ??

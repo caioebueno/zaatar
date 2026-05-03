@@ -481,9 +481,25 @@ function handleRequest(request, response) {
             : undefined;
         return processDispatchAssignmentJobs(runLimit);
       })
-      .finally(() => {
-      response.writeHead(202, { "Content-Type": "application/json" });
-      response.end(JSON.stringify({ accepted: true }));
+      .then((result) => {
+        response.writeHead(200, { "Content-Type": "application/json" });
+        response.end(
+          JSON.stringify({
+            ok: true,
+            processed: result.processed,
+            failed: result.failed,
+          }),
+        );
+      })
+      .catch((error) => {
+        console.error("[queue-worker] Failed to process dispatch jobs:", error);
+        response.writeHead(500, { "Content-Type": "application/json" });
+        response.end(
+          JSON.stringify({
+            ok: false,
+            error: "FAILED_TO_PROCESS_DISPATCH_JOBS",
+          }),
+        );
       });
     return;
   }
