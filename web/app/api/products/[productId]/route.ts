@@ -52,6 +52,7 @@ type LegacyComboItemInput = {
 
 type ComboSlotInput = {
   name: string;
+  translations: Prisma.InputJsonValue | null;
   minSelect: number;
   maxSelect: number;
   allowDuplicates: boolean;
@@ -100,6 +101,7 @@ function mapProductRow(product: {
   comboSlots: {
     id: string;
     name: string;
+    translations: unknown | null;
     minSelect: number;
     maxSelect: number;
     allowDuplicates: boolean;
@@ -168,6 +170,7 @@ function mapProductRow(product: {
     comboSlots: product.comboSlots.map((comboSlot) => ({
       id: comboSlot.id,
       name: comboSlot.name,
+      translations: comboSlot.translations ?? null,
       minSelect: comboSlot.minSelect,
       maxSelect: comboSlot.maxSelect,
       allowDuplicates: comboSlot.allowDuplicates,
@@ -281,6 +284,21 @@ function parseIdArray(value: unknown, field: string): string[] {
   return normalizedIds;
 }
 
+function parseTranslationsInput(
+  value: unknown,
+  field: string,
+): Prisma.InputJsonValue | null {
+  if (value === undefined || value === null) {
+    return null;
+  }
+
+  if (typeof value !== "object" || Array.isArray(value)) {
+    throw new Error(field);
+  }
+
+  return value as Prisma.InputJsonValue;
+}
+
 function parseComboSlots(value: unknown, field: string): ComboSlotInput[] {
   if (!Array.isArray(value)) {
     throw new Error(field);
@@ -293,6 +311,7 @@ function parseComboSlots(value: unknown, field: string): ComboSlotInput[] {
 
     const record = row as {
       name?: unknown;
+      translations?: unknown;
       minSelect?: unknown;
       maxSelect?: unknown;
       allowDuplicates?: unknown;
@@ -324,6 +343,10 @@ function parseComboSlots(value: unknown, field: string): ComboSlotInput[] {
       record.allowDuplicates === undefined
         ? true
         : parseBoolean(record.allowDuplicates, field);
+    const translations =
+      record.translations === undefined
+        ? null
+        : parseTranslationsInput(record.translations, field);
     const sortIndex =
       record.sortIndex === undefined
         ? null
@@ -375,6 +398,7 @@ function parseComboSlots(value: unknown, field: string): ComboSlotInput[] {
 
     return {
       name: record.name.trim(),
+      translations,
       minSelect: record.minSelect,
       maxSelect: record.maxSelect,
       allowDuplicates,
@@ -571,6 +595,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
         const legacyComboItems = parseLegacyComboItems(body.comboItems, "comboItems");
         comboSlotsToPersist = legacyComboItems.map((item, index) => ({
           name: `Item ${index + 1}`,
+          translations: null,
           minSelect: item.quantity,
           maxSelect: item.quantity,
           allowDuplicates: false,
@@ -904,6 +929,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
         select: {
           id: true,
           name: true,
+          translations: true,
           minSelect: true,
           maxSelect: true,
           allowDuplicates: true,
@@ -1018,6 +1044,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
                 id: slotId,
                 comboId: normalizedProductId,
                 name: slot.name,
+                translations: slot.translations ?? Prisma.JsonNull,
                 minSelect: slot.minSelect,
                 maxSelect: slot.maxSelect,
                 allowDuplicates: slot.allowDuplicates,

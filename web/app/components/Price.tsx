@@ -56,6 +56,7 @@ import {
 import text from "@/constants/text";
 import type { TProgressiveDiscountPrize } from "@/src/types/progressiveDiscount";
 import { calculateSalesTaxInCents } from "@/src/constants/pricing";
+import { trackFacebookPixelEvent } from "@/app/lib/facebookPixel";
 
 const montserrat = Montserrat({
   variable: "--font-geist-mono",
@@ -121,6 +122,42 @@ const resolveModifierGroupTitle = (
   modifierGroup.translations?.["en"]?.title ||
   modifierGroup.title;
 
+const resolveComboOptionTitle = (
+  option:
+    | {
+        productName: string;
+        productTranslations?: {
+          [key: string]: {
+            [key: string]: string;
+          };
+        };
+      }
+    | undefined,
+  lg: string,
+) =>
+  option?.productTranslations?.[lg]?.title ||
+  option?.productTranslations?.["en"]?.title ||
+  option?.productName ||
+  "Selected option";
+
+const resolveComboSlotTitle = (
+  slot:
+    | {
+        name: string;
+        translations?: {
+          [key: string]: {
+            [key: string]: string;
+          };
+        };
+      }
+    | undefined,
+  lg: string,
+) =>
+  slot?.translations?.[lg]?.title ||
+  slot?.translations?.["en"]?.title ||
+  slot?.name ||
+  "Combo selection";
+
 const buildSelectedModifierGroupsFromCartItem = (
   product: TProduct | null | undefined,
   cartItem: TCartItem,
@@ -156,6 +193,7 @@ const buildSelectedModifierGroupsFromCartItem = (
 const buildSelectedComboGroupsFromCartItem = (
   product: TProduct | null | undefined,
   cartItem: TCartItem,
+  lg: string,
 ): TSummaryModifierGroup[] => {
   if (!product?.comboSlots?.length || !cartItem.comboSelections?.length) {
     return [];
@@ -170,7 +208,9 @@ const buildSelectedComboGroupsFromCartItem = (
             (slotOption) => slotOption.productId === selection.optionProductId,
           );
           const optionLabel =
-            selection.optionProductName || option?.productName || "Selected option";
+            resolveComboOptionTitle(option, lg) ||
+            selection.optionProductName ||
+            "Selected option";
           const optionPrice =
             typeof option?.extraPrice === "number"
               ? option.extraPrice
@@ -199,7 +239,7 @@ const buildSelectedComboGroupsFromCartItem = (
 
       return {
         id: slot.id,
-        title: slot.name || "Combo selection",
+        title: resolveComboSlotTitle(slot, lg),
         items: selectedItems,
       };
     })
@@ -864,6 +904,21 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
           : undefined,
         tipAmount: Number(selectedTip || 0),
       });
+
+      trackFacebookPixelEvent("Purchase", {
+        currency: "USD",
+        value: orderTotal / 100,
+        content_ids: Array.from(
+          new Set(cart.items.map((item) => item.productId)),
+        ),
+        content_type: "product",
+        num_items: cart.items.reduce(
+          (total, item) => total + Math.max(0, item.quantity),
+          0,
+        ),
+        order_id: order.id,
+      });
+
       clearCart();
       setLoading(false);
       router.push(`/menu/${lg}/confirmation/${order.id}`);
@@ -2628,6 +2683,7 @@ const OrderSummaryItem: React.FC<TOrderSummaryItem> = ({
   const selectedComboGroups = buildSelectedComboGroupsFromCartItem(
     findProduct,
     cartItem,
+    lg,
   );
   const fallbackName = isPromotionProduct
     ? `${promotionBadgeLabel} item`
@@ -2755,6 +2811,7 @@ const CartListItem: React.FC<TCartListItem> = ({
   const selectedComboGroups = buildSelectedComboGroupsFromCartItem(
     findProduct,
     cartItem,
+    lg,
   );
   const selectedGroups = [...selectedModifierGroups, ...selectedComboGroups];
 

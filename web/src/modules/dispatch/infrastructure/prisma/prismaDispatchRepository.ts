@@ -1629,7 +1629,6 @@ class PrismaDispatchRepository implements DispatchRepository {
       FROM "Dispatch" dispatch
       LEFT JOIN "Driver" driver ON driver."id" = dispatch."driverId"
       WHERE dispatch."driverId" = ${driverId}
-        AND dispatch."dispatched" = true
         AND EXISTS (
           SELECT 1
           FROM "Order" orders

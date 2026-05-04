@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import {
   MENU_ID_COOKIE_NAME,
   MENU_ID_HEADER_NAME,
+  MENU_TAGS_COOKIE_NAME,
   PROMOTION_ID_COOKIE_NAME,
   PROMOTION_ID_HEADER_NAME,
 } from "./src/constants/menu";
@@ -9,6 +10,23 @@ import {
 const CORS_METHODS = "GET,POST,PUT,PATCH,DELETE,OPTIONS";
 const CORS_HEADERS = "Content-Type, Authorization";
 const MENU_CONTEXT_COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 365;
+const MAX_MENU_TAGS_PER_BROWSER = 30;
+
+function normalizeTag(value: string): string | null {
+  const normalized = value.trim().toLowerCase();
+  if (!normalized) return null;
+  if (normalized.length > 64) return null;
+  return normalized;
+}
+
+function parseMenuTagsCookie(value: string | undefined): string[] {
+  if (!value) return [];
+
+  return value
+    .split("|")
+    .map((item) => normalizeTag(item))
+    .filter((item): item is string => Boolean(item));
+}
 
 function getAllowedOrigins(): string[] {
   const raw = process.env.CORS_ALLOWED_ORIGINS;
@@ -85,6 +103,15 @@ export function middleware(request: NextRequest) {
   const promotionIdFromQuery = isMenuRoute
     ? request.nextUrl.searchParams.get("promotionId")?.trim() || ""
     : "";
+  const hasTagQueryParam = isMenuRoute
+    ? request.nextUrl.searchParams.has("tag")
+    : false;
+  const tagsFromQuery = hasTagQueryParam
+    ? request.nextUrl.searchParams
+        .getAll("tag")
+        .map((tag) => normalizeTag(tag))
+        .filter((tag): tag is string => Boolean(tag))
+    : [];
 
   if (menuIdFromQuery) {
     requestHeaders.set(MENU_ID_HEADER_NAME, menuIdFromQuery);
@@ -119,6 +146,22 @@ export function middleware(request: NextRequest) {
       });
     } else {
       response.cookies.delete(PROMOTION_ID_COOKIE_NAME);
+    }
+  }
+  if (hasTagQueryParam && tagsFromQuery.length > 0) {
+    const existingTags = parseMenuTagsCookie(
+      request.cookies.get(MENU_TAGS_COOKIE_NAME)?.value,
+    );
+    const mergedTags = Array.from(new Set([...existingTags, ...tagsFromQuery])).slice(
+      -MAX_MENU_TAGS_PER_BROWSER,
+    );
+
+    if (mergedTags.length > 0) {
+      response.cookies.set(MENU_TAGS_COOKIE_NAME, mergedTags.join("|"), {
+        sameSite: "lax",
+        path: "/",
+        maxAge: MENU_CONTEXT_COOKIE_MAX_AGE_SECONDS,
+      });
     }
   }
 

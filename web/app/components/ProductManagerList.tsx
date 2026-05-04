@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type {
   ProductManagerCategory,
@@ -42,6 +42,7 @@ type DragProductState = {
 
 type DrawerLanguage = "es" | "pt";
 type ProductEditorMode = "create" | "edit";
+type ProductEditorFocusSection = "translations";
 
 type ProductEditorComboSlotOption = {
   id: string;
@@ -52,6 +53,7 @@ type ProductEditorComboSlotOption = {
 type ProductEditorComboSlot = {
   id: string;
   name: string;
+  translations: ProductManagerTranslations | null;
   minSelect: number;
   maxSelect: number;
   allowDuplicates: boolean;
@@ -91,6 +93,7 @@ type ProductEditorState = {
   deletingModifierItemId: string | null;
   uploadingPhoto: boolean;
   activeLanguage: DrawerLanguage;
+  focusSection: ProductEditorFocusSection | null;
   saving: boolean;
   error: string | null;
 };
@@ -243,6 +246,7 @@ function cloneComboSlots(slots: ProductManagerComboSlot[]): ProductEditorComboSl
   return slots.map((slot) => ({
     id: slot.id,
     name: slot.name,
+    translations: cloneTranslations(slot.translations),
     minSelect: slot.minSelect,
     maxSelect: slot.maxSelect,
     allowDuplicates: slot.allowDuplicates,
@@ -367,6 +371,7 @@ function mapComboSlotFromUnknown(value: unknown): ProductManagerComboSlot | null
   const record = value as {
     id?: unknown;
     name?: unknown;
+    translations?: unknown;
     minSelect?: unknown;
     maxSelect?: unknown;
     allowDuplicates?: unknown;
@@ -389,6 +394,7 @@ function mapComboSlotFromUnknown(value: unknown): ProductManagerComboSlot | null
   return {
     id: record.id,
     name: record.name,
+    translations: normalizeTranslations(record.translations),
     minSelect: record.minSelect,
     maxSelect: record.maxSelect,
     allowDuplicates: record.allowDuplicates,
@@ -661,6 +667,10 @@ export default function ProductManagerList({
   const [creatingMenu, setCreatingMenu] = useState(false);
   const [linkingSection, setLinkingSection] = useState(false);
   const [creatingSection, setCreatingSection] = useState(false);
+  const [detachingSectionId, setDetachingSectionId] = useState<string | null>(null);
+  const translationsSectionRef = useRef<HTMLElement | null>(null);
+  const esTranslationNameInputRef = useRef<HTMLInputElement | null>(null);
+  const ptTranslationNameInputRef = useRef<HTMLInputElement | null>(null);
 
   const categoryViews = useMemo<CategoryView[]>(() => {
     const normalizedSearch = search.trim().toLowerCase();
@@ -754,6 +764,35 @@ export default function ProductManagerList({
   useEffect(() => {
     setSwitchingMenu(false);
   }, [selectedMenuId]);
+
+  useEffect(() => {
+    if (!editor || editor.focusSection !== "translations") return;
+
+    const frameId = window.requestAnimationFrame(() => {
+      translationsSectionRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+
+      if (editor.activeLanguage === "pt") {
+        ptTranslationNameInputRef.current?.focus();
+      } else {
+        esTranslationNameInputRef.current?.focus();
+      }
+    });
+
+    setEditor((current) => {
+      if (!current || current.focusSection !== "translations") return current;
+      return {
+        ...current,
+        focusSection: null,
+      };
+    });
+
+    return () => {
+      window.cancelAnimationFrame(frameId);
+    };
+  }, [editor]);
 
   function setProductVisibility(productId: string, visible: boolean) {
     setCategories((current) =>
@@ -941,6 +980,54 @@ export default function ProductManagerList({
       );
     } finally {
       setCreatingSection(false);
+    }
+  }
+
+  async function onDetachSection(sectionId: string) {
+    const normalizedSectionId = sectionId.trim();
+    if (!normalizedSectionId) return;
+
+    const targetSection = categories.find((category) => category.id === normalizedSectionId);
+    const sectionTitle = targetSection?.title || "this section";
+    const confirmed = window.confirm(
+      `Detach "${sectionTitle}" from this menu? This will not delete the section.`,
+    );
+
+    if (!confirmed) return;
+
+    try {
+      setDetachingSectionId(normalizedSectionId);
+      setError(null);
+
+      const response = await fetch(
+        `/api/categories/${encodeURIComponent(
+          normalizedSectionId,
+        )}?menuId=${encodeURIComponent(selectedMenuId)}`,
+        {
+          method: "DELETE",
+        },
+      );
+
+      if (!response.ok) {
+        const payload = (await response.json().catch(() => ({}))) as {
+          error?: unknown;
+        };
+        throw new Error(
+          typeof payload.error === "string"
+            ? payload.error
+            : "Failed to detach section",
+        );
+      }
+
+      router.refresh();
+    } catch (detachError) {
+      setError(
+        detachError instanceof Error
+          ? detachError.message
+          : "Failed to detach section",
+      );
+    } finally {
+      setDetachingSectionId(null);
     }
   }
 
@@ -1260,7 +1347,13 @@ export default function ProductManagerList({
     );
   }
 
-  function openEditor(product: ProductManagerProduct) {
+  function openEditor(
+    product: ProductManagerProduct,
+    options?: {
+      focusSection?: ProductEditorFocusSection;
+      activeLanguage?: DrawerLanguage;
+    },
+  ) {
     const translations = cloneTranslations(product.translations);
     const es = translations.es ?? {};
     const pt = translations.pt ?? {};
@@ -1298,7 +1391,8 @@ export default function ProductManagerList({
       savingModifierItemId: null,
       deletingModifierItemId: null,
       uploadingPhoto: false,
-      activeLanguage: "es",
+      activeLanguage: options?.activeLanguage ?? "es",
+      focusSection: options?.focusSection ?? null,
       saving: false,
       error: null,
     });
@@ -1343,6 +1437,7 @@ export default function ProductManagerList({
       deletingModifierItemId: null,
       uploadingPhoto: false,
       activeLanguage: "es",
+      focusSection: null,
       saving: false,
       error: null,
     });
@@ -1553,6 +1648,7 @@ export default function ProductManagerList({
           {
             id: createLocalId(),
             name: `Slot ${current.comboSlots.length + 1}`,
+            translations: null,
             minSelect: 1,
             maxSelect: 1,
             allowDuplicates: true,
@@ -1588,6 +1684,34 @@ export default function ProductManagerList({
       return {
         ...current,
         comboSlots: current.comboSlots.filter((slot) => slot.id !== slotId),
+      };
+    });
+  }
+
+  function updateComboSlotTranslation(
+    slotId: string,
+    locale: "es" | "pt",
+    field: string,
+    value: string,
+  ) {
+    setEditor((current) => {
+      if (!current) return current;
+
+      return {
+        ...current,
+        comboSlots: current.comboSlots.map((slot) => {
+          if (slot.id !== slotId) return slot;
+
+          return {
+            ...slot,
+            translations: upsertTranslationField(
+              slot.translations,
+              locale,
+              field,
+              value,
+            ),
+          };
+        }),
       };
     });
   }
@@ -2563,6 +2687,7 @@ export default function ProductManagerList({
           editor.itemType === "COMBO"
             ? editor.comboSlots.map((slot, slotIndex) => ({
                 name: slot.name.trim(),
+                translations: normalizeTranslations(slot.translations),
                 minSelect: slot.minSelect,
                 maxSelect: slot.maxSelect,
                 allowDuplicates: slot.allowDuplicates,
@@ -2696,6 +2821,7 @@ export default function ProductManagerList({
           : editor.comboSlots.map((slot, slotIndex) => ({
               id: slot.id,
               name: slot.name.trim() || `Slot ${slotIndex + 1}`,
+              translations: normalizeTranslations(slot.translations),
               minSelect: slot.minSelect,
               maxSelect: slot.maxSelect,
               allowDuplicates: slot.allowDuplicates,
@@ -2753,7 +2879,8 @@ export default function ProductManagerList({
                   switchingMenu ||
                   creatingMenu ||
                   linkingSection ||
-                  creatingSection
+                  creatingSection ||
+                  detachingSectionId !== null
                 }
                 onChange={(event) => onMenuChange(event.target.value)}
                 className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none ring-zinc-300 focus:ring-2 md:w-[240px]"
@@ -2773,7 +2900,8 @@ export default function ProductManagerList({
                   switchingMenu ||
                   creatingMenu ||
                   linkingSection ||
-                  creatingSection
+                  creatingSection ||
+                  detachingSectionId !== null
                 }
                 className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-100 disabled:cursor-not-allowed disabled:opacity-50"
               >
@@ -2786,7 +2914,8 @@ export default function ProductManagerList({
                   switchingMenu ||
                   creatingMenu ||
                   linkingSection ||
-                  creatingSection
+                  creatingSection ||
+                  detachingSectionId !== null
                 }
                 className="rounded-lg border border-emerald-300 bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-700 hover:bg-emerald-100 disabled:cursor-not-allowed disabled:opacity-50"
               >
@@ -2795,7 +2924,9 @@ export default function ProductManagerList({
               <div className="w-full md:w-[360px]">
                 <SectionInsertControl
                   compact
-                  disabled={linkingSection || creatingSection}
+                  disabled={
+                    linkingSection || creatingSection || detachingSectionId !== null
+                  }
                   availableSections={availableSectionsToLink}
                   onLink={(sectionId) =>
                     void onLinkSectionAtIndex(sectionId, categories.length)
@@ -2832,7 +2963,9 @@ export default function ProductManagerList({
             {search.trim().length === 0 && categoryViews.length > 0 ? (
               <SectionInsertControl
                 compact
-                disabled={linkingSection || creatingSection}
+                disabled={
+                  linkingSection || creatingSection || detachingSectionId !== null
+                }
                 availableSections={availableSectionsToLink}
                 onLink={(sectionId) => void onLinkSectionAtIndex(sectionId, 0)}
                 onCreate={(sectionName) =>
@@ -2889,6 +3022,22 @@ export default function ProductManagerList({
                       <span className="rounded-full bg-zinc-200 px-2.5 py-0.5 text-xs font-medium text-zinc-600">
                         {productCount} {productCount === 1 ? "product" : "products"}
                       </span>
+                      <button
+                        type="button"
+                        onClick={(event) => {
+                          event.preventDefault();
+                          event.stopPropagation();
+                          void onDetachSection(category.id);
+                        }}
+                        disabled={
+                          linkingSection ||
+                          creatingSection ||
+                          detachingSectionId === category.id
+                        }
+                        className="ml-auto rounded-md border border-rose-200 bg-rose-50 px-2.5 py-1 text-xs font-semibold text-rose-700 hover:bg-rose-100 disabled:cursor-not-allowed disabled:opacity-50"
+                      >
+                        {detachingSectionId === category.id ? "Detaching..." : "Detach"}
+                      </button>
                     </button>
 
                     {!isCollapsed ? (
@@ -3019,6 +3168,19 @@ export default function ProductManagerList({
                                     </button>
                                     <button
                                       type="button"
+                                      onClick={(event) => {
+                                        event.stopPropagation();
+                                        openEditor(product, {
+                                          focusSection: "translations",
+                                          activeLanguage: "es",
+                                        });
+                                      }}
+                                      className="rounded-lg border border-violet-200 bg-violet-50 px-3 py-1.5 text-sm font-medium text-violet-700 hover:bg-violet-100"
+                                    >
+                                      Translations
+                                    </button>
+                                    <button
+                                      type="button"
                                       onClick={(event) => event.stopPropagation()}
                                       className="cursor-grab rounded-md border border-transparent p-1.5 text-zinc-400 hover:bg-zinc-100 active:cursor-grabbing"
                                       aria-label="Drag product"
@@ -3049,7 +3211,9 @@ export default function ProductManagerList({
                   {search.trim().length === 0 ? (
                     <SectionInsertControl
                       compact
-                      disabled={linkingSection || creatingSection}
+                      disabled={
+                        linkingSection || creatingSection || detachingSectionId !== null
+                      }
                       availableSections={availableSectionsToLink}
                       onLink={(sectionId) =>
                         void onLinkSectionAtIndex(
@@ -3079,7 +3243,9 @@ export default function ProductManagerList({
                     Create a new section or link an existing one to start managing products.
                   </p>
                   <SectionInsertControl
-                    disabled={linkingSection || creatingSection}
+                    disabled={
+                      linkingSection || creatingSection || detachingSectionId !== null
+                    }
                     availableSections={availableSectionsToLink}
                     onLink={(sectionId) => void onLinkSectionAtIndex(sectionId, 0)}
                     onCreate={(sectionName) =>
@@ -3240,7 +3406,10 @@ export default function ProductManagerList({
                 </div>
               </section>
 
-              <section className="border-b border-zinc-200 px-6 py-5">
+              <section
+                ref={translationsSectionRef}
+                className="border-b border-zinc-200 px-6 py-5"
+              >
                 <SectionTitle>Translations</SectionTitle>
 
                 <div className="mb-3 flex items-center gap-2">
@@ -3273,6 +3442,7 @@ export default function ProductManagerList({
                     <div>
                       <InputLabel>Name (ES)</InputLabel>
                       <input
+                        ref={esTranslationNameInputRef}
                         value={editor.esName}
                         onChange={(event) =>
                           updateEditorField("esName", event.target.value)
@@ -3299,6 +3469,7 @@ export default function ProductManagerList({
                     <div>
                       <InputLabel>Name (PT)</InputLabel>
                       <input
+                        ref={ptTranslationNameInputRef}
                         value={editor.ptName}
                         onChange={(event) =>
                           updateEditorField("ptName", event.target.value)
@@ -3401,6 +3572,40 @@ export default function ProductManagerList({
                             }
                             placeholder="Slot name (e.g. Choose your pizzas)"
                             className="col-span-2 rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 outline-none ring-zinc-300 focus:ring-2"
+                          />
+                          <input
+                            value={readTranslationField(
+                              slot.translations,
+                              "es",
+                              "title",
+                            )}
+                            onChange={(event) =>
+                              updateComboSlotTranslation(
+                                slot.id,
+                                "es",
+                                "title",
+                                event.target.value,
+                              )
+                            }
+                            placeholder="Slot name (ES)"
+                            className="rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 outline-none ring-zinc-300 focus:ring-2"
+                          />
+                          <input
+                            value={readTranslationField(
+                              slot.translations,
+                              "pt",
+                              "title",
+                            )}
+                            onChange={(event) =>
+                              updateComboSlotTranslation(
+                                slot.id,
+                                "pt",
+                                "title",
+                                event.target.value,
+                              )
+                            }
+                            placeholder="Slot name (PT-BR)"
+                            className="rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 outline-none ring-zinc-300 focus:ring-2"
                           />
                           <input
                             type="number"

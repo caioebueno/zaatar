@@ -1,6 +1,7 @@
 import createOrder from "@/src/createOrder";
 import {
   MENU_ID_COOKIE_NAME,
+  MENU_TAGS_COOKIE_NAME,
   PROMOTION_ID_COOKIE_NAME,
 } from "@/src/constants/menu";
 import type TCart from "@/types/cart";
@@ -14,16 +15,19 @@ type PostBody = {
   paymentMethod?: unknown;
   menuId?: unknown;
   promotionId?: unknown;
+  tags?: unknown;
   language?: unknown;
   scheduleFor?: unknown;
   selectedPrize?: unknown;
   tipAmount?: unknown;
   addressId?: unknown;
   cupom?: unknown;
+  source?: unknown;
 };
 
 const VALID_ORDER_TYPES: TOrderType[] = ["DELIVERY", "TAKEAWAY"];
 const VALID_PAYMENT_METHODS: TPaymentMethod[] = ["CARD", "CASH", "ZELLE"];
+const VALID_ORDER_SOURCES = ["MENU", "POS"] as const;
 
 function parseRequiredString(value: unknown, field: string): string {
   if (typeof value !== "string") {
@@ -46,6 +50,31 @@ function parseOptionalString(value: unknown, field: string): string | undefined 
 
   const normalized = value.trim();
   return normalized || undefined;
+}
+
+function parseOptionalStringArray(
+  value: unknown,
+  field: string,
+): string[] | undefined {
+  if (value === undefined || value === null) return undefined;
+  if (!Array.isArray(value)) {
+    throw { code: "INVALID_PARAMS", details: { field } };
+  }
+
+  return value.map((item) => parseRequiredString(item, field));
+}
+
+function parseTagsCookie(value: string | undefined): string[] {
+  if (!value) return [];
+
+  return Array.from(
+    new Set(
+      value
+        .split("|")
+        .map((item) => item.trim().toLowerCase())
+        .filter((item) => item.length > 0 && item.length <= 64),
+    ),
+  );
 }
 
 function parseOrderType(value: unknown): TOrderType {
@@ -74,6 +103,20 @@ function parseTipAmount(value: unknown): number | undefined {
   }
 
   return value;
+}
+
+function parseOrderSource(value: unknown): "MENU" | "POS" | undefined {
+  if (value === undefined || value === null) return undefined;
+  if (typeof value !== "string") {
+    throw { code: "INVALID_PARAMS", details: { field: "source" } };
+  }
+
+  const normalized = value.trim().toUpperCase();
+  if (!VALID_ORDER_SOURCES.includes(normalized as "MENU" | "POS")) {
+    throw { code: "INVALID_PARAMS", details: { field: "source" } };
+  }
+
+  return normalized as "MENU" | "POS";
 }
 
 function parseSelectedPrize(value: unknown):
@@ -281,6 +324,17 @@ function mapKnownError(error: unknown) {
     typeof (error as { data?: { productId?: string } }).data?.productId === "string"
       ? (error as { data?: { productId?: string } }).data?.productId
       : undefined;
+  const menuId =
+    "data" in error &&
+    typeof (error as { data?: { menuId?: string | null } }).data?.menuId === "string"
+      ? (error as { data?: { menuId?: string | null } }).data?.menuId
+      : undefined;
+  const promotionId =
+    "data" in error &&
+    typeof (error as { data?: { promotionId?: string | null } }).data?.promotionId ===
+      "string"
+      ? (error as { data?: { promotionId?: string | null } }).data?.promotionId
+      : undefined;
 
   if (code === "INVALID_PARAMS") {
     const field = detailsField || mapInvalidParamsField(message);
@@ -307,6 +361,22 @@ function mapKnownError(error: unknown) {
     );
   }
 
+  if (code === "PRODUCT_NOT_AVAILABLE_IN_MENU_CONTEXT") {
+    return NextResponse.json(
+      {
+        error: "Invalid payload",
+        field: "cart.items.productId",
+        reason: "PRODUCT_NOT_AVAILABLE_IN_MENU_CONTEXT",
+        message:
+          "The selected product is not available in the active menu or promotion context.",
+        ...(productId ? { productId } : {}),
+        ...(menuId ? { menuId } : {}),
+        ...(promotionId ? { promotionId } : {}),
+      },
+      { status: 400 },
+    );
+  }
+
   return null;
 }
 
@@ -326,6 +396,10 @@ export async function POST(request: NextRequest) {
     const promotionIdFromCookie = request.cookies.get(
       PROMOTION_ID_COOKIE_NAME,
     )?.value;
+    const tagsFromBody = parseOptionalStringArray(body.tags, "tags");
+    const tagsFromCookie = parseTagsCookie(
+      request.cookies.get(MENU_TAGS_COOKIE_NAME)?.value,
+    );
     const menuId =
       menuIdFromBody ||
       (typeof menuIdFromCookie === "string" && menuIdFromCookie.trim().length > 0
@@ -337,12 +411,14 @@ export async function POST(request: NextRequest) {
       promotionIdFromCookie.trim().length > 0
         ? promotionIdFromCookie.trim()
         : undefined);
+    const tags = tagsFromBody && tagsFromBody.length > 0 ? tagsFromBody : tagsFromCookie;
     const language = parseOptionalString(body.language, "language");
     const scheduleFor = parseOptionalString(body.scheduleFor, "scheduleFor");
     const selectedPrize = parseSelectedPrize(body.selectedPrize);
     const tipAmount = parseTipAmount(body.tipAmount);
     const addressId = parseOptionalString(body.addressId, "addressId");
     const cupom = parseOptionalString(body.cupom, "cupom");
+    const source = parseOrderSource(body.source);
 
     const order = await createOrder({
       cart,
@@ -351,12 +427,14 @@ export async function POST(request: NextRequest) {
       paymentMethod,
       menuId,
       promotionId,
+      tags,
       language,
       scheduleFor,
       selectedPrize,
       tipAmount,
       addressId,
       cupom,
+      source,
     });
 
     return NextResponse.json(order, { status: 201 });

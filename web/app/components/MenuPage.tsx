@@ -16,6 +16,7 @@ import ProductImage from "./ProductImage";
 import ProductModal from "./ProductModal";
 import { useCart } from "./CartContext";
 import TCart, {
+  TCartItem,
   TSelectedComboSlotOption,
   TSelectedModifier,
 } from "@/types/cart";
@@ -26,6 +27,7 @@ import text from "@/constants/text";
 import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
+import { trackFacebookPixelEvent } from "@/app/lib/facebookPixel";
 
 const ADDRESS_MAPS_URL = "https://maps.app.goo.gl/daqTiXJTTGwVeH4Z6";
 
@@ -244,6 +246,53 @@ const MenuPage: React.FC<TMenuPage> = ({ data, lg }) => {
     comboSelections: TSelectedComboSlotOption[],
     description?: string,
   ) => {
+    const cartItemForTracking: TCartItem = {
+      cartId: "tracking",
+      productId,
+      quantity,
+      modifiers: selectedModifiers,
+      comboSelections,
+      description,
+    };
+    const trackedCart: TCart = {
+      ...cart,
+      items: [...cart.items, cartItemForTracking],
+    };
+    const trackedPrice = calculateProductPriceWithProgressiveDiscount(
+      productId,
+      data.progressiveDiscount,
+      trackedCart,
+      data.categories,
+      data.activePromotion?.products,
+      data.promotionProductIds,
+      { cartItem: cartItemForTracking },
+    );
+    const trackedProduct = findProductById(
+      data.categories,
+      productId,
+      data.activePromotion?.products,
+    );
+    const fallbackUnitPrice = trackedProduct?.price ?? 0;
+    const unitPriceInCents = trackedPrice?.actualPrice ?? fallbackUnitPrice;
+    const safeUnitPriceInCents =
+      typeof unitPriceInCents === "number" && Number.isFinite(unitPriceInCents)
+        ? Math.max(0, unitPriceInCents)
+        : 0;
+
+    trackFacebookPixelEvent("AddToCart", {
+      currency: "USD",
+      value: (safeUnitPriceInCents * quantity) / 100,
+      content_ids: [productId],
+      content_type: "product",
+      contents: [
+        {
+          id: productId,
+          quantity,
+          item_price: safeUnitPriceInCents / 100,
+        },
+      ],
+    });
+
     addItem({
       productId,
       quantity,
@@ -302,18 +351,27 @@ const MenuPage: React.FC<TMenuPage> = ({ data, lg }) => {
           </div>
           {isBranchOpen !== null && (
             <div className="absolute left-4 top-4 flex flex-col gap-0">
-              <div
-                className={`w-fit rounded-full px-3 py-1 text-xs font-bold text-white shadow-sm ${
-                  isBranchOpen ? "bg-green-600" : "bg-red-600 rounded-b-none rounded-t-xl w-full flex justify-center items-center"
-                }`}
+              <button
+                type="button"
+                onClick={() => setOpenInformationModal(true)}
+                className="text-left"
+                aria-label={content["information"]}
               >
-                {isBranchOpen ? content["open"] : content["closed"]}
-              </div>
-              {isBranchOpen === false && (
-                <div className="w-fit rounded-b-xl rounded-t-none bg-black/65 px-3 py-1.5 text-xs font-semibold text-white">
-                  {content["orderForLater"]}
+                <div
+                  className={`w-fit rounded-full px-3 py-1 text-xs font-bold text-white shadow-sm ${
+                    isBranchOpen
+                      ? "bg-green-600"
+                      : "bg-red-600 rounded-b-none rounded-t-xl w-full flex justify-center items-center"
+                  }`}
+                >
+                  {isBranchOpen ? content["open"] : content["closed"]}
                 </div>
-              )}
+                {isBranchOpen === false && (
+                  <div className="w-fit rounded-b-xl rounded-t-none bg-black/65 px-3 py-1.5 text-xs font-semibold text-white">
+                    {content["orderForLater"]}
+                  </div>
+                )}
+              </button>
             </div>
           )}
         </div>

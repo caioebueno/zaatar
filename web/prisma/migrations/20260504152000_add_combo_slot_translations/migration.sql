@@ -1,0 +1,2 @@
+ALTER TABLE "ComboSlot"
+ADD COLUMN IF NOT EXISTS "translations" JSONB;
