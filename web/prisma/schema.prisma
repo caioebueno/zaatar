@@ -158,10 +158,34 @@ enum ModifierGroupType {
 }
 
 model Business {
-  id        String   @id
-  createdAt DateTime @default(now())
+  id        String          @id
+  createdAt DateTime        @default(now())
   name      String
   branches  Branch[]
+  owners    BusinessOwner[]
+}
+
+model User {
+  id              String          @id
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  email           String          @unique
+  name            String
+  passwordHash    String
+  emailVerifiedAt DateTime?
+  lastLoginAt     DateTime?
+  ownedBusinesses BusinessOwner[]
+}
+
+model BusinessOwner {
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  businessId String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String
+  createdAt  DateTime @default(now())
+
+  @@id([businessId, userId])
+  @@index([userId])
 }
 
 model Branch {
@@ -263,6 +287,7 @@ model ExclusivePromotion {
   expireAt  DateTime?
   validWeekdays ExclusivePromotionWeekday[] @default([])
   products  ExclusivePromotionProduct[]
+  menuVisits MenuVisit[]
 }
 
 enum ExclusivePromotionWeekday {
@@ -300,8 +325,30 @@ model Menu {
   isDefault      Boolean        @default(false)
   categories     Category[]
   menuCategories MenuCategory[]
+  menuVisits     MenuVisit[]
 
   @@index([isDefault])
+}
+
+model MenuVisit {
+  id          String              @id
+  createdAt   DateTime            @default(now())
+  visitorId   String
+  visitKey    String
+  menu        Menu?               @relation(fields: [menuId], references: [id], onDelete: SetNull)
+  menuId      String?
+  promotion   ExclusivePromotion? @relation(fields: [promotionId], references: [id], onDelete: SetNull)
+  promotionId String?
+  language    String?
+  pathname    String
+  referrer    String?
+  userAgent   String?
+  ipAddress   String?
+
+  @@unique([visitorId, visitKey])
+  @@index([createdAt])
+  @@index([menuId, createdAt])
+  @@index([promotionId, createdAt])
 }
 
 model Category {

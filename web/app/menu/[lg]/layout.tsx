@@ -1,5 +1,6 @@
 import PendingOrderAlert from "@/app/components/PendingOrderAlert";
 import { MenuProductsProvider } from "@/app/components/MenuProductsContext";
+import MenuVisitTracker from "@/app/components/MenuVisitTracker";
 import {
   MENU_ID_COOKIE_NAME,
   MENU_ID_HEADER_NAME,
@@ -41,6 +42,11 @@ export default async function MenuLayout({
   return (
     <div className="min-h-dvh flex flex-col">
       <MenuProductsProvider initialData={products}>
+        <MenuVisitTracker
+          menuId={menuId}
+          promotionId={promotionId}
+          language={lg}
+        />
         <PendingOrderAlert lg={lg} />
         <div className="flex-1">{children}</div>
       </MenuProductsProvider>

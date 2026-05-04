@@ -72,7 +72,6 @@ model ProgressiveDiscount {
   createdAt DateTime                  @default(now())
   completed Boolean                   @default(false)
   steps     ProgressiveDiscountStep[]
-  menus     Menu[]
 }
 
 enum ProgressiveDiscountStepType {
@@ -264,6 +263,7 @@ model ExclusivePromotion {
   expireAt      DateTime?
   validWeekdays ExclusivePromotionWeekday[] @default([])
   products      ExclusivePromotionProduct[]
+  menuVisits    MenuVisit[]
 }
 
 enum ExclusivePromotionWeekday {
@@ -293,19 +293,38 @@ enum ProductItemType {
 }
 
 model Menu {
-  id                    String               @id
-  createdAt             DateTime             @default(now())
-  updatedAt             DateTime             @updatedAt
-  name                  String
-  active                Boolean              @default(true)
-  isDefault             Boolean              @default(false)
-  progressiveDiscount   ProgressiveDiscount? @relation(fields: [progressiveDiscountId], references: [id], onDelete: SetNull)
-  progressiveDiscountId String?
-  categories            Category[]
-  menuCategories        MenuCategory[]
+  id             String         @id
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  name           String
+  active         Boolean        @default(true)
+  isDefault      Boolean        @default(false)
+  categories     Category[]
+  menuCategories MenuCategory[]
+  menuVisits     MenuVisit[]
 
   @@index([isDefault])
-  @@index([progressiveDiscountId])
+}
+
+model MenuVisit {
+  id          String              @id
+  createdAt   DateTime            @default(now())
+  visitorId   String
+  visitKey    String
+  menu        Menu?               @relation(fields: [menuId], references: [id], onDelete: SetNull)
+  menuId      String?
+  promotion   ExclusivePromotion? @relation(fields: [promotionId], references: [id], onDelete: SetNull)
+  promotionId String?
+  language    String?
+  pathname    String
+  referrer    String?
+  userAgent   String?
+  ipAddress   String?
+
+  @@unique([visitorId, visitKey])
+  @@index([createdAt])
+  @@index([menuId, createdAt])
+  @@index([promotionId, createdAt])
 }
 
 model Category {

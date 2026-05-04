@@ -124,6 +124,11 @@ export type ExclusivePromotionProduct = $Result.DefaultSelection<Prisma.$Exclusi
  */
 export type Menu = $Result.DefaultSelection<Prisma.$MenuPayload>
 /**
+ * Model MenuVisit
+ * 
+ */
+export type MenuVisit = $Result.DefaultSelection<Prisma.$MenuVisitPayload>
+/**
  * Model Category
  * 
  */
@@ -758,6 +763,16 @@ export class PrismaClient<
     * ```
     */
   get menu(): Prisma.MenuDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.menuVisit`: Exposes CRUD operations for the **MenuVisit** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more MenuVisits
+    * const menuVisits = await prisma.menuVisit.findMany()
+    * ```
+    */
+  get menuVisit(): Prisma.MenuVisitDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.category`: Exposes CRUD operations for the **Category** model.
@@ -1414,6 +1429,7 @@ export namespace Prisma {
     ExclusivePromotion: 'ExclusivePromotion',
     ExclusivePromotionProduct: 'ExclusivePromotionProduct',
     Menu: 'Menu',
+    MenuVisit: 'MenuVisit',
     Category: 'Category',
     MenuCategory: 'MenuCategory',
     ProductCategory: 'ProductCategory',
@@ -1449,7 +1465,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "station" | "preparationStep" | "preparationStepCategory" | "preparationStepTrack" | "preparationStepModifierTrack" | "progressiveDiscount" | "progressiveDiscountStep" | "progressiveDiscountPrize" | "progressiveDiscountPrizeProduct" | "file" | "modifierGroup" | "modifierGroupItem" | "business" | "branch" | "driver" | "dispatch" | "dispatchAssignmentJob" | "address" | "product" | "exclusivePromotion" | "exclusivePromotionProduct" | "menu" | "category" | "menuCategory" | "productCategory" | "comboSlot" | "comboSlotOption" | "campaign" | "customer" | "deliveryAddress" | "externalAddress" | "message" | "promotialMessage" | "order" | "orderProducts" | "inventoryPlace" | "inventoryProduct" | "inventoryStock" | "inventoryChecklist" | "inventoryChecklistItem" | "inventoryAlert" | "inventoryStockEvent"
+      modelProps: "station" | "preparationStep" | "preparationStepCategory" | "preparationStepTrack" | "preparationStepModifierTrack" | "progressiveDiscount" | "progressiveDiscountStep" | "progressiveDiscountPrize" | "progressiveDiscountPrizeProduct" | "file" | "modifierGroup" | "modifierGroupItem" | "business" | "branch" | "driver" | "dispatch" | "dispatchAssignmentJob" | "address" | "product" | "exclusivePromotion" | "exclusivePromotionProduct" | "menu" | "menuVisit" | "category" | "menuCategory" | "productCategory" | "comboSlot" | "comboSlotOption" | "campaign" | "customer" | "deliveryAddress" | "externalAddress" | "message" | "promotialMessage" | "order" | "orderProducts" | "inventoryPlace" | "inventoryProduct" | "inventoryStock" | "inventoryChecklist" | "inventoryChecklistItem" | "inventoryAlert" | "inventoryStockEvent"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3081,6 +3097,80 @@ export namespace Prisma {
           }
         }
       }
+      MenuVisit: {
+        payload: Prisma.$MenuVisitPayload<ExtArgs>
+        fields: Prisma.MenuVisitFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.MenuVisitFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MenuVisitPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.MenuVisitFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MenuVisitPayload>
+          }
+          findFirst: {
+            args: Prisma.MenuVisitFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MenuVisitPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.MenuVisitFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MenuVisitPayload>
+          }
+          findMany: {
+            args: Prisma.MenuVisitFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MenuVisitPayload>[]
+          }
+          create: {
+            args: Prisma.MenuVisitCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MenuVisitPayload>
+          }
+          createMany: {
+            args: Prisma.MenuVisitCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.MenuVisitCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MenuVisitPayload>[]
+          }
+          delete: {
+            args: Prisma.MenuVisitDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MenuVisitPayload>
+          }
+          update: {
+            args: Prisma.MenuVisitUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MenuVisitPayload>
+          }
+          deleteMany: {
+            args: Prisma.MenuVisitDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.MenuVisitUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.MenuVisitUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MenuVisitPayload>[]
+          }
+          upsert: {
+            args: Prisma.MenuVisitUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MenuVisitPayload>
+          }
+          aggregate: {
+            args: Prisma.MenuVisitAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateMenuVisit>
+          }
+          groupBy: {
+            args: Prisma.MenuVisitGroupByArgs<ExtArgs>
+            result: $Utils.Optional<MenuVisitGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.MenuVisitCountArgs<ExtArgs>
+            result: $Utils.Optional<MenuVisitCountAggregateOutputType> | number
+          }
+        }
+      }
       Category: {
         payload: Prisma.$CategoryPayload<ExtArgs>
         fields: Prisma.CategoryFieldRefs
@@ -4691,6 +4781,7 @@ export namespace Prisma {
     exclusivePromotion?: ExclusivePromotionOmit
     exclusivePromotionProduct?: ExclusivePromotionProductOmit
     menu?: MenuOmit
+    menuVisit?: MenuVisitOmit
     category?: CategoryOmit
     menuCategory?: MenuCategoryOmit
     productCategory?: ProductCategoryOmit
@@ -4925,12 +5016,10 @@ export namespace Prisma {
 
   export type ProgressiveDiscountCountOutputType = {
     steps: number
-    menus: number
   }
 
   export type ProgressiveDiscountCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     steps?: boolean | ProgressiveDiscountCountOutputTypeCountStepsArgs
-    menus?: boolean | ProgressiveDiscountCountOutputTypeCountMenusArgs
   }
 
   // Custom InputTypes
@@ -4949,13 +5038,6 @@ export namespace Prisma {
    */
   export type ProgressiveDiscountCountOutputTypeCountStepsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ProgressiveDiscountStepWhereInput
-  }
-
-  /**
-   * ProgressiveDiscountCountOutputType without action
-   */
-  export type ProgressiveDiscountCountOutputTypeCountMenusArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: MenuWhereInput
   }
 
 
@@ -5365,10 +5447,12 @@ export namespace Prisma {
 
   export type ExclusivePromotionCountOutputType = {
     products: number
+    menuVisits: number
   }
 
   export type ExclusivePromotionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     products?: boolean | ExclusivePromotionCountOutputTypeCountProductsArgs
+    menuVisits?: boolean | ExclusivePromotionCountOutputTypeCountMenuVisitsArgs
   }
 
   // Custom InputTypes
@@ -5389,6 +5473,13 @@ export namespace Prisma {
     where?: ExclusivePromotionProductWhereInput
   }
 
+  /**
+   * ExclusivePromotionCountOutputType without action
+   */
+  export type ExclusivePromotionCountOutputTypeCountMenuVisitsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MenuVisitWhereInput
+  }
+
 
   /**
    * Count Type MenuCountOutputType
@@ -5397,11 +5488,13 @@ export namespace Prisma {
   export type MenuCountOutputType = {
     categories: number
     menuCategories: number
+    menuVisits: number
   }
 
   export type MenuCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     categories?: boolean | MenuCountOutputTypeCountCategoriesArgs
     menuCategories?: boolean | MenuCountOutputTypeCountMenuCategoriesArgs
+    menuVisits?: boolean | MenuCountOutputTypeCountMenuVisitsArgs
   }
 
   // Custom InputTypes
@@ -5427,6 +5520,13 @@ export namespace Prisma {
    */
   export type MenuCountOutputTypeCountMenuCategoriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: MenuCategoryWhereInput
+  }
+
+  /**
+   * MenuCountOutputType without action
+   */
+  export type MenuCountOutputTypeCountMenuVisitsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MenuVisitWhereInput
   }
 
 
@@ -11647,7 +11747,6 @@ export namespace Prisma {
     createdAt?: boolean
     completed?: boolean
     steps?: boolean | ProgressiveDiscount$stepsArgs<ExtArgs>
-    menus?: boolean | ProgressiveDiscount$menusArgs<ExtArgs>
     _count?: boolean | ProgressiveDiscountCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["progressiveDiscount"]>
 
@@ -11672,7 +11771,6 @@ export namespace Prisma {
   export type ProgressiveDiscountOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "completed", ExtArgs["result"]["progressiveDiscount"]>
   export type ProgressiveDiscountInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     steps?: boolean | ProgressiveDiscount$stepsArgs<ExtArgs>
-    menus?: boolean | ProgressiveDiscount$menusArgs<ExtArgs>
     _count?: boolean | ProgressiveDiscountCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ProgressiveDiscountIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -11682,7 +11780,6 @@ export namespace Prisma {
     name: "ProgressiveDiscount"
     objects: {
       steps: Prisma.$ProgressiveDiscountStepPayload<ExtArgs>[]
-      menus: Prisma.$MenuPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -12083,7 +12180,6 @@ export namespace Prisma {
   export interface Prisma__ProgressiveDiscountClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     steps<T extends ProgressiveDiscount$stepsArgs<ExtArgs> = {}>(args?: Subset<T, ProgressiveDiscount$stepsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProgressiveDiscountStepPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    menus<T extends ProgressiveDiscount$menusArgs<ExtArgs> = {}>(args?: Subset<T, ProgressiveDiscount$menusArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MenuPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -12530,30 +12626,6 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ProgressiveDiscountStepScalarFieldEnum | ProgressiveDiscountStepScalarFieldEnum[]
-  }
-
-  /**
-   * ProgressiveDiscount.menus
-   */
-  export type ProgressiveDiscount$menusArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Menu
-     */
-    select?: MenuSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Menu
-     */
-    omit?: MenuOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MenuInclude<ExtArgs> | null
-    where?: MenuWhereInput
-    orderBy?: MenuOrderByWithRelationInput | MenuOrderByWithRelationInput[]
-    cursor?: MenuWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: MenuScalarFieldEnum | MenuScalarFieldEnum[]
   }
 
   /**
@@ -27779,6 +27851,7 @@ export namespace Prisma {
     expireAt?: boolean
     validWeekdays?: boolean
     products?: boolean | ExclusivePromotion$productsArgs<ExtArgs>
+    menuVisits?: boolean | ExclusivePromotion$menuVisitsArgs<ExtArgs>
     _count?: boolean | ExclusivePromotionCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["exclusivePromotion"]>
 
@@ -27815,6 +27888,7 @@ export namespace Prisma {
   export type ExclusivePromotionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "name" | "active" | "expireAt" | "validWeekdays", ExtArgs["result"]["exclusivePromotion"]>
   export type ExclusivePromotionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     products?: boolean | ExclusivePromotion$productsArgs<ExtArgs>
+    menuVisits?: boolean | ExclusivePromotion$menuVisitsArgs<ExtArgs>
     _count?: boolean | ExclusivePromotionCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ExclusivePromotionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -27824,6 +27898,7 @@ export namespace Prisma {
     name: "ExclusivePromotion"
     objects: {
       products: Prisma.$ExclusivePromotionProductPayload<ExtArgs>[]
+      menuVisits: Prisma.$MenuVisitPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -28228,6 +28303,7 @@ export namespace Prisma {
   export interface Prisma__ExclusivePromotionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     products<T extends ExclusivePromotion$productsArgs<ExtArgs> = {}>(args?: Subset<T, ExclusivePromotion$productsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExclusivePromotionProductPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    menuVisits<T extends ExclusivePromotion$menuVisitsArgs<ExtArgs> = {}>(args?: Subset<T, ExclusivePromotion$menuVisitsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MenuVisitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -28678,6 +28754,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ExclusivePromotionProductScalarFieldEnum | ExclusivePromotionProductScalarFieldEnum[]
+  }
+
+  /**
+   * ExclusivePromotion.menuVisits
+   */
+  export type ExclusivePromotion$menuVisitsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MenuVisit
+     */
+    select?: MenuVisitSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MenuVisit
+     */
+    omit?: MenuVisitOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MenuVisitInclude<ExtArgs> | null
+    where?: MenuVisitWhereInput
+    orderBy?: MenuVisitOrderByWithRelationInput | MenuVisitOrderByWithRelationInput[]
+    cursor?: MenuVisitWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MenuVisitScalarFieldEnum | MenuVisitScalarFieldEnum[]
   }
 
   /**
@@ -29761,7 +29861,6 @@ export namespace Prisma {
     name: string | null
     active: boolean | null
     isDefault: boolean | null
-    progressiveDiscountId: string | null
   }
 
   export type MenuMaxAggregateOutputType = {
@@ -29771,7 +29870,6 @@ export namespace Prisma {
     name: string | null
     active: boolean | null
     isDefault: boolean | null
-    progressiveDiscountId: string | null
   }
 
   export type MenuCountAggregateOutputType = {
@@ -29781,7 +29879,6 @@ export namespace Prisma {
     name: number
     active: number
     isDefault: number
-    progressiveDiscountId: number
     _all: number
   }
 
@@ -29793,7 +29890,6 @@ export namespace Prisma {
     name?: true
     active?: true
     isDefault?: true
-    progressiveDiscountId?: true
   }
 
   export type MenuMaxAggregateInputType = {
@@ -29803,7 +29899,6 @@ export namespace Prisma {
     name?: true
     active?: true
     isDefault?: true
-    progressiveDiscountId?: true
   }
 
   export type MenuCountAggregateInputType = {
@@ -29813,7 +29908,6 @@ export namespace Prisma {
     name?: true
     active?: true
     isDefault?: true
-    progressiveDiscountId?: true
     _all?: true
   }
 
@@ -29896,7 +29990,6 @@ export namespace Prisma {
     name: string
     active: boolean
     isDefault: boolean
-    progressiveDiscountId: string | null
     _count: MenuCountAggregateOutputType | null
     _min: MenuMinAggregateOutputType | null
     _max: MenuMaxAggregateOutputType | null
@@ -29923,10 +30016,9 @@ export namespace Prisma {
     name?: boolean
     active?: boolean
     isDefault?: boolean
-    progressiveDiscountId?: boolean
-    progressiveDiscount?: boolean | Menu$progressiveDiscountArgs<ExtArgs>
     categories?: boolean | Menu$categoriesArgs<ExtArgs>
     menuCategories?: boolean | Menu$menuCategoriesArgs<ExtArgs>
+    menuVisits?: boolean | Menu$menuVisitsArgs<ExtArgs>
     _count?: boolean | MenuCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["menu"]>
 
@@ -29937,8 +30029,6 @@ export namespace Prisma {
     name?: boolean
     active?: boolean
     isDefault?: boolean
-    progressiveDiscountId?: boolean
-    progressiveDiscount?: boolean | Menu$progressiveDiscountArgs<ExtArgs>
   }, ExtArgs["result"]["menu"]>
 
   export type MenuSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -29948,8 +30038,6 @@ export namespace Prisma {
     name?: boolean
     active?: boolean
     isDefault?: boolean
-    progressiveDiscountId?: boolean
-    progressiveDiscount?: boolean | Menu$progressiveDiscountArgs<ExtArgs>
   }, ExtArgs["result"]["menu"]>
 
   export type MenuSelectScalar = {
@@ -29959,29 +30047,24 @@ export namespace Prisma {
     name?: boolean
     active?: boolean
     isDefault?: boolean
-    progressiveDiscountId?: boolean
   }
 
-  export type MenuOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "name" | "active" | "isDefault" | "progressiveDiscountId", ExtArgs["result"]["menu"]>
+  export type MenuOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "name" | "active" | "isDefault", ExtArgs["result"]["menu"]>
   export type MenuInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    progressiveDiscount?: boolean | Menu$progressiveDiscountArgs<ExtArgs>
     categories?: boolean | Menu$categoriesArgs<ExtArgs>
     menuCategories?: boolean | Menu$menuCategoriesArgs<ExtArgs>
+    menuVisits?: boolean | Menu$menuVisitsArgs<ExtArgs>
     _count?: boolean | MenuCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type MenuIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    progressiveDiscount?: boolean | Menu$progressiveDiscountArgs<ExtArgs>
-  }
-  export type MenuIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    progressiveDiscount?: boolean | Menu$progressiveDiscountArgs<ExtArgs>
-  }
+  export type MenuIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type MenuIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
 
   export type $MenuPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Menu"
     objects: {
-      progressiveDiscount: Prisma.$ProgressiveDiscountPayload<ExtArgs> | null
       categories: Prisma.$CategoryPayload<ExtArgs>[]
       menuCategories: Prisma.$MenuCategoryPayload<ExtArgs>[]
+      menuVisits: Prisma.$MenuVisitPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -29990,7 +30073,6 @@ export namespace Prisma {
       name: string
       active: boolean
       isDefault: boolean
-      progressiveDiscountId: string | null
     }, ExtArgs["result"]["menu"]>
     composites: {}
   }
@@ -30385,9 +30467,9 @@ export namespace Prisma {
    */
   export interface Prisma__MenuClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    progressiveDiscount<T extends Menu$progressiveDiscountArgs<ExtArgs> = {}>(args?: Subset<T, Menu$progressiveDiscountArgs<ExtArgs>>): Prisma__ProgressiveDiscountClient<$Result.GetResult<Prisma.$ProgressiveDiscountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     categories<T extends Menu$categoriesArgs<ExtArgs> = {}>(args?: Subset<T, Menu$categoriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     menuCategories<T extends Menu$menuCategoriesArgs<ExtArgs> = {}>(args?: Subset<T, Menu$menuCategoriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MenuCategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    menuVisits<T extends Menu$menuVisitsArgs<ExtArgs> = {}>(args?: Subset<T, Menu$menuVisitsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MenuVisitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -30423,7 +30505,6 @@ export namespace Prisma {
     readonly name: FieldRef<"Menu", 'String'>
     readonly active: FieldRef<"Menu", 'Boolean'>
     readonly isDefault: FieldRef<"Menu", 'Boolean'>
-    readonly progressiveDiscountId: FieldRef<"Menu", 'String'>
   }
     
 
@@ -30678,10 +30759,6 @@ export namespace Prisma {
      */
     data: MenuCreateManyInput | MenuCreateManyInput[]
     skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MenuIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -30752,10 +30829,6 @@ export namespace Prisma {
      * Limit how many Menus to update.
      */
     limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MenuIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -30825,25 +30898,6 @@ export namespace Prisma {
   }
 
   /**
-   * Menu.progressiveDiscount
-   */
-  export type Menu$progressiveDiscountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ProgressiveDiscount
-     */
-    select?: ProgressiveDiscountSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ProgressiveDiscount
-     */
-    omit?: ProgressiveDiscountOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ProgressiveDiscountInclude<ExtArgs> | null
-    where?: ProgressiveDiscountWhereInput
-  }
-
-  /**
    * Menu.categories
    */
   export type Menu$categoriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -30892,6 +30946,30 @@ export namespace Prisma {
   }
 
   /**
+   * Menu.menuVisits
+   */
+  export type Menu$menuVisitsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MenuVisit
+     */
+    select?: MenuVisitSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MenuVisit
+     */
+    omit?: MenuVisitOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MenuVisitInclude<ExtArgs> | null
+    where?: MenuVisitWhereInput
+    orderBy?: MenuVisitOrderByWithRelationInput | MenuVisitOrderByWithRelationInput[]
+    cursor?: MenuVisitWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MenuVisitScalarFieldEnum | MenuVisitScalarFieldEnum[]
+  }
+
+  /**
    * Menu without action
    */
   export type MenuDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -30907,6 +30985,1193 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: MenuInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model MenuVisit
+   */
+
+  export type AggregateMenuVisit = {
+    _count: MenuVisitCountAggregateOutputType | null
+    _min: MenuVisitMinAggregateOutputType | null
+    _max: MenuVisitMaxAggregateOutputType | null
+  }
+
+  export type MenuVisitMinAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    visitorId: string | null
+    visitKey: string | null
+    menuId: string | null
+    promotionId: string | null
+    language: string | null
+    pathname: string | null
+    referrer: string | null
+    userAgent: string | null
+    ipAddress: string | null
+  }
+
+  export type MenuVisitMaxAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    visitorId: string | null
+    visitKey: string | null
+    menuId: string | null
+    promotionId: string | null
+    language: string | null
+    pathname: string | null
+    referrer: string | null
+    userAgent: string | null
+    ipAddress: string | null
+  }
+
+  export type MenuVisitCountAggregateOutputType = {
+    id: number
+    createdAt: number
+    visitorId: number
+    visitKey: number
+    menuId: number
+    promotionId: number
+    language: number
+    pathname: number
+    referrer: number
+    userAgent: number
+    ipAddress: number
+    _all: number
+  }
+
+
+  export type MenuVisitMinAggregateInputType = {
+    id?: true
+    createdAt?: true
+    visitorId?: true
+    visitKey?: true
+    menuId?: true
+    promotionId?: true
+    language?: true
+    pathname?: true
+    referrer?: true
+    userAgent?: true
+    ipAddress?: true
+  }
+
+  export type MenuVisitMaxAggregateInputType = {
+    id?: true
+    createdAt?: true
+    visitorId?: true
+    visitKey?: true
+    menuId?: true
+    promotionId?: true
+    language?: true
+    pathname?: true
+    referrer?: true
+    userAgent?: true
+    ipAddress?: true
+  }
+
+  export type MenuVisitCountAggregateInputType = {
+    id?: true
+    createdAt?: true
+    visitorId?: true
+    visitKey?: true
+    menuId?: true
+    promotionId?: true
+    language?: true
+    pathname?: true
+    referrer?: true
+    userAgent?: true
+    ipAddress?: true
+    _all?: true
+  }
+
+  export type MenuVisitAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which MenuVisit to aggregate.
+     */
+    where?: MenuVisitWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MenuVisits to fetch.
+     */
+    orderBy?: MenuVisitOrderByWithRelationInput | MenuVisitOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: MenuVisitWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MenuVisits from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MenuVisits.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned MenuVisits
+    **/
+    _count?: true | MenuVisitCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: MenuVisitMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: MenuVisitMaxAggregateInputType
+  }
+
+  export type GetMenuVisitAggregateType<T extends MenuVisitAggregateArgs> = {
+        [P in keyof T & keyof AggregateMenuVisit]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateMenuVisit[P]>
+      : GetScalarType<T[P], AggregateMenuVisit[P]>
+  }
+
+
+
+
+  export type MenuVisitGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MenuVisitWhereInput
+    orderBy?: MenuVisitOrderByWithAggregationInput | MenuVisitOrderByWithAggregationInput[]
+    by: MenuVisitScalarFieldEnum[] | MenuVisitScalarFieldEnum
+    having?: MenuVisitScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: MenuVisitCountAggregateInputType | true
+    _min?: MenuVisitMinAggregateInputType
+    _max?: MenuVisitMaxAggregateInputType
+  }
+
+  export type MenuVisitGroupByOutputType = {
+    id: string
+    createdAt: Date
+    visitorId: string
+    visitKey: string
+    menuId: string | null
+    promotionId: string | null
+    language: string | null
+    pathname: string
+    referrer: string | null
+    userAgent: string | null
+    ipAddress: string | null
+    _count: MenuVisitCountAggregateOutputType | null
+    _min: MenuVisitMinAggregateOutputType | null
+    _max: MenuVisitMaxAggregateOutputType | null
+  }
+
+  type GetMenuVisitGroupByPayload<T extends MenuVisitGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<MenuVisitGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof MenuVisitGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], MenuVisitGroupByOutputType[P]>
+            : GetScalarType<T[P], MenuVisitGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type MenuVisitSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    visitorId?: boolean
+    visitKey?: boolean
+    menuId?: boolean
+    promotionId?: boolean
+    language?: boolean
+    pathname?: boolean
+    referrer?: boolean
+    userAgent?: boolean
+    ipAddress?: boolean
+    menu?: boolean | MenuVisit$menuArgs<ExtArgs>
+    promotion?: boolean | MenuVisit$promotionArgs<ExtArgs>
+  }, ExtArgs["result"]["menuVisit"]>
+
+  export type MenuVisitSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    visitorId?: boolean
+    visitKey?: boolean
+    menuId?: boolean
+    promotionId?: boolean
+    language?: boolean
+    pathname?: boolean
+    referrer?: boolean
+    userAgent?: boolean
+    ipAddress?: boolean
+    menu?: boolean | MenuVisit$menuArgs<ExtArgs>
+    promotion?: boolean | MenuVisit$promotionArgs<ExtArgs>
+  }, ExtArgs["result"]["menuVisit"]>
+
+  export type MenuVisitSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    visitorId?: boolean
+    visitKey?: boolean
+    menuId?: boolean
+    promotionId?: boolean
+    language?: boolean
+    pathname?: boolean
+    referrer?: boolean
+    userAgent?: boolean
+    ipAddress?: boolean
+    menu?: boolean | MenuVisit$menuArgs<ExtArgs>
+    promotion?: boolean | MenuVisit$promotionArgs<ExtArgs>
+  }, ExtArgs["result"]["menuVisit"]>
+
+  export type MenuVisitSelectScalar = {
+    id?: boolean
+    createdAt?: boolean
+    visitorId?: boolean
+    visitKey?: boolean
+    menuId?: boolean
+    promotionId?: boolean
+    language?: boolean
+    pathname?: boolean
+    referrer?: boolean
+    userAgent?: boolean
+    ipAddress?: boolean
+  }
+
+  export type MenuVisitOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "visitorId" | "visitKey" | "menuId" | "promotionId" | "language" | "pathname" | "referrer" | "userAgent" | "ipAddress", ExtArgs["result"]["menuVisit"]>
+  export type MenuVisitInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    menu?: boolean | MenuVisit$menuArgs<ExtArgs>
+    promotion?: boolean | MenuVisit$promotionArgs<ExtArgs>
+  }
+  export type MenuVisitIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    menu?: boolean | MenuVisit$menuArgs<ExtArgs>
+    promotion?: boolean | MenuVisit$promotionArgs<ExtArgs>
+  }
+  export type MenuVisitIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    menu?: boolean | MenuVisit$menuArgs<ExtArgs>
+    promotion?: boolean | MenuVisit$promotionArgs<ExtArgs>
+  }
+
+  export type $MenuVisitPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "MenuVisit"
+    objects: {
+      menu: Prisma.$MenuPayload<ExtArgs> | null
+      promotion: Prisma.$ExclusivePromotionPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      createdAt: Date
+      visitorId: string
+      visitKey: string
+      menuId: string | null
+      promotionId: string | null
+      language: string | null
+      pathname: string
+      referrer: string | null
+      userAgent: string | null
+      ipAddress: string | null
+    }, ExtArgs["result"]["menuVisit"]>
+    composites: {}
+  }
+
+  type MenuVisitGetPayload<S extends boolean | null | undefined | MenuVisitDefaultArgs> = $Result.GetResult<Prisma.$MenuVisitPayload, S>
+
+  type MenuVisitCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<MenuVisitFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: MenuVisitCountAggregateInputType | true
+    }
+
+  export interface MenuVisitDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['MenuVisit'], meta: { name: 'MenuVisit' } }
+    /**
+     * Find zero or one MenuVisit that matches the filter.
+     * @param {MenuVisitFindUniqueArgs} args - Arguments to find a MenuVisit
+     * @example
+     * // Get one MenuVisit
+     * const menuVisit = await prisma.menuVisit.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends MenuVisitFindUniqueArgs>(args: SelectSubset<T, MenuVisitFindUniqueArgs<ExtArgs>>): Prisma__MenuVisitClient<$Result.GetResult<Prisma.$MenuVisitPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one MenuVisit that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {MenuVisitFindUniqueOrThrowArgs} args - Arguments to find a MenuVisit
+     * @example
+     * // Get one MenuVisit
+     * const menuVisit = await prisma.menuVisit.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends MenuVisitFindUniqueOrThrowArgs>(args: SelectSubset<T, MenuVisitFindUniqueOrThrowArgs<ExtArgs>>): Prisma__MenuVisitClient<$Result.GetResult<Prisma.$MenuVisitPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first MenuVisit that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MenuVisitFindFirstArgs} args - Arguments to find a MenuVisit
+     * @example
+     * // Get one MenuVisit
+     * const menuVisit = await prisma.menuVisit.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends MenuVisitFindFirstArgs>(args?: SelectSubset<T, MenuVisitFindFirstArgs<ExtArgs>>): Prisma__MenuVisitClient<$Result.GetResult<Prisma.$MenuVisitPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first MenuVisit that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MenuVisitFindFirstOrThrowArgs} args - Arguments to find a MenuVisit
+     * @example
+     * // Get one MenuVisit
+     * const menuVisit = await prisma.menuVisit.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends MenuVisitFindFirstOrThrowArgs>(args?: SelectSubset<T, MenuVisitFindFirstOrThrowArgs<ExtArgs>>): Prisma__MenuVisitClient<$Result.GetResult<Prisma.$MenuVisitPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more MenuVisits that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MenuVisitFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all MenuVisits
+     * const menuVisits = await prisma.menuVisit.findMany()
+     * 
+     * // Get first 10 MenuVisits
+     * const menuVisits = await prisma.menuVisit.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const menuVisitWithIdOnly = await prisma.menuVisit.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends MenuVisitFindManyArgs>(args?: SelectSubset<T, MenuVisitFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MenuVisitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a MenuVisit.
+     * @param {MenuVisitCreateArgs} args - Arguments to create a MenuVisit.
+     * @example
+     * // Create one MenuVisit
+     * const MenuVisit = await prisma.menuVisit.create({
+     *   data: {
+     *     // ... data to create a MenuVisit
+     *   }
+     * })
+     * 
+     */
+    create<T extends MenuVisitCreateArgs>(args: SelectSubset<T, MenuVisitCreateArgs<ExtArgs>>): Prisma__MenuVisitClient<$Result.GetResult<Prisma.$MenuVisitPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many MenuVisits.
+     * @param {MenuVisitCreateManyArgs} args - Arguments to create many MenuVisits.
+     * @example
+     * // Create many MenuVisits
+     * const menuVisit = await prisma.menuVisit.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends MenuVisitCreateManyArgs>(args?: SelectSubset<T, MenuVisitCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many MenuVisits and returns the data saved in the database.
+     * @param {MenuVisitCreateManyAndReturnArgs} args - Arguments to create many MenuVisits.
+     * @example
+     * // Create many MenuVisits
+     * const menuVisit = await prisma.menuVisit.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many MenuVisits and only return the `id`
+     * const menuVisitWithIdOnly = await prisma.menuVisit.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends MenuVisitCreateManyAndReturnArgs>(args?: SelectSubset<T, MenuVisitCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MenuVisitPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a MenuVisit.
+     * @param {MenuVisitDeleteArgs} args - Arguments to delete one MenuVisit.
+     * @example
+     * // Delete one MenuVisit
+     * const MenuVisit = await prisma.menuVisit.delete({
+     *   where: {
+     *     // ... filter to delete one MenuVisit
+     *   }
+     * })
+     * 
+     */
+    delete<T extends MenuVisitDeleteArgs>(args: SelectSubset<T, MenuVisitDeleteArgs<ExtArgs>>): Prisma__MenuVisitClient<$Result.GetResult<Prisma.$MenuVisitPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one MenuVisit.
+     * @param {MenuVisitUpdateArgs} args - Arguments to update one MenuVisit.
+     * @example
+     * // Update one MenuVisit
+     * const menuVisit = await prisma.menuVisit.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends MenuVisitUpdateArgs>(args: SelectSubset<T, MenuVisitUpdateArgs<ExtArgs>>): Prisma__MenuVisitClient<$Result.GetResult<Prisma.$MenuVisitPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more MenuVisits.
+     * @param {MenuVisitDeleteManyArgs} args - Arguments to filter MenuVisits to delete.
+     * @example
+     * // Delete a few MenuVisits
+     * const { count } = await prisma.menuVisit.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends MenuVisitDeleteManyArgs>(args?: SelectSubset<T, MenuVisitDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more MenuVisits.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MenuVisitUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many MenuVisits
+     * const menuVisit = await prisma.menuVisit.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends MenuVisitUpdateManyArgs>(args: SelectSubset<T, MenuVisitUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more MenuVisits and returns the data updated in the database.
+     * @param {MenuVisitUpdateManyAndReturnArgs} args - Arguments to update many MenuVisits.
+     * @example
+     * // Update many MenuVisits
+     * const menuVisit = await prisma.menuVisit.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more MenuVisits and only return the `id`
+     * const menuVisitWithIdOnly = await prisma.menuVisit.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends MenuVisitUpdateManyAndReturnArgs>(args: SelectSubset<T, MenuVisitUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MenuVisitPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one MenuVisit.
+     * @param {MenuVisitUpsertArgs} args - Arguments to update or create a MenuVisit.
+     * @example
+     * // Update or create a MenuVisit
+     * const menuVisit = await prisma.menuVisit.upsert({
+     *   create: {
+     *     // ... data to create a MenuVisit
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the MenuVisit we want to update
+     *   }
+     * })
+     */
+    upsert<T extends MenuVisitUpsertArgs>(args: SelectSubset<T, MenuVisitUpsertArgs<ExtArgs>>): Prisma__MenuVisitClient<$Result.GetResult<Prisma.$MenuVisitPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of MenuVisits.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MenuVisitCountArgs} args - Arguments to filter MenuVisits to count.
+     * @example
+     * // Count the number of MenuVisits
+     * const count = await prisma.menuVisit.count({
+     *   where: {
+     *     // ... the filter for the MenuVisits we want to count
+     *   }
+     * })
+    **/
+    count<T extends MenuVisitCountArgs>(
+      args?: Subset<T, MenuVisitCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], MenuVisitCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a MenuVisit.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MenuVisitAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends MenuVisitAggregateArgs>(args: Subset<T, MenuVisitAggregateArgs>): Prisma.PrismaPromise<GetMenuVisitAggregateType<T>>
+
+    /**
+     * Group by MenuVisit.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MenuVisitGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends MenuVisitGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: MenuVisitGroupByArgs['orderBy'] }
+        : { orderBy?: MenuVisitGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, MenuVisitGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetMenuVisitGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the MenuVisit model
+   */
+  readonly fields: MenuVisitFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for MenuVisit.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__MenuVisitClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    menu<T extends MenuVisit$menuArgs<ExtArgs> = {}>(args?: Subset<T, MenuVisit$menuArgs<ExtArgs>>): Prisma__MenuClient<$Result.GetResult<Prisma.$MenuPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    promotion<T extends MenuVisit$promotionArgs<ExtArgs> = {}>(args?: Subset<T, MenuVisit$promotionArgs<ExtArgs>>): Prisma__ExclusivePromotionClient<$Result.GetResult<Prisma.$ExclusivePromotionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the MenuVisit model
+   */
+  interface MenuVisitFieldRefs {
+    readonly id: FieldRef<"MenuVisit", 'String'>
+    readonly createdAt: FieldRef<"MenuVisit", 'DateTime'>
+    readonly visitorId: FieldRef<"MenuVisit", 'String'>
+    readonly visitKey: FieldRef<"MenuVisit", 'String'>
+    readonly menuId: FieldRef<"MenuVisit", 'String'>
+    readonly promotionId: FieldRef<"MenuVisit", 'String'>
+    readonly language: FieldRef<"MenuVisit", 'String'>
+    readonly pathname: FieldRef<"MenuVisit", 'String'>
+    readonly referrer: FieldRef<"MenuVisit", 'String'>
+    readonly userAgent: FieldRef<"MenuVisit", 'String'>
+    readonly ipAddress: FieldRef<"MenuVisit", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * MenuVisit findUnique
+   */
+  export type MenuVisitFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MenuVisit
+     */
+    select?: MenuVisitSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MenuVisit
+     */
+    omit?: MenuVisitOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MenuVisitInclude<ExtArgs> | null
+    /**
+     * Filter, which MenuVisit to fetch.
+     */
+    where: MenuVisitWhereUniqueInput
+  }
+
+  /**
+   * MenuVisit findUniqueOrThrow
+   */
+  export type MenuVisitFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MenuVisit
+     */
+    select?: MenuVisitSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MenuVisit
+     */
+    omit?: MenuVisitOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MenuVisitInclude<ExtArgs> | null
+    /**
+     * Filter, which MenuVisit to fetch.
+     */
+    where: MenuVisitWhereUniqueInput
+  }
+
+  /**
+   * MenuVisit findFirst
+   */
+  export type MenuVisitFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MenuVisit
+     */
+    select?: MenuVisitSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MenuVisit
+     */
+    omit?: MenuVisitOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MenuVisitInclude<ExtArgs> | null
+    /**
+     * Filter, which MenuVisit to fetch.
+     */
+    where?: MenuVisitWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MenuVisits to fetch.
+     */
+    orderBy?: MenuVisitOrderByWithRelationInput | MenuVisitOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MenuVisits.
+     */
+    cursor?: MenuVisitWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MenuVisits from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MenuVisits.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MenuVisits.
+     */
+    distinct?: MenuVisitScalarFieldEnum | MenuVisitScalarFieldEnum[]
+  }
+
+  /**
+   * MenuVisit findFirstOrThrow
+   */
+  export type MenuVisitFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MenuVisit
+     */
+    select?: MenuVisitSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MenuVisit
+     */
+    omit?: MenuVisitOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MenuVisitInclude<ExtArgs> | null
+    /**
+     * Filter, which MenuVisit to fetch.
+     */
+    where?: MenuVisitWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MenuVisits to fetch.
+     */
+    orderBy?: MenuVisitOrderByWithRelationInput | MenuVisitOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MenuVisits.
+     */
+    cursor?: MenuVisitWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MenuVisits from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MenuVisits.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MenuVisits.
+     */
+    distinct?: MenuVisitScalarFieldEnum | MenuVisitScalarFieldEnum[]
+  }
+
+  /**
+   * MenuVisit findMany
+   */
+  export type MenuVisitFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MenuVisit
+     */
+    select?: MenuVisitSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MenuVisit
+     */
+    omit?: MenuVisitOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MenuVisitInclude<ExtArgs> | null
+    /**
+     * Filter, which MenuVisits to fetch.
+     */
+    where?: MenuVisitWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MenuVisits to fetch.
+     */
+    orderBy?: MenuVisitOrderByWithRelationInput | MenuVisitOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing MenuVisits.
+     */
+    cursor?: MenuVisitWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MenuVisits from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MenuVisits.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MenuVisits.
+     */
+    distinct?: MenuVisitScalarFieldEnum | MenuVisitScalarFieldEnum[]
+  }
+
+  /**
+   * MenuVisit create
+   */
+  export type MenuVisitCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MenuVisit
+     */
+    select?: MenuVisitSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MenuVisit
+     */
+    omit?: MenuVisitOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MenuVisitInclude<ExtArgs> | null
+    /**
+     * The data needed to create a MenuVisit.
+     */
+    data: XOR<MenuVisitCreateInput, MenuVisitUncheckedCreateInput>
+  }
+
+  /**
+   * MenuVisit createMany
+   */
+  export type MenuVisitCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many MenuVisits.
+     */
+    data: MenuVisitCreateManyInput | MenuVisitCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * MenuVisit createManyAndReturn
+   */
+  export type MenuVisitCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MenuVisit
+     */
+    select?: MenuVisitSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the MenuVisit
+     */
+    omit?: MenuVisitOmit<ExtArgs> | null
+    /**
+     * The data used to create many MenuVisits.
+     */
+    data: MenuVisitCreateManyInput | MenuVisitCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MenuVisitIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * MenuVisit update
+   */
+  export type MenuVisitUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MenuVisit
+     */
+    select?: MenuVisitSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MenuVisit
+     */
+    omit?: MenuVisitOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MenuVisitInclude<ExtArgs> | null
+    /**
+     * The data needed to update a MenuVisit.
+     */
+    data: XOR<MenuVisitUpdateInput, MenuVisitUncheckedUpdateInput>
+    /**
+     * Choose, which MenuVisit to update.
+     */
+    where: MenuVisitWhereUniqueInput
+  }
+
+  /**
+   * MenuVisit updateMany
+   */
+  export type MenuVisitUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update MenuVisits.
+     */
+    data: XOR<MenuVisitUpdateManyMutationInput, MenuVisitUncheckedUpdateManyInput>
+    /**
+     * Filter which MenuVisits to update
+     */
+    where?: MenuVisitWhereInput
+    /**
+     * Limit how many MenuVisits to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * MenuVisit updateManyAndReturn
+   */
+  export type MenuVisitUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MenuVisit
+     */
+    select?: MenuVisitSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the MenuVisit
+     */
+    omit?: MenuVisitOmit<ExtArgs> | null
+    /**
+     * The data used to update MenuVisits.
+     */
+    data: XOR<MenuVisitUpdateManyMutationInput, MenuVisitUncheckedUpdateManyInput>
+    /**
+     * Filter which MenuVisits to update
+     */
+    where?: MenuVisitWhereInput
+    /**
+     * Limit how many MenuVisits to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MenuVisitIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * MenuVisit upsert
+   */
+  export type MenuVisitUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MenuVisit
+     */
+    select?: MenuVisitSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MenuVisit
+     */
+    omit?: MenuVisitOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MenuVisitInclude<ExtArgs> | null
+    /**
+     * The filter to search for the MenuVisit to update in case it exists.
+     */
+    where: MenuVisitWhereUniqueInput
+    /**
+     * In case the MenuVisit found by the `where` argument doesn't exist, create a new MenuVisit with this data.
+     */
+    create: XOR<MenuVisitCreateInput, MenuVisitUncheckedCreateInput>
+    /**
+     * In case the MenuVisit was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<MenuVisitUpdateInput, MenuVisitUncheckedUpdateInput>
+  }
+
+  /**
+   * MenuVisit delete
+   */
+  export type MenuVisitDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MenuVisit
+     */
+    select?: MenuVisitSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MenuVisit
+     */
+    omit?: MenuVisitOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MenuVisitInclude<ExtArgs> | null
+    /**
+     * Filter which MenuVisit to delete.
+     */
+    where: MenuVisitWhereUniqueInput
+  }
+
+  /**
+   * MenuVisit deleteMany
+   */
+  export type MenuVisitDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which MenuVisits to delete
+     */
+    where?: MenuVisitWhereInput
+    /**
+     * Limit how many MenuVisits to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * MenuVisit.menu
+   */
+  export type MenuVisit$menuArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Menu
+     */
+    select?: MenuSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Menu
+     */
+    omit?: MenuOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MenuInclude<ExtArgs> | null
+    where?: MenuWhereInput
+  }
+
+  /**
+   * MenuVisit.promotion
+   */
+  export type MenuVisit$promotionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExclusivePromotion
+     */
+    select?: ExclusivePromotionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExclusivePromotion
+     */
+    omit?: ExclusivePromotionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExclusivePromotionInclude<ExtArgs> | null
+    where?: ExclusivePromotionWhereInput
+  }
+
+  /**
+   * MenuVisit without action
+   */
+  export type MenuVisitDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MenuVisit
+     */
+    select?: MenuVisitSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MenuVisit
+     */
+    omit?: MenuVisitOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MenuVisitInclude<ExtArgs> | null
   }
 
 
@@ -54913,11 +56178,27 @@ export namespace Prisma {
     updatedAt: 'updatedAt',
     name: 'name',
     active: 'active',
-    isDefault: 'isDefault',
-    progressiveDiscountId: 'progressiveDiscountId'
+    isDefault: 'isDefault'
   };
 
   export type MenuScalarFieldEnum = (typeof MenuScalarFieldEnum)[keyof typeof MenuScalarFieldEnum]
+
+
+  export const MenuVisitScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    visitorId: 'visitorId',
+    visitKey: 'visitKey',
+    menuId: 'menuId',
+    promotionId: 'promotionId',
+    language: 'language',
+    pathname: 'pathname',
+    referrer: 'referrer',
+    userAgent: 'userAgent',
+    ipAddress: 'ipAddress'
+  };
+
+  export type MenuVisitScalarFieldEnum = (typeof MenuVisitScalarFieldEnum)[keyof typeof MenuVisitScalarFieldEnum]
 
 
   export const CategoryScalarFieldEnum: {
@@ -55764,7 +57045,6 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"ProgressiveDiscount"> | Date | string
     completed?: BoolFilter<"ProgressiveDiscount"> | boolean
     steps?: ProgressiveDiscountStepListRelationFilter
-    menus?: MenuListRelationFilter
   }
 
   export type ProgressiveDiscountOrderByWithRelationInput = {
@@ -55772,7 +57052,6 @@ export namespace Prisma {
     createdAt?: SortOrder
     completed?: SortOrder
     steps?: ProgressiveDiscountStepOrderByRelationAggregateInput
-    menus?: MenuOrderByRelationAggregateInput
   }
 
   export type ProgressiveDiscountWhereUniqueInput = Prisma.AtLeast<{
@@ -55783,7 +57062,6 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"ProgressiveDiscount"> | Date | string
     completed?: BoolFilter<"ProgressiveDiscount"> | boolean
     steps?: ProgressiveDiscountStepListRelationFilter
-    menus?: MenuListRelationFilter
   }, "id">
 
   export type ProgressiveDiscountOrderByWithAggregationInput = {
@@ -56712,6 +57990,7 @@ export namespace Prisma {
     expireAt?: DateTimeNullableFilter<"ExclusivePromotion"> | Date | string | null
     validWeekdays?: EnumExclusivePromotionWeekdayNullableListFilter<"ExclusivePromotion">
     products?: ExclusivePromotionProductListRelationFilter
+    menuVisits?: MenuVisitListRelationFilter
   }
 
   export type ExclusivePromotionOrderByWithRelationInput = {
@@ -56723,6 +58002,7 @@ export namespace Prisma {
     expireAt?: SortOrderInput | SortOrder
     validWeekdays?: SortOrder
     products?: ExclusivePromotionProductOrderByRelationAggregateInput
+    menuVisits?: MenuVisitOrderByRelationAggregateInput
   }
 
   export type ExclusivePromotionWhereUniqueInput = Prisma.AtLeast<{
@@ -56737,6 +58017,7 @@ export namespace Prisma {
     expireAt?: DateTimeNullableFilter<"ExclusivePromotion"> | Date | string | null
     validWeekdays?: EnumExclusivePromotionWeekdayNullableListFilter<"ExclusivePromotion">
     products?: ExclusivePromotionProductListRelationFilter
+    menuVisits?: MenuVisitListRelationFilter
   }, "id">
 
   export type ExclusivePromotionOrderByWithAggregationInput = {
@@ -56824,10 +58105,9 @@ export namespace Prisma {
     name?: StringFilter<"Menu"> | string
     active?: BoolFilter<"Menu"> | boolean
     isDefault?: BoolFilter<"Menu"> | boolean
-    progressiveDiscountId?: StringNullableFilter<"Menu"> | string | null
-    progressiveDiscount?: XOR<ProgressiveDiscountNullableScalarRelationFilter, ProgressiveDiscountWhereInput> | null
     categories?: CategoryListRelationFilter
     menuCategories?: MenuCategoryListRelationFilter
+    menuVisits?: MenuVisitListRelationFilter
   }
 
   export type MenuOrderByWithRelationInput = {
@@ -56837,10 +58117,9 @@ export namespace Prisma {
     name?: SortOrder
     active?: SortOrder
     isDefault?: SortOrder
-    progressiveDiscountId?: SortOrderInput | SortOrder
-    progressiveDiscount?: ProgressiveDiscountOrderByWithRelationInput
     categories?: CategoryOrderByRelationAggregateInput
     menuCategories?: MenuCategoryOrderByRelationAggregateInput
+    menuVisits?: MenuVisitOrderByRelationAggregateInput
   }
 
   export type MenuWhereUniqueInput = Prisma.AtLeast<{
@@ -56853,10 +58132,9 @@ export namespace Prisma {
     name?: StringFilter<"Menu"> | string
     active?: BoolFilter<"Menu"> | boolean
     isDefault?: BoolFilter<"Menu"> | boolean
-    progressiveDiscountId?: StringNullableFilter<"Menu"> | string | null
-    progressiveDiscount?: XOR<ProgressiveDiscountNullableScalarRelationFilter, ProgressiveDiscountWhereInput> | null
     categories?: CategoryListRelationFilter
     menuCategories?: MenuCategoryListRelationFilter
+    menuVisits?: MenuVisitListRelationFilter
   }, "id">
 
   export type MenuOrderByWithAggregationInput = {
@@ -56866,7 +58144,6 @@ export namespace Prisma {
     name?: SortOrder
     active?: SortOrder
     isDefault?: SortOrder
-    progressiveDiscountId?: SortOrderInput | SortOrder
     _count?: MenuCountOrderByAggregateInput
     _max?: MenuMaxOrderByAggregateInput
     _min?: MenuMinOrderByAggregateInput
@@ -56882,7 +58159,95 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"Menu"> | string
     active?: BoolWithAggregatesFilter<"Menu"> | boolean
     isDefault?: BoolWithAggregatesFilter<"Menu"> | boolean
-    progressiveDiscountId?: StringNullableWithAggregatesFilter<"Menu"> | string | null
+  }
+
+  export type MenuVisitWhereInput = {
+    AND?: MenuVisitWhereInput | MenuVisitWhereInput[]
+    OR?: MenuVisitWhereInput[]
+    NOT?: MenuVisitWhereInput | MenuVisitWhereInput[]
+    id?: StringFilter<"MenuVisit"> | string
+    createdAt?: DateTimeFilter<"MenuVisit"> | Date | string
+    visitorId?: StringFilter<"MenuVisit"> | string
+    visitKey?: StringFilter<"MenuVisit"> | string
+    menuId?: StringNullableFilter<"MenuVisit"> | string | null
+    promotionId?: StringNullableFilter<"MenuVisit"> | string | null
+    language?: StringNullableFilter<"MenuVisit"> | string | null
+    pathname?: StringFilter<"MenuVisit"> | string
+    referrer?: StringNullableFilter<"MenuVisit"> | string | null
+    userAgent?: StringNullableFilter<"MenuVisit"> | string | null
+    ipAddress?: StringNullableFilter<"MenuVisit"> | string | null
+    menu?: XOR<MenuNullableScalarRelationFilter, MenuWhereInput> | null
+    promotion?: XOR<ExclusivePromotionNullableScalarRelationFilter, ExclusivePromotionWhereInput> | null
+  }
+
+  export type MenuVisitOrderByWithRelationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    visitorId?: SortOrder
+    visitKey?: SortOrder
+    menuId?: SortOrderInput | SortOrder
+    promotionId?: SortOrderInput | SortOrder
+    language?: SortOrderInput | SortOrder
+    pathname?: SortOrder
+    referrer?: SortOrderInput | SortOrder
+    userAgent?: SortOrderInput | SortOrder
+    ipAddress?: SortOrderInput | SortOrder
+    menu?: MenuOrderByWithRelationInput
+    promotion?: ExclusivePromotionOrderByWithRelationInput
+  }
+
+  export type MenuVisitWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    visitorId_visitKey?: MenuVisitVisitorIdVisitKeyCompoundUniqueInput
+    AND?: MenuVisitWhereInput | MenuVisitWhereInput[]
+    OR?: MenuVisitWhereInput[]
+    NOT?: MenuVisitWhereInput | MenuVisitWhereInput[]
+    createdAt?: DateTimeFilter<"MenuVisit"> | Date | string
+    visitorId?: StringFilter<"MenuVisit"> | string
+    visitKey?: StringFilter<"MenuVisit"> | string
+    menuId?: StringNullableFilter<"MenuVisit"> | string | null
+    promotionId?: StringNullableFilter<"MenuVisit"> | string | null
+    language?: StringNullableFilter<"MenuVisit"> | string | null
+    pathname?: StringFilter<"MenuVisit"> | string
+    referrer?: StringNullableFilter<"MenuVisit"> | string | null
+    userAgent?: StringNullableFilter<"MenuVisit"> | string | null
+    ipAddress?: StringNullableFilter<"MenuVisit"> | string | null
+    menu?: XOR<MenuNullableScalarRelationFilter, MenuWhereInput> | null
+    promotion?: XOR<ExclusivePromotionNullableScalarRelationFilter, ExclusivePromotionWhereInput> | null
+  }, "id" | "visitorId_visitKey">
+
+  export type MenuVisitOrderByWithAggregationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    visitorId?: SortOrder
+    visitKey?: SortOrder
+    menuId?: SortOrderInput | SortOrder
+    promotionId?: SortOrderInput | SortOrder
+    language?: SortOrderInput | SortOrder
+    pathname?: SortOrder
+    referrer?: SortOrderInput | SortOrder
+    userAgent?: SortOrderInput | SortOrder
+    ipAddress?: SortOrderInput | SortOrder
+    _count?: MenuVisitCountOrderByAggregateInput
+    _max?: MenuVisitMaxOrderByAggregateInput
+    _min?: MenuVisitMinOrderByAggregateInput
+  }
+
+  export type MenuVisitScalarWhereWithAggregatesInput = {
+    AND?: MenuVisitScalarWhereWithAggregatesInput | MenuVisitScalarWhereWithAggregatesInput[]
+    OR?: MenuVisitScalarWhereWithAggregatesInput[]
+    NOT?: MenuVisitScalarWhereWithAggregatesInput | MenuVisitScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"MenuVisit"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"MenuVisit"> | Date | string
+    visitorId?: StringWithAggregatesFilter<"MenuVisit"> | string
+    visitKey?: StringWithAggregatesFilter<"MenuVisit"> | string
+    menuId?: StringNullableWithAggregatesFilter<"MenuVisit"> | string | null
+    promotionId?: StringNullableWithAggregatesFilter<"MenuVisit"> | string | null
+    language?: StringNullableWithAggregatesFilter<"MenuVisit"> | string | null
+    pathname?: StringWithAggregatesFilter<"MenuVisit"> | string
+    referrer?: StringNullableWithAggregatesFilter<"MenuVisit"> | string | null
+    userAgent?: StringNullableWithAggregatesFilter<"MenuVisit"> | string | null
+    ipAddress?: StringNullableWithAggregatesFilter<"MenuVisit"> | string | null
   }
 
   export type CategoryWhereInput = {
@@ -58810,7 +60175,6 @@ export namespace Prisma {
     createdAt?: Date | string
     completed?: boolean
     steps?: ProgressiveDiscountStepCreateNestedManyWithoutProgressiveDiscountInput
-    menus?: MenuCreateNestedManyWithoutProgressiveDiscountInput
   }
 
   export type ProgressiveDiscountUncheckedCreateInput = {
@@ -58818,7 +60182,6 @@ export namespace Prisma {
     createdAt?: Date | string
     completed?: boolean
     steps?: ProgressiveDiscountStepUncheckedCreateNestedManyWithoutProgressiveDiscountInput
-    menus?: MenuUncheckedCreateNestedManyWithoutProgressiveDiscountInput
   }
 
   export type ProgressiveDiscountUpdateInput = {
@@ -58826,7 +60189,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     completed?: BoolFieldUpdateOperationsInput | boolean
     steps?: ProgressiveDiscountStepUpdateManyWithoutProgressiveDiscountNestedInput
-    menus?: MenuUpdateManyWithoutProgressiveDiscountNestedInput
   }
 
   export type ProgressiveDiscountUncheckedUpdateInput = {
@@ -58834,7 +60196,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     completed?: BoolFieldUpdateOperationsInput | boolean
     steps?: ProgressiveDiscountStepUncheckedUpdateManyWithoutProgressiveDiscountNestedInput
-    menus?: MenuUncheckedUpdateManyWithoutProgressiveDiscountNestedInput
   }
 
   export type ProgressiveDiscountCreateManyInput = {
@@ -59812,6 +61173,7 @@ export namespace Prisma {
     expireAt?: Date | string | null
     validWeekdays?: ExclusivePromotionCreatevalidWeekdaysInput | $Enums.ExclusivePromotionWeekday[]
     products?: ExclusivePromotionProductCreateNestedManyWithoutPromotionInput
+    menuVisits?: MenuVisitCreateNestedManyWithoutPromotionInput
   }
 
   export type ExclusivePromotionUncheckedCreateInput = {
@@ -59823,6 +61185,7 @@ export namespace Prisma {
     expireAt?: Date | string | null
     validWeekdays?: ExclusivePromotionCreatevalidWeekdaysInput | $Enums.ExclusivePromotionWeekday[]
     products?: ExclusivePromotionProductUncheckedCreateNestedManyWithoutPromotionInput
+    menuVisits?: MenuVisitUncheckedCreateNestedManyWithoutPromotionInput
   }
 
   export type ExclusivePromotionUpdateInput = {
@@ -59834,6 +61197,7 @@ export namespace Prisma {
     expireAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validWeekdays?: ExclusivePromotionUpdatevalidWeekdaysInput | $Enums.ExclusivePromotionWeekday[]
     products?: ExclusivePromotionProductUpdateManyWithoutPromotionNestedInput
+    menuVisits?: MenuVisitUpdateManyWithoutPromotionNestedInput
   }
 
   export type ExclusivePromotionUncheckedUpdateInput = {
@@ -59845,6 +61209,7 @@ export namespace Prisma {
     expireAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validWeekdays?: ExclusivePromotionUpdatevalidWeekdaysInput | $Enums.ExclusivePromotionWeekday[]
     products?: ExclusivePromotionProductUncheckedUpdateManyWithoutPromotionNestedInput
+    menuVisits?: MenuVisitUncheckedUpdateManyWithoutPromotionNestedInput
   }
 
   export type ExclusivePromotionCreateManyInput = {
@@ -59924,9 +61289,9 @@ export namespace Prisma {
     name: string
     active?: boolean
     isDefault?: boolean
-    progressiveDiscount?: ProgressiveDiscountCreateNestedOneWithoutMenusInput
     categories?: CategoryCreateNestedManyWithoutMenuInput
     menuCategories?: MenuCategoryCreateNestedManyWithoutMenuInput
+    menuVisits?: MenuVisitCreateNestedManyWithoutMenuInput
   }
 
   export type MenuUncheckedCreateInput = {
@@ -59936,9 +61301,9 @@ export namespace Prisma {
     name: string
     active?: boolean
     isDefault?: boolean
-    progressiveDiscountId?: string | null
     categories?: CategoryUncheckedCreateNestedManyWithoutMenuInput
     menuCategories?: MenuCategoryUncheckedCreateNestedManyWithoutMenuInput
+    menuVisits?: MenuVisitUncheckedCreateNestedManyWithoutMenuInput
   }
 
   export type MenuUpdateInput = {
@@ -59948,9 +61313,9 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     active?: BoolFieldUpdateOperationsInput | boolean
     isDefault?: BoolFieldUpdateOperationsInput | boolean
-    progressiveDiscount?: ProgressiveDiscountUpdateOneWithoutMenusNestedInput
     categories?: CategoryUpdateManyWithoutMenuNestedInput
     menuCategories?: MenuCategoryUpdateManyWithoutMenuNestedInput
+    menuVisits?: MenuVisitUpdateManyWithoutMenuNestedInput
   }
 
   export type MenuUncheckedUpdateInput = {
@@ -59960,9 +61325,9 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     active?: BoolFieldUpdateOperationsInput | boolean
     isDefault?: BoolFieldUpdateOperationsInput | boolean
-    progressiveDiscountId?: NullableStringFieldUpdateOperationsInput | string | null
     categories?: CategoryUncheckedUpdateManyWithoutMenuNestedInput
     menuCategories?: MenuCategoryUncheckedUpdateManyWithoutMenuNestedInput
+    menuVisits?: MenuVisitUncheckedUpdateManyWithoutMenuNestedInput
   }
 
   export type MenuCreateManyInput = {
@@ -59972,7 +61337,6 @@ export namespace Prisma {
     name: string
     active?: boolean
     isDefault?: boolean
-    progressiveDiscountId?: string | null
   }
 
   export type MenuUpdateManyMutationInput = {
@@ -59991,7 +61355,102 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     active?: BoolFieldUpdateOperationsInput | boolean
     isDefault?: BoolFieldUpdateOperationsInput | boolean
-    progressiveDiscountId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type MenuVisitCreateInput = {
+    id: string
+    createdAt?: Date | string
+    visitorId: string
+    visitKey: string
+    language?: string | null
+    pathname: string
+    referrer?: string | null
+    userAgent?: string | null
+    ipAddress?: string | null
+    menu?: MenuCreateNestedOneWithoutMenuVisitsInput
+    promotion?: ExclusivePromotionCreateNestedOneWithoutMenuVisitsInput
+  }
+
+  export type MenuVisitUncheckedCreateInput = {
+    id: string
+    createdAt?: Date | string
+    visitorId: string
+    visitKey: string
+    menuId?: string | null
+    promotionId?: string | null
+    language?: string | null
+    pathname: string
+    referrer?: string | null
+    userAgent?: string | null
+    ipAddress?: string | null
+  }
+
+  export type MenuVisitUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    visitorId?: StringFieldUpdateOperationsInput | string
+    visitKey?: StringFieldUpdateOperationsInput | string
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    pathname?: StringFieldUpdateOperationsInput | string
+    referrer?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    menu?: MenuUpdateOneWithoutMenuVisitsNestedInput
+    promotion?: ExclusivePromotionUpdateOneWithoutMenuVisitsNestedInput
+  }
+
+  export type MenuVisitUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    visitorId?: StringFieldUpdateOperationsInput | string
+    visitKey?: StringFieldUpdateOperationsInput | string
+    menuId?: NullableStringFieldUpdateOperationsInput | string | null
+    promotionId?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    pathname?: StringFieldUpdateOperationsInput | string
+    referrer?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type MenuVisitCreateManyInput = {
+    id: string
+    createdAt?: Date | string
+    visitorId: string
+    visitKey: string
+    menuId?: string | null
+    promotionId?: string | null
+    language?: string | null
+    pathname: string
+    referrer?: string | null
+    userAgent?: string | null
+    ipAddress?: string | null
+  }
+
+  export type MenuVisitUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    visitorId?: StringFieldUpdateOperationsInput | string
+    visitKey?: StringFieldUpdateOperationsInput | string
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    pathname?: StringFieldUpdateOperationsInput | string
+    referrer?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type MenuVisitUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    visitorId?: StringFieldUpdateOperationsInput | string
+    visitKey?: StringFieldUpdateOperationsInput | string
+    menuId?: NullableStringFieldUpdateOperationsInput | string | null
+    promotionId?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    pathname?: StringFieldUpdateOperationsInput | string
+    referrer?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type CategoryCreateInput = {
@@ -62064,17 +63523,7 @@ export namespace Prisma {
     none?: ProgressiveDiscountStepWhereInput
   }
 
-  export type MenuListRelationFilter = {
-    every?: MenuWhereInput
-    some?: MenuWhereInput
-    none?: MenuWhereInput
-  }
-
   export type ProgressiveDiscountStepOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type MenuOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -62912,6 +64361,16 @@ export namespace Prisma {
     isEmpty?: boolean
   }
 
+  export type MenuVisitListRelationFilter = {
+    every?: MenuVisitWhereInput
+    some?: MenuVisitWhereInput
+    none?: MenuVisitWhereInput
+  }
+
+  export type MenuVisitOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type ExclusivePromotionCountOrderByAggregateInput = {
     id?: SortOrder
     createdAt?: SortOrder
@@ -62968,11 +64427,6 @@ export namespace Prisma {
     createdAt?: SortOrder
   }
 
-  export type ProgressiveDiscountNullableScalarRelationFilter = {
-    is?: ProgressiveDiscountWhereInput | null
-    isNot?: ProgressiveDiscountWhereInput | null
-  }
-
   export type CategoryListRelationFilter = {
     every?: CategoryWhereInput
     some?: CategoryWhereInput
@@ -63000,7 +64454,6 @@ export namespace Prisma {
     name?: SortOrder
     active?: SortOrder
     isDefault?: SortOrder
-    progressiveDiscountId?: SortOrder
   }
 
   export type MenuMaxOrderByAggregateInput = {
@@ -63010,7 +64463,6 @@ export namespace Prisma {
     name?: SortOrder
     active?: SortOrder
     isDefault?: SortOrder
-    progressiveDiscountId?: SortOrder
   }
 
   export type MenuMinOrderByAggregateInput = {
@@ -63020,7 +64472,63 @@ export namespace Prisma {
     name?: SortOrder
     active?: SortOrder
     isDefault?: SortOrder
-    progressiveDiscountId?: SortOrder
+  }
+
+  export type MenuNullableScalarRelationFilter = {
+    is?: MenuWhereInput | null
+    isNot?: MenuWhereInput | null
+  }
+
+  export type ExclusivePromotionNullableScalarRelationFilter = {
+    is?: ExclusivePromotionWhereInput | null
+    isNot?: ExclusivePromotionWhereInput | null
+  }
+
+  export type MenuVisitVisitorIdVisitKeyCompoundUniqueInput = {
+    visitorId: string
+    visitKey: string
+  }
+
+  export type MenuVisitCountOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    visitorId?: SortOrder
+    visitKey?: SortOrder
+    menuId?: SortOrder
+    promotionId?: SortOrder
+    language?: SortOrder
+    pathname?: SortOrder
+    referrer?: SortOrder
+    userAgent?: SortOrder
+    ipAddress?: SortOrder
+  }
+
+  export type MenuVisitMaxOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    visitorId?: SortOrder
+    visitKey?: SortOrder
+    menuId?: SortOrder
+    promotionId?: SortOrder
+    language?: SortOrder
+    pathname?: SortOrder
+    referrer?: SortOrder
+    userAgent?: SortOrder
+    ipAddress?: SortOrder
+  }
+
+  export type MenuVisitMinOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    visitorId?: SortOrder
+    visitKey?: SortOrder
+    menuId?: SortOrder
+    promotionId?: SortOrder
+    language?: SortOrder
+    pathname?: SortOrder
+    referrer?: SortOrder
+    userAgent?: SortOrder
+    ipAddress?: SortOrder
   }
 
   export type MenuScalarRelationFilter = {
@@ -64424,25 +65932,11 @@ export namespace Prisma {
     connect?: ProgressiveDiscountStepWhereUniqueInput | ProgressiveDiscountStepWhereUniqueInput[]
   }
 
-  export type MenuCreateNestedManyWithoutProgressiveDiscountInput = {
-    create?: XOR<MenuCreateWithoutProgressiveDiscountInput, MenuUncheckedCreateWithoutProgressiveDiscountInput> | MenuCreateWithoutProgressiveDiscountInput[] | MenuUncheckedCreateWithoutProgressiveDiscountInput[]
-    connectOrCreate?: MenuCreateOrConnectWithoutProgressiveDiscountInput | MenuCreateOrConnectWithoutProgressiveDiscountInput[]
-    createMany?: MenuCreateManyProgressiveDiscountInputEnvelope
-    connect?: MenuWhereUniqueInput | MenuWhereUniqueInput[]
-  }
-
   export type ProgressiveDiscountStepUncheckedCreateNestedManyWithoutProgressiveDiscountInput = {
     create?: XOR<ProgressiveDiscountStepCreateWithoutProgressiveDiscountInput, ProgressiveDiscountStepUncheckedCreateWithoutProgressiveDiscountInput> | ProgressiveDiscountStepCreateWithoutProgressiveDiscountInput[] | ProgressiveDiscountStepUncheckedCreateWithoutProgressiveDiscountInput[]
     connectOrCreate?: ProgressiveDiscountStepCreateOrConnectWithoutProgressiveDiscountInput | ProgressiveDiscountStepCreateOrConnectWithoutProgressiveDiscountInput[]
     createMany?: ProgressiveDiscountStepCreateManyProgressiveDiscountInputEnvelope
     connect?: ProgressiveDiscountStepWhereUniqueInput | ProgressiveDiscountStepWhereUniqueInput[]
-  }
-
-  export type MenuUncheckedCreateNestedManyWithoutProgressiveDiscountInput = {
-    create?: XOR<MenuCreateWithoutProgressiveDiscountInput, MenuUncheckedCreateWithoutProgressiveDiscountInput> | MenuCreateWithoutProgressiveDiscountInput[] | MenuUncheckedCreateWithoutProgressiveDiscountInput[]
-    connectOrCreate?: MenuCreateOrConnectWithoutProgressiveDiscountInput | MenuCreateOrConnectWithoutProgressiveDiscountInput[]
-    createMany?: MenuCreateManyProgressiveDiscountInputEnvelope
-    connect?: MenuWhereUniqueInput | MenuWhereUniqueInput[]
   }
 
   export type ProgressiveDiscountStepUpdateManyWithoutProgressiveDiscountNestedInput = {
@@ -64459,20 +65953,6 @@ export namespace Prisma {
     deleteMany?: ProgressiveDiscountStepScalarWhereInput | ProgressiveDiscountStepScalarWhereInput[]
   }
 
-  export type MenuUpdateManyWithoutProgressiveDiscountNestedInput = {
-    create?: XOR<MenuCreateWithoutProgressiveDiscountInput, MenuUncheckedCreateWithoutProgressiveDiscountInput> | MenuCreateWithoutProgressiveDiscountInput[] | MenuUncheckedCreateWithoutProgressiveDiscountInput[]
-    connectOrCreate?: MenuCreateOrConnectWithoutProgressiveDiscountInput | MenuCreateOrConnectWithoutProgressiveDiscountInput[]
-    upsert?: MenuUpsertWithWhereUniqueWithoutProgressiveDiscountInput | MenuUpsertWithWhereUniqueWithoutProgressiveDiscountInput[]
-    createMany?: MenuCreateManyProgressiveDiscountInputEnvelope
-    set?: MenuWhereUniqueInput | MenuWhereUniqueInput[]
-    disconnect?: MenuWhereUniqueInput | MenuWhereUniqueInput[]
-    delete?: MenuWhereUniqueInput | MenuWhereUniqueInput[]
-    connect?: MenuWhereUniqueInput | MenuWhereUniqueInput[]
-    update?: MenuUpdateWithWhereUniqueWithoutProgressiveDiscountInput | MenuUpdateWithWhereUniqueWithoutProgressiveDiscountInput[]
-    updateMany?: MenuUpdateManyWithWhereWithoutProgressiveDiscountInput | MenuUpdateManyWithWhereWithoutProgressiveDiscountInput[]
-    deleteMany?: MenuScalarWhereInput | MenuScalarWhereInput[]
-  }
-
   export type ProgressiveDiscountStepUncheckedUpdateManyWithoutProgressiveDiscountNestedInput = {
     create?: XOR<ProgressiveDiscountStepCreateWithoutProgressiveDiscountInput, ProgressiveDiscountStepUncheckedCreateWithoutProgressiveDiscountInput> | ProgressiveDiscountStepCreateWithoutProgressiveDiscountInput[] | ProgressiveDiscountStepUncheckedCreateWithoutProgressiveDiscountInput[]
     connectOrCreate?: ProgressiveDiscountStepCreateOrConnectWithoutProgressiveDiscountInput | ProgressiveDiscountStepCreateOrConnectWithoutProgressiveDiscountInput[]
@@ -64485,20 +65965,6 @@ export namespace Prisma {
     update?: ProgressiveDiscountStepUpdateWithWhereUniqueWithoutProgressiveDiscountInput | ProgressiveDiscountStepUpdateWithWhereUniqueWithoutProgressiveDiscountInput[]
     updateMany?: ProgressiveDiscountStepUpdateManyWithWhereWithoutProgressiveDiscountInput | ProgressiveDiscountStepUpdateManyWithWhereWithoutProgressiveDiscountInput[]
     deleteMany?: ProgressiveDiscountStepScalarWhereInput | ProgressiveDiscountStepScalarWhereInput[]
-  }
-
-  export type MenuUncheckedUpdateManyWithoutProgressiveDiscountNestedInput = {
-    create?: XOR<MenuCreateWithoutProgressiveDiscountInput, MenuUncheckedCreateWithoutProgressiveDiscountInput> | MenuCreateWithoutProgressiveDiscountInput[] | MenuUncheckedCreateWithoutProgressiveDiscountInput[]
-    connectOrCreate?: MenuCreateOrConnectWithoutProgressiveDiscountInput | MenuCreateOrConnectWithoutProgressiveDiscountInput[]
-    upsert?: MenuUpsertWithWhereUniqueWithoutProgressiveDiscountInput | MenuUpsertWithWhereUniqueWithoutProgressiveDiscountInput[]
-    createMany?: MenuCreateManyProgressiveDiscountInputEnvelope
-    set?: MenuWhereUniqueInput | MenuWhereUniqueInput[]
-    disconnect?: MenuWhereUniqueInput | MenuWhereUniqueInput[]
-    delete?: MenuWhereUniqueInput | MenuWhereUniqueInput[]
-    connect?: MenuWhereUniqueInput | MenuWhereUniqueInput[]
-    update?: MenuUpdateWithWhereUniqueWithoutProgressiveDiscountInput | MenuUpdateWithWhereUniqueWithoutProgressiveDiscountInput[]
-    updateMany?: MenuUpdateManyWithWhereWithoutProgressiveDiscountInput | MenuUpdateManyWithWhereWithoutProgressiveDiscountInput[]
-    deleteMany?: MenuScalarWhereInput | MenuScalarWhereInput[]
   }
 
   export type ProgressiveDiscountCreateNestedOneWithoutStepsInput = {
@@ -65564,11 +67030,25 @@ export namespace Prisma {
     connect?: ExclusivePromotionProductWhereUniqueInput | ExclusivePromotionProductWhereUniqueInput[]
   }
 
+  export type MenuVisitCreateNestedManyWithoutPromotionInput = {
+    create?: XOR<MenuVisitCreateWithoutPromotionInput, MenuVisitUncheckedCreateWithoutPromotionInput> | MenuVisitCreateWithoutPromotionInput[] | MenuVisitUncheckedCreateWithoutPromotionInput[]
+    connectOrCreate?: MenuVisitCreateOrConnectWithoutPromotionInput | MenuVisitCreateOrConnectWithoutPromotionInput[]
+    createMany?: MenuVisitCreateManyPromotionInputEnvelope
+    connect?: MenuVisitWhereUniqueInput | MenuVisitWhereUniqueInput[]
+  }
+
   export type ExclusivePromotionProductUncheckedCreateNestedManyWithoutPromotionInput = {
     create?: XOR<ExclusivePromotionProductCreateWithoutPromotionInput, ExclusivePromotionProductUncheckedCreateWithoutPromotionInput> | ExclusivePromotionProductCreateWithoutPromotionInput[] | ExclusivePromotionProductUncheckedCreateWithoutPromotionInput[]
     connectOrCreate?: ExclusivePromotionProductCreateOrConnectWithoutPromotionInput | ExclusivePromotionProductCreateOrConnectWithoutPromotionInput[]
     createMany?: ExclusivePromotionProductCreateManyPromotionInputEnvelope
     connect?: ExclusivePromotionProductWhereUniqueInput | ExclusivePromotionProductWhereUniqueInput[]
+  }
+
+  export type MenuVisitUncheckedCreateNestedManyWithoutPromotionInput = {
+    create?: XOR<MenuVisitCreateWithoutPromotionInput, MenuVisitUncheckedCreateWithoutPromotionInput> | MenuVisitCreateWithoutPromotionInput[] | MenuVisitUncheckedCreateWithoutPromotionInput[]
+    connectOrCreate?: MenuVisitCreateOrConnectWithoutPromotionInput | MenuVisitCreateOrConnectWithoutPromotionInput[]
+    createMany?: MenuVisitCreateManyPromotionInputEnvelope
+    connect?: MenuVisitWhereUniqueInput | MenuVisitWhereUniqueInput[]
   }
 
   export type ExclusivePromotionUpdatevalidWeekdaysInput = {
@@ -65590,6 +67070,20 @@ export namespace Prisma {
     deleteMany?: ExclusivePromotionProductScalarWhereInput | ExclusivePromotionProductScalarWhereInput[]
   }
 
+  export type MenuVisitUpdateManyWithoutPromotionNestedInput = {
+    create?: XOR<MenuVisitCreateWithoutPromotionInput, MenuVisitUncheckedCreateWithoutPromotionInput> | MenuVisitCreateWithoutPromotionInput[] | MenuVisitUncheckedCreateWithoutPromotionInput[]
+    connectOrCreate?: MenuVisitCreateOrConnectWithoutPromotionInput | MenuVisitCreateOrConnectWithoutPromotionInput[]
+    upsert?: MenuVisitUpsertWithWhereUniqueWithoutPromotionInput | MenuVisitUpsertWithWhereUniqueWithoutPromotionInput[]
+    createMany?: MenuVisitCreateManyPromotionInputEnvelope
+    set?: MenuVisitWhereUniqueInput | MenuVisitWhereUniqueInput[]
+    disconnect?: MenuVisitWhereUniqueInput | MenuVisitWhereUniqueInput[]
+    delete?: MenuVisitWhereUniqueInput | MenuVisitWhereUniqueInput[]
+    connect?: MenuVisitWhereUniqueInput | MenuVisitWhereUniqueInput[]
+    update?: MenuVisitUpdateWithWhereUniqueWithoutPromotionInput | MenuVisitUpdateWithWhereUniqueWithoutPromotionInput[]
+    updateMany?: MenuVisitUpdateManyWithWhereWithoutPromotionInput | MenuVisitUpdateManyWithWhereWithoutPromotionInput[]
+    deleteMany?: MenuVisitScalarWhereInput | MenuVisitScalarWhereInput[]
+  }
+
   export type ExclusivePromotionProductUncheckedUpdateManyWithoutPromotionNestedInput = {
     create?: XOR<ExclusivePromotionProductCreateWithoutPromotionInput, ExclusivePromotionProductUncheckedCreateWithoutPromotionInput> | ExclusivePromotionProductCreateWithoutPromotionInput[] | ExclusivePromotionProductUncheckedCreateWithoutPromotionInput[]
     connectOrCreate?: ExclusivePromotionProductCreateOrConnectWithoutPromotionInput | ExclusivePromotionProductCreateOrConnectWithoutPromotionInput[]
@@ -65602,6 +67096,20 @@ export namespace Prisma {
     update?: ExclusivePromotionProductUpdateWithWhereUniqueWithoutPromotionInput | ExclusivePromotionProductUpdateWithWhereUniqueWithoutPromotionInput[]
     updateMany?: ExclusivePromotionProductUpdateManyWithWhereWithoutPromotionInput | ExclusivePromotionProductUpdateManyWithWhereWithoutPromotionInput[]
     deleteMany?: ExclusivePromotionProductScalarWhereInput | ExclusivePromotionProductScalarWhereInput[]
+  }
+
+  export type MenuVisitUncheckedUpdateManyWithoutPromotionNestedInput = {
+    create?: XOR<MenuVisitCreateWithoutPromotionInput, MenuVisitUncheckedCreateWithoutPromotionInput> | MenuVisitCreateWithoutPromotionInput[] | MenuVisitUncheckedCreateWithoutPromotionInput[]
+    connectOrCreate?: MenuVisitCreateOrConnectWithoutPromotionInput | MenuVisitCreateOrConnectWithoutPromotionInput[]
+    upsert?: MenuVisitUpsertWithWhereUniqueWithoutPromotionInput | MenuVisitUpsertWithWhereUniqueWithoutPromotionInput[]
+    createMany?: MenuVisitCreateManyPromotionInputEnvelope
+    set?: MenuVisitWhereUniqueInput | MenuVisitWhereUniqueInput[]
+    disconnect?: MenuVisitWhereUniqueInput | MenuVisitWhereUniqueInput[]
+    delete?: MenuVisitWhereUniqueInput | MenuVisitWhereUniqueInput[]
+    connect?: MenuVisitWhereUniqueInput | MenuVisitWhereUniqueInput[]
+    update?: MenuVisitUpdateWithWhereUniqueWithoutPromotionInput | MenuVisitUpdateWithWhereUniqueWithoutPromotionInput[]
+    updateMany?: MenuVisitUpdateManyWithWhereWithoutPromotionInput | MenuVisitUpdateManyWithWhereWithoutPromotionInput[]
+    deleteMany?: MenuVisitScalarWhereInput | MenuVisitScalarWhereInput[]
   }
 
   export type ExclusivePromotionCreateNestedOneWithoutProductsInput = {
@@ -65632,12 +67140,6 @@ export namespace Prisma {
     update?: XOR<XOR<ProductUpdateToOneWithWhereWithoutExclusivePromotionProductsInput, ProductUpdateWithoutExclusivePromotionProductsInput>, ProductUncheckedUpdateWithoutExclusivePromotionProductsInput>
   }
 
-  export type ProgressiveDiscountCreateNestedOneWithoutMenusInput = {
-    create?: XOR<ProgressiveDiscountCreateWithoutMenusInput, ProgressiveDiscountUncheckedCreateWithoutMenusInput>
-    connectOrCreate?: ProgressiveDiscountCreateOrConnectWithoutMenusInput
-    connect?: ProgressiveDiscountWhereUniqueInput
-  }
-
   export type CategoryCreateNestedManyWithoutMenuInput = {
     create?: XOR<CategoryCreateWithoutMenuInput, CategoryUncheckedCreateWithoutMenuInput> | CategoryCreateWithoutMenuInput[] | CategoryUncheckedCreateWithoutMenuInput[]
     connectOrCreate?: CategoryCreateOrConnectWithoutMenuInput | CategoryCreateOrConnectWithoutMenuInput[]
@@ -65650,6 +67152,13 @@ export namespace Prisma {
     connectOrCreate?: MenuCategoryCreateOrConnectWithoutMenuInput | MenuCategoryCreateOrConnectWithoutMenuInput[]
     createMany?: MenuCategoryCreateManyMenuInputEnvelope
     connect?: MenuCategoryWhereUniqueInput | MenuCategoryWhereUniqueInput[]
+  }
+
+  export type MenuVisitCreateNestedManyWithoutMenuInput = {
+    create?: XOR<MenuVisitCreateWithoutMenuInput, MenuVisitUncheckedCreateWithoutMenuInput> | MenuVisitCreateWithoutMenuInput[] | MenuVisitUncheckedCreateWithoutMenuInput[]
+    connectOrCreate?: MenuVisitCreateOrConnectWithoutMenuInput | MenuVisitCreateOrConnectWithoutMenuInput[]
+    createMany?: MenuVisitCreateManyMenuInputEnvelope
+    connect?: MenuVisitWhereUniqueInput | MenuVisitWhereUniqueInput[]
   }
 
   export type CategoryUncheckedCreateNestedManyWithoutMenuInput = {
@@ -65666,14 +67175,11 @@ export namespace Prisma {
     connect?: MenuCategoryWhereUniqueInput | MenuCategoryWhereUniqueInput[]
   }
 
-  export type ProgressiveDiscountUpdateOneWithoutMenusNestedInput = {
-    create?: XOR<ProgressiveDiscountCreateWithoutMenusInput, ProgressiveDiscountUncheckedCreateWithoutMenusInput>
-    connectOrCreate?: ProgressiveDiscountCreateOrConnectWithoutMenusInput
-    upsert?: ProgressiveDiscountUpsertWithoutMenusInput
-    disconnect?: ProgressiveDiscountWhereInput | boolean
-    delete?: ProgressiveDiscountWhereInput | boolean
-    connect?: ProgressiveDiscountWhereUniqueInput
-    update?: XOR<XOR<ProgressiveDiscountUpdateToOneWithWhereWithoutMenusInput, ProgressiveDiscountUpdateWithoutMenusInput>, ProgressiveDiscountUncheckedUpdateWithoutMenusInput>
+  export type MenuVisitUncheckedCreateNestedManyWithoutMenuInput = {
+    create?: XOR<MenuVisitCreateWithoutMenuInput, MenuVisitUncheckedCreateWithoutMenuInput> | MenuVisitCreateWithoutMenuInput[] | MenuVisitUncheckedCreateWithoutMenuInput[]
+    connectOrCreate?: MenuVisitCreateOrConnectWithoutMenuInput | MenuVisitCreateOrConnectWithoutMenuInput[]
+    createMany?: MenuVisitCreateManyMenuInputEnvelope
+    connect?: MenuVisitWhereUniqueInput | MenuVisitWhereUniqueInput[]
   }
 
   export type CategoryUpdateManyWithoutMenuNestedInput = {
@@ -65704,6 +67210,20 @@ export namespace Prisma {
     deleteMany?: MenuCategoryScalarWhereInput | MenuCategoryScalarWhereInput[]
   }
 
+  export type MenuVisitUpdateManyWithoutMenuNestedInput = {
+    create?: XOR<MenuVisitCreateWithoutMenuInput, MenuVisitUncheckedCreateWithoutMenuInput> | MenuVisitCreateWithoutMenuInput[] | MenuVisitUncheckedCreateWithoutMenuInput[]
+    connectOrCreate?: MenuVisitCreateOrConnectWithoutMenuInput | MenuVisitCreateOrConnectWithoutMenuInput[]
+    upsert?: MenuVisitUpsertWithWhereUniqueWithoutMenuInput | MenuVisitUpsertWithWhereUniqueWithoutMenuInput[]
+    createMany?: MenuVisitCreateManyMenuInputEnvelope
+    set?: MenuVisitWhereUniqueInput | MenuVisitWhereUniqueInput[]
+    disconnect?: MenuVisitWhereUniqueInput | MenuVisitWhereUniqueInput[]
+    delete?: MenuVisitWhereUniqueInput | MenuVisitWhereUniqueInput[]
+    connect?: MenuVisitWhereUniqueInput | MenuVisitWhereUniqueInput[]
+    update?: MenuVisitUpdateWithWhereUniqueWithoutMenuInput | MenuVisitUpdateWithWhereUniqueWithoutMenuInput[]
+    updateMany?: MenuVisitUpdateManyWithWhereWithoutMenuInput | MenuVisitUpdateManyWithWhereWithoutMenuInput[]
+    deleteMany?: MenuVisitScalarWhereInput | MenuVisitScalarWhereInput[]
+  }
+
   export type CategoryUncheckedUpdateManyWithoutMenuNestedInput = {
     create?: XOR<CategoryCreateWithoutMenuInput, CategoryUncheckedCreateWithoutMenuInput> | CategoryCreateWithoutMenuInput[] | CategoryUncheckedCreateWithoutMenuInput[]
     connectOrCreate?: CategoryCreateOrConnectWithoutMenuInput | CategoryCreateOrConnectWithoutMenuInput[]
@@ -65730,6 +67250,52 @@ export namespace Prisma {
     update?: MenuCategoryUpdateWithWhereUniqueWithoutMenuInput | MenuCategoryUpdateWithWhereUniqueWithoutMenuInput[]
     updateMany?: MenuCategoryUpdateManyWithWhereWithoutMenuInput | MenuCategoryUpdateManyWithWhereWithoutMenuInput[]
     deleteMany?: MenuCategoryScalarWhereInput | MenuCategoryScalarWhereInput[]
+  }
+
+  export type MenuVisitUncheckedUpdateManyWithoutMenuNestedInput = {
+    create?: XOR<MenuVisitCreateWithoutMenuInput, MenuVisitUncheckedCreateWithoutMenuInput> | MenuVisitCreateWithoutMenuInput[] | MenuVisitUncheckedCreateWithoutMenuInput[]
+    connectOrCreate?: MenuVisitCreateOrConnectWithoutMenuInput | MenuVisitCreateOrConnectWithoutMenuInput[]
+    upsert?: MenuVisitUpsertWithWhereUniqueWithoutMenuInput | MenuVisitUpsertWithWhereUniqueWithoutMenuInput[]
+    createMany?: MenuVisitCreateManyMenuInputEnvelope
+    set?: MenuVisitWhereUniqueInput | MenuVisitWhereUniqueInput[]
+    disconnect?: MenuVisitWhereUniqueInput | MenuVisitWhereUniqueInput[]
+    delete?: MenuVisitWhereUniqueInput | MenuVisitWhereUniqueInput[]
+    connect?: MenuVisitWhereUniqueInput | MenuVisitWhereUniqueInput[]
+    update?: MenuVisitUpdateWithWhereUniqueWithoutMenuInput | MenuVisitUpdateWithWhereUniqueWithoutMenuInput[]
+    updateMany?: MenuVisitUpdateManyWithWhereWithoutMenuInput | MenuVisitUpdateManyWithWhereWithoutMenuInput[]
+    deleteMany?: MenuVisitScalarWhereInput | MenuVisitScalarWhereInput[]
+  }
+
+  export type MenuCreateNestedOneWithoutMenuVisitsInput = {
+    create?: XOR<MenuCreateWithoutMenuVisitsInput, MenuUncheckedCreateWithoutMenuVisitsInput>
+    connectOrCreate?: MenuCreateOrConnectWithoutMenuVisitsInput
+    connect?: MenuWhereUniqueInput
+  }
+
+  export type ExclusivePromotionCreateNestedOneWithoutMenuVisitsInput = {
+    create?: XOR<ExclusivePromotionCreateWithoutMenuVisitsInput, ExclusivePromotionUncheckedCreateWithoutMenuVisitsInput>
+    connectOrCreate?: ExclusivePromotionCreateOrConnectWithoutMenuVisitsInput
+    connect?: ExclusivePromotionWhereUniqueInput
+  }
+
+  export type MenuUpdateOneWithoutMenuVisitsNestedInput = {
+    create?: XOR<MenuCreateWithoutMenuVisitsInput, MenuUncheckedCreateWithoutMenuVisitsInput>
+    connectOrCreate?: MenuCreateOrConnectWithoutMenuVisitsInput
+    upsert?: MenuUpsertWithoutMenuVisitsInput
+    disconnect?: MenuWhereInput | boolean
+    delete?: MenuWhereInput | boolean
+    connect?: MenuWhereUniqueInput
+    update?: XOR<XOR<MenuUpdateToOneWithWhereWithoutMenuVisitsInput, MenuUpdateWithoutMenuVisitsInput>, MenuUncheckedUpdateWithoutMenuVisitsInput>
+  }
+
+  export type ExclusivePromotionUpdateOneWithoutMenuVisitsNestedInput = {
+    create?: XOR<ExclusivePromotionCreateWithoutMenuVisitsInput, ExclusivePromotionUncheckedCreateWithoutMenuVisitsInput>
+    connectOrCreate?: ExclusivePromotionCreateOrConnectWithoutMenuVisitsInput
+    upsert?: ExclusivePromotionUpsertWithoutMenuVisitsInput
+    disconnect?: ExclusivePromotionWhereInput | boolean
+    delete?: ExclusivePromotionWhereInput | boolean
+    connect?: ExclusivePromotionWhereUniqueInput
+    update?: XOR<XOR<ExclusivePromotionUpdateToOneWithWhereWithoutMenuVisitsInput, ExclusivePromotionUpdateWithoutMenuVisitsInput>, ExclusivePromotionUncheckedUpdateWithoutMenuVisitsInput>
   }
 
   export type MenuCreateNestedOneWithoutCategoriesInput = {
@@ -68450,38 +70016,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type MenuCreateWithoutProgressiveDiscountInput = {
-    id: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    name: string
-    active?: boolean
-    isDefault?: boolean
-    categories?: CategoryCreateNestedManyWithoutMenuInput
-    menuCategories?: MenuCategoryCreateNestedManyWithoutMenuInput
-  }
-
-  export type MenuUncheckedCreateWithoutProgressiveDiscountInput = {
-    id: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    name: string
-    active?: boolean
-    isDefault?: boolean
-    categories?: CategoryUncheckedCreateNestedManyWithoutMenuInput
-    menuCategories?: MenuCategoryUncheckedCreateNestedManyWithoutMenuInput
-  }
-
-  export type MenuCreateOrConnectWithoutProgressiveDiscountInput = {
-    where: MenuWhereUniqueInput
-    create: XOR<MenuCreateWithoutProgressiveDiscountInput, MenuUncheckedCreateWithoutProgressiveDiscountInput>
-  }
-
-  export type MenuCreateManyProgressiveDiscountInputEnvelope = {
-    data: MenuCreateManyProgressiveDiscountInput | MenuCreateManyProgressiveDiscountInput[]
-    skipDuplicates?: boolean
-  }
-
   export type ProgressiveDiscountStepUpsertWithWhereUniqueWithoutProgressiveDiscountInput = {
     where: ProgressiveDiscountStepWhereUniqueInput
     update: XOR<ProgressiveDiscountStepUpdateWithoutProgressiveDiscountInput, ProgressiveDiscountStepUncheckedUpdateWithoutProgressiveDiscountInput>
@@ -68510,47 +70044,16 @@ export namespace Prisma {
     progressiveDiscountId?: StringFilter<"ProgressiveDiscountStep"> | string
   }
 
-  export type MenuUpsertWithWhereUniqueWithoutProgressiveDiscountInput = {
-    where: MenuWhereUniqueInput
-    update: XOR<MenuUpdateWithoutProgressiveDiscountInput, MenuUncheckedUpdateWithoutProgressiveDiscountInput>
-    create: XOR<MenuCreateWithoutProgressiveDiscountInput, MenuUncheckedCreateWithoutProgressiveDiscountInput>
-  }
-
-  export type MenuUpdateWithWhereUniqueWithoutProgressiveDiscountInput = {
-    where: MenuWhereUniqueInput
-    data: XOR<MenuUpdateWithoutProgressiveDiscountInput, MenuUncheckedUpdateWithoutProgressiveDiscountInput>
-  }
-
-  export type MenuUpdateManyWithWhereWithoutProgressiveDiscountInput = {
-    where: MenuScalarWhereInput
-    data: XOR<MenuUpdateManyMutationInput, MenuUncheckedUpdateManyWithoutProgressiveDiscountInput>
-  }
-
-  export type MenuScalarWhereInput = {
-    AND?: MenuScalarWhereInput | MenuScalarWhereInput[]
-    OR?: MenuScalarWhereInput[]
-    NOT?: MenuScalarWhereInput | MenuScalarWhereInput[]
-    id?: StringFilter<"Menu"> | string
-    createdAt?: DateTimeFilter<"Menu"> | Date | string
-    updatedAt?: DateTimeFilter<"Menu"> | Date | string
-    name?: StringFilter<"Menu"> | string
-    active?: BoolFilter<"Menu"> | boolean
-    isDefault?: BoolFilter<"Menu"> | boolean
-    progressiveDiscountId?: StringNullableFilter<"Menu"> | string | null
-  }
-
   export type ProgressiveDiscountCreateWithoutStepsInput = {
     id: string
     createdAt?: Date | string
     completed?: boolean
-    menus?: MenuCreateNestedManyWithoutProgressiveDiscountInput
   }
 
   export type ProgressiveDiscountUncheckedCreateWithoutStepsInput = {
     id: string
     createdAt?: Date | string
     completed?: boolean
-    menus?: MenuUncheckedCreateNestedManyWithoutProgressiveDiscountInput
   }
 
   export type ProgressiveDiscountCreateOrConnectWithoutStepsInput = {
@@ -68603,14 +70106,12 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     completed?: BoolFieldUpdateOperationsInput | boolean
-    menus?: MenuUpdateManyWithoutProgressiveDiscountNestedInput
   }
 
   export type ProgressiveDiscountUncheckedUpdateWithoutStepsInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     completed?: BoolFieldUpdateOperationsInput | boolean
-    menus?: MenuUncheckedUpdateManyWithoutProgressiveDiscountNestedInput
   }
 
   export type ProgressiveDiscountPrizeUpsertWithWhereUniqueWithoutProgressiveDiscountStepInput = {
@@ -70420,6 +71921,42 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type MenuVisitCreateWithoutPromotionInput = {
+    id: string
+    createdAt?: Date | string
+    visitorId: string
+    visitKey: string
+    language?: string | null
+    pathname: string
+    referrer?: string | null
+    userAgent?: string | null
+    ipAddress?: string | null
+    menu?: MenuCreateNestedOneWithoutMenuVisitsInput
+  }
+
+  export type MenuVisitUncheckedCreateWithoutPromotionInput = {
+    id: string
+    createdAt?: Date | string
+    visitorId: string
+    visitKey: string
+    menuId?: string | null
+    language?: string | null
+    pathname: string
+    referrer?: string | null
+    userAgent?: string | null
+    ipAddress?: string | null
+  }
+
+  export type MenuVisitCreateOrConnectWithoutPromotionInput = {
+    where: MenuVisitWhereUniqueInput
+    create: XOR<MenuVisitCreateWithoutPromotionInput, MenuVisitUncheckedCreateWithoutPromotionInput>
+  }
+
+  export type MenuVisitCreateManyPromotionInputEnvelope = {
+    data: MenuVisitCreateManyPromotionInput | MenuVisitCreateManyPromotionInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ExclusivePromotionProductUpsertWithWhereUniqueWithoutPromotionInput = {
     where: ExclusivePromotionProductWhereUniqueInput
     update: XOR<ExclusivePromotionProductUpdateWithoutPromotionInput, ExclusivePromotionProductUncheckedUpdateWithoutPromotionInput>
@@ -70436,6 +71973,39 @@ export namespace Prisma {
     data: XOR<ExclusivePromotionProductUpdateManyMutationInput, ExclusivePromotionProductUncheckedUpdateManyWithoutPromotionInput>
   }
 
+  export type MenuVisitUpsertWithWhereUniqueWithoutPromotionInput = {
+    where: MenuVisitWhereUniqueInput
+    update: XOR<MenuVisitUpdateWithoutPromotionInput, MenuVisitUncheckedUpdateWithoutPromotionInput>
+    create: XOR<MenuVisitCreateWithoutPromotionInput, MenuVisitUncheckedCreateWithoutPromotionInput>
+  }
+
+  export type MenuVisitUpdateWithWhereUniqueWithoutPromotionInput = {
+    where: MenuVisitWhereUniqueInput
+    data: XOR<MenuVisitUpdateWithoutPromotionInput, MenuVisitUncheckedUpdateWithoutPromotionInput>
+  }
+
+  export type MenuVisitUpdateManyWithWhereWithoutPromotionInput = {
+    where: MenuVisitScalarWhereInput
+    data: XOR<MenuVisitUpdateManyMutationInput, MenuVisitUncheckedUpdateManyWithoutPromotionInput>
+  }
+
+  export type MenuVisitScalarWhereInput = {
+    AND?: MenuVisitScalarWhereInput | MenuVisitScalarWhereInput[]
+    OR?: MenuVisitScalarWhereInput[]
+    NOT?: MenuVisitScalarWhereInput | MenuVisitScalarWhereInput[]
+    id?: StringFilter<"MenuVisit"> | string
+    createdAt?: DateTimeFilter<"MenuVisit"> | Date | string
+    visitorId?: StringFilter<"MenuVisit"> | string
+    visitKey?: StringFilter<"MenuVisit"> | string
+    menuId?: StringNullableFilter<"MenuVisit"> | string | null
+    promotionId?: StringNullableFilter<"MenuVisit"> | string | null
+    language?: StringNullableFilter<"MenuVisit"> | string | null
+    pathname?: StringFilter<"MenuVisit"> | string
+    referrer?: StringNullableFilter<"MenuVisit"> | string | null
+    userAgent?: StringNullableFilter<"MenuVisit"> | string | null
+    ipAddress?: StringNullableFilter<"MenuVisit"> | string | null
+  }
+
   export type ExclusivePromotionCreateWithoutProductsInput = {
     id: string
     createdAt?: Date | string
@@ -70444,6 +72014,7 @@ export namespace Prisma {
     active?: boolean
     expireAt?: Date | string | null
     validWeekdays?: ExclusivePromotionCreatevalidWeekdaysInput | $Enums.ExclusivePromotionWeekday[]
+    menuVisits?: MenuVisitCreateNestedManyWithoutPromotionInput
   }
 
   export type ExclusivePromotionUncheckedCreateWithoutProductsInput = {
@@ -70454,6 +72025,7 @@ export namespace Prisma {
     active?: boolean
     expireAt?: Date | string | null
     validWeekdays?: ExclusivePromotionCreatevalidWeekdaysInput | $Enums.ExclusivePromotionWeekday[]
+    menuVisits?: MenuVisitUncheckedCreateNestedManyWithoutPromotionInput
   }
 
   export type ExclusivePromotionCreateOrConnectWithoutProductsInput = {
@@ -70529,6 +72101,7 @@ export namespace Prisma {
     active?: BoolFieldUpdateOperationsInput | boolean
     expireAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validWeekdays?: ExclusivePromotionUpdatevalidWeekdaysInput | $Enums.ExclusivePromotionWeekday[]
+    menuVisits?: MenuVisitUpdateManyWithoutPromotionNestedInput
   }
 
   export type ExclusivePromotionUncheckedUpdateWithoutProductsInput = {
@@ -70539,6 +72112,7 @@ export namespace Prisma {
     active?: BoolFieldUpdateOperationsInput | boolean
     expireAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validWeekdays?: ExclusivePromotionUpdatevalidWeekdaysInput | $Enums.ExclusivePromotionWeekday[]
+    menuVisits?: MenuVisitUncheckedUpdateManyWithoutPromotionNestedInput
   }
 
   export type ProductUpsertWithoutExclusivePromotionProductsInput = {
@@ -70594,25 +72168,6 @@ export namespace Prisma {
     OrderProducts?: OrderProductsUncheckedUpdateManyWithoutProductNestedInput
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUncheckedUpdateManyWithoutProductsNestedInput
-  }
-
-  export type ProgressiveDiscountCreateWithoutMenusInput = {
-    id: string
-    createdAt?: Date | string
-    completed?: boolean
-    steps?: ProgressiveDiscountStepCreateNestedManyWithoutProgressiveDiscountInput
-  }
-
-  export type ProgressiveDiscountUncheckedCreateWithoutMenusInput = {
-    id: string
-    createdAt?: Date | string
-    completed?: boolean
-    steps?: ProgressiveDiscountStepUncheckedCreateNestedManyWithoutProgressiveDiscountInput
-  }
-
-  export type ProgressiveDiscountCreateOrConnectWithoutMenusInput = {
-    where: ProgressiveDiscountWhereUniqueInput
-    create: XOR<ProgressiveDiscountCreateWithoutMenusInput, ProgressiveDiscountUncheckedCreateWithoutMenusInput>
   }
 
   export type CategoryCreateWithoutMenuInput = {
@@ -70671,29 +72226,40 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type ProgressiveDiscountUpsertWithoutMenusInput = {
-    update: XOR<ProgressiveDiscountUpdateWithoutMenusInput, ProgressiveDiscountUncheckedUpdateWithoutMenusInput>
-    create: XOR<ProgressiveDiscountCreateWithoutMenusInput, ProgressiveDiscountUncheckedCreateWithoutMenusInput>
-    where?: ProgressiveDiscountWhereInput
+  export type MenuVisitCreateWithoutMenuInput = {
+    id: string
+    createdAt?: Date | string
+    visitorId: string
+    visitKey: string
+    language?: string | null
+    pathname: string
+    referrer?: string | null
+    userAgent?: string | null
+    ipAddress?: string | null
+    promotion?: ExclusivePromotionCreateNestedOneWithoutMenuVisitsInput
   }
 
-  export type ProgressiveDiscountUpdateToOneWithWhereWithoutMenusInput = {
-    where?: ProgressiveDiscountWhereInput
-    data: XOR<ProgressiveDiscountUpdateWithoutMenusInput, ProgressiveDiscountUncheckedUpdateWithoutMenusInput>
+  export type MenuVisitUncheckedCreateWithoutMenuInput = {
+    id: string
+    createdAt?: Date | string
+    visitorId: string
+    visitKey: string
+    promotionId?: string | null
+    language?: string | null
+    pathname: string
+    referrer?: string | null
+    userAgent?: string | null
+    ipAddress?: string | null
   }
 
-  export type ProgressiveDiscountUpdateWithoutMenusInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    completed?: BoolFieldUpdateOperationsInput | boolean
-    steps?: ProgressiveDiscountStepUpdateManyWithoutProgressiveDiscountNestedInput
+  export type MenuVisitCreateOrConnectWithoutMenuInput = {
+    where: MenuVisitWhereUniqueInput
+    create: XOR<MenuVisitCreateWithoutMenuInput, MenuVisitUncheckedCreateWithoutMenuInput>
   }
 
-  export type ProgressiveDiscountUncheckedUpdateWithoutMenusInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    completed?: BoolFieldUpdateOperationsInput | boolean
-    steps?: ProgressiveDiscountStepUncheckedUpdateManyWithoutProgressiveDiscountNestedInput
+  export type MenuVisitCreateManyMenuInputEnvelope = {
+    data: MenuVisitCreateManyMenuInput | MenuVisitCreateManyMenuInput[]
+    skipDuplicates?: boolean
   }
 
   export type CategoryUpsertWithWhereUniqueWithoutMenuInput = {
@@ -70750,6 +72316,142 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"MenuCategory"> | Date | string
   }
 
+  export type MenuVisitUpsertWithWhereUniqueWithoutMenuInput = {
+    where: MenuVisitWhereUniqueInput
+    update: XOR<MenuVisitUpdateWithoutMenuInput, MenuVisitUncheckedUpdateWithoutMenuInput>
+    create: XOR<MenuVisitCreateWithoutMenuInput, MenuVisitUncheckedCreateWithoutMenuInput>
+  }
+
+  export type MenuVisitUpdateWithWhereUniqueWithoutMenuInput = {
+    where: MenuVisitWhereUniqueInput
+    data: XOR<MenuVisitUpdateWithoutMenuInput, MenuVisitUncheckedUpdateWithoutMenuInput>
+  }
+
+  export type MenuVisitUpdateManyWithWhereWithoutMenuInput = {
+    where: MenuVisitScalarWhereInput
+    data: XOR<MenuVisitUpdateManyMutationInput, MenuVisitUncheckedUpdateManyWithoutMenuInput>
+  }
+
+  export type MenuCreateWithoutMenuVisitsInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    active?: boolean
+    isDefault?: boolean
+    categories?: CategoryCreateNestedManyWithoutMenuInput
+    menuCategories?: MenuCategoryCreateNestedManyWithoutMenuInput
+  }
+
+  export type MenuUncheckedCreateWithoutMenuVisitsInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    active?: boolean
+    isDefault?: boolean
+    categories?: CategoryUncheckedCreateNestedManyWithoutMenuInput
+    menuCategories?: MenuCategoryUncheckedCreateNestedManyWithoutMenuInput
+  }
+
+  export type MenuCreateOrConnectWithoutMenuVisitsInput = {
+    where: MenuWhereUniqueInput
+    create: XOR<MenuCreateWithoutMenuVisitsInput, MenuUncheckedCreateWithoutMenuVisitsInput>
+  }
+
+  export type ExclusivePromotionCreateWithoutMenuVisitsInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    active?: boolean
+    expireAt?: Date | string | null
+    validWeekdays?: ExclusivePromotionCreatevalidWeekdaysInput | $Enums.ExclusivePromotionWeekday[]
+    products?: ExclusivePromotionProductCreateNestedManyWithoutPromotionInput
+  }
+
+  export type ExclusivePromotionUncheckedCreateWithoutMenuVisitsInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    active?: boolean
+    expireAt?: Date | string | null
+    validWeekdays?: ExclusivePromotionCreatevalidWeekdaysInput | $Enums.ExclusivePromotionWeekday[]
+    products?: ExclusivePromotionProductUncheckedCreateNestedManyWithoutPromotionInput
+  }
+
+  export type ExclusivePromotionCreateOrConnectWithoutMenuVisitsInput = {
+    where: ExclusivePromotionWhereUniqueInput
+    create: XOR<ExclusivePromotionCreateWithoutMenuVisitsInput, ExclusivePromotionUncheckedCreateWithoutMenuVisitsInput>
+  }
+
+  export type MenuUpsertWithoutMenuVisitsInput = {
+    update: XOR<MenuUpdateWithoutMenuVisitsInput, MenuUncheckedUpdateWithoutMenuVisitsInput>
+    create: XOR<MenuCreateWithoutMenuVisitsInput, MenuUncheckedCreateWithoutMenuVisitsInput>
+    where?: MenuWhereInput
+  }
+
+  export type MenuUpdateToOneWithWhereWithoutMenuVisitsInput = {
+    where?: MenuWhereInput
+    data: XOR<MenuUpdateWithoutMenuVisitsInput, MenuUncheckedUpdateWithoutMenuVisitsInput>
+  }
+
+  export type MenuUpdateWithoutMenuVisitsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    categories?: CategoryUpdateManyWithoutMenuNestedInput
+    menuCategories?: MenuCategoryUpdateManyWithoutMenuNestedInput
+  }
+
+  export type MenuUncheckedUpdateWithoutMenuVisitsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    categories?: CategoryUncheckedUpdateManyWithoutMenuNestedInput
+    menuCategories?: MenuCategoryUncheckedUpdateManyWithoutMenuNestedInput
+  }
+
+  export type ExclusivePromotionUpsertWithoutMenuVisitsInput = {
+    update: XOR<ExclusivePromotionUpdateWithoutMenuVisitsInput, ExclusivePromotionUncheckedUpdateWithoutMenuVisitsInput>
+    create: XOR<ExclusivePromotionCreateWithoutMenuVisitsInput, ExclusivePromotionUncheckedCreateWithoutMenuVisitsInput>
+    where?: ExclusivePromotionWhereInput
+  }
+
+  export type ExclusivePromotionUpdateToOneWithWhereWithoutMenuVisitsInput = {
+    where?: ExclusivePromotionWhereInput
+    data: XOR<ExclusivePromotionUpdateWithoutMenuVisitsInput, ExclusivePromotionUncheckedUpdateWithoutMenuVisitsInput>
+  }
+
+  export type ExclusivePromotionUpdateWithoutMenuVisitsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    expireAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    validWeekdays?: ExclusivePromotionUpdatevalidWeekdaysInput | $Enums.ExclusivePromotionWeekday[]
+    products?: ExclusivePromotionProductUpdateManyWithoutPromotionNestedInput
+  }
+
+  export type ExclusivePromotionUncheckedUpdateWithoutMenuVisitsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    expireAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    validWeekdays?: ExclusivePromotionUpdatevalidWeekdaysInput | $Enums.ExclusivePromotionWeekday[]
+    products?: ExclusivePromotionProductUncheckedUpdateManyWithoutPromotionNestedInput
+  }
+
   export type MenuCreateWithoutCategoriesInput = {
     id: string
     createdAt?: Date | string
@@ -70757,8 +72459,8 @@ export namespace Prisma {
     name: string
     active?: boolean
     isDefault?: boolean
-    progressiveDiscount?: ProgressiveDiscountCreateNestedOneWithoutMenusInput
     menuCategories?: MenuCategoryCreateNestedManyWithoutMenuInput
+    menuVisits?: MenuVisitCreateNestedManyWithoutMenuInput
   }
 
   export type MenuUncheckedCreateWithoutCategoriesInput = {
@@ -70768,8 +72470,8 @@ export namespace Prisma {
     name: string
     active?: boolean
     isDefault?: boolean
-    progressiveDiscountId?: string | null
     menuCategories?: MenuCategoryUncheckedCreateNestedManyWithoutMenuInput
+    menuVisits?: MenuVisitUncheckedCreateNestedManyWithoutMenuInput
   }
 
   export type MenuCreateOrConnectWithoutCategoriesInput = {
@@ -70919,8 +72621,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     active?: BoolFieldUpdateOperationsInput | boolean
     isDefault?: BoolFieldUpdateOperationsInput | boolean
-    progressiveDiscount?: ProgressiveDiscountUpdateOneWithoutMenusNestedInput
     menuCategories?: MenuCategoryUpdateManyWithoutMenuNestedInput
+    menuVisits?: MenuVisitUpdateManyWithoutMenuNestedInput
   }
 
   export type MenuUncheckedUpdateWithoutCategoriesInput = {
@@ -70930,8 +72632,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     active?: BoolFieldUpdateOperationsInput | boolean
     isDefault?: BoolFieldUpdateOperationsInput | boolean
-    progressiveDiscountId?: NullableStringFieldUpdateOperationsInput | string | null
     menuCategories?: MenuCategoryUncheckedUpdateManyWithoutMenuNestedInput
+    menuVisits?: MenuVisitUncheckedUpdateManyWithoutMenuNestedInput
   }
 
   export type ProductUpsertWithWhereUniqueWithoutCategoryInput = {
@@ -71016,8 +72718,8 @@ export namespace Prisma {
     name: string
     active?: boolean
     isDefault?: boolean
-    progressiveDiscount?: ProgressiveDiscountCreateNestedOneWithoutMenusInput
     categories?: CategoryCreateNestedManyWithoutMenuInput
+    menuVisits?: MenuVisitCreateNestedManyWithoutMenuInput
   }
 
   export type MenuUncheckedCreateWithoutMenuCategoriesInput = {
@@ -71027,8 +72729,8 @@ export namespace Prisma {
     name: string
     active?: boolean
     isDefault?: boolean
-    progressiveDiscountId?: string | null
     categories?: CategoryUncheckedCreateNestedManyWithoutMenuInput
+    menuVisits?: MenuVisitUncheckedCreateNestedManyWithoutMenuInput
   }
 
   export type MenuCreateOrConnectWithoutMenuCategoriesInput = {
@@ -71083,8 +72785,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     active?: BoolFieldUpdateOperationsInput | boolean
     isDefault?: BoolFieldUpdateOperationsInput | boolean
-    progressiveDiscount?: ProgressiveDiscountUpdateOneWithoutMenusNestedInput
     categories?: CategoryUpdateManyWithoutMenuNestedInput
+    menuVisits?: MenuVisitUpdateManyWithoutMenuNestedInput
   }
 
   export type MenuUncheckedUpdateWithoutMenuCategoriesInput = {
@@ -71094,8 +72796,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     active?: BoolFieldUpdateOperationsInput | boolean
     isDefault?: BoolFieldUpdateOperationsInput | boolean
-    progressiveDiscountId?: NullableStringFieldUpdateOperationsInput | string | null
     categories?: CategoryUncheckedUpdateManyWithoutMenuNestedInput
+    menuVisits?: MenuVisitUncheckedUpdateManyWithoutMenuNestedInput
   }
 
   export type CategoryUpsertWithoutMenuCategoriesInput = {
@@ -74809,15 +76511,6 @@ export namespace Prisma {
     discountType: $Enums.ProgressiveDiscountStepType
   }
 
-  export type MenuCreateManyProgressiveDiscountInput = {
-    id: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    name: string
-    active?: boolean
-    isDefault?: boolean
-  }
-
   export type ProgressiveDiscountStepUpdateWithoutProgressiveDiscountInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -74842,37 +76535,6 @@ export namespace Prisma {
     amount?: IntFieldUpdateOperationsInput | number
     discount?: NullableIntFieldUpdateOperationsInput | number | null
     discountType?: EnumProgressiveDiscountStepTypeFieldUpdateOperationsInput | $Enums.ProgressiveDiscountStepType
-  }
-
-  export type MenuUpdateWithoutProgressiveDiscountInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    name?: StringFieldUpdateOperationsInput | string
-    active?: BoolFieldUpdateOperationsInput | boolean
-    isDefault?: BoolFieldUpdateOperationsInput | boolean
-    categories?: CategoryUpdateManyWithoutMenuNestedInput
-    menuCategories?: MenuCategoryUpdateManyWithoutMenuNestedInput
-  }
-
-  export type MenuUncheckedUpdateWithoutProgressiveDiscountInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    name?: StringFieldUpdateOperationsInput | string
-    active?: BoolFieldUpdateOperationsInput | boolean
-    isDefault?: BoolFieldUpdateOperationsInput | boolean
-    categories?: CategoryUncheckedUpdateManyWithoutMenuNestedInput
-    menuCategories?: MenuCategoryUncheckedUpdateManyWithoutMenuNestedInput
-  }
-
-  export type MenuUncheckedUpdateManyWithoutProgressiveDiscountInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    name?: StringFieldUpdateOperationsInput | string
-    active?: BoolFieldUpdateOperationsInput | boolean
-    isDefault?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ProgressiveDiscountPrizeCreateManyProgressiveDiscountStepInput = {
@@ -75709,6 +77371,19 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
+  export type MenuVisitCreateManyPromotionInput = {
+    id: string
+    createdAt?: Date | string
+    visitorId: string
+    visitKey: string
+    menuId?: string | null
+    language?: string | null
+    pathname: string
+    referrer?: string | null
+    userAgent?: string | null
+    ipAddress?: string | null
+  }
+
   export type ExclusivePromotionProductUpdateWithoutPromotionInput = {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     product?: ProductUpdateOneRequiredWithoutExclusivePromotionProductsNestedInput
@@ -75724,6 +77399,45 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type MenuVisitUpdateWithoutPromotionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    visitorId?: StringFieldUpdateOperationsInput | string
+    visitKey?: StringFieldUpdateOperationsInput | string
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    pathname?: StringFieldUpdateOperationsInput | string
+    referrer?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    menu?: MenuUpdateOneWithoutMenuVisitsNestedInput
+  }
+
+  export type MenuVisitUncheckedUpdateWithoutPromotionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    visitorId?: StringFieldUpdateOperationsInput | string
+    visitKey?: StringFieldUpdateOperationsInput | string
+    menuId?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    pathname?: StringFieldUpdateOperationsInput | string
+    referrer?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type MenuVisitUncheckedUpdateManyWithoutPromotionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    visitorId?: StringFieldUpdateOperationsInput | string
+    visitKey?: StringFieldUpdateOperationsInput | string
+    menuId?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    pathname?: StringFieldUpdateOperationsInput | string
+    referrer?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
   export type CategoryCreateManyMenuInput = {
     id: string
     createdAt?: Date | string
@@ -75736,6 +77450,19 @@ export namespace Prisma {
     categoryId: string
     menuIndex?: number | null
     createdAt?: Date | string
+  }
+
+  export type MenuVisitCreateManyMenuInput = {
+    id: string
+    createdAt?: Date | string
+    visitorId: string
+    visitKey: string
+    promotionId?: string | null
+    language?: string | null
+    pathname: string
+    referrer?: string | null
+    userAgent?: string | null
+    ipAddress?: string | null
   }
 
   export type CategoryUpdateWithoutMenuInput = {
@@ -75786,6 +77513,45 @@ export namespace Prisma {
     categoryId?: StringFieldUpdateOperationsInput | string
     menuIndex?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MenuVisitUpdateWithoutMenuInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    visitorId?: StringFieldUpdateOperationsInput | string
+    visitKey?: StringFieldUpdateOperationsInput | string
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    pathname?: StringFieldUpdateOperationsInput | string
+    referrer?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    promotion?: ExclusivePromotionUpdateOneWithoutMenuVisitsNestedInput
+  }
+
+  export type MenuVisitUncheckedUpdateWithoutMenuInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    visitorId?: StringFieldUpdateOperationsInput | string
+    visitKey?: StringFieldUpdateOperationsInput | string
+    promotionId?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    pathname?: StringFieldUpdateOperationsInput | string
+    referrer?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type MenuVisitUncheckedUpdateManyWithoutMenuInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    visitorId?: StringFieldUpdateOperationsInput | string
+    visitKey?: StringFieldUpdateOperationsInput | string
+    promotionId?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    pathname?: StringFieldUpdateOperationsInput | string
+    referrer?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ProductCreateManyCategoryInput = {

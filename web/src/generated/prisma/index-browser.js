@@ -314,8 +314,21 @@ exports.Prisma.MenuScalarFieldEnum = {
   updatedAt: 'updatedAt',
   name: 'name',
   active: 'active',
-  isDefault: 'isDefault',
-  progressiveDiscountId: 'progressiveDiscountId'
+  isDefault: 'isDefault'
+};
+
+exports.Prisma.MenuVisitScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  visitorId: 'visitorId',
+  visitKey: 'visitKey',
+  menuId: 'menuId',
+  promotionId: 'promotionId',
+  language: 'language',
+  pathname: 'pathname',
+  referrer: 'referrer',
+  userAgent: 'userAgent',
+  ipAddress: 'ipAddress'
 };
 
 exports.Prisma.CategoryScalarFieldEnum = {
@@ -651,6 +664,7 @@ exports.Prisma.ModelName = {
   ExclusivePromotion: 'ExclusivePromotion',
   ExclusivePromotionProduct: 'ExclusivePromotionProduct',
   Menu: 'Menu',
+  MenuVisit: 'MenuVisit',
   Category: 'Category',
   MenuCategory: 'MenuCategory',
   ProductCategory: 'ProductCategory',
