@@ -3,6 +3,7 @@ import { TPreparationStep } from "./station";
 
 type TProduct = {
   id: string;
+  itemType?: "PRODUCT" | "COMBO";
   name: string;
   visible?: boolean;
   photos?: Image[];
@@ -12,12 +13,32 @@ type TProduct = {
   categoryIndex?: number | null;
   comparedAtPrice?: number | null;
   modifierGroups?: TModifierGroup[];
+  comboSlots?: TComboSlot[];
   preparationStep?: TPreparationStep[];
   translations?: {
     [key: string]: {
       [key: string];
     };
   };
+};
+
+type TComboSlot = {
+  id: string;
+  name: string;
+  minSelect: number;
+  maxSelect: number;
+  allowDuplicates: boolean;
+  sortIndex?: number | null;
+  options: TComboSlotOption[];
+};
+
+type TComboSlotOption = {
+  id: string;
+  productId: string;
+  productName: string;
+  productPhotoUrl?: string;
+  extraPrice: number;
+  sortIndex?: number | null;
 };
 
 type TModifierGroup = {
@@ -52,4 +73,4 @@ type TModifierGroupItem = {
 };
 
 export default TProduct;
-export { TModifierGroup, TModifierGroupItem };
+export { TModifierGroup, TModifierGroupItem, TComboSlot, TComboSlotOption };

@@ -11,6 +11,8 @@ import LeadWhatsappFunnel from "../components/LeadWhatsappFunnel";
 import AvgOrdersPerWeekLineChart from "../components/AvgOrdersPerWeekLineChart";
 import OrderTotalsLast7DaysBarChart from "../components/OrderTotalsLast7DaysBarChart";
 import Link from "next/link";
+import MenuVisitsLast7DaysChart from "../components/MenuVisitsLast7DaysChart";
+import { getMenuVisitsOverview } from "@/src/chartData/menuVisitsOverview";
 
 export default async function ChartsPage() {
   const clientOrderCountResponse = await clientOrderCount();
@@ -19,6 +21,7 @@ export default async function ChartsPage() {
     await leadsCampaignFunnel("lead-whatsapp");
   const getAvgOrdersPerWeekByMonthResponse = await getAvgOrdersPerWeekByMonth();
   const orderTotalsLast7DaysResponse = await orderTotalsLast7Days();
+  const menuVisitsOverview = await getMenuVisitsOverview();
 
   return (
     <div className="bg-zinc-50 font-sans dark:bg-black px-8 py-10 ">
@@ -31,6 +34,12 @@ export default async function ChartsPage() {
           >
             Driver Earnings
           </Link>
+          <Link
+            href="/orders/amount"
+            className="rounded-md border border-zinc-300 bg-white px-3 py-1.5 text-sm font-medium text-zinc-700 hover:bg-zinc-100"
+          >
+            Order Amount
+          </Link>
         </div>
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 pb-10">
@@ -38,6 +47,110 @@ export default async function ChartsPage() {
         <AvgTicketLineChart data={averageTicketByMonthResponse} />
         <AvgOrdersPerWeekLineChart data={getAvgOrdersPerWeekByMonthResponse} />
         <OrderTotalsLast7DaysBarChart data={orderTotalsLast7DaysResponse} />
+      </div>
+      <div className="pb-8 flex items-center justify-center">
+        <h1 className="text-2xl font-semibold">Menu Visits</h1>
+      </div>
+      <div className="grid grid-cols-1 gap-4 pb-8 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="rounded-xl border border-zinc-200 bg-white p-4">
+          <p className="text-xs uppercase tracking-wide text-zinc-500">Total Visits</p>
+          <p className="mt-2 text-3xl font-semibold text-zinc-900">
+            {menuVisitsOverview.totalVisits}
+          </p>
+        </div>
+        <div className="rounded-xl border border-zinc-200 bg-white p-4">
+          <p className="text-xs uppercase tracking-wide text-zinc-500">
+            Unique Visitors
+          </p>
+          <p className="mt-2 text-3xl font-semibold text-zinc-900">
+            {menuVisitsOverview.uniqueVisitors}
+          </p>
+        </div>
+        <div className="rounded-xl border border-zinc-200 bg-white p-4">
+          <p className="text-xs uppercase tracking-wide text-zinc-500">
+            Visits (7 Days)
+          </p>
+          <p className="mt-2 text-3xl font-semibold text-zinc-900">
+            {menuVisitsOverview.visitsLast7Days}
+          </p>
+        </div>
+        <div className="rounded-xl border border-zinc-200 bg-white p-4">
+          <p className="text-xs uppercase tracking-wide text-zinc-500">
+            Unique Visitors (7 Days)
+          </p>
+          <p className="mt-2 text-3xl font-semibold text-zinc-900">
+            {menuVisitsOverview.uniqueVisitorsLast7Days}
+          </p>
+        </div>
+      </div>
+      <div className="grid grid-cols-1 gap-10 pb-10 lg:grid-cols-2">
+        <div className="rounded-xl border border-zinc-200 bg-white p-4">
+          <MenuVisitsLast7DaysChart data={menuVisitsOverview.dailyLast7Days} />
+        </div>
+        <div className="rounded-xl border border-zinc-200 bg-white p-4">
+          <h2 className="mb-4 text-lg font-semibold">Top Menus</h2>
+          <div className="space-y-2">
+            {menuVisitsOverview.topMenus.length === 0 ? (
+              <p className="text-sm text-zinc-500">No visits yet.</p>
+            ) : (
+              menuVisitsOverview.topMenus.map((item) => (
+                <div
+                  key={`${item.menuId ?? "none"}-${item.name}`}
+                  className="flex items-center justify-between rounded-md border border-zinc-100 px-3 py-2"
+                >
+                  <p className="text-sm font-medium text-zinc-800">{item.name}</p>
+                  <span className="text-sm font-semibold text-zinc-900">
+                    {item.visits}
+                  </span>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      </div>
+      <div className="grid grid-cols-1 gap-10 pb-10 lg:grid-cols-2">
+        <div className="rounded-xl border border-zinc-200 bg-white p-4">
+          <h2 className="mb-4 text-lg font-semibold">Top Promotions</h2>
+          <div className="space-y-2">
+            {menuVisitsOverview.topPromotions.length === 0 ? (
+              <p className="text-sm text-zinc-500">No promotion visits yet.</p>
+            ) : (
+              menuVisitsOverview.topPromotions.map((item) => (
+                <div
+                  key={`${item.promotionId ?? "none"}-${item.name}`}
+                  className="flex items-center justify-between rounded-md border border-zinc-100 px-3 py-2"
+                >
+                  <p className="text-sm font-medium text-zinc-800">{item.name}</p>
+                  <span className="text-sm font-semibold text-zinc-900">
+                    {item.visits}
+                  </span>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+        <div className="rounded-xl border border-zinc-200 bg-white p-4">
+          <h2 className="mb-4 text-lg font-semibold">Top Languages</h2>
+          <div className="space-y-2">
+            {menuVisitsOverview.topLanguages.length === 0 ? (
+              <p className="text-sm text-zinc-500">No language data yet.</p>
+            ) : (
+              menuVisitsOverview.topLanguages.map((item) => (
+                <div
+                  key={item.language}
+                  className="flex items-center justify-between rounded-md border border-zinc-100 px-3 py-2"
+                >
+                  <p className="text-sm font-medium text-zinc-800">
+                    {item.language}
+                  </p>
+                  <span className="text-sm font-semibold text-zinc-900">
+                    {item.visits}
+                  </span>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
       </div>
       <div className="pb-10 flex items-center justify-center">
         <h1 className="text-2xl font-semibold">Campanhas</h1>

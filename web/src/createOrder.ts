@@ -3,7 +3,7 @@
 import { after } from "next/server";
 import { MAX_DELIVERY_FEE_CENTS } from "@/utils/calculateDeliveryFee";
 import prisma from "../prisma";
-import TCart from "../types/cart";
+import TCart, { TCartItem } from "../types/cart";
 import getProgressiveDiscount from "./getProgressiveDiscount";
 import { randomUUID } from "crypto";
 import { Prisma } from "@/src/generated/prisma";
@@ -23,12 +23,19 @@ import {
 } from "@/src/modules/dispatch/application/assignDeliveryOrderToDispatchQueue";
 import { calculateSalesTaxInCents } from "@/src/constants/pricing";
 import { normalizePhoneWithCountryCode } from "@/src/phone";
+import { cookies } from "next/headers";
+import {
+  MENU_ID_COOKIE_NAME,
+  PROMOTION_ID_COOKIE_NAME,
+} from "@/src/constants/menu";
 
 type TCreateOrder = {
   cart: TCart;
   customerId?: string;
   orderType: TOrderType;
   paymentMethod: TPaymentMethod;
+  menuId?: string;
+  promotionId?: string;
   language?: string;
   scheduleFor?: string;
   selectedPrize?: {
@@ -245,9 +252,10 @@ async function enqueueDispatchAssignmentJobTx(
 
 async function triggerDispatchQueueRun(): Promise<void> {
   const workerBaseUrl = process.env.DISPATCH_QUEUE_WORKER_BASE_URL?.trim();
+  const jobsToProcess = 1;
 
   if (!workerBaseUrl) {
-    await processDispatchAssignmentJobs(1);
+    await processDispatchAssignmentJobs(jobsToProcess);
     return;
   }
 
@@ -261,15 +269,43 @@ async function triggerDispatchQueueRun(): Promise<void> {
     headers.Authorization = `Bearer ${runSecret}`;
   }
 
-  const response = await fetch(endpoint, {
-    method: "POST",
-    headers,
-  });
+  try {
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers,
+    });
 
-  if (!response.ok) {
-    const errorBody = await response.text().catch(() => "");
-    throw new Error(
-      `QUEUE_WORKER_TRIGGER_FAILED status=${response.status} body=${errorBody}`,
+    if (!response.ok) {
+      const errorBody = await response.text().catch(() => "");
+
+      // Worker trigger failed: fallback to local processing so dispatches
+      // are still created immediately for delivery orders.
+      await processDispatchAssignmentJobs(jobsToProcess);
+      console.warn(
+        `QUEUE_WORKER_TRIGGER_FAILED status=${response.status} body=${errorBody} (fell_back_to_local_queue_processing=true)`,
+      );
+      return;
+    }
+
+    const responseJson = await response
+      .json()
+      .catch(() => null as { ok?: boolean } | null);
+
+    // Older workers return 202 accepted without execution result. In that case,
+    // fallback locally to guarantee dispatch assignment execution.
+    if (response.status !== 200 || responseJson?.ok !== true) {
+      await processDispatchAssignmentJobs(jobsToProcess);
+      console.warn(
+        `QUEUE_WORKER_TRIGGER_UNVERIFIED status=${response.status} (fell_back_to_local_queue_processing=true)`,
+      );
+      return;
+    }
+  } catch (error) {
+    // Worker request threw (DNS/network/etc): fallback to local processing.
+    await processDispatchAssignmentJobs(jobsToProcess);
+    console.warn(
+      "QUEUE_WORKER_TRIGGER_REQUEST_FAILED (fell_back_to_local_queue_processing=true):",
+      error,
     );
   }
 }
@@ -399,7 +435,48 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
     now.getDate() + 1,
   );
   const progressiveDiscount = await getProgressiveDiscount();
-  const productData = await getProductsFresh();
+  const normalizedMenuId =
+    typeof data.menuId === "string" && data.menuId.trim().length > 0
+      ? data.menuId.trim()
+      : null;
+  const normalizedPromotionId =
+    typeof data.promotionId === "string" && data.promotionId.trim().length > 0
+      ? data.promotionId.trim()
+      : null;
+  let menuIdFromCookie: string | null = null;
+  let promotionIdFromCookie: string | null = null;
+
+  if (!normalizedMenuId || !normalizedPromotionId) {
+    try {
+      const cookieStore = await cookies();
+      if (!normalizedMenuId) {
+        const rawMenuIdFromCookie = cookieStore.get(MENU_ID_COOKIE_NAME)?.value;
+        menuIdFromCookie =
+          typeof rawMenuIdFromCookie === "string" &&
+          rawMenuIdFromCookie.trim().length > 0
+            ? rawMenuIdFromCookie.trim()
+            : null;
+      }
+      if (!normalizedPromotionId) {
+        const rawPromotionIdFromCookie = cookieStore.get(
+          PROMOTION_ID_COOKIE_NAME,
+        )?.value;
+        promotionIdFromCookie =
+          typeof rawPromotionIdFromCookie === "string" &&
+          rawPromotionIdFromCookie.trim().length > 0
+            ? rawPromotionIdFromCookie.trim()
+            : null;
+      }
+    } catch {
+      menuIdFromCookie = null;
+      promotionIdFromCookie = null;
+    }
+  }
+
+  const productData = await getProductsFresh(
+    normalizedMenuId ?? menuIdFromCookie,
+    normalizedPromotionId ?? promotionIdFromCookie,
+  );
   const language = normalizeOrderLanguage(data.language);
   const scheduleFor = ensureValidScheduleFor(data.scheduleFor);
   const getCatalogProductById = (productId: string) => {
@@ -413,12 +490,62 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
       };
     }
 
+    const promotionProduct = productData.activePromotion?.products?.find(
+      (item) => item.id === productId,
+    );
+    if (promotionProduct) {
+      return {
+        product: promotionProduct,
+        categoryId: null,
+      };
+    }
+
     return null;
+  };
+  const buildComboSelectionComments = (cartItem: TCartItem): string | null => {
+    if (!Array.isArray(cartItem.comboSelections) || cartItem.comboSelections.length === 0) {
+      return null;
+    }
+
+    const comboProduct = getCatalogProductById(cartItem.productId)?.product;
+    if (!comboProduct?.comboSlots?.length) {
+      return null;
+    }
+
+    const comboSelectionLines: string[] = [];
+
+    for (const slot of comboProduct.comboSlots) {
+      const slotSelections = cartItem.comboSelections
+        .filter((selection) => selection.slotId === slot.id && selection.quantity > 0)
+        .map((selection) => {
+          const option = slot.options.find(
+            (slotOption) => slotOption.productId === selection.optionProductId,
+          );
+          const optionName =
+            selection.optionProductName ||
+            option?.productName ||
+            "Selected option";
+
+          return selection.quantity > 1
+            ? `${optionName} x${selection.quantity}`
+            : optionName;
+        });
+
+      if (slotSelections.length === 0) continue;
+
+      comboSelectionLines.push(`${slot.name}: ${slotSelections.join(", ")}`);
+    }
+
+    if (comboSelectionLines.length === 0) return null;
+
+    return comboSelectionLines.join("\n");
   };
   const cartPricingSummary = calculateCartWithProgressiveDiscount(
     productData.categories,
     data.cart,
     progressiveDiscount,
+    productData.activePromotion?.products,
+    productData.promotionProductIds,
   );
   const sanitizedTipPercentage =
     typeof data.tipAmount === "number" && Number.isFinite(data.tipAmount)
@@ -559,6 +686,8 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
             progressiveDiscount,
             data.cart,
             productData.categories,
+            productData.activePromotion?.products,
+            productData.promotionProductIds,
             { cartItem: item },
           );
           if (!price)
@@ -568,6 +697,13 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
                 productId: item.productId,
               },
             };
+          const itemDescription =
+            typeof item.description === "string" ? item.description.trim() : "";
+          const comboSelectionDescription = buildComboSelectionComments(item);
+          const comments = [itemDescription, comboSelectionDescription]
+            .filter((value): value is string => Boolean(value))
+            .join("\n");
+
           await tx.orderProducts.create({
             data: {
               id: randomUUID(),
@@ -576,7 +712,7 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
               orderId: createdOrder.id,
               fullAmount: price.fullPrice,
               quantity: item.quantity,
-              comments: item.description,
+              comments: comments.length > 0 ? comments : undefined,
               modifierGroupItems: {
                 connect: item.modifiers.map((modItem) => ({
                   id: modItem.modifierItemId,
@@ -643,6 +779,57 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
             preparationStep: [],
           },
         }));
+        const comboPreparationOrderProducts: TOrderProduct[] = [];
+        for (const cartItem of data.cart.items) {
+          const comboCatalogProduct = getCatalogProductById(cartItem.productId)?.product;
+          if (!comboCatalogProduct || comboCatalogProduct.itemType !== "COMBO") continue;
+          if (
+            !Array.isArray(cartItem.comboSelections) ||
+            cartItem.comboSelections.length === 0
+          ) {
+            continue;
+          }
+
+          const parentQuantity =
+            typeof cartItem.quantity === "number" &&
+            Number.isInteger(cartItem.quantity) &&
+            cartItem.quantity > 0
+              ? cartItem.quantity
+              : 1;
+
+          for (const selection of cartItem.comboSelections) {
+            const selectionQuantity =
+              typeof selection.quantity === "number" &&
+              Number.isInteger(selection.quantity) &&
+              selection.quantity > 0
+                ? selection.quantity
+                : 0;
+            if (selectionQuantity <= 0) continue;
+
+            const selectedProduct = getCatalogProductById(selection.optionProductId);
+            if (!selectedProduct) continue;
+
+            const selectedProductCategoryId =
+              selectedProduct.product.categoryId ?? selectedProduct.categoryId;
+            if (!selectedProductCategoryId) continue;
+
+            comboPreparationOrderProducts.push({
+              id: randomUUID(),
+              amount: 0,
+              fullAmount: 0,
+              productId: selectedProduct.product.id,
+              quantity: parentQuantity * selectionQuantity,
+              selectedModifierGroupItemIds: [],
+              product: {
+                id: selectedProduct.product.id,
+                name: selectedProduct.product.name,
+                categoryId: selectedProductCategoryId,
+                translations: selectedProduct.product.translations,
+                preparationStep: [],
+              },
+            });
+          }
+        }
         const prizePreparationOrderProducts: TOrderProduct[] = [];
         if (selectedPrizeSnapshot) {
           for (const selectedPrizeProduct of selectedPrizeSnapshot.selectedProductCounts) {
@@ -687,10 +874,15 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
           preparationStepCategory: [],
         };
         const orderForPreparationSteps =
+          comboPreparationOrderProducts.length > 0 ||
           prizePreparationOrderProducts.length > 0
             ? {
                 ...order,
-                orderProducts: [...order.orderProducts, ...prizePreparationOrderProducts],
+                orderProducts: [
+                  ...order.orderProducts,
+                  ...comboPreparationOrderProducts,
+                  ...prizePreparationOrderProducts,
+                ],
               }
             : order;
 

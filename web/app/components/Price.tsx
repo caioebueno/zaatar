@@ -73,6 +73,11 @@ const formatDiscountOffLabel = (discountAmount: number) => {
 };
 
 const DELIVERY_MINIMUM_ORDER_CENTS = 2499;
+const PROMOTION_BADGE_BY_LOCALE: Record<string, string> = {
+  en: "Promotion",
+  pt: "Promoção",
+  es: "Promoción",
+};
 
 type TSummaryModifierItem = {
   id: string;
@@ -147,6 +152,59 @@ const buildSelectedModifierGroupsFromCartItem = (
       };
     })
     .filter((group): group is TSummaryModifierGroup => Boolean(group)) || [];
+
+const buildSelectedComboGroupsFromCartItem = (
+  product: TProduct | null | undefined,
+  cartItem: TCartItem,
+): TSummaryModifierGroup[] => {
+  if (!product?.comboSlots?.length || !cartItem.comboSelections?.length) {
+    return [];
+  }
+
+  return product.comboSlots
+    .map((slot) => {
+      const selectedItems = cartItem.comboSelections
+        ?.filter((selection) => selection.slotId === slot.id && selection.quantity > 0)
+        .map((selection) => {
+          const option = slot.options.find(
+            (slotOption) => slotOption.productId === selection.optionProductId,
+          );
+          const optionLabel =
+            selection.optionProductName || option?.productName || "Selected option";
+          const optionPrice =
+            typeof option?.extraPrice === "number"
+              ? option.extraPrice
+              : selection.extraPrice ?? 0;
+          const normalizedQuantity =
+            typeof selection.quantity === "number" &&
+            Number.isInteger(selection.quantity) &&
+            selection.quantity > 0
+              ? selection.quantity
+              : 1;
+
+          return {
+            id: `${selection.slotId}:${selection.optionProductId}`,
+            title:
+              normalizedQuantity > 1
+                ? `${optionLabel} x${normalizedQuantity}`
+                : optionLabel,
+            price: optionPrice * normalizedQuantity,
+          };
+        })
+        .filter((item): item is TSummaryModifierItem => Boolean(item));
+
+      if (!selectedItems || selectedItems.length === 0) {
+        return null;
+      }
+
+      return {
+        id: slot.id,
+        title: slot.name || "Combo selection",
+        items: selectedItems,
+      };
+    })
+    .filter((group): group is TSummaryModifierGroup => Boolean(group));
+};
 
 const buildSelectedModifierGroupsFromOrderProduct = (
   orderProduct: TOrder["orderProducts"][number],
@@ -327,6 +385,8 @@ const Price: React.FC<TPrice> = ({ data, cart, content }) => {
     data.categories,
     cart,
     data.progressiveDiscount,
+    data.activePromotion?.products,
+    data.promotionProductIds,
   );
   const router = useRouter();
 
@@ -677,6 +737,8 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
     data.categories,
     cart,
     data.progressiveDiscount,
+    data.activePromotion?.products,
+    data.promotionProductIds,
   );
   const eligibleGiftStep = useMemo(
     () =>
@@ -685,11 +747,11 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
           (step) =>
             step.type === "GIFT" &&
             typeof step.amount === "number" &&
-            price.fullPrice >= step.amount &&
+            price.progressiveDiscountBaseFullPrice >= step.amount &&
             Boolean(step.prizes?.length),
         )
         .sort((a, b) => (b.amount ?? 0) - (a.amount ?? 0))[0] || null,
-    [data.progressiveDiscount, price.fullPrice],
+    [data.progressiveDiscount, price.progressiveDiscountBaseFullPrice],
   );
   const availablePrizes = eligibleGiftStep?.prizes || [];
   const prizeSelectionRequired = availablePrizes.length > 0;
@@ -1662,6 +1724,8 @@ export const OrderSummaryModal: React.FC<TOrderSummaryModal> = ({
         data.categories,
         cart,
         data.progressiveDiscount,
+        data.activePromotion?.products,
+        data.promotionProductIds,
       )
       : null;
   const baseProductCount = isOrderMode
@@ -2545,30 +2609,51 @@ const OrderSummaryItem: React.FC<TOrderSummaryItem> = ({
   lg,
   showDivider,
 }) => {
-  const findProduct = findProductById(data.categories, cartItem.productId);
+  const promotionProductIds = new Set([
+    ...(data.promotionProductIds ?? []),
+    ...(data.activePromotion?.products?.map((product) => product.id) ?? []),
+  ]);
+  const promotionBadgeLabel = PROMOTION_BADGE_BY_LOCALE[lg] ?? PROMOTION_BADGE_BY_LOCALE.en;
+  const isPromotionProduct = promotionProductIds.has(cartItem.productId);
+  const findProduct = findProductById(
+    data.categories,
+    cartItem.productId,
+    data.activePromotion?.products,
+  );
   const selectedModifierGroups = buildSelectedModifierGroupsFromCartItem(
     findProduct,
     cartItem,
     lg,
   );
+  const selectedComboGroups = buildSelectedComboGroupsFromCartItem(
+    findProduct,
+    cartItem,
+  );
+  const fallbackName = isPromotionProduct
+    ? `${promotionBadgeLabel} item`
+    : "Item";
+  const itemName =
+    findProduct?.translations
+      ? findProduct.translations[lg]?.["title"] || findProduct.name
+      : findProduct?.name || fallbackName;
+  const selectedGroups = [...selectedModifierGroups, ...selectedComboGroups];
   const price = calculateProductPriceWithProgressiveDiscount(
     cartItem.productId,
     data.progressiveDiscount,
     cart,
     data.categories,
+    data.activePromotion?.products,
+    data.promotionProductIds,
     { cartItem },
   );
   const itemTotal = price ? price.fullPrice * cartItem.quantity : 0;
 
   return (
     <OrderSummaryLineItem
+      badgeLabel={isPromotionProduct ? promotionBadgeLabel : undefined}
       comments={cartItem.description}
-      modifierGroups={selectedModifierGroups}
-      name={
-        findProduct?.translations
-          ? findProduct.translations[lg] && findProduct.translations[lg]["title"] || findProduct.name
-          : findProduct?.name || ""
-      }
+      modifierGroups={selectedGroups}
+      name={itemName}
       price={itemTotal}
       quantity={cartItem.quantity}
       showDivider={showDivider}
@@ -2631,6 +2716,12 @@ const CartListItem: React.FC<TCartListItem> = ({
   quantity,
   lg,
 }) => {
+  const promotionProductIds = new Set([
+    ...(data.promotionProductIds ?? []),
+    ...(data.activePromotion?.products?.map((product) => product.id) ?? []),
+  ]);
+  const promotionBadgeLabel = PROMOTION_BADGE_BY_LOCALE[lg] ?? PROMOTION_BADGE_BY_LOCALE.en;
+  const isPromotionProduct = promotionProductIds.has(cartItem.productId);
   // const [quantity, setQuantity] = useState(cart.quantity)
   const { updateItemQuantity } = useCart();
   const price = calculateProductPriceWithProgressiveDiscount(
@@ -2638,33 +2729,56 @@ const CartListItem: React.FC<TCartListItem> = ({
     data.progressiveDiscount,
     cart,
     data.categories,
+    data.activePromotion?.products,
+    data.promotionProductIds,
     { cartItem },
   );
 
-  const findProduct = findProductById(data.categories, cartItem.productId);
+  const findProduct = findProductById(
+    data.categories,
+    cartItem.productId,
+    data.activePromotion?.products,
+  );
+  const fallbackName = isPromotionProduct
+    ? `${promotionBadgeLabel} item`
+    : "Item";
+  const itemName =
+    findProduct?.translations
+      ? findProduct.translations[lg]?.["title"] || findProduct.name
+      : findProduct?.name || fallbackName;
   const image = findProduct?.photos?.[0]?.url ?? null;
   const selectedModifierGroups = buildSelectedModifierGroupsFromCartItem(
     findProduct,
     cartItem,
     lg,
   );
+  const selectedComboGroups = buildSelectedComboGroupsFromCartItem(
+    findProduct,
+    cartItem,
+  );
+  const selectedGroups = [...selectedModifierGroups, ...selectedComboGroups];
 
   return (
     <div className="flex w-full flex-row items-center gap-2">
       <div className="flex min-w-0 flex-1 flex-row items-start gap-3">
         <ProductImage
           src={image}
-          alt={findProduct?.name || "Product image"}
+          alt={itemName}
           className="h-20 w-20 rounded-lg object-cover bg-foreground aspect-square shrink-0"
           iconClassName="h-6 w-6"
         />
         <div className="flex flex-col gap-1.5 min-w-0">
-          <span className="font-semibold ">
-            {findProduct?.translations
-              ? findProduct?.translations[lg] && findProduct?.translations[lg]["title"] || findProduct?.name
-              : findProduct?.name}
-          </span>
-          <ModifierGroupsList modifierGroups={selectedModifierGroups} />
+          <div className="flex items-center gap-2">
+            <span className="font-semibold ">
+              {itemName}
+            </span>
+            {isPromotionProduct && (
+              <span className="rounded-full bg-[#FFE8B8] px-2 py-0.5 text-[11px] font-bold uppercase tracking-[0.04em] text-[#7A4A00]">
+                {promotionBadgeLabel}
+              </span>
+            )}
+          </div>
+          <ModifierGroupsList modifierGroups={selectedGroups} />
           {cartItem.description && (
             <p className="text-sm text-lightText font-medium">
               {cartItem.description}

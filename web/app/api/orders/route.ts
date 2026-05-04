@@ -1,4 +1,8 @@
 import createOrder from "@/src/createOrder";
+import {
+  MENU_ID_COOKIE_NAME,
+  PROMOTION_ID_COOKIE_NAME,
+} from "@/src/constants/menu";
 import type TCart from "@/types/cart";
 import type { TOrderType, TPaymentMethod } from "@/src/types/order";
 import { NextRequest, NextResponse } from "next/server";
@@ -8,6 +12,8 @@ type PostBody = {
   customerId?: unknown;
   orderType?: unknown;
   paymentMethod?: unknown;
+  menuId?: unknown;
+  promotionId?: unknown;
   language?: unknown;
   scheduleFor?: unknown;
   selectedPrize?: unknown;
@@ -181,6 +187,52 @@ function parseCart(value: unknown): TCart {
         details: { field: "cart.items.description" },
       };
     }
+
+    const comboSelections = (item as { comboSelections?: unknown }).comboSelections;
+    if (comboSelections !== undefined) {
+      if (!Array.isArray(comboSelections)) {
+        throw {
+          code: "INVALID_PARAMS",
+          details: { field: "cart.items.comboSelections" },
+        };
+      }
+
+      for (const selection of comboSelections) {
+        if (
+          typeof selection !== "object" ||
+          selection === null ||
+          Array.isArray(selection)
+        ) {
+          throw {
+            code: "INVALID_PARAMS",
+            details: { field: "cart.items.comboSelections" },
+          };
+        }
+
+        parseRequiredString(
+          (selection as { slotId?: unknown }).slotId,
+          "cart.items.comboSelections.slotId",
+        );
+        parseRequiredString(
+          (selection as { optionProductId?: unknown }).optionProductId,
+          "cart.items.comboSelections.optionProductId",
+        );
+
+        const selectionQuantity = (selection as { quantity?: unknown }).quantity;
+
+        if (
+          typeof selectionQuantity !== "number" ||
+          !Number.isFinite(selectionQuantity) ||
+          !Number.isInteger(selectionQuantity) ||
+          selectionQuantity <= 0
+        ) {
+          throw {
+            code: "INVALID_PARAMS",
+            details: { field: "cart.items.comboSelections.quantity" },
+          };
+        }
+      }
+    }
   }
 
   return value as TCart;
@@ -265,6 +317,26 @@ export async function POST(request: NextRequest) {
     const customerId = parseOptionalString(body.customerId, "customerId");
     const orderType = parseOrderType(body.orderType);
     const paymentMethod = parsePaymentMethod(body.paymentMethod);
+    const menuIdFromBody = parseOptionalString(body.menuId, "menuId");
+    const promotionIdFromBody = parseOptionalString(
+      body.promotionId,
+      "promotionId",
+    );
+    const menuIdFromCookie = request.cookies.get(MENU_ID_COOKIE_NAME)?.value;
+    const promotionIdFromCookie = request.cookies.get(
+      PROMOTION_ID_COOKIE_NAME,
+    )?.value;
+    const menuId =
+      menuIdFromBody ||
+      (typeof menuIdFromCookie === "string" && menuIdFromCookie.trim().length > 0
+        ? menuIdFromCookie.trim()
+        : undefined);
+    const promotionId =
+      promotionIdFromBody ||
+      (typeof promotionIdFromCookie === "string" &&
+      promotionIdFromCookie.trim().length > 0
+        ? promotionIdFromCookie.trim()
+        : undefined);
     const language = parseOptionalString(body.language, "language");
     const scheduleFor = parseOptionalString(body.scheduleFor, "scheduleFor");
     const selectedPrize = parseSelectedPrize(body.selectedPrize);
@@ -277,6 +349,8 @@ export async function POST(request: NextRequest) {
       customerId,
       orderType,
       paymentMethod,
+      menuId,
+      promotionId,
       language,
       scheduleFor,
       selectedPrize,

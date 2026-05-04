@@ -7,6 +7,7 @@ import TProduct from "../src/types/product";
 
 type TResult = {
   fullPrice: number;
+  progressiveDiscountBaseFullPrice: number;
   discountedPrice: number;
   discountAmount: number;
   appliedStep: TProgressiveDiscountStep | null;
@@ -16,6 +17,8 @@ export function calculateCartWithProgressiveDiscount(
   categories: TCategory[],
   cart: TCart,
   progressiveDiscount: TProgressiveDiscount | null,
+  additionalProducts?: TProduct[],
+  excludedFromProgressiveDiscountProductIds?: string[],
 ): TResult {
   const getModifierUnitPrice = (product: TProduct, cartItem?: TCartItem) => {
     if (!cartItem?.modifiers?.length || !product.modifierGroups?.length) {
@@ -36,6 +39,42 @@ export function calculateCartWithProgressiveDiscount(
     );
   };
 
+  const getComboSelectionUnitPrice = (product: TProduct, cartItem?: TCartItem) => {
+    if (!cartItem?.comboSelections?.length || !product.comboSlots?.length) {
+      return 0;
+    }
+
+    const slotOptionExtraPriceByKey = new Map<string, number>();
+
+    for (const slot of product.comboSlots) {
+      for (const option of slot.options) {
+        slotOptionExtraPriceByKey.set(
+          `${slot.id}:${option.productId}`,
+          option.extraPrice,
+        );
+      }
+    }
+
+    return cartItem.comboSelections.reduce((sum, selection) => {
+      const key = `${selection.slotId}:${selection.optionProductId}`;
+      const optionExtraPrice = slotOptionExtraPriceByKey.get(key);
+      const resolvedExtraPrice =
+        typeof optionExtraPrice === "number"
+          ? optionExtraPrice
+          : typeof selection.extraPrice === "number"
+            ? selection.extraPrice
+            : 0;
+      const quantity =
+        typeof selection.quantity === "number" &&
+        Number.isInteger(selection.quantity) &&
+        selection.quantity > 0
+          ? selection.quantity
+          : 1;
+
+      return sum + resolvedExtraPrice * quantity;
+    }, 0);
+  };
+
   const productMap = new Map<string, TProduct>();
 
   for (const category of categories) {
@@ -44,8 +83,20 @@ export function calculateCartWithProgressiveDiscount(
     }
   }
 
+  for (const product of additionalProducts ?? []) {
+    if (!productMap.has(product.id)) {
+      productMap.set(product.id, product);
+    }
+  }
+
+  const excludedProductIdSet = new Set(
+    excludedFromProgressiveDiscountProductIds ?? [],
+  );
+
   let fullPrice = 0;
+  let progressiveDiscountBaseFullPrice = 0;
   let actualPrice = 0;
+  let discountableActualPrice = 0;
 
   for (const item of cart.items) {
     const product = productMap.get(item.productId);
@@ -58,18 +109,31 @@ export function calculateCartWithProgressiveDiscount(
 
     const price = typeof product.price === "number" ? product.price : 0;
     const modifierUnitPrice = getModifierUnitPrice(product, item);
+    const comboSelectionUnitPrice = getComboSelectionUnitPrice(product, item);
 
     const compared =
       typeof product.comparedAtPrice === "number"
         ? product.comparedAtPrice
         : price;
+    const itemFullPrice =
+      (compared + modifierUnitPrice + comboSelectionUnitPrice) * quantity;
 
-    fullPrice += (compared + modifierUnitPrice) * quantity;
-    actualPrice += (price + modifierUnitPrice) * quantity;
+    fullPrice += itemFullPrice;
+    const itemActualPrice =
+      (price + modifierUnitPrice + comboSelectionUnitPrice) * quantity;
+    actualPrice += itemActualPrice;
+    if (!excludedProductIdSet.has(item.productId)) {
+      progressiveDiscountBaseFullPrice += itemFullPrice;
+      discountableActualPrice += itemActualPrice;
+    }
   }
 
   fullPrice = Number(fullPrice.toFixed(2));
+  progressiveDiscountBaseFullPrice = Number(
+    progressiveDiscountBaseFullPrice.toFixed(2),
+  );
   actualPrice = Number(actualPrice.toFixed(2));
+  discountableActualPrice = Number(discountableActualPrice.toFixed(2));
 
   let appliedStep: TProgressiveDiscountStep | null = null;
 
@@ -80,7 +144,7 @@ export function calculateCartWithProgressiveDiscount(
           (step) =>
             step.type === "PERCENTAGEDISCOUNT" &&
             typeof step.amount === "number" &&
-            fullPrice >= step.amount,
+            progressiveDiscountBaseFullPrice >= step.amount,
         )
         .sort((a, b) => (b.amount ?? 0) - (a.amount ?? 0))[0] ?? null;
   }
@@ -91,7 +155,10 @@ export function calculateCartWithProgressiveDiscount(
     appliedStep?.type === "PERCENTAGEDISCOUNT" &&
     typeof appliedStep.discount === "number"
   ) {
-    discountedPrice = actualPrice * (1 - appliedStep.discount / 100);
+    const discountRate = 1 - appliedStep.discount / 100;
+    const nonDiscountableActualPrice = actualPrice - discountableActualPrice;
+    discountedPrice =
+      nonDiscountableActualPrice + discountableActualPrice * discountRate;
   }
 
   discountedPrice = Number(discountedPrice.toFixed(2));
@@ -100,6 +167,7 @@ export function calculateCartWithProgressiveDiscount(
 
   return {
     fullPrice,
+    progressiveDiscountBaseFullPrice,
     discountedPrice,
     discountAmount,
     appliedStep,

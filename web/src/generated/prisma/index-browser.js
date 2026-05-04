@@ -281,6 +281,7 @@ exports.Prisma.AddressScalarFieldEnum = {
 exports.Prisma.ProductScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
+  itemType: 'itemType',
   name: 'name',
   visible: 'visible',
   description: 'description',
@@ -291,12 +292,87 @@ exports.Prisma.ProductScalarFieldEnum = {
   translations: 'translations'
 };
 
+exports.Prisma.ExclusivePromotionScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  name: 'name',
+  active: 'active',
+  expireAt: 'expireAt',
+  validWeekdays: 'validWeekdays'
+};
+
+exports.Prisma.ExclusivePromotionProductScalarFieldEnum = {
+  promotionId: 'promotionId',
+  productId: 'productId',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.MenuScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  name: 'name',
+  active: 'active',
+  isDefault: 'isDefault'
+};
+
+exports.Prisma.MenuVisitScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  visitorId: 'visitorId',
+  visitKey: 'visitKey',
+  menuId: 'menuId',
+  promotionId: 'promotionId',
+  language: 'language',
+  pathname: 'pathname',
+  referrer: 'referrer',
+  userAgent: 'userAgent',
+  ipAddress: 'ipAddress'
+};
+
 exports.Prisma.CategoryScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
   name: 'name',
+  menuId: 'menuId',
   menuIndex: 'menuIndex',
   translations: 'translations'
+};
+
+exports.Prisma.MenuCategoryScalarFieldEnum = {
+  menuId: 'menuId',
+  categoryId: 'categoryId',
+  menuIndex: 'menuIndex',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.ProductCategoryScalarFieldEnum = {
+  productId: 'productId',
+  categoryId: 'categoryId',
+  categoryIndex: 'categoryIndex',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.ComboSlotScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  comboId: 'comboId',
+  name: 'name',
+  minSelect: 'minSelect',
+  maxSelect: 'maxSelect',
+  allowDuplicates: 'allowDuplicates',
+  sortIndex: 'sortIndex'
+};
+
+exports.Prisma.ComboSlotOptionScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  slotId: 'slotId',
+  productId: 'productId',
+  extraPrice: 'extraPrice',
+  sortIndex: 'sortIndex'
 };
 
 exports.Prisma.CampaignScalarFieldEnum = {
@@ -414,7 +490,6 @@ exports.Prisma.InventoryProductScalarFieldEnum = {
   minQuantity: 'minQuantity',
   alertThreshold: 'alertThreshold',
   requiresRefill: 'requiresRefill',
-  notifyBelowThreshold: 'notifyBelowThreshold',
   notes: 'notes'
 };
 
@@ -425,6 +500,8 @@ exports.Prisma.InventoryStockScalarFieldEnum = {
   placeId: 'placeId',
   productId: 'productId',
   currentQuantity: 'currentQuantity',
+  minQuantity: 'minQuantity',
+  notifyBelowThreshold: 'notifyBelowThreshold',
   includeInChecklist: 'includeInChecklist',
   lastCheckedAt: 'lastCheckedAt',
   lastCheckedBy: 'lastCheckedBy'
@@ -531,6 +608,21 @@ exports.DispatchAssignmentJobStatus = exports.$Enums.DispatchAssignmentJobStatus
   FAILED: 'FAILED'
 };
 
+exports.ProductItemType = exports.$Enums.ProductItemType = {
+  PRODUCT: 'PRODUCT',
+  COMBO: 'COMBO'
+};
+
+exports.ExclusivePromotionWeekday = exports.$Enums.ExclusivePromotionWeekday = {
+  MONDAY: 'MONDAY',
+  TUESDAY: 'TUESDAY',
+  WEDNESDAY: 'WEDNESDAY',
+  THURSDAY: 'THURSDAY',
+  FRIDAY: 'FRIDAY',
+  SATURDAY: 'SATURDAY',
+  SUNDAY: 'SUNDAY'
+};
+
 exports.OrderStatus = exports.$Enums.OrderStatus = {
   ACCEPTED: 'ACCEPTED',
   PREPARING: 'PREPARING',
@@ -547,47 +639,6 @@ exports.PaymentType = exports.$Enums.PaymentType = {
   CASH: 'CASH',
   CARD: 'CARD',
   ZELLE: 'ZELLE'
-};
-
-exports.InventoryPlaceType = exports.$Enums.InventoryPlaceType = {
-  FRIDGE: 'FRIDGE',
-  FREEZER: 'FREEZER',
-  SHELF: 'SHELF',
-  PANTRY: 'PANTRY',
-  OTHER: 'OTHER'
-};
-
-exports.InventoryChecklistStatus = exports.$Enums.InventoryChecklistStatus = {
-  OPEN: 'OPEN',
-  SUBMITTED: 'SUBMITTED',
-  REVIEWED: 'REVIEWED'
-};
-
-exports.InventoryChecklistItemResult = exports.$Enums.InventoryChecklistItemResult = {
-  PENDING: 'PENDING',
-  OK: 'OK',
-  BELOW_MIN: 'BELOW_MIN',
-  REFILL_NEEDED: 'REFILL_NEEDED',
-  OUT_OF_STOCK: 'OUT_OF_STOCK'
-};
-
-exports.InventoryAlertType = exports.$Enums.InventoryAlertType = {
-  LOW_STOCK: 'LOW_STOCK',
-  THRESHOLD: 'THRESHOLD',
-  REFILL: 'REFILL'
-};
-
-exports.InventoryAlertSeverity = exports.$Enums.InventoryAlertSeverity = {
-  CRITICAL: 'CRITICAL',
-  HIGH: 'HIGH',
-  MEDIUM: 'MEDIUM',
-  LOW: 'LOW'
-};
-
-exports.InventoryAlertStatus = exports.$Enums.InventoryAlertStatus = {
-  OPEN: 'OPEN',
-  ACKED: 'ACKED',
-  RESOLVED: 'RESOLVED'
 };
 
 exports.Prisma.ModelName = {
@@ -610,7 +661,15 @@ exports.Prisma.ModelName = {
   DispatchAssignmentJob: 'DispatchAssignmentJob',
   Address: 'Address',
   Product: 'Product',
+  ExclusivePromotion: 'ExclusivePromotion',
+  ExclusivePromotionProduct: 'ExclusivePromotionProduct',
+  Menu: 'Menu',
+  MenuVisit: 'MenuVisit',
   Category: 'Category',
+  MenuCategory: 'MenuCategory',
+  ProductCategory: 'ProductCategory',
+  ComboSlot: 'ComboSlot',
+  ComboSlotOption: 'ComboSlotOption',
   Campaign: 'Campaign',
   Customer: 'Customer',
   DeliveryAddress: 'DeliveryAddress',

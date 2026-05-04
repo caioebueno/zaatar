@@ -3,6 +3,7 @@ type TCartItem = {
   productId: string;
   quantity: number;
   modifiers: TSelectedModifier[];
+  comboSelections?: TSelectedComboSlotOption[];
   description?: string;
 };
 
@@ -18,10 +19,24 @@ type TSelectedModifier = {
   modifierItemId: string;
 };
 
+type TSelectedComboSlotOption = {
+  slotId: string;
+  optionProductId: string;
+  quantity: number;
+  extraPrice?: number;
+  slotName?: string;
+  optionProductName?: string;
+};
+
 type TCart = {
   items: TCartItem[];
   selectedPrize?: TCartPrizeSelection | null;
 };
 
 export default TCart;
-export { TCartItem, TCartPrizeSelection, TSelectedModifier };
+export {
+  TCartItem,
+  TCartPrizeSelection,
+  TSelectedModifier,
+  TSelectedComboSlotOption,
+};

@@ -7,6 +7,34 @@ type ProductVisibleRow = {
   visible: boolean;
 };
 
+type ProductCategoryEntry = {
+  productId: string;
+  categoryId: string;
+  categoryIndex: number | null;
+};
+
+type ProductItemType = "PRODUCT" | "COMBO";
+
+type ComboSlotOptionInput = {
+  productId: string;
+  extraPrice: number;
+  sortIndex: number | null;
+};
+
+type LegacyComboItemInput = {
+  productId: string;
+  quantity: number;
+};
+
+type ComboSlotInput = {
+  name: string;
+  minSelect: number;
+  maxSelect: number;
+  allowDuplicates: boolean;
+  sortIndex: number | null;
+  options: ComboSlotOptionInput[];
+};
+
 type PostBody = {
   id?: unknown;
   name?: unknown;
@@ -15,17 +43,22 @@ type PostBody = {
   price?: unknown;
   comparedAtPrice?: unknown;
   categoryId?: unknown;
+  categoryIds?: unknown;
   categoryIndex?: unknown;
   translations?: unknown;
   photoIds?: unknown;
   photoUrls?: unknown;
   modifierGroupIds?: unknown;
   preparationStepIds?: unknown;
+  itemType?: unknown;
+  comboSlots?: unknown;
+  comboItems?: unknown;
 };
 
 type ProductRowResponse = {
   id: string;
   createdAt: string;
+  itemType: ProductItemType;
   name: string;
   visible: boolean;
   description: string | null;
@@ -33,6 +66,11 @@ type ProductRowResponse = {
   comparedAtPrice: number | null;
   categoryId: string | null;
   categoryIndex: number | null;
+  categoryIds: string[];
+  categoryEntries: {
+    categoryId: string;
+    categoryIndex: number | null;
+  }[];
   translations: unknown | null;
   photos: {
     id: string;
@@ -62,11 +100,31 @@ type ProductRowResponse = {
     }[];
   }[];
   preparationStepIds: string[];
+  comboSlots: {
+    id: string;
+    name: string;
+    minSelect: number;
+    maxSelect: number;
+    allowDuplicates: boolean;
+    sortIndex: number | null;
+    options: {
+      productId: string;
+      productName: string;
+      extraPrice: number;
+      sortIndex: number | null;
+    }[];
+  }[];
+  comboItems: {
+    productId: string;
+    productName: string;
+    quantity: number;
+  }[];
 };
 
 function mapProductRow(product: {
   id: string;
   createdAt: Date;
+  itemType: ProductItemType;
   name: string;
   visible?: boolean;
   description: string | null;
@@ -101,10 +159,27 @@ function mapProductRow(product: {
     }[];
   }[];
   preparationSteps: { id: string }[];
-}): ProductRowResponse {
+  comboSlots: {
+    id: string;
+    name: string;
+    minSelect: number;
+    maxSelect: number;
+    allowDuplicates: boolean;
+    sortIndex: number | null;
+    options: {
+      productId: string;
+      extraPrice: number;
+      sortIndex: number | null;
+      product: {
+        name: string;
+      };
+    }[];
+  }[];
+}, productCategoryEntries: ProductCategoryEntry[]): ProductRowResponse {
   return {
     id: product.id,
     createdAt: product.createdAt.toISOString(),
+    itemType: product.itemType,
     name: product.name,
     visible: product.visible !== false,
     description: product.description,
@@ -112,6 +187,11 @@ function mapProductRow(product: {
     comparedAtPrice: product.comparedAtPrice,
     categoryId: product.categoryId,
     categoryIndex: product.categoryIndex,
+    categoryIds: productCategoryEntries.map((entry) => entry.categoryId),
+    categoryEntries: productCategoryEntries.map((entry) => ({
+      categoryId: entry.categoryId,
+      categoryIndex: entry.categoryIndex,
+    })),
     translations: product.translations,
     photos: product.photos.map((photo) => ({
       id: photo.id,
@@ -147,6 +227,35 @@ function mapProductRow(product: {
     preparationStepIds: product.preparationSteps.map(
       (preparationStep) => preparationStep.id,
     ),
+    comboSlots: product.comboSlots.map((comboSlot) => ({
+      id: comboSlot.id,
+      name: comboSlot.name,
+      minSelect: comboSlot.minSelect,
+      maxSelect: comboSlot.maxSelect,
+      allowDuplicates: comboSlot.allowDuplicates,
+      sortIndex: comboSlot.sortIndex,
+      options: comboSlot.options.map((option) => ({
+        productId: option.productId,
+        productName: option.product.name,
+        extraPrice: option.extraPrice,
+        sortIndex: option.sortIndex,
+      })),
+    })),
+    comboItems: product.comboSlots
+      .map((slot) => {
+        const firstOption = slot.options[0];
+        if (!firstOption) return null;
+
+        return {
+          productId: firstOption.productId,
+          productName: firstOption.product.name,
+          quantity: Math.max(1, slot.maxSelect),
+        };
+      })
+      .filter(
+        (item): item is { productId: string; productName: string; quantity: number } =>
+          item !== null,
+      ),
   };
 }
 
@@ -194,6 +303,14 @@ function parseBoolean(value: unknown, field: string): boolean {
   return value;
 }
 
+function parseProductItemType(value: unknown, field: string): ProductItemType {
+  if (value === "PRODUCT" || value === "COMBO") {
+    return value;
+  }
+
+  throw new Error(field);
+}
+
 function parseIdArray(value: unknown, field: string): string[] {
   if (!Array.isArray(value)) {
     throw new Error(field);
@@ -215,6 +332,150 @@ function parseIdArray(value: unknown, field: string): string[] {
       }),
     ),
   );
+}
+
+function parseComboSlots(value: unknown, field: string): ComboSlotInput[] {
+  if (!Array.isArray(value)) {
+    throw new Error(field);
+  }
+
+  return value.map((row, slotIndex) => {
+    if (!row || typeof row !== "object" || Array.isArray(row)) {
+      throw new Error(field);
+    }
+
+    const record = row as {
+      name?: unknown;
+      minSelect?: unknown;
+      maxSelect?: unknown;
+      allowDuplicates?: unknown;
+      sortIndex?: unknown;
+      options?: unknown;
+    };
+
+    if (typeof record.name !== "string" || !record.name.trim()) {
+      throw new Error(field);
+    }
+
+    if (
+      typeof record.minSelect !== "number" ||
+      !Number.isInteger(record.minSelect) ||
+      record.minSelect < 0
+    ) {
+      throw new Error(field);
+    }
+
+    if (
+      typeof record.maxSelect !== "number" ||
+      !Number.isInteger(record.maxSelect) ||
+      record.maxSelect < record.minSelect
+    ) {
+      throw new Error(field);
+    }
+
+    const allowDuplicates =
+      record.allowDuplicates === undefined
+        ? true
+        : parseBoolean(record.allowDuplicates, field);
+
+    const sortIndex =
+      record.sortIndex === undefined
+        ? null
+        : parseNullableInt(record.sortIndex, field);
+
+    if (!Array.isArray(record.options) || record.options.length === 0) {
+      throw new Error(field);
+    }
+
+    const uniqueOptionsByProductId = new Map<string, ComboSlotOptionInput>();
+
+    for (let optionIndex = 0; optionIndex < record.options.length; optionIndex += 1) {
+      const option = record.options[optionIndex];
+      if (!option || typeof option !== "object" || Array.isArray(option)) {
+        throw new Error(field);
+      }
+
+      const optionRecord = option as {
+        productId?: unknown;
+        extraPrice?: unknown;
+        sortIndex?: unknown;
+      };
+
+      if (typeof optionRecord.productId !== "string" || !optionRecord.productId.trim()) {
+        throw new Error(field);
+      }
+
+      const extraPrice =
+        optionRecord.extraPrice === undefined
+          ? 0
+          : parseNullableInt(optionRecord.extraPrice, field);
+      const optionSortIndex =
+        optionRecord.sortIndex === undefined
+          ? null
+          : parseNullableInt(optionRecord.sortIndex, field);
+
+      uniqueOptionsByProductId.set(optionRecord.productId.trim(), {
+        productId: optionRecord.productId.trim(),
+        extraPrice: extraPrice ?? 0,
+        sortIndex: optionSortIndex ?? optionIndex + 1,
+      });
+    }
+
+    const options = Array.from(uniqueOptionsByProductId.values());
+
+    if (!allowDuplicates && record.maxSelect > options.length) {
+      throw new Error(field);
+    }
+
+    return {
+      name: record.name.trim(),
+      minSelect: record.minSelect,
+      maxSelect: record.maxSelect,
+      allowDuplicates,
+      sortIndex: sortIndex ?? slotIndex + 1,
+      options,
+    };
+  });
+}
+
+function parseLegacyComboItems(
+  value: unknown,
+  field: string,
+): LegacyComboItemInput[] {
+  if (!Array.isArray(value)) {
+    throw new Error(field);
+  }
+
+  const items = new Map<string, LegacyComboItemInput>();
+
+  for (const row of value) {
+    if (!row || typeof row !== "object" || Array.isArray(row)) {
+      throw new Error(field);
+    }
+
+    const record = row as {
+      productId?: unknown;
+      quantity?: unknown;
+    };
+
+    if (typeof record.productId !== "string" || !record.productId.trim()) {
+      throw new Error(field);
+    }
+    if (
+      typeof record.quantity !== "number" ||
+      !Number.isInteger(record.quantity) ||
+      record.quantity <= 0
+    ) {
+      throw new Error(field);
+    }
+
+    items.set(record.productId.trim(), {
+      productId: record.productId.trim(),
+      quantity: record.quantity,
+    });
+  }
+
+  return Array.from(items.values());
 }
 
 function parseUrlArray(value: unknown, field: string): string[] {
@@ -300,10 +561,57 @@ export async function POST(request: NextRequest) {
       body.comparedAtPrice === undefined
         ? null
         : parseNullableInt(body.comparedAtPrice, "comparedAtPrice");
+    const itemType =
+      body.itemType === undefined
+        ? ("PRODUCT" as const)
+        : parseProductItemType(body.itemType, "itemType");
+    const comboSlotsFromBody =
+      body.comboSlots === undefined
+        ? null
+        : parseComboSlots(body.comboSlots, "comboSlots");
+    const legacyComboItems =
+      body.comboItems === undefined
+        ? null
+        : parseLegacyComboItems(body.comboItems, "comboItems");
+    const comboSlots =
+      comboSlotsFromBody ??
+      (legacyComboItems
+        ? legacyComboItems.map((item, index) => ({
+            name: `Item ${index + 1}`,
+            minSelect: item.quantity,
+            maxSelect: item.quantity,
+            allowDuplicates: false,
+            sortIndex: index + 1,
+            options: [
+              {
+                productId: item.productId,
+                extraPrice: 0,
+                sortIndex: 1,
+              },
+            ],
+          }))
+        : []);
     const categoryIndex =
       body.categoryIndex === undefined
         ? null
         : parseNullableInt(body.categoryIndex, "categoryIndex");
+
+    if (itemType !== "COMBO" && comboSlots.length > 0) {
+      return NextResponse.json(
+        { error: "Invalid payload", field: "comboSlots" },
+        { status: 400 },
+      );
+    }
+
+    if (
+      itemType === "COMBO" &&
+      comboSlots.some((slot) => slot.options.some((option) => option.productId === id))
+    ) {
+      return NextResponse.json(
+        { error: "Invalid payload", field: "comboSlots" },
+        { status: 400 },
+      );
+    }
 
     if (body.photoIds !== undefined && body.photoUrls !== undefined) {
       return NextResponse.json(
@@ -332,6 +640,31 @@ export async function POST(request: NextRequest) {
             { status: 400 },
           );
         }
+      }
+    }
+
+    const categoryIdsFromBody =
+      body.categoryIds === undefined
+        ? []
+        : parseIdArray(body.categoryIds, "categoryIds");
+    const allCategoryIds = Array.from(
+      new Set([...categoryIdsFromBody, ...(categoryId ? [categoryId] : [])]),
+    );
+
+    if (allCategoryIds.length > 0) {
+      const categoryCount = await prisma.category.count({
+        where: {
+          id: {
+            in: allCategoryIds,
+          },
+        },
+      });
+
+      if (categoryCount !== allCategoryIds.length) {
+        return NextResponse.json(
+          { error: "Invalid payload", field: "categoryIds" },
+          { status: 400 },
+        );
       }
     }
 
@@ -374,6 +707,30 @@ export async function POST(request: NextRequest) {
       if (preparationStepCount !== preparationStepIds.length) {
         return NextResponse.json(
           { error: "Invalid payload", field: "preparationStepIds" },
+          { status: 400 },
+        );
+      }
+    }
+
+    if (comboSlots.length > 0) {
+      const comboProductIds = Array.from(
+        new Set(
+          comboSlots.flatMap((slot) =>
+            slot.options.map((option) => option.productId),
+          ),
+        ),
+      );
+      const comboProductCount = await prisma.product.count({
+        where: {
+          id: {
+            in: comboProductIds,
+          },
+        },
+      });
+
+      if (comboProductCount !== comboProductIds.length) {
+        return NextResponse.json(
+          { error: "Invalid payload", field: "comboSlots" },
           { status: 400 },
         );
       }
@@ -500,59 +857,152 @@ export async function POST(request: NextRequest) {
           id: true,
         },
       },
-    };
-
-    const createdProduct = await prisma.product.create({
-      data: {
-        id,
-        name,
-        visible,
-        description,
-        price,
-        comparedAtPrice,
-        categoryIndex,
-        ...(categoryId
-          ? {
-              category: {
-                connect: {
-                  id: categoryId,
+      comboSlots: {
+        select: {
+          id: true,
+          name: true,
+          minSelect: true,
+          maxSelect: true,
+          allowDuplicates: true,
+          sortIndex: true,
+          options: {
+            select: {
+              productId: true,
+              extraPrice: true,
+              sortIndex: true,
+              product: {
+                select: {
+                  name: true,
                 },
               },
-            }
-          : {}),
-        ...(translationsValue !== undefined
-          ? { translations: translationsValue }
-          : {}),
-        ...(photoIds.length > 0
-          ? {
-              photos: {
-                connect: photoIds.map((photoId) => ({ id: photoId })),
-              },
-            }
-          : {}),
-        ...(modifierGroupIds.length > 0
-          ? {
-              modifierGroups: {
-                connect: modifierGroupIds.map((modifierGroupId) => ({
-                  id: modifierGroupId,
-                })),
-              },
-            }
-          : {}),
-        ...(preparationStepIds.length > 0
-          ? {
-              preparationSteps: {
-                connect: preparationStepIds.map((preparationStepId) => ({
-                  id: preparationStepId,
-                })),
-              },
-            }
-          : {}),
+            },
+            orderBy: [{ sortIndex: "asc" as const }, { createdAt: "asc" as const }],
+          },
+        },
+        orderBy: [{ sortIndex: "asc" as const }, { createdAt: "asc" as const }],
       },
-      include,
+    };
+
+    const createdProduct = await prisma.$transaction(async (tx) => {
+      const created = await tx.product.create({
+        data: {
+          id,
+          itemType,
+          name,
+          visible,
+          description,
+          price,
+          comparedAtPrice,
+          categoryIndex,
+          ...(categoryId
+            ? {
+                category: {
+                  connect: {
+                    id: categoryId,
+                  },
+                },
+              }
+            : {}),
+          ...(translationsValue !== undefined
+            ? { translations: translationsValue }
+            : {}),
+          ...(photoIds.length > 0
+            ? {
+                photos: {
+                  connect: photoIds.map((photoId) => ({ id: photoId })),
+                },
+              }
+            : {}),
+          ...(modifierGroupIds.length > 0
+            ? {
+                modifierGroups: {
+                  connect: modifierGroupIds.map((modifierGroupId) => ({
+                    id: modifierGroupId,
+                  })),
+                },
+              }
+            : {}),
+          ...(preparationStepIds.length > 0
+            ? {
+                preparationSteps: {
+                  connect: preparationStepIds.map((preparationStepId) => ({
+                    id: preparationStepId,
+                  })),
+                },
+              }
+            : {}),
+        },
+      });
+
+      if (allCategoryIds.length > 0) {
+        await tx.$executeRaw`
+          INSERT INTO "ProductCategory" ("productId", "categoryId", "categoryIndex")
+          VALUES ${Prisma.join(
+            allCategoryIds.map((linkedCategoryId) => Prisma.sql`(${created.id}, ${linkedCategoryId}, ${categoryIndex})`),
+          )}
+          ON CONFLICT ("productId", "categoryId")
+          DO UPDATE SET "categoryIndex" = EXCLUDED."categoryIndex"
+        `;
+      }
+
+      await tx.comboSlot.deleteMany({
+        where: {
+          comboId: created.id,
+        },
+      });
+
+      if (itemType === "COMBO" && comboSlots.length > 0) {
+        for (let slotIndex = 0; slotIndex < comboSlots.length; slotIndex += 1) {
+          const slot = comboSlots[slotIndex];
+          const slotId = createId();
+
+          await tx.comboSlot.create({
+            data: {
+              id: slotId,
+              comboId: created.id,
+              name: slot.name,
+              minSelect: slot.minSelect,
+              maxSelect: slot.maxSelect,
+              allowDuplicates: slot.allowDuplicates,
+              sortIndex: slot.sortIndex ?? slotIndex + 1,
+            },
+          });
+
+          if (slot.options.length > 0) {
+            await tx.comboSlotOption.createMany({
+              data: slot.options.map((option, optionIndex) => ({
+                id: createId(),
+                slotId,
+                productId: option.productId,
+                extraPrice: option.extraPrice,
+                sortIndex: option.sortIndex ?? optionIndex + 1,
+              })),
+            });
+          }
+        }
+      }
+
+      return tx.product.findUniqueOrThrow({
+        where: {
+          id: created.id,
+        },
+        include,
+      });
     });
 
-    return NextResponse.json(mapProductRow(createdProduct), { status: 201 });
+    const createdProductCategoryRows = await prisma.$queryRaw<ProductCategoryEntry[]>`
+      SELECT "productId", "categoryId", "categoryIndex"
+      FROM "ProductCategory"
+      WHERE "productId" = ${createdProduct.id}
+      ORDER BY
+        COALESCE("categoryIndex", 2147483647) ASC,
+        "createdAt" ASC
+    `;
+
+    return NextResponse.json(
+      mapProductRow(createdProduct, createdProductCategoryRows),
+      { status: 201 },
+    );
   } catch (error) {
     if (error instanceof Error && error.message) {
       return NextResponse.json(
@@ -624,6 +1074,30 @@ export async function GET() {
               select: {
                 id: true,
               },
+            },
+            comboSlots: {
+              select: {
+                id: true,
+                name: true,
+                minSelect: true,
+                maxSelect: true,
+                allowDuplicates: true,
+                sortIndex: true,
+                options: {
+                  select: {
+                    productId: true,
+                    extraPrice: true,
+                    sortIndex: true,
+                    product: {
+                      select: {
+                        name: true,
+                      },
+                    },
+                  },
+                  orderBy: [{ sortIndex: "asc" }, { createdAt: "asc" }],
+                },
+              },
+              orderBy: [{ sortIndex: "asc" }, { createdAt: "asc" }],
             },
           },
           orderBy: [
@@ -727,14 +1201,38 @@ export async function GET() {
       productVisibilityRows.map((row) => [row.id, row.visible]),
     );
 
+    const productIds = products.map((product) => product.id);
+    const productCategoryRows =
+      productIds.length === 0
+        ? []
+        : await prisma.$queryRaw<ProductCategoryEntry[]>`
+            SELECT "productId", "categoryId", "categoryIndex"
+            FROM "ProductCategory"
+            WHERE "productId" IN (${Prisma.join(productIds)})
+            ORDER BY
+              "productId" ASC,
+              COALESCE("categoryIndex", 2147483647) ASC,
+              "createdAt" ASC
+          `;
+    const productCategoriesByProductId = new Map<string, ProductCategoryEntry[]>();
+
+    for (const row of productCategoryRows) {
+      const current = productCategoriesByProductId.get(row.productId) ?? [];
+      current.push(row);
+      productCategoriesByProductId.set(row.productId, current);
+    }
+
     return NextResponse.json({
       products: products.map((product) =>
-        mapProductRow({
-          ...product,
-          visible:
-            visibleByProductId.get(product.id) ??
-            (product as typeof product & { visible?: boolean }).visible,
-        }),
+        mapProductRow(
+          {
+            ...product,
+            visible:
+              visibleByProductId.get(product.id) ??
+              (product as typeof product & { visible?: boolean }).visible,
+          },
+          productCategoriesByProductId.get(product.id) ?? [],
+        ),
       ),
       lookup: {
         categories,

@@ -1,5 +1,6 @@
 import prisma from "@/prisma";
 import type { Prisma } from "@/src/generated/prisma";
+import { DEFAULT_MENU_ID, DEFAULT_MENU_NAME } from "@/src/constants/menu";
 
 export type ProductManagerTranslations = Record<string, Record<string, string>>;
 
@@ -23,8 +24,34 @@ export type ProductManagerModifierGroup = {
   items: ProductManagerModifierGroupItem[];
 };
 
+export type ProductManagerProductItemType = "PRODUCT" | "COMBO";
+
+export type ProductManagerComboItem = {
+  productId: string;
+  productName: string;
+  quantity: number;
+};
+
+export type ProductManagerComboSlotOption = {
+  productId: string;
+  productName: string;
+  extraPrice: number;
+  sortIndex: number | null;
+};
+
+export type ProductManagerComboSlot = {
+  id: string;
+  name: string;
+  minSelect: number;
+  maxSelect: number;
+  allowDuplicates: boolean;
+  sortIndex: number | null;
+  options: ProductManagerComboSlotOption[];
+};
+
 export type ProductManagerProduct = {
   id: string;
+  itemType: ProductManagerProductItemType;
   name: string;
   visible: boolean;
   description: string | null;
@@ -37,6 +64,8 @@ export type ProductManagerProduct = {
   photoUrls: string[];
   mainPhotoUrl: string | null;
   modifierGroups: ProductManagerModifierGroup[];
+  comboItems: ProductManagerComboItem[];
+  comboSlots: ProductManagerComboSlot[];
 };
 
 export type ProductManagerCategory = {
@@ -55,6 +84,7 @@ export type ProductManagerListResponse = {
 type ProductListRow = Prisma.ProductGetPayload<{
   select: {
     id: true;
+    itemType: true;
     name: true;
     visible: true;
     price: true;
@@ -103,6 +133,37 @@ type ProductListRow = Prisma.ProductGetPayload<{
         createdAt: "asc";
       };
     };
+    comboSlots: {
+      select: {
+        id: true;
+        name: true;
+        minSelect: true;
+        maxSelect: true;
+        allowDuplicates: true;
+        sortIndex: true;
+        options: {
+          select: {
+            productId: true;
+            extraPrice: true;
+            sortIndex: true;
+            product: {
+              select: {
+                name: true;
+              };
+            };
+          };
+          orderBy: [
+            {
+              sortIndex: "asc";
+            },
+            {
+              createdAt: "asc";
+            },
+          ];
+        };
+      };
+      orderBy: [{ sortIndex: "asc" }, { createdAt: "asc" }];
+    };
   };
 }>;
 
@@ -134,6 +195,20 @@ type ModifierGroupLookupRow = Prisma.ModifierGroupGetPayload<{
     };
   };
 }>;
+
+type MenuCategoryRow = {
+  categoryId: string;
+  categoryName: string;
+  menuIndex: number | null;
+  createdAt: Date;
+};
+
+type ProductCategoryAssignmentRow = {
+  productId: string;
+  categoryId: string;
+  categoryIndex: number | null;
+  createdAt: Date;
+};
 
 function parseTranslations(
   value: Prisma.JsonValue | null,
@@ -213,6 +288,7 @@ function sortProducts(left: ProductListRow, right: ProductListRow): number {
 function mapProduct(product: ProductListRow): ProductManagerProduct {
   return {
     id: product.id,
+    itemType: product.itemType,
     name: product.name,
     visible: product.visible !== false,
     description: product.description,
@@ -227,22 +303,85 @@ function mapProduct(product: ProductListRow): ProductManagerProduct {
     modifierGroups: product.modifierGroups.map((modifierGroup) =>
       mapModifierGroup(modifierGroup),
     ),
+    comboSlots: product.comboSlots.map((slot) => ({
+      id: slot.id,
+      name: slot.name,
+      minSelect: slot.minSelect,
+      maxSelect: slot.maxSelect,
+      allowDuplicates: slot.allowDuplicates,
+      sortIndex: slot.sortIndex,
+      options: slot.options.map((option) => ({
+        productId: option.productId,
+        productName: option.product.name,
+        extraPrice: option.extraPrice,
+        sortIndex: option.sortIndex,
+      })),
+    })),
+    comboItems: product.comboSlots
+      .map((slot) => {
+        const firstOption = slot.options[0];
+        if (!firstOption) return null;
+
+        return {
+          productId: firstOption.productId,
+          productName: firstOption.product.name,
+          quantity: Math.max(1, slot.maxSelect),
+        };
+      })
+      .filter(
+        (item): item is ProductManagerComboItem => item !== null,
+      ),
   };
 }
 
-export default async function getProductsManagerList(): Promise<ProductManagerListResponse> {
-  const [categories, products, lookupModifierGroups] = await Promise.all([
-    prisma.category.findMany({
+function mapProductForCategory(
+  product: ProductListRow,
+  categoryId: string | null,
+  categoryIndex: number | null,
+): ProductManagerProduct {
+  const mapped = mapProduct(product);
+
+  return {
+    ...mapped,
+    categoryId,
+    categoryIndex,
+  };
+}
+
+async function ensureDefaultMenuRecord(): Promise<void> {
+  await prisma.$executeRaw`
+    INSERT INTO "Menu" ("id", "createdAt", "updatedAt", "name", "active", "isDefault")
+    VALUES (${DEFAULT_MENU_ID}, NOW(), NOW(), ${DEFAULT_MENU_NAME}, true, true)
+    ON CONFLICT ("id") DO NOTHING
+  `;
+}
+
+export default async function getProductsManagerList(
+  menuId: string = DEFAULT_MENU_ID,
+): Promise<ProductManagerListResponse> {
+  const normalizedMenuId = menuId.trim() || DEFAULT_MENU_ID;
+
+  await ensureDefaultMenuRecord();
+
+  const [menuCategories, products, productCategories, lookupModifierGroups] =
+    await Promise.all([
+      prisma.$queryRaw<MenuCategoryRow[]>`
+        SELECT
+          mc."categoryId",
+          c."name" as "categoryName",
+          mc."menuIndex",
+          mc."createdAt"
+        FROM "MenuCategory" mc
+        INNER JOIN "Category" c ON c."id" = mc."categoryId"
+        WHERE mc."menuId" = ${normalizedMenuId}
+        ORDER BY
+          COALESCE(mc."menuIndex", 2147483647) ASC,
+          mc."createdAt" ASC
+      `,
+      prisma.product.findMany({
       select: {
         id: true,
-        name: true,
-        menuIndex: true,
-      },
-      orderBy: [{ menuIndex: "asc" }, { createdAt: "asc" }],
-    }),
-    prisma.product.findMany({
-      select: {
-        id: true,
+        itemType: true,
         name: true,
         visible: true,
         price: true,
@@ -291,20 +430,50 @@ export default async function getProductsManagerList(): Promise<ProductManagerLi
             createdAt: "asc",
           },
         },
+        comboSlots: {
+          select: {
+            id: true,
+            name: true,
+            minSelect: true,
+            maxSelect: true,
+            allowDuplicates: true,
+            sortIndex: true,
+            options: {
+              select: {
+                productId: true,
+                extraPrice: true,
+                sortIndex: true,
+                product: {
+                  select: {
+                    name: true,
+                  },
+                },
+              },
+              orderBy: [{ sortIndex: "asc" }, { createdAt: "asc" }],
+            },
+          },
+          orderBy: [{ sortIndex: "asc" }, { createdAt: "asc" }],
+        },
       },
       orderBy: [
-        {
-          categoryId: "asc",
-        },
-        {
-          categoryIndex: "asc",
-        },
         {
           createdAt: "asc",
         },
       ],
-    }),
-    prisma.modifierGroup.findMany({
+      }),
+      prisma.$queryRaw<ProductCategoryAssignmentRow[]>`
+        SELECT
+          "productId",
+          "categoryId",
+          "categoryIndex",
+          "createdAt"
+        FROM "ProductCategory"
+        ORDER BY
+          "categoryId" ASC,
+          COALESCE("categoryIndex", 2147483647) ASC,
+          "createdAt" ASC
+      `,
+      prisma.modifierGroup.findMany({
       select: {
         id: true,
         title: true,
@@ -334,23 +503,52 @@ export default async function getProductsManagerList(): Promise<ProductManagerLi
       orderBy: {
         createdAt: "asc",
       },
-    }),
-  ]);
+      }),
+    ]);
+
+  const categories = menuCategories.map((menuCategory) => ({
+    id: menuCategory.categoryId,
+    name: menuCategory.categoryName,
+    menuIndex: menuCategory.menuIndex,
+  }));
+
+  const menuCategoryIds = new Set(categories.map((category) => category.id));
+  const productById = new Map(products.map((product) => [product.id, product]));
+  const productCategoriesByCategoryId = new Map<
+    string,
+    ProductCategoryAssignmentRow[]
+  >();
+
+  for (const row of productCategories) {
+    const current = productCategoriesByCategoryId.get(row.categoryId) ?? [];
+    current.push(row);
+    productCategoriesByCategoryId.set(row.categoryId, current);
+  }
 
   const categorized = categories.map((category) => ({
     id: category.id,
     title: category.name,
     menuIndex: category.menuIndex,
-    products: products
-      .filter((product) => product.categoryId === category.id)
-      .sort(sortProducts)
-      .map(mapProduct),
+    products: (productCategoriesByCategoryId.get(category.id) ?? [])
+      .map((row) => {
+        const product = productById.get(row.productId);
+        if (!product) return null;
+
+        return mapProductForCategory(product, category.id, row.categoryIndex);
+      })
+      .filter((product): product is ProductManagerProduct => Boolean(product)),
   }));
 
+  const categorizedProductIds = new Set(
+    productCategories
+      .filter((row) => menuCategoryIds.has(row.categoryId))
+      .map((row) => row.productId),
+  );
+
   const uncategorized = products
-    .filter((product) => !product.categoryId)
+    .filter((product) => !categorizedProductIds.has(product.id))
     .sort(sortProducts)
-    .map(mapProduct);
+    .map((product) => mapProductForCategory(product, null, null));
 
   return {
     categories: categorized,

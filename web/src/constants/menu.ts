@@ -1,0 +1,8 @@
+export const DEFAULT_MENU_ID = "default";
+export const DEFAULT_MENU_NAME = "Default Menu";
+export const MENU_ID_COOKIE_NAME = "foody_menu_id";
+export const MENU_ID_HEADER_NAME = "x-foody-menu-id";
+export const PROMOTION_ID_COOKIE_NAME = "foody_promotion_id";
+export const PROMOTION_ID_HEADER_NAME = "x-foody-promotion-id";
+export const MENU_VISITOR_ID_COOKIE_NAME = "foody_menu_visitor_id";
+export const MENU_VISIT_KEYS_COOKIE_NAME = "foody_menu_visit_keys";
