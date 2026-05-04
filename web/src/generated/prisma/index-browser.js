@@ -230,6 +230,23 @@ exports.Prisma.BusinessScalarFieldEnum = {
   name: 'name'
 };
 
+exports.Prisma.UserScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  email: 'email',
+  name: 'name',
+  passwordHash: 'passwordHash',
+  emailVerifiedAt: 'emailVerifiedAt',
+  lastLoginAt: 'lastLoginAt'
+};
+
+exports.Prisma.BusinessOwnerScalarFieldEnum = {
+  businessId: 'businessId',
+  userId: 'userId',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.BranchScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
@@ -360,6 +377,7 @@ exports.Prisma.ComboSlotScalarFieldEnum = {
   updatedAt: 'updatedAt',
   comboId: 'comboId',
   name: 'name',
+  translations: 'translations',
   minSelect: 'minSelect',
   maxSelect: 'maxSelect',
   allowDuplicates: 'allowDuplicates',
@@ -449,6 +467,7 @@ exports.Prisma.OrderScalarFieldEnum = {
   type: 'type',
   paymentMethod: 'paymentMethod',
   tipAmount: 'tipAmount',
+  tags: 'tags',
   progressiveDiscountSnapshot: 'progressiveDiscountSnapshot',
   customerId: 'customerId',
   externalId: 'externalId',
@@ -655,6 +674,8 @@ exports.Prisma.ModelName = {
   ModifierGroup: 'ModifierGroup',
   ModifierGroupItem: 'ModifierGroupItem',
   Business: 'Business',
+  User: 'User',
+  BusinessOwner: 'BusinessOwner',
   Branch: 'Branch',
   Driver: 'Driver',
   Dispatch: 'Dispatch',

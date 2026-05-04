@@ -13,6 +13,7 @@ import OrderTotalsLast7DaysBarChart from "../components/OrderTotalsLast7DaysBarC
 import Link from "next/link";
 import MenuVisitsLast7DaysChart from "../components/MenuVisitsLast7DaysChart";
 import { getMenuVisitsOverview } from "@/src/chartData/menuVisitsOverview";
+import { getOrderTagsOverview } from "@/src/chartData/orderTagsOverview";
 
 export default async function ChartsPage() {
   const clientOrderCountResponse = await clientOrderCount();
@@ -22,6 +23,7 @@ export default async function ChartsPage() {
   const getAvgOrdersPerWeekByMonthResponse = await getAvgOrdersPerWeekByMonth();
   const orderTotalsLast7DaysResponse = await orderTotalsLast7Days();
   const menuVisitsOverview = await getMenuVisitsOverview();
+  const orderTagsOverview = await getOrderTagsOverview();
 
   return (
     <div className="bg-zinc-50 font-sans dark:bg-black px-8 py-10 ">
@@ -145,6 +147,42 @@ export default async function ChartsPage() {
                   </p>
                   <span className="text-sm font-semibold text-zinc-900">
                     {item.visits}
+                  </span>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      </div>
+      <div className="pb-8 flex items-center justify-center">
+        <h1 className="text-2xl font-semibold">Orders by Tag</h1>
+      </div>
+      <div className="grid grid-cols-1 gap-10 pb-10 lg:grid-cols-2">
+        <div className="rounded-xl border border-zinc-200 bg-white p-4">
+          <p className="text-xs uppercase tracking-wide text-zinc-500">
+            Orders with at least one tag
+          </p>
+          <p className="mt-2 text-3xl font-semibold text-zinc-900">
+            {orderTagsOverview.taggedOrders}
+          </p>
+          <p className="mt-2 text-xs text-zinc-500">
+            Canceled orders are excluded.
+          </p>
+        </div>
+        <div className="rounded-xl border border-zinc-200 bg-white p-4">
+          <h2 className="mb-4 text-lg font-semibold">Top Tags</h2>
+          <div className="space-y-2">
+            {orderTagsOverview.topTags.length === 0 ? (
+              <p className="text-sm text-zinc-500">No tagged orders yet.</p>
+            ) : (
+              orderTagsOverview.topTags.map((item) => (
+                <div
+                  key={item.tag}
+                  className="flex items-center justify-between rounded-md border border-zinc-100 px-3 py-2"
+                >
+                  <p className="text-sm font-medium text-zinc-800">{item.tag}</p>
+                  <span className="text-sm font-semibold text-zinc-900">
+                    {item.orders}
                   </span>
                 </div>
               ))

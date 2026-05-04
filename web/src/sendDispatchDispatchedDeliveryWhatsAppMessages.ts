@@ -1,7 +1,67 @@
 import prisma from "@/prisma";
 import type { Dispatch } from "@/src/modules/dispatch/domain/dispatch.types";
 import { getDispatchDispatchedWhatsAppMessage } from "@/src/constants/whatsappMessages";
-import { sendWhatsAppTextMessage } from "@/src/whatsappApi";
+import {
+  sendWhatsAppTemplateMessage,
+  sendWhatsAppTextMessage,
+} from "@/src/whatsappApi";
+
+const DEFAULT_TWILIO_DISPATCH_DISPATCHED_TEMPLATE_SID_EN =
+  "HXf2aa80f481c4bff1e7dc3e4de158bbc8";
+const DEFAULT_TWILIO_DISPATCH_DISPATCHED_TEMPLATE_SID_PT =
+  "HX5c0e3ce4cf05ec70173c9647c21e5de3";
+const DEFAULT_TWILIO_DISPATCH_DISPATCHED_TEMPLATE_SID_ES =
+  "HXea4bc246eebf9a1d079fb29e7b5879f0";
+
+function normalizeLanguageForTemplate(
+  value: string | null | undefined,
+): "en" | "pt" | "es" {
+  const normalizedValue = (value || "").trim().toLowerCase();
+  const baseLanguage = normalizedValue.split("-")[0];
+
+  if (baseLanguage === "pt" || baseLanguage === "es") {
+    return baseLanguage;
+  }
+
+  return "en";
+}
+
+function resolveDispatchDispatchedTemplateSid(
+  language: "en" | "pt" | "es",
+): string {
+  if (language === "pt") {
+    return (
+      process.env.TWILIO_OUT_FOR_DELIVERY_TEMPLATE_SID_PT?.trim() ||
+      process.env.TWILIO_DISPATCH_DISPATCHED_TEMPLATE_SID_PT?.trim() ||
+      DEFAULT_TWILIO_DISPATCH_DISPATCHED_TEMPLATE_SID_PT
+    );
+  }
+
+  if (language === "es") {
+    return (
+      process.env.TWILIO_OUT_FOR_DELIVERY_TEMPLATE_SID_ES?.trim() ||
+      process.env.TWILIO_DISPATCH_DISPATCHED_TEMPLATE_SID_ES?.trim() ||
+      DEFAULT_TWILIO_DISPATCH_DISPATCHED_TEMPLATE_SID_ES
+    );
+  }
+
+  return (
+    process.env.TWILIO_OUT_FOR_DELIVERY_TEMPLATE_SID_EN?.trim() ||
+    process.env.TWILIO_OUT_FOR_DELIVERY_TEMPLATE_SID?.trim() ||
+    process.env.TWILIO_DISPATCH_DISPATCHED_TEMPLATE_SID_EN?.trim() ||
+    process.env.TWILIO_DISPATCH_DISPATCHED_TEMPLATE_SID?.trim() ||
+    DEFAULT_TWILIO_DISPATCH_DISPATCHED_TEMPLATE_SID_EN
+  );
+}
+
+function toEtaRangeLabel(estimatedDeliveryDurationMinutes: number | null | undefined): string {
+  const etaFromMinutes = Math.max(
+    0,
+    Math.ceil(Number.isFinite(estimatedDeliveryDurationMinutes) ? Number(estimatedDeliveryDurationMinutes) : 0),
+  );
+  const etaToMinutes = etaFromMinutes + 10;
+  return `${etaFromMinutes}-${etaToMinutes} min`;
+}
 
 export default async function sendDispatchDispatchedDeliveryWhatsAppMessages(
   dispatch: Dispatch,
@@ -48,6 +108,13 @@ export default async function sendDispatchDispatchedDeliveryWhatsAppMessages(
 
       if (!customerPhone) return;
 
+      const templateLanguage = normalizeLanguageForTemplate(order.language);
+      const templateSid = resolveDispatchDispatchedTemplateSid(templateLanguage);
+      const etaRangeLabel = toEtaRangeLabel(
+        order.estimatedDeliveryDurationMinutes ??
+          dispatch.estimatedDeliveryDurationMinutes ??
+          null,
+      );
       const message = getDispatchDispatchedWhatsAppMessage({
         language: order.language,
         estimatedDeliveryDurationMinutes:
@@ -55,6 +122,17 @@ export default async function sendDispatchDispatchedDeliveryWhatsAppMessages(
           dispatch.estimatedDeliveryDurationMinutes ??
           null,
       });
+
+      if (templateSid) {
+        await sendWhatsAppTemplateMessage({
+          customerPhone,
+          contentSid: templateSid,
+          contentVariables: {
+            "1": etaRangeLabel,
+          },
+        });
+        return;
+      }
 
       await sendWhatsAppTextMessage({
         customerPhone,

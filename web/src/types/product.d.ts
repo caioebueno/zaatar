@@ -25,6 +25,11 @@ type TProduct = {
 type TComboSlot = {
   id: string;
   name: string;
+  translations?: {
+    [key: string]: {
+      [key: string]: string;
+    };
+  };
   minSelect: number;
   maxSelect: number;
   allowDuplicates: boolean;
@@ -36,6 +41,11 @@ type TComboSlotOption = {
   id: string;
   productId: string;
   productName: string;
+  productTranslations?: {
+    [key: string]: {
+      [key: string]: string;
+    };
+  };
   productPhotoUrl?: string;
   extraPrice: number;
   sortIndex?: number | null;

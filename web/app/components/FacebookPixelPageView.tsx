@@ -2,18 +2,7 @@
 
 import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
-
-type FbqTrackFunction = (
-  command: "track",
-  eventName: string,
-  ...parameters: unknown[]
-) => void;
-
-declare global {
-  interface Window {
-    fbq?: FbqTrackFunction;
-  }
-}
+import { trackFacebookPixelEvent } from "@/app/lib/facebookPixel";
 
 export default function FacebookPixelPageView() {
   const pathname = usePathname();
@@ -21,28 +10,7 @@ export default function FacebookPixelPageView() {
   const searchParamsString = searchParams.toString();
 
   useEffect(() => {
-    let cancelled = false;
-
-    const tryTrack = (attempt: number) => {
-      if (cancelled) return;
-
-      if (typeof window.fbq === "function") {
-        window.fbq("track", "PageView");
-        return;
-      }
-
-      if (attempt >= 15) return;
-
-      window.setTimeout(() => {
-        tryTrack(attempt + 1);
-      }, 200);
-    };
-
-    tryTrack(0);
-
-    return () => {
-      cancelled = true;
-    };
+    trackFacebookPixelEvent("PageView");
   }, [pathname, searchParamsString]);
 
   return null;

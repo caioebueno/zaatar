@@ -213,6 +213,7 @@ export const getProductsFresh = async (
             product: {
               select: {
                 name: true,
+                translations: true,
                 photos: {
                   select: {
                     id: true,
@@ -462,6 +463,14 @@ export const getProductsFresh = async (
     comboSlots: product.comboSlots.map((slot) => ({
       id: slot.id,
       name: slot.name,
+      translations:
+        slot.translations && typeof slot.translations === "object"
+          ? (slot.translations as {
+              [key: string]: {
+                [key: string]: string;
+              };
+            })
+          : undefined,
       minSelect: slot.minSelect,
       maxSelect: slot.maxSelect,
       allowDuplicates: slot.allowDuplicates,
@@ -470,6 +479,15 @@ export const getProductsFresh = async (
         id: option.id,
         productId: option.productId,
         productName: option.product.name,
+        productTranslations:
+          option.product.translations &&
+          typeof option.product.translations === "object"
+            ? (option.product.translations as {
+                [key: string]: {
+                  [key: string]: string;
+                };
+              })
+            : undefined,
         productPhotoUrl: option.product.photos[0]?.url,
         extraPrice: option.extraPrice,
         sortIndex: option.sortIndex,

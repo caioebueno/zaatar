@@ -61,8 +61,21 @@ const resolveModifierGroupTitle = (
   return localizedTitle || englishTitle || modifierGroup?.title || "Select options";
 };
 
-const resolveComboSlotTitle = (comboSlot: TComboSlot | undefined, index: number) =>
-  comboSlot?.name?.trim() || `Select option ${index + 1}`;
+const resolveComboSlotTitle = (
+  comboSlot: TComboSlot | undefined,
+  index: number,
+  lg: string,
+) =>
+  comboSlot?.translations?.[lg]?.title ||
+  comboSlot?.translations?.["en"]?.title ||
+  comboSlot?.name?.trim() ||
+  `Select option ${index + 1}`;
+
+const resolveComboOptionTitle = (option: TComboSlotOption | undefined, lg: string) =>
+  option?.productTranslations?.[lg]?.title ||
+  option?.productTranslations?.["en"]?.title ||
+  option?.productName ||
+  "Selected option";
 
 const sortComboSelections = (selections: TSelectedComboSlotOption[]) =>
   [...selections].sort((a, b) => {
@@ -337,14 +350,20 @@ const ProductModal: React.FC<TProductModal> = ({
                           slotSelections.length > 0
                             ? slotSelections
                                 .map((selection) => {
+                                  const selectedOption = slot.options.find(
+                                    (slotOption) =>
+                                      slotOption.productId === selection.optionProductId,
+                                  );
                                   const optionLabel =
-                                    selection.optionProductName || "Selected option";
+                                    resolveComboOptionTitle(selectedOption, lg) ||
+                                    selection.optionProductName ||
+                                    "Selected option";
                                   return selection.quantity > 1
                                     ? `${optionLabel} x${selection.quantity}`
                                     : optionLabel;
                                 })
                                 .join(", ")
-                            : resolveComboSlotTitle(slot, slotIndex);
+                            : resolveComboSlotTitle(slot, slotIndex, lg);
 
                         return (
                           <button
@@ -456,6 +475,7 @@ const ProductModal: React.FC<TProductModal> = ({
               : undefined
           }
           selectedComboSelections={selectedComboSelections}
+          lg={lg}
           content={content}
           onConfirm={(slot, selections) =>
             handleSaveComboSlotSelections(slot, selections)
@@ -471,6 +491,7 @@ type TComboSlotModal = {
   onOpenChange: (value: boolean) => void;
   slot?: TComboSlot;
   selectedComboSelections: TSelectedComboSlotOption[];
+  lg: string;
   content: {
     [key: string]: string;
   };
@@ -485,6 +506,7 @@ const ComboSlotModal: React.FC<TComboSlotModal> = ({
   onOpenChange,
   slot,
   selectedComboSelections,
+  lg,
   content,
   onConfirm,
 }) => {
@@ -569,7 +591,7 @@ const ComboSlotModal: React.FC<TComboSlotModal> = ({
       .map(([productId, quantity]) => {
         const option = slot.options.find((item) => item.productId === productId);
         const optionPrice = option?.extraPrice ?? 0;
-        const optionName = option?.productName || "Selected option";
+        const optionName = resolveComboOptionTitle(option, lg);
 
         return {
           slotId: slot.id,
@@ -589,7 +611,11 @@ const ComboSlotModal: React.FC<TComboSlotModal> = ({
     onConfirm(slot, []);
   };
 
-  const slotTitle = slot?.name || "Select options";
+  const slotTitle =
+    slot?.translations?.[lg]?.title ||
+    slot?.translations?.["en"]?.title ||
+    slot?.name ||
+    "Select options";
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -634,7 +660,9 @@ const ComboSlotModal: React.FC<TComboSlotModal> = ({
                     />
                   ) : null}
                   <div className="flex items-center justify-between gap-2">
-                    <span className="font-bold text-[16px]">{option.productName}</span>
+                    <span className="font-bold text-[16px]">
+                      {resolveComboOptionTitle(option, lg)}
+                    </span>
                   </div>
                   <div className="text-sm font-semibold text-lightText">
                     {option.extraPrice > 0 ? `+${formatCurrency(option.extraPrice)}` : ""}

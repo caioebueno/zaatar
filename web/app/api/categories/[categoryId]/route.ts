@@ -133,3 +133,101 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     );
   }
 }
+
+export async function DELETE(request: NextRequest, context: RouteContext) {
+  try {
+    const { categoryId } = await context.params;
+    const normalizedCategoryId = categoryId.trim();
+
+    if (!normalizedCategoryId) {
+      return NextResponse.json(
+        { error: "Invalid payload", field: "categoryId" },
+        { status: 400 },
+      );
+    }
+
+    const menuIdFromQuery = request.nextUrl.searchParams.get("menuId");
+    const menuId = menuIdFromQuery
+      ? parseMenuId(menuIdFromQuery)
+      : DEFAULT_MENU_ID;
+
+    const [existingCategory, existingMenu] = await Promise.all([
+      prisma.category.findUnique({
+        where: {
+          id: normalizedCategoryId,
+        },
+        select: {
+          id: true,
+        },
+      }),
+      prisma.menu.findUnique({
+        where: {
+          id: menuId,
+        },
+        select: {
+          id: true,
+        },
+      }),
+    ]);
+
+    if (!existingCategory) {
+      return NextResponse.json({ error: "Category not found" }, { status: 404 });
+    }
+
+    if (!existingMenu) {
+      return NextResponse.json(
+        { error: "Invalid payload", field: "menuId" },
+        { status: 400 },
+      );
+    }
+
+    await prisma.$transaction(async (tx) => {
+      await tx.$executeRaw`
+        DELETE FROM "MenuCategory"
+        WHERE "menuId" = ${menuId}
+          AND "categoryId" = ${normalizedCategoryId}
+      `;
+
+      await tx.$executeRaw`
+        WITH ranked AS (
+          SELECT
+            mc."menuId",
+            mc."categoryId",
+            ROW_NUMBER() OVER (
+              ORDER BY
+                COALESCE(mc."menuIndex", 2147483647) ASC,
+                mc."createdAt" ASC,
+                mc."categoryId" ASC
+            ) AS "nextIndex"
+          FROM "MenuCategory" mc
+          WHERE mc."menuId" = ${menuId}
+        )
+        UPDATE "MenuCategory" mc
+        SET "menuIndex" = ranked."nextIndex"
+        FROM ranked
+        WHERE mc."menuId" = ranked."menuId"
+          AND mc."categoryId" = ranked."categoryId"
+      `;
+    });
+
+    return NextResponse.json({
+      id: normalizedCategoryId,
+      menuId,
+      detached: true,
+    });
+  } catch (error) {
+    if (error instanceof Error && error.message) {
+      return NextResponse.json(
+        { error: "Invalid payload", field: error.message },
+        { status: 400 },
+      );
+    }
+
+    console.error("DELETE /api/categories/[categoryId] error:", error);
+
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 },
+    );
+  }
+}

@@ -42,6 +42,7 @@ export type ProductManagerComboSlotOption = {
 export type ProductManagerComboSlot = {
   id: string;
   name: string;
+  translations: ProductManagerTranslations | null;
   minSelect: number;
   maxSelect: number;
   allowDuplicates: boolean;
@@ -137,6 +138,7 @@ type ProductListRow = Prisma.ProductGetPayload<{
       select: {
         id: true;
         name: true;
+        translations: true;
         minSelect: true;
         maxSelect: true;
         allowDuplicates: true;
@@ -306,6 +308,7 @@ function mapProduct(product: ProductListRow): ProductManagerProduct {
     comboSlots: product.comboSlots.map((slot) => ({
       id: slot.id,
       name: slot.name,
+      translations: parseTranslations(slot.translations as Prisma.JsonValue | null),
       minSelect: slot.minSelect,
       maxSelect: slot.maxSelect,
       allowDuplicates: slot.allowDuplicates,
@@ -434,6 +437,7 @@ export default async function getProductsManagerList(
           select: {
             id: true,
             name: true,
+            translations: true,
             minSelect: true,
             maxSelect: true,
             allowDuplicates: true,

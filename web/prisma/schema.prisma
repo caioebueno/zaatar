@@ -400,6 +400,7 @@ model ComboSlot {
   combo           Product           @relation("ComboProduct", fields: [comboId], references: [id], onDelete: Cascade)
   comboId         String
   name            String
+  translations    Json?
   minSelect       Int               @default(1)
   maxSelect       Int               @default(1)
   allowDuplicates Boolean           @default(true)
@@ -514,6 +515,7 @@ model Order {
   type                             OrderType                 @default(DELIVERY)
   paymentMethod                    PaymentType               @default(CARD)
   tipAmount                        Int?
+  tags                             String[]                  @default([])
   progressiveDiscountSnapshot      Json?
   dispatch                         Dispatch?                 @relation(fields: [dispatchId], references: [id])
   address                          Address?                  @relation(fields: [addressId], references: [id])
@@ -688,7 +690,7 @@ model InventoryChecklistItem {
   checkedBy           String?
   alerts              InventoryAlert[]
 
-  @@unique([checklistId, productId, placeId], map: "InventoryChecklistItem_checklist_product_place_key")
+  @@unique([checklistId, productId, placeId], map: "InventoryChecklistItem_checklistId_productId_placeId_key")
 }
 
 model InventoryAlert {
@@ -730,5 +732,5 @@ model InventoryStockEvent {
   source         String
   metadata       Json?
 
-  @@index([placeId, productId, createdAt], map: "InventoryStockEvent_place_product_createdAt_idx")
+  @@index([placeId, productId, createdAt], map: "InventoryStockEvent_placeId_productId_createdAt_idx")
 }
