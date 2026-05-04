@@ -2795,12 +2795,7 @@ export default function ProductManagerList({
               <div className="w-full md:w-[360px]">
                 <SectionInsertControl
                   compact
-                  disabled={
-                    switchingMenu ||
-                    creatingMenu ||
-                    linkingSection ||
-                    creatingSection
-                  }
+                  disabled={linkingSection || creatingSection}
                   availableSections={availableSectionsToLink}
                   onLink={(sectionId) =>
                     void onLinkSectionAtIndex(sectionId, categories.length)
@@ -2837,12 +2832,7 @@ export default function ProductManagerList({
             {search.trim().length === 0 && categoryViews.length > 0 ? (
               <SectionInsertControl
                 compact
-                disabled={
-                  switchingMenu ||
-                  creatingMenu ||
-                  linkingSection ||
-                  creatingSection
-                }
+                disabled={linkingSection || creatingSection}
                 availableSections={availableSectionsToLink}
                 onLink={(sectionId) => void onLinkSectionAtIndex(sectionId, 0)}
                 onCreate={(sectionName) =>
@@ -3059,12 +3049,7 @@ export default function ProductManagerList({
                   {search.trim().length === 0 ? (
                     <SectionInsertControl
                       compact
-                      disabled={
-                        switchingMenu ||
-                        creatingMenu ||
-                        linkingSection ||
-                        creatingSection
-                      }
+                      disabled={linkingSection || creatingSection}
                       availableSections={availableSectionsToLink}
                       onLink={(sectionId) =>
                         void onLinkSectionAtIndex(
@@ -3094,12 +3079,7 @@ export default function ProductManagerList({
                     Create a new section or link an existing one to start managing products.
                   </p>
                   <SectionInsertControl
-                    disabled={
-                      switchingMenu ||
-                      creatingMenu ||
-                      linkingSection ||
-                      creatingSection
-                    }
+                    disabled={linkingSection || creatingSection}
                     availableSections={availableSectionsToLink}
                     onLink={(sectionId) => void onLinkSectionAtIndex(sectionId, 0)}
                     onCreate={(sectionName) =>

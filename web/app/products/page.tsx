@@ -1,7 +1,7 @@
 import ProductManagerList from "../components/ProductManagerList";
 import getProductsManagerList from "@/src/getProductsManagerList";
 import prisma from "@/prisma";
-import { DEFAULT_MENU_ID } from "@/src/constants/menu";
+import { DEFAULT_MENU_ID, DEFAULT_MENU_NAME } from "@/src/constants/menu";
 
 type ProductsPageProps = {
   searchParams: Promise<{
@@ -16,6 +16,19 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
     typeof rawMenuId === "string" && rawMenuId.trim().length > 0
       ? rawMenuId.trim()
       : DEFAULT_MENU_ID;
+
+  await prisma.menu.upsert({
+    where: {
+      id: DEFAULT_MENU_ID,
+    },
+    update: {},
+    create: {
+      id: DEFAULT_MENU_ID,
+      name: DEFAULT_MENU_NAME,
+      active: true,
+      isDefault: true,
+    },
+  });
 
   const [products, menus, allSections] = await Promise.all([
     getProductsManagerList(selectedMenuId),
