@@ -435,12 +435,41 @@ async function enqueueDispatchAssignmentJobTx(
   `;
 }
 
-async function triggerDispatchQueueRun(): Promise<void> {
+function hasErrorCode(error: unknown, targetCode: string): boolean {
+  if (!error || typeof error !== "object") return false;
+  const record = error as { code?: unknown; cause?: unknown };
+  if (record.code === targetCode) return true;
+
+  const cause = record.cause;
+  if (cause && typeof cause === "object") {
+    const causeRecord = cause as {
+      code?: unknown;
+      errors?: Array<{ code?: unknown }>;
+    };
+    if (causeRecord.code === targetCode) return true;
+    if (
+      Array.isArray(causeRecord.errors) &&
+      causeRecord.errors.some((item) => item?.code === targetCode)
+    ) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+async function triggerDispatchQueueRun(input?: {
+  orderId?: string;
+}): Promise<void> {
+  const orderIdLabel = input?.orderId ? ` orderId=${input.orderId}` : "";
   const workerBaseUrl = process.env.DISPATCH_QUEUE_WORKER_BASE_URL?.trim();
   const jobsToProcess = 1;
 
   if (!workerBaseUrl) {
     await processDispatchAssignmentJobs(jobsToProcess);
+    console.info(
+      `DISPATCH_ASSIGNMENT_LOCAL_PROCESSING reason=no_worker_base_url${orderIdLabel}`,
+    );
     return;
   }
 
@@ -466,6 +495,9 @@ async function triggerDispatchQueueRun(): Promise<void> {
       // Worker trigger failed: fallback to local processing so dispatches
       // are still created immediately for delivery orders.
       await processDispatchAssignmentJobs(jobsToProcess);
+      console.info(
+        `DISPATCH_ASSIGNMENT_LOCAL_PROCESSING reason=remote_worker_http_${response.status}${orderIdLabel}`,
+      );
       console.warn(
         `QUEUE_WORKER_TRIGGER_FAILED status=${response.status} body=${errorBody} (fell_back_to_local_queue_processing=true)`,
       );
@@ -480,14 +512,31 @@ async function triggerDispatchQueueRun(): Promise<void> {
     // fallback locally to guarantee dispatch assignment execution.
     if (response.status !== 200 || responseJson?.ok !== true) {
       await processDispatchAssignmentJobs(jobsToProcess);
+      console.info(
+        `DISPATCH_ASSIGNMENT_LOCAL_PROCESSING reason=remote_worker_unverified_response status=${response.status}${orderIdLabel}`,
+      );
       console.warn(
         `QUEUE_WORKER_TRIGGER_UNVERIFIED status=${response.status} (fell_back_to_local_queue_processing=true)`,
       );
       return;
     }
+
+    console.info(
+      `DISPATCH_ASSIGNMENT_REMOTE_TRIGGERED worker=${endpoint}${orderIdLabel}`,
+    );
   } catch (error) {
     // Worker request threw (DNS/network/etc): fallback to local processing.
     await processDispatchAssignmentJobs(jobsToProcess);
+    console.info(
+      `DISPATCH_ASSIGNMENT_LOCAL_PROCESSING reason=remote_worker_request_error${orderIdLabel}`,
+    );
+    if (hasErrorCode(error, "ECONNREFUSED")) {
+      console.info(
+        "QUEUE_WORKER_TRIGGER_CONNECTION_REFUSED (fell_back_to_local_queue_processing=true)",
+      );
+      return;
+    }
+
     console.warn(
       "QUEUE_WORKER_TRIGGER_REQUEST_FAILED (fell_back_to_local_queue_processing=true):",
       error,
@@ -506,12 +555,18 @@ async function ensureDeliveryOrderHasDispatch(input: {
     LIMIT 1
   `;
 
-  if (orderRow?.dispatchId) return;
+  if (orderRow?.dispatchId) {
+    console.info(
+      `DISPATCH_ALREADY_ASSIGNED orderId=${input.orderId} dispatchId=${orderRow.dispatchId}`,
+    );
+    return;
+  }
 
   await assignDeliveryOrderToDispatchUseCase(prismaDispatchRepository, {
     orderId: input.orderId,
     deliveryAddressId: input.deliveryAddressId,
   });
+  console.info(`DISPATCH_ASSIGNED_LOCALLY orderId=${input.orderId}`);
 }
 
 async function createPreparationStepCategoriesForOrderTx(
@@ -801,21 +856,23 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
     productData.activePromotion?.products,
     productData.promotionProductIds,
   );
+  const discountedSubtotalInCents = Math.round(cartPricingSummary.discountedPrice);
   const sanitizedTipPercentage =
     typeof data.tipAmount === "number" && Number.isFinite(data.tipAmount)
       ? Math.max(data.tipAmount, 0)
       : 0;
   const tipAmountInCents = Math.round(
-    (cartPricingSummary.discountedPrice * sanitizedTipPercentage) / 100,
+    (discountedSubtotalInCents * sanitizedTipPercentage) / 100,
   );
   const salesTaxInCents = calculateSalesTaxInCents(
-    cartPricingSummary.discountedPrice,
+    discountedSubtotalInCents,
   );
-  const orderTotalInCents =
-    cartPricingSummary.discountedPrice +
+  const orderTotalInCents = Math.round(
+    discountedSubtotalInCents +
     tipAmountInCents +
     (data.orderType === "DELIVERY" ? deliveryFeeInCents : 0) +
-    salesTaxInCents;
+    salesTaxInCents,
+  );
   markCheckoutTimingStep("pricing");
   const createdOrderId = randomUUID();
   const nextOrderNumber = buildReadableOrderNumber();
@@ -948,7 +1005,8 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
       const comments = [itemDescription, comboSelectionDescription]
         .filter((value): value is string => Boolean(value))
         .join("\n");
-      const catalogProduct = getCatalogProductById(cartItem.productId)?.product;
+      const catalogProductLookup = getCatalogProductById(cartItem.productId);
+      const catalogProduct = catalogProductLookup?.product;
       const posProduct = posPricingProductsById.get(cartItem.productId);
 
       return {
@@ -961,7 +1019,10 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
         modifierItemIds: cartItem.modifiers.map((modItem) => modItem.modifierItemId),
         productName: catalogProduct?.name ?? posProduct?.name ?? "Product",
         productCategoryId:
-          catalogProduct?.categoryId ?? posProduct?.categoryId ?? undefined,
+          catalogProductLookup?.categoryId ??
+          posProduct?.categoryId ??
+          catalogProduct?.categoryId ??
+          undefined,
       };
     },
   );
@@ -1029,6 +1090,16 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
     }
 
     try {
+      if (!Number.isInteger(orderTotalInCents) || orderTotalInCents <= 0) {
+        throw {
+          code: "STRIPE_PAYMENT_FAILED",
+          data: {
+            message: "INVALID_STRIPE_AMOUNT",
+            orderTotalInCents,
+          },
+        };
+      }
+
       const stripe = getStripeClient();
       const paymentIntent = await stripe.paymentIntents.create({
         amount: orderTotalInCents,
@@ -1608,7 +1679,9 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
 
   if (data.orderType === "DELIVERY" && data.addressId) {
     after(async () => {
-      await triggerDispatchQueueRun().catch((error: unknown) => {
+      await triggerDispatchQueueRun({
+        orderId: transactionResult.orderId,
+      }).catch((error: unknown) => {
         console.error("Failed to trigger dispatch assignment processing:", error);
       });
 

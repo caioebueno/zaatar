@@ -747,6 +747,7 @@ function resolveCheckoutErrorMessage(
     case "STRIPE_CUSTOMER_NOT_FOUND":
     case "STRIPE_PAYMENT_NOT_COMPLETED":
     case "STRIPE_PAYMENT_FAILED":
+    case "INVALID_STRIPE_AMOUNT":
       return "We could not charge your card. Please try another card.";
     case "ORDER_CREATION_FAILED_AFTER_CHARGE_REFUNDED":
       return "We could not create your order. Your card charge was refunded.";
@@ -1054,7 +1055,7 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
 
   if (step === 3)
     return (
-      <div className="flex flex-col h-dvh overflow-hidden items-center">
+      <div className="flex flex-col overflow-hidden items-center">
         <div className="bg-foreground p-4 border-[#B9BFBF] border-b flex flex-row justify-center w-full">
           <div className="max-w-[900px] w-full">
             <Button
@@ -1066,7 +1067,7 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
             </Button>
           </div>
         </div>
-        <div className="py-6 px-4 flex flex-1 flex-col gap-4 overflow-y-auto pb-36 max-w-[900px] w-full">
+        <div className="py-6 px-4 flex flex-1 flex-col gap-4 pb-36 max-w-[900px] w-full">
           <div className="py-3 px-4 rounded-xl bg-foreground flex flex-row justify-between items-center mb-2">
             <button
               type="button"
