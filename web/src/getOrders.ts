@@ -2,7 +2,12 @@
 
 import prisma from "@/prisma";
 import { calculateSalesTaxInCents } from "@/src/constants/pricing";
-import type { TOrderStatus, TOrderType, TPaymentMethod } from "@/src/types/order";
+import type {
+  TOrderStatus,
+  TOrderType,
+  TPaymentMethod,
+  TPaymentProvider,
+} from "@/src/types/order";
 
 type OrderListRow = {
   id: string;
@@ -13,6 +18,7 @@ type OrderListRow = {
   canceled: boolean;
   type: TOrderType;
   paymentMethod: TPaymentMethod;
+  paymentProvider: TPaymentProvider | null;
   status: TOrderStatus;
   amount: number | bigint;
   tipAmount: number | bigint | null;
@@ -33,6 +39,7 @@ export type TOrderListItem = {
   canceled: boolean;
   type: TOrderType;
   paymentMethod: TPaymentMethod;
+  paymentProvider?: TPaymentProvider | null;
   status: TOrderStatus;
   customerName: string | null;
   language: string | null;
@@ -58,6 +65,7 @@ const getOrders = async (): Promise<TOrderListItem[]> => {
       o."canceled",
       o."type",
       o."paymentMethod",
+      o."paymentProvider",
       o."language",
       o."amount",
       o."tipAmount",
@@ -97,6 +105,7 @@ const getOrders = async (): Promise<TOrderListItem[]> => {
       o."canceled",
       o."type",
       o."paymentMethod",
+      o."paymentProvider",
       o."language",
       o."amount",
       o."tipAmount",
@@ -140,6 +149,7 @@ const getOrders = async (): Promise<TOrderListItem[]> => {
       canceled: row.canceled,
       type: row.type,
       paymentMethod: row.paymentMethod,
+      paymentProvider: row.paymentProvider,
       status: row.status,
       customerName: row.customerName,
       language: row.language,

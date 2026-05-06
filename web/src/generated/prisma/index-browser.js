@@ -288,6 +288,20 @@ exports.Prisma.DispatchAssignmentJobScalarFieldEnum = {
   deliveryAddressId: 'deliveryAddressId'
 };
 
+exports.Prisma.FeedbackWhatsAppJobScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  status: 'status',
+  attempts: 'attempts',
+  availableAt: 'availableAt',
+  processingStartedAt: 'processingStartedAt',
+  completedAt: 'completedAt',
+  lastError: 'lastError',
+  orderId: 'orderId',
+  customerPhone: 'customerPhone',
+  language: 'language'
+};
+
 exports.Prisma.AddressScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
@@ -409,6 +423,35 @@ exports.Prisma.CustomerScalarFieldEnum = {
   lastMessageSent: 'lastMessageSent'
 };
 
+exports.Prisma.CustomerOtpChallengeScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  customerId: 'customerId',
+  phone: 'phone',
+  countryCode: 'countryCode',
+  channel: 'channel',
+  codeHash: 'codeHash',
+  expiresAt: 'expiresAt',
+  usedAt: 'usedAt',
+  attemptCount: 'attemptCount',
+  maxAttempts: 'maxAttempts',
+  lastAttemptAt: 'lastAttemptAt'
+};
+
+exports.Prisma.CustomerAccessTokenScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  customerId: 'customerId',
+  tokenHash: 'tokenHash',
+  expiresAt: 'expiresAt',
+  lastUsedAt: 'lastUsedAt',
+  revokedAt: 'revokedAt',
+  userAgent: 'userAgent',
+  ipAddress: 'ipAddress'
+};
+
 exports.Prisma.DeliveryAddressScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
@@ -475,6 +518,45 @@ exports.Prisma.OrderScalarFieldEnum = {
   addressId: 'addressId',
   deliveryAddressId: 'deliveryAddressId',
   externalAddressId: 'externalAddressId'
+};
+
+exports.Prisma.CustomerFeedbackScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  customerId: 'customerId',
+  orderId: 'orderId',
+  language: 'language',
+  overallRating: 'overallRating',
+  sentiment: 'sentiment',
+  productQuality: 'productQuality',
+  temperature: 'temperature',
+  deliverySpeed: 'deliverySpeed',
+  serviceExperience: 'serviceExperience',
+  comment: 'comment',
+  source: 'source'
+};
+
+exports.Prisma.CustomerRewardScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  customerId: 'customerId',
+  status: 'status',
+  type: 'type',
+  title: 'title',
+  description: 'description',
+  quantity: 'quantity',
+  value: 'value',
+  productId: 'productId',
+  couponCode: 'couponCode',
+  issuedAt: 'issuedAt',
+  expiresAt: 'expiresAt',
+  redeemedAt: 'redeemedAt',
+  feedbackId: 'feedbackId',
+  issuedForOrderId: 'issuedForOrderId',
+  redeemedByOrderId: 'redeemedByOrderId',
+  metadata: 'metadata'
 };
 
 exports.Prisma.OrderProductsScalarFieldEnum = {
@@ -585,6 +667,15 @@ exports.Prisma.InventoryStockEventScalarFieldEnum = {
   metadata: 'metadata'
 };
 
+exports.Prisma.FeedbackSettingsScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  active: 'active',
+  rewardProductId: 'rewardProductId',
+  rewardQuantity: 'rewardQuantity'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -627,6 +718,13 @@ exports.DispatchAssignmentJobStatus = exports.$Enums.DispatchAssignmentJobStatus
   FAILED: 'FAILED'
 };
 
+exports.FeedbackWhatsAppJobStatus = exports.$Enums.FeedbackWhatsAppJobStatus = {
+  PENDING: 'PENDING',
+  PROCESSING: 'PROCESSING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED'
+};
+
 exports.ProductItemType = exports.$Enums.ProductItemType = {
   PRODUCT: 'PRODUCT',
   COMBO: 'COMBO'
@@ -640,6 +738,11 @@ exports.ExclusivePromotionWeekday = exports.$Enums.ExclusivePromotionWeekday = {
   FRIDAY: 'FRIDAY',
   SATURDAY: 'SATURDAY',
   SUNDAY: 'SUNDAY'
+};
+
+exports.CustomerOtpChannel = exports.$Enums.CustomerOtpChannel = {
+  WHATSAPP: 'WHATSAPP',
+  SMS: 'SMS'
 };
 
 exports.OrderStatus = exports.$Enums.OrderStatus = {
@@ -658,6 +761,26 @@ exports.PaymentType = exports.$Enums.PaymentType = {
   CASH: 'CASH',
   CARD: 'CARD',
   ZELLE: 'ZELLE'
+};
+
+exports.CustomerFeedbackSentiment = exports.$Enums.CustomerFeedbackSentiment = {
+  NEGATIVE: 'NEGATIVE',
+  NEUTRAL: 'NEUTRAL',
+  POSITIVE: 'POSITIVE'
+};
+
+exports.CustomerRewardStatus = exports.$Enums.CustomerRewardStatus = {
+  ACTIVE: 'ACTIVE',
+  REDEEMED: 'REDEEMED',
+  EXPIRED: 'EXPIRED',
+  CANCELED: 'CANCELED'
+};
+
+exports.CustomerRewardType = exports.$Enums.CustomerRewardType = {
+  FREE_PRODUCT: 'FREE_PRODUCT',
+  PERCENT_DISCOUNT: 'PERCENT_DISCOUNT',
+  FIXED_DISCOUNT: 'FIXED_DISCOUNT',
+  CUSTOM: 'CUSTOM'
 };
 
 exports.Prisma.ModelName = {
@@ -680,6 +803,7 @@ exports.Prisma.ModelName = {
   Driver: 'Driver',
   Dispatch: 'Dispatch',
   DispatchAssignmentJob: 'DispatchAssignmentJob',
+  FeedbackWhatsAppJob: 'FeedbackWhatsAppJob',
   Address: 'Address',
   Product: 'Product',
   ExclusivePromotion: 'ExclusivePromotion',
@@ -693,11 +817,15 @@ exports.Prisma.ModelName = {
   ComboSlotOption: 'ComboSlotOption',
   Campaign: 'Campaign',
   Customer: 'Customer',
+  CustomerOtpChallenge: 'CustomerOtpChallenge',
+  CustomerAccessToken: 'CustomerAccessToken',
   DeliveryAddress: 'DeliveryAddress',
   ExternalAddress: 'ExternalAddress',
   Message: 'Message',
   PromotialMessage: 'PromotialMessage',
   Order: 'Order',
+  CustomerFeedback: 'CustomerFeedback',
+  CustomerReward: 'CustomerReward',
   OrderProducts: 'OrderProducts',
   InventoryPlace: 'InventoryPlace',
   InventoryProduct: 'InventoryProduct',
@@ -705,7 +833,8 @@ exports.Prisma.ModelName = {
   InventoryChecklist: 'InventoryChecklist',
   InventoryChecklistItem: 'InventoryChecklistItem',
   InventoryAlert: 'InventoryAlert',
-  InventoryStockEvent: 'InventoryStockEvent'
+  InventoryStockEvent: 'InventoryStockEvent',
+  FeedbackSettings: 'FeedbackSettings'
 };
 
 /**

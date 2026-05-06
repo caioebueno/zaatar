@@ -30,6 +30,27 @@ type DeliveryAddressRow = {
   customerId: string | null;
 };
 
+type CustomerRewardRow = {
+  id: string;
+  type: "FREE_PRODUCT" | "PERCENT_DISCOUNT" | "FIXED_DISCOUNT" | "CUSTOM";
+  title: string;
+  description: string | null;
+  quantity: number | null;
+  value: number | null;
+  productId: string | null;
+  productName: string | null;
+  expiresAt: Date | null;
+};
+
+type CustomerCardRow = {
+  id: string;
+  brand: string;
+  last4: string;
+  expMonth: number;
+  expYear: number;
+  isDefault: boolean;
+};
+
 function mapDeliveryAddress(address: DeliveryAddressRow): TAddress {
   return {
     id: address.id,
@@ -114,10 +135,61 @@ const getCustomerData = async (data: TGetCustomerData): Promise<TCustomer> => {
     ORDER BY "createdAt" DESC
   `;
 
+  const rewards = await prisma.$queryRaw<CustomerRewardRow[]>`
+    SELECT
+      cr."id",
+      cr."type",
+      cr."title",
+      cr."description",
+      cr."quantity",
+      cr."value",
+      cr."productId",
+      p."name" AS "productName",
+      cr."expiresAt"
+    FROM "CustomerReward" cr
+    LEFT JOIN "Product" p ON p."id" = cr."productId"
+    WHERE cr."customerId" = ${findCustomer.id}
+      AND cr."status" = 'ACTIVE'
+      AND (cr."expiresAt" IS NULL OR cr."expiresAt" >= NOW())
+    ORDER BY cr."createdAt" DESC
+  `;
+
+  const cards = await prisma.$queryRaw<CustomerCardRow[]>`
+    SELECT
+      "id",
+      "brand",
+      "last4",
+      "expMonth",
+      "expYear",
+      "isDefault"
+    FROM "CustomerCard"
+    WHERE "customerId" = ${findCustomer.id}
+    ORDER BY "isDefault" DESC, "createdAt" ASC
+  `;
+
   return {
     id: findCustomer.id,
     name: findCustomer.name,
     addresses: addresses.map(mapDeliveryAddress),
+    cards: cards.map((card) => ({
+      id: card.id,
+      brand: card.brand,
+      last4: card.last4,
+      expMonth: card.expMonth,
+      expYear: card.expYear,
+      isDefault: card.isDefault,
+    })),
+    rewards: rewards.map((reward) => ({
+      id: reward.id,
+      type: reward.type,
+      title: reward.title,
+      description: reward.description,
+      quantity: reward.quantity,
+      value: reward.value,
+      productId: reward.productId,
+      productName: reward.productName,
+      expiresAt: reward.expiresAt ? reward.expiresAt.toISOString() : null,
+    })),
   };
 };
 

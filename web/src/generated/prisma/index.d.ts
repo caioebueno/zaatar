@@ -109,6 +109,11 @@ export type Dispatch = $Result.DefaultSelection<Prisma.$DispatchPayload>
  */
 export type DispatchAssignmentJob = $Result.DefaultSelection<Prisma.$DispatchAssignmentJobPayload>
 /**
+ * Model FeedbackWhatsAppJob
+ * 
+ */
+export type FeedbackWhatsAppJob = $Result.DefaultSelection<Prisma.$FeedbackWhatsAppJobPayload>
+/**
  * Model Address
  * 
  */
@@ -174,6 +179,16 @@ export type Campaign = $Result.DefaultSelection<Prisma.$CampaignPayload>
  */
 export type Customer = $Result.DefaultSelection<Prisma.$CustomerPayload>
 /**
+ * Model CustomerOtpChallenge
+ * 
+ */
+export type CustomerOtpChallenge = $Result.DefaultSelection<Prisma.$CustomerOtpChallengePayload>
+/**
+ * Model CustomerAccessToken
+ * 
+ */
+export type CustomerAccessToken = $Result.DefaultSelection<Prisma.$CustomerAccessTokenPayload>
+/**
  * Model DeliveryAddress
  * 
  */
@@ -198,6 +213,16 @@ export type PromotialMessage = $Result.DefaultSelection<Prisma.$PromotialMessage
  * 
  */
 export type Order = $Result.DefaultSelection<Prisma.$OrderPayload>
+/**
+ * Model CustomerFeedback
+ * 
+ */
+export type CustomerFeedback = $Result.DefaultSelection<Prisma.$CustomerFeedbackPayload>
+/**
+ * Model CustomerReward
+ * 
+ */
+export type CustomerReward = $Result.DefaultSelection<Prisma.$CustomerRewardPayload>
 /**
  * Model OrderProducts
  * 
@@ -238,6 +263,11 @@ export type InventoryAlert = $Result.DefaultSelection<Prisma.$InventoryAlertPayl
  * 
  */
 export type InventoryStockEvent = $Result.DefaultSelection<Prisma.$InventoryStockEventPayload>
+/**
+ * Model FeedbackSettings
+ * 
+ */
+export type FeedbackSettings = $Result.DefaultSelection<Prisma.$FeedbackSettingsPayload>
 
 /**
  * Enums
@@ -269,6 +299,16 @@ export const DispatchAssignmentJobStatus: {
 export type DispatchAssignmentJobStatus = (typeof DispatchAssignmentJobStatus)[keyof typeof DispatchAssignmentJobStatus]
 
 
+export const FeedbackWhatsAppJobStatus: {
+  PENDING: 'PENDING',
+  PROCESSING: 'PROCESSING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED'
+};
+
+export type FeedbackWhatsAppJobStatus = (typeof FeedbackWhatsAppJobStatus)[keyof typeof FeedbackWhatsAppJobStatus]
+
+
 export const ExclusivePromotionWeekday: {
   MONDAY: 'MONDAY',
   TUESDAY: 'TUESDAY',
@@ -288,6 +328,43 @@ export const ProductItemType: {
 };
 
 export type ProductItemType = (typeof ProductItemType)[keyof typeof ProductItemType]
+
+
+export const CustomerOtpChannel: {
+  WHATSAPP: 'WHATSAPP',
+  SMS: 'SMS'
+};
+
+export type CustomerOtpChannel = (typeof CustomerOtpChannel)[keyof typeof CustomerOtpChannel]
+
+
+export const CustomerFeedbackSentiment: {
+  NEGATIVE: 'NEGATIVE',
+  NEUTRAL: 'NEUTRAL',
+  POSITIVE: 'POSITIVE'
+};
+
+export type CustomerFeedbackSentiment = (typeof CustomerFeedbackSentiment)[keyof typeof CustomerFeedbackSentiment]
+
+
+export const CustomerRewardStatus: {
+  ACTIVE: 'ACTIVE',
+  REDEEMED: 'REDEEMED',
+  EXPIRED: 'EXPIRED',
+  CANCELED: 'CANCELED'
+};
+
+export type CustomerRewardStatus = (typeof CustomerRewardStatus)[keyof typeof CustomerRewardStatus]
+
+
+export const CustomerRewardType: {
+  FREE_PRODUCT: 'FREE_PRODUCT',
+  PERCENT_DISCOUNT: 'PERCENT_DISCOUNT',
+  FIXED_DISCOUNT: 'FIXED_DISCOUNT',
+  CUSTOM: 'CUSTOM'
+};
+
+export type CustomerRewardType = (typeof CustomerRewardType)[keyof typeof CustomerRewardType]
 
 
 export const PaymentType: {
@@ -389,6 +466,10 @@ export type DispatchAssignmentJobStatus = $Enums.DispatchAssignmentJobStatus
 
 export const DispatchAssignmentJobStatus: typeof $Enums.DispatchAssignmentJobStatus
 
+export type FeedbackWhatsAppJobStatus = $Enums.FeedbackWhatsAppJobStatus
+
+export const FeedbackWhatsAppJobStatus: typeof $Enums.FeedbackWhatsAppJobStatus
+
 export type ExclusivePromotionWeekday = $Enums.ExclusivePromotionWeekday
 
 export const ExclusivePromotionWeekday: typeof $Enums.ExclusivePromotionWeekday
@@ -396,6 +477,22 @@ export const ExclusivePromotionWeekday: typeof $Enums.ExclusivePromotionWeekday
 export type ProductItemType = $Enums.ProductItemType
 
 export const ProductItemType: typeof $Enums.ProductItemType
+
+export type CustomerOtpChannel = $Enums.CustomerOtpChannel
+
+export const CustomerOtpChannel: typeof $Enums.CustomerOtpChannel
+
+export type CustomerFeedbackSentiment = $Enums.CustomerFeedbackSentiment
+
+export const CustomerFeedbackSentiment: typeof $Enums.CustomerFeedbackSentiment
+
+export type CustomerRewardStatus = $Enums.CustomerRewardStatus
+
+export const CustomerRewardStatus: typeof $Enums.CustomerRewardStatus
+
+export type CustomerRewardType = $Enums.CustomerRewardType
+
+export const CustomerRewardType: typeof $Enums.CustomerRewardType
 
 export type PaymentType = $Enums.PaymentType
 
@@ -745,6 +842,16 @@ export class PrismaClient<
   get dispatchAssignmentJob(): Prisma.DispatchAssignmentJobDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.feedbackWhatsAppJob`: Exposes CRUD operations for the **FeedbackWhatsAppJob** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more FeedbackWhatsAppJobs
+    * const feedbackWhatsAppJobs = await prisma.feedbackWhatsAppJob.findMany()
+    * ```
+    */
+  get feedbackWhatsAppJob(): Prisma.FeedbackWhatsAppJobDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.address`: Exposes CRUD operations for the **Address** model.
     * Example usage:
     * ```ts
@@ -875,6 +982,26 @@ export class PrismaClient<
   get customer(): Prisma.CustomerDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.customerOtpChallenge`: Exposes CRUD operations for the **CustomerOtpChallenge** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CustomerOtpChallenges
+    * const customerOtpChallenges = await prisma.customerOtpChallenge.findMany()
+    * ```
+    */
+  get customerOtpChallenge(): Prisma.CustomerOtpChallengeDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.customerAccessToken`: Exposes CRUD operations for the **CustomerAccessToken** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CustomerAccessTokens
+    * const customerAccessTokens = await prisma.customerAccessToken.findMany()
+    * ```
+    */
+  get customerAccessToken(): Prisma.CustomerAccessTokenDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.deliveryAddress`: Exposes CRUD operations for the **DeliveryAddress** model.
     * Example usage:
     * ```ts
@@ -923,6 +1050,26 @@ export class PrismaClient<
     * ```
     */
   get order(): Prisma.OrderDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.customerFeedback`: Exposes CRUD operations for the **CustomerFeedback** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CustomerFeedbacks
+    * const customerFeedbacks = await prisma.customerFeedback.findMany()
+    * ```
+    */
+  get customerFeedback(): Prisma.CustomerFeedbackDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.customerReward`: Exposes CRUD operations for the **CustomerReward** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CustomerRewards
+    * const customerRewards = await prisma.customerReward.findMany()
+    * ```
+    */
+  get customerReward(): Prisma.CustomerRewardDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.orderProducts`: Exposes CRUD operations for the **OrderProducts** model.
@@ -1003,6 +1150,16 @@ export class PrismaClient<
     * ```
     */
   get inventoryStockEvent(): Prisma.InventoryStockEventDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.feedbackSettings`: Exposes CRUD operations for the **FeedbackSettings** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more FeedbackSettings
+    * const feedbackSettings = await prisma.feedbackSettings.findMany()
+    * ```
+    */
+  get feedbackSettings(): Prisma.FeedbackSettingsDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1456,6 +1613,7 @@ export namespace Prisma {
     Driver: 'Driver',
     Dispatch: 'Dispatch',
     DispatchAssignmentJob: 'DispatchAssignmentJob',
+    FeedbackWhatsAppJob: 'FeedbackWhatsAppJob',
     Address: 'Address',
     Product: 'Product',
     ExclusivePromotion: 'ExclusivePromotion',
@@ -1469,11 +1627,15 @@ export namespace Prisma {
     ComboSlotOption: 'ComboSlotOption',
     Campaign: 'Campaign',
     Customer: 'Customer',
+    CustomerOtpChallenge: 'CustomerOtpChallenge',
+    CustomerAccessToken: 'CustomerAccessToken',
     DeliveryAddress: 'DeliveryAddress',
     ExternalAddress: 'ExternalAddress',
     Message: 'Message',
     PromotialMessage: 'PromotialMessage',
     Order: 'Order',
+    CustomerFeedback: 'CustomerFeedback',
+    CustomerReward: 'CustomerReward',
     OrderProducts: 'OrderProducts',
     InventoryPlace: 'InventoryPlace',
     InventoryProduct: 'InventoryProduct',
@@ -1481,7 +1643,8 @@ export namespace Prisma {
     InventoryChecklist: 'InventoryChecklist',
     InventoryChecklistItem: 'InventoryChecklistItem',
     InventoryAlert: 'InventoryAlert',
-    InventoryStockEvent: 'InventoryStockEvent'
+    InventoryStockEvent: 'InventoryStockEvent',
+    FeedbackSettings: 'FeedbackSettings'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1497,7 +1660,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "station" | "preparationStep" | "preparationStepCategory" | "preparationStepTrack" | "preparationStepModifierTrack" | "progressiveDiscount" | "progressiveDiscountStep" | "progressiveDiscountPrize" | "progressiveDiscountPrizeProduct" | "file" | "modifierGroup" | "modifierGroupItem" | "business" | "user" | "businessOwner" | "branch" | "driver" | "dispatch" | "dispatchAssignmentJob" | "address" | "product" | "exclusivePromotion" | "exclusivePromotionProduct" | "menu" | "menuVisit" | "category" | "menuCategory" | "productCategory" | "comboSlot" | "comboSlotOption" | "campaign" | "customer" | "deliveryAddress" | "externalAddress" | "message" | "promotialMessage" | "order" | "orderProducts" | "inventoryPlace" | "inventoryProduct" | "inventoryStock" | "inventoryChecklist" | "inventoryChecklistItem" | "inventoryAlert" | "inventoryStockEvent"
+      modelProps: "station" | "preparationStep" | "preparationStepCategory" | "preparationStepTrack" | "preparationStepModifierTrack" | "progressiveDiscount" | "progressiveDiscountStep" | "progressiveDiscountPrize" | "progressiveDiscountPrizeProduct" | "file" | "modifierGroup" | "modifierGroupItem" | "business" | "user" | "businessOwner" | "branch" | "driver" | "dispatch" | "dispatchAssignmentJob" | "feedbackWhatsAppJob" | "address" | "product" | "exclusivePromotion" | "exclusivePromotionProduct" | "menu" | "menuVisit" | "category" | "menuCategory" | "productCategory" | "comboSlot" | "comboSlotOption" | "campaign" | "customer" | "customerOtpChallenge" | "customerAccessToken" | "deliveryAddress" | "externalAddress" | "message" | "promotialMessage" | "order" | "customerFeedback" | "customerReward" | "orderProducts" | "inventoryPlace" | "inventoryProduct" | "inventoryStock" | "inventoryChecklist" | "inventoryChecklistItem" | "inventoryAlert" | "inventoryStockEvent" | "feedbackSettings"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2907,6 +3070,80 @@ export namespace Prisma {
           }
         }
       }
+      FeedbackWhatsAppJob: {
+        payload: Prisma.$FeedbackWhatsAppJobPayload<ExtArgs>
+        fields: Prisma.FeedbackWhatsAppJobFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.FeedbackWhatsAppJobFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackWhatsAppJobPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.FeedbackWhatsAppJobFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackWhatsAppJobPayload>
+          }
+          findFirst: {
+            args: Prisma.FeedbackWhatsAppJobFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackWhatsAppJobPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.FeedbackWhatsAppJobFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackWhatsAppJobPayload>
+          }
+          findMany: {
+            args: Prisma.FeedbackWhatsAppJobFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackWhatsAppJobPayload>[]
+          }
+          create: {
+            args: Prisma.FeedbackWhatsAppJobCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackWhatsAppJobPayload>
+          }
+          createMany: {
+            args: Prisma.FeedbackWhatsAppJobCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.FeedbackWhatsAppJobCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackWhatsAppJobPayload>[]
+          }
+          delete: {
+            args: Prisma.FeedbackWhatsAppJobDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackWhatsAppJobPayload>
+          }
+          update: {
+            args: Prisma.FeedbackWhatsAppJobUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackWhatsAppJobPayload>
+          }
+          deleteMany: {
+            args: Prisma.FeedbackWhatsAppJobDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.FeedbackWhatsAppJobUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.FeedbackWhatsAppJobUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackWhatsAppJobPayload>[]
+          }
+          upsert: {
+            args: Prisma.FeedbackWhatsAppJobUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackWhatsAppJobPayload>
+          }
+          aggregate: {
+            args: Prisma.FeedbackWhatsAppJobAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateFeedbackWhatsAppJob>
+          }
+          groupBy: {
+            args: Prisma.FeedbackWhatsAppJobGroupByArgs<ExtArgs>
+            result: $Utils.Optional<FeedbackWhatsAppJobGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.FeedbackWhatsAppJobCountArgs<ExtArgs>
+            result: $Utils.Optional<FeedbackWhatsAppJobCountAggregateOutputType> | number
+          }
+        }
+      }
       Address: {
         payload: Prisma.$AddressPayload<ExtArgs>
         fields: Prisma.AddressFieldRefs
@@ -3869,6 +4106,154 @@ export namespace Prisma {
           }
         }
       }
+      CustomerOtpChallenge: {
+        payload: Prisma.$CustomerOtpChallengePayload<ExtArgs>
+        fields: Prisma.CustomerOtpChallengeFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CustomerOtpChallengeFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerOtpChallengePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CustomerOtpChallengeFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerOtpChallengePayload>
+          }
+          findFirst: {
+            args: Prisma.CustomerOtpChallengeFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerOtpChallengePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CustomerOtpChallengeFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerOtpChallengePayload>
+          }
+          findMany: {
+            args: Prisma.CustomerOtpChallengeFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerOtpChallengePayload>[]
+          }
+          create: {
+            args: Prisma.CustomerOtpChallengeCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerOtpChallengePayload>
+          }
+          createMany: {
+            args: Prisma.CustomerOtpChallengeCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.CustomerOtpChallengeCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerOtpChallengePayload>[]
+          }
+          delete: {
+            args: Prisma.CustomerOtpChallengeDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerOtpChallengePayload>
+          }
+          update: {
+            args: Prisma.CustomerOtpChallengeUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerOtpChallengePayload>
+          }
+          deleteMany: {
+            args: Prisma.CustomerOtpChallengeDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CustomerOtpChallengeUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.CustomerOtpChallengeUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerOtpChallengePayload>[]
+          }
+          upsert: {
+            args: Prisma.CustomerOtpChallengeUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerOtpChallengePayload>
+          }
+          aggregate: {
+            args: Prisma.CustomerOtpChallengeAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCustomerOtpChallenge>
+          }
+          groupBy: {
+            args: Prisma.CustomerOtpChallengeGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CustomerOtpChallengeGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CustomerOtpChallengeCountArgs<ExtArgs>
+            result: $Utils.Optional<CustomerOtpChallengeCountAggregateOutputType> | number
+          }
+        }
+      }
+      CustomerAccessToken: {
+        payload: Prisma.$CustomerAccessTokenPayload<ExtArgs>
+        fields: Prisma.CustomerAccessTokenFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CustomerAccessTokenFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerAccessTokenPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CustomerAccessTokenFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerAccessTokenPayload>
+          }
+          findFirst: {
+            args: Prisma.CustomerAccessTokenFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerAccessTokenPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CustomerAccessTokenFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerAccessTokenPayload>
+          }
+          findMany: {
+            args: Prisma.CustomerAccessTokenFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerAccessTokenPayload>[]
+          }
+          create: {
+            args: Prisma.CustomerAccessTokenCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerAccessTokenPayload>
+          }
+          createMany: {
+            args: Prisma.CustomerAccessTokenCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.CustomerAccessTokenCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerAccessTokenPayload>[]
+          }
+          delete: {
+            args: Prisma.CustomerAccessTokenDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerAccessTokenPayload>
+          }
+          update: {
+            args: Prisma.CustomerAccessTokenUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerAccessTokenPayload>
+          }
+          deleteMany: {
+            args: Prisma.CustomerAccessTokenDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CustomerAccessTokenUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.CustomerAccessTokenUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerAccessTokenPayload>[]
+          }
+          upsert: {
+            args: Prisma.CustomerAccessTokenUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerAccessTokenPayload>
+          }
+          aggregate: {
+            args: Prisma.CustomerAccessTokenAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCustomerAccessToken>
+          }
+          groupBy: {
+            args: Prisma.CustomerAccessTokenGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CustomerAccessTokenGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CustomerAccessTokenCountArgs<ExtArgs>
+            result: $Utils.Optional<CustomerAccessTokenCountAggregateOutputType> | number
+          }
+        }
+      }
       DeliveryAddress: {
         payload: Prisma.$DeliveryAddressPayload<ExtArgs>
         fields: Prisma.DeliveryAddressFieldRefs
@@ -4236,6 +4621,154 @@ export namespace Prisma {
           count: {
             args: Prisma.OrderCountArgs<ExtArgs>
             result: $Utils.Optional<OrderCountAggregateOutputType> | number
+          }
+        }
+      }
+      CustomerFeedback: {
+        payload: Prisma.$CustomerFeedbackPayload<ExtArgs>
+        fields: Prisma.CustomerFeedbackFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CustomerFeedbackFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerFeedbackPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CustomerFeedbackFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerFeedbackPayload>
+          }
+          findFirst: {
+            args: Prisma.CustomerFeedbackFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerFeedbackPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CustomerFeedbackFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerFeedbackPayload>
+          }
+          findMany: {
+            args: Prisma.CustomerFeedbackFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerFeedbackPayload>[]
+          }
+          create: {
+            args: Prisma.CustomerFeedbackCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerFeedbackPayload>
+          }
+          createMany: {
+            args: Prisma.CustomerFeedbackCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.CustomerFeedbackCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerFeedbackPayload>[]
+          }
+          delete: {
+            args: Prisma.CustomerFeedbackDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerFeedbackPayload>
+          }
+          update: {
+            args: Prisma.CustomerFeedbackUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerFeedbackPayload>
+          }
+          deleteMany: {
+            args: Prisma.CustomerFeedbackDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CustomerFeedbackUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.CustomerFeedbackUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerFeedbackPayload>[]
+          }
+          upsert: {
+            args: Prisma.CustomerFeedbackUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerFeedbackPayload>
+          }
+          aggregate: {
+            args: Prisma.CustomerFeedbackAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCustomerFeedback>
+          }
+          groupBy: {
+            args: Prisma.CustomerFeedbackGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CustomerFeedbackGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CustomerFeedbackCountArgs<ExtArgs>
+            result: $Utils.Optional<CustomerFeedbackCountAggregateOutputType> | number
+          }
+        }
+      }
+      CustomerReward: {
+        payload: Prisma.$CustomerRewardPayload<ExtArgs>
+        fields: Prisma.CustomerRewardFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CustomerRewardFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerRewardPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CustomerRewardFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerRewardPayload>
+          }
+          findFirst: {
+            args: Prisma.CustomerRewardFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerRewardPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CustomerRewardFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerRewardPayload>
+          }
+          findMany: {
+            args: Prisma.CustomerRewardFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerRewardPayload>[]
+          }
+          create: {
+            args: Prisma.CustomerRewardCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerRewardPayload>
+          }
+          createMany: {
+            args: Prisma.CustomerRewardCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.CustomerRewardCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerRewardPayload>[]
+          }
+          delete: {
+            args: Prisma.CustomerRewardDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerRewardPayload>
+          }
+          update: {
+            args: Prisma.CustomerRewardUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerRewardPayload>
+          }
+          deleteMany: {
+            args: Prisma.CustomerRewardDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CustomerRewardUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.CustomerRewardUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerRewardPayload>[]
+          }
+          upsert: {
+            args: Prisma.CustomerRewardUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerRewardPayload>
+          }
+          aggregate: {
+            args: Prisma.CustomerRewardAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCustomerReward>
+          }
+          groupBy: {
+            args: Prisma.CustomerRewardGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CustomerRewardGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CustomerRewardCountArgs<ExtArgs>
+            result: $Utils.Optional<CustomerRewardCountAggregateOutputType> | number
           }
         }
       }
@@ -4831,6 +5364,80 @@ export namespace Prisma {
           }
         }
       }
+      FeedbackSettings: {
+        payload: Prisma.$FeedbackSettingsPayload<ExtArgs>
+        fields: Prisma.FeedbackSettingsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.FeedbackSettingsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackSettingsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.FeedbackSettingsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackSettingsPayload>
+          }
+          findFirst: {
+            args: Prisma.FeedbackSettingsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackSettingsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.FeedbackSettingsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackSettingsPayload>
+          }
+          findMany: {
+            args: Prisma.FeedbackSettingsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackSettingsPayload>[]
+          }
+          create: {
+            args: Prisma.FeedbackSettingsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackSettingsPayload>
+          }
+          createMany: {
+            args: Prisma.FeedbackSettingsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.FeedbackSettingsCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackSettingsPayload>[]
+          }
+          delete: {
+            args: Prisma.FeedbackSettingsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackSettingsPayload>
+          }
+          update: {
+            args: Prisma.FeedbackSettingsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackSettingsPayload>
+          }
+          deleteMany: {
+            args: Prisma.FeedbackSettingsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.FeedbackSettingsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.FeedbackSettingsUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackSettingsPayload>[]
+          }
+          upsert: {
+            args: Prisma.FeedbackSettingsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeedbackSettingsPayload>
+          }
+          aggregate: {
+            args: Prisma.FeedbackSettingsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateFeedbackSettings>
+          }
+          groupBy: {
+            args: Prisma.FeedbackSettingsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<FeedbackSettingsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.FeedbackSettingsCountArgs<ExtArgs>
+            result: $Utils.Optional<FeedbackSettingsCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -4958,6 +5565,7 @@ export namespace Prisma {
     driver?: DriverOmit
     dispatch?: DispatchOmit
     dispatchAssignmentJob?: DispatchAssignmentJobOmit
+    feedbackWhatsAppJob?: FeedbackWhatsAppJobOmit
     address?: AddressOmit
     product?: ProductOmit
     exclusivePromotion?: ExclusivePromotionOmit
@@ -4971,11 +5579,15 @@ export namespace Prisma {
     comboSlotOption?: ComboSlotOptionOmit
     campaign?: CampaignOmit
     customer?: CustomerOmit
+    customerOtpChallenge?: CustomerOtpChallengeOmit
+    customerAccessToken?: CustomerAccessTokenOmit
     deliveryAddress?: DeliveryAddressOmit
     externalAddress?: ExternalAddressOmit
     message?: MessageOmit
     promotialMessage?: PromotialMessageOmit
     order?: OrderOmit
+    customerFeedback?: CustomerFeedbackOmit
+    customerReward?: CustomerRewardOmit
     orderProducts?: OrderProductsOmit
     inventoryPlace?: InventoryPlaceOmit
     inventoryProduct?: InventoryProductOmit
@@ -4984,6 +5596,7 @@ export namespace Prisma {
     inventoryChecklistItem?: InventoryChecklistItemOmit
     inventoryAlert?: InventoryAlertOmit
     inventoryStockEvent?: InventoryStockEventOmit
+    feedbackSettings?: FeedbackSettingsOmit
   }
 
   /* Types for Logging */
@@ -5573,6 +6186,7 @@ export namespace Prisma {
     exclusivePromotionProducts: number
     OrderProducts: number
     prizeProducts: number
+    customerRewards: number
     preparationSteps: number
   }
 
@@ -5585,6 +6199,7 @@ export namespace Prisma {
     exclusivePromotionProducts?: boolean | ProductCountOutputTypeCountExclusivePromotionProductsArgs
     OrderProducts?: boolean | ProductCountOutputTypeCountOrderProductsArgs
     prizeProducts?: boolean | ProductCountOutputTypeCountPrizeProductsArgs
+    customerRewards?: boolean | ProductCountOutputTypeCountCustomerRewardsArgs
     preparationSteps?: boolean | ProductCountOutputTypeCountPreparationStepsArgs
   }
 
@@ -5653,6 +6268,13 @@ export namespace Prisma {
    */
   export type ProductCountOutputTypeCountPrizeProductsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ProgressiveDiscountPrizeProductWhereInput
+  }
+
+  /**
+   * ProductCountOutputType without action
+   */
+  export type ProductCountOutputTypeCountCustomerRewardsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CustomerRewardWhereInput
   }
 
   /**
@@ -5881,6 +6503,10 @@ export namespace Prisma {
     promotionalMessages: number
     addresses: number
     externalAddresses: number
+    feedbacks: number
+    rewards: number
+    otpChallenges: number
+    accessTokens: number
   }
 
   export type CustomerCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5888,6 +6514,10 @@ export namespace Prisma {
     promotionalMessages?: boolean | CustomerCountOutputTypeCountPromotionalMessagesArgs
     addresses?: boolean | CustomerCountOutputTypeCountAddressesArgs
     externalAddresses?: boolean | CustomerCountOutputTypeCountExternalAddressesArgs
+    feedbacks?: boolean | CustomerCountOutputTypeCountFeedbacksArgs
+    rewards?: boolean | CustomerCountOutputTypeCountRewardsArgs
+    otpChallenges?: boolean | CustomerCountOutputTypeCountOtpChallengesArgs
+    accessTokens?: boolean | CustomerCountOutputTypeCountAccessTokensArgs
   }
 
   // Custom InputTypes
@@ -5927,6 +6557,34 @@ export namespace Prisma {
    */
   export type CustomerCountOutputTypeCountExternalAddressesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ExternalAddressWhereInput
+  }
+
+  /**
+   * CustomerCountOutputType without action
+   */
+  export type CustomerCountOutputTypeCountFeedbacksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CustomerFeedbackWhereInput
+  }
+
+  /**
+   * CustomerCountOutputType without action
+   */
+  export type CustomerCountOutputTypeCountRewardsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CustomerRewardWhereInput
+  }
+
+  /**
+   * CustomerCountOutputType without action
+   */
+  export type CustomerCountOutputTypeCountOtpChallengesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CustomerOtpChallengeWhereInput
+  }
+
+  /**
+   * CustomerCountOutputType without action
+   */
+  export type CustomerCountOutputTypeCountAccessTokensArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CustomerAccessTokenWhereInput
   }
 
 
@@ -6030,11 +6688,15 @@ export namespace Prisma {
   export type OrderCountOutputType = {
     orderProducts: number
     preparationStepCategories: number
+    issuedRewards: number
+    redeemedRewards: number
   }
 
   export type OrderCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     orderProducts?: boolean | OrderCountOutputTypeCountOrderProductsArgs
     preparationStepCategories?: boolean | OrderCountOutputTypeCountPreparationStepCategoriesArgs
+    issuedRewards?: boolean | OrderCountOutputTypeCountIssuedRewardsArgs
+    redeemedRewards?: boolean | OrderCountOutputTypeCountRedeemedRewardsArgs
   }
 
   // Custom InputTypes
@@ -6060,6 +6722,20 @@ export namespace Prisma {
    */
   export type OrderCountOutputTypeCountPreparationStepCategoriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: PreparationStepCategoryWhereInput
+  }
+
+  /**
+   * OrderCountOutputType without action
+   */
+  export type OrderCountOutputTypeCountIssuedRewardsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CustomerRewardWhereInput
+  }
+
+  /**
+   * OrderCountOutputType without action
+   */
+  export type OrderCountOutputTypeCountRedeemedRewardsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CustomerRewardWhereInput
   }
 
 
@@ -27547,6 +28223,1118 @@ export namespace Prisma {
 
 
   /**
+   * Model FeedbackWhatsAppJob
+   */
+
+  export type AggregateFeedbackWhatsAppJob = {
+    _count: FeedbackWhatsAppJobCountAggregateOutputType | null
+    _avg: FeedbackWhatsAppJobAvgAggregateOutputType | null
+    _sum: FeedbackWhatsAppJobSumAggregateOutputType | null
+    _min: FeedbackWhatsAppJobMinAggregateOutputType | null
+    _max: FeedbackWhatsAppJobMaxAggregateOutputType | null
+  }
+
+  export type FeedbackWhatsAppJobAvgAggregateOutputType = {
+    attempts: number | null
+  }
+
+  export type FeedbackWhatsAppJobSumAggregateOutputType = {
+    attempts: number | null
+  }
+
+  export type FeedbackWhatsAppJobMinAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    status: $Enums.FeedbackWhatsAppJobStatus | null
+    attempts: number | null
+    availableAt: Date | null
+    processingStartedAt: Date | null
+    completedAt: Date | null
+    lastError: string | null
+    orderId: string | null
+    customerPhone: string | null
+    language: string | null
+  }
+
+  export type FeedbackWhatsAppJobMaxAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    status: $Enums.FeedbackWhatsAppJobStatus | null
+    attempts: number | null
+    availableAt: Date | null
+    processingStartedAt: Date | null
+    completedAt: Date | null
+    lastError: string | null
+    orderId: string | null
+    customerPhone: string | null
+    language: string | null
+  }
+
+  export type FeedbackWhatsAppJobCountAggregateOutputType = {
+    id: number
+    createdAt: number
+    status: number
+    attempts: number
+    availableAt: number
+    processingStartedAt: number
+    completedAt: number
+    lastError: number
+    orderId: number
+    customerPhone: number
+    language: number
+    _all: number
+  }
+
+
+  export type FeedbackWhatsAppJobAvgAggregateInputType = {
+    attempts?: true
+  }
+
+  export type FeedbackWhatsAppJobSumAggregateInputType = {
+    attempts?: true
+  }
+
+  export type FeedbackWhatsAppJobMinAggregateInputType = {
+    id?: true
+    createdAt?: true
+    status?: true
+    attempts?: true
+    availableAt?: true
+    processingStartedAt?: true
+    completedAt?: true
+    lastError?: true
+    orderId?: true
+    customerPhone?: true
+    language?: true
+  }
+
+  export type FeedbackWhatsAppJobMaxAggregateInputType = {
+    id?: true
+    createdAt?: true
+    status?: true
+    attempts?: true
+    availableAt?: true
+    processingStartedAt?: true
+    completedAt?: true
+    lastError?: true
+    orderId?: true
+    customerPhone?: true
+    language?: true
+  }
+
+  export type FeedbackWhatsAppJobCountAggregateInputType = {
+    id?: true
+    createdAt?: true
+    status?: true
+    attempts?: true
+    availableAt?: true
+    processingStartedAt?: true
+    completedAt?: true
+    lastError?: true
+    orderId?: true
+    customerPhone?: true
+    language?: true
+    _all?: true
+  }
+
+  export type FeedbackWhatsAppJobAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FeedbackWhatsAppJob to aggregate.
+     */
+    where?: FeedbackWhatsAppJobWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FeedbackWhatsAppJobs to fetch.
+     */
+    orderBy?: FeedbackWhatsAppJobOrderByWithRelationInput | FeedbackWhatsAppJobOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: FeedbackWhatsAppJobWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FeedbackWhatsAppJobs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FeedbackWhatsAppJobs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned FeedbackWhatsAppJobs
+    **/
+    _count?: true | FeedbackWhatsAppJobCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: FeedbackWhatsAppJobAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: FeedbackWhatsAppJobSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: FeedbackWhatsAppJobMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: FeedbackWhatsAppJobMaxAggregateInputType
+  }
+
+  export type GetFeedbackWhatsAppJobAggregateType<T extends FeedbackWhatsAppJobAggregateArgs> = {
+        [P in keyof T & keyof AggregateFeedbackWhatsAppJob]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateFeedbackWhatsAppJob[P]>
+      : GetScalarType<T[P], AggregateFeedbackWhatsAppJob[P]>
+  }
+
+
+
+
+  export type FeedbackWhatsAppJobGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FeedbackWhatsAppJobWhereInput
+    orderBy?: FeedbackWhatsAppJobOrderByWithAggregationInput | FeedbackWhatsAppJobOrderByWithAggregationInput[]
+    by: FeedbackWhatsAppJobScalarFieldEnum[] | FeedbackWhatsAppJobScalarFieldEnum
+    having?: FeedbackWhatsAppJobScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: FeedbackWhatsAppJobCountAggregateInputType | true
+    _avg?: FeedbackWhatsAppJobAvgAggregateInputType
+    _sum?: FeedbackWhatsAppJobSumAggregateInputType
+    _min?: FeedbackWhatsAppJobMinAggregateInputType
+    _max?: FeedbackWhatsAppJobMaxAggregateInputType
+  }
+
+  export type FeedbackWhatsAppJobGroupByOutputType = {
+    id: string
+    createdAt: Date
+    status: $Enums.FeedbackWhatsAppJobStatus
+    attempts: number
+    availableAt: Date
+    processingStartedAt: Date | null
+    completedAt: Date | null
+    lastError: string | null
+    orderId: string
+    customerPhone: string
+    language: string | null
+    _count: FeedbackWhatsAppJobCountAggregateOutputType | null
+    _avg: FeedbackWhatsAppJobAvgAggregateOutputType | null
+    _sum: FeedbackWhatsAppJobSumAggregateOutputType | null
+    _min: FeedbackWhatsAppJobMinAggregateOutputType | null
+    _max: FeedbackWhatsAppJobMaxAggregateOutputType | null
+  }
+
+  type GetFeedbackWhatsAppJobGroupByPayload<T extends FeedbackWhatsAppJobGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<FeedbackWhatsAppJobGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof FeedbackWhatsAppJobGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], FeedbackWhatsAppJobGroupByOutputType[P]>
+            : GetScalarType<T[P], FeedbackWhatsAppJobGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type FeedbackWhatsAppJobSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    status?: boolean
+    attempts?: boolean
+    availableAt?: boolean
+    processingStartedAt?: boolean
+    completedAt?: boolean
+    lastError?: boolean
+    orderId?: boolean
+    customerPhone?: boolean
+    language?: boolean
+  }, ExtArgs["result"]["feedbackWhatsAppJob"]>
+
+  export type FeedbackWhatsAppJobSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    status?: boolean
+    attempts?: boolean
+    availableAt?: boolean
+    processingStartedAt?: boolean
+    completedAt?: boolean
+    lastError?: boolean
+    orderId?: boolean
+    customerPhone?: boolean
+    language?: boolean
+  }, ExtArgs["result"]["feedbackWhatsAppJob"]>
+
+  export type FeedbackWhatsAppJobSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    status?: boolean
+    attempts?: boolean
+    availableAt?: boolean
+    processingStartedAt?: boolean
+    completedAt?: boolean
+    lastError?: boolean
+    orderId?: boolean
+    customerPhone?: boolean
+    language?: boolean
+  }, ExtArgs["result"]["feedbackWhatsAppJob"]>
+
+  export type FeedbackWhatsAppJobSelectScalar = {
+    id?: boolean
+    createdAt?: boolean
+    status?: boolean
+    attempts?: boolean
+    availableAt?: boolean
+    processingStartedAt?: boolean
+    completedAt?: boolean
+    lastError?: boolean
+    orderId?: boolean
+    customerPhone?: boolean
+    language?: boolean
+  }
+
+  export type FeedbackWhatsAppJobOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "status" | "attempts" | "availableAt" | "processingStartedAt" | "completedAt" | "lastError" | "orderId" | "customerPhone" | "language", ExtArgs["result"]["feedbackWhatsAppJob"]>
+
+  export type $FeedbackWhatsAppJobPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "FeedbackWhatsAppJob"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      createdAt: Date
+      status: $Enums.FeedbackWhatsAppJobStatus
+      attempts: number
+      availableAt: Date
+      processingStartedAt: Date | null
+      completedAt: Date | null
+      lastError: string | null
+      orderId: string
+      customerPhone: string
+      language: string | null
+    }, ExtArgs["result"]["feedbackWhatsAppJob"]>
+    composites: {}
+  }
+
+  type FeedbackWhatsAppJobGetPayload<S extends boolean | null | undefined | FeedbackWhatsAppJobDefaultArgs> = $Result.GetResult<Prisma.$FeedbackWhatsAppJobPayload, S>
+
+  type FeedbackWhatsAppJobCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<FeedbackWhatsAppJobFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: FeedbackWhatsAppJobCountAggregateInputType | true
+    }
+
+  export interface FeedbackWhatsAppJobDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['FeedbackWhatsAppJob'], meta: { name: 'FeedbackWhatsAppJob' } }
+    /**
+     * Find zero or one FeedbackWhatsAppJob that matches the filter.
+     * @param {FeedbackWhatsAppJobFindUniqueArgs} args - Arguments to find a FeedbackWhatsAppJob
+     * @example
+     * // Get one FeedbackWhatsAppJob
+     * const feedbackWhatsAppJob = await prisma.feedbackWhatsAppJob.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends FeedbackWhatsAppJobFindUniqueArgs>(args: SelectSubset<T, FeedbackWhatsAppJobFindUniqueArgs<ExtArgs>>): Prisma__FeedbackWhatsAppJobClient<$Result.GetResult<Prisma.$FeedbackWhatsAppJobPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one FeedbackWhatsAppJob that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {FeedbackWhatsAppJobFindUniqueOrThrowArgs} args - Arguments to find a FeedbackWhatsAppJob
+     * @example
+     * // Get one FeedbackWhatsAppJob
+     * const feedbackWhatsAppJob = await prisma.feedbackWhatsAppJob.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends FeedbackWhatsAppJobFindUniqueOrThrowArgs>(args: SelectSubset<T, FeedbackWhatsAppJobFindUniqueOrThrowArgs<ExtArgs>>): Prisma__FeedbackWhatsAppJobClient<$Result.GetResult<Prisma.$FeedbackWhatsAppJobPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FeedbackWhatsAppJob that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeedbackWhatsAppJobFindFirstArgs} args - Arguments to find a FeedbackWhatsAppJob
+     * @example
+     * // Get one FeedbackWhatsAppJob
+     * const feedbackWhatsAppJob = await prisma.feedbackWhatsAppJob.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends FeedbackWhatsAppJobFindFirstArgs>(args?: SelectSubset<T, FeedbackWhatsAppJobFindFirstArgs<ExtArgs>>): Prisma__FeedbackWhatsAppJobClient<$Result.GetResult<Prisma.$FeedbackWhatsAppJobPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FeedbackWhatsAppJob that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeedbackWhatsAppJobFindFirstOrThrowArgs} args - Arguments to find a FeedbackWhatsAppJob
+     * @example
+     * // Get one FeedbackWhatsAppJob
+     * const feedbackWhatsAppJob = await prisma.feedbackWhatsAppJob.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends FeedbackWhatsAppJobFindFirstOrThrowArgs>(args?: SelectSubset<T, FeedbackWhatsAppJobFindFirstOrThrowArgs<ExtArgs>>): Prisma__FeedbackWhatsAppJobClient<$Result.GetResult<Prisma.$FeedbackWhatsAppJobPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more FeedbackWhatsAppJobs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeedbackWhatsAppJobFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all FeedbackWhatsAppJobs
+     * const feedbackWhatsAppJobs = await prisma.feedbackWhatsAppJob.findMany()
+     * 
+     * // Get first 10 FeedbackWhatsAppJobs
+     * const feedbackWhatsAppJobs = await prisma.feedbackWhatsAppJob.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const feedbackWhatsAppJobWithIdOnly = await prisma.feedbackWhatsAppJob.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends FeedbackWhatsAppJobFindManyArgs>(args?: SelectSubset<T, FeedbackWhatsAppJobFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeedbackWhatsAppJobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a FeedbackWhatsAppJob.
+     * @param {FeedbackWhatsAppJobCreateArgs} args - Arguments to create a FeedbackWhatsAppJob.
+     * @example
+     * // Create one FeedbackWhatsAppJob
+     * const FeedbackWhatsAppJob = await prisma.feedbackWhatsAppJob.create({
+     *   data: {
+     *     // ... data to create a FeedbackWhatsAppJob
+     *   }
+     * })
+     * 
+     */
+    create<T extends FeedbackWhatsAppJobCreateArgs>(args: SelectSubset<T, FeedbackWhatsAppJobCreateArgs<ExtArgs>>): Prisma__FeedbackWhatsAppJobClient<$Result.GetResult<Prisma.$FeedbackWhatsAppJobPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many FeedbackWhatsAppJobs.
+     * @param {FeedbackWhatsAppJobCreateManyArgs} args - Arguments to create many FeedbackWhatsAppJobs.
+     * @example
+     * // Create many FeedbackWhatsAppJobs
+     * const feedbackWhatsAppJob = await prisma.feedbackWhatsAppJob.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends FeedbackWhatsAppJobCreateManyArgs>(args?: SelectSubset<T, FeedbackWhatsAppJobCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many FeedbackWhatsAppJobs and returns the data saved in the database.
+     * @param {FeedbackWhatsAppJobCreateManyAndReturnArgs} args - Arguments to create many FeedbackWhatsAppJobs.
+     * @example
+     * // Create many FeedbackWhatsAppJobs
+     * const feedbackWhatsAppJob = await prisma.feedbackWhatsAppJob.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many FeedbackWhatsAppJobs and only return the `id`
+     * const feedbackWhatsAppJobWithIdOnly = await prisma.feedbackWhatsAppJob.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends FeedbackWhatsAppJobCreateManyAndReturnArgs>(args?: SelectSubset<T, FeedbackWhatsAppJobCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeedbackWhatsAppJobPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a FeedbackWhatsAppJob.
+     * @param {FeedbackWhatsAppJobDeleteArgs} args - Arguments to delete one FeedbackWhatsAppJob.
+     * @example
+     * // Delete one FeedbackWhatsAppJob
+     * const FeedbackWhatsAppJob = await prisma.feedbackWhatsAppJob.delete({
+     *   where: {
+     *     // ... filter to delete one FeedbackWhatsAppJob
+     *   }
+     * })
+     * 
+     */
+    delete<T extends FeedbackWhatsAppJobDeleteArgs>(args: SelectSubset<T, FeedbackWhatsAppJobDeleteArgs<ExtArgs>>): Prisma__FeedbackWhatsAppJobClient<$Result.GetResult<Prisma.$FeedbackWhatsAppJobPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one FeedbackWhatsAppJob.
+     * @param {FeedbackWhatsAppJobUpdateArgs} args - Arguments to update one FeedbackWhatsAppJob.
+     * @example
+     * // Update one FeedbackWhatsAppJob
+     * const feedbackWhatsAppJob = await prisma.feedbackWhatsAppJob.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends FeedbackWhatsAppJobUpdateArgs>(args: SelectSubset<T, FeedbackWhatsAppJobUpdateArgs<ExtArgs>>): Prisma__FeedbackWhatsAppJobClient<$Result.GetResult<Prisma.$FeedbackWhatsAppJobPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more FeedbackWhatsAppJobs.
+     * @param {FeedbackWhatsAppJobDeleteManyArgs} args - Arguments to filter FeedbackWhatsAppJobs to delete.
+     * @example
+     * // Delete a few FeedbackWhatsAppJobs
+     * const { count } = await prisma.feedbackWhatsAppJob.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends FeedbackWhatsAppJobDeleteManyArgs>(args?: SelectSubset<T, FeedbackWhatsAppJobDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FeedbackWhatsAppJobs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeedbackWhatsAppJobUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many FeedbackWhatsAppJobs
+     * const feedbackWhatsAppJob = await prisma.feedbackWhatsAppJob.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends FeedbackWhatsAppJobUpdateManyArgs>(args: SelectSubset<T, FeedbackWhatsAppJobUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FeedbackWhatsAppJobs and returns the data updated in the database.
+     * @param {FeedbackWhatsAppJobUpdateManyAndReturnArgs} args - Arguments to update many FeedbackWhatsAppJobs.
+     * @example
+     * // Update many FeedbackWhatsAppJobs
+     * const feedbackWhatsAppJob = await prisma.feedbackWhatsAppJob.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more FeedbackWhatsAppJobs and only return the `id`
+     * const feedbackWhatsAppJobWithIdOnly = await prisma.feedbackWhatsAppJob.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends FeedbackWhatsAppJobUpdateManyAndReturnArgs>(args: SelectSubset<T, FeedbackWhatsAppJobUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeedbackWhatsAppJobPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one FeedbackWhatsAppJob.
+     * @param {FeedbackWhatsAppJobUpsertArgs} args - Arguments to update or create a FeedbackWhatsAppJob.
+     * @example
+     * // Update or create a FeedbackWhatsAppJob
+     * const feedbackWhatsAppJob = await prisma.feedbackWhatsAppJob.upsert({
+     *   create: {
+     *     // ... data to create a FeedbackWhatsAppJob
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the FeedbackWhatsAppJob we want to update
+     *   }
+     * })
+     */
+    upsert<T extends FeedbackWhatsAppJobUpsertArgs>(args: SelectSubset<T, FeedbackWhatsAppJobUpsertArgs<ExtArgs>>): Prisma__FeedbackWhatsAppJobClient<$Result.GetResult<Prisma.$FeedbackWhatsAppJobPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of FeedbackWhatsAppJobs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeedbackWhatsAppJobCountArgs} args - Arguments to filter FeedbackWhatsAppJobs to count.
+     * @example
+     * // Count the number of FeedbackWhatsAppJobs
+     * const count = await prisma.feedbackWhatsAppJob.count({
+     *   where: {
+     *     // ... the filter for the FeedbackWhatsAppJobs we want to count
+     *   }
+     * })
+    **/
+    count<T extends FeedbackWhatsAppJobCountArgs>(
+      args?: Subset<T, FeedbackWhatsAppJobCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], FeedbackWhatsAppJobCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a FeedbackWhatsAppJob.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeedbackWhatsAppJobAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends FeedbackWhatsAppJobAggregateArgs>(args: Subset<T, FeedbackWhatsAppJobAggregateArgs>): Prisma.PrismaPromise<GetFeedbackWhatsAppJobAggregateType<T>>
+
+    /**
+     * Group by FeedbackWhatsAppJob.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeedbackWhatsAppJobGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends FeedbackWhatsAppJobGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: FeedbackWhatsAppJobGroupByArgs['orderBy'] }
+        : { orderBy?: FeedbackWhatsAppJobGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, FeedbackWhatsAppJobGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetFeedbackWhatsAppJobGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the FeedbackWhatsAppJob model
+   */
+  readonly fields: FeedbackWhatsAppJobFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for FeedbackWhatsAppJob.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__FeedbackWhatsAppJobClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the FeedbackWhatsAppJob model
+   */
+  interface FeedbackWhatsAppJobFieldRefs {
+    readonly id: FieldRef<"FeedbackWhatsAppJob", 'String'>
+    readonly createdAt: FieldRef<"FeedbackWhatsAppJob", 'DateTime'>
+    readonly status: FieldRef<"FeedbackWhatsAppJob", 'FeedbackWhatsAppJobStatus'>
+    readonly attempts: FieldRef<"FeedbackWhatsAppJob", 'Int'>
+    readonly availableAt: FieldRef<"FeedbackWhatsAppJob", 'DateTime'>
+    readonly processingStartedAt: FieldRef<"FeedbackWhatsAppJob", 'DateTime'>
+    readonly completedAt: FieldRef<"FeedbackWhatsAppJob", 'DateTime'>
+    readonly lastError: FieldRef<"FeedbackWhatsAppJob", 'String'>
+    readonly orderId: FieldRef<"FeedbackWhatsAppJob", 'String'>
+    readonly customerPhone: FieldRef<"FeedbackWhatsAppJob", 'String'>
+    readonly language: FieldRef<"FeedbackWhatsAppJob", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * FeedbackWhatsAppJob findUnique
+   */
+  export type FeedbackWhatsAppJobFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackWhatsAppJob
+     */
+    select?: FeedbackWhatsAppJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackWhatsAppJob
+     */
+    omit?: FeedbackWhatsAppJobOmit<ExtArgs> | null
+    /**
+     * Filter, which FeedbackWhatsAppJob to fetch.
+     */
+    where: FeedbackWhatsAppJobWhereUniqueInput
+  }
+
+  /**
+   * FeedbackWhatsAppJob findUniqueOrThrow
+   */
+  export type FeedbackWhatsAppJobFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackWhatsAppJob
+     */
+    select?: FeedbackWhatsAppJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackWhatsAppJob
+     */
+    omit?: FeedbackWhatsAppJobOmit<ExtArgs> | null
+    /**
+     * Filter, which FeedbackWhatsAppJob to fetch.
+     */
+    where: FeedbackWhatsAppJobWhereUniqueInput
+  }
+
+  /**
+   * FeedbackWhatsAppJob findFirst
+   */
+  export type FeedbackWhatsAppJobFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackWhatsAppJob
+     */
+    select?: FeedbackWhatsAppJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackWhatsAppJob
+     */
+    omit?: FeedbackWhatsAppJobOmit<ExtArgs> | null
+    /**
+     * Filter, which FeedbackWhatsAppJob to fetch.
+     */
+    where?: FeedbackWhatsAppJobWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FeedbackWhatsAppJobs to fetch.
+     */
+    orderBy?: FeedbackWhatsAppJobOrderByWithRelationInput | FeedbackWhatsAppJobOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FeedbackWhatsAppJobs.
+     */
+    cursor?: FeedbackWhatsAppJobWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FeedbackWhatsAppJobs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FeedbackWhatsAppJobs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FeedbackWhatsAppJobs.
+     */
+    distinct?: FeedbackWhatsAppJobScalarFieldEnum | FeedbackWhatsAppJobScalarFieldEnum[]
+  }
+
+  /**
+   * FeedbackWhatsAppJob findFirstOrThrow
+   */
+  export type FeedbackWhatsAppJobFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackWhatsAppJob
+     */
+    select?: FeedbackWhatsAppJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackWhatsAppJob
+     */
+    omit?: FeedbackWhatsAppJobOmit<ExtArgs> | null
+    /**
+     * Filter, which FeedbackWhatsAppJob to fetch.
+     */
+    where?: FeedbackWhatsAppJobWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FeedbackWhatsAppJobs to fetch.
+     */
+    orderBy?: FeedbackWhatsAppJobOrderByWithRelationInput | FeedbackWhatsAppJobOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FeedbackWhatsAppJobs.
+     */
+    cursor?: FeedbackWhatsAppJobWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FeedbackWhatsAppJobs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FeedbackWhatsAppJobs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FeedbackWhatsAppJobs.
+     */
+    distinct?: FeedbackWhatsAppJobScalarFieldEnum | FeedbackWhatsAppJobScalarFieldEnum[]
+  }
+
+  /**
+   * FeedbackWhatsAppJob findMany
+   */
+  export type FeedbackWhatsAppJobFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackWhatsAppJob
+     */
+    select?: FeedbackWhatsAppJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackWhatsAppJob
+     */
+    omit?: FeedbackWhatsAppJobOmit<ExtArgs> | null
+    /**
+     * Filter, which FeedbackWhatsAppJobs to fetch.
+     */
+    where?: FeedbackWhatsAppJobWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FeedbackWhatsAppJobs to fetch.
+     */
+    orderBy?: FeedbackWhatsAppJobOrderByWithRelationInput | FeedbackWhatsAppJobOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing FeedbackWhatsAppJobs.
+     */
+    cursor?: FeedbackWhatsAppJobWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FeedbackWhatsAppJobs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FeedbackWhatsAppJobs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FeedbackWhatsAppJobs.
+     */
+    distinct?: FeedbackWhatsAppJobScalarFieldEnum | FeedbackWhatsAppJobScalarFieldEnum[]
+  }
+
+  /**
+   * FeedbackWhatsAppJob create
+   */
+  export type FeedbackWhatsAppJobCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackWhatsAppJob
+     */
+    select?: FeedbackWhatsAppJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackWhatsAppJob
+     */
+    omit?: FeedbackWhatsAppJobOmit<ExtArgs> | null
+    /**
+     * The data needed to create a FeedbackWhatsAppJob.
+     */
+    data: XOR<FeedbackWhatsAppJobCreateInput, FeedbackWhatsAppJobUncheckedCreateInput>
+  }
+
+  /**
+   * FeedbackWhatsAppJob createMany
+   */
+  export type FeedbackWhatsAppJobCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many FeedbackWhatsAppJobs.
+     */
+    data: FeedbackWhatsAppJobCreateManyInput | FeedbackWhatsAppJobCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * FeedbackWhatsAppJob createManyAndReturn
+   */
+  export type FeedbackWhatsAppJobCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackWhatsAppJob
+     */
+    select?: FeedbackWhatsAppJobSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackWhatsAppJob
+     */
+    omit?: FeedbackWhatsAppJobOmit<ExtArgs> | null
+    /**
+     * The data used to create many FeedbackWhatsAppJobs.
+     */
+    data: FeedbackWhatsAppJobCreateManyInput | FeedbackWhatsAppJobCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * FeedbackWhatsAppJob update
+   */
+  export type FeedbackWhatsAppJobUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackWhatsAppJob
+     */
+    select?: FeedbackWhatsAppJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackWhatsAppJob
+     */
+    omit?: FeedbackWhatsAppJobOmit<ExtArgs> | null
+    /**
+     * The data needed to update a FeedbackWhatsAppJob.
+     */
+    data: XOR<FeedbackWhatsAppJobUpdateInput, FeedbackWhatsAppJobUncheckedUpdateInput>
+    /**
+     * Choose, which FeedbackWhatsAppJob to update.
+     */
+    where: FeedbackWhatsAppJobWhereUniqueInput
+  }
+
+  /**
+   * FeedbackWhatsAppJob updateMany
+   */
+  export type FeedbackWhatsAppJobUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update FeedbackWhatsAppJobs.
+     */
+    data: XOR<FeedbackWhatsAppJobUpdateManyMutationInput, FeedbackWhatsAppJobUncheckedUpdateManyInput>
+    /**
+     * Filter which FeedbackWhatsAppJobs to update
+     */
+    where?: FeedbackWhatsAppJobWhereInput
+    /**
+     * Limit how many FeedbackWhatsAppJobs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * FeedbackWhatsAppJob updateManyAndReturn
+   */
+  export type FeedbackWhatsAppJobUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackWhatsAppJob
+     */
+    select?: FeedbackWhatsAppJobSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackWhatsAppJob
+     */
+    omit?: FeedbackWhatsAppJobOmit<ExtArgs> | null
+    /**
+     * The data used to update FeedbackWhatsAppJobs.
+     */
+    data: XOR<FeedbackWhatsAppJobUpdateManyMutationInput, FeedbackWhatsAppJobUncheckedUpdateManyInput>
+    /**
+     * Filter which FeedbackWhatsAppJobs to update
+     */
+    where?: FeedbackWhatsAppJobWhereInput
+    /**
+     * Limit how many FeedbackWhatsAppJobs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * FeedbackWhatsAppJob upsert
+   */
+  export type FeedbackWhatsAppJobUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackWhatsAppJob
+     */
+    select?: FeedbackWhatsAppJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackWhatsAppJob
+     */
+    omit?: FeedbackWhatsAppJobOmit<ExtArgs> | null
+    /**
+     * The filter to search for the FeedbackWhatsAppJob to update in case it exists.
+     */
+    where: FeedbackWhatsAppJobWhereUniqueInput
+    /**
+     * In case the FeedbackWhatsAppJob found by the `where` argument doesn't exist, create a new FeedbackWhatsAppJob with this data.
+     */
+    create: XOR<FeedbackWhatsAppJobCreateInput, FeedbackWhatsAppJobUncheckedCreateInput>
+    /**
+     * In case the FeedbackWhatsAppJob was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<FeedbackWhatsAppJobUpdateInput, FeedbackWhatsAppJobUncheckedUpdateInput>
+  }
+
+  /**
+   * FeedbackWhatsAppJob delete
+   */
+  export type FeedbackWhatsAppJobDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackWhatsAppJob
+     */
+    select?: FeedbackWhatsAppJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackWhatsAppJob
+     */
+    omit?: FeedbackWhatsAppJobOmit<ExtArgs> | null
+    /**
+     * Filter which FeedbackWhatsAppJob to delete.
+     */
+    where: FeedbackWhatsAppJobWhereUniqueInput
+  }
+
+  /**
+   * FeedbackWhatsAppJob deleteMany
+   */
+  export type FeedbackWhatsAppJobDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FeedbackWhatsAppJobs to delete
+     */
+    where?: FeedbackWhatsAppJobWhereInput
+    /**
+     * Limit how many FeedbackWhatsAppJobs to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * FeedbackWhatsAppJob without action
+   */
+  export type FeedbackWhatsAppJobDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackWhatsAppJob
+     */
+    select?: FeedbackWhatsAppJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackWhatsAppJob
+     */
+    omit?: FeedbackWhatsAppJobOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Model Address
    */
 
@@ -28890,6 +30678,7 @@ export namespace Prisma {
     exclusivePromotionProducts?: boolean | Product$exclusivePromotionProductsArgs<ExtArgs>
     OrderProducts?: boolean | Product$OrderProductsArgs<ExtArgs>
     prizeProducts?: boolean | Product$prizeProductsArgs<ExtArgs>
+    customerRewards?: boolean | Product$customerRewardsArgs<ExtArgs>
     preparationSteps?: boolean | Product$preparationStepsArgs<ExtArgs>
     _count?: boolean | ProductCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["product"]>
@@ -28949,6 +30738,7 @@ export namespace Prisma {
     exclusivePromotionProducts?: boolean | Product$exclusivePromotionProductsArgs<ExtArgs>
     OrderProducts?: boolean | Product$OrderProductsArgs<ExtArgs>
     prizeProducts?: boolean | Product$prizeProductsArgs<ExtArgs>
+    customerRewards?: boolean | Product$customerRewardsArgs<ExtArgs>
     preparationSteps?: boolean | Product$preparationStepsArgs<ExtArgs>
     _count?: boolean | ProductCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -28971,6 +30761,7 @@ export namespace Prisma {
       exclusivePromotionProducts: Prisma.$ExclusivePromotionProductPayload<ExtArgs>[]
       OrderProducts: Prisma.$OrderProductsPayload<ExtArgs>[]
       prizeProducts: Prisma.$ProgressiveDiscountPrizeProductPayload<ExtArgs>[]
+      customerRewards: Prisma.$CustomerRewardPayload<ExtArgs>[]
       preparationSteps: Prisma.$PreparationStepPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -29388,6 +31179,7 @@ export namespace Prisma {
     exclusivePromotionProducts<T extends Product$exclusivePromotionProductsArgs<ExtArgs> = {}>(args?: Subset<T, Product$exclusivePromotionProductsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExclusivePromotionProductPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     OrderProducts<T extends Product$OrderProductsArgs<ExtArgs> = {}>(args?: Subset<T, Product$OrderProductsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderProductsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     prizeProducts<T extends Product$prizeProductsArgs<ExtArgs> = {}>(args?: Subset<T, Product$prizeProductsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProgressiveDiscountPrizeProductPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    customerRewards<T extends Product$customerRewardsArgs<ExtArgs> = {}>(args?: Subset<T, Product$customerRewardsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomerRewardPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     preparationSteps<T extends Product$preparationStepsArgs<ExtArgs> = {}>(args?: Subset<T, Product$preparationStepsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PreparationStepPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -30038,6 +31830,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ProgressiveDiscountPrizeProductScalarFieldEnum | ProgressiveDiscountPrizeProductScalarFieldEnum[]
+  }
+
+  /**
+   * Product.customerRewards
+   */
+  export type Product$customerRewardsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerReward
+     */
+    select?: CustomerRewardSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerReward
+     */
+    omit?: CustomerRewardOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerRewardInclude<ExtArgs> | null
+    where?: CustomerRewardWhereInput
+    orderBy?: CustomerRewardOrderByWithRelationInput | CustomerRewardOrderByWithRelationInput[]
+    cursor?: CustomerRewardWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CustomerRewardScalarFieldEnum | CustomerRewardScalarFieldEnum[]
   }
 
   /**
@@ -41539,6 +43355,10 @@ export namespace Prisma {
     promotionalMessages?: boolean | Customer$promotionalMessagesArgs<ExtArgs>
     addresses?: boolean | Customer$addressesArgs<ExtArgs>
     externalAddresses?: boolean | Customer$externalAddressesArgs<ExtArgs>
+    feedbacks?: boolean | Customer$feedbacksArgs<ExtArgs>
+    rewards?: boolean | Customer$rewardsArgs<ExtArgs>
+    otpChallenges?: boolean | Customer$otpChallengesArgs<ExtArgs>
+    accessTokens?: boolean | Customer$accessTokensArgs<ExtArgs>
     _count?: boolean | CustomerCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["customer"]>
 
@@ -41578,6 +43398,10 @@ export namespace Prisma {
     promotionalMessages?: boolean | Customer$promotionalMessagesArgs<ExtArgs>
     addresses?: boolean | Customer$addressesArgs<ExtArgs>
     externalAddresses?: boolean | Customer$externalAddressesArgs<ExtArgs>
+    feedbacks?: boolean | Customer$feedbacksArgs<ExtArgs>
+    rewards?: boolean | Customer$rewardsArgs<ExtArgs>
+    otpChallenges?: boolean | Customer$otpChallengesArgs<ExtArgs>
+    accessTokens?: boolean | Customer$accessTokensArgs<ExtArgs>
     _count?: boolean | CustomerCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type CustomerIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -41590,6 +43414,10 @@ export namespace Prisma {
       promotionalMessages: Prisma.$PromotialMessagePayload<ExtArgs>[]
       addresses: Prisma.$DeliveryAddressPayload<ExtArgs>[]
       externalAddresses: Prisma.$ExternalAddressPayload<ExtArgs>[]
+      feedbacks: Prisma.$CustomerFeedbackPayload<ExtArgs>[]
+      rewards: Prisma.$CustomerRewardPayload<ExtArgs>[]
+      otpChallenges: Prisma.$CustomerOtpChallengePayload<ExtArgs>[]
+      accessTokens: Prisma.$CustomerAccessTokenPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -41997,6 +43825,10 @@ export namespace Prisma {
     promotionalMessages<T extends Customer$promotionalMessagesArgs<ExtArgs> = {}>(args?: Subset<T, Customer$promotionalMessagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PromotialMessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     addresses<T extends Customer$addressesArgs<ExtArgs> = {}>(args?: Subset<T, Customer$addressesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DeliveryAddressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     externalAddresses<T extends Customer$externalAddressesArgs<ExtArgs> = {}>(args?: Subset<T, Customer$externalAddressesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExternalAddressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    feedbacks<T extends Customer$feedbacksArgs<ExtArgs> = {}>(args?: Subset<T, Customer$feedbacksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomerFeedbackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    rewards<T extends Customer$rewardsArgs<ExtArgs> = {}>(args?: Subset<T, Customer$rewardsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomerRewardPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    otpChallenges<T extends Customer$otpChallengesArgs<ExtArgs> = {}>(args?: Subset<T, Customer$otpChallengesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomerOtpChallengePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    accessTokens<T extends Customer$accessTokensArgs<ExtArgs> = {}>(args?: Subset<T, Customer$accessTokensArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomerAccessTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -42522,6 +44354,102 @@ export namespace Prisma {
   }
 
   /**
+   * Customer.feedbacks
+   */
+  export type Customer$feedbacksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerFeedback
+     */
+    select?: CustomerFeedbackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerFeedback
+     */
+    omit?: CustomerFeedbackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerFeedbackInclude<ExtArgs> | null
+    where?: CustomerFeedbackWhereInput
+    orderBy?: CustomerFeedbackOrderByWithRelationInput | CustomerFeedbackOrderByWithRelationInput[]
+    cursor?: CustomerFeedbackWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CustomerFeedbackScalarFieldEnum | CustomerFeedbackScalarFieldEnum[]
+  }
+
+  /**
+   * Customer.rewards
+   */
+  export type Customer$rewardsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerReward
+     */
+    select?: CustomerRewardSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerReward
+     */
+    omit?: CustomerRewardOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerRewardInclude<ExtArgs> | null
+    where?: CustomerRewardWhereInput
+    orderBy?: CustomerRewardOrderByWithRelationInput | CustomerRewardOrderByWithRelationInput[]
+    cursor?: CustomerRewardWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CustomerRewardScalarFieldEnum | CustomerRewardScalarFieldEnum[]
+  }
+
+  /**
+   * Customer.otpChallenges
+   */
+  export type Customer$otpChallengesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerOtpChallenge
+     */
+    select?: CustomerOtpChallengeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerOtpChallenge
+     */
+    omit?: CustomerOtpChallengeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerOtpChallengeInclude<ExtArgs> | null
+    where?: CustomerOtpChallengeWhereInput
+    orderBy?: CustomerOtpChallengeOrderByWithRelationInput | CustomerOtpChallengeOrderByWithRelationInput[]
+    cursor?: CustomerOtpChallengeWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CustomerOtpChallengeScalarFieldEnum | CustomerOtpChallengeScalarFieldEnum[]
+  }
+
+  /**
+   * Customer.accessTokens
+   */
+  export type Customer$accessTokensArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerAccessToken
+     */
+    select?: CustomerAccessTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerAccessToken
+     */
+    omit?: CustomerAccessTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerAccessTokenInclude<ExtArgs> | null
+    where?: CustomerAccessTokenWhereInput
+    orderBy?: CustomerAccessTokenOrderByWithRelationInput | CustomerAccessTokenOrderByWithRelationInput[]
+    cursor?: CustomerAccessTokenWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CustomerAccessTokenScalarFieldEnum | CustomerAccessTokenScalarFieldEnum[]
+  }
+
+  /**
    * Customer without action
    */
   export type CustomerDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -42537,6 +44465,2358 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: CustomerInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model CustomerOtpChallenge
+   */
+
+  export type AggregateCustomerOtpChallenge = {
+    _count: CustomerOtpChallengeCountAggregateOutputType | null
+    _avg: CustomerOtpChallengeAvgAggregateOutputType | null
+    _sum: CustomerOtpChallengeSumAggregateOutputType | null
+    _min: CustomerOtpChallengeMinAggregateOutputType | null
+    _max: CustomerOtpChallengeMaxAggregateOutputType | null
+  }
+
+  export type CustomerOtpChallengeAvgAggregateOutputType = {
+    attemptCount: number | null
+    maxAttempts: number | null
+  }
+
+  export type CustomerOtpChallengeSumAggregateOutputType = {
+    attemptCount: number | null
+    maxAttempts: number | null
+  }
+
+  export type CustomerOtpChallengeMinAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    customerId: string | null
+    phone: string | null
+    countryCode: string | null
+    channel: $Enums.CustomerOtpChannel | null
+    codeHash: string | null
+    expiresAt: Date | null
+    usedAt: Date | null
+    attemptCount: number | null
+    maxAttempts: number | null
+    lastAttemptAt: Date | null
+  }
+
+  export type CustomerOtpChallengeMaxAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    customerId: string | null
+    phone: string | null
+    countryCode: string | null
+    channel: $Enums.CustomerOtpChannel | null
+    codeHash: string | null
+    expiresAt: Date | null
+    usedAt: Date | null
+    attemptCount: number | null
+    maxAttempts: number | null
+    lastAttemptAt: Date | null
+  }
+
+  export type CustomerOtpChallengeCountAggregateOutputType = {
+    id: number
+    createdAt: number
+    updatedAt: number
+    customerId: number
+    phone: number
+    countryCode: number
+    channel: number
+    codeHash: number
+    expiresAt: number
+    usedAt: number
+    attemptCount: number
+    maxAttempts: number
+    lastAttemptAt: number
+    _all: number
+  }
+
+
+  export type CustomerOtpChallengeAvgAggregateInputType = {
+    attemptCount?: true
+    maxAttempts?: true
+  }
+
+  export type CustomerOtpChallengeSumAggregateInputType = {
+    attemptCount?: true
+    maxAttempts?: true
+  }
+
+  export type CustomerOtpChallengeMinAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    customerId?: true
+    phone?: true
+    countryCode?: true
+    channel?: true
+    codeHash?: true
+    expiresAt?: true
+    usedAt?: true
+    attemptCount?: true
+    maxAttempts?: true
+    lastAttemptAt?: true
+  }
+
+  export type CustomerOtpChallengeMaxAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    customerId?: true
+    phone?: true
+    countryCode?: true
+    channel?: true
+    codeHash?: true
+    expiresAt?: true
+    usedAt?: true
+    attemptCount?: true
+    maxAttempts?: true
+    lastAttemptAt?: true
+  }
+
+  export type CustomerOtpChallengeCountAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    customerId?: true
+    phone?: true
+    countryCode?: true
+    channel?: true
+    codeHash?: true
+    expiresAt?: true
+    usedAt?: true
+    attemptCount?: true
+    maxAttempts?: true
+    lastAttemptAt?: true
+    _all?: true
+  }
+
+  export type CustomerOtpChallengeAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CustomerOtpChallenge to aggregate.
+     */
+    where?: CustomerOtpChallengeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CustomerOtpChallenges to fetch.
+     */
+    orderBy?: CustomerOtpChallengeOrderByWithRelationInput | CustomerOtpChallengeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CustomerOtpChallengeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CustomerOtpChallenges from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CustomerOtpChallenges.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned CustomerOtpChallenges
+    **/
+    _count?: true | CustomerOtpChallengeCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: CustomerOtpChallengeAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: CustomerOtpChallengeSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CustomerOtpChallengeMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CustomerOtpChallengeMaxAggregateInputType
+  }
+
+  export type GetCustomerOtpChallengeAggregateType<T extends CustomerOtpChallengeAggregateArgs> = {
+        [P in keyof T & keyof AggregateCustomerOtpChallenge]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCustomerOtpChallenge[P]>
+      : GetScalarType<T[P], AggregateCustomerOtpChallenge[P]>
+  }
+
+
+
+
+  export type CustomerOtpChallengeGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CustomerOtpChallengeWhereInput
+    orderBy?: CustomerOtpChallengeOrderByWithAggregationInput | CustomerOtpChallengeOrderByWithAggregationInput[]
+    by: CustomerOtpChallengeScalarFieldEnum[] | CustomerOtpChallengeScalarFieldEnum
+    having?: CustomerOtpChallengeScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CustomerOtpChallengeCountAggregateInputType | true
+    _avg?: CustomerOtpChallengeAvgAggregateInputType
+    _sum?: CustomerOtpChallengeSumAggregateInputType
+    _min?: CustomerOtpChallengeMinAggregateInputType
+    _max?: CustomerOtpChallengeMaxAggregateInputType
+  }
+
+  export type CustomerOtpChallengeGroupByOutputType = {
+    id: string
+    createdAt: Date
+    updatedAt: Date
+    customerId: string | null
+    phone: string
+    countryCode: string | null
+    channel: $Enums.CustomerOtpChannel
+    codeHash: string
+    expiresAt: Date
+    usedAt: Date | null
+    attemptCount: number
+    maxAttempts: number
+    lastAttemptAt: Date | null
+    _count: CustomerOtpChallengeCountAggregateOutputType | null
+    _avg: CustomerOtpChallengeAvgAggregateOutputType | null
+    _sum: CustomerOtpChallengeSumAggregateOutputType | null
+    _min: CustomerOtpChallengeMinAggregateOutputType | null
+    _max: CustomerOtpChallengeMaxAggregateOutputType | null
+  }
+
+  type GetCustomerOtpChallengeGroupByPayload<T extends CustomerOtpChallengeGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CustomerOtpChallengeGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CustomerOtpChallengeGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CustomerOtpChallengeGroupByOutputType[P]>
+            : GetScalarType<T[P], CustomerOtpChallengeGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CustomerOtpChallengeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    customerId?: boolean
+    phone?: boolean
+    countryCode?: boolean
+    channel?: boolean
+    codeHash?: boolean
+    expiresAt?: boolean
+    usedAt?: boolean
+    attemptCount?: boolean
+    maxAttempts?: boolean
+    lastAttemptAt?: boolean
+    customer?: boolean | CustomerOtpChallenge$customerArgs<ExtArgs>
+  }, ExtArgs["result"]["customerOtpChallenge"]>
+
+  export type CustomerOtpChallengeSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    customerId?: boolean
+    phone?: boolean
+    countryCode?: boolean
+    channel?: boolean
+    codeHash?: boolean
+    expiresAt?: boolean
+    usedAt?: boolean
+    attemptCount?: boolean
+    maxAttempts?: boolean
+    lastAttemptAt?: boolean
+    customer?: boolean | CustomerOtpChallenge$customerArgs<ExtArgs>
+  }, ExtArgs["result"]["customerOtpChallenge"]>
+
+  export type CustomerOtpChallengeSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    customerId?: boolean
+    phone?: boolean
+    countryCode?: boolean
+    channel?: boolean
+    codeHash?: boolean
+    expiresAt?: boolean
+    usedAt?: boolean
+    attemptCount?: boolean
+    maxAttempts?: boolean
+    lastAttemptAt?: boolean
+    customer?: boolean | CustomerOtpChallenge$customerArgs<ExtArgs>
+  }, ExtArgs["result"]["customerOtpChallenge"]>
+
+  export type CustomerOtpChallengeSelectScalar = {
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    customerId?: boolean
+    phone?: boolean
+    countryCode?: boolean
+    channel?: boolean
+    codeHash?: boolean
+    expiresAt?: boolean
+    usedAt?: boolean
+    attemptCount?: boolean
+    maxAttempts?: boolean
+    lastAttemptAt?: boolean
+  }
+
+  export type CustomerOtpChallengeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "customerId" | "phone" | "countryCode" | "channel" | "codeHash" | "expiresAt" | "usedAt" | "attemptCount" | "maxAttempts" | "lastAttemptAt", ExtArgs["result"]["customerOtpChallenge"]>
+  export type CustomerOtpChallengeInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    customer?: boolean | CustomerOtpChallenge$customerArgs<ExtArgs>
+  }
+  export type CustomerOtpChallengeIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    customer?: boolean | CustomerOtpChallenge$customerArgs<ExtArgs>
+  }
+  export type CustomerOtpChallengeIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    customer?: boolean | CustomerOtpChallenge$customerArgs<ExtArgs>
+  }
+
+  export type $CustomerOtpChallengePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "CustomerOtpChallenge"
+    objects: {
+      customer: Prisma.$CustomerPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      createdAt: Date
+      updatedAt: Date
+      customerId: string | null
+      phone: string
+      countryCode: string | null
+      channel: $Enums.CustomerOtpChannel
+      codeHash: string
+      expiresAt: Date
+      usedAt: Date | null
+      attemptCount: number
+      maxAttempts: number
+      lastAttemptAt: Date | null
+    }, ExtArgs["result"]["customerOtpChallenge"]>
+    composites: {}
+  }
+
+  type CustomerOtpChallengeGetPayload<S extends boolean | null | undefined | CustomerOtpChallengeDefaultArgs> = $Result.GetResult<Prisma.$CustomerOtpChallengePayload, S>
+
+  type CustomerOtpChallengeCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<CustomerOtpChallengeFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: CustomerOtpChallengeCountAggregateInputType | true
+    }
+
+  export interface CustomerOtpChallengeDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['CustomerOtpChallenge'], meta: { name: 'CustomerOtpChallenge' } }
+    /**
+     * Find zero or one CustomerOtpChallenge that matches the filter.
+     * @param {CustomerOtpChallengeFindUniqueArgs} args - Arguments to find a CustomerOtpChallenge
+     * @example
+     * // Get one CustomerOtpChallenge
+     * const customerOtpChallenge = await prisma.customerOtpChallenge.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CustomerOtpChallengeFindUniqueArgs>(args: SelectSubset<T, CustomerOtpChallengeFindUniqueArgs<ExtArgs>>): Prisma__CustomerOtpChallengeClient<$Result.GetResult<Prisma.$CustomerOtpChallengePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one CustomerOtpChallenge that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {CustomerOtpChallengeFindUniqueOrThrowArgs} args - Arguments to find a CustomerOtpChallenge
+     * @example
+     * // Get one CustomerOtpChallenge
+     * const customerOtpChallenge = await prisma.customerOtpChallenge.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CustomerOtpChallengeFindUniqueOrThrowArgs>(args: SelectSubset<T, CustomerOtpChallengeFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CustomerOtpChallengeClient<$Result.GetResult<Prisma.$CustomerOtpChallengePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CustomerOtpChallenge that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomerOtpChallengeFindFirstArgs} args - Arguments to find a CustomerOtpChallenge
+     * @example
+     * // Get one CustomerOtpChallenge
+     * const customerOtpChallenge = await prisma.customerOtpChallenge.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CustomerOtpChallengeFindFirstArgs>(args?: SelectSubset<T, CustomerOtpChallengeFindFirstArgs<ExtArgs>>): Prisma__CustomerOtpChallengeClient<$Result.GetResult<Prisma.$CustomerOtpChallengePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CustomerOtpChallenge that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomerOtpChallengeFindFirstOrThrowArgs} args - Arguments to find a CustomerOtpChallenge
+     * @example
+     * // Get one CustomerOtpChallenge
+     * const customerOtpChallenge = await prisma.customerOtpChallenge.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CustomerOtpChallengeFindFirstOrThrowArgs>(args?: SelectSubset<T, CustomerOtpChallengeFindFirstOrThrowArgs<ExtArgs>>): Prisma__CustomerOtpChallengeClient<$Result.GetResult<Prisma.$CustomerOtpChallengePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more CustomerOtpChallenges that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomerOtpChallengeFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all CustomerOtpChallenges
+     * const customerOtpChallenges = await prisma.customerOtpChallenge.findMany()
+     * 
+     * // Get first 10 CustomerOtpChallenges
+     * const customerOtpChallenges = await prisma.customerOtpChallenge.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const customerOtpChallengeWithIdOnly = await prisma.customerOtpChallenge.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CustomerOtpChallengeFindManyArgs>(args?: SelectSubset<T, CustomerOtpChallengeFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomerOtpChallengePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a CustomerOtpChallenge.
+     * @param {CustomerOtpChallengeCreateArgs} args - Arguments to create a CustomerOtpChallenge.
+     * @example
+     * // Create one CustomerOtpChallenge
+     * const CustomerOtpChallenge = await prisma.customerOtpChallenge.create({
+     *   data: {
+     *     // ... data to create a CustomerOtpChallenge
+     *   }
+     * })
+     * 
+     */
+    create<T extends CustomerOtpChallengeCreateArgs>(args: SelectSubset<T, CustomerOtpChallengeCreateArgs<ExtArgs>>): Prisma__CustomerOtpChallengeClient<$Result.GetResult<Prisma.$CustomerOtpChallengePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many CustomerOtpChallenges.
+     * @param {CustomerOtpChallengeCreateManyArgs} args - Arguments to create many CustomerOtpChallenges.
+     * @example
+     * // Create many CustomerOtpChallenges
+     * const customerOtpChallenge = await prisma.customerOtpChallenge.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CustomerOtpChallengeCreateManyArgs>(args?: SelectSubset<T, CustomerOtpChallengeCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many CustomerOtpChallenges and returns the data saved in the database.
+     * @param {CustomerOtpChallengeCreateManyAndReturnArgs} args - Arguments to create many CustomerOtpChallenges.
+     * @example
+     * // Create many CustomerOtpChallenges
+     * const customerOtpChallenge = await prisma.customerOtpChallenge.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many CustomerOtpChallenges and only return the `id`
+     * const customerOtpChallengeWithIdOnly = await prisma.customerOtpChallenge.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends CustomerOtpChallengeCreateManyAndReturnArgs>(args?: SelectSubset<T, CustomerOtpChallengeCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomerOtpChallengePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a CustomerOtpChallenge.
+     * @param {CustomerOtpChallengeDeleteArgs} args - Arguments to delete one CustomerOtpChallenge.
+     * @example
+     * // Delete one CustomerOtpChallenge
+     * const CustomerOtpChallenge = await prisma.customerOtpChallenge.delete({
+     *   where: {
+     *     // ... filter to delete one CustomerOtpChallenge
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CustomerOtpChallengeDeleteArgs>(args: SelectSubset<T, CustomerOtpChallengeDeleteArgs<ExtArgs>>): Prisma__CustomerOtpChallengeClient<$Result.GetResult<Prisma.$CustomerOtpChallengePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one CustomerOtpChallenge.
+     * @param {CustomerOtpChallengeUpdateArgs} args - Arguments to update one CustomerOtpChallenge.
+     * @example
+     * // Update one CustomerOtpChallenge
+     * const customerOtpChallenge = await prisma.customerOtpChallenge.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CustomerOtpChallengeUpdateArgs>(args: SelectSubset<T, CustomerOtpChallengeUpdateArgs<ExtArgs>>): Prisma__CustomerOtpChallengeClient<$Result.GetResult<Prisma.$CustomerOtpChallengePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more CustomerOtpChallenges.
+     * @param {CustomerOtpChallengeDeleteManyArgs} args - Arguments to filter CustomerOtpChallenges to delete.
+     * @example
+     * // Delete a few CustomerOtpChallenges
+     * const { count } = await prisma.customerOtpChallenge.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CustomerOtpChallengeDeleteManyArgs>(args?: SelectSubset<T, CustomerOtpChallengeDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CustomerOtpChallenges.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomerOtpChallengeUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many CustomerOtpChallenges
+     * const customerOtpChallenge = await prisma.customerOtpChallenge.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CustomerOtpChallengeUpdateManyArgs>(args: SelectSubset<T, CustomerOtpChallengeUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CustomerOtpChallenges and returns the data updated in the database.
+     * @param {CustomerOtpChallengeUpdateManyAndReturnArgs} args - Arguments to update many CustomerOtpChallenges.
+     * @example
+     * // Update many CustomerOtpChallenges
+     * const customerOtpChallenge = await prisma.customerOtpChallenge.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more CustomerOtpChallenges and only return the `id`
+     * const customerOtpChallengeWithIdOnly = await prisma.customerOtpChallenge.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends CustomerOtpChallengeUpdateManyAndReturnArgs>(args: SelectSubset<T, CustomerOtpChallengeUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomerOtpChallengePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one CustomerOtpChallenge.
+     * @param {CustomerOtpChallengeUpsertArgs} args - Arguments to update or create a CustomerOtpChallenge.
+     * @example
+     * // Update or create a CustomerOtpChallenge
+     * const customerOtpChallenge = await prisma.customerOtpChallenge.upsert({
+     *   create: {
+     *     // ... data to create a CustomerOtpChallenge
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the CustomerOtpChallenge we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CustomerOtpChallengeUpsertArgs>(args: SelectSubset<T, CustomerOtpChallengeUpsertArgs<ExtArgs>>): Prisma__CustomerOtpChallengeClient<$Result.GetResult<Prisma.$CustomerOtpChallengePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of CustomerOtpChallenges.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomerOtpChallengeCountArgs} args - Arguments to filter CustomerOtpChallenges to count.
+     * @example
+     * // Count the number of CustomerOtpChallenges
+     * const count = await prisma.customerOtpChallenge.count({
+     *   where: {
+     *     // ... the filter for the CustomerOtpChallenges we want to count
+     *   }
+     * })
+    **/
+    count<T extends CustomerOtpChallengeCountArgs>(
+      args?: Subset<T, CustomerOtpChallengeCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CustomerOtpChallengeCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a CustomerOtpChallenge.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomerOtpChallengeAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CustomerOtpChallengeAggregateArgs>(args: Subset<T, CustomerOtpChallengeAggregateArgs>): Prisma.PrismaPromise<GetCustomerOtpChallengeAggregateType<T>>
+
+    /**
+     * Group by CustomerOtpChallenge.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomerOtpChallengeGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CustomerOtpChallengeGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CustomerOtpChallengeGroupByArgs['orderBy'] }
+        : { orderBy?: CustomerOtpChallengeGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CustomerOtpChallengeGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCustomerOtpChallengeGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the CustomerOtpChallenge model
+   */
+  readonly fields: CustomerOtpChallengeFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for CustomerOtpChallenge.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CustomerOtpChallengeClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    customer<T extends CustomerOtpChallenge$customerArgs<ExtArgs> = {}>(args?: Subset<T, CustomerOtpChallenge$customerArgs<ExtArgs>>): Prisma__CustomerClient<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the CustomerOtpChallenge model
+   */
+  interface CustomerOtpChallengeFieldRefs {
+    readonly id: FieldRef<"CustomerOtpChallenge", 'String'>
+    readonly createdAt: FieldRef<"CustomerOtpChallenge", 'DateTime'>
+    readonly updatedAt: FieldRef<"CustomerOtpChallenge", 'DateTime'>
+    readonly customerId: FieldRef<"CustomerOtpChallenge", 'String'>
+    readonly phone: FieldRef<"CustomerOtpChallenge", 'String'>
+    readonly countryCode: FieldRef<"CustomerOtpChallenge", 'String'>
+    readonly channel: FieldRef<"CustomerOtpChallenge", 'CustomerOtpChannel'>
+    readonly codeHash: FieldRef<"CustomerOtpChallenge", 'String'>
+    readonly expiresAt: FieldRef<"CustomerOtpChallenge", 'DateTime'>
+    readonly usedAt: FieldRef<"CustomerOtpChallenge", 'DateTime'>
+    readonly attemptCount: FieldRef<"CustomerOtpChallenge", 'Int'>
+    readonly maxAttempts: FieldRef<"CustomerOtpChallenge", 'Int'>
+    readonly lastAttemptAt: FieldRef<"CustomerOtpChallenge", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * CustomerOtpChallenge findUnique
+   */
+  export type CustomerOtpChallengeFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerOtpChallenge
+     */
+    select?: CustomerOtpChallengeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerOtpChallenge
+     */
+    omit?: CustomerOtpChallengeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerOtpChallengeInclude<ExtArgs> | null
+    /**
+     * Filter, which CustomerOtpChallenge to fetch.
+     */
+    where: CustomerOtpChallengeWhereUniqueInput
+  }
+
+  /**
+   * CustomerOtpChallenge findUniqueOrThrow
+   */
+  export type CustomerOtpChallengeFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerOtpChallenge
+     */
+    select?: CustomerOtpChallengeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerOtpChallenge
+     */
+    omit?: CustomerOtpChallengeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerOtpChallengeInclude<ExtArgs> | null
+    /**
+     * Filter, which CustomerOtpChallenge to fetch.
+     */
+    where: CustomerOtpChallengeWhereUniqueInput
+  }
+
+  /**
+   * CustomerOtpChallenge findFirst
+   */
+  export type CustomerOtpChallengeFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerOtpChallenge
+     */
+    select?: CustomerOtpChallengeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerOtpChallenge
+     */
+    omit?: CustomerOtpChallengeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerOtpChallengeInclude<ExtArgs> | null
+    /**
+     * Filter, which CustomerOtpChallenge to fetch.
+     */
+    where?: CustomerOtpChallengeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CustomerOtpChallenges to fetch.
+     */
+    orderBy?: CustomerOtpChallengeOrderByWithRelationInput | CustomerOtpChallengeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CustomerOtpChallenges.
+     */
+    cursor?: CustomerOtpChallengeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CustomerOtpChallenges from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CustomerOtpChallenges.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CustomerOtpChallenges.
+     */
+    distinct?: CustomerOtpChallengeScalarFieldEnum | CustomerOtpChallengeScalarFieldEnum[]
+  }
+
+  /**
+   * CustomerOtpChallenge findFirstOrThrow
+   */
+  export type CustomerOtpChallengeFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerOtpChallenge
+     */
+    select?: CustomerOtpChallengeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerOtpChallenge
+     */
+    omit?: CustomerOtpChallengeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerOtpChallengeInclude<ExtArgs> | null
+    /**
+     * Filter, which CustomerOtpChallenge to fetch.
+     */
+    where?: CustomerOtpChallengeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CustomerOtpChallenges to fetch.
+     */
+    orderBy?: CustomerOtpChallengeOrderByWithRelationInput | CustomerOtpChallengeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CustomerOtpChallenges.
+     */
+    cursor?: CustomerOtpChallengeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CustomerOtpChallenges from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CustomerOtpChallenges.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CustomerOtpChallenges.
+     */
+    distinct?: CustomerOtpChallengeScalarFieldEnum | CustomerOtpChallengeScalarFieldEnum[]
+  }
+
+  /**
+   * CustomerOtpChallenge findMany
+   */
+  export type CustomerOtpChallengeFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerOtpChallenge
+     */
+    select?: CustomerOtpChallengeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerOtpChallenge
+     */
+    omit?: CustomerOtpChallengeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerOtpChallengeInclude<ExtArgs> | null
+    /**
+     * Filter, which CustomerOtpChallenges to fetch.
+     */
+    where?: CustomerOtpChallengeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CustomerOtpChallenges to fetch.
+     */
+    orderBy?: CustomerOtpChallengeOrderByWithRelationInput | CustomerOtpChallengeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing CustomerOtpChallenges.
+     */
+    cursor?: CustomerOtpChallengeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CustomerOtpChallenges from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CustomerOtpChallenges.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CustomerOtpChallenges.
+     */
+    distinct?: CustomerOtpChallengeScalarFieldEnum | CustomerOtpChallengeScalarFieldEnum[]
+  }
+
+  /**
+   * CustomerOtpChallenge create
+   */
+  export type CustomerOtpChallengeCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerOtpChallenge
+     */
+    select?: CustomerOtpChallengeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerOtpChallenge
+     */
+    omit?: CustomerOtpChallengeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerOtpChallengeInclude<ExtArgs> | null
+    /**
+     * The data needed to create a CustomerOtpChallenge.
+     */
+    data: XOR<CustomerOtpChallengeCreateInput, CustomerOtpChallengeUncheckedCreateInput>
+  }
+
+  /**
+   * CustomerOtpChallenge createMany
+   */
+  export type CustomerOtpChallengeCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many CustomerOtpChallenges.
+     */
+    data: CustomerOtpChallengeCreateManyInput | CustomerOtpChallengeCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * CustomerOtpChallenge createManyAndReturn
+   */
+  export type CustomerOtpChallengeCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerOtpChallenge
+     */
+    select?: CustomerOtpChallengeSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerOtpChallenge
+     */
+    omit?: CustomerOtpChallengeOmit<ExtArgs> | null
+    /**
+     * The data used to create many CustomerOtpChallenges.
+     */
+    data: CustomerOtpChallengeCreateManyInput | CustomerOtpChallengeCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerOtpChallengeIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CustomerOtpChallenge update
+   */
+  export type CustomerOtpChallengeUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerOtpChallenge
+     */
+    select?: CustomerOtpChallengeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerOtpChallenge
+     */
+    omit?: CustomerOtpChallengeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerOtpChallengeInclude<ExtArgs> | null
+    /**
+     * The data needed to update a CustomerOtpChallenge.
+     */
+    data: XOR<CustomerOtpChallengeUpdateInput, CustomerOtpChallengeUncheckedUpdateInput>
+    /**
+     * Choose, which CustomerOtpChallenge to update.
+     */
+    where: CustomerOtpChallengeWhereUniqueInput
+  }
+
+  /**
+   * CustomerOtpChallenge updateMany
+   */
+  export type CustomerOtpChallengeUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update CustomerOtpChallenges.
+     */
+    data: XOR<CustomerOtpChallengeUpdateManyMutationInput, CustomerOtpChallengeUncheckedUpdateManyInput>
+    /**
+     * Filter which CustomerOtpChallenges to update
+     */
+    where?: CustomerOtpChallengeWhereInput
+    /**
+     * Limit how many CustomerOtpChallenges to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * CustomerOtpChallenge updateManyAndReturn
+   */
+  export type CustomerOtpChallengeUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerOtpChallenge
+     */
+    select?: CustomerOtpChallengeSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerOtpChallenge
+     */
+    omit?: CustomerOtpChallengeOmit<ExtArgs> | null
+    /**
+     * The data used to update CustomerOtpChallenges.
+     */
+    data: XOR<CustomerOtpChallengeUpdateManyMutationInput, CustomerOtpChallengeUncheckedUpdateManyInput>
+    /**
+     * Filter which CustomerOtpChallenges to update
+     */
+    where?: CustomerOtpChallengeWhereInput
+    /**
+     * Limit how many CustomerOtpChallenges to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerOtpChallengeIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CustomerOtpChallenge upsert
+   */
+  export type CustomerOtpChallengeUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerOtpChallenge
+     */
+    select?: CustomerOtpChallengeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerOtpChallenge
+     */
+    omit?: CustomerOtpChallengeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerOtpChallengeInclude<ExtArgs> | null
+    /**
+     * The filter to search for the CustomerOtpChallenge to update in case it exists.
+     */
+    where: CustomerOtpChallengeWhereUniqueInput
+    /**
+     * In case the CustomerOtpChallenge found by the `where` argument doesn't exist, create a new CustomerOtpChallenge with this data.
+     */
+    create: XOR<CustomerOtpChallengeCreateInput, CustomerOtpChallengeUncheckedCreateInput>
+    /**
+     * In case the CustomerOtpChallenge was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CustomerOtpChallengeUpdateInput, CustomerOtpChallengeUncheckedUpdateInput>
+  }
+
+  /**
+   * CustomerOtpChallenge delete
+   */
+  export type CustomerOtpChallengeDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerOtpChallenge
+     */
+    select?: CustomerOtpChallengeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerOtpChallenge
+     */
+    omit?: CustomerOtpChallengeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerOtpChallengeInclude<ExtArgs> | null
+    /**
+     * Filter which CustomerOtpChallenge to delete.
+     */
+    where: CustomerOtpChallengeWhereUniqueInput
+  }
+
+  /**
+   * CustomerOtpChallenge deleteMany
+   */
+  export type CustomerOtpChallengeDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CustomerOtpChallenges to delete
+     */
+    where?: CustomerOtpChallengeWhereInput
+    /**
+     * Limit how many CustomerOtpChallenges to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * CustomerOtpChallenge.customer
+   */
+  export type CustomerOtpChallenge$customerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Customer
+     */
+    select?: CustomerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Customer
+     */
+    omit?: CustomerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerInclude<ExtArgs> | null
+    where?: CustomerWhereInput
+  }
+
+  /**
+   * CustomerOtpChallenge without action
+   */
+  export type CustomerOtpChallengeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerOtpChallenge
+     */
+    select?: CustomerOtpChallengeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerOtpChallenge
+     */
+    omit?: CustomerOtpChallengeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerOtpChallengeInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model CustomerAccessToken
+   */
+
+  export type AggregateCustomerAccessToken = {
+    _count: CustomerAccessTokenCountAggregateOutputType | null
+    _min: CustomerAccessTokenMinAggregateOutputType | null
+    _max: CustomerAccessTokenMaxAggregateOutputType | null
+  }
+
+  export type CustomerAccessTokenMinAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    customerId: string | null
+    tokenHash: string | null
+    expiresAt: Date | null
+    lastUsedAt: Date | null
+    revokedAt: Date | null
+    userAgent: string | null
+    ipAddress: string | null
+  }
+
+  export type CustomerAccessTokenMaxAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    customerId: string | null
+    tokenHash: string | null
+    expiresAt: Date | null
+    lastUsedAt: Date | null
+    revokedAt: Date | null
+    userAgent: string | null
+    ipAddress: string | null
+  }
+
+  export type CustomerAccessTokenCountAggregateOutputType = {
+    id: number
+    createdAt: number
+    updatedAt: number
+    customerId: number
+    tokenHash: number
+    expiresAt: number
+    lastUsedAt: number
+    revokedAt: number
+    userAgent: number
+    ipAddress: number
+    _all: number
+  }
+
+
+  export type CustomerAccessTokenMinAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    customerId?: true
+    tokenHash?: true
+    expiresAt?: true
+    lastUsedAt?: true
+    revokedAt?: true
+    userAgent?: true
+    ipAddress?: true
+  }
+
+  export type CustomerAccessTokenMaxAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    customerId?: true
+    tokenHash?: true
+    expiresAt?: true
+    lastUsedAt?: true
+    revokedAt?: true
+    userAgent?: true
+    ipAddress?: true
+  }
+
+  export type CustomerAccessTokenCountAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    customerId?: true
+    tokenHash?: true
+    expiresAt?: true
+    lastUsedAt?: true
+    revokedAt?: true
+    userAgent?: true
+    ipAddress?: true
+    _all?: true
+  }
+
+  export type CustomerAccessTokenAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CustomerAccessToken to aggregate.
+     */
+    where?: CustomerAccessTokenWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CustomerAccessTokens to fetch.
+     */
+    orderBy?: CustomerAccessTokenOrderByWithRelationInput | CustomerAccessTokenOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CustomerAccessTokenWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CustomerAccessTokens from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CustomerAccessTokens.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned CustomerAccessTokens
+    **/
+    _count?: true | CustomerAccessTokenCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CustomerAccessTokenMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CustomerAccessTokenMaxAggregateInputType
+  }
+
+  export type GetCustomerAccessTokenAggregateType<T extends CustomerAccessTokenAggregateArgs> = {
+        [P in keyof T & keyof AggregateCustomerAccessToken]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCustomerAccessToken[P]>
+      : GetScalarType<T[P], AggregateCustomerAccessToken[P]>
+  }
+
+
+
+
+  export type CustomerAccessTokenGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CustomerAccessTokenWhereInput
+    orderBy?: CustomerAccessTokenOrderByWithAggregationInput | CustomerAccessTokenOrderByWithAggregationInput[]
+    by: CustomerAccessTokenScalarFieldEnum[] | CustomerAccessTokenScalarFieldEnum
+    having?: CustomerAccessTokenScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CustomerAccessTokenCountAggregateInputType | true
+    _min?: CustomerAccessTokenMinAggregateInputType
+    _max?: CustomerAccessTokenMaxAggregateInputType
+  }
+
+  export type CustomerAccessTokenGroupByOutputType = {
+    id: string
+    createdAt: Date
+    updatedAt: Date
+    customerId: string
+    tokenHash: string
+    expiresAt: Date
+    lastUsedAt: Date | null
+    revokedAt: Date | null
+    userAgent: string | null
+    ipAddress: string | null
+    _count: CustomerAccessTokenCountAggregateOutputType | null
+    _min: CustomerAccessTokenMinAggregateOutputType | null
+    _max: CustomerAccessTokenMaxAggregateOutputType | null
+  }
+
+  type GetCustomerAccessTokenGroupByPayload<T extends CustomerAccessTokenGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CustomerAccessTokenGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CustomerAccessTokenGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CustomerAccessTokenGroupByOutputType[P]>
+            : GetScalarType<T[P], CustomerAccessTokenGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CustomerAccessTokenSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    customerId?: boolean
+    tokenHash?: boolean
+    expiresAt?: boolean
+    lastUsedAt?: boolean
+    revokedAt?: boolean
+    userAgent?: boolean
+    ipAddress?: boolean
+    customer?: boolean | CustomerDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["customerAccessToken"]>
+
+  export type CustomerAccessTokenSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    customerId?: boolean
+    tokenHash?: boolean
+    expiresAt?: boolean
+    lastUsedAt?: boolean
+    revokedAt?: boolean
+    userAgent?: boolean
+    ipAddress?: boolean
+    customer?: boolean | CustomerDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["customerAccessToken"]>
+
+  export type CustomerAccessTokenSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    customerId?: boolean
+    tokenHash?: boolean
+    expiresAt?: boolean
+    lastUsedAt?: boolean
+    revokedAt?: boolean
+    userAgent?: boolean
+    ipAddress?: boolean
+    customer?: boolean | CustomerDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["customerAccessToken"]>
+
+  export type CustomerAccessTokenSelectScalar = {
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    customerId?: boolean
+    tokenHash?: boolean
+    expiresAt?: boolean
+    lastUsedAt?: boolean
+    revokedAt?: boolean
+    userAgent?: boolean
+    ipAddress?: boolean
+  }
+
+  export type CustomerAccessTokenOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "customerId" | "tokenHash" | "expiresAt" | "lastUsedAt" | "revokedAt" | "userAgent" | "ipAddress", ExtArgs["result"]["customerAccessToken"]>
+  export type CustomerAccessTokenInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    customer?: boolean | CustomerDefaultArgs<ExtArgs>
+  }
+  export type CustomerAccessTokenIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    customer?: boolean | CustomerDefaultArgs<ExtArgs>
+  }
+  export type CustomerAccessTokenIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    customer?: boolean | CustomerDefaultArgs<ExtArgs>
+  }
+
+  export type $CustomerAccessTokenPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "CustomerAccessToken"
+    objects: {
+      customer: Prisma.$CustomerPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      createdAt: Date
+      updatedAt: Date
+      customerId: string
+      tokenHash: string
+      expiresAt: Date
+      lastUsedAt: Date | null
+      revokedAt: Date | null
+      userAgent: string | null
+      ipAddress: string | null
+    }, ExtArgs["result"]["customerAccessToken"]>
+    composites: {}
+  }
+
+  type CustomerAccessTokenGetPayload<S extends boolean | null | undefined | CustomerAccessTokenDefaultArgs> = $Result.GetResult<Prisma.$CustomerAccessTokenPayload, S>
+
+  type CustomerAccessTokenCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<CustomerAccessTokenFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: CustomerAccessTokenCountAggregateInputType | true
+    }
+
+  export interface CustomerAccessTokenDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['CustomerAccessToken'], meta: { name: 'CustomerAccessToken' } }
+    /**
+     * Find zero or one CustomerAccessToken that matches the filter.
+     * @param {CustomerAccessTokenFindUniqueArgs} args - Arguments to find a CustomerAccessToken
+     * @example
+     * // Get one CustomerAccessToken
+     * const customerAccessToken = await prisma.customerAccessToken.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CustomerAccessTokenFindUniqueArgs>(args: SelectSubset<T, CustomerAccessTokenFindUniqueArgs<ExtArgs>>): Prisma__CustomerAccessTokenClient<$Result.GetResult<Prisma.$CustomerAccessTokenPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one CustomerAccessToken that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {CustomerAccessTokenFindUniqueOrThrowArgs} args - Arguments to find a CustomerAccessToken
+     * @example
+     * // Get one CustomerAccessToken
+     * const customerAccessToken = await prisma.customerAccessToken.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CustomerAccessTokenFindUniqueOrThrowArgs>(args: SelectSubset<T, CustomerAccessTokenFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CustomerAccessTokenClient<$Result.GetResult<Prisma.$CustomerAccessTokenPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CustomerAccessToken that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomerAccessTokenFindFirstArgs} args - Arguments to find a CustomerAccessToken
+     * @example
+     * // Get one CustomerAccessToken
+     * const customerAccessToken = await prisma.customerAccessToken.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CustomerAccessTokenFindFirstArgs>(args?: SelectSubset<T, CustomerAccessTokenFindFirstArgs<ExtArgs>>): Prisma__CustomerAccessTokenClient<$Result.GetResult<Prisma.$CustomerAccessTokenPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CustomerAccessToken that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomerAccessTokenFindFirstOrThrowArgs} args - Arguments to find a CustomerAccessToken
+     * @example
+     * // Get one CustomerAccessToken
+     * const customerAccessToken = await prisma.customerAccessToken.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CustomerAccessTokenFindFirstOrThrowArgs>(args?: SelectSubset<T, CustomerAccessTokenFindFirstOrThrowArgs<ExtArgs>>): Prisma__CustomerAccessTokenClient<$Result.GetResult<Prisma.$CustomerAccessTokenPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more CustomerAccessTokens that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomerAccessTokenFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all CustomerAccessTokens
+     * const customerAccessTokens = await prisma.customerAccessToken.findMany()
+     * 
+     * // Get first 10 CustomerAccessTokens
+     * const customerAccessTokens = await prisma.customerAccessToken.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const customerAccessTokenWithIdOnly = await prisma.customerAccessToken.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CustomerAccessTokenFindManyArgs>(args?: SelectSubset<T, CustomerAccessTokenFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomerAccessTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a CustomerAccessToken.
+     * @param {CustomerAccessTokenCreateArgs} args - Arguments to create a CustomerAccessToken.
+     * @example
+     * // Create one CustomerAccessToken
+     * const CustomerAccessToken = await prisma.customerAccessToken.create({
+     *   data: {
+     *     // ... data to create a CustomerAccessToken
+     *   }
+     * })
+     * 
+     */
+    create<T extends CustomerAccessTokenCreateArgs>(args: SelectSubset<T, CustomerAccessTokenCreateArgs<ExtArgs>>): Prisma__CustomerAccessTokenClient<$Result.GetResult<Prisma.$CustomerAccessTokenPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many CustomerAccessTokens.
+     * @param {CustomerAccessTokenCreateManyArgs} args - Arguments to create many CustomerAccessTokens.
+     * @example
+     * // Create many CustomerAccessTokens
+     * const customerAccessToken = await prisma.customerAccessToken.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CustomerAccessTokenCreateManyArgs>(args?: SelectSubset<T, CustomerAccessTokenCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many CustomerAccessTokens and returns the data saved in the database.
+     * @param {CustomerAccessTokenCreateManyAndReturnArgs} args - Arguments to create many CustomerAccessTokens.
+     * @example
+     * // Create many CustomerAccessTokens
+     * const customerAccessToken = await prisma.customerAccessToken.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many CustomerAccessTokens and only return the `id`
+     * const customerAccessTokenWithIdOnly = await prisma.customerAccessToken.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends CustomerAccessTokenCreateManyAndReturnArgs>(args?: SelectSubset<T, CustomerAccessTokenCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomerAccessTokenPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a CustomerAccessToken.
+     * @param {CustomerAccessTokenDeleteArgs} args - Arguments to delete one CustomerAccessToken.
+     * @example
+     * // Delete one CustomerAccessToken
+     * const CustomerAccessToken = await prisma.customerAccessToken.delete({
+     *   where: {
+     *     // ... filter to delete one CustomerAccessToken
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CustomerAccessTokenDeleteArgs>(args: SelectSubset<T, CustomerAccessTokenDeleteArgs<ExtArgs>>): Prisma__CustomerAccessTokenClient<$Result.GetResult<Prisma.$CustomerAccessTokenPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one CustomerAccessToken.
+     * @param {CustomerAccessTokenUpdateArgs} args - Arguments to update one CustomerAccessToken.
+     * @example
+     * // Update one CustomerAccessToken
+     * const customerAccessToken = await prisma.customerAccessToken.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CustomerAccessTokenUpdateArgs>(args: SelectSubset<T, CustomerAccessTokenUpdateArgs<ExtArgs>>): Prisma__CustomerAccessTokenClient<$Result.GetResult<Prisma.$CustomerAccessTokenPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more CustomerAccessTokens.
+     * @param {CustomerAccessTokenDeleteManyArgs} args - Arguments to filter CustomerAccessTokens to delete.
+     * @example
+     * // Delete a few CustomerAccessTokens
+     * const { count } = await prisma.customerAccessToken.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CustomerAccessTokenDeleteManyArgs>(args?: SelectSubset<T, CustomerAccessTokenDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CustomerAccessTokens.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomerAccessTokenUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many CustomerAccessTokens
+     * const customerAccessToken = await prisma.customerAccessToken.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CustomerAccessTokenUpdateManyArgs>(args: SelectSubset<T, CustomerAccessTokenUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CustomerAccessTokens and returns the data updated in the database.
+     * @param {CustomerAccessTokenUpdateManyAndReturnArgs} args - Arguments to update many CustomerAccessTokens.
+     * @example
+     * // Update many CustomerAccessTokens
+     * const customerAccessToken = await prisma.customerAccessToken.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more CustomerAccessTokens and only return the `id`
+     * const customerAccessTokenWithIdOnly = await prisma.customerAccessToken.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends CustomerAccessTokenUpdateManyAndReturnArgs>(args: SelectSubset<T, CustomerAccessTokenUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomerAccessTokenPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one CustomerAccessToken.
+     * @param {CustomerAccessTokenUpsertArgs} args - Arguments to update or create a CustomerAccessToken.
+     * @example
+     * // Update or create a CustomerAccessToken
+     * const customerAccessToken = await prisma.customerAccessToken.upsert({
+     *   create: {
+     *     // ... data to create a CustomerAccessToken
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the CustomerAccessToken we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CustomerAccessTokenUpsertArgs>(args: SelectSubset<T, CustomerAccessTokenUpsertArgs<ExtArgs>>): Prisma__CustomerAccessTokenClient<$Result.GetResult<Prisma.$CustomerAccessTokenPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of CustomerAccessTokens.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomerAccessTokenCountArgs} args - Arguments to filter CustomerAccessTokens to count.
+     * @example
+     * // Count the number of CustomerAccessTokens
+     * const count = await prisma.customerAccessToken.count({
+     *   where: {
+     *     // ... the filter for the CustomerAccessTokens we want to count
+     *   }
+     * })
+    **/
+    count<T extends CustomerAccessTokenCountArgs>(
+      args?: Subset<T, CustomerAccessTokenCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CustomerAccessTokenCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a CustomerAccessToken.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomerAccessTokenAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CustomerAccessTokenAggregateArgs>(args: Subset<T, CustomerAccessTokenAggregateArgs>): Prisma.PrismaPromise<GetCustomerAccessTokenAggregateType<T>>
+
+    /**
+     * Group by CustomerAccessToken.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomerAccessTokenGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CustomerAccessTokenGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CustomerAccessTokenGroupByArgs['orderBy'] }
+        : { orderBy?: CustomerAccessTokenGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CustomerAccessTokenGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCustomerAccessTokenGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the CustomerAccessToken model
+   */
+  readonly fields: CustomerAccessTokenFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for CustomerAccessToken.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CustomerAccessTokenClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    customer<T extends CustomerDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CustomerDefaultArgs<ExtArgs>>): Prisma__CustomerClient<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the CustomerAccessToken model
+   */
+  interface CustomerAccessTokenFieldRefs {
+    readonly id: FieldRef<"CustomerAccessToken", 'String'>
+    readonly createdAt: FieldRef<"CustomerAccessToken", 'DateTime'>
+    readonly updatedAt: FieldRef<"CustomerAccessToken", 'DateTime'>
+    readonly customerId: FieldRef<"CustomerAccessToken", 'String'>
+    readonly tokenHash: FieldRef<"CustomerAccessToken", 'String'>
+    readonly expiresAt: FieldRef<"CustomerAccessToken", 'DateTime'>
+    readonly lastUsedAt: FieldRef<"CustomerAccessToken", 'DateTime'>
+    readonly revokedAt: FieldRef<"CustomerAccessToken", 'DateTime'>
+    readonly userAgent: FieldRef<"CustomerAccessToken", 'String'>
+    readonly ipAddress: FieldRef<"CustomerAccessToken", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * CustomerAccessToken findUnique
+   */
+  export type CustomerAccessTokenFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerAccessToken
+     */
+    select?: CustomerAccessTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerAccessToken
+     */
+    omit?: CustomerAccessTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerAccessTokenInclude<ExtArgs> | null
+    /**
+     * Filter, which CustomerAccessToken to fetch.
+     */
+    where: CustomerAccessTokenWhereUniqueInput
+  }
+
+  /**
+   * CustomerAccessToken findUniqueOrThrow
+   */
+  export type CustomerAccessTokenFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerAccessToken
+     */
+    select?: CustomerAccessTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerAccessToken
+     */
+    omit?: CustomerAccessTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerAccessTokenInclude<ExtArgs> | null
+    /**
+     * Filter, which CustomerAccessToken to fetch.
+     */
+    where: CustomerAccessTokenWhereUniqueInput
+  }
+
+  /**
+   * CustomerAccessToken findFirst
+   */
+  export type CustomerAccessTokenFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerAccessToken
+     */
+    select?: CustomerAccessTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerAccessToken
+     */
+    omit?: CustomerAccessTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerAccessTokenInclude<ExtArgs> | null
+    /**
+     * Filter, which CustomerAccessToken to fetch.
+     */
+    where?: CustomerAccessTokenWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CustomerAccessTokens to fetch.
+     */
+    orderBy?: CustomerAccessTokenOrderByWithRelationInput | CustomerAccessTokenOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CustomerAccessTokens.
+     */
+    cursor?: CustomerAccessTokenWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CustomerAccessTokens from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CustomerAccessTokens.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CustomerAccessTokens.
+     */
+    distinct?: CustomerAccessTokenScalarFieldEnum | CustomerAccessTokenScalarFieldEnum[]
+  }
+
+  /**
+   * CustomerAccessToken findFirstOrThrow
+   */
+  export type CustomerAccessTokenFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerAccessToken
+     */
+    select?: CustomerAccessTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerAccessToken
+     */
+    omit?: CustomerAccessTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerAccessTokenInclude<ExtArgs> | null
+    /**
+     * Filter, which CustomerAccessToken to fetch.
+     */
+    where?: CustomerAccessTokenWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CustomerAccessTokens to fetch.
+     */
+    orderBy?: CustomerAccessTokenOrderByWithRelationInput | CustomerAccessTokenOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CustomerAccessTokens.
+     */
+    cursor?: CustomerAccessTokenWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CustomerAccessTokens from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CustomerAccessTokens.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CustomerAccessTokens.
+     */
+    distinct?: CustomerAccessTokenScalarFieldEnum | CustomerAccessTokenScalarFieldEnum[]
+  }
+
+  /**
+   * CustomerAccessToken findMany
+   */
+  export type CustomerAccessTokenFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerAccessToken
+     */
+    select?: CustomerAccessTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerAccessToken
+     */
+    omit?: CustomerAccessTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerAccessTokenInclude<ExtArgs> | null
+    /**
+     * Filter, which CustomerAccessTokens to fetch.
+     */
+    where?: CustomerAccessTokenWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CustomerAccessTokens to fetch.
+     */
+    orderBy?: CustomerAccessTokenOrderByWithRelationInput | CustomerAccessTokenOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing CustomerAccessTokens.
+     */
+    cursor?: CustomerAccessTokenWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CustomerAccessTokens from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CustomerAccessTokens.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CustomerAccessTokens.
+     */
+    distinct?: CustomerAccessTokenScalarFieldEnum | CustomerAccessTokenScalarFieldEnum[]
+  }
+
+  /**
+   * CustomerAccessToken create
+   */
+  export type CustomerAccessTokenCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerAccessToken
+     */
+    select?: CustomerAccessTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerAccessToken
+     */
+    omit?: CustomerAccessTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerAccessTokenInclude<ExtArgs> | null
+    /**
+     * The data needed to create a CustomerAccessToken.
+     */
+    data: XOR<CustomerAccessTokenCreateInput, CustomerAccessTokenUncheckedCreateInput>
+  }
+
+  /**
+   * CustomerAccessToken createMany
+   */
+  export type CustomerAccessTokenCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many CustomerAccessTokens.
+     */
+    data: CustomerAccessTokenCreateManyInput | CustomerAccessTokenCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * CustomerAccessToken createManyAndReturn
+   */
+  export type CustomerAccessTokenCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerAccessToken
+     */
+    select?: CustomerAccessTokenSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerAccessToken
+     */
+    omit?: CustomerAccessTokenOmit<ExtArgs> | null
+    /**
+     * The data used to create many CustomerAccessTokens.
+     */
+    data: CustomerAccessTokenCreateManyInput | CustomerAccessTokenCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerAccessTokenIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CustomerAccessToken update
+   */
+  export type CustomerAccessTokenUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerAccessToken
+     */
+    select?: CustomerAccessTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerAccessToken
+     */
+    omit?: CustomerAccessTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerAccessTokenInclude<ExtArgs> | null
+    /**
+     * The data needed to update a CustomerAccessToken.
+     */
+    data: XOR<CustomerAccessTokenUpdateInput, CustomerAccessTokenUncheckedUpdateInput>
+    /**
+     * Choose, which CustomerAccessToken to update.
+     */
+    where: CustomerAccessTokenWhereUniqueInput
+  }
+
+  /**
+   * CustomerAccessToken updateMany
+   */
+  export type CustomerAccessTokenUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update CustomerAccessTokens.
+     */
+    data: XOR<CustomerAccessTokenUpdateManyMutationInput, CustomerAccessTokenUncheckedUpdateManyInput>
+    /**
+     * Filter which CustomerAccessTokens to update
+     */
+    where?: CustomerAccessTokenWhereInput
+    /**
+     * Limit how many CustomerAccessTokens to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * CustomerAccessToken updateManyAndReturn
+   */
+  export type CustomerAccessTokenUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerAccessToken
+     */
+    select?: CustomerAccessTokenSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerAccessToken
+     */
+    omit?: CustomerAccessTokenOmit<ExtArgs> | null
+    /**
+     * The data used to update CustomerAccessTokens.
+     */
+    data: XOR<CustomerAccessTokenUpdateManyMutationInput, CustomerAccessTokenUncheckedUpdateManyInput>
+    /**
+     * Filter which CustomerAccessTokens to update
+     */
+    where?: CustomerAccessTokenWhereInput
+    /**
+     * Limit how many CustomerAccessTokens to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerAccessTokenIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CustomerAccessToken upsert
+   */
+  export type CustomerAccessTokenUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerAccessToken
+     */
+    select?: CustomerAccessTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerAccessToken
+     */
+    omit?: CustomerAccessTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerAccessTokenInclude<ExtArgs> | null
+    /**
+     * The filter to search for the CustomerAccessToken to update in case it exists.
+     */
+    where: CustomerAccessTokenWhereUniqueInput
+    /**
+     * In case the CustomerAccessToken found by the `where` argument doesn't exist, create a new CustomerAccessToken with this data.
+     */
+    create: XOR<CustomerAccessTokenCreateInput, CustomerAccessTokenUncheckedCreateInput>
+    /**
+     * In case the CustomerAccessToken was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CustomerAccessTokenUpdateInput, CustomerAccessTokenUncheckedUpdateInput>
+  }
+
+  /**
+   * CustomerAccessToken delete
+   */
+  export type CustomerAccessTokenDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerAccessToken
+     */
+    select?: CustomerAccessTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerAccessToken
+     */
+    omit?: CustomerAccessTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerAccessTokenInclude<ExtArgs> | null
+    /**
+     * Filter which CustomerAccessToken to delete.
+     */
+    where: CustomerAccessTokenWhereUniqueInput
+  }
+
+  /**
+   * CustomerAccessToken deleteMany
+   */
+  export type CustomerAccessTokenDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CustomerAccessTokens to delete
+     */
+    where?: CustomerAccessTokenWhereInput
+    /**
+     * Limit how many CustomerAccessTokens to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * CustomerAccessToken without action
+   */
+  export type CustomerAccessTokenDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerAccessToken
+     */
+    select?: CustomerAccessTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerAccessToken
+     */
+    omit?: CustomerAccessTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerAccessTokenInclude<ExtArgs> | null
   }
 
 
@@ -47454,6 +51734,9 @@ export namespace Prisma {
     externalAddress?: boolean | Order$externalAddressArgs<ExtArgs>
     orderProducts?: boolean | Order$orderProductsArgs<ExtArgs>
     preparationStepCategories?: boolean | Order$preparationStepCategoriesArgs<ExtArgs>
+    feedback?: boolean | Order$feedbackArgs<ExtArgs>
+    issuedRewards?: boolean | Order$issuedRewardsArgs<ExtArgs>
+    redeemedRewards?: boolean | Order$redeemedRewardsArgs<ExtArgs>
     _count?: boolean | OrderCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["order"]>
 
@@ -47554,6 +51837,9 @@ export namespace Prisma {
     externalAddress?: boolean | Order$externalAddressArgs<ExtArgs>
     orderProducts?: boolean | Order$orderProductsArgs<ExtArgs>
     preparationStepCategories?: boolean | Order$preparationStepCategoriesArgs<ExtArgs>
+    feedback?: boolean | Order$feedbackArgs<ExtArgs>
+    issuedRewards?: boolean | Order$issuedRewardsArgs<ExtArgs>
+    redeemedRewards?: boolean | Order$redeemedRewardsArgs<ExtArgs>
     _count?: boolean | OrderCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type OrderIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -47581,6 +51867,9 @@ export namespace Prisma {
       externalAddress: Prisma.$ExternalAddressPayload<ExtArgs> | null
       orderProducts: Prisma.$OrderProductsPayload<ExtArgs>[]
       preparationStepCategories: Prisma.$PreparationStepCategoryPayload<ExtArgs>[]
+      feedback: Prisma.$CustomerFeedbackPayload<ExtArgs> | null
+      issuedRewards: Prisma.$CustomerRewardPayload<ExtArgs>[]
+      redeemedRewards: Prisma.$CustomerRewardPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -48007,6 +52296,9 @@ export namespace Prisma {
     externalAddress<T extends Order$externalAddressArgs<ExtArgs> = {}>(args?: Subset<T, Order$externalAddressArgs<ExtArgs>>): Prisma__ExternalAddressClient<$Result.GetResult<Prisma.$ExternalAddressPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     orderProducts<T extends Order$orderProductsArgs<ExtArgs> = {}>(args?: Subset<T, Order$orderProductsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderProductsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     preparationStepCategories<T extends Order$preparationStepCategoriesArgs<ExtArgs> = {}>(args?: Subset<T, Order$preparationStepCategoriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PreparationStepCategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    feedback<T extends Order$feedbackArgs<ExtArgs> = {}>(args?: Subset<T, Order$feedbackArgs<ExtArgs>>): Prisma__CustomerFeedbackClient<$Result.GetResult<Prisma.$CustomerFeedbackPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    issuedRewards<T extends Order$issuedRewardsArgs<ExtArgs> = {}>(args?: Subset<T, Order$issuedRewardsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomerRewardPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    redeemedRewards<T extends Order$redeemedRewardsArgs<ExtArgs> = {}>(args?: Subset<T, Order$redeemedRewardsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomerRewardPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -48603,6 +52895,73 @@ export namespace Prisma {
   }
 
   /**
+   * Order.feedback
+   */
+  export type Order$feedbackArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerFeedback
+     */
+    select?: CustomerFeedbackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerFeedback
+     */
+    omit?: CustomerFeedbackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerFeedbackInclude<ExtArgs> | null
+    where?: CustomerFeedbackWhereInput
+  }
+
+  /**
+   * Order.issuedRewards
+   */
+  export type Order$issuedRewardsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerReward
+     */
+    select?: CustomerRewardSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerReward
+     */
+    omit?: CustomerRewardOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerRewardInclude<ExtArgs> | null
+    where?: CustomerRewardWhereInput
+    orderBy?: CustomerRewardOrderByWithRelationInput | CustomerRewardOrderByWithRelationInput[]
+    cursor?: CustomerRewardWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CustomerRewardScalarFieldEnum | CustomerRewardScalarFieldEnum[]
+  }
+
+  /**
+   * Order.redeemedRewards
+   */
+  export type Order$redeemedRewardsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerReward
+     */
+    select?: CustomerRewardSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerReward
+     */
+    omit?: CustomerRewardOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerRewardInclude<ExtArgs> | null
+    where?: CustomerRewardWhereInput
+    orderBy?: CustomerRewardOrderByWithRelationInput | CustomerRewardOrderByWithRelationInput[]
+    cursor?: CustomerRewardWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CustomerRewardScalarFieldEnum | CustomerRewardScalarFieldEnum[]
+  }
+
+  /**
    * Order without action
    */
   export type OrderDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -48618,6 +52977,2654 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: OrderInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model CustomerFeedback
+   */
+
+  export type AggregateCustomerFeedback = {
+    _count: CustomerFeedbackCountAggregateOutputType | null
+    _avg: CustomerFeedbackAvgAggregateOutputType | null
+    _sum: CustomerFeedbackSumAggregateOutputType | null
+    _min: CustomerFeedbackMinAggregateOutputType | null
+    _max: CustomerFeedbackMaxAggregateOutputType | null
+  }
+
+  export type CustomerFeedbackAvgAggregateOutputType = {
+    overallRating: number | null
+    productQuality: number | null
+    temperature: number | null
+    deliverySpeed: number | null
+    serviceExperience: number | null
+  }
+
+  export type CustomerFeedbackSumAggregateOutputType = {
+    overallRating: number | null
+    productQuality: number | null
+    temperature: number | null
+    deliverySpeed: number | null
+    serviceExperience: number | null
+  }
+
+  export type CustomerFeedbackMinAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    customerId: string | null
+    orderId: string | null
+    language: string | null
+    overallRating: number | null
+    sentiment: $Enums.CustomerFeedbackSentiment | null
+    productQuality: number | null
+    temperature: number | null
+    deliverySpeed: number | null
+    serviceExperience: number | null
+    comment: string | null
+    source: string | null
+  }
+
+  export type CustomerFeedbackMaxAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    customerId: string | null
+    orderId: string | null
+    language: string | null
+    overallRating: number | null
+    sentiment: $Enums.CustomerFeedbackSentiment | null
+    productQuality: number | null
+    temperature: number | null
+    deliverySpeed: number | null
+    serviceExperience: number | null
+    comment: string | null
+    source: string | null
+  }
+
+  export type CustomerFeedbackCountAggregateOutputType = {
+    id: number
+    createdAt: number
+    updatedAt: number
+    customerId: number
+    orderId: number
+    language: number
+    overallRating: number
+    sentiment: number
+    productQuality: number
+    temperature: number
+    deliverySpeed: number
+    serviceExperience: number
+    comment: number
+    source: number
+    _all: number
+  }
+
+
+  export type CustomerFeedbackAvgAggregateInputType = {
+    overallRating?: true
+    productQuality?: true
+    temperature?: true
+    deliverySpeed?: true
+    serviceExperience?: true
+  }
+
+  export type CustomerFeedbackSumAggregateInputType = {
+    overallRating?: true
+    productQuality?: true
+    temperature?: true
+    deliverySpeed?: true
+    serviceExperience?: true
+  }
+
+  export type CustomerFeedbackMinAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    customerId?: true
+    orderId?: true
+    language?: true
+    overallRating?: true
+    sentiment?: true
+    productQuality?: true
+    temperature?: true
+    deliverySpeed?: true
+    serviceExperience?: true
+    comment?: true
+    source?: true
+  }
+
+  export type CustomerFeedbackMaxAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    customerId?: true
+    orderId?: true
+    language?: true
+    overallRating?: true
+    sentiment?: true
+    productQuality?: true
+    temperature?: true
+    deliverySpeed?: true
+    serviceExperience?: true
+    comment?: true
+    source?: true
+  }
+
+  export type CustomerFeedbackCountAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    customerId?: true
+    orderId?: true
+    language?: true
+    overallRating?: true
+    sentiment?: true
+    productQuality?: true
+    temperature?: true
+    deliverySpeed?: true
+    serviceExperience?: true
+    comment?: true
+    source?: true
+    _all?: true
+  }
+
+  export type CustomerFeedbackAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CustomerFeedback to aggregate.
+     */
+    where?: CustomerFeedbackWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CustomerFeedbacks to fetch.
+     */
+    orderBy?: CustomerFeedbackOrderByWithRelationInput | CustomerFeedbackOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CustomerFeedbackWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CustomerFeedbacks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CustomerFeedbacks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned CustomerFeedbacks
+    **/
+    _count?: true | CustomerFeedbackCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: CustomerFeedbackAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: CustomerFeedbackSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CustomerFeedbackMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CustomerFeedbackMaxAggregateInputType
+  }
+
+  export type GetCustomerFeedbackAggregateType<T extends CustomerFeedbackAggregateArgs> = {
+        [P in keyof T & keyof AggregateCustomerFeedback]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCustomerFeedback[P]>
+      : GetScalarType<T[P], AggregateCustomerFeedback[P]>
+  }
+
+
+
+
+  export type CustomerFeedbackGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CustomerFeedbackWhereInput
+    orderBy?: CustomerFeedbackOrderByWithAggregationInput | CustomerFeedbackOrderByWithAggregationInput[]
+    by: CustomerFeedbackScalarFieldEnum[] | CustomerFeedbackScalarFieldEnum
+    having?: CustomerFeedbackScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CustomerFeedbackCountAggregateInputType | true
+    _avg?: CustomerFeedbackAvgAggregateInputType
+    _sum?: CustomerFeedbackSumAggregateInputType
+    _min?: CustomerFeedbackMinAggregateInputType
+    _max?: CustomerFeedbackMaxAggregateInputType
+  }
+
+  export type CustomerFeedbackGroupByOutputType = {
+    id: string
+    createdAt: Date
+    updatedAt: Date
+    customerId: string
+    orderId: string
+    language: string | null
+    overallRating: number
+    sentiment: $Enums.CustomerFeedbackSentiment
+    productQuality: number | null
+    temperature: number | null
+    deliverySpeed: number | null
+    serviceExperience: number | null
+    comment: string | null
+    source: string | null
+    _count: CustomerFeedbackCountAggregateOutputType | null
+    _avg: CustomerFeedbackAvgAggregateOutputType | null
+    _sum: CustomerFeedbackSumAggregateOutputType | null
+    _min: CustomerFeedbackMinAggregateOutputType | null
+    _max: CustomerFeedbackMaxAggregateOutputType | null
+  }
+
+  type GetCustomerFeedbackGroupByPayload<T extends CustomerFeedbackGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CustomerFeedbackGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CustomerFeedbackGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CustomerFeedbackGroupByOutputType[P]>
+            : GetScalarType<T[P], CustomerFeedbackGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CustomerFeedbackSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    customerId?: boolean
+    orderId?: boolean
+    language?: boolean
+    overallRating?: boolean
+    sentiment?: boolean
+    productQuality?: boolean
+    temperature?: boolean
+    deliverySpeed?: boolean
+    serviceExperience?: boolean
+    comment?: boolean
+    source?: boolean
+    customer?: boolean | CustomerDefaultArgs<ExtArgs>
+    order?: boolean | OrderDefaultArgs<ExtArgs>
+    issuedReward?: boolean | CustomerFeedback$issuedRewardArgs<ExtArgs>
+  }, ExtArgs["result"]["customerFeedback"]>
+
+  export type CustomerFeedbackSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    customerId?: boolean
+    orderId?: boolean
+    language?: boolean
+    overallRating?: boolean
+    sentiment?: boolean
+    productQuality?: boolean
+    temperature?: boolean
+    deliverySpeed?: boolean
+    serviceExperience?: boolean
+    comment?: boolean
+    source?: boolean
+    customer?: boolean | CustomerDefaultArgs<ExtArgs>
+    order?: boolean | OrderDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["customerFeedback"]>
+
+  export type CustomerFeedbackSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    customerId?: boolean
+    orderId?: boolean
+    language?: boolean
+    overallRating?: boolean
+    sentiment?: boolean
+    productQuality?: boolean
+    temperature?: boolean
+    deliverySpeed?: boolean
+    serviceExperience?: boolean
+    comment?: boolean
+    source?: boolean
+    customer?: boolean | CustomerDefaultArgs<ExtArgs>
+    order?: boolean | OrderDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["customerFeedback"]>
+
+  export type CustomerFeedbackSelectScalar = {
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    customerId?: boolean
+    orderId?: boolean
+    language?: boolean
+    overallRating?: boolean
+    sentiment?: boolean
+    productQuality?: boolean
+    temperature?: boolean
+    deliverySpeed?: boolean
+    serviceExperience?: boolean
+    comment?: boolean
+    source?: boolean
+  }
+
+  export type CustomerFeedbackOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "customerId" | "orderId" | "language" | "overallRating" | "sentiment" | "productQuality" | "temperature" | "deliverySpeed" | "serviceExperience" | "comment" | "source", ExtArgs["result"]["customerFeedback"]>
+  export type CustomerFeedbackInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    customer?: boolean | CustomerDefaultArgs<ExtArgs>
+    order?: boolean | OrderDefaultArgs<ExtArgs>
+    issuedReward?: boolean | CustomerFeedback$issuedRewardArgs<ExtArgs>
+  }
+  export type CustomerFeedbackIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    customer?: boolean | CustomerDefaultArgs<ExtArgs>
+    order?: boolean | OrderDefaultArgs<ExtArgs>
+  }
+  export type CustomerFeedbackIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    customer?: boolean | CustomerDefaultArgs<ExtArgs>
+    order?: boolean | OrderDefaultArgs<ExtArgs>
+  }
+
+  export type $CustomerFeedbackPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "CustomerFeedback"
+    objects: {
+      customer: Prisma.$CustomerPayload<ExtArgs>
+      order: Prisma.$OrderPayload<ExtArgs>
+      issuedReward: Prisma.$CustomerRewardPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      createdAt: Date
+      updatedAt: Date
+      customerId: string
+      orderId: string
+      language: string | null
+      overallRating: number
+      sentiment: $Enums.CustomerFeedbackSentiment
+      productQuality: number | null
+      temperature: number | null
+      deliverySpeed: number | null
+      serviceExperience: number | null
+      comment: string | null
+      source: string | null
+    }, ExtArgs["result"]["customerFeedback"]>
+    composites: {}
+  }
+
+  type CustomerFeedbackGetPayload<S extends boolean | null | undefined | CustomerFeedbackDefaultArgs> = $Result.GetResult<Prisma.$CustomerFeedbackPayload, S>
+
+  type CustomerFeedbackCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<CustomerFeedbackFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: CustomerFeedbackCountAggregateInputType | true
+    }
+
+  export interface CustomerFeedbackDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['CustomerFeedback'], meta: { name: 'CustomerFeedback' } }
+    /**
+     * Find zero or one CustomerFeedback that matches the filter.
+     * @param {CustomerFeedbackFindUniqueArgs} args - Arguments to find a CustomerFeedback
+     * @example
+     * // Get one CustomerFeedback
+     * const customerFeedback = await prisma.customerFeedback.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CustomerFeedbackFindUniqueArgs>(args: SelectSubset<T, CustomerFeedbackFindUniqueArgs<ExtArgs>>): Prisma__CustomerFeedbackClient<$Result.GetResult<Prisma.$CustomerFeedbackPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one CustomerFeedback that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {CustomerFeedbackFindUniqueOrThrowArgs} args - Arguments to find a CustomerFeedback
+     * @example
+     * // Get one CustomerFeedback
+     * const customerFeedback = await prisma.customerFeedback.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CustomerFeedbackFindUniqueOrThrowArgs>(args: SelectSubset<T, CustomerFeedbackFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CustomerFeedbackClient<$Result.GetResult<Prisma.$CustomerFeedbackPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CustomerFeedback that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomerFeedbackFindFirstArgs} args - Arguments to find a CustomerFeedback
+     * @example
+     * // Get one CustomerFeedback
+     * const customerFeedback = await prisma.customerFeedback.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CustomerFeedbackFindFirstArgs>(args?: SelectSubset<T, CustomerFeedbackFindFirstArgs<ExtArgs>>): Prisma__CustomerFeedbackClient<$Result.GetResult<Prisma.$CustomerFeedbackPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CustomerFeedback that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomerFeedbackFindFirstOrThrowArgs} args - Arguments to find a CustomerFeedback
+     * @example
+     * // Get one CustomerFeedback
+     * const customerFeedback = await prisma.customerFeedback.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CustomerFeedbackFindFirstOrThrowArgs>(args?: SelectSubset<T, CustomerFeedbackFindFirstOrThrowArgs<ExtArgs>>): Prisma__CustomerFeedbackClient<$Result.GetResult<Prisma.$CustomerFeedbackPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more CustomerFeedbacks that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomerFeedbackFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all CustomerFeedbacks
+     * const customerFeedbacks = await prisma.customerFeedback.findMany()
+     * 
+     * // Get first 10 CustomerFeedbacks
+     * const customerFeedbacks = await prisma.customerFeedback.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const customerFeedbackWithIdOnly = await prisma.customerFeedback.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CustomerFeedbackFindManyArgs>(args?: SelectSubset<T, CustomerFeedbackFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomerFeedbackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a CustomerFeedback.
+     * @param {CustomerFeedbackCreateArgs} args - Arguments to create a CustomerFeedback.
+     * @example
+     * // Create one CustomerFeedback
+     * const CustomerFeedback = await prisma.customerFeedback.create({
+     *   data: {
+     *     // ... data to create a CustomerFeedback
+     *   }
+     * })
+     * 
+     */
+    create<T extends CustomerFeedbackCreateArgs>(args: SelectSubset<T, CustomerFeedbackCreateArgs<ExtArgs>>): Prisma__CustomerFeedbackClient<$Result.GetResult<Prisma.$CustomerFeedbackPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many CustomerFeedbacks.
+     * @param {CustomerFeedbackCreateManyArgs} args - Arguments to create many CustomerFeedbacks.
+     * @example
+     * // Create many CustomerFeedbacks
+     * const customerFeedback = await prisma.customerFeedback.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CustomerFeedbackCreateManyArgs>(args?: SelectSubset<T, CustomerFeedbackCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many CustomerFeedbacks and returns the data saved in the database.
+     * @param {CustomerFeedbackCreateManyAndReturnArgs} args - Arguments to create many CustomerFeedbacks.
+     * @example
+     * // Create many CustomerFeedbacks
+     * const customerFeedback = await prisma.customerFeedback.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many CustomerFeedbacks and only return the `id`
+     * const customerFeedbackWithIdOnly = await prisma.customerFeedback.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends CustomerFeedbackCreateManyAndReturnArgs>(args?: SelectSubset<T, CustomerFeedbackCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomerFeedbackPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a CustomerFeedback.
+     * @param {CustomerFeedbackDeleteArgs} args - Arguments to delete one CustomerFeedback.
+     * @example
+     * // Delete one CustomerFeedback
+     * const CustomerFeedback = await prisma.customerFeedback.delete({
+     *   where: {
+     *     // ... filter to delete one CustomerFeedback
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CustomerFeedbackDeleteArgs>(args: SelectSubset<T, CustomerFeedbackDeleteArgs<ExtArgs>>): Prisma__CustomerFeedbackClient<$Result.GetResult<Prisma.$CustomerFeedbackPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one CustomerFeedback.
+     * @param {CustomerFeedbackUpdateArgs} args - Arguments to update one CustomerFeedback.
+     * @example
+     * // Update one CustomerFeedback
+     * const customerFeedback = await prisma.customerFeedback.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CustomerFeedbackUpdateArgs>(args: SelectSubset<T, CustomerFeedbackUpdateArgs<ExtArgs>>): Prisma__CustomerFeedbackClient<$Result.GetResult<Prisma.$CustomerFeedbackPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more CustomerFeedbacks.
+     * @param {CustomerFeedbackDeleteManyArgs} args - Arguments to filter CustomerFeedbacks to delete.
+     * @example
+     * // Delete a few CustomerFeedbacks
+     * const { count } = await prisma.customerFeedback.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CustomerFeedbackDeleteManyArgs>(args?: SelectSubset<T, CustomerFeedbackDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CustomerFeedbacks.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomerFeedbackUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many CustomerFeedbacks
+     * const customerFeedback = await prisma.customerFeedback.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CustomerFeedbackUpdateManyArgs>(args: SelectSubset<T, CustomerFeedbackUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CustomerFeedbacks and returns the data updated in the database.
+     * @param {CustomerFeedbackUpdateManyAndReturnArgs} args - Arguments to update many CustomerFeedbacks.
+     * @example
+     * // Update many CustomerFeedbacks
+     * const customerFeedback = await prisma.customerFeedback.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more CustomerFeedbacks and only return the `id`
+     * const customerFeedbackWithIdOnly = await prisma.customerFeedback.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends CustomerFeedbackUpdateManyAndReturnArgs>(args: SelectSubset<T, CustomerFeedbackUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomerFeedbackPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one CustomerFeedback.
+     * @param {CustomerFeedbackUpsertArgs} args - Arguments to update or create a CustomerFeedback.
+     * @example
+     * // Update or create a CustomerFeedback
+     * const customerFeedback = await prisma.customerFeedback.upsert({
+     *   create: {
+     *     // ... data to create a CustomerFeedback
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the CustomerFeedback we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CustomerFeedbackUpsertArgs>(args: SelectSubset<T, CustomerFeedbackUpsertArgs<ExtArgs>>): Prisma__CustomerFeedbackClient<$Result.GetResult<Prisma.$CustomerFeedbackPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of CustomerFeedbacks.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomerFeedbackCountArgs} args - Arguments to filter CustomerFeedbacks to count.
+     * @example
+     * // Count the number of CustomerFeedbacks
+     * const count = await prisma.customerFeedback.count({
+     *   where: {
+     *     // ... the filter for the CustomerFeedbacks we want to count
+     *   }
+     * })
+    **/
+    count<T extends CustomerFeedbackCountArgs>(
+      args?: Subset<T, CustomerFeedbackCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CustomerFeedbackCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a CustomerFeedback.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomerFeedbackAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CustomerFeedbackAggregateArgs>(args: Subset<T, CustomerFeedbackAggregateArgs>): Prisma.PrismaPromise<GetCustomerFeedbackAggregateType<T>>
+
+    /**
+     * Group by CustomerFeedback.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomerFeedbackGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CustomerFeedbackGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CustomerFeedbackGroupByArgs['orderBy'] }
+        : { orderBy?: CustomerFeedbackGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CustomerFeedbackGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCustomerFeedbackGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the CustomerFeedback model
+   */
+  readonly fields: CustomerFeedbackFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for CustomerFeedback.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CustomerFeedbackClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    customer<T extends CustomerDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CustomerDefaultArgs<ExtArgs>>): Prisma__CustomerClient<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    order<T extends OrderDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrderDefaultArgs<ExtArgs>>): Prisma__OrderClient<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    issuedReward<T extends CustomerFeedback$issuedRewardArgs<ExtArgs> = {}>(args?: Subset<T, CustomerFeedback$issuedRewardArgs<ExtArgs>>): Prisma__CustomerRewardClient<$Result.GetResult<Prisma.$CustomerRewardPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the CustomerFeedback model
+   */
+  interface CustomerFeedbackFieldRefs {
+    readonly id: FieldRef<"CustomerFeedback", 'String'>
+    readonly createdAt: FieldRef<"CustomerFeedback", 'DateTime'>
+    readonly updatedAt: FieldRef<"CustomerFeedback", 'DateTime'>
+    readonly customerId: FieldRef<"CustomerFeedback", 'String'>
+    readonly orderId: FieldRef<"CustomerFeedback", 'String'>
+    readonly language: FieldRef<"CustomerFeedback", 'String'>
+    readonly overallRating: FieldRef<"CustomerFeedback", 'Int'>
+    readonly sentiment: FieldRef<"CustomerFeedback", 'CustomerFeedbackSentiment'>
+    readonly productQuality: FieldRef<"CustomerFeedback", 'Int'>
+    readonly temperature: FieldRef<"CustomerFeedback", 'Int'>
+    readonly deliverySpeed: FieldRef<"CustomerFeedback", 'Int'>
+    readonly serviceExperience: FieldRef<"CustomerFeedback", 'Int'>
+    readonly comment: FieldRef<"CustomerFeedback", 'String'>
+    readonly source: FieldRef<"CustomerFeedback", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * CustomerFeedback findUnique
+   */
+  export type CustomerFeedbackFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerFeedback
+     */
+    select?: CustomerFeedbackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerFeedback
+     */
+    omit?: CustomerFeedbackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerFeedbackInclude<ExtArgs> | null
+    /**
+     * Filter, which CustomerFeedback to fetch.
+     */
+    where: CustomerFeedbackWhereUniqueInput
+  }
+
+  /**
+   * CustomerFeedback findUniqueOrThrow
+   */
+  export type CustomerFeedbackFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerFeedback
+     */
+    select?: CustomerFeedbackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerFeedback
+     */
+    omit?: CustomerFeedbackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerFeedbackInclude<ExtArgs> | null
+    /**
+     * Filter, which CustomerFeedback to fetch.
+     */
+    where: CustomerFeedbackWhereUniqueInput
+  }
+
+  /**
+   * CustomerFeedback findFirst
+   */
+  export type CustomerFeedbackFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerFeedback
+     */
+    select?: CustomerFeedbackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerFeedback
+     */
+    omit?: CustomerFeedbackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerFeedbackInclude<ExtArgs> | null
+    /**
+     * Filter, which CustomerFeedback to fetch.
+     */
+    where?: CustomerFeedbackWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CustomerFeedbacks to fetch.
+     */
+    orderBy?: CustomerFeedbackOrderByWithRelationInput | CustomerFeedbackOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CustomerFeedbacks.
+     */
+    cursor?: CustomerFeedbackWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CustomerFeedbacks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CustomerFeedbacks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CustomerFeedbacks.
+     */
+    distinct?: CustomerFeedbackScalarFieldEnum | CustomerFeedbackScalarFieldEnum[]
+  }
+
+  /**
+   * CustomerFeedback findFirstOrThrow
+   */
+  export type CustomerFeedbackFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerFeedback
+     */
+    select?: CustomerFeedbackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerFeedback
+     */
+    omit?: CustomerFeedbackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerFeedbackInclude<ExtArgs> | null
+    /**
+     * Filter, which CustomerFeedback to fetch.
+     */
+    where?: CustomerFeedbackWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CustomerFeedbacks to fetch.
+     */
+    orderBy?: CustomerFeedbackOrderByWithRelationInput | CustomerFeedbackOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CustomerFeedbacks.
+     */
+    cursor?: CustomerFeedbackWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CustomerFeedbacks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CustomerFeedbacks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CustomerFeedbacks.
+     */
+    distinct?: CustomerFeedbackScalarFieldEnum | CustomerFeedbackScalarFieldEnum[]
+  }
+
+  /**
+   * CustomerFeedback findMany
+   */
+  export type CustomerFeedbackFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerFeedback
+     */
+    select?: CustomerFeedbackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerFeedback
+     */
+    omit?: CustomerFeedbackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerFeedbackInclude<ExtArgs> | null
+    /**
+     * Filter, which CustomerFeedbacks to fetch.
+     */
+    where?: CustomerFeedbackWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CustomerFeedbacks to fetch.
+     */
+    orderBy?: CustomerFeedbackOrderByWithRelationInput | CustomerFeedbackOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing CustomerFeedbacks.
+     */
+    cursor?: CustomerFeedbackWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CustomerFeedbacks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CustomerFeedbacks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CustomerFeedbacks.
+     */
+    distinct?: CustomerFeedbackScalarFieldEnum | CustomerFeedbackScalarFieldEnum[]
+  }
+
+  /**
+   * CustomerFeedback create
+   */
+  export type CustomerFeedbackCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerFeedback
+     */
+    select?: CustomerFeedbackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerFeedback
+     */
+    omit?: CustomerFeedbackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerFeedbackInclude<ExtArgs> | null
+    /**
+     * The data needed to create a CustomerFeedback.
+     */
+    data: XOR<CustomerFeedbackCreateInput, CustomerFeedbackUncheckedCreateInput>
+  }
+
+  /**
+   * CustomerFeedback createMany
+   */
+  export type CustomerFeedbackCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many CustomerFeedbacks.
+     */
+    data: CustomerFeedbackCreateManyInput | CustomerFeedbackCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * CustomerFeedback createManyAndReturn
+   */
+  export type CustomerFeedbackCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerFeedback
+     */
+    select?: CustomerFeedbackSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerFeedback
+     */
+    omit?: CustomerFeedbackOmit<ExtArgs> | null
+    /**
+     * The data used to create many CustomerFeedbacks.
+     */
+    data: CustomerFeedbackCreateManyInput | CustomerFeedbackCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerFeedbackIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CustomerFeedback update
+   */
+  export type CustomerFeedbackUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerFeedback
+     */
+    select?: CustomerFeedbackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerFeedback
+     */
+    omit?: CustomerFeedbackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerFeedbackInclude<ExtArgs> | null
+    /**
+     * The data needed to update a CustomerFeedback.
+     */
+    data: XOR<CustomerFeedbackUpdateInput, CustomerFeedbackUncheckedUpdateInput>
+    /**
+     * Choose, which CustomerFeedback to update.
+     */
+    where: CustomerFeedbackWhereUniqueInput
+  }
+
+  /**
+   * CustomerFeedback updateMany
+   */
+  export type CustomerFeedbackUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update CustomerFeedbacks.
+     */
+    data: XOR<CustomerFeedbackUpdateManyMutationInput, CustomerFeedbackUncheckedUpdateManyInput>
+    /**
+     * Filter which CustomerFeedbacks to update
+     */
+    where?: CustomerFeedbackWhereInput
+    /**
+     * Limit how many CustomerFeedbacks to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * CustomerFeedback updateManyAndReturn
+   */
+  export type CustomerFeedbackUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerFeedback
+     */
+    select?: CustomerFeedbackSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerFeedback
+     */
+    omit?: CustomerFeedbackOmit<ExtArgs> | null
+    /**
+     * The data used to update CustomerFeedbacks.
+     */
+    data: XOR<CustomerFeedbackUpdateManyMutationInput, CustomerFeedbackUncheckedUpdateManyInput>
+    /**
+     * Filter which CustomerFeedbacks to update
+     */
+    where?: CustomerFeedbackWhereInput
+    /**
+     * Limit how many CustomerFeedbacks to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerFeedbackIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CustomerFeedback upsert
+   */
+  export type CustomerFeedbackUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerFeedback
+     */
+    select?: CustomerFeedbackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerFeedback
+     */
+    omit?: CustomerFeedbackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerFeedbackInclude<ExtArgs> | null
+    /**
+     * The filter to search for the CustomerFeedback to update in case it exists.
+     */
+    where: CustomerFeedbackWhereUniqueInput
+    /**
+     * In case the CustomerFeedback found by the `where` argument doesn't exist, create a new CustomerFeedback with this data.
+     */
+    create: XOR<CustomerFeedbackCreateInput, CustomerFeedbackUncheckedCreateInput>
+    /**
+     * In case the CustomerFeedback was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CustomerFeedbackUpdateInput, CustomerFeedbackUncheckedUpdateInput>
+  }
+
+  /**
+   * CustomerFeedback delete
+   */
+  export type CustomerFeedbackDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerFeedback
+     */
+    select?: CustomerFeedbackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerFeedback
+     */
+    omit?: CustomerFeedbackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerFeedbackInclude<ExtArgs> | null
+    /**
+     * Filter which CustomerFeedback to delete.
+     */
+    where: CustomerFeedbackWhereUniqueInput
+  }
+
+  /**
+   * CustomerFeedback deleteMany
+   */
+  export type CustomerFeedbackDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CustomerFeedbacks to delete
+     */
+    where?: CustomerFeedbackWhereInput
+    /**
+     * Limit how many CustomerFeedbacks to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * CustomerFeedback.issuedReward
+   */
+  export type CustomerFeedback$issuedRewardArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerReward
+     */
+    select?: CustomerRewardSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerReward
+     */
+    omit?: CustomerRewardOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerRewardInclude<ExtArgs> | null
+    where?: CustomerRewardWhereInput
+  }
+
+  /**
+   * CustomerFeedback without action
+   */
+  export type CustomerFeedbackDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerFeedback
+     */
+    select?: CustomerFeedbackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerFeedback
+     */
+    omit?: CustomerFeedbackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerFeedbackInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model CustomerReward
+   */
+
+  export type AggregateCustomerReward = {
+    _count: CustomerRewardCountAggregateOutputType | null
+    _avg: CustomerRewardAvgAggregateOutputType | null
+    _sum: CustomerRewardSumAggregateOutputType | null
+    _min: CustomerRewardMinAggregateOutputType | null
+    _max: CustomerRewardMaxAggregateOutputType | null
+  }
+
+  export type CustomerRewardAvgAggregateOutputType = {
+    quantity: number | null
+    value: number | null
+  }
+
+  export type CustomerRewardSumAggregateOutputType = {
+    quantity: number | null
+    value: number | null
+  }
+
+  export type CustomerRewardMinAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    customerId: string | null
+    status: $Enums.CustomerRewardStatus | null
+    type: $Enums.CustomerRewardType | null
+    title: string | null
+    description: string | null
+    quantity: number | null
+    value: number | null
+    productId: string | null
+    couponCode: string | null
+    issuedAt: Date | null
+    expiresAt: Date | null
+    redeemedAt: Date | null
+    feedbackId: string | null
+    issuedForOrderId: string | null
+    redeemedByOrderId: string | null
+  }
+
+  export type CustomerRewardMaxAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    customerId: string | null
+    status: $Enums.CustomerRewardStatus | null
+    type: $Enums.CustomerRewardType | null
+    title: string | null
+    description: string | null
+    quantity: number | null
+    value: number | null
+    productId: string | null
+    couponCode: string | null
+    issuedAt: Date | null
+    expiresAt: Date | null
+    redeemedAt: Date | null
+    feedbackId: string | null
+    issuedForOrderId: string | null
+    redeemedByOrderId: string | null
+  }
+
+  export type CustomerRewardCountAggregateOutputType = {
+    id: number
+    createdAt: number
+    updatedAt: number
+    customerId: number
+    status: number
+    type: number
+    title: number
+    description: number
+    quantity: number
+    value: number
+    productId: number
+    couponCode: number
+    issuedAt: number
+    expiresAt: number
+    redeemedAt: number
+    feedbackId: number
+    issuedForOrderId: number
+    redeemedByOrderId: number
+    metadata: number
+    _all: number
+  }
+
+
+  export type CustomerRewardAvgAggregateInputType = {
+    quantity?: true
+    value?: true
+  }
+
+  export type CustomerRewardSumAggregateInputType = {
+    quantity?: true
+    value?: true
+  }
+
+  export type CustomerRewardMinAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    customerId?: true
+    status?: true
+    type?: true
+    title?: true
+    description?: true
+    quantity?: true
+    value?: true
+    productId?: true
+    couponCode?: true
+    issuedAt?: true
+    expiresAt?: true
+    redeemedAt?: true
+    feedbackId?: true
+    issuedForOrderId?: true
+    redeemedByOrderId?: true
+  }
+
+  export type CustomerRewardMaxAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    customerId?: true
+    status?: true
+    type?: true
+    title?: true
+    description?: true
+    quantity?: true
+    value?: true
+    productId?: true
+    couponCode?: true
+    issuedAt?: true
+    expiresAt?: true
+    redeemedAt?: true
+    feedbackId?: true
+    issuedForOrderId?: true
+    redeemedByOrderId?: true
+  }
+
+  export type CustomerRewardCountAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    customerId?: true
+    status?: true
+    type?: true
+    title?: true
+    description?: true
+    quantity?: true
+    value?: true
+    productId?: true
+    couponCode?: true
+    issuedAt?: true
+    expiresAt?: true
+    redeemedAt?: true
+    feedbackId?: true
+    issuedForOrderId?: true
+    redeemedByOrderId?: true
+    metadata?: true
+    _all?: true
+  }
+
+  export type CustomerRewardAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CustomerReward to aggregate.
+     */
+    where?: CustomerRewardWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CustomerRewards to fetch.
+     */
+    orderBy?: CustomerRewardOrderByWithRelationInput | CustomerRewardOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CustomerRewardWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CustomerRewards from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CustomerRewards.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned CustomerRewards
+    **/
+    _count?: true | CustomerRewardCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: CustomerRewardAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: CustomerRewardSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CustomerRewardMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CustomerRewardMaxAggregateInputType
+  }
+
+  export type GetCustomerRewardAggregateType<T extends CustomerRewardAggregateArgs> = {
+        [P in keyof T & keyof AggregateCustomerReward]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCustomerReward[P]>
+      : GetScalarType<T[P], AggregateCustomerReward[P]>
+  }
+
+
+
+
+  export type CustomerRewardGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CustomerRewardWhereInput
+    orderBy?: CustomerRewardOrderByWithAggregationInput | CustomerRewardOrderByWithAggregationInput[]
+    by: CustomerRewardScalarFieldEnum[] | CustomerRewardScalarFieldEnum
+    having?: CustomerRewardScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CustomerRewardCountAggregateInputType | true
+    _avg?: CustomerRewardAvgAggregateInputType
+    _sum?: CustomerRewardSumAggregateInputType
+    _min?: CustomerRewardMinAggregateInputType
+    _max?: CustomerRewardMaxAggregateInputType
+  }
+
+  export type CustomerRewardGroupByOutputType = {
+    id: string
+    createdAt: Date
+    updatedAt: Date
+    customerId: string
+    status: $Enums.CustomerRewardStatus
+    type: $Enums.CustomerRewardType
+    title: string
+    description: string | null
+    quantity: number | null
+    value: number | null
+    productId: string | null
+    couponCode: string | null
+    issuedAt: Date
+    expiresAt: Date | null
+    redeemedAt: Date | null
+    feedbackId: string | null
+    issuedForOrderId: string | null
+    redeemedByOrderId: string | null
+    metadata: JsonValue | null
+    _count: CustomerRewardCountAggregateOutputType | null
+    _avg: CustomerRewardAvgAggregateOutputType | null
+    _sum: CustomerRewardSumAggregateOutputType | null
+    _min: CustomerRewardMinAggregateOutputType | null
+    _max: CustomerRewardMaxAggregateOutputType | null
+  }
+
+  type GetCustomerRewardGroupByPayload<T extends CustomerRewardGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CustomerRewardGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CustomerRewardGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CustomerRewardGroupByOutputType[P]>
+            : GetScalarType<T[P], CustomerRewardGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CustomerRewardSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    customerId?: boolean
+    status?: boolean
+    type?: boolean
+    title?: boolean
+    description?: boolean
+    quantity?: boolean
+    value?: boolean
+    productId?: boolean
+    couponCode?: boolean
+    issuedAt?: boolean
+    expiresAt?: boolean
+    redeemedAt?: boolean
+    feedbackId?: boolean
+    issuedForOrderId?: boolean
+    redeemedByOrderId?: boolean
+    metadata?: boolean
+    customer?: boolean | CustomerDefaultArgs<ExtArgs>
+    product?: boolean | CustomerReward$productArgs<ExtArgs>
+    feedback?: boolean | CustomerReward$feedbackArgs<ExtArgs>
+    issuedForOrder?: boolean | CustomerReward$issuedForOrderArgs<ExtArgs>
+    redeemedByOrder?: boolean | CustomerReward$redeemedByOrderArgs<ExtArgs>
+  }, ExtArgs["result"]["customerReward"]>
+
+  export type CustomerRewardSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    customerId?: boolean
+    status?: boolean
+    type?: boolean
+    title?: boolean
+    description?: boolean
+    quantity?: boolean
+    value?: boolean
+    productId?: boolean
+    couponCode?: boolean
+    issuedAt?: boolean
+    expiresAt?: boolean
+    redeemedAt?: boolean
+    feedbackId?: boolean
+    issuedForOrderId?: boolean
+    redeemedByOrderId?: boolean
+    metadata?: boolean
+    customer?: boolean | CustomerDefaultArgs<ExtArgs>
+    product?: boolean | CustomerReward$productArgs<ExtArgs>
+    feedback?: boolean | CustomerReward$feedbackArgs<ExtArgs>
+    issuedForOrder?: boolean | CustomerReward$issuedForOrderArgs<ExtArgs>
+    redeemedByOrder?: boolean | CustomerReward$redeemedByOrderArgs<ExtArgs>
+  }, ExtArgs["result"]["customerReward"]>
+
+  export type CustomerRewardSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    customerId?: boolean
+    status?: boolean
+    type?: boolean
+    title?: boolean
+    description?: boolean
+    quantity?: boolean
+    value?: boolean
+    productId?: boolean
+    couponCode?: boolean
+    issuedAt?: boolean
+    expiresAt?: boolean
+    redeemedAt?: boolean
+    feedbackId?: boolean
+    issuedForOrderId?: boolean
+    redeemedByOrderId?: boolean
+    metadata?: boolean
+    customer?: boolean | CustomerDefaultArgs<ExtArgs>
+    product?: boolean | CustomerReward$productArgs<ExtArgs>
+    feedback?: boolean | CustomerReward$feedbackArgs<ExtArgs>
+    issuedForOrder?: boolean | CustomerReward$issuedForOrderArgs<ExtArgs>
+    redeemedByOrder?: boolean | CustomerReward$redeemedByOrderArgs<ExtArgs>
+  }, ExtArgs["result"]["customerReward"]>
+
+  export type CustomerRewardSelectScalar = {
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    customerId?: boolean
+    status?: boolean
+    type?: boolean
+    title?: boolean
+    description?: boolean
+    quantity?: boolean
+    value?: boolean
+    productId?: boolean
+    couponCode?: boolean
+    issuedAt?: boolean
+    expiresAt?: boolean
+    redeemedAt?: boolean
+    feedbackId?: boolean
+    issuedForOrderId?: boolean
+    redeemedByOrderId?: boolean
+    metadata?: boolean
+  }
+
+  export type CustomerRewardOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "customerId" | "status" | "type" | "title" | "description" | "quantity" | "value" | "productId" | "couponCode" | "issuedAt" | "expiresAt" | "redeemedAt" | "feedbackId" | "issuedForOrderId" | "redeemedByOrderId" | "metadata", ExtArgs["result"]["customerReward"]>
+  export type CustomerRewardInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    customer?: boolean | CustomerDefaultArgs<ExtArgs>
+    product?: boolean | CustomerReward$productArgs<ExtArgs>
+    feedback?: boolean | CustomerReward$feedbackArgs<ExtArgs>
+    issuedForOrder?: boolean | CustomerReward$issuedForOrderArgs<ExtArgs>
+    redeemedByOrder?: boolean | CustomerReward$redeemedByOrderArgs<ExtArgs>
+  }
+  export type CustomerRewardIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    customer?: boolean | CustomerDefaultArgs<ExtArgs>
+    product?: boolean | CustomerReward$productArgs<ExtArgs>
+    feedback?: boolean | CustomerReward$feedbackArgs<ExtArgs>
+    issuedForOrder?: boolean | CustomerReward$issuedForOrderArgs<ExtArgs>
+    redeemedByOrder?: boolean | CustomerReward$redeemedByOrderArgs<ExtArgs>
+  }
+  export type CustomerRewardIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    customer?: boolean | CustomerDefaultArgs<ExtArgs>
+    product?: boolean | CustomerReward$productArgs<ExtArgs>
+    feedback?: boolean | CustomerReward$feedbackArgs<ExtArgs>
+    issuedForOrder?: boolean | CustomerReward$issuedForOrderArgs<ExtArgs>
+    redeemedByOrder?: boolean | CustomerReward$redeemedByOrderArgs<ExtArgs>
+  }
+
+  export type $CustomerRewardPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "CustomerReward"
+    objects: {
+      customer: Prisma.$CustomerPayload<ExtArgs>
+      product: Prisma.$ProductPayload<ExtArgs> | null
+      feedback: Prisma.$CustomerFeedbackPayload<ExtArgs> | null
+      issuedForOrder: Prisma.$OrderPayload<ExtArgs> | null
+      redeemedByOrder: Prisma.$OrderPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      createdAt: Date
+      updatedAt: Date
+      customerId: string
+      status: $Enums.CustomerRewardStatus
+      type: $Enums.CustomerRewardType
+      title: string
+      description: string | null
+      quantity: number | null
+      value: number | null
+      productId: string | null
+      couponCode: string | null
+      issuedAt: Date
+      expiresAt: Date | null
+      redeemedAt: Date | null
+      feedbackId: string | null
+      issuedForOrderId: string | null
+      redeemedByOrderId: string | null
+      metadata: Prisma.JsonValue | null
+    }, ExtArgs["result"]["customerReward"]>
+    composites: {}
+  }
+
+  type CustomerRewardGetPayload<S extends boolean | null | undefined | CustomerRewardDefaultArgs> = $Result.GetResult<Prisma.$CustomerRewardPayload, S>
+
+  type CustomerRewardCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<CustomerRewardFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: CustomerRewardCountAggregateInputType | true
+    }
+
+  export interface CustomerRewardDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['CustomerReward'], meta: { name: 'CustomerReward' } }
+    /**
+     * Find zero or one CustomerReward that matches the filter.
+     * @param {CustomerRewardFindUniqueArgs} args - Arguments to find a CustomerReward
+     * @example
+     * // Get one CustomerReward
+     * const customerReward = await prisma.customerReward.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CustomerRewardFindUniqueArgs>(args: SelectSubset<T, CustomerRewardFindUniqueArgs<ExtArgs>>): Prisma__CustomerRewardClient<$Result.GetResult<Prisma.$CustomerRewardPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one CustomerReward that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {CustomerRewardFindUniqueOrThrowArgs} args - Arguments to find a CustomerReward
+     * @example
+     * // Get one CustomerReward
+     * const customerReward = await prisma.customerReward.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CustomerRewardFindUniqueOrThrowArgs>(args: SelectSubset<T, CustomerRewardFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CustomerRewardClient<$Result.GetResult<Prisma.$CustomerRewardPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CustomerReward that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomerRewardFindFirstArgs} args - Arguments to find a CustomerReward
+     * @example
+     * // Get one CustomerReward
+     * const customerReward = await prisma.customerReward.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CustomerRewardFindFirstArgs>(args?: SelectSubset<T, CustomerRewardFindFirstArgs<ExtArgs>>): Prisma__CustomerRewardClient<$Result.GetResult<Prisma.$CustomerRewardPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CustomerReward that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomerRewardFindFirstOrThrowArgs} args - Arguments to find a CustomerReward
+     * @example
+     * // Get one CustomerReward
+     * const customerReward = await prisma.customerReward.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CustomerRewardFindFirstOrThrowArgs>(args?: SelectSubset<T, CustomerRewardFindFirstOrThrowArgs<ExtArgs>>): Prisma__CustomerRewardClient<$Result.GetResult<Prisma.$CustomerRewardPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more CustomerRewards that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomerRewardFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all CustomerRewards
+     * const customerRewards = await prisma.customerReward.findMany()
+     * 
+     * // Get first 10 CustomerRewards
+     * const customerRewards = await prisma.customerReward.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const customerRewardWithIdOnly = await prisma.customerReward.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CustomerRewardFindManyArgs>(args?: SelectSubset<T, CustomerRewardFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomerRewardPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a CustomerReward.
+     * @param {CustomerRewardCreateArgs} args - Arguments to create a CustomerReward.
+     * @example
+     * // Create one CustomerReward
+     * const CustomerReward = await prisma.customerReward.create({
+     *   data: {
+     *     // ... data to create a CustomerReward
+     *   }
+     * })
+     * 
+     */
+    create<T extends CustomerRewardCreateArgs>(args: SelectSubset<T, CustomerRewardCreateArgs<ExtArgs>>): Prisma__CustomerRewardClient<$Result.GetResult<Prisma.$CustomerRewardPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many CustomerRewards.
+     * @param {CustomerRewardCreateManyArgs} args - Arguments to create many CustomerRewards.
+     * @example
+     * // Create many CustomerRewards
+     * const customerReward = await prisma.customerReward.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CustomerRewardCreateManyArgs>(args?: SelectSubset<T, CustomerRewardCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many CustomerRewards and returns the data saved in the database.
+     * @param {CustomerRewardCreateManyAndReturnArgs} args - Arguments to create many CustomerRewards.
+     * @example
+     * // Create many CustomerRewards
+     * const customerReward = await prisma.customerReward.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many CustomerRewards and only return the `id`
+     * const customerRewardWithIdOnly = await prisma.customerReward.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends CustomerRewardCreateManyAndReturnArgs>(args?: SelectSubset<T, CustomerRewardCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomerRewardPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a CustomerReward.
+     * @param {CustomerRewardDeleteArgs} args - Arguments to delete one CustomerReward.
+     * @example
+     * // Delete one CustomerReward
+     * const CustomerReward = await prisma.customerReward.delete({
+     *   where: {
+     *     // ... filter to delete one CustomerReward
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CustomerRewardDeleteArgs>(args: SelectSubset<T, CustomerRewardDeleteArgs<ExtArgs>>): Prisma__CustomerRewardClient<$Result.GetResult<Prisma.$CustomerRewardPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one CustomerReward.
+     * @param {CustomerRewardUpdateArgs} args - Arguments to update one CustomerReward.
+     * @example
+     * // Update one CustomerReward
+     * const customerReward = await prisma.customerReward.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CustomerRewardUpdateArgs>(args: SelectSubset<T, CustomerRewardUpdateArgs<ExtArgs>>): Prisma__CustomerRewardClient<$Result.GetResult<Prisma.$CustomerRewardPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more CustomerRewards.
+     * @param {CustomerRewardDeleteManyArgs} args - Arguments to filter CustomerRewards to delete.
+     * @example
+     * // Delete a few CustomerRewards
+     * const { count } = await prisma.customerReward.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CustomerRewardDeleteManyArgs>(args?: SelectSubset<T, CustomerRewardDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CustomerRewards.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomerRewardUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many CustomerRewards
+     * const customerReward = await prisma.customerReward.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CustomerRewardUpdateManyArgs>(args: SelectSubset<T, CustomerRewardUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CustomerRewards and returns the data updated in the database.
+     * @param {CustomerRewardUpdateManyAndReturnArgs} args - Arguments to update many CustomerRewards.
+     * @example
+     * // Update many CustomerRewards
+     * const customerReward = await prisma.customerReward.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more CustomerRewards and only return the `id`
+     * const customerRewardWithIdOnly = await prisma.customerReward.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends CustomerRewardUpdateManyAndReturnArgs>(args: SelectSubset<T, CustomerRewardUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomerRewardPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one CustomerReward.
+     * @param {CustomerRewardUpsertArgs} args - Arguments to update or create a CustomerReward.
+     * @example
+     * // Update or create a CustomerReward
+     * const customerReward = await prisma.customerReward.upsert({
+     *   create: {
+     *     // ... data to create a CustomerReward
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the CustomerReward we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CustomerRewardUpsertArgs>(args: SelectSubset<T, CustomerRewardUpsertArgs<ExtArgs>>): Prisma__CustomerRewardClient<$Result.GetResult<Prisma.$CustomerRewardPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of CustomerRewards.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomerRewardCountArgs} args - Arguments to filter CustomerRewards to count.
+     * @example
+     * // Count the number of CustomerRewards
+     * const count = await prisma.customerReward.count({
+     *   where: {
+     *     // ... the filter for the CustomerRewards we want to count
+     *   }
+     * })
+    **/
+    count<T extends CustomerRewardCountArgs>(
+      args?: Subset<T, CustomerRewardCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CustomerRewardCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a CustomerReward.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomerRewardAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CustomerRewardAggregateArgs>(args: Subset<T, CustomerRewardAggregateArgs>): Prisma.PrismaPromise<GetCustomerRewardAggregateType<T>>
+
+    /**
+     * Group by CustomerReward.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomerRewardGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CustomerRewardGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CustomerRewardGroupByArgs['orderBy'] }
+        : { orderBy?: CustomerRewardGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CustomerRewardGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCustomerRewardGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the CustomerReward model
+   */
+  readonly fields: CustomerRewardFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for CustomerReward.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CustomerRewardClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    customer<T extends CustomerDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CustomerDefaultArgs<ExtArgs>>): Prisma__CustomerClient<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    product<T extends CustomerReward$productArgs<ExtArgs> = {}>(args?: Subset<T, CustomerReward$productArgs<ExtArgs>>): Prisma__ProductClient<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    feedback<T extends CustomerReward$feedbackArgs<ExtArgs> = {}>(args?: Subset<T, CustomerReward$feedbackArgs<ExtArgs>>): Prisma__CustomerFeedbackClient<$Result.GetResult<Prisma.$CustomerFeedbackPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    issuedForOrder<T extends CustomerReward$issuedForOrderArgs<ExtArgs> = {}>(args?: Subset<T, CustomerReward$issuedForOrderArgs<ExtArgs>>): Prisma__OrderClient<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    redeemedByOrder<T extends CustomerReward$redeemedByOrderArgs<ExtArgs> = {}>(args?: Subset<T, CustomerReward$redeemedByOrderArgs<ExtArgs>>): Prisma__OrderClient<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the CustomerReward model
+   */
+  interface CustomerRewardFieldRefs {
+    readonly id: FieldRef<"CustomerReward", 'String'>
+    readonly createdAt: FieldRef<"CustomerReward", 'DateTime'>
+    readonly updatedAt: FieldRef<"CustomerReward", 'DateTime'>
+    readonly customerId: FieldRef<"CustomerReward", 'String'>
+    readonly status: FieldRef<"CustomerReward", 'CustomerRewardStatus'>
+    readonly type: FieldRef<"CustomerReward", 'CustomerRewardType'>
+    readonly title: FieldRef<"CustomerReward", 'String'>
+    readonly description: FieldRef<"CustomerReward", 'String'>
+    readonly quantity: FieldRef<"CustomerReward", 'Int'>
+    readonly value: FieldRef<"CustomerReward", 'Int'>
+    readonly productId: FieldRef<"CustomerReward", 'String'>
+    readonly couponCode: FieldRef<"CustomerReward", 'String'>
+    readonly issuedAt: FieldRef<"CustomerReward", 'DateTime'>
+    readonly expiresAt: FieldRef<"CustomerReward", 'DateTime'>
+    readonly redeemedAt: FieldRef<"CustomerReward", 'DateTime'>
+    readonly feedbackId: FieldRef<"CustomerReward", 'String'>
+    readonly issuedForOrderId: FieldRef<"CustomerReward", 'String'>
+    readonly redeemedByOrderId: FieldRef<"CustomerReward", 'String'>
+    readonly metadata: FieldRef<"CustomerReward", 'Json'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * CustomerReward findUnique
+   */
+  export type CustomerRewardFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerReward
+     */
+    select?: CustomerRewardSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerReward
+     */
+    omit?: CustomerRewardOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerRewardInclude<ExtArgs> | null
+    /**
+     * Filter, which CustomerReward to fetch.
+     */
+    where: CustomerRewardWhereUniqueInput
+  }
+
+  /**
+   * CustomerReward findUniqueOrThrow
+   */
+  export type CustomerRewardFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerReward
+     */
+    select?: CustomerRewardSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerReward
+     */
+    omit?: CustomerRewardOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerRewardInclude<ExtArgs> | null
+    /**
+     * Filter, which CustomerReward to fetch.
+     */
+    where: CustomerRewardWhereUniqueInput
+  }
+
+  /**
+   * CustomerReward findFirst
+   */
+  export type CustomerRewardFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerReward
+     */
+    select?: CustomerRewardSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerReward
+     */
+    omit?: CustomerRewardOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerRewardInclude<ExtArgs> | null
+    /**
+     * Filter, which CustomerReward to fetch.
+     */
+    where?: CustomerRewardWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CustomerRewards to fetch.
+     */
+    orderBy?: CustomerRewardOrderByWithRelationInput | CustomerRewardOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CustomerRewards.
+     */
+    cursor?: CustomerRewardWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CustomerRewards from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CustomerRewards.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CustomerRewards.
+     */
+    distinct?: CustomerRewardScalarFieldEnum | CustomerRewardScalarFieldEnum[]
+  }
+
+  /**
+   * CustomerReward findFirstOrThrow
+   */
+  export type CustomerRewardFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerReward
+     */
+    select?: CustomerRewardSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerReward
+     */
+    omit?: CustomerRewardOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerRewardInclude<ExtArgs> | null
+    /**
+     * Filter, which CustomerReward to fetch.
+     */
+    where?: CustomerRewardWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CustomerRewards to fetch.
+     */
+    orderBy?: CustomerRewardOrderByWithRelationInput | CustomerRewardOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CustomerRewards.
+     */
+    cursor?: CustomerRewardWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CustomerRewards from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CustomerRewards.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CustomerRewards.
+     */
+    distinct?: CustomerRewardScalarFieldEnum | CustomerRewardScalarFieldEnum[]
+  }
+
+  /**
+   * CustomerReward findMany
+   */
+  export type CustomerRewardFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerReward
+     */
+    select?: CustomerRewardSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerReward
+     */
+    omit?: CustomerRewardOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerRewardInclude<ExtArgs> | null
+    /**
+     * Filter, which CustomerRewards to fetch.
+     */
+    where?: CustomerRewardWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CustomerRewards to fetch.
+     */
+    orderBy?: CustomerRewardOrderByWithRelationInput | CustomerRewardOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing CustomerRewards.
+     */
+    cursor?: CustomerRewardWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CustomerRewards from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CustomerRewards.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CustomerRewards.
+     */
+    distinct?: CustomerRewardScalarFieldEnum | CustomerRewardScalarFieldEnum[]
+  }
+
+  /**
+   * CustomerReward create
+   */
+  export type CustomerRewardCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerReward
+     */
+    select?: CustomerRewardSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerReward
+     */
+    omit?: CustomerRewardOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerRewardInclude<ExtArgs> | null
+    /**
+     * The data needed to create a CustomerReward.
+     */
+    data: XOR<CustomerRewardCreateInput, CustomerRewardUncheckedCreateInput>
+  }
+
+  /**
+   * CustomerReward createMany
+   */
+  export type CustomerRewardCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many CustomerRewards.
+     */
+    data: CustomerRewardCreateManyInput | CustomerRewardCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * CustomerReward createManyAndReturn
+   */
+  export type CustomerRewardCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerReward
+     */
+    select?: CustomerRewardSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerReward
+     */
+    omit?: CustomerRewardOmit<ExtArgs> | null
+    /**
+     * The data used to create many CustomerRewards.
+     */
+    data: CustomerRewardCreateManyInput | CustomerRewardCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerRewardIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CustomerReward update
+   */
+  export type CustomerRewardUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerReward
+     */
+    select?: CustomerRewardSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerReward
+     */
+    omit?: CustomerRewardOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerRewardInclude<ExtArgs> | null
+    /**
+     * The data needed to update a CustomerReward.
+     */
+    data: XOR<CustomerRewardUpdateInput, CustomerRewardUncheckedUpdateInput>
+    /**
+     * Choose, which CustomerReward to update.
+     */
+    where: CustomerRewardWhereUniqueInput
+  }
+
+  /**
+   * CustomerReward updateMany
+   */
+  export type CustomerRewardUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update CustomerRewards.
+     */
+    data: XOR<CustomerRewardUpdateManyMutationInput, CustomerRewardUncheckedUpdateManyInput>
+    /**
+     * Filter which CustomerRewards to update
+     */
+    where?: CustomerRewardWhereInput
+    /**
+     * Limit how many CustomerRewards to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * CustomerReward updateManyAndReturn
+   */
+  export type CustomerRewardUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerReward
+     */
+    select?: CustomerRewardSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerReward
+     */
+    omit?: CustomerRewardOmit<ExtArgs> | null
+    /**
+     * The data used to update CustomerRewards.
+     */
+    data: XOR<CustomerRewardUpdateManyMutationInput, CustomerRewardUncheckedUpdateManyInput>
+    /**
+     * Filter which CustomerRewards to update
+     */
+    where?: CustomerRewardWhereInput
+    /**
+     * Limit how many CustomerRewards to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerRewardIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CustomerReward upsert
+   */
+  export type CustomerRewardUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerReward
+     */
+    select?: CustomerRewardSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerReward
+     */
+    omit?: CustomerRewardOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerRewardInclude<ExtArgs> | null
+    /**
+     * The filter to search for the CustomerReward to update in case it exists.
+     */
+    where: CustomerRewardWhereUniqueInput
+    /**
+     * In case the CustomerReward found by the `where` argument doesn't exist, create a new CustomerReward with this data.
+     */
+    create: XOR<CustomerRewardCreateInput, CustomerRewardUncheckedCreateInput>
+    /**
+     * In case the CustomerReward was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CustomerRewardUpdateInput, CustomerRewardUncheckedUpdateInput>
+  }
+
+  /**
+   * CustomerReward delete
+   */
+  export type CustomerRewardDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerReward
+     */
+    select?: CustomerRewardSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerReward
+     */
+    omit?: CustomerRewardOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerRewardInclude<ExtArgs> | null
+    /**
+     * Filter which CustomerReward to delete.
+     */
+    where: CustomerRewardWhereUniqueInput
+  }
+
+  /**
+   * CustomerReward deleteMany
+   */
+  export type CustomerRewardDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CustomerRewards to delete
+     */
+    where?: CustomerRewardWhereInput
+    /**
+     * Limit how many CustomerRewards to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * CustomerReward.product
+   */
+  export type CustomerReward$productArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Product
+     */
+    select?: ProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Product
+     */
+    omit?: ProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductInclude<ExtArgs> | null
+    where?: ProductWhereInput
+  }
+
+  /**
+   * CustomerReward.feedback
+   */
+  export type CustomerReward$feedbackArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerFeedback
+     */
+    select?: CustomerFeedbackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerFeedback
+     */
+    omit?: CustomerFeedbackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerFeedbackInclude<ExtArgs> | null
+    where?: CustomerFeedbackWhereInput
+  }
+
+  /**
+   * CustomerReward.issuedForOrder
+   */
+  export type CustomerReward$issuedForOrderArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Order
+     */
+    select?: OrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Order
+     */
+    omit?: OrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderInclude<ExtArgs> | null
+    where?: OrderWhereInput
+  }
+
+  /**
+   * CustomerReward.redeemedByOrder
+   */
+  export type CustomerReward$redeemedByOrderArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Order
+     */
+    select?: OrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Order
+     */
+    omit?: OrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderInclude<ExtArgs> | null
+    where?: OrderWhereInput
+  }
+
+  /**
+   * CustomerReward without action
+   */
+  export type CustomerRewardDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerReward
+     */
+    select?: CustomerRewardSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerReward
+     */
+    omit?: CustomerRewardOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerRewardInclude<ExtArgs> | null
   }
 
 
@@ -58335,6 +65342,1053 @@ export namespace Prisma {
 
 
   /**
+   * Model FeedbackSettings
+   */
+
+  export type AggregateFeedbackSettings = {
+    _count: FeedbackSettingsCountAggregateOutputType | null
+    _avg: FeedbackSettingsAvgAggregateOutputType | null
+    _sum: FeedbackSettingsSumAggregateOutputType | null
+    _min: FeedbackSettingsMinAggregateOutputType | null
+    _max: FeedbackSettingsMaxAggregateOutputType | null
+  }
+
+  export type FeedbackSettingsAvgAggregateOutputType = {
+    rewardQuantity: number | null
+  }
+
+  export type FeedbackSettingsSumAggregateOutputType = {
+    rewardQuantity: number | null
+  }
+
+  export type FeedbackSettingsMinAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    active: boolean | null
+    rewardProductId: string | null
+    rewardQuantity: number | null
+  }
+
+  export type FeedbackSettingsMaxAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    active: boolean | null
+    rewardProductId: string | null
+    rewardQuantity: number | null
+  }
+
+  export type FeedbackSettingsCountAggregateOutputType = {
+    id: number
+    createdAt: number
+    updatedAt: number
+    active: number
+    rewardProductId: number
+    rewardQuantity: number
+    _all: number
+  }
+
+
+  export type FeedbackSettingsAvgAggregateInputType = {
+    rewardQuantity?: true
+  }
+
+  export type FeedbackSettingsSumAggregateInputType = {
+    rewardQuantity?: true
+  }
+
+  export type FeedbackSettingsMinAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    active?: true
+    rewardProductId?: true
+    rewardQuantity?: true
+  }
+
+  export type FeedbackSettingsMaxAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    active?: true
+    rewardProductId?: true
+    rewardQuantity?: true
+  }
+
+  export type FeedbackSettingsCountAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    active?: true
+    rewardProductId?: true
+    rewardQuantity?: true
+    _all?: true
+  }
+
+  export type FeedbackSettingsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FeedbackSettings to aggregate.
+     */
+    where?: FeedbackSettingsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FeedbackSettings to fetch.
+     */
+    orderBy?: FeedbackSettingsOrderByWithRelationInput | FeedbackSettingsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: FeedbackSettingsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FeedbackSettings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FeedbackSettings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned FeedbackSettings
+    **/
+    _count?: true | FeedbackSettingsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: FeedbackSettingsAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: FeedbackSettingsSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: FeedbackSettingsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: FeedbackSettingsMaxAggregateInputType
+  }
+
+  export type GetFeedbackSettingsAggregateType<T extends FeedbackSettingsAggregateArgs> = {
+        [P in keyof T & keyof AggregateFeedbackSettings]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateFeedbackSettings[P]>
+      : GetScalarType<T[P], AggregateFeedbackSettings[P]>
+  }
+
+
+
+
+  export type FeedbackSettingsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FeedbackSettingsWhereInput
+    orderBy?: FeedbackSettingsOrderByWithAggregationInput | FeedbackSettingsOrderByWithAggregationInput[]
+    by: FeedbackSettingsScalarFieldEnum[] | FeedbackSettingsScalarFieldEnum
+    having?: FeedbackSettingsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: FeedbackSettingsCountAggregateInputType | true
+    _avg?: FeedbackSettingsAvgAggregateInputType
+    _sum?: FeedbackSettingsSumAggregateInputType
+    _min?: FeedbackSettingsMinAggregateInputType
+    _max?: FeedbackSettingsMaxAggregateInputType
+  }
+
+  export type FeedbackSettingsGroupByOutputType = {
+    id: string
+    createdAt: Date
+    updatedAt: Date
+    active: boolean
+    rewardProductId: string | null
+    rewardQuantity: number
+    _count: FeedbackSettingsCountAggregateOutputType | null
+    _avg: FeedbackSettingsAvgAggregateOutputType | null
+    _sum: FeedbackSettingsSumAggregateOutputType | null
+    _min: FeedbackSettingsMinAggregateOutputType | null
+    _max: FeedbackSettingsMaxAggregateOutputType | null
+  }
+
+  type GetFeedbackSettingsGroupByPayload<T extends FeedbackSettingsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<FeedbackSettingsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof FeedbackSettingsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], FeedbackSettingsGroupByOutputType[P]>
+            : GetScalarType<T[P], FeedbackSettingsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type FeedbackSettingsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    active?: boolean
+    rewardProductId?: boolean
+    rewardQuantity?: boolean
+  }, ExtArgs["result"]["feedbackSettings"]>
+
+  export type FeedbackSettingsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    active?: boolean
+    rewardProductId?: boolean
+    rewardQuantity?: boolean
+  }, ExtArgs["result"]["feedbackSettings"]>
+
+  export type FeedbackSettingsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    active?: boolean
+    rewardProductId?: boolean
+    rewardQuantity?: boolean
+  }, ExtArgs["result"]["feedbackSettings"]>
+
+  export type FeedbackSettingsSelectScalar = {
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    active?: boolean
+    rewardProductId?: boolean
+    rewardQuantity?: boolean
+  }
+
+  export type FeedbackSettingsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "active" | "rewardProductId" | "rewardQuantity", ExtArgs["result"]["feedbackSettings"]>
+
+  export type $FeedbackSettingsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "FeedbackSettings"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      createdAt: Date
+      updatedAt: Date
+      active: boolean
+      rewardProductId: string | null
+      rewardQuantity: number
+    }, ExtArgs["result"]["feedbackSettings"]>
+    composites: {}
+  }
+
+  type FeedbackSettingsGetPayload<S extends boolean | null | undefined | FeedbackSettingsDefaultArgs> = $Result.GetResult<Prisma.$FeedbackSettingsPayload, S>
+
+  type FeedbackSettingsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<FeedbackSettingsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: FeedbackSettingsCountAggregateInputType | true
+    }
+
+  export interface FeedbackSettingsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['FeedbackSettings'], meta: { name: 'FeedbackSettings' } }
+    /**
+     * Find zero or one FeedbackSettings that matches the filter.
+     * @param {FeedbackSettingsFindUniqueArgs} args - Arguments to find a FeedbackSettings
+     * @example
+     * // Get one FeedbackSettings
+     * const feedbackSettings = await prisma.feedbackSettings.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends FeedbackSettingsFindUniqueArgs>(args: SelectSubset<T, FeedbackSettingsFindUniqueArgs<ExtArgs>>): Prisma__FeedbackSettingsClient<$Result.GetResult<Prisma.$FeedbackSettingsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one FeedbackSettings that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {FeedbackSettingsFindUniqueOrThrowArgs} args - Arguments to find a FeedbackSettings
+     * @example
+     * // Get one FeedbackSettings
+     * const feedbackSettings = await prisma.feedbackSettings.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends FeedbackSettingsFindUniqueOrThrowArgs>(args: SelectSubset<T, FeedbackSettingsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__FeedbackSettingsClient<$Result.GetResult<Prisma.$FeedbackSettingsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FeedbackSettings that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeedbackSettingsFindFirstArgs} args - Arguments to find a FeedbackSettings
+     * @example
+     * // Get one FeedbackSettings
+     * const feedbackSettings = await prisma.feedbackSettings.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends FeedbackSettingsFindFirstArgs>(args?: SelectSubset<T, FeedbackSettingsFindFirstArgs<ExtArgs>>): Prisma__FeedbackSettingsClient<$Result.GetResult<Prisma.$FeedbackSettingsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FeedbackSettings that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeedbackSettingsFindFirstOrThrowArgs} args - Arguments to find a FeedbackSettings
+     * @example
+     * // Get one FeedbackSettings
+     * const feedbackSettings = await prisma.feedbackSettings.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends FeedbackSettingsFindFirstOrThrowArgs>(args?: SelectSubset<T, FeedbackSettingsFindFirstOrThrowArgs<ExtArgs>>): Prisma__FeedbackSettingsClient<$Result.GetResult<Prisma.$FeedbackSettingsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more FeedbackSettings that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeedbackSettingsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all FeedbackSettings
+     * const feedbackSettings = await prisma.feedbackSettings.findMany()
+     * 
+     * // Get first 10 FeedbackSettings
+     * const feedbackSettings = await prisma.feedbackSettings.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const feedbackSettingsWithIdOnly = await prisma.feedbackSettings.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends FeedbackSettingsFindManyArgs>(args?: SelectSubset<T, FeedbackSettingsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeedbackSettingsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a FeedbackSettings.
+     * @param {FeedbackSettingsCreateArgs} args - Arguments to create a FeedbackSettings.
+     * @example
+     * // Create one FeedbackSettings
+     * const FeedbackSettings = await prisma.feedbackSettings.create({
+     *   data: {
+     *     // ... data to create a FeedbackSettings
+     *   }
+     * })
+     * 
+     */
+    create<T extends FeedbackSettingsCreateArgs>(args: SelectSubset<T, FeedbackSettingsCreateArgs<ExtArgs>>): Prisma__FeedbackSettingsClient<$Result.GetResult<Prisma.$FeedbackSettingsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many FeedbackSettings.
+     * @param {FeedbackSettingsCreateManyArgs} args - Arguments to create many FeedbackSettings.
+     * @example
+     * // Create many FeedbackSettings
+     * const feedbackSettings = await prisma.feedbackSettings.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends FeedbackSettingsCreateManyArgs>(args?: SelectSubset<T, FeedbackSettingsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many FeedbackSettings and returns the data saved in the database.
+     * @param {FeedbackSettingsCreateManyAndReturnArgs} args - Arguments to create many FeedbackSettings.
+     * @example
+     * // Create many FeedbackSettings
+     * const feedbackSettings = await prisma.feedbackSettings.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many FeedbackSettings and only return the `id`
+     * const feedbackSettingsWithIdOnly = await prisma.feedbackSettings.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends FeedbackSettingsCreateManyAndReturnArgs>(args?: SelectSubset<T, FeedbackSettingsCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeedbackSettingsPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a FeedbackSettings.
+     * @param {FeedbackSettingsDeleteArgs} args - Arguments to delete one FeedbackSettings.
+     * @example
+     * // Delete one FeedbackSettings
+     * const FeedbackSettings = await prisma.feedbackSettings.delete({
+     *   where: {
+     *     // ... filter to delete one FeedbackSettings
+     *   }
+     * })
+     * 
+     */
+    delete<T extends FeedbackSettingsDeleteArgs>(args: SelectSubset<T, FeedbackSettingsDeleteArgs<ExtArgs>>): Prisma__FeedbackSettingsClient<$Result.GetResult<Prisma.$FeedbackSettingsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one FeedbackSettings.
+     * @param {FeedbackSettingsUpdateArgs} args - Arguments to update one FeedbackSettings.
+     * @example
+     * // Update one FeedbackSettings
+     * const feedbackSettings = await prisma.feedbackSettings.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends FeedbackSettingsUpdateArgs>(args: SelectSubset<T, FeedbackSettingsUpdateArgs<ExtArgs>>): Prisma__FeedbackSettingsClient<$Result.GetResult<Prisma.$FeedbackSettingsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more FeedbackSettings.
+     * @param {FeedbackSettingsDeleteManyArgs} args - Arguments to filter FeedbackSettings to delete.
+     * @example
+     * // Delete a few FeedbackSettings
+     * const { count } = await prisma.feedbackSettings.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends FeedbackSettingsDeleteManyArgs>(args?: SelectSubset<T, FeedbackSettingsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FeedbackSettings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeedbackSettingsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many FeedbackSettings
+     * const feedbackSettings = await prisma.feedbackSettings.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends FeedbackSettingsUpdateManyArgs>(args: SelectSubset<T, FeedbackSettingsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FeedbackSettings and returns the data updated in the database.
+     * @param {FeedbackSettingsUpdateManyAndReturnArgs} args - Arguments to update many FeedbackSettings.
+     * @example
+     * // Update many FeedbackSettings
+     * const feedbackSettings = await prisma.feedbackSettings.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more FeedbackSettings and only return the `id`
+     * const feedbackSettingsWithIdOnly = await prisma.feedbackSettings.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends FeedbackSettingsUpdateManyAndReturnArgs>(args: SelectSubset<T, FeedbackSettingsUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeedbackSettingsPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one FeedbackSettings.
+     * @param {FeedbackSettingsUpsertArgs} args - Arguments to update or create a FeedbackSettings.
+     * @example
+     * // Update or create a FeedbackSettings
+     * const feedbackSettings = await prisma.feedbackSettings.upsert({
+     *   create: {
+     *     // ... data to create a FeedbackSettings
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the FeedbackSettings we want to update
+     *   }
+     * })
+     */
+    upsert<T extends FeedbackSettingsUpsertArgs>(args: SelectSubset<T, FeedbackSettingsUpsertArgs<ExtArgs>>): Prisma__FeedbackSettingsClient<$Result.GetResult<Prisma.$FeedbackSettingsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of FeedbackSettings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeedbackSettingsCountArgs} args - Arguments to filter FeedbackSettings to count.
+     * @example
+     * // Count the number of FeedbackSettings
+     * const count = await prisma.feedbackSettings.count({
+     *   where: {
+     *     // ... the filter for the FeedbackSettings we want to count
+     *   }
+     * })
+    **/
+    count<T extends FeedbackSettingsCountArgs>(
+      args?: Subset<T, FeedbackSettingsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], FeedbackSettingsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a FeedbackSettings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeedbackSettingsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends FeedbackSettingsAggregateArgs>(args: Subset<T, FeedbackSettingsAggregateArgs>): Prisma.PrismaPromise<GetFeedbackSettingsAggregateType<T>>
+
+    /**
+     * Group by FeedbackSettings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeedbackSettingsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends FeedbackSettingsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: FeedbackSettingsGroupByArgs['orderBy'] }
+        : { orderBy?: FeedbackSettingsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, FeedbackSettingsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetFeedbackSettingsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the FeedbackSettings model
+   */
+  readonly fields: FeedbackSettingsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for FeedbackSettings.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__FeedbackSettingsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the FeedbackSettings model
+   */
+  interface FeedbackSettingsFieldRefs {
+    readonly id: FieldRef<"FeedbackSettings", 'String'>
+    readonly createdAt: FieldRef<"FeedbackSettings", 'DateTime'>
+    readonly updatedAt: FieldRef<"FeedbackSettings", 'DateTime'>
+    readonly active: FieldRef<"FeedbackSettings", 'Boolean'>
+    readonly rewardProductId: FieldRef<"FeedbackSettings", 'String'>
+    readonly rewardQuantity: FieldRef<"FeedbackSettings", 'Int'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * FeedbackSettings findUnique
+   */
+  export type FeedbackSettingsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackSettings
+     */
+    select?: FeedbackSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackSettings
+     */
+    omit?: FeedbackSettingsOmit<ExtArgs> | null
+    /**
+     * Filter, which FeedbackSettings to fetch.
+     */
+    where: FeedbackSettingsWhereUniqueInput
+  }
+
+  /**
+   * FeedbackSettings findUniqueOrThrow
+   */
+  export type FeedbackSettingsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackSettings
+     */
+    select?: FeedbackSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackSettings
+     */
+    omit?: FeedbackSettingsOmit<ExtArgs> | null
+    /**
+     * Filter, which FeedbackSettings to fetch.
+     */
+    where: FeedbackSettingsWhereUniqueInput
+  }
+
+  /**
+   * FeedbackSettings findFirst
+   */
+  export type FeedbackSettingsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackSettings
+     */
+    select?: FeedbackSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackSettings
+     */
+    omit?: FeedbackSettingsOmit<ExtArgs> | null
+    /**
+     * Filter, which FeedbackSettings to fetch.
+     */
+    where?: FeedbackSettingsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FeedbackSettings to fetch.
+     */
+    orderBy?: FeedbackSettingsOrderByWithRelationInput | FeedbackSettingsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FeedbackSettings.
+     */
+    cursor?: FeedbackSettingsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FeedbackSettings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FeedbackSettings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FeedbackSettings.
+     */
+    distinct?: FeedbackSettingsScalarFieldEnum | FeedbackSettingsScalarFieldEnum[]
+  }
+
+  /**
+   * FeedbackSettings findFirstOrThrow
+   */
+  export type FeedbackSettingsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackSettings
+     */
+    select?: FeedbackSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackSettings
+     */
+    omit?: FeedbackSettingsOmit<ExtArgs> | null
+    /**
+     * Filter, which FeedbackSettings to fetch.
+     */
+    where?: FeedbackSettingsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FeedbackSettings to fetch.
+     */
+    orderBy?: FeedbackSettingsOrderByWithRelationInput | FeedbackSettingsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FeedbackSettings.
+     */
+    cursor?: FeedbackSettingsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FeedbackSettings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FeedbackSettings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FeedbackSettings.
+     */
+    distinct?: FeedbackSettingsScalarFieldEnum | FeedbackSettingsScalarFieldEnum[]
+  }
+
+  /**
+   * FeedbackSettings findMany
+   */
+  export type FeedbackSettingsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackSettings
+     */
+    select?: FeedbackSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackSettings
+     */
+    omit?: FeedbackSettingsOmit<ExtArgs> | null
+    /**
+     * Filter, which FeedbackSettings to fetch.
+     */
+    where?: FeedbackSettingsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FeedbackSettings to fetch.
+     */
+    orderBy?: FeedbackSettingsOrderByWithRelationInput | FeedbackSettingsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing FeedbackSettings.
+     */
+    cursor?: FeedbackSettingsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FeedbackSettings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FeedbackSettings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FeedbackSettings.
+     */
+    distinct?: FeedbackSettingsScalarFieldEnum | FeedbackSettingsScalarFieldEnum[]
+  }
+
+  /**
+   * FeedbackSettings create
+   */
+  export type FeedbackSettingsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackSettings
+     */
+    select?: FeedbackSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackSettings
+     */
+    omit?: FeedbackSettingsOmit<ExtArgs> | null
+    /**
+     * The data needed to create a FeedbackSettings.
+     */
+    data: XOR<FeedbackSettingsCreateInput, FeedbackSettingsUncheckedCreateInput>
+  }
+
+  /**
+   * FeedbackSettings createMany
+   */
+  export type FeedbackSettingsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many FeedbackSettings.
+     */
+    data: FeedbackSettingsCreateManyInput | FeedbackSettingsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * FeedbackSettings createManyAndReturn
+   */
+  export type FeedbackSettingsCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackSettings
+     */
+    select?: FeedbackSettingsSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackSettings
+     */
+    omit?: FeedbackSettingsOmit<ExtArgs> | null
+    /**
+     * The data used to create many FeedbackSettings.
+     */
+    data: FeedbackSettingsCreateManyInput | FeedbackSettingsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * FeedbackSettings update
+   */
+  export type FeedbackSettingsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackSettings
+     */
+    select?: FeedbackSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackSettings
+     */
+    omit?: FeedbackSettingsOmit<ExtArgs> | null
+    /**
+     * The data needed to update a FeedbackSettings.
+     */
+    data: XOR<FeedbackSettingsUpdateInput, FeedbackSettingsUncheckedUpdateInput>
+    /**
+     * Choose, which FeedbackSettings to update.
+     */
+    where: FeedbackSettingsWhereUniqueInput
+  }
+
+  /**
+   * FeedbackSettings updateMany
+   */
+  export type FeedbackSettingsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update FeedbackSettings.
+     */
+    data: XOR<FeedbackSettingsUpdateManyMutationInput, FeedbackSettingsUncheckedUpdateManyInput>
+    /**
+     * Filter which FeedbackSettings to update
+     */
+    where?: FeedbackSettingsWhereInput
+    /**
+     * Limit how many FeedbackSettings to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * FeedbackSettings updateManyAndReturn
+   */
+  export type FeedbackSettingsUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackSettings
+     */
+    select?: FeedbackSettingsSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackSettings
+     */
+    omit?: FeedbackSettingsOmit<ExtArgs> | null
+    /**
+     * The data used to update FeedbackSettings.
+     */
+    data: XOR<FeedbackSettingsUpdateManyMutationInput, FeedbackSettingsUncheckedUpdateManyInput>
+    /**
+     * Filter which FeedbackSettings to update
+     */
+    where?: FeedbackSettingsWhereInput
+    /**
+     * Limit how many FeedbackSettings to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * FeedbackSettings upsert
+   */
+  export type FeedbackSettingsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackSettings
+     */
+    select?: FeedbackSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackSettings
+     */
+    omit?: FeedbackSettingsOmit<ExtArgs> | null
+    /**
+     * The filter to search for the FeedbackSettings to update in case it exists.
+     */
+    where: FeedbackSettingsWhereUniqueInput
+    /**
+     * In case the FeedbackSettings found by the `where` argument doesn't exist, create a new FeedbackSettings with this data.
+     */
+    create: XOR<FeedbackSettingsCreateInput, FeedbackSettingsUncheckedCreateInput>
+    /**
+     * In case the FeedbackSettings was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<FeedbackSettingsUpdateInput, FeedbackSettingsUncheckedUpdateInput>
+  }
+
+  /**
+   * FeedbackSettings delete
+   */
+  export type FeedbackSettingsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackSettings
+     */
+    select?: FeedbackSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackSettings
+     */
+    omit?: FeedbackSettingsOmit<ExtArgs> | null
+    /**
+     * Filter which FeedbackSettings to delete.
+     */
+    where: FeedbackSettingsWhereUniqueInput
+  }
+
+  /**
+   * FeedbackSettings deleteMany
+   */
+  export type FeedbackSettingsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FeedbackSettings to delete
+     */
+    where?: FeedbackSettingsWhereInput
+    /**
+     * Limit how many FeedbackSettings to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * FeedbackSettings without action
+   */
+  export type FeedbackSettingsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedbackSettings
+     */
+    select?: FeedbackSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeedbackSettings
+     */
+    omit?: FeedbackSettingsOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -58573,6 +66627,23 @@ export namespace Prisma {
   export type DispatchAssignmentJobScalarFieldEnum = (typeof DispatchAssignmentJobScalarFieldEnum)[keyof typeof DispatchAssignmentJobScalarFieldEnum]
 
 
+  export const FeedbackWhatsAppJobScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    status: 'status',
+    attempts: 'attempts',
+    availableAt: 'availableAt',
+    processingStartedAt: 'processingStartedAt',
+    completedAt: 'completedAt',
+    lastError: 'lastError',
+    orderId: 'orderId',
+    customerPhone: 'customerPhone',
+    language: 'language'
+  };
+
+  export type FeedbackWhatsAppJobScalarFieldEnum = (typeof FeedbackWhatsAppJobScalarFieldEnum)[keyof typeof FeedbackWhatsAppJobScalarFieldEnum]
+
+
   export const AddressScalarFieldEnum: {
     id: 'id',
     createdAt: 'createdAt',
@@ -58733,6 +66804,41 @@ export namespace Prisma {
   export type CustomerScalarFieldEnum = (typeof CustomerScalarFieldEnum)[keyof typeof CustomerScalarFieldEnum]
 
 
+  export const CustomerOtpChallengeScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    customerId: 'customerId',
+    phone: 'phone',
+    countryCode: 'countryCode',
+    channel: 'channel',
+    codeHash: 'codeHash',
+    expiresAt: 'expiresAt',
+    usedAt: 'usedAt',
+    attemptCount: 'attemptCount',
+    maxAttempts: 'maxAttempts',
+    lastAttemptAt: 'lastAttemptAt'
+  };
+
+  export type CustomerOtpChallengeScalarFieldEnum = (typeof CustomerOtpChallengeScalarFieldEnum)[keyof typeof CustomerOtpChallengeScalarFieldEnum]
+
+
+  export const CustomerAccessTokenScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    customerId: 'customerId',
+    tokenHash: 'tokenHash',
+    expiresAt: 'expiresAt',
+    lastUsedAt: 'lastUsedAt',
+    revokedAt: 'revokedAt',
+    userAgent: 'userAgent',
+    ipAddress: 'ipAddress'
+  };
+
+  export type CustomerAccessTokenScalarFieldEnum = (typeof CustomerAccessTokenScalarFieldEnum)[keyof typeof CustomerAccessTokenScalarFieldEnum]
+
+
   export const DeliveryAddressScalarFieldEnum: {
     id: 'id',
     createdAt: 'createdAt',
@@ -58814,6 +66920,51 @@ export namespace Prisma {
   };
 
   export type OrderScalarFieldEnum = (typeof OrderScalarFieldEnum)[keyof typeof OrderScalarFieldEnum]
+
+
+  export const CustomerFeedbackScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    customerId: 'customerId',
+    orderId: 'orderId',
+    language: 'language',
+    overallRating: 'overallRating',
+    sentiment: 'sentiment',
+    productQuality: 'productQuality',
+    temperature: 'temperature',
+    deliverySpeed: 'deliverySpeed',
+    serviceExperience: 'serviceExperience',
+    comment: 'comment',
+    source: 'source'
+  };
+
+  export type CustomerFeedbackScalarFieldEnum = (typeof CustomerFeedbackScalarFieldEnum)[keyof typeof CustomerFeedbackScalarFieldEnum]
+
+
+  export const CustomerRewardScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    customerId: 'customerId',
+    status: 'status',
+    type: 'type',
+    title: 'title',
+    description: 'description',
+    quantity: 'quantity',
+    value: 'value',
+    productId: 'productId',
+    couponCode: 'couponCode',
+    issuedAt: 'issuedAt',
+    expiresAt: 'expiresAt',
+    redeemedAt: 'redeemedAt',
+    feedbackId: 'feedbackId',
+    issuedForOrderId: 'issuedForOrderId',
+    redeemedByOrderId: 'redeemedByOrderId',
+    metadata: 'metadata'
+  };
+
+  export type CustomerRewardScalarFieldEnum = (typeof CustomerRewardScalarFieldEnum)[keyof typeof CustomerRewardScalarFieldEnum]
 
 
   export const OrderProductsScalarFieldEnum: {
@@ -58946,6 +67097,18 @@ export namespace Prisma {
   };
 
   export type InventoryStockEventScalarFieldEnum = (typeof InventoryStockEventScalarFieldEnum)[keyof typeof InventoryStockEventScalarFieldEnum]
+
+
+  export const FeedbackSettingsScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    active: 'active',
+    rewardProductId: 'rewardProductId',
+    rewardQuantity: 'rewardQuantity'
+  };
+
+  export type FeedbackSettingsScalarFieldEnum = (typeof FeedbackSettingsScalarFieldEnum)[keyof typeof FeedbackSettingsScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -59100,6 +67263,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'FeedbackWhatsAppJobStatus'
+   */
+  export type EnumFeedbackWhatsAppJobStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FeedbackWhatsAppJobStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'FeedbackWhatsAppJobStatus[]'
+   */
+  export type ListEnumFeedbackWhatsAppJobStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FeedbackWhatsAppJobStatus[]'>
+    
+
+
+  /**
    * Reference to a field of type 'ProductItemType'
    */
   export type EnumProductItemTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProductItemType'>
@@ -59124,6 +67301,20 @@ export namespace Prisma {
    * Reference to a field of type 'ExclusivePromotionWeekday'
    */
   export type EnumExclusivePromotionWeekdayFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ExclusivePromotionWeekday'>
+    
+
+
+  /**
+   * Reference to a field of type 'CustomerOtpChannel'
+   */
+  export type EnumCustomerOtpChannelFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CustomerOtpChannel'>
+    
+
+
+  /**
+   * Reference to a field of type 'CustomerOtpChannel[]'
+   */
+  export type ListEnumCustomerOtpChannelFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CustomerOtpChannel[]'>
     
 
 
@@ -59166,6 +67357,48 @@ export namespace Prisma {
    * Reference to a field of type 'PaymentType[]'
    */
   export type ListEnumPaymentTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'CustomerFeedbackSentiment'
+   */
+  export type EnumCustomerFeedbackSentimentFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CustomerFeedbackSentiment'>
+    
+
+
+  /**
+   * Reference to a field of type 'CustomerFeedbackSentiment[]'
+   */
+  export type ListEnumCustomerFeedbackSentimentFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CustomerFeedbackSentiment[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'CustomerRewardStatus'
+   */
+  export type EnumCustomerRewardStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CustomerRewardStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'CustomerRewardStatus[]'
+   */
+  export type ListEnumCustomerRewardStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CustomerRewardStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'CustomerRewardType'
+   */
+  export type EnumCustomerRewardTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CustomerRewardType'>
+    
+
+
+  /**
+   * Reference to a field of type 'CustomerRewardType[]'
+   */
+  export type ListEnumCustomerRewardTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CustomerRewardType[]'>
     
 
 
@@ -60385,6 +68618,90 @@ export namespace Prisma {
     deliveryAddressId?: StringWithAggregatesFilter<"DispatchAssignmentJob"> | string
   }
 
+  export type FeedbackWhatsAppJobWhereInput = {
+    AND?: FeedbackWhatsAppJobWhereInput | FeedbackWhatsAppJobWhereInput[]
+    OR?: FeedbackWhatsAppJobWhereInput[]
+    NOT?: FeedbackWhatsAppJobWhereInput | FeedbackWhatsAppJobWhereInput[]
+    id?: StringFilter<"FeedbackWhatsAppJob"> | string
+    createdAt?: DateTimeFilter<"FeedbackWhatsAppJob"> | Date | string
+    status?: EnumFeedbackWhatsAppJobStatusFilter<"FeedbackWhatsAppJob"> | $Enums.FeedbackWhatsAppJobStatus
+    attempts?: IntFilter<"FeedbackWhatsAppJob"> | number
+    availableAt?: DateTimeFilter<"FeedbackWhatsAppJob"> | Date | string
+    processingStartedAt?: DateTimeNullableFilter<"FeedbackWhatsAppJob"> | Date | string | null
+    completedAt?: DateTimeNullableFilter<"FeedbackWhatsAppJob"> | Date | string | null
+    lastError?: StringNullableFilter<"FeedbackWhatsAppJob"> | string | null
+    orderId?: StringFilter<"FeedbackWhatsAppJob"> | string
+    customerPhone?: StringFilter<"FeedbackWhatsAppJob"> | string
+    language?: StringNullableFilter<"FeedbackWhatsAppJob"> | string | null
+  }
+
+  export type FeedbackWhatsAppJobOrderByWithRelationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    status?: SortOrder
+    attempts?: SortOrder
+    availableAt?: SortOrder
+    processingStartedAt?: SortOrderInput | SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    lastError?: SortOrderInput | SortOrder
+    orderId?: SortOrder
+    customerPhone?: SortOrder
+    language?: SortOrderInput | SortOrder
+  }
+
+  export type FeedbackWhatsAppJobWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    orderId?: string
+    AND?: FeedbackWhatsAppJobWhereInput | FeedbackWhatsAppJobWhereInput[]
+    OR?: FeedbackWhatsAppJobWhereInput[]
+    NOT?: FeedbackWhatsAppJobWhereInput | FeedbackWhatsAppJobWhereInput[]
+    createdAt?: DateTimeFilter<"FeedbackWhatsAppJob"> | Date | string
+    status?: EnumFeedbackWhatsAppJobStatusFilter<"FeedbackWhatsAppJob"> | $Enums.FeedbackWhatsAppJobStatus
+    attempts?: IntFilter<"FeedbackWhatsAppJob"> | number
+    availableAt?: DateTimeFilter<"FeedbackWhatsAppJob"> | Date | string
+    processingStartedAt?: DateTimeNullableFilter<"FeedbackWhatsAppJob"> | Date | string | null
+    completedAt?: DateTimeNullableFilter<"FeedbackWhatsAppJob"> | Date | string | null
+    lastError?: StringNullableFilter<"FeedbackWhatsAppJob"> | string | null
+    customerPhone?: StringFilter<"FeedbackWhatsAppJob"> | string
+    language?: StringNullableFilter<"FeedbackWhatsAppJob"> | string | null
+  }, "id" | "orderId">
+
+  export type FeedbackWhatsAppJobOrderByWithAggregationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    status?: SortOrder
+    attempts?: SortOrder
+    availableAt?: SortOrder
+    processingStartedAt?: SortOrderInput | SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    lastError?: SortOrderInput | SortOrder
+    orderId?: SortOrder
+    customerPhone?: SortOrder
+    language?: SortOrderInput | SortOrder
+    _count?: FeedbackWhatsAppJobCountOrderByAggregateInput
+    _avg?: FeedbackWhatsAppJobAvgOrderByAggregateInput
+    _max?: FeedbackWhatsAppJobMaxOrderByAggregateInput
+    _min?: FeedbackWhatsAppJobMinOrderByAggregateInput
+    _sum?: FeedbackWhatsAppJobSumOrderByAggregateInput
+  }
+
+  export type FeedbackWhatsAppJobScalarWhereWithAggregatesInput = {
+    AND?: FeedbackWhatsAppJobScalarWhereWithAggregatesInput | FeedbackWhatsAppJobScalarWhereWithAggregatesInput[]
+    OR?: FeedbackWhatsAppJobScalarWhereWithAggregatesInput[]
+    NOT?: FeedbackWhatsAppJobScalarWhereWithAggregatesInput | FeedbackWhatsAppJobScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"FeedbackWhatsAppJob"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"FeedbackWhatsAppJob"> | Date | string
+    status?: EnumFeedbackWhatsAppJobStatusWithAggregatesFilter<"FeedbackWhatsAppJob"> | $Enums.FeedbackWhatsAppJobStatus
+    attempts?: IntWithAggregatesFilter<"FeedbackWhatsAppJob"> | number
+    availableAt?: DateTimeWithAggregatesFilter<"FeedbackWhatsAppJob"> | Date | string
+    processingStartedAt?: DateTimeNullableWithAggregatesFilter<"FeedbackWhatsAppJob"> | Date | string | null
+    completedAt?: DateTimeNullableWithAggregatesFilter<"FeedbackWhatsAppJob"> | Date | string | null
+    lastError?: StringNullableWithAggregatesFilter<"FeedbackWhatsAppJob"> | string | null
+    orderId?: StringWithAggregatesFilter<"FeedbackWhatsAppJob"> | string
+    customerPhone?: StringWithAggregatesFilter<"FeedbackWhatsAppJob"> | string
+    language?: StringNullableWithAggregatesFilter<"FeedbackWhatsAppJob"> | string | null
+  }
+
   export type AddressWhereInput = {
     AND?: AddressWhereInput | AddressWhereInput[]
     OR?: AddressWhereInput[]
@@ -60462,6 +68779,7 @@ export namespace Prisma {
     exclusivePromotionProducts?: ExclusivePromotionProductListRelationFilter
     OrderProducts?: OrderProductsListRelationFilter
     prizeProducts?: ProgressiveDiscountPrizeProductListRelationFilter
+    customerRewards?: CustomerRewardListRelationFilter
     preparationSteps?: PreparationStepListRelationFilter
   }
 
@@ -60486,6 +68804,7 @@ export namespace Prisma {
     exclusivePromotionProducts?: ExclusivePromotionProductOrderByRelationAggregateInput
     OrderProducts?: OrderProductsOrderByRelationAggregateInput
     prizeProducts?: ProgressiveDiscountPrizeProductOrderByRelationAggregateInput
+    customerRewards?: CustomerRewardOrderByRelationAggregateInput
     preparationSteps?: PreparationStepOrderByRelationAggregateInput
   }
 
@@ -60513,6 +68832,7 @@ export namespace Prisma {
     exclusivePromotionProducts?: ExclusivePromotionProductListRelationFilter
     OrderProducts?: OrderProductsListRelationFilter
     prizeProducts?: ProgressiveDiscountPrizeProductListRelationFilter
+    customerRewards?: CustomerRewardListRelationFilter
     preparationSteps?: PreparationStepListRelationFilter
   }, "id">
 
@@ -61221,6 +69541,10 @@ export namespace Prisma {
     promotionalMessages?: PromotialMessageListRelationFilter
     addresses?: DeliveryAddressListRelationFilter
     externalAddresses?: ExternalAddressListRelationFilter
+    feedbacks?: CustomerFeedbackListRelationFilter
+    rewards?: CustomerRewardListRelationFilter
+    otpChallenges?: CustomerOtpChallengeListRelationFilter
+    accessTokens?: CustomerAccessTokenListRelationFilter
   }
 
   export type CustomerOrderByWithRelationInput = {
@@ -61235,6 +69559,10 @@ export namespace Prisma {
     promotionalMessages?: PromotialMessageOrderByRelationAggregateInput
     addresses?: DeliveryAddressOrderByRelationAggregateInput
     externalAddresses?: ExternalAddressOrderByRelationAggregateInput
+    feedbacks?: CustomerFeedbackOrderByRelationAggregateInput
+    rewards?: CustomerRewardOrderByRelationAggregateInput
+    otpChallenges?: CustomerOtpChallengeOrderByRelationAggregateInput
+    accessTokens?: CustomerAccessTokenOrderByRelationAggregateInput
   }
 
   export type CustomerWhereUniqueInput = Prisma.AtLeast<{
@@ -61252,6 +69580,10 @@ export namespace Prisma {
     promotionalMessages?: PromotialMessageListRelationFilter
     addresses?: DeliveryAddressListRelationFilter
     externalAddresses?: ExternalAddressListRelationFilter
+    feedbacks?: CustomerFeedbackListRelationFilter
+    rewards?: CustomerRewardListRelationFilter
+    otpChallenges?: CustomerOtpChallengeListRelationFilter
+    accessTokens?: CustomerAccessTokenListRelationFilter
   }, "id">
 
   export type CustomerOrderByWithAggregationInput = {
@@ -61278,6 +69610,183 @@ export namespace Prisma {
     phone?: StringNullableWithAggregatesFilter<"Customer"> | string | null
     address?: StringNullableWithAggregatesFilter<"Customer"> | string | null
     lastMessageSent?: DateTimeNullableWithAggregatesFilter<"Customer"> | Date | string | null
+  }
+
+  export type CustomerOtpChallengeWhereInput = {
+    AND?: CustomerOtpChallengeWhereInput | CustomerOtpChallengeWhereInput[]
+    OR?: CustomerOtpChallengeWhereInput[]
+    NOT?: CustomerOtpChallengeWhereInput | CustomerOtpChallengeWhereInput[]
+    id?: StringFilter<"CustomerOtpChallenge"> | string
+    createdAt?: DateTimeFilter<"CustomerOtpChallenge"> | Date | string
+    updatedAt?: DateTimeFilter<"CustomerOtpChallenge"> | Date | string
+    customerId?: StringNullableFilter<"CustomerOtpChallenge"> | string | null
+    phone?: StringFilter<"CustomerOtpChallenge"> | string
+    countryCode?: StringNullableFilter<"CustomerOtpChallenge"> | string | null
+    channel?: EnumCustomerOtpChannelFilter<"CustomerOtpChallenge"> | $Enums.CustomerOtpChannel
+    codeHash?: StringFilter<"CustomerOtpChallenge"> | string
+    expiresAt?: DateTimeFilter<"CustomerOtpChallenge"> | Date | string
+    usedAt?: DateTimeNullableFilter<"CustomerOtpChallenge"> | Date | string | null
+    attemptCount?: IntFilter<"CustomerOtpChallenge"> | number
+    maxAttempts?: IntFilter<"CustomerOtpChallenge"> | number
+    lastAttemptAt?: DateTimeNullableFilter<"CustomerOtpChallenge"> | Date | string | null
+    customer?: XOR<CustomerNullableScalarRelationFilter, CustomerWhereInput> | null
+  }
+
+  export type CustomerOtpChallengeOrderByWithRelationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    customerId?: SortOrderInput | SortOrder
+    phone?: SortOrder
+    countryCode?: SortOrderInput | SortOrder
+    channel?: SortOrder
+    codeHash?: SortOrder
+    expiresAt?: SortOrder
+    usedAt?: SortOrderInput | SortOrder
+    attemptCount?: SortOrder
+    maxAttempts?: SortOrder
+    lastAttemptAt?: SortOrderInput | SortOrder
+    customer?: CustomerOrderByWithRelationInput
+  }
+
+  export type CustomerOtpChallengeWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: CustomerOtpChallengeWhereInput | CustomerOtpChallengeWhereInput[]
+    OR?: CustomerOtpChallengeWhereInput[]
+    NOT?: CustomerOtpChallengeWhereInput | CustomerOtpChallengeWhereInput[]
+    createdAt?: DateTimeFilter<"CustomerOtpChallenge"> | Date | string
+    updatedAt?: DateTimeFilter<"CustomerOtpChallenge"> | Date | string
+    customerId?: StringNullableFilter<"CustomerOtpChallenge"> | string | null
+    phone?: StringFilter<"CustomerOtpChallenge"> | string
+    countryCode?: StringNullableFilter<"CustomerOtpChallenge"> | string | null
+    channel?: EnumCustomerOtpChannelFilter<"CustomerOtpChallenge"> | $Enums.CustomerOtpChannel
+    codeHash?: StringFilter<"CustomerOtpChallenge"> | string
+    expiresAt?: DateTimeFilter<"CustomerOtpChallenge"> | Date | string
+    usedAt?: DateTimeNullableFilter<"CustomerOtpChallenge"> | Date | string | null
+    attemptCount?: IntFilter<"CustomerOtpChallenge"> | number
+    maxAttempts?: IntFilter<"CustomerOtpChallenge"> | number
+    lastAttemptAt?: DateTimeNullableFilter<"CustomerOtpChallenge"> | Date | string | null
+    customer?: XOR<CustomerNullableScalarRelationFilter, CustomerWhereInput> | null
+  }, "id">
+
+  export type CustomerOtpChallengeOrderByWithAggregationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    customerId?: SortOrderInput | SortOrder
+    phone?: SortOrder
+    countryCode?: SortOrderInput | SortOrder
+    channel?: SortOrder
+    codeHash?: SortOrder
+    expiresAt?: SortOrder
+    usedAt?: SortOrderInput | SortOrder
+    attemptCount?: SortOrder
+    maxAttempts?: SortOrder
+    lastAttemptAt?: SortOrderInput | SortOrder
+    _count?: CustomerOtpChallengeCountOrderByAggregateInput
+    _avg?: CustomerOtpChallengeAvgOrderByAggregateInput
+    _max?: CustomerOtpChallengeMaxOrderByAggregateInput
+    _min?: CustomerOtpChallengeMinOrderByAggregateInput
+    _sum?: CustomerOtpChallengeSumOrderByAggregateInput
+  }
+
+  export type CustomerOtpChallengeScalarWhereWithAggregatesInput = {
+    AND?: CustomerOtpChallengeScalarWhereWithAggregatesInput | CustomerOtpChallengeScalarWhereWithAggregatesInput[]
+    OR?: CustomerOtpChallengeScalarWhereWithAggregatesInput[]
+    NOT?: CustomerOtpChallengeScalarWhereWithAggregatesInput | CustomerOtpChallengeScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"CustomerOtpChallenge"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"CustomerOtpChallenge"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"CustomerOtpChallenge"> | Date | string
+    customerId?: StringNullableWithAggregatesFilter<"CustomerOtpChallenge"> | string | null
+    phone?: StringWithAggregatesFilter<"CustomerOtpChallenge"> | string
+    countryCode?: StringNullableWithAggregatesFilter<"CustomerOtpChallenge"> | string | null
+    channel?: EnumCustomerOtpChannelWithAggregatesFilter<"CustomerOtpChallenge"> | $Enums.CustomerOtpChannel
+    codeHash?: StringWithAggregatesFilter<"CustomerOtpChallenge"> | string
+    expiresAt?: DateTimeWithAggregatesFilter<"CustomerOtpChallenge"> | Date | string
+    usedAt?: DateTimeNullableWithAggregatesFilter<"CustomerOtpChallenge"> | Date | string | null
+    attemptCount?: IntWithAggregatesFilter<"CustomerOtpChallenge"> | number
+    maxAttempts?: IntWithAggregatesFilter<"CustomerOtpChallenge"> | number
+    lastAttemptAt?: DateTimeNullableWithAggregatesFilter<"CustomerOtpChallenge"> | Date | string | null
+  }
+
+  export type CustomerAccessTokenWhereInput = {
+    AND?: CustomerAccessTokenWhereInput | CustomerAccessTokenWhereInput[]
+    OR?: CustomerAccessTokenWhereInput[]
+    NOT?: CustomerAccessTokenWhereInput | CustomerAccessTokenWhereInput[]
+    id?: StringFilter<"CustomerAccessToken"> | string
+    createdAt?: DateTimeFilter<"CustomerAccessToken"> | Date | string
+    updatedAt?: DateTimeFilter<"CustomerAccessToken"> | Date | string
+    customerId?: StringFilter<"CustomerAccessToken"> | string
+    tokenHash?: StringFilter<"CustomerAccessToken"> | string
+    expiresAt?: DateTimeFilter<"CustomerAccessToken"> | Date | string
+    lastUsedAt?: DateTimeNullableFilter<"CustomerAccessToken"> | Date | string | null
+    revokedAt?: DateTimeNullableFilter<"CustomerAccessToken"> | Date | string | null
+    userAgent?: StringNullableFilter<"CustomerAccessToken"> | string | null
+    ipAddress?: StringNullableFilter<"CustomerAccessToken"> | string | null
+    customer?: XOR<CustomerScalarRelationFilter, CustomerWhereInput>
+  }
+
+  export type CustomerAccessTokenOrderByWithRelationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    customerId?: SortOrder
+    tokenHash?: SortOrder
+    expiresAt?: SortOrder
+    lastUsedAt?: SortOrderInput | SortOrder
+    revokedAt?: SortOrderInput | SortOrder
+    userAgent?: SortOrderInput | SortOrder
+    ipAddress?: SortOrderInput | SortOrder
+    customer?: CustomerOrderByWithRelationInput
+  }
+
+  export type CustomerAccessTokenWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    tokenHash?: string
+    AND?: CustomerAccessTokenWhereInput | CustomerAccessTokenWhereInput[]
+    OR?: CustomerAccessTokenWhereInput[]
+    NOT?: CustomerAccessTokenWhereInput | CustomerAccessTokenWhereInput[]
+    createdAt?: DateTimeFilter<"CustomerAccessToken"> | Date | string
+    updatedAt?: DateTimeFilter<"CustomerAccessToken"> | Date | string
+    customerId?: StringFilter<"CustomerAccessToken"> | string
+    expiresAt?: DateTimeFilter<"CustomerAccessToken"> | Date | string
+    lastUsedAt?: DateTimeNullableFilter<"CustomerAccessToken"> | Date | string | null
+    revokedAt?: DateTimeNullableFilter<"CustomerAccessToken"> | Date | string | null
+    userAgent?: StringNullableFilter<"CustomerAccessToken"> | string | null
+    ipAddress?: StringNullableFilter<"CustomerAccessToken"> | string | null
+    customer?: XOR<CustomerScalarRelationFilter, CustomerWhereInput>
+  }, "id" | "tokenHash">
+
+  export type CustomerAccessTokenOrderByWithAggregationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    customerId?: SortOrder
+    tokenHash?: SortOrder
+    expiresAt?: SortOrder
+    lastUsedAt?: SortOrderInput | SortOrder
+    revokedAt?: SortOrderInput | SortOrder
+    userAgent?: SortOrderInput | SortOrder
+    ipAddress?: SortOrderInput | SortOrder
+    _count?: CustomerAccessTokenCountOrderByAggregateInput
+    _max?: CustomerAccessTokenMaxOrderByAggregateInput
+    _min?: CustomerAccessTokenMinOrderByAggregateInput
+  }
+
+  export type CustomerAccessTokenScalarWhereWithAggregatesInput = {
+    AND?: CustomerAccessTokenScalarWhereWithAggregatesInput | CustomerAccessTokenScalarWhereWithAggregatesInput[]
+    OR?: CustomerAccessTokenScalarWhereWithAggregatesInput[]
+    NOT?: CustomerAccessTokenScalarWhereWithAggregatesInput | CustomerAccessTokenScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"CustomerAccessToken"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"CustomerAccessToken"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"CustomerAccessToken"> | Date | string
+    customerId?: StringWithAggregatesFilter<"CustomerAccessToken"> | string
+    tokenHash?: StringWithAggregatesFilter<"CustomerAccessToken"> | string
+    expiresAt?: DateTimeWithAggregatesFilter<"CustomerAccessToken"> | Date | string
+    lastUsedAt?: DateTimeNullableWithAggregatesFilter<"CustomerAccessToken"> | Date | string | null
+    revokedAt?: DateTimeNullableWithAggregatesFilter<"CustomerAccessToken"> | Date | string | null
+    userAgent?: StringNullableWithAggregatesFilter<"CustomerAccessToken"> | string | null
+    ipAddress?: StringNullableWithAggregatesFilter<"CustomerAccessToken"> | string | null
   }
 
   export type DeliveryAddressWhereInput = {
@@ -61598,6 +70107,9 @@ export namespace Prisma {
     externalAddress?: XOR<ExternalAddressNullableScalarRelationFilter, ExternalAddressWhereInput> | null
     orderProducts?: OrderProductsListRelationFilter
     preparationStepCategories?: PreparationStepCategoryListRelationFilter
+    feedback?: XOR<CustomerFeedbackNullableScalarRelationFilter, CustomerFeedbackWhereInput> | null
+    issuedRewards?: CustomerRewardListRelationFilter
+    redeemedRewards?: CustomerRewardListRelationFilter
   }
 
   export type OrderOrderByWithRelationInput = {
@@ -61631,6 +70143,9 @@ export namespace Prisma {
     externalAddress?: ExternalAddressOrderByWithRelationInput
     orderProducts?: OrderProductsOrderByRelationAggregateInput
     preparationStepCategories?: PreparationStepCategoryOrderByRelationAggregateInput
+    feedback?: CustomerFeedbackOrderByWithRelationInput
+    issuedRewards?: CustomerRewardOrderByRelationAggregateInput
+    redeemedRewards?: CustomerRewardOrderByRelationAggregateInput
   }
 
   export type OrderWhereUniqueInput = Prisma.AtLeast<{
@@ -61667,6 +70182,9 @@ export namespace Prisma {
     externalAddress?: XOR<ExternalAddressNullableScalarRelationFilter, ExternalAddressWhereInput> | null
     orderProducts?: OrderProductsListRelationFilter
     preparationStepCategories?: PreparationStepCategoryListRelationFilter
+    feedback?: XOR<CustomerFeedbackNullableScalarRelationFilter, CustomerFeedbackWhereInput> | null
+    issuedRewards?: CustomerRewardListRelationFilter
+    redeemedRewards?: CustomerRewardListRelationFilter
   }, "id" | "externalId">
 
   export type OrderOrderByWithAggregationInput = {
@@ -61727,6 +70245,253 @@ export namespace Prisma {
     addressId?: StringNullableWithAggregatesFilter<"Order"> | string | null
     deliveryAddressId?: StringNullableWithAggregatesFilter<"Order"> | string | null
     externalAddressId?: StringNullableWithAggregatesFilter<"Order"> | string | null
+  }
+
+  export type CustomerFeedbackWhereInput = {
+    AND?: CustomerFeedbackWhereInput | CustomerFeedbackWhereInput[]
+    OR?: CustomerFeedbackWhereInput[]
+    NOT?: CustomerFeedbackWhereInput | CustomerFeedbackWhereInput[]
+    id?: StringFilter<"CustomerFeedback"> | string
+    createdAt?: DateTimeFilter<"CustomerFeedback"> | Date | string
+    updatedAt?: DateTimeFilter<"CustomerFeedback"> | Date | string
+    customerId?: StringFilter<"CustomerFeedback"> | string
+    orderId?: StringFilter<"CustomerFeedback"> | string
+    language?: StringNullableFilter<"CustomerFeedback"> | string | null
+    overallRating?: IntFilter<"CustomerFeedback"> | number
+    sentiment?: EnumCustomerFeedbackSentimentFilter<"CustomerFeedback"> | $Enums.CustomerFeedbackSentiment
+    productQuality?: IntNullableFilter<"CustomerFeedback"> | number | null
+    temperature?: IntNullableFilter<"CustomerFeedback"> | number | null
+    deliverySpeed?: IntNullableFilter<"CustomerFeedback"> | number | null
+    serviceExperience?: IntNullableFilter<"CustomerFeedback"> | number | null
+    comment?: StringNullableFilter<"CustomerFeedback"> | string | null
+    source?: StringNullableFilter<"CustomerFeedback"> | string | null
+    customer?: XOR<CustomerScalarRelationFilter, CustomerWhereInput>
+    order?: XOR<OrderScalarRelationFilter, OrderWhereInput>
+    issuedReward?: XOR<CustomerRewardNullableScalarRelationFilter, CustomerRewardWhereInput> | null
+  }
+
+  export type CustomerFeedbackOrderByWithRelationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    customerId?: SortOrder
+    orderId?: SortOrder
+    language?: SortOrderInput | SortOrder
+    overallRating?: SortOrder
+    sentiment?: SortOrder
+    productQuality?: SortOrderInput | SortOrder
+    temperature?: SortOrderInput | SortOrder
+    deliverySpeed?: SortOrderInput | SortOrder
+    serviceExperience?: SortOrderInput | SortOrder
+    comment?: SortOrderInput | SortOrder
+    source?: SortOrderInput | SortOrder
+    customer?: CustomerOrderByWithRelationInput
+    order?: OrderOrderByWithRelationInput
+    issuedReward?: CustomerRewardOrderByWithRelationInput
+  }
+
+  export type CustomerFeedbackWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    orderId?: string
+    AND?: CustomerFeedbackWhereInput | CustomerFeedbackWhereInput[]
+    OR?: CustomerFeedbackWhereInput[]
+    NOT?: CustomerFeedbackWhereInput | CustomerFeedbackWhereInput[]
+    createdAt?: DateTimeFilter<"CustomerFeedback"> | Date | string
+    updatedAt?: DateTimeFilter<"CustomerFeedback"> | Date | string
+    customerId?: StringFilter<"CustomerFeedback"> | string
+    language?: StringNullableFilter<"CustomerFeedback"> | string | null
+    overallRating?: IntFilter<"CustomerFeedback"> | number
+    sentiment?: EnumCustomerFeedbackSentimentFilter<"CustomerFeedback"> | $Enums.CustomerFeedbackSentiment
+    productQuality?: IntNullableFilter<"CustomerFeedback"> | number | null
+    temperature?: IntNullableFilter<"CustomerFeedback"> | number | null
+    deliverySpeed?: IntNullableFilter<"CustomerFeedback"> | number | null
+    serviceExperience?: IntNullableFilter<"CustomerFeedback"> | number | null
+    comment?: StringNullableFilter<"CustomerFeedback"> | string | null
+    source?: StringNullableFilter<"CustomerFeedback"> | string | null
+    customer?: XOR<CustomerScalarRelationFilter, CustomerWhereInput>
+    order?: XOR<OrderScalarRelationFilter, OrderWhereInput>
+    issuedReward?: XOR<CustomerRewardNullableScalarRelationFilter, CustomerRewardWhereInput> | null
+  }, "id" | "orderId">
+
+  export type CustomerFeedbackOrderByWithAggregationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    customerId?: SortOrder
+    orderId?: SortOrder
+    language?: SortOrderInput | SortOrder
+    overallRating?: SortOrder
+    sentiment?: SortOrder
+    productQuality?: SortOrderInput | SortOrder
+    temperature?: SortOrderInput | SortOrder
+    deliverySpeed?: SortOrderInput | SortOrder
+    serviceExperience?: SortOrderInput | SortOrder
+    comment?: SortOrderInput | SortOrder
+    source?: SortOrderInput | SortOrder
+    _count?: CustomerFeedbackCountOrderByAggregateInput
+    _avg?: CustomerFeedbackAvgOrderByAggregateInput
+    _max?: CustomerFeedbackMaxOrderByAggregateInput
+    _min?: CustomerFeedbackMinOrderByAggregateInput
+    _sum?: CustomerFeedbackSumOrderByAggregateInput
+  }
+
+  export type CustomerFeedbackScalarWhereWithAggregatesInput = {
+    AND?: CustomerFeedbackScalarWhereWithAggregatesInput | CustomerFeedbackScalarWhereWithAggregatesInput[]
+    OR?: CustomerFeedbackScalarWhereWithAggregatesInput[]
+    NOT?: CustomerFeedbackScalarWhereWithAggregatesInput | CustomerFeedbackScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"CustomerFeedback"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"CustomerFeedback"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"CustomerFeedback"> | Date | string
+    customerId?: StringWithAggregatesFilter<"CustomerFeedback"> | string
+    orderId?: StringWithAggregatesFilter<"CustomerFeedback"> | string
+    language?: StringNullableWithAggregatesFilter<"CustomerFeedback"> | string | null
+    overallRating?: IntWithAggregatesFilter<"CustomerFeedback"> | number
+    sentiment?: EnumCustomerFeedbackSentimentWithAggregatesFilter<"CustomerFeedback"> | $Enums.CustomerFeedbackSentiment
+    productQuality?: IntNullableWithAggregatesFilter<"CustomerFeedback"> | number | null
+    temperature?: IntNullableWithAggregatesFilter<"CustomerFeedback"> | number | null
+    deliverySpeed?: IntNullableWithAggregatesFilter<"CustomerFeedback"> | number | null
+    serviceExperience?: IntNullableWithAggregatesFilter<"CustomerFeedback"> | number | null
+    comment?: StringNullableWithAggregatesFilter<"CustomerFeedback"> | string | null
+    source?: StringNullableWithAggregatesFilter<"CustomerFeedback"> | string | null
+  }
+
+  export type CustomerRewardWhereInput = {
+    AND?: CustomerRewardWhereInput | CustomerRewardWhereInput[]
+    OR?: CustomerRewardWhereInput[]
+    NOT?: CustomerRewardWhereInput | CustomerRewardWhereInput[]
+    id?: StringFilter<"CustomerReward"> | string
+    createdAt?: DateTimeFilter<"CustomerReward"> | Date | string
+    updatedAt?: DateTimeFilter<"CustomerReward"> | Date | string
+    customerId?: StringFilter<"CustomerReward"> | string
+    status?: EnumCustomerRewardStatusFilter<"CustomerReward"> | $Enums.CustomerRewardStatus
+    type?: EnumCustomerRewardTypeFilter<"CustomerReward"> | $Enums.CustomerRewardType
+    title?: StringFilter<"CustomerReward"> | string
+    description?: StringNullableFilter<"CustomerReward"> | string | null
+    quantity?: IntNullableFilter<"CustomerReward"> | number | null
+    value?: IntNullableFilter<"CustomerReward"> | number | null
+    productId?: StringNullableFilter<"CustomerReward"> | string | null
+    couponCode?: StringNullableFilter<"CustomerReward"> | string | null
+    issuedAt?: DateTimeFilter<"CustomerReward"> | Date | string
+    expiresAt?: DateTimeNullableFilter<"CustomerReward"> | Date | string | null
+    redeemedAt?: DateTimeNullableFilter<"CustomerReward"> | Date | string | null
+    feedbackId?: StringNullableFilter<"CustomerReward"> | string | null
+    issuedForOrderId?: StringNullableFilter<"CustomerReward"> | string | null
+    redeemedByOrderId?: StringNullableFilter<"CustomerReward"> | string | null
+    metadata?: JsonNullableFilter<"CustomerReward">
+    customer?: XOR<CustomerScalarRelationFilter, CustomerWhereInput>
+    product?: XOR<ProductNullableScalarRelationFilter, ProductWhereInput> | null
+    feedback?: XOR<CustomerFeedbackNullableScalarRelationFilter, CustomerFeedbackWhereInput> | null
+    issuedForOrder?: XOR<OrderNullableScalarRelationFilter, OrderWhereInput> | null
+    redeemedByOrder?: XOR<OrderNullableScalarRelationFilter, OrderWhereInput> | null
+  }
+
+  export type CustomerRewardOrderByWithRelationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    customerId?: SortOrder
+    status?: SortOrder
+    type?: SortOrder
+    title?: SortOrder
+    description?: SortOrderInput | SortOrder
+    quantity?: SortOrderInput | SortOrder
+    value?: SortOrderInput | SortOrder
+    productId?: SortOrderInput | SortOrder
+    couponCode?: SortOrderInput | SortOrder
+    issuedAt?: SortOrder
+    expiresAt?: SortOrderInput | SortOrder
+    redeemedAt?: SortOrderInput | SortOrder
+    feedbackId?: SortOrderInput | SortOrder
+    issuedForOrderId?: SortOrderInput | SortOrder
+    redeemedByOrderId?: SortOrderInput | SortOrder
+    metadata?: SortOrderInput | SortOrder
+    customer?: CustomerOrderByWithRelationInput
+    product?: ProductOrderByWithRelationInput
+    feedback?: CustomerFeedbackOrderByWithRelationInput
+    issuedForOrder?: OrderOrderByWithRelationInput
+    redeemedByOrder?: OrderOrderByWithRelationInput
+  }
+
+  export type CustomerRewardWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    feedbackId?: string
+    AND?: CustomerRewardWhereInput | CustomerRewardWhereInput[]
+    OR?: CustomerRewardWhereInput[]
+    NOT?: CustomerRewardWhereInput | CustomerRewardWhereInput[]
+    createdAt?: DateTimeFilter<"CustomerReward"> | Date | string
+    updatedAt?: DateTimeFilter<"CustomerReward"> | Date | string
+    customerId?: StringFilter<"CustomerReward"> | string
+    status?: EnumCustomerRewardStatusFilter<"CustomerReward"> | $Enums.CustomerRewardStatus
+    type?: EnumCustomerRewardTypeFilter<"CustomerReward"> | $Enums.CustomerRewardType
+    title?: StringFilter<"CustomerReward"> | string
+    description?: StringNullableFilter<"CustomerReward"> | string | null
+    quantity?: IntNullableFilter<"CustomerReward"> | number | null
+    value?: IntNullableFilter<"CustomerReward"> | number | null
+    productId?: StringNullableFilter<"CustomerReward"> | string | null
+    couponCode?: StringNullableFilter<"CustomerReward"> | string | null
+    issuedAt?: DateTimeFilter<"CustomerReward"> | Date | string
+    expiresAt?: DateTimeNullableFilter<"CustomerReward"> | Date | string | null
+    redeemedAt?: DateTimeNullableFilter<"CustomerReward"> | Date | string | null
+    issuedForOrderId?: StringNullableFilter<"CustomerReward"> | string | null
+    redeemedByOrderId?: StringNullableFilter<"CustomerReward"> | string | null
+    metadata?: JsonNullableFilter<"CustomerReward">
+    customer?: XOR<CustomerScalarRelationFilter, CustomerWhereInput>
+    product?: XOR<ProductNullableScalarRelationFilter, ProductWhereInput> | null
+    feedback?: XOR<CustomerFeedbackNullableScalarRelationFilter, CustomerFeedbackWhereInput> | null
+    issuedForOrder?: XOR<OrderNullableScalarRelationFilter, OrderWhereInput> | null
+    redeemedByOrder?: XOR<OrderNullableScalarRelationFilter, OrderWhereInput> | null
+  }, "id" | "feedbackId">
+
+  export type CustomerRewardOrderByWithAggregationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    customerId?: SortOrder
+    status?: SortOrder
+    type?: SortOrder
+    title?: SortOrder
+    description?: SortOrderInput | SortOrder
+    quantity?: SortOrderInput | SortOrder
+    value?: SortOrderInput | SortOrder
+    productId?: SortOrderInput | SortOrder
+    couponCode?: SortOrderInput | SortOrder
+    issuedAt?: SortOrder
+    expiresAt?: SortOrderInput | SortOrder
+    redeemedAt?: SortOrderInput | SortOrder
+    feedbackId?: SortOrderInput | SortOrder
+    issuedForOrderId?: SortOrderInput | SortOrder
+    redeemedByOrderId?: SortOrderInput | SortOrder
+    metadata?: SortOrderInput | SortOrder
+    _count?: CustomerRewardCountOrderByAggregateInput
+    _avg?: CustomerRewardAvgOrderByAggregateInput
+    _max?: CustomerRewardMaxOrderByAggregateInput
+    _min?: CustomerRewardMinOrderByAggregateInput
+    _sum?: CustomerRewardSumOrderByAggregateInput
+  }
+
+  export type CustomerRewardScalarWhereWithAggregatesInput = {
+    AND?: CustomerRewardScalarWhereWithAggregatesInput | CustomerRewardScalarWhereWithAggregatesInput[]
+    OR?: CustomerRewardScalarWhereWithAggregatesInput[]
+    NOT?: CustomerRewardScalarWhereWithAggregatesInput | CustomerRewardScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"CustomerReward"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"CustomerReward"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"CustomerReward"> | Date | string
+    customerId?: StringWithAggregatesFilter<"CustomerReward"> | string
+    status?: EnumCustomerRewardStatusWithAggregatesFilter<"CustomerReward"> | $Enums.CustomerRewardStatus
+    type?: EnumCustomerRewardTypeWithAggregatesFilter<"CustomerReward"> | $Enums.CustomerRewardType
+    title?: StringWithAggregatesFilter<"CustomerReward"> | string
+    description?: StringNullableWithAggregatesFilter<"CustomerReward"> | string | null
+    quantity?: IntNullableWithAggregatesFilter<"CustomerReward"> | number | null
+    value?: IntNullableWithAggregatesFilter<"CustomerReward"> | number | null
+    productId?: StringNullableWithAggregatesFilter<"CustomerReward"> | string | null
+    couponCode?: StringNullableWithAggregatesFilter<"CustomerReward"> | string | null
+    issuedAt?: DateTimeWithAggregatesFilter<"CustomerReward"> | Date | string
+    expiresAt?: DateTimeNullableWithAggregatesFilter<"CustomerReward"> | Date | string | null
+    redeemedAt?: DateTimeNullableWithAggregatesFilter<"CustomerReward"> | Date | string | null
+    feedbackId?: StringNullableWithAggregatesFilter<"CustomerReward"> | string | null
+    issuedForOrderId?: StringNullableWithAggregatesFilter<"CustomerReward"> | string | null
+    redeemedByOrderId?: StringNullableWithAggregatesFilter<"CustomerReward"> | string | null
+    metadata?: JsonNullableWithAggregatesFilter<"CustomerReward">
   }
 
   export type OrderProductsWhereInput = {
@@ -62452,6 +71217,65 @@ export namespace Prisma {
     actorId?: StringNullableWithAggregatesFilter<"InventoryStockEvent"> | string | null
     source?: StringWithAggregatesFilter<"InventoryStockEvent"> | string
     metadata?: JsonNullableWithAggregatesFilter<"InventoryStockEvent">
+  }
+
+  export type FeedbackSettingsWhereInput = {
+    AND?: FeedbackSettingsWhereInput | FeedbackSettingsWhereInput[]
+    OR?: FeedbackSettingsWhereInput[]
+    NOT?: FeedbackSettingsWhereInput | FeedbackSettingsWhereInput[]
+    id?: StringFilter<"FeedbackSettings"> | string
+    createdAt?: DateTimeFilter<"FeedbackSettings"> | Date | string
+    updatedAt?: DateTimeFilter<"FeedbackSettings"> | Date | string
+    active?: BoolFilter<"FeedbackSettings"> | boolean
+    rewardProductId?: StringNullableFilter<"FeedbackSettings"> | string | null
+    rewardQuantity?: IntFilter<"FeedbackSettings"> | number
+  }
+
+  export type FeedbackSettingsOrderByWithRelationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    active?: SortOrder
+    rewardProductId?: SortOrderInput | SortOrder
+    rewardQuantity?: SortOrder
+  }
+
+  export type FeedbackSettingsWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: FeedbackSettingsWhereInput | FeedbackSettingsWhereInput[]
+    OR?: FeedbackSettingsWhereInput[]
+    NOT?: FeedbackSettingsWhereInput | FeedbackSettingsWhereInput[]
+    createdAt?: DateTimeFilter<"FeedbackSettings"> | Date | string
+    updatedAt?: DateTimeFilter<"FeedbackSettings"> | Date | string
+    active?: BoolFilter<"FeedbackSettings"> | boolean
+    rewardProductId?: StringNullableFilter<"FeedbackSettings"> | string | null
+    rewardQuantity?: IntFilter<"FeedbackSettings"> | number
+  }, "id">
+
+  export type FeedbackSettingsOrderByWithAggregationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    active?: SortOrder
+    rewardProductId?: SortOrderInput | SortOrder
+    rewardQuantity?: SortOrder
+    _count?: FeedbackSettingsCountOrderByAggregateInput
+    _avg?: FeedbackSettingsAvgOrderByAggregateInput
+    _max?: FeedbackSettingsMaxOrderByAggregateInput
+    _min?: FeedbackSettingsMinOrderByAggregateInput
+    _sum?: FeedbackSettingsSumOrderByAggregateInput
+  }
+
+  export type FeedbackSettingsScalarWhereWithAggregatesInput = {
+    AND?: FeedbackSettingsScalarWhereWithAggregatesInput | FeedbackSettingsScalarWhereWithAggregatesInput[]
+    OR?: FeedbackSettingsScalarWhereWithAggregatesInput[]
+    NOT?: FeedbackSettingsScalarWhereWithAggregatesInput | FeedbackSettingsScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"FeedbackSettings"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"FeedbackSettings"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"FeedbackSettings"> | Date | string
+    active?: BoolWithAggregatesFilter<"FeedbackSettings"> | boolean
+    rewardProductId?: StringNullableWithAggregatesFilter<"FeedbackSettings"> | string | null
+    rewardQuantity?: IntWithAggregatesFilter<"FeedbackSettings"> | number
   }
 
   export type StationCreateInput = {
@@ -63683,6 +72507,104 @@ export namespace Prisma {
     deliveryAddressId?: StringFieldUpdateOperationsInput | string
   }
 
+  export type FeedbackWhatsAppJobCreateInput = {
+    id: string
+    createdAt?: Date | string
+    status?: $Enums.FeedbackWhatsAppJobStatus
+    attempts?: number
+    availableAt?: Date | string
+    processingStartedAt?: Date | string | null
+    completedAt?: Date | string | null
+    lastError?: string | null
+    orderId: string
+    customerPhone: string
+    language?: string | null
+  }
+
+  export type FeedbackWhatsAppJobUncheckedCreateInput = {
+    id: string
+    createdAt?: Date | string
+    status?: $Enums.FeedbackWhatsAppJobStatus
+    attempts?: number
+    availableAt?: Date | string
+    processingStartedAt?: Date | string | null
+    completedAt?: Date | string | null
+    lastError?: string | null
+    orderId: string
+    customerPhone: string
+    language?: string | null
+  }
+
+  export type FeedbackWhatsAppJobUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumFeedbackWhatsAppJobStatusFieldUpdateOperationsInput | $Enums.FeedbackWhatsAppJobStatus
+    attempts?: IntFieldUpdateOperationsInput | number
+    availableAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processingStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastError?: NullableStringFieldUpdateOperationsInput | string | null
+    orderId?: StringFieldUpdateOperationsInput | string
+    customerPhone?: StringFieldUpdateOperationsInput | string
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type FeedbackWhatsAppJobUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumFeedbackWhatsAppJobStatusFieldUpdateOperationsInput | $Enums.FeedbackWhatsAppJobStatus
+    attempts?: IntFieldUpdateOperationsInput | number
+    availableAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processingStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastError?: NullableStringFieldUpdateOperationsInput | string | null
+    orderId?: StringFieldUpdateOperationsInput | string
+    customerPhone?: StringFieldUpdateOperationsInput | string
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type FeedbackWhatsAppJobCreateManyInput = {
+    id: string
+    createdAt?: Date | string
+    status?: $Enums.FeedbackWhatsAppJobStatus
+    attempts?: number
+    availableAt?: Date | string
+    processingStartedAt?: Date | string | null
+    completedAt?: Date | string | null
+    lastError?: string | null
+    orderId: string
+    customerPhone: string
+    language?: string | null
+  }
+
+  export type FeedbackWhatsAppJobUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumFeedbackWhatsAppJobStatusFieldUpdateOperationsInput | $Enums.FeedbackWhatsAppJobStatus
+    attempts?: IntFieldUpdateOperationsInput | number
+    availableAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processingStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastError?: NullableStringFieldUpdateOperationsInput | string | null
+    orderId?: StringFieldUpdateOperationsInput | string
+    customerPhone?: StringFieldUpdateOperationsInput | string
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type FeedbackWhatsAppJobUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumFeedbackWhatsAppJobStatusFieldUpdateOperationsInput | $Enums.FeedbackWhatsAppJobStatus
+    attempts?: IntFieldUpdateOperationsInput | number
+    availableAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processingStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastError?: NullableStringFieldUpdateOperationsInput | string | null
+    orderId?: StringFieldUpdateOperationsInput | string
+    customerPhone?: StringFieldUpdateOperationsInput | string
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
   export type AddressCreateInput = {
     id: string
     createdAt?: Date | string
@@ -63760,6 +72682,7 @@ export namespace Prisma {
     exclusivePromotionProducts?: ExclusivePromotionProductCreateNestedManyWithoutProductInput
     OrderProducts?: OrderProductsCreateNestedManyWithoutProductInput
     prizeProducts?: ProgressiveDiscountPrizeProductCreateNestedManyWithoutProductInput
+    customerRewards?: CustomerRewardCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepCreateNestedManyWithoutProductsInput
   }
 
@@ -63783,6 +72706,7 @@ export namespace Prisma {
     exclusivePromotionProducts?: ExclusivePromotionProductUncheckedCreateNestedManyWithoutProductInput
     OrderProducts?: OrderProductsUncheckedCreateNestedManyWithoutProductInput
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedCreateNestedManyWithoutProductInput
+    customerRewards?: CustomerRewardUncheckedCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepUncheckedCreateNestedManyWithoutProductsInput
   }
 
@@ -63806,6 +72730,7 @@ export namespace Prisma {
     exclusivePromotionProducts?: ExclusivePromotionProductUpdateManyWithoutProductNestedInput
     OrderProducts?: OrderProductsUpdateManyWithoutProductNestedInput
     prizeProducts?: ProgressiveDiscountPrizeProductUpdateManyWithoutProductNestedInput
+    customerRewards?: CustomerRewardUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUpdateManyWithoutProductsNestedInput
   }
 
@@ -63829,6 +72754,7 @@ export namespace Prisma {
     exclusivePromotionProducts?: ExclusivePromotionProductUncheckedUpdateManyWithoutProductNestedInput
     OrderProducts?: OrderProductsUncheckedUpdateManyWithoutProductNestedInput
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutProductNestedInput
+    customerRewards?: CustomerRewardUncheckedUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUncheckedUpdateManyWithoutProductsNestedInput
   }
 
@@ -64547,6 +73473,10 @@ export namespace Prisma {
     promotionalMessages?: PromotialMessageCreateNestedManyWithoutCustomerInput
     addresses?: DeliveryAddressCreateNestedManyWithoutCustomerInput
     externalAddresses?: ExternalAddressCreateNestedManyWithoutCustomerInput
+    feedbacks?: CustomerFeedbackCreateNestedManyWithoutCustomerInput
+    rewards?: CustomerRewardCreateNestedManyWithoutCustomerInput
+    otpChallenges?: CustomerOtpChallengeCreateNestedManyWithoutCustomerInput
+    accessTokens?: CustomerAccessTokenCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUncheckedCreateInput = {
@@ -64561,6 +73491,10 @@ export namespace Prisma {
     promotionalMessages?: PromotialMessageUncheckedCreateNestedManyWithoutCustomerInput
     addresses?: DeliveryAddressUncheckedCreateNestedManyWithoutCustomerInput
     externalAddresses?: ExternalAddressUncheckedCreateNestedManyWithoutCustomerInput
+    feedbacks?: CustomerFeedbackUncheckedCreateNestedManyWithoutCustomerInput
+    rewards?: CustomerRewardUncheckedCreateNestedManyWithoutCustomerInput
+    otpChallenges?: CustomerOtpChallengeUncheckedCreateNestedManyWithoutCustomerInput
+    accessTokens?: CustomerAccessTokenUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUpdateInput = {
@@ -64575,6 +73509,10 @@ export namespace Prisma {
     promotionalMessages?: PromotialMessageUpdateManyWithoutCustomerNestedInput
     addresses?: DeliveryAddressUpdateManyWithoutCustomerNestedInput
     externalAddresses?: ExternalAddressUpdateManyWithoutCustomerNestedInput
+    feedbacks?: CustomerFeedbackUpdateManyWithoutCustomerNestedInput
+    rewards?: CustomerRewardUpdateManyWithoutCustomerNestedInput
+    otpChallenges?: CustomerOtpChallengeUpdateManyWithoutCustomerNestedInput
+    accessTokens?: CustomerAccessTokenUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateInput = {
@@ -64589,6 +73527,10 @@ export namespace Prisma {
     promotionalMessages?: PromotialMessageUncheckedUpdateManyWithoutCustomerNestedInput
     addresses?: DeliveryAddressUncheckedUpdateManyWithoutCustomerNestedInput
     externalAddresses?: ExternalAddressUncheckedUpdateManyWithoutCustomerNestedInput
+    feedbacks?: CustomerFeedbackUncheckedUpdateManyWithoutCustomerNestedInput
+    rewards?: CustomerRewardUncheckedUpdateManyWithoutCustomerNestedInput
+    otpChallenges?: CustomerOtpChallengeUncheckedUpdateManyWithoutCustomerNestedInput
+    accessTokens?: CustomerAccessTokenUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerCreateManyInput = {
@@ -64619,6 +73561,207 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     lastMessageSent?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type CustomerOtpChallengeCreateInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    phone: string
+    countryCode?: string | null
+    channel?: $Enums.CustomerOtpChannel
+    codeHash: string
+    expiresAt: Date | string
+    usedAt?: Date | string | null
+    attemptCount?: number
+    maxAttempts?: number
+    lastAttemptAt?: Date | string | null
+    customer?: CustomerCreateNestedOneWithoutOtpChallengesInput
+  }
+
+  export type CustomerOtpChallengeUncheckedCreateInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    customerId?: string | null
+    phone: string
+    countryCode?: string | null
+    channel?: $Enums.CustomerOtpChannel
+    codeHash: string
+    expiresAt: Date | string
+    usedAt?: Date | string | null
+    attemptCount?: number
+    maxAttempts?: number
+    lastAttemptAt?: Date | string | null
+  }
+
+  export type CustomerOtpChallengeUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    phone?: StringFieldUpdateOperationsInput | string
+    countryCode?: NullableStringFieldUpdateOperationsInput | string | null
+    channel?: EnumCustomerOtpChannelFieldUpdateOperationsInput | $Enums.CustomerOtpChannel
+    codeHash?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    attemptCount?: IntFieldUpdateOperationsInput | number
+    maxAttempts?: IntFieldUpdateOperationsInput | number
+    lastAttemptAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    customer?: CustomerUpdateOneWithoutOtpChallengesNestedInput
+  }
+
+  export type CustomerOtpChallengeUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customerId?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: StringFieldUpdateOperationsInput | string
+    countryCode?: NullableStringFieldUpdateOperationsInput | string | null
+    channel?: EnumCustomerOtpChannelFieldUpdateOperationsInput | $Enums.CustomerOtpChannel
+    codeHash?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    attemptCount?: IntFieldUpdateOperationsInput | number
+    maxAttempts?: IntFieldUpdateOperationsInput | number
+    lastAttemptAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type CustomerOtpChallengeCreateManyInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    customerId?: string | null
+    phone: string
+    countryCode?: string | null
+    channel?: $Enums.CustomerOtpChannel
+    codeHash: string
+    expiresAt: Date | string
+    usedAt?: Date | string | null
+    attemptCount?: number
+    maxAttempts?: number
+    lastAttemptAt?: Date | string | null
+  }
+
+  export type CustomerOtpChallengeUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    phone?: StringFieldUpdateOperationsInput | string
+    countryCode?: NullableStringFieldUpdateOperationsInput | string | null
+    channel?: EnumCustomerOtpChannelFieldUpdateOperationsInput | $Enums.CustomerOtpChannel
+    codeHash?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    attemptCount?: IntFieldUpdateOperationsInput | number
+    maxAttempts?: IntFieldUpdateOperationsInput | number
+    lastAttemptAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type CustomerOtpChallengeUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customerId?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: StringFieldUpdateOperationsInput | string
+    countryCode?: NullableStringFieldUpdateOperationsInput | string | null
+    channel?: EnumCustomerOtpChannelFieldUpdateOperationsInput | $Enums.CustomerOtpChannel
+    codeHash?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    attemptCount?: IntFieldUpdateOperationsInput | number
+    maxAttempts?: IntFieldUpdateOperationsInput | number
+    lastAttemptAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type CustomerAccessTokenCreateInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    tokenHash: string
+    expiresAt: Date | string
+    lastUsedAt?: Date | string | null
+    revokedAt?: Date | string | null
+    userAgent?: string | null
+    ipAddress?: string | null
+    customer: CustomerCreateNestedOneWithoutAccessTokensInput
+  }
+
+  export type CustomerAccessTokenUncheckedCreateInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    customerId: string
+    tokenHash: string
+    expiresAt: Date | string
+    lastUsedAt?: Date | string | null
+    revokedAt?: Date | string | null
+    userAgent?: string | null
+    ipAddress?: string | null
+  }
+
+  export type CustomerAccessTokenUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tokenHash?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    customer?: CustomerUpdateOneRequiredWithoutAccessTokensNestedInput
+  }
+
+  export type CustomerAccessTokenUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customerId?: StringFieldUpdateOperationsInput | string
+    tokenHash?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type CustomerAccessTokenCreateManyInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    customerId: string
+    tokenHash: string
+    expiresAt: Date | string
+    lastUsedAt?: Date | string | null
+    revokedAt?: Date | string | null
+    userAgent?: string | null
+    ipAddress?: string | null
+  }
+
+  export type CustomerAccessTokenUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tokenHash?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type CustomerAccessTokenUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customerId?: StringFieldUpdateOperationsInput | string
+    tokenHash?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type DeliveryAddressCreateInput = {
@@ -64948,6 +74091,9 @@ export namespace Prisma {
     externalAddress?: ExternalAddressCreateNestedOneWithoutOrdersInput
     orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryCreateNestedManyWithoutOrderInput
+    feedback?: CustomerFeedbackCreateNestedOneWithoutOrderInput
+    issuedRewards?: CustomerRewardCreateNestedManyWithoutIssuedForOrderInput
+    redeemedRewards?: CustomerRewardCreateNestedManyWithoutRedeemedByOrderInput
   }
 
   export type OrderUncheckedCreateInput = {
@@ -64976,6 +74122,9 @@ export namespace Prisma {
     externalAddressId?: string | null
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryUncheckedCreateNestedManyWithoutOrderInput
+    feedback?: CustomerFeedbackUncheckedCreateNestedOneWithoutOrderInput
+    issuedRewards?: CustomerRewardUncheckedCreateNestedManyWithoutIssuedForOrderInput
+    redeemedRewards?: CustomerRewardUncheckedCreateNestedManyWithoutRedeemedByOrderInput
   }
 
   export type OrderUpdateInput = {
@@ -65004,6 +74153,9 @@ export namespace Prisma {
     externalAddress?: ExternalAddressUpdateOneWithoutOrdersNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUpdateManyWithoutOrderNestedInput
+    feedback?: CustomerFeedbackUpdateOneWithoutOrderNestedInput
+    issuedRewards?: CustomerRewardUpdateManyWithoutIssuedForOrderNestedInput
+    redeemedRewards?: CustomerRewardUpdateManyWithoutRedeemedByOrderNestedInput
   }
 
   export type OrderUncheckedUpdateInput = {
@@ -65032,6 +74184,9 @@ export namespace Prisma {
     externalAddressId?: NullableStringFieldUpdateOperationsInput | string | null
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUncheckedUpdateManyWithoutOrderNestedInput
+    feedback?: CustomerFeedbackUncheckedUpdateOneWithoutOrderNestedInput
+    issuedRewards?: CustomerRewardUncheckedUpdateManyWithoutIssuedForOrderNestedInput
+    redeemedRewards?: CustomerRewardUncheckedUpdateManyWithoutRedeemedByOrderNestedInput
   }
 
   export type OrderCreateManyInput = {
@@ -65105,6 +74260,276 @@ export namespace Prisma {
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
     externalAddressId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type CustomerFeedbackCreateInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    language?: string | null
+    overallRating: number
+    sentiment: $Enums.CustomerFeedbackSentiment
+    productQuality?: number | null
+    temperature?: number | null
+    deliverySpeed?: number | null
+    serviceExperience?: number | null
+    comment?: string | null
+    source?: string | null
+    customer: CustomerCreateNestedOneWithoutFeedbacksInput
+    order: OrderCreateNestedOneWithoutFeedbackInput
+    issuedReward?: CustomerRewardCreateNestedOneWithoutFeedbackInput
+  }
+
+  export type CustomerFeedbackUncheckedCreateInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    customerId: string
+    orderId: string
+    language?: string | null
+    overallRating: number
+    sentiment: $Enums.CustomerFeedbackSentiment
+    productQuality?: number | null
+    temperature?: number | null
+    deliverySpeed?: number | null
+    serviceExperience?: number | null
+    comment?: string | null
+    source?: string | null
+    issuedReward?: CustomerRewardUncheckedCreateNestedOneWithoutFeedbackInput
+  }
+
+  export type CustomerFeedbackUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    overallRating?: IntFieldUpdateOperationsInput | number
+    sentiment?: EnumCustomerFeedbackSentimentFieldUpdateOperationsInput | $Enums.CustomerFeedbackSentiment
+    productQuality?: NullableIntFieldUpdateOperationsInput | number | null
+    temperature?: NullableIntFieldUpdateOperationsInput | number | null
+    deliverySpeed?: NullableIntFieldUpdateOperationsInput | number | null
+    serviceExperience?: NullableIntFieldUpdateOperationsInput | number | null
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    source?: NullableStringFieldUpdateOperationsInput | string | null
+    customer?: CustomerUpdateOneRequiredWithoutFeedbacksNestedInput
+    order?: OrderUpdateOneRequiredWithoutFeedbackNestedInput
+    issuedReward?: CustomerRewardUpdateOneWithoutFeedbackNestedInput
+  }
+
+  export type CustomerFeedbackUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customerId?: StringFieldUpdateOperationsInput | string
+    orderId?: StringFieldUpdateOperationsInput | string
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    overallRating?: IntFieldUpdateOperationsInput | number
+    sentiment?: EnumCustomerFeedbackSentimentFieldUpdateOperationsInput | $Enums.CustomerFeedbackSentiment
+    productQuality?: NullableIntFieldUpdateOperationsInput | number | null
+    temperature?: NullableIntFieldUpdateOperationsInput | number | null
+    deliverySpeed?: NullableIntFieldUpdateOperationsInput | number | null
+    serviceExperience?: NullableIntFieldUpdateOperationsInput | number | null
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    source?: NullableStringFieldUpdateOperationsInput | string | null
+    issuedReward?: CustomerRewardUncheckedUpdateOneWithoutFeedbackNestedInput
+  }
+
+  export type CustomerFeedbackCreateManyInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    customerId: string
+    orderId: string
+    language?: string | null
+    overallRating: number
+    sentiment: $Enums.CustomerFeedbackSentiment
+    productQuality?: number | null
+    temperature?: number | null
+    deliverySpeed?: number | null
+    serviceExperience?: number | null
+    comment?: string | null
+    source?: string | null
+  }
+
+  export type CustomerFeedbackUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    overallRating?: IntFieldUpdateOperationsInput | number
+    sentiment?: EnumCustomerFeedbackSentimentFieldUpdateOperationsInput | $Enums.CustomerFeedbackSentiment
+    productQuality?: NullableIntFieldUpdateOperationsInput | number | null
+    temperature?: NullableIntFieldUpdateOperationsInput | number | null
+    deliverySpeed?: NullableIntFieldUpdateOperationsInput | number | null
+    serviceExperience?: NullableIntFieldUpdateOperationsInput | number | null
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    source?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type CustomerFeedbackUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customerId?: StringFieldUpdateOperationsInput | string
+    orderId?: StringFieldUpdateOperationsInput | string
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    overallRating?: IntFieldUpdateOperationsInput | number
+    sentiment?: EnumCustomerFeedbackSentimentFieldUpdateOperationsInput | $Enums.CustomerFeedbackSentiment
+    productQuality?: NullableIntFieldUpdateOperationsInput | number | null
+    temperature?: NullableIntFieldUpdateOperationsInput | number | null
+    deliverySpeed?: NullableIntFieldUpdateOperationsInput | number | null
+    serviceExperience?: NullableIntFieldUpdateOperationsInput | number | null
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    source?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type CustomerRewardCreateInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    status?: $Enums.CustomerRewardStatus
+    type: $Enums.CustomerRewardType
+    title: string
+    description?: string | null
+    quantity?: number | null
+    value?: number | null
+    couponCode?: string | null
+    issuedAt?: Date | string
+    expiresAt?: Date | string | null
+    redeemedAt?: Date | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    customer: CustomerCreateNestedOneWithoutRewardsInput
+    product?: ProductCreateNestedOneWithoutCustomerRewardsInput
+    feedback?: CustomerFeedbackCreateNestedOneWithoutIssuedRewardInput
+    issuedForOrder?: OrderCreateNestedOneWithoutIssuedRewardsInput
+    redeemedByOrder?: OrderCreateNestedOneWithoutRedeemedRewardsInput
+  }
+
+  export type CustomerRewardUncheckedCreateInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    customerId: string
+    status?: $Enums.CustomerRewardStatus
+    type: $Enums.CustomerRewardType
+    title: string
+    description?: string | null
+    quantity?: number | null
+    value?: number | null
+    productId?: string | null
+    couponCode?: string | null
+    issuedAt?: Date | string
+    expiresAt?: Date | string | null
+    redeemedAt?: Date | string | null
+    feedbackId?: string | null
+    issuedForOrderId?: string | null
+    redeemedByOrderId?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type CustomerRewardUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumCustomerRewardStatusFieldUpdateOperationsInput | $Enums.CustomerRewardStatus
+    type?: EnumCustomerRewardTypeFieldUpdateOperationsInput | $Enums.CustomerRewardType
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    value?: NullableIntFieldUpdateOperationsInput | number | null
+    couponCode?: NullableStringFieldUpdateOperationsInput | string | null
+    issuedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    redeemedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    customer?: CustomerUpdateOneRequiredWithoutRewardsNestedInput
+    product?: ProductUpdateOneWithoutCustomerRewardsNestedInput
+    feedback?: CustomerFeedbackUpdateOneWithoutIssuedRewardNestedInput
+    issuedForOrder?: OrderUpdateOneWithoutIssuedRewardsNestedInput
+    redeemedByOrder?: OrderUpdateOneWithoutRedeemedRewardsNestedInput
+  }
+
+  export type CustomerRewardUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customerId?: StringFieldUpdateOperationsInput | string
+    status?: EnumCustomerRewardStatusFieldUpdateOperationsInput | $Enums.CustomerRewardStatus
+    type?: EnumCustomerRewardTypeFieldUpdateOperationsInput | $Enums.CustomerRewardType
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    value?: NullableIntFieldUpdateOperationsInput | number | null
+    productId?: NullableStringFieldUpdateOperationsInput | string | null
+    couponCode?: NullableStringFieldUpdateOperationsInput | string | null
+    issuedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    redeemedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    feedbackId?: NullableStringFieldUpdateOperationsInput | string | null
+    issuedForOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    redeemedByOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type CustomerRewardCreateManyInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    customerId: string
+    status?: $Enums.CustomerRewardStatus
+    type: $Enums.CustomerRewardType
+    title: string
+    description?: string | null
+    quantity?: number | null
+    value?: number | null
+    productId?: string | null
+    couponCode?: string | null
+    issuedAt?: Date | string
+    expiresAt?: Date | string | null
+    redeemedAt?: Date | string | null
+    feedbackId?: string | null
+    issuedForOrderId?: string | null
+    redeemedByOrderId?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type CustomerRewardUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumCustomerRewardStatusFieldUpdateOperationsInput | $Enums.CustomerRewardStatus
+    type?: EnumCustomerRewardTypeFieldUpdateOperationsInput | $Enums.CustomerRewardType
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    value?: NullableIntFieldUpdateOperationsInput | number | null
+    couponCode?: NullableStringFieldUpdateOperationsInput | string | null
+    issuedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    redeemedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type CustomerRewardUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customerId?: StringFieldUpdateOperationsInput | string
+    status?: EnumCustomerRewardStatusFieldUpdateOperationsInput | $Enums.CustomerRewardStatus
+    type?: EnumCustomerRewardTypeFieldUpdateOperationsInput | $Enums.CustomerRewardType
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    value?: NullableIntFieldUpdateOperationsInput | number | null
+    productId?: NullableStringFieldUpdateOperationsInput | string | null
+    couponCode?: NullableStringFieldUpdateOperationsInput | string | null
+    issuedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    redeemedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    feedbackId?: NullableStringFieldUpdateOperationsInput | string | null
+    issuedForOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    redeemedByOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type OrderProductsCreateInput = {
@@ -65896,6 +75321,69 @@ export namespace Prisma {
     actorId?: NullableStringFieldUpdateOperationsInput | string | null
     source?: StringFieldUpdateOperationsInput | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type FeedbackSettingsCreateInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    active?: boolean
+    rewardProductId?: string | null
+    rewardQuantity?: number
+  }
+
+  export type FeedbackSettingsUncheckedCreateInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    active?: boolean
+    rewardProductId?: string | null
+    rewardQuantity?: number
+  }
+
+  export type FeedbackSettingsUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    rewardProductId?: NullableStringFieldUpdateOperationsInput | string | null
+    rewardQuantity?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type FeedbackSettingsUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    rewardProductId?: NullableStringFieldUpdateOperationsInput | string | null
+    rewardQuantity?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type FeedbackSettingsCreateManyInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    active?: boolean
+    rewardProductId?: string | null
+    rewardQuantity?: number
+  }
+
+  export type FeedbackSettingsUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    rewardProductId?: NullableStringFieldUpdateOperationsInput | string | null
+    rewardQuantity?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type FeedbackSettingsUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    rewardProductId?: NullableStringFieldUpdateOperationsInput | string | null
+    rewardQuantity?: IntFieldUpdateOperationsInput | number
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -66997,6 +76485,73 @@ export namespace Prisma {
     _max?: NestedEnumDispatchAssignmentJobStatusFilter<$PrismaModel>
   }
 
+  export type EnumFeedbackWhatsAppJobStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.FeedbackWhatsAppJobStatus | EnumFeedbackWhatsAppJobStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.FeedbackWhatsAppJobStatus[] | ListEnumFeedbackWhatsAppJobStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.FeedbackWhatsAppJobStatus[] | ListEnumFeedbackWhatsAppJobStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumFeedbackWhatsAppJobStatusFilter<$PrismaModel> | $Enums.FeedbackWhatsAppJobStatus
+  }
+
+  export type FeedbackWhatsAppJobCountOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    status?: SortOrder
+    attempts?: SortOrder
+    availableAt?: SortOrder
+    processingStartedAt?: SortOrder
+    completedAt?: SortOrder
+    lastError?: SortOrder
+    orderId?: SortOrder
+    customerPhone?: SortOrder
+    language?: SortOrder
+  }
+
+  export type FeedbackWhatsAppJobAvgOrderByAggregateInput = {
+    attempts?: SortOrder
+  }
+
+  export type FeedbackWhatsAppJobMaxOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    status?: SortOrder
+    attempts?: SortOrder
+    availableAt?: SortOrder
+    processingStartedAt?: SortOrder
+    completedAt?: SortOrder
+    lastError?: SortOrder
+    orderId?: SortOrder
+    customerPhone?: SortOrder
+    language?: SortOrder
+  }
+
+  export type FeedbackWhatsAppJobMinOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    status?: SortOrder
+    attempts?: SortOrder
+    availableAt?: SortOrder
+    processingStartedAt?: SortOrder
+    completedAt?: SortOrder
+    lastError?: SortOrder
+    orderId?: SortOrder
+    customerPhone?: SortOrder
+    language?: SortOrder
+  }
+
+  export type FeedbackWhatsAppJobSumOrderByAggregateInput = {
+    attempts?: SortOrder
+  }
+
+  export type EnumFeedbackWhatsAppJobStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.FeedbackWhatsAppJobStatus | EnumFeedbackWhatsAppJobStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.FeedbackWhatsAppJobStatus[] | ListEnumFeedbackWhatsAppJobStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.FeedbackWhatsAppJobStatus[] | ListEnumFeedbackWhatsAppJobStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumFeedbackWhatsAppJobStatusWithAggregatesFilter<$PrismaModel> | $Enums.FeedbackWhatsAppJobStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumFeedbackWhatsAppJobStatusFilter<$PrismaModel>
+    _max?: NestedEnumFeedbackWhatsAppJobStatusFilter<$PrismaModel>
+  }
+
   export type BranchNullableScalarRelationFilter = {
     is?: BranchWhereInput | null
     isNot?: BranchWhereInput | null
@@ -67066,6 +76621,12 @@ export namespace Prisma {
     none?: ExclusivePromotionProductWhereInput
   }
 
+  export type CustomerRewardListRelationFilter = {
+    every?: CustomerRewardWhereInput
+    some?: CustomerRewardWhereInput
+    none?: CustomerRewardWhereInput
+  }
+
   export type FileOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -67087,6 +76648,10 @@ export namespace Prisma {
   }
 
   export type ExclusivePromotionProductOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type CustomerRewardOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -67587,11 +77152,41 @@ export namespace Prisma {
     none?: ExternalAddressWhereInput
   }
 
+  export type CustomerFeedbackListRelationFilter = {
+    every?: CustomerFeedbackWhereInput
+    some?: CustomerFeedbackWhereInput
+    none?: CustomerFeedbackWhereInput
+  }
+
+  export type CustomerOtpChallengeListRelationFilter = {
+    every?: CustomerOtpChallengeWhereInput
+    some?: CustomerOtpChallengeWhereInput
+    none?: CustomerOtpChallengeWhereInput
+  }
+
+  export type CustomerAccessTokenListRelationFilter = {
+    every?: CustomerAccessTokenWhereInput
+    some?: CustomerAccessTokenWhereInput
+    none?: CustomerAccessTokenWhereInput
+  }
+
   export type DeliveryAddressOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
   export type ExternalAddressOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type CustomerFeedbackOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type CustomerOtpChallengeOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type CustomerAccessTokenOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -67625,9 +77220,128 @@ export namespace Prisma {
     lastMessageSent?: SortOrder
   }
 
+  export type EnumCustomerOtpChannelFilter<$PrismaModel = never> = {
+    equals?: $Enums.CustomerOtpChannel | EnumCustomerOtpChannelFieldRefInput<$PrismaModel>
+    in?: $Enums.CustomerOtpChannel[] | ListEnumCustomerOtpChannelFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CustomerOtpChannel[] | ListEnumCustomerOtpChannelFieldRefInput<$PrismaModel>
+    not?: NestedEnumCustomerOtpChannelFilter<$PrismaModel> | $Enums.CustomerOtpChannel
+  }
+
   export type CustomerNullableScalarRelationFilter = {
     is?: CustomerWhereInput | null
     isNot?: CustomerWhereInput | null
+  }
+
+  export type CustomerOtpChallengeCountOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    customerId?: SortOrder
+    phone?: SortOrder
+    countryCode?: SortOrder
+    channel?: SortOrder
+    codeHash?: SortOrder
+    expiresAt?: SortOrder
+    usedAt?: SortOrder
+    attemptCount?: SortOrder
+    maxAttempts?: SortOrder
+    lastAttemptAt?: SortOrder
+  }
+
+  export type CustomerOtpChallengeAvgOrderByAggregateInput = {
+    attemptCount?: SortOrder
+    maxAttempts?: SortOrder
+  }
+
+  export type CustomerOtpChallengeMaxOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    customerId?: SortOrder
+    phone?: SortOrder
+    countryCode?: SortOrder
+    channel?: SortOrder
+    codeHash?: SortOrder
+    expiresAt?: SortOrder
+    usedAt?: SortOrder
+    attemptCount?: SortOrder
+    maxAttempts?: SortOrder
+    lastAttemptAt?: SortOrder
+  }
+
+  export type CustomerOtpChallengeMinOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    customerId?: SortOrder
+    phone?: SortOrder
+    countryCode?: SortOrder
+    channel?: SortOrder
+    codeHash?: SortOrder
+    expiresAt?: SortOrder
+    usedAt?: SortOrder
+    attemptCount?: SortOrder
+    maxAttempts?: SortOrder
+    lastAttemptAt?: SortOrder
+  }
+
+  export type CustomerOtpChallengeSumOrderByAggregateInput = {
+    attemptCount?: SortOrder
+    maxAttempts?: SortOrder
+  }
+
+  export type EnumCustomerOtpChannelWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CustomerOtpChannel | EnumCustomerOtpChannelFieldRefInput<$PrismaModel>
+    in?: $Enums.CustomerOtpChannel[] | ListEnumCustomerOtpChannelFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CustomerOtpChannel[] | ListEnumCustomerOtpChannelFieldRefInput<$PrismaModel>
+    not?: NestedEnumCustomerOtpChannelWithAggregatesFilter<$PrismaModel> | $Enums.CustomerOtpChannel
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCustomerOtpChannelFilter<$PrismaModel>
+    _max?: NestedEnumCustomerOtpChannelFilter<$PrismaModel>
+  }
+
+  export type CustomerScalarRelationFilter = {
+    is?: CustomerWhereInput
+    isNot?: CustomerWhereInput
+  }
+
+  export type CustomerAccessTokenCountOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    customerId?: SortOrder
+    tokenHash?: SortOrder
+    expiresAt?: SortOrder
+    lastUsedAt?: SortOrder
+    revokedAt?: SortOrder
+    userAgent?: SortOrder
+    ipAddress?: SortOrder
+  }
+
+  export type CustomerAccessTokenMaxOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    customerId?: SortOrder
+    tokenHash?: SortOrder
+    expiresAt?: SortOrder
+    lastUsedAt?: SortOrder
+    revokedAt?: SortOrder
+    userAgent?: SortOrder
+    ipAddress?: SortOrder
+  }
+
+  export type CustomerAccessTokenMinOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    customerId?: SortOrder
+    tokenHash?: SortOrder
+    expiresAt?: SortOrder
+    lastUsedAt?: SortOrder
+    revokedAt?: SortOrder
+    userAgent?: SortOrder
+    ipAddress?: SortOrder
   }
 
   export type DeliveryAddressCountOrderByAggregateInput = {
@@ -67750,11 +77464,6 @@ export namespace Prisma {
     isNot?: MessageWhereInput
   }
 
-  export type CustomerScalarRelationFilter = {
-    is?: CustomerWhereInput
-    isNot?: CustomerWhereInput
-  }
-
   export type PromotialMessageCountOrderByAggregateInput = {
     id?: SortOrder
     sentAt?: SortOrder
@@ -67821,6 +77530,11 @@ export namespace Prisma {
   export type ExternalAddressNullableScalarRelationFilter = {
     is?: ExternalAddressWhereInput | null
     isNot?: ExternalAddressWhereInput | null
+  }
+
+  export type CustomerFeedbackNullableScalarRelationFilter = {
+    is?: CustomerFeedbackWhereInput | null
+    isNot?: CustomerFeedbackWhereInput | null
   }
 
   export type OrderCountOrderByAggregateInput = {
@@ -67941,9 +77655,206 @@ export namespace Prisma {
     _max?: NestedEnumPaymentTypeFilter<$PrismaModel>
   }
 
+  export type EnumCustomerFeedbackSentimentFilter<$PrismaModel = never> = {
+    equals?: $Enums.CustomerFeedbackSentiment | EnumCustomerFeedbackSentimentFieldRefInput<$PrismaModel>
+    in?: $Enums.CustomerFeedbackSentiment[] | ListEnumCustomerFeedbackSentimentFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CustomerFeedbackSentiment[] | ListEnumCustomerFeedbackSentimentFieldRefInput<$PrismaModel>
+    not?: NestedEnumCustomerFeedbackSentimentFilter<$PrismaModel> | $Enums.CustomerFeedbackSentiment
+  }
+
+  export type CustomerRewardNullableScalarRelationFilter = {
+    is?: CustomerRewardWhereInput | null
+    isNot?: CustomerRewardWhereInput | null
+  }
+
+  export type CustomerFeedbackCountOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    customerId?: SortOrder
+    orderId?: SortOrder
+    language?: SortOrder
+    overallRating?: SortOrder
+    sentiment?: SortOrder
+    productQuality?: SortOrder
+    temperature?: SortOrder
+    deliverySpeed?: SortOrder
+    serviceExperience?: SortOrder
+    comment?: SortOrder
+    source?: SortOrder
+  }
+
+  export type CustomerFeedbackAvgOrderByAggregateInput = {
+    overallRating?: SortOrder
+    productQuality?: SortOrder
+    temperature?: SortOrder
+    deliverySpeed?: SortOrder
+    serviceExperience?: SortOrder
+  }
+
+  export type CustomerFeedbackMaxOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    customerId?: SortOrder
+    orderId?: SortOrder
+    language?: SortOrder
+    overallRating?: SortOrder
+    sentiment?: SortOrder
+    productQuality?: SortOrder
+    temperature?: SortOrder
+    deliverySpeed?: SortOrder
+    serviceExperience?: SortOrder
+    comment?: SortOrder
+    source?: SortOrder
+  }
+
+  export type CustomerFeedbackMinOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    customerId?: SortOrder
+    orderId?: SortOrder
+    language?: SortOrder
+    overallRating?: SortOrder
+    sentiment?: SortOrder
+    productQuality?: SortOrder
+    temperature?: SortOrder
+    deliverySpeed?: SortOrder
+    serviceExperience?: SortOrder
+    comment?: SortOrder
+    source?: SortOrder
+  }
+
+  export type CustomerFeedbackSumOrderByAggregateInput = {
+    overallRating?: SortOrder
+    productQuality?: SortOrder
+    temperature?: SortOrder
+    deliverySpeed?: SortOrder
+    serviceExperience?: SortOrder
+  }
+
+  export type EnumCustomerFeedbackSentimentWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CustomerFeedbackSentiment | EnumCustomerFeedbackSentimentFieldRefInput<$PrismaModel>
+    in?: $Enums.CustomerFeedbackSentiment[] | ListEnumCustomerFeedbackSentimentFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CustomerFeedbackSentiment[] | ListEnumCustomerFeedbackSentimentFieldRefInput<$PrismaModel>
+    not?: NestedEnumCustomerFeedbackSentimentWithAggregatesFilter<$PrismaModel> | $Enums.CustomerFeedbackSentiment
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCustomerFeedbackSentimentFilter<$PrismaModel>
+    _max?: NestedEnumCustomerFeedbackSentimentFilter<$PrismaModel>
+  }
+
+  export type EnumCustomerRewardStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.CustomerRewardStatus | EnumCustomerRewardStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.CustomerRewardStatus[] | ListEnumCustomerRewardStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CustomerRewardStatus[] | ListEnumCustomerRewardStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumCustomerRewardStatusFilter<$PrismaModel> | $Enums.CustomerRewardStatus
+  }
+
+  export type EnumCustomerRewardTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.CustomerRewardType | EnumCustomerRewardTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.CustomerRewardType[] | ListEnumCustomerRewardTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CustomerRewardType[] | ListEnumCustomerRewardTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumCustomerRewardTypeFilter<$PrismaModel> | $Enums.CustomerRewardType
+  }
+
   export type OrderNullableScalarRelationFilter = {
     is?: OrderWhereInput | null
     isNot?: OrderWhereInput | null
+  }
+
+  export type CustomerRewardCountOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    customerId?: SortOrder
+    status?: SortOrder
+    type?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    quantity?: SortOrder
+    value?: SortOrder
+    productId?: SortOrder
+    couponCode?: SortOrder
+    issuedAt?: SortOrder
+    expiresAt?: SortOrder
+    redeemedAt?: SortOrder
+    feedbackId?: SortOrder
+    issuedForOrderId?: SortOrder
+    redeemedByOrderId?: SortOrder
+    metadata?: SortOrder
+  }
+
+  export type CustomerRewardAvgOrderByAggregateInput = {
+    quantity?: SortOrder
+    value?: SortOrder
+  }
+
+  export type CustomerRewardMaxOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    customerId?: SortOrder
+    status?: SortOrder
+    type?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    quantity?: SortOrder
+    value?: SortOrder
+    productId?: SortOrder
+    couponCode?: SortOrder
+    issuedAt?: SortOrder
+    expiresAt?: SortOrder
+    redeemedAt?: SortOrder
+    feedbackId?: SortOrder
+    issuedForOrderId?: SortOrder
+    redeemedByOrderId?: SortOrder
+  }
+
+  export type CustomerRewardMinOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    customerId?: SortOrder
+    status?: SortOrder
+    type?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    quantity?: SortOrder
+    value?: SortOrder
+    productId?: SortOrder
+    couponCode?: SortOrder
+    issuedAt?: SortOrder
+    expiresAt?: SortOrder
+    redeemedAt?: SortOrder
+    feedbackId?: SortOrder
+    issuedForOrderId?: SortOrder
+    redeemedByOrderId?: SortOrder
+  }
+
+  export type CustomerRewardSumOrderByAggregateInput = {
+    quantity?: SortOrder
+    value?: SortOrder
+  }
+
+  export type EnumCustomerRewardStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CustomerRewardStatus | EnumCustomerRewardStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.CustomerRewardStatus[] | ListEnumCustomerRewardStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CustomerRewardStatus[] | ListEnumCustomerRewardStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumCustomerRewardStatusWithAggregatesFilter<$PrismaModel> | $Enums.CustomerRewardStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCustomerRewardStatusFilter<$PrismaModel>
+    _max?: NestedEnumCustomerRewardStatusFilter<$PrismaModel>
+  }
+
+  export type EnumCustomerRewardTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CustomerRewardType | EnumCustomerRewardTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.CustomerRewardType[] | ListEnumCustomerRewardTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CustomerRewardType[] | ListEnumCustomerRewardTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumCustomerRewardTypeWithAggregatesFilter<$PrismaModel> | $Enums.CustomerRewardType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCustomerRewardTypeFilter<$PrismaModel>
+    _max?: NestedEnumCustomerRewardTypeFilter<$PrismaModel>
   }
 
   export type OrderProductsCountOrderByAggregateInput = {
@@ -68402,6 +78313,41 @@ export namespace Prisma {
   export type InventoryStockEventSumOrderByAggregateInput = {
     beforeQuantity?: SortOrder
     afterQuantity?: SortOrder
+  }
+
+  export type FeedbackSettingsCountOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    active?: SortOrder
+    rewardProductId?: SortOrder
+    rewardQuantity?: SortOrder
+  }
+
+  export type FeedbackSettingsAvgOrderByAggregateInput = {
+    rewardQuantity?: SortOrder
+  }
+
+  export type FeedbackSettingsMaxOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    active?: SortOrder
+    rewardProductId?: SortOrder
+    rewardQuantity?: SortOrder
+  }
+
+  export type FeedbackSettingsMinOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    active?: SortOrder
+    rewardProductId?: SortOrder
+    rewardQuantity?: SortOrder
+  }
+
+  export type FeedbackSettingsSumOrderByAggregateInput = {
+    rewardQuantity?: SortOrder
   }
 
   export type PreparationStepCreateNestedManyWithoutStationInput = {
@@ -69476,6 +79422,10 @@ export namespace Prisma {
     set?: $Enums.DispatchAssignmentJobStatus
   }
 
+  export type EnumFeedbackWhatsAppJobStatusFieldUpdateOperationsInput = {
+    set?: $Enums.FeedbackWhatsAppJobStatus
+  }
+
   export type BranchCreateNestedOneWithoutAddressInput = {
     create?: XOR<BranchCreateWithoutAddressInput, BranchUncheckedCreateWithoutAddressInput>
     connectOrCreate?: BranchCreateOrConnectWithoutAddressInput
@@ -69611,6 +79561,13 @@ export namespace Prisma {
     connect?: ProgressiveDiscountPrizeProductWhereUniqueInput | ProgressiveDiscountPrizeProductWhereUniqueInput[]
   }
 
+  export type CustomerRewardCreateNestedManyWithoutProductInput = {
+    create?: XOR<CustomerRewardCreateWithoutProductInput, CustomerRewardUncheckedCreateWithoutProductInput> | CustomerRewardCreateWithoutProductInput[] | CustomerRewardUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: CustomerRewardCreateOrConnectWithoutProductInput | CustomerRewardCreateOrConnectWithoutProductInput[]
+    createMany?: CustomerRewardCreateManyProductInputEnvelope
+    connect?: CustomerRewardWhereUniqueInput | CustomerRewardWhereUniqueInput[]
+  }
+
   export type PreparationStepCreateNestedManyWithoutProductsInput = {
     create?: XOR<PreparationStepCreateWithoutProductsInput, PreparationStepUncheckedCreateWithoutProductsInput> | PreparationStepCreateWithoutProductsInput[] | PreparationStepUncheckedCreateWithoutProductsInput[]
     connectOrCreate?: PreparationStepCreateOrConnectWithoutProductsInput | PreparationStepCreateOrConnectWithoutProductsInput[]
@@ -69670,6 +79627,13 @@ export namespace Prisma {
     connectOrCreate?: ProgressiveDiscountPrizeProductCreateOrConnectWithoutProductInput | ProgressiveDiscountPrizeProductCreateOrConnectWithoutProductInput[]
     createMany?: ProgressiveDiscountPrizeProductCreateManyProductInputEnvelope
     connect?: ProgressiveDiscountPrizeProductWhereUniqueInput | ProgressiveDiscountPrizeProductWhereUniqueInput[]
+  }
+
+  export type CustomerRewardUncheckedCreateNestedManyWithoutProductInput = {
+    create?: XOR<CustomerRewardCreateWithoutProductInput, CustomerRewardUncheckedCreateWithoutProductInput> | CustomerRewardCreateWithoutProductInput[] | CustomerRewardUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: CustomerRewardCreateOrConnectWithoutProductInput | CustomerRewardCreateOrConnectWithoutProductInput[]
+    createMany?: CustomerRewardCreateManyProductInputEnvelope
+    connect?: CustomerRewardWhereUniqueInput | CustomerRewardWhereUniqueInput[]
   }
 
   export type PreparationStepUncheckedCreateNestedManyWithoutProductsInput = {
@@ -69803,6 +79767,20 @@ export namespace Prisma {
     deleteMany?: ProgressiveDiscountPrizeProductScalarWhereInput | ProgressiveDiscountPrizeProductScalarWhereInput[]
   }
 
+  export type CustomerRewardUpdateManyWithoutProductNestedInput = {
+    create?: XOR<CustomerRewardCreateWithoutProductInput, CustomerRewardUncheckedCreateWithoutProductInput> | CustomerRewardCreateWithoutProductInput[] | CustomerRewardUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: CustomerRewardCreateOrConnectWithoutProductInput | CustomerRewardCreateOrConnectWithoutProductInput[]
+    upsert?: CustomerRewardUpsertWithWhereUniqueWithoutProductInput | CustomerRewardUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: CustomerRewardCreateManyProductInputEnvelope
+    set?: CustomerRewardWhereUniqueInput | CustomerRewardWhereUniqueInput[]
+    disconnect?: CustomerRewardWhereUniqueInput | CustomerRewardWhereUniqueInput[]
+    delete?: CustomerRewardWhereUniqueInput | CustomerRewardWhereUniqueInput[]
+    connect?: CustomerRewardWhereUniqueInput | CustomerRewardWhereUniqueInput[]
+    update?: CustomerRewardUpdateWithWhereUniqueWithoutProductInput | CustomerRewardUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: CustomerRewardUpdateManyWithWhereWithoutProductInput | CustomerRewardUpdateManyWithWhereWithoutProductInput[]
+    deleteMany?: CustomerRewardScalarWhereInput | CustomerRewardScalarWhereInput[]
+  }
+
   export type PreparationStepUpdateManyWithoutProductsNestedInput = {
     create?: XOR<PreparationStepCreateWithoutProductsInput, PreparationStepUncheckedCreateWithoutProductsInput> | PreparationStepCreateWithoutProductsInput[] | PreparationStepUncheckedCreateWithoutProductsInput[]
     connectOrCreate?: PreparationStepCreateOrConnectWithoutProductsInput | PreparationStepCreateOrConnectWithoutProductsInput[]
@@ -69925,6 +79903,20 @@ export namespace Prisma {
     update?: ProgressiveDiscountPrizeProductUpdateWithWhereUniqueWithoutProductInput | ProgressiveDiscountPrizeProductUpdateWithWhereUniqueWithoutProductInput[]
     updateMany?: ProgressiveDiscountPrizeProductUpdateManyWithWhereWithoutProductInput | ProgressiveDiscountPrizeProductUpdateManyWithWhereWithoutProductInput[]
     deleteMany?: ProgressiveDiscountPrizeProductScalarWhereInput | ProgressiveDiscountPrizeProductScalarWhereInput[]
+  }
+
+  export type CustomerRewardUncheckedUpdateManyWithoutProductNestedInput = {
+    create?: XOR<CustomerRewardCreateWithoutProductInput, CustomerRewardUncheckedCreateWithoutProductInput> | CustomerRewardCreateWithoutProductInput[] | CustomerRewardUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: CustomerRewardCreateOrConnectWithoutProductInput | CustomerRewardCreateOrConnectWithoutProductInput[]
+    upsert?: CustomerRewardUpsertWithWhereUniqueWithoutProductInput | CustomerRewardUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: CustomerRewardCreateManyProductInputEnvelope
+    set?: CustomerRewardWhereUniqueInput | CustomerRewardWhereUniqueInput[]
+    disconnect?: CustomerRewardWhereUniqueInput | CustomerRewardWhereUniqueInput[]
+    delete?: CustomerRewardWhereUniqueInput | CustomerRewardWhereUniqueInput[]
+    connect?: CustomerRewardWhereUniqueInput | CustomerRewardWhereUniqueInput[]
+    update?: CustomerRewardUpdateWithWhereUniqueWithoutProductInput | CustomerRewardUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: CustomerRewardUpdateManyWithWhereWithoutProductInput | CustomerRewardUpdateManyWithWhereWithoutProductInput[]
+    deleteMany?: CustomerRewardScalarWhereInput | CustomerRewardScalarWhereInput[]
   }
 
   export type PreparationStepUncheckedUpdateManyWithoutProductsNestedInput = {
@@ -70611,6 +80603,34 @@ export namespace Prisma {
     connect?: ExternalAddressWhereUniqueInput | ExternalAddressWhereUniqueInput[]
   }
 
+  export type CustomerFeedbackCreateNestedManyWithoutCustomerInput = {
+    create?: XOR<CustomerFeedbackCreateWithoutCustomerInput, CustomerFeedbackUncheckedCreateWithoutCustomerInput> | CustomerFeedbackCreateWithoutCustomerInput[] | CustomerFeedbackUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: CustomerFeedbackCreateOrConnectWithoutCustomerInput | CustomerFeedbackCreateOrConnectWithoutCustomerInput[]
+    createMany?: CustomerFeedbackCreateManyCustomerInputEnvelope
+    connect?: CustomerFeedbackWhereUniqueInput | CustomerFeedbackWhereUniqueInput[]
+  }
+
+  export type CustomerRewardCreateNestedManyWithoutCustomerInput = {
+    create?: XOR<CustomerRewardCreateWithoutCustomerInput, CustomerRewardUncheckedCreateWithoutCustomerInput> | CustomerRewardCreateWithoutCustomerInput[] | CustomerRewardUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: CustomerRewardCreateOrConnectWithoutCustomerInput | CustomerRewardCreateOrConnectWithoutCustomerInput[]
+    createMany?: CustomerRewardCreateManyCustomerInputEnvelope
+    connect?: CustomerRewardWhereUniqueInput | CustomerRewardWhereUniqueInput[]
+  }
+
+  export type CustomerOtpChallengeCreateNestedManyWithoutCustomerInput = {
+    create?: XOR<CustomerOtpChallengeCreateWithoutCustomerInput, CustomerOtpChallengeUncheckedCreateWithoutCustomerInput> | CustomerOtpChallengeCreateWithoutCustomerInput[] | CustomerOtpChallengeUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: CustomerOtpChallengeCreateOrConnectWithoutCustomerInput | CustomerOtpChallengeCreateOrConnectWithoutCustomerInput[]
+    createMany?: CustomerOtpChallengeCreateManyCustomerInputEnvelope
+    connect?: CustomerOtpChallengeWhereUniqueInput | CustomerOtpChallengeWhereUniqueInput[]
+  }
+
+  export type CustomerAccessTokenCreateNestedManyWithoutCustomerInput = {
+    create?: XOR<CustomerAccessTokenCreateWithoutCustomerInput, CustomerAccessTokenUncheckedCreateWithoutCustomerInput> | CustomerAccessTokenCreateWithoutCustomerInput[] | CustomerAccessTokenUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: CustomerAccessTokenCreateOrConnectWithoutCustomerInput | CustomerAccessTokenCreateOrConnectWithoutCustomerInput[]
+    createMany?: CustomerAccessTokenCreateManyCustomerInputEnvelope
+    connect?: CustomerAccessTokenWhereUniqueInput | CustomerAccessTokenWhereUniqueInput[]
+  }
+
   export type OrderUncheckedCreateNestedManyWithoutCustomerInput = {
     create?: XOR<OrderCreateWithoutCustomerInput, OrderUncheckedCreateWithoutCustomerInput> | OrderCreateWithoutCustomerInput[] | OrderUncheckedCreateWithoutCustomerInput[]
     connectOrCreate?: OrderCreateOrConnectWithoutCustomerInput | OrderCreateOrConnectWithoutCustomerInput[]
@@ -70637,6 +80657,34 @@ export namespace Prisma {
     connectOrCreate?: ExternalAddressCreateOrConnectWithoutCustomerInput | ExternalAddressCreateOrConnectWithoutCustomerInput[]
     createMany?: ExternalAddressCreateManyCustomerInputEnvelope
     connect?: ExternalAddressWhereUniqueInput | ExternalAddressWhereUniqueInput[]
+  }
+
+  export type CustomerFeedbackUncheckedCreateNestedManyWithoutCustomerInput = {
+    create?: XOR<CustomerFeedbackCreateWithoutCustomerInput, CustomerFeedbackUncheckedCreateWithoutCustomerInput> | CustomerFeedbackCreateWithoutCustomerInput[] | CustomerFeedbackUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: CustomerFeedbackCreateOrConnectWithoutCustomerInput | CustomerFeedbackCreateOrConnectWithoutCustomerInput[]
+    createMany?: CustomerFeedbackCreateManyCustomerInputEnvelope
+    connect?: CustomerFeedbackWhereUniqueInput | CustomerFeedbackWhereUniqueInput[]
+  }
+
+  export type CustomerRewardUncheckedCreateNestedManyWithoutCustomerInput = {
+    create?: XOR<CustomerRewardCreateWithoutCustomerInput, CustomerRewardUncheckedCreateWithoutCustomerInput> | CustomerRewardCreateWithoutCustomerInput[] | CustomerRewardUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: CustomerRewardCreateOrConnectWithoutCustomerInput | CustomerRewardCreateOrConnectWithoutCustomerInput[]
+    createMany?: CustomerRewardCreateManyCustomerInputEnvelope
+    connect?: CustomerRewardWhereUniqueInput | CustomerRewardWhereUniqueInput[]
+  }
+
+  export type CustomerOtpChallengeUncheckedCreateNestedManyWithoutCustomerInput = {
+    create?: XOR<CustomerOtpChallengeCreateWithoutCustomerInput, CustomerOtpChallengeUncheckedCreateWithoutCustomerInput> | CustomerOtpChallengeCreateWithoutCustomerInput[] | CustomerOtpChallengeUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: CustomerOtpChallengeCreateOrConnectWithoutCustomerInput | CustomerOtpChallengeCreateOrConnectWithoutCustomerInput[]
+    createMany?: CustomerOtpChallengeCreateManyCustomerInputEnvelope
+    connect?: CustomerOtpChallengeWhereUniqueInput | CustomerOtpChallengeWhereUniqueInput[]
+  }
+
+  export type CustomerAccessTokenUncheckedCreateNestedManyWithoutCustomerInput = {
+    create?: XOR<CustomerAccessTokenCreateWithoutCustomerInput, CustomerAccessTokenUncheckedCreateWithoutCustomerInput> | CustomerAccessTokenCreateWithoutCustomerInput[] | CustomerAccessTokenUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: CustomerAccessTokenCreateOrConnectWithoutCustomerInput | CustomerAccessTokenCreateOrConnectWithoutCustomerInput[]
+    createMany?: CustomerAccessTokenCreateManyCustomerInputEnvelope
+    connect?: CustomerAccessTokenWhereUniqueInput | CustomerAccessTokenWhereUniqueInput[]
   }
 
   export type OrderUpdateManyWithoutCustomerNestedInput = {
@@ -70695,6 +80743,62 @@ export namespace Prisma {
     deleteMany?: ExternalAddressScalarWhereInput | ExternalAddressScalarWhereInput[]
   }
 
+  export type CustomerFeedbackUpdateManyWithoutCustomerNestedInput = {
+    create?: XOR<CustomerFeedbackCreateWithoutCustomerInput, CustomerFeedbackUncheckedCreateWithoutCustomerInput> | CustomerFeedbackCreateWithoutCustomerInput[] | CustomerFeedbackUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: CustomerFeedbackCreateOrConnectWithoutCustomerInput | CustomerFeedbackCreateOrConnectWithoutCustomerInput[]
+    upsert?: CustomerFeedbackUpsertWithWhereUniqueWithoutCustomerInput | CustomerFeedbackUpsertWithWhereUniqueWithoutCustomerInput[]
+    createMany?: CustomerFeedbackCreateManyCustomerInputEnvelope
+    set?: CustomerFeedbackWhereUniqueInput | CustomerFeedbackWhereUniqueInput[]
+    disconnect?: CustomerFeedbackWhereUniqueInput | CustomerFeedbackWhereUniqueInput[]
+    delete?: CustomerFeedbackWhereUniqueInput | CustomerFeedbackWhereUniqueInput[]
+    connect?: CustomerFeedbackWhereUniqueInput | CustomerFeedbackWhereUniqueInput[]
+    update?: CustomerFeedbackUpdateWithWhereUniqueWithoutCustomerInput | CustomerFeedbackUpdateWithWhereUniqueWithoutCustomerInput[]
+    updateMany?: CustomerFeedbackUpdateManyWithWhereWithoutCustomerInput | CustomerFeedbackUpdateManyWithWhereWithoutCustomerInput[]
+    deleteMany?: CustomerFeedbackScalarWhereInput | CustomerFeedbackScalarWhereInput[]
+  }
+
+  export type CustomerRewardUpdateManyWithoutCustomerNestedInput = {
+    create?: XOR<CustomerRewardCreateWithoutCustomerInput, CustomerRewardUncheckedCreateWithoutCustomerInput> | CustomerRewardCreateWithoutCustomerInput[] | CustomerRewardUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: CustomerRewardCreateOrConnectWithoutCustomerInput | CustomerRewardCreateOrConnectWithoutCustomerInput[]
+    upsert?: CustomerRewardUpsertWithWhereUniqueWithoutCustomerInput | CustomerRewardUpsertWithWhereUniqueWithoutCustomerInput[]
+    createMany?: CustomerRewardCreateManyCustomerInputEnvelope
+    set?: CustomerRewardWhereUniqueInput | CustomerRewardWhereUniqueInput[]
+    disconnect?: CustomerRewardWhereUniqueInput | CustomerRewardWhereUniqueInput[]
+    delete?: CustomerRewardWhereUniqueInput | CustomerRewardWhereUniqueInput[]
+    connect?: CustomerRewardWhereUniqueInput | CustomerRewardWhereUniqueInput[]
+    update?: CustomerRewardUpdateWithWhereUniqueWithoutCustomerInput | CustomerRewardUpdateWithWhereUniqueWithoutCustomerInput[]
+    updateMany?: CustomerRewardUpdateManyWithWhereWithoutCustomerInput | CustomerRewardUpdateManyWithWhereWithoutCustomerInput[]
+    deleteMany?: CustomerRewardScalarWhereInput | CustomerRewardScalarWhereInput[]
+  }
+
+  export type CustomerOtpChallengeUpdateManyWithoutCustomerNestedInput = {
+    create?: XOR<CustomerOtpChallengeCreateWithoutCustomerInput, CustomerOtpChallengeUncheckedCreateWithoutCustomerInput> | CustomerOtpChallengeCreateWithoutCustomerInput[] | CustomerOtpChallengeUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: CustomerOtpChallengeCreateOrConnectWithoutCustomerInput | CustomerOtpChallengeCreateOrConnectWithoutCustomerInput[]
+    upsert?: CustomerOtpChallengeUpsertWithWhereUniqueWithoutCustomerInput | CustomerOtpChallengeUpsertWithWhereUniqueWithoutCustomerInput[]
+    createMany?: CustomerOtpChallengeCreateManyCustomerInputEnvelope
+    set?: CustomerOtpChallengeWhereUniqueInput | CustomerOtpChallengeWhereUniqueInput[]
+    disconnect?: CustomerOtpChallengeWhereUniqueInput | CustomerOtpChallengeWhereUniqueInput[]
+    delete?: CustomerOtpChallengeWhereUniqueInput | CustomerOtpChallengeWhereUniqueInput[]
+    connect?: CustomerOtpChallengeWhereUniqueInput | CustomerOtpChallengeWhereUniqueInput[]
+    update?: CustomerOtpChallengeUpdateWithWhereUniqueWithoutCustomerInput | CustomerOtpChallengeUpdateWithWhereUniqueWithoutCustomerInput[]
+    updateMany?: CustomerOtpChallengeUpdateManyWithWhereWithoutCustomerInput | CustomerOtpChallengeUpdateManyWithWhereWithoutCustomerInput[]
+    deleteMany?: CustomerOtpChallengeScalarWhereInput | CustomerOtpChallengeScalarWhereInput[]
+  }
+
+  export type CustomerAccessTokenUpdateManyWithoutCustomerNestedInput = {
+    create?: XOR<CustomerAccessTokenCreateWithoutCustomerInput, CustomerAccessTokenUncheckedCreateWithoutCustomerInput> | CustomerAccessTokenCreateWithoutCustomerInput[] | CustomerAccessTokenUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: CustomerAccessTokenCreateOrConnectWithoutCustomerInput | CustomerAccessTokenCreateOrConnectWithoutCustomerInput[]
+    upsert?: CustomerAccessTokenUpsertWithWhereUniqueWithoutCustomerInput | CustomerAccessTokenUpsertWithWhereUniqueWithoutCustomerInput[]
+    createMany?: CustomerAccessTokenCreateManyCustomerInputEnvelope
+    set?: CustomerAccessTokenWhereUniqueInput | CustomerAccessTokenWhereUniqueInput[]
+    disconnect?: CustomerAccessTokenWhereUniqueInput | CustomerAccessTokenWhereUniqueInput[]
+    delete?: CustomerAccessTokenWhereUniqueInput | CustomerAccessTokenWhereUniqueInput[]
+    connect?: CustomerAccessTokenWhereUniqueInput | CustomerAccessTokenWhereUniqueInput[]
+    update?: CustomerAccessTokenUpdateWithWhereUniqueWithoutCustomerInput | CustomerAccessTokenUpdateWithWhereUniqueWithoutCustomerInput[]
+    updateMany?: CustomerAccessTokenUpdateManyWithWhereWithoutCustomerInput | CustomerAccessTokenUpdateManyWithWhereWithoutCustomerInput[]
+    deleteMany?: CustomerAccessTokenScalarWhereInput | CustomerAccessTokenScalarWhereInput[]
+  }
+
   export type OrderUncheckedUpdateManyWithoutCustomerNestedInput = {
     create?: XOR<OrderCreateWithoutCustomerInput, OrderUncheckedCreateWithoutCustomerInput> | OrderCreateWithoutCustomerInput[] | OrderUncheckedCreateWithoutCustomerInput[]
     connectOrCreate?: OrderCreateOrConnectWithoutCustomerInput | OrderCreateOrConnectWithoutCustomerInput[]
@@ -70749,6 +80853,96 @@ export namespace Prisma {
     update?: ExternalAddressUpdateWithWhereUniqueWithoutCustomerInput | ExternalAddressUpdateWithWhereUniqueWithoutCustomerInput[]
     updateMany?: ExternalAddressUpdateManyWithWhereWithoutCustomerInput | ExternalAddressUpdateManyWithWhereWithoutCustomerInput[]
     deleteMany?: ExternalAddressScalarWhereInput | ExternalAddressScalarWhereInput[]
+  }
+
+  export type CustomerFeedbackUncheckedUpdateManyWithoutCustomerNestedInput = {
+    create?: XOR<CustomerFeedbackCreateWithoutCustomerInput, CustomerFeedbackUncheckedCreateWithoutCustomerInput> | CustomerFeedbackCreateWithoutCustomerInput[] | CustomerFeedbackUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: CustomerFeedbackCreateOrConnectWithoutCustomerInput | CustomerFeedbackCreateOrConnectWithoutCustomerInput[]
+    upsert?: CustomerFeedbackUpsertWithWhereUniqueWithoutCustomerInput | CustomerFeedbackUpsertWithWhereUniqueWithoutCustomerInput[]
+    createMany?: CustomerFeedbackCreateManyCustomerInputEnvelope
+    set?: CustomerFeedbackWhereUniqueInput | CustomerFeedbackWhereUniqueInput[]
+    disconnect?: CustomerFeedbackWhereUniqueInput | CustomerFeedbackWhereUniqueInput[]
+    delete?: CustomerFeedbackWhereUniqueInput | CustomerFeedbackWhereUniqueInput[]
+    connect?: CustomerFeedbackWhereUniqueInput | CustomerFeedbackWhereUniqueInput[]
+    update?: CustomerFeedbackUpdateWithWhereUniqueWithoutCustomerInput | CustomerFeedbackUpdateWithWhereUniqueWithoutCustomerInput[]
+    updateMany?: CustomerFeedbackUpdateManyWithWhereWithoutCustomerInput | CustomerFeedbackUpdateManyWithWhereWithoutCustomerInput[]
+    deleteMany?: CustomerFeedbackScalarWhereInput | CustomerFeedbackScalarWhereInput[]
+  }
+
+  export type CustomerRewardUncheckedUpdateManyWithoutCustomerNestedInput = {
+    create?: XOR<CustomerRewardCreateWithoutCustomerInput, CustomerRewardUncheckedCreateWithoutCustomerInput> | CustomerRewardCreateWithoutCustomerInput[] | CustomerRewardUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: CustomerRewardCreateOrConnectWithoutCustomerInput | CustomerRewardCreateOrConnectWithoutCustomerInput[]
+    upsert?: CustomerRewardUpsertWithWhereUniqueWithoutCustomerInput | CustomerRewardUpsertWithWhereUniqueWithoutCustomerInput[]
+    createMany?: CustomerRewardCreateManyCustomerInputEnvelope
+    set?: CustomerRewardWhereUniqueInput | CustomerRewardWhereUniqueInput[]
+    disconnect?: CustomerRewardWhereUniqueInput | CustomerRewardWhereUniqueInput[]
+    delete?: CustomerRewardWhereUniqueInput | CustomerRewardWhereUniqueInput[]
+    connect?: CustomerRewardWhereUniqueInput | CustomerRewardWhereUniqueInput[]
+    update?: CustomerRewardUpdateWithWhereUniqueWithoutCustomerInput | CustomerRewardUpdateWithWhereUniqueWithoutCustomerInput[]
+    updateMany?: CustomerRewardUpdateManyWithWhereWithoutCustomerInput | CustomerRewardUpdateManyWithWhereWithoutCustomerInput[]
+    deleteMany?: CustomerRewardScalarWhereInput | CustomerRewardScalarWhereInput[]
+  }
+
+  export type CustomerOtpChallengeUncheckedUpdateManyWithoutCustomerNestedInput = {
+    create?: XOR<CustomerOtpChallengeCreateWithoutCustomerInput, CustomerOtpChallengeUncheckedCreateWithoutCustomerInput> | CustomerOtpChallengeCreateWithoutCustomerInput[] | CustomerOtpChallengeUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: CustomerOtpChallengeCreateOrConnectWithoutCustomerInput | CustomerOtpChallengeCreateOrConnectWithoutCustomerInput[]
+    upsert?: CustomerOtpChallengeUpsertWithWhereUniqueWithoutCustomerInput | CustomerOtpChallengeUpsertWithWhereUniqueWithoutCustomerInput[]
+    createMany?: CustomerOtpChallengeCreateManyCustomerInputEnvelope
+    set?: CustomerOtpChallengeWhereUniqueInput | CustomerOtpChallengeWhereUniqueInput[]
+    disconnect?: CustomerOtpChallengeWhereUniqueInput | CustomerOtpChallengeWhereUniqueInput[]
+    delete?: CustomerOtpChallengeWhereUniqueInput | CustomerOtpChallengeWhereUniqueInput[]
+    connect?: CustomerOtpChallengeWhereUniqueInput | CustomerOtpChallengeWhereUniqueInput[]
+    update?: CustomerOtpChallengeUpdateWithWhereUniqueWithoutCustomerInput | CustomerOtpChallengeUpdateWithWhereUniqueWithoutCustomerInput[]
+    updateMany?: CustomerOtpChallengeUpdateManyWithWhereWithoutCustomerInput | CustomerOtpChallengeUpdateManyWithWhereWithoutCustomerInput[]
+    deleteMany?: CustomerOtpChallengeScalarWhereInput | CustomerOtpChallengeScalarWhereInput[]
+  }
+
+  export type CustomerAccessTokenUncheckedUpdateManyWithoutCustomerNestedInput = {
+    create?: XOR<CustomerAccessTokenCreateWithoutCustomerInput, CustomerAccessTokenUncheckedCreateWithoutCustomerInput> | CustomerAccessTokenCreateWithoutCustomerInput[] | CustomerAccessTokenUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: CustomerAccessTokenCreateOrConnectWithoutCustomerInput | CustomerAccessTokenCreateOrConnectWithoutCustomerInput[]
+    upsert?: CustomerAccessTokenUpsertWithWhereUniqueWithoutCustomerInput | CustomerAccessTokenUpsertWithWhereUniqueWithoutCustomerInput[]
+    createMany?: CustomerAccessTokenCreateManyCustomerInputEnvelope
+    set?: CustomerAccessTokenWhereUniqueInput | CustomerAccessTokenWhereUniqueInput[]
+    disconnect?: CustomerAccessTokenWhereUniqueInput | CustomerAccessTokenWhereUniqueInput[]
+    delete?: CustomerAccessTokenWhereUniqueInput | CustomerAccessTokenWhereUniqueInput[]
+    connect?: CustomerAccessTokenWhereUniqueInput | CustomerAccessTokenWhereUniqueInput[]
+    update?: CustomerAccessTokenUpdateWithWhereUniqueWithoutCustomerInput | CustomerAccessTokenUpdateWithWhereUniqueWithoutCustomerInput[]
+    updateMany?: CustomerAccessTokenUpdateManyWithWhereWithoutCustomerInput | CustomerAccessTokenUpdateManyWithWhereWithoutCustomerInput[]
+    deleteMany?: CustomerAccessTokenScalarWhereInput | CustomerAccessTokenScalarWhereInput[]
+  }
+
+  export type CustomerCreateNestedOneWithoutOtpChallengesInput = {
+    create?: XOR<CustomerCreateWithoutOtpChallengesInput, CustomerUncheckedCreateWithoutOtpChallengesInput>
+    connectOrCreate?: CustomerCreateOrConnectWithoutOtpChallengesInput
+    connect?: CustomerWhereUniqueInput
+  }
+
+  export type EnumCustomerOtpChannelFieldUpdateOperationsInput = {
+    set?: $Enums.CustomerOtpChannel
+  }
+
+  export type CustomerUpdateOneWithoutOtpChallengesNestedInput = {
+    create?: XOR<CustomerCreateWithoutOtpChallengesInput, CustomerUncheckedCreateWithoutOtpChallengesInput>
+    connectOrCreate?: CustomerCreateOrConnectWithoutOtpChallengesInput
+    upsert?: CustomerUpsertWithoutOtpChallengesInput
+    disconnect?: CustomerWhereInput | boolean
+    delete?: CustomerWhereInput | boolean
+    connect?: CustomerWhereUniqueInput
+    update?: XOR<XOR<CustomerUpdateToOneWithWhereWithoutOtpChallengesInput, CustomerUpdateWithoutOtpChallengesInput>, CustomerUncheckedUpdateWithoutOtpChallengesInput>
+  }
+
+  export type CustomerCreateNestedOneWithoutAccessTokensInput = {
+    create?: XOR<CustomerCreateWithoutAccessTokensInput, CustomerUncheckedCreateWithoutAccessTokensInput>
+    connectOrCreate?: CustomerCreateOrConnectWithoutAccessTokensInput
+    connect?: CustomerWhereUniqueInput
+  }
+
+  export type CustomerUpdateOneRequiredWithoutAccessTokensNestedInput = {
+    create?: XOR<CustomerCreateWithoutAccessTokensInput, CustomerUncheckedCreateWithoutAccessTokensInput>
+    connectOrCreate?: CustomerCreateOrConnectWithoutAccessTokensInput
+    upsert?: CustomerUpsertWithoutAccessTokensInput
+    connect?: CustomerWhereUniqueInput
+    update?: XOR<XOR<CustomerUpdateToOneWithWhereWithoutAccessTokensInput, CustomerUpdateWithoutAccessTokensInput>, CustomerUncheckedUpdateWithoutAccessTokensInput>
   }
 
   export type CustomerCreateNestedOneWithoutAddressesInput = {
@@ -71001,6 +81195,26 @@ export namespace Prisma {
     connect?: PreparationStepCategoryWhereUniqueInput | PreparationStepCategoryWhereUniqueInput[]
   }
 
+  export type CustomerFeedbackCreateNestedOneWithoutOrderInput = {
+    create?: XOR<CustomerFeedbackCreateWithoutOrderInput, CustomerFeedbackUncheckedCreateWithoutOrderInput>
+    connectOrCreate?: CustomerFeedbackCreateOrConnectWithoutOrderInput
+    connect?: CustomerFeedbackWhereUniqueInput
+  }
+
+  export type CustomerRewardCreateNestedManyWithoutIssuedForOrderInput = {
+    create?: XOR<CustomerRewardCreateWithoutIssuedForOrderInput, CustomerRewardUncheckedCreateWithoutIssuedForOrderInput> | CustomerRewardCreateWithoutIssuedForOrderInput[] | CustomerRewardUncheckedCreateWithoutIssuedForOrderInput[]
+    connectOrCreate?: CustomerRewardCreateOrConnectWithoutIssuedForOrderInput | CustomerRewardCreateOrConnectWithoutIssuedForOrderInput[]
+    createMany?: CustomerRewardCreateManyIssuedForOrderInputEnvelope
+    connect?: CustomerRewardWhereUniqueInput | CustomerRewardWhereUniqueInput[]
+  }
+
+  export type CustomerRewardCreateNestedManyWithoutRedeemedByOrderInput = {
+    create?: XOR<CustomerRewardCreateWithoutRedeemedByOrderInput, CustomerRewardUncheckedCreateWithoutRedeemedByOrderInput> | CustomerRewardCreateWithoutRedeemedByOrderInput[] | CustomerRewardUncheckedCreateWithoutRedeemedByOrderInput[]
+    connectOrCreate?: CustomerRewardCreateOrConnectWithoutRedeemedByOrderInput | CustomerRewardCreateOrConnectWithoutRedeemedByOrderInput[]
+    createMany?: CustomerRewardCreateManyRedeemedByOrderInputEnvelope
+    connect?: CustomerRewardWhereUniqueInput | CustomerRewardWhereUniqueInput[]
+  }
+
   export type OrderProductsUncheckedCreateNestedManyWithoutOrderInput = {
     create?: XOR<OrderProductsCreateWithoutOrderInput, OrderProductsUncheckedCreateWithoutOrderInput> | OrderProductsCreateWithoutOrderInput[] | OrderProductsUncheckedCreateWithoutOrderInput[]
     connectOrCreate?: OrderProductsCreateOrConnectWithoutOrderInput | OrderProductsCreateOrConnectWithoutOrderInput[]
@@ -71013,6 +81227,26 @@ export namespace Prisma {
     connectOrCreate?: PreparationStepCategoryCreateOrConnectWithoutOrderInput | PreparationStepCategoryCreateOrConnectWithoutOrderInput[]
     createMany?: PreparationStepCategoryCreateManyOrderInputEnvelope
     connect?: PreparationStepCategoryWhereUniqueInput | PreparationStepCategoryWhereUniqueInput[]
+  }
+
+  export type CustomerFeedbackUncheckedCreateNestedOneWithoutOrderInput = {
+    create?: XOR<CustomerFeedbackCreateWithoutOrderInput, CustomerFeedbackUncheckedCreateWithoutOrderInput>
+    connectOrCreate?: CustomerFeedbackCreateOrConnectWithoutOrderInput
+    connect?: CustomerFeedbackWhereUniqueInput
+  }
+
+  export type CustomerRewardUncheckedCreateNestedManyWithoutIssuedForOrderInput = {
+    create?: XOR<CustomerRewardCreateWithoutIssuedForOrderInput, CustomerRewardUncheckedCreateWithoutIssuedForOrderInput> | CustomerRewardCreateWithoutIssuedForOrderInput[] | CustomerRewardUncheckedCreateWithoutIssuedForOrderInput[]
+    connectOrCreate?: CustomerRewardCreateOrConnectWithoutIssuedForOrderInput | CustomerRewardCreateOrConnectWithoutIssuedForOrderInput[]
+    createMany?: CustomerRewardCreateManyIssuedForOrderInputEnvelope
+    connect?: CustomerRewardWhereUniqueInput | CustomerRewardWhereUniqueInput[]
+  }
+
+  export type CustomerRewardUncheckedCreateNestedManyWithoutRedeemedByOrderInput = {
+    create?: XOR<CustomerRewardCreateWithoutRedeemedByOrderInput, CustomerRewardUncheckedCreateWithoutRedeemedByOrderInput> | CustomerRewardCreateWithoutRedeemedByOrderInput[] | CustomerRewardUncheckedCreateWithoutRedeemedByOrderInput[]
+    connectOrCreate?: CustomerRewardCreateOrConnectWithoutRedeemedByOrderInput | CustomerRewardCreateOrConnectWithoutRedeemedByOrderInput[]
+    createMany?: CustomerRewardCreateManyRedeemedByOrderInputEnvelope
+    connect?: CustomerRewardWhereUniqueInput | CustomerRewardWhereUniqueInput[]
   }
 
   export type EnumOrderStatusFieldUpdateOperationsInput = {
@@ -71110,6 +81344,44 @@ export namespace Prisma {
     deleteMany?: PreparationStepCategoryScalarWhereInput | PreparationStepCategoryScalarWhereInput[]
   }
 
+  export type CustomerFeedbackUpdateOneWithoutOrderNestedInput = {
+    create?: XOR<CustomerFeedbackCreateWithoutOrderInput, CustomerFeedbackUncheckedCreateWithoutOrderInput>
+    connectOrCreate?: CustomerFeedbackCreateOrConnectWithoutOrderInput
+    upsert?: CustomerFeedbackUpsertWithoutOrderInput
+    disconnect?: CustomerFeedbackWhereInput | boolean
+    delete?: CustomerFeedbackWhereInput | boolean
+    connect?: CustomerFeedbackWhereUniqueInput
+    update?: XOR<XOR<CustomerFeedbackUpdateToOneWithWhereWithoutOrderInput, CustomerFeedbackUpdateWithoutOrderInput>, CustomerFeedbackUncheckedUpdateWithoutOrderInput>
+  }
+
+  export type CustomerRewardUpdateManyWithoutIssuedForOrderNestedInput = {
+    create?: XOR<CustomerRewardCreateWithoutIssuedForOrderInput, CustomerRewardUncheckedCreateWithoutIssuedForOrderInput> | CustomerRewardCreateWithoutIssuedForOrderInput[] | CustomerRewardUncheckedCreateWithoutIssuedForOrderInput[]
+    connectOrCreate?: CustomerRewardCreateOrConnectWithoutIssuedForOrderInput | CustomerRewardCreateOrConnectWithoutIssuedForOrderInput[]
+    upsert?: CustomerRewardUpsertWithWhereUniqueWithoutIssuedForOrderInput | CustomerRewardUpsertWithWhereUniqueWithoutIssuedForOrderInput[]
+    createMany?: CustomerRewardCreateManyIssuedForOrderInputEnvelope
+    set?: CustomerRewardWhereUniqueInput | CustomerRewardWhereUniqueInput[]
+    disconnect?: CustomerRewardWhereUniqueInput | CustomerRewardWhereUniqueInput[]
+    delete?: CustomerRewardWhereUniqueInput | CustomerRewardWhereUniqueInput[]
+    connect?: CustomerRewardWhereUniqueInput | CustomerRewardWhereUniqueInput[]
+    update?: CustomerRewardUpdateWithWhereUniqueWithoutIssuedForOrderInput | CustomerRewardUpdateWithWhereUniqueWithoutIssuedForOrderInput[]
+    updateMany?: CustomerRewardUpdateManyWithWhereWithoutIssuedForOrderInput | CustomerRewardUpdateManyWithWhereWithoutIssuedForOrderInput[]
+    deleteMany?: CustomerRewardScalarWhereInput | CustomerRewardScalarWhereInput[]
+  }
+
+  export type CustomerRewardUpdateManyWithoutRedeemedByOrderNestedInput = {
+    create?: XOR<CustomerRewardCreateWithoutRedeemedByOrderInput, CustomerRewardUncheckedCreateWithoutRedeemedByOrderInput> | CustomerRewardCreateWithoutRedeemedByOrderInput[] | CustomerRewardUncheckedCreateWithoutRedeemedByOrderInput[]
+    connectOrCreate?: CustomerRewardCreateOrConnectWithoutRedeemedByOrderInput | CustomerRewardCreateOrConnectWithoutRedeemedByOrderInput[]
+    upsert?: CustomerRewardUpsertWithWhereUniqueWithoutRedeemedByOrderInput | CustomerRewardUpsertWithWhereUniqueWithoutRedeemedByOrderInput[]
+    createMany?: CustomerRewardCreateManyRedeemedByOrderInputEnvelope
+    set?: CustomerRewardWhereUniqueInput | CustomerRewardWhereUniqueInput[]
+    disconnect?: CustomerRewardWhereUniqueInput | CustomerRewardWhereUniqueInput[]
+    delete?: CustomerRewardWhereUniqueInput | CustomerRewardWhereUniqueInput[]
+    connect?: CustomerRewardWhereUniqueInput | CustomerRewardWhereUniqueInput[]
+    update?: CustomerRewardUpdateWithWhereUniqueWithoutRedeemedByOrderInput | CustomerRewardUpdateWithWhereUniqueWithoutRedeemedByOrderInput[]
+    updateMany?: CustomerRewardUpdateManyWithWhereWithoutRedeemedByOrderInput | CustomerRewardUpdateManyWithWhereWithoutRedeemedByOrderInput[]
+    deleteMany?: CustomerRewardScalarWhereInput | CustomerRewardScalarWhereInput[]
+  }
+
   export type OrderProductsUncheckedUpdateManyWithoutOrderNestedInput = {
     create?: XOR<OrderProductsCreateWithoutOrderInput, OrderProductsUncheckedCreateWithoutOrderInput> | OrderProductsCreateWithoutOrderInput[] | OrderProductsUncheckedCreateWithoutOrderInput[]
     connectOrCreate?: OrderProductsCreateOrConnectWithoutOrderInput | OrderProductsCreateOrConnectWithoutOrderInput[]
@@ -71136,6 +81408,194 @@ export namespace Prisma {
     update?: PreparationStepCategoryUpdateWithWhereUniqueWithoutOrderInput | PreparationStepCategoryUpdateWithWhereUniqueWithoutOrderInput[]
     updateMany?: PreparationStepCategoryUpdateManyWithWhereWithoutOrderInput | PreparationStepCategoryUpdateManyWithWhereWithoutOrderInput[]
     deleteMany?: PreparationStepCategoryScalarWhereInput | PreparationStepCategoryScalarWhereInput[]
+  }
+
+  export type CustomerFeedbackUncheckedUpdateOneWithoutOrderNestedInput = {
+    create?: XOR<CustomerFeedbackCreateWithoutOrderInput, CustomerFeedbackUncheckedCreateWithoutOrderInput>
+    connectOrCreate?: CustomerFeedbackCreateOrConnectWithoutOrderInput
+    upsert?: CustomerFeedbackUpsertWithoutOrderInput
+    disconnect?: CustomerFeedbackWhereInput | boolean
+    delete?: CustomerFeedbackWhereInput | boolean
+    connect?: CustomerFeedbackWhereUniqueInput
+    update?: XOR<XOR<CustomerFeedbackUpdateToOneWithWhereWithoutOrderInput, CustomerFeedbackUpdateWithoutOrderInput>, CustomerFeedbackUncheckedUpdateWithoutOrderInput>
+  }
+
+  export type CustomerRewardUncheckedUpdateManyWithoutIssuedForOrderNestedInput = {
+    create?: XOR<CustomerRewardCreateWithoutIssuedForOrderInput, CustomerRewardUncheckedCreateWithoutIssuedForOrderInput> | CustomerRewardCreateWithoutIssuedForOrderInput[] | CustomerRewardUncheckedCreateWithoutIssuedForOrderInput[]
+    connectOrCreate?: CustomerRewardCreateOrConnectWithoutIssuedForOrderInput | CustomerRewardCreateOrConnectWithoutIssuedForOrderInput[]
+    upsert?: CustomerRewardUpsertWithWhereUniqueWithoutIssuedForOrderInput | CustomerRewardUpsertWithWhereUniqueWithoutIssuedForOrderInput[]
+    createMany?: CustomerRewardCreateManyIssuedForOrderInputEnvelope
+    set?: CustomerRewardWhereUniqueInput | CustomerRewardWhereUniqueInput[]
+    disconnect?: CustomerRewardWhereUniqueInput | CustomerRewardWhereUniqueInput[]
+    delete?: CustomerRewardWhereUniqueInput | CustomerRewardWhereUniqueInput[]
+    connect?: CustomerRewardWhereUniqueInput | CustomerRewardWhereUniqueInput[]
+    update?: CustomerRewardUpdateWithWhereUniqueWithoutIssuedForOrderInput | CustomerRewardUpdateWithWhereUniqueWithoutIssuedForOrderInput[]
+    updateMany?: CustomerRewardUpdateManyWithWhereWithoutIssuedForOrderInput | CustomerRewardUpdateManyWithWhereWithoutIssuedForOrderInput[]
+    deleteMany?: CustomerRewardScalarWhereInput | CustomerRewardScalarWhereInput[]
+  }
+
+  export type CustomerRewardUncheckedUpdateManyWithoutRedeemedByOrderNestedInput = {
+    create?: XOR<CustomerRewardCreateWithoutRedeemedByOrderInput, CustomerRewardUncheckedCreateWithoutRedeemedByOrderInput> | CustomerRewardCreateWithoutRedeemedByOrderInput[] | CustomerRewardUncheckedCreateWithoutRedeemedByOrderInput[]
+    connectOrCreate?: CustomerRewardCreateOrConnectWithoutRedeemedByOrderInput | CustomerRewardCreateOrConnectWithoutRedeemedByOrderInput[]
+    upsert?: CustomerRewardUpsertWithWhereUniqueWithoutRedeemedByOrderInput | CustomerRewardUpsertWithWhereUniqueWithoutRedeemedByOrderInput[]
+    createMany?: CustomerRewardCreateManyRedeemedByOrderInputEnvelope
+    set?: CustomerRewardWhereUniqueInput | CustomerRewardWhereUniqueInput[]
+    disconnect?: CustomerRewardWhereUniqueInput | CustomerRewardWhereUniqueInput[]
+    delete?: CustomerRewardWhereUniqueInput | CustomerRewardWhereUniqueInput[]
+    connect?: CustomerRewardWhereUniqueInput | CustomerRewardWhereUniqueInput[]
+    update?: CustomerRewardUpdateWithWhereUniqueWithoutRedeemedByOrderInput | CustomerRewardUpdateWithWhereUniqueWithoutRedeemedByOrderInput[]
+    updateMany?: CustomerRewardUpdateManyWithWhereWithoutRedeemedByOrderInput | CustomerRewardUpdateManyWithWhereWithoutRedeemedByOrderInput[]
+    deleteMany?: CustomerRewardScalarWhereInput | CustomerRewardScalarWhereInput[]
+  }
+
+  export type CustomerCreateNestedOneWithoutFeedbacksInput = {
+    create?: XOR<CustomerCreateWithoutFeedbacksInput, CustomerUncheckedCreateWithoutFeedbacksInput>
+    connectOrCreate?: CustomerCreateOrConnectWithoutFeedbacksInput
+    connect?: CustomerWhereUniqueInput
+  }
+
+  export type OrderCreateNestedOneWithoutFeedbackInput = {
+    create?: XOR<OrderCreateWithoutFeedbackInput, OrderUncheckedCreateWithoutFeedbackInput>
+    connectOrCreate?: OrderCreateOrConnectWithoutFeedbackInput
+    connect?: OrderWhereUniqueInput
+  }
+
+  export type CustomerRewardCreateNestedOneWithoutFeedbackInput = {
+    create?: XOR<CustomerRewardCreateWithoutFeedbackInput, CustomerRewardUncheckedCreateWithoutFeedbackInput>
+    connectOrCreate?: CustomerRewardCreateOrConnectWithoutFeedbackInput
+    connect?: CustomerRewardWhereUniqueInput
+  }
+
+  export type CustomerRewardUncheckedCreateNestedOneWithoutFeedbackInput = {
+    create?: XOR<CustomerRewardCreateWithoutFeedbackInput, CustomerRewardUncheckedCreateWithoutFeedbackInput>
+    connectOrCreate?: CustomerRewardCreateOrConnectWithoutFeedbackInput
+    connect?: CustomerRewardWhereUniqueInput
+  }
+
+  export type EnumCustomerFeedbackSentimentFieldUpdateOperationsInput = {
+    set?: $Enums.CustomerFeedbackSentiment
+  }
+
+  export type CustomerUpdateOneRequiredWithoutFeedbacksNestedInput = {
+    create?: XOR<CustomerCreateWithoutFeedbacksInput, CustomerUncheckedCreateWithoutFeedbacksInput>
+    connectOrCreate?: CustomerCreateOrConnectWithoutFeedbacksInput
+    upsert?: CustomerUpsertWithoutFeedbacksInput
+    connect?: CustomerWhereUniqueInput
+    update?: XOR<XOR<CustomerUpdateToOneWithWhereWithoutFeedbacksInput, CustomerUpdateWithoutFeedbacksInput>, CustomerUncheckedUpdateWithoutFeedbacksInput>
+  }
+
+  export type OrderUpdateOneRequiredWithoutFeedbackNestedInput = {
+    create?: XOR<OrderCreateWithoutFeedbackInput, OrderUncheckedCreateWithoutFeedbackInput>
+    connectOrCreate?: OrderCreateOrConnectWithoutFeedbackInput
+    upsert?: OrderUpsertWithoutFeedbackInput
+    connect?: OrderWhereUniqueInput
+    update?: XOR<XOR<OrderUpdateToOneWithWhereWithoutFeedbackInput, OrderUpdateWithoutFeedbackInput>, OrderUncheckedUpdateWithoutFeedbackInput>
+  }
+
+  export type CustomerRewardUpdateOneWithoutFeedbackNestedInput = {
+    create?: XOR<CustomerRewardCreateWithoutFeedbackInput, CustomerRewardUncheckedCreateWithoutFeedbackInput>
+    connectOrCreate?: CustomerRewardCreateOrConnectWithoutFeedbackInput
+    upsert?: CustomerRewardUpsertWithoutFeedbackInput
+    disconnect?: CustomerRewardWhereInput | boolean
+    delete?: CustomerRewardWhereInput | boolean
+    connect?: CustomerRewardWhereUniqueInput
+    update?: XOR<XOR<CustomerRewardUpdateToOneWithWhereWithoutFeedbackInput, CustomerRewardUpdateWithoutFeedbackInput>, CustomerRewardUncheckedUpdateWithoutFeedbackInput>
+  }
+
+  export type CustomerRewardUncheckedUpdateOneWithoutFeedbackNestedInput = {
+    create?: XOR<CustomerRewardCreateWithoutFeedbackInput, CustomerRewardUncheckedCreateWithoutFeedbackInput>
+    connectOrCreate?: CustomerRewardCreateOrConnectWithoutFeedbackInput
+    upsert?: CustomerRewardUpsertWithoutFeedbackInput
+    disconnect?: CustomerRewardWhereInput | boolean
+    delete?: CustomerRewardWhereInput | boolean
+    connect?: CustomerRewardWhereUniqueInput
+    update?: XOR<XOR<CustomerRewardUpdateToOneWithWhereWithoutFeedbackInput, CustomerRewardUpdateWithoutFeedbackInput>, CustomerRewardUncheckedUpdateWithoutFeedbackInput>
+  }
+
+  export type CustomerCreateNestedOneWithoutRewardsInput = {
+    create?: XOR<CustomerCreateWithoutRewardsInput, CustomerUncheckedCreateWithoutRewardsInput>
+    connectOrCreate?: CustomerCreateOrConnectWithoutRewardsInput
+    connect?: CustomerWhereUniqueInput
+  }
+
+  export type ProductCreateNestedOneWithoutCustomerRewardsInput = {
+    create?: XOR<ProductCreateWithoutCustomerRewardsInput, ProductUncheckedCreateWithoutCustomerRewardsInput>
+    connectOrCreate?: ProductCreateOrConnectWithoutCustomerRewardsInput
+    connect?: ProductWhereUniqueInput
+  }
+
+  export type CustomerFeedbackCreateNestedOneWithoutIssuedRewardInput = {
+    create?: XOR<CustomerFeedbackCreateWithoutIssuedRewardInput, CustomerFeedbackUncheckedCreateWithoutIssuedRewardInput>
+    connectOrCreate?: CustomerFeedbackCreateOrConnectWithoutIssuedRewardInput
+    connect?: CustomerFeedbackWhereUniqueInput
+  }
+
+  export type OrderCreateNestedOneWithoutIssuedRewardsInput = {
+    create?: XOR<OrderCreateWithoutIssuedRewardsInput, OrderUncheckedCreateWithoutIssuedRewardsInput>
+    connectOrCreate?: OrderCreateOrConnectWithoutIssuedRewardsInput
+    connect?: OrderWhereUniqueInput
+  }
+
+  export type OrderCreateNestedOneWithoutRedeemedRewardsInput = {
+    create?: XOR<OrderCreateWithoutRedeemedRewardsInput, OrderUncheckedCreateWithoutRedeemedRewardsInput>
+    connectOrCreate?: OrderCreateOrConnectWithoutRedeemedRewardsInput
+    connect?: OrderWhereUniqueInput
+  }
+
+  export type EnumCustomerRewardStatusFieldUpdateOperationsInput = {
+    set?: $Enums.CustomerRewardStatus
+  }
+
+  export type EnumCustomerRewardTypeFieldUpdateOperationsInput = {
+    set?: $Enums.CustomerRewardType
+  }
+
+  export type CustomerUpdateOneRequiredWithoutRewardsNestedInput = {
+    create?: XOR<CustomerCreateWithoutRewardsInput, CustomerUncheckedCreateWithoutRewardsInput>
+    connectOrCreate?: CustomerCreateOrConnectWithoutRewardsInput
+    upsert?: CustomerUpsertWithoutRewardsInput
+    connect?: CustomerWhereUniqueInput
+    update?: XOR<XOR<CustomerUpdateToOneWithWhereWithoutRewardsInput, CustomerUpdateWithoutRewardsInput>, CustomerUncheckedUpdateWithoutRewardsInput>
+  }
+
+  export type ProductUpdateOneWithoutCustomerRewardsNestedInput = {
+    create?: XOR<ProductCreateWithoutCustomerRewardsInput, ProductUncheckedCreateWithoutCustomerRewardsInput>
+    connectOrCreate?: ProductCreateOrConnectWithoutCustomerRewardsInput
+    upsert?: ProductUpsertWithoutCustomerRewardsInput
+    disconnect?: ProductWhereInput | boolean
+    delete?: ProductWhereInput | boolean
+    connect?: ProductWhereUniqueInput
+    update?: XOR<XOR<ProductUpdateToOneWithWhereWithoutCustomerRewardsInput, ProductUpdateWithoutCustomerRewardsInput>, ProductUncheckedUpdateWithoutCustomerRewardsInput>
+  }
+
+  export type CustomerFeedbackUpdateOneWithoutIssuedRewardNestedInput = {
+    create?: XOR<CustomerFeedbackCreateWithoutIssuedRewardInput, CustomerFeedbackUncheckedCreateWithoutIssuedRewardInput>
+    connectOrCreate?: CustomerFeedbackCreateOrConnectWithoutIssuedRewardInput
+    upsert?: CustomerFeedbackUpsertWithoutIssuedRewardInput
+    disconnect?: CustomerFeedbackWhereInput | boolean
+    delete?: CustomerFeedbackWhereInput | boolean
+    connect?: CustomerFeedbackWhereUniqueInput
+    update?: XOR<XOR<CustomerFeedbackUpdateToOneWithWhereWithoutIssuedRewardInput, CustomerFeedbackUpdateWithoutIssuedRewardInput>, CustomerFeedbackUncheckedUpdateWithoutIssuedRewardInput>
+  }
+
+  export type OrderUpdateOneWithoutIssuedRewardsNestedInput = {
+    create?: XOR<OrderCreateWithoutIssuedRewardsInput, OrderUncheckedCreateWithoutIssuedRewardsInput>
+    connectOrCreate?: OrderCreateOrConnectWithoutIssuedRewardsInput
+    upsert?: OrderUpsertWithoutIssuedRewardsInput
+    disconnect?: OrderWhereInput | boolean
+    delete?: OrderWhereInput | boolean
+    connect?: OrderWhereUniqueInput
+    update?: XOR<XOR<OrderUpdateToOneWithWhereWithoutIssuedRewardsInput, OrderUpdateWithoutIssuedRewardsInput>, OrderUncheckedUpdateWithoutIssuedRewardsInput>
+  }
+
+  export type OrderUpdateOneWithoutRedeemedRewardsNestedInput = {
+    create?: XOR<OrderCreateWithoutRedeemedRewardsInput, OrderUncheckedCreateWithoutRedeemedRewardsInput>
+    connectOrCreate?: OrderCreateOrConnectWithoutRedeemedRewardsInput
+    upsert?: OrderUpsertWithoutRedeemedRewardsInput
+    disconnect?: OrderWhereInput | boolean
+    delete?: OrderWhereInput | boolean
+    connect?: OrderWhereUniqueInput
+    update?: XOR<XOR<OrderUpdateToOneWithWhereWithoutRedeemedRewardsInput, OrderUpdateWithoutRedeemedRewardsInput>, OrderUncheckedUpdateWithoutRedeemedRewardsInput>
   }
 
   export type ProductCreateNestedOneWithoutOrderProductsInput = {
@@ -72101,6 +82561,23 @@ export namespace Prisma {
     _max?: NestedEnumDispatchAssignmentJobStatusFilter<$PrismaModel>
   }
 
+  export type NestedEnumFeedbackWhatsAppJobStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.FeedbackWhatsAppJobStatus | EnumFeedbackWhatsAppJobStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.FeedbackWhatsAppJobStatus[] | ListEnumFeedbackWhatsAppJobStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.FeedbackWhatsAppJobStatus[] | ListEnumFeedbackWhatsAppJobStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumFeedbackWhatsAppJobStatusFilter<$PrismaModel> | $Enums.FeedbackWhatsAppJobStatus
+  }
+
+  export type NestedEnumFeedbackWhatsAppJobStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.FeedbackWhatsAppJobStatus | EnumFeedbackWhatsAppJobStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.FeedbackWhatsAppJobStatus[] | ListEnumFeedbackWhatsAppJobStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.FeedbackWhatsAppJobStatus[] | ListEnumFeedbackWhatsAppJobStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumFeedbackWhatsAppJobStatusWithAggregatesFilter<$PrismaModel> | $Enums.FeedbackWhatsAppJobStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumFeedbackWhatsAppJobStatusFilter<$PrismaModel>
+    _max?: NestedEnumFeedbackWhatsAppJobStatusFilter<$PrismaModel>
+  }
+
   export type NestedEnumProductItemTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.ProductItemType | EnumProductItemTypeFieldRefInput<$PrismaModel>
     in?: $Enums.ProductItemType[] | ListEnumProductItemTypeFieldRefInput<$PrismaModel>
@@ -72116,6 +82593,23 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumProductItemTypeFilter<$PrismaModel>
     _max?: NestedEnumProductItemTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumCustomerOtpChannelFilter<$PrismaModel = never> = {
+    equals?: $Enums.CustomerOtpChannel | EnumCustomerOtpChannelFieldRefInput<$PrismaModel>
+    in?: $Enums.CustomerOtpChannel[] | ListEnumCustomerOtpChannelFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CustomerOtpChannel[] | ListEnumCustomerOtpChannelFieldRefInput<$PrismaModel>
+    not?: NestedEnumCustomerOtpChannelFilter<$PrismaModel> | $Enums.CustomerOtpChannel
+  }
+
+  export type NestedEnumCustomerOtpChannelWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CustomerOtpChannel | EnumCustomerOtpChannelFieldRefInput<$PrismaModel>
+    in?: $Enums.CustomerOtpChannel[] | ListEnumCustomerOtpChannelFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CustomerOtpChannel[] | ListEnumCustomerOtpChannelFieldRefInput<$PrismaModel>
+    not?: NestedEnumCustomerOtpChannelWithAggregatesFilter<$PrismaModel> | $Enums.CustomerOtpChannel
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCustomerOtpChannelFilter<$PrismaModel>
+    _max?: NestedEnumCustomerOtpChannelFilter<$PrismaModel>
   }
 
   export type NestedEnumOrderStatusFilter<$PrismaModel = never> = {
@@ -72167,6 +82661,57 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumPaymentTypeFilter<$PrismaModel>
     _max?: NestedEnumPaymentTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumCustomerFeedbackSentimentFilter<$PrismaModel = never> = {
+    equals?: $Enums.CustomerFeedbackSentiment | EnumCustomerFeedbackSentimentFieldRefInput<$PrismaModel>
+    in?: $Enums.CustomerFeedbackSentiment[] | ListEnumCustomerFeedbackSentimentFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CustomerFeedbackSentiment[] | ListEnumCustomerFeedbackSentimentFieldRefInput<$PrismaModel>
+    not?: NestedEnumCustomerFeedbackSentimentFilter<$PrismaModel> | $Enums.CustomerFeedbackSentiment
+  }
+
+  export type NestedEnumCustomerFeedbackSentimentWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CustomerFeedbackSentiment | EnumCustomerFeedbackSentimentFieldRefInput<$PrismaModel>
+    in?: $Enums.CustomerFeedbackSentiment[] | ListEnumCustomerFeedbackSentimentFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CustomerFeedbackSentiment[] | ListEnumCustomerFeedbackSentimentFieldRefInput<$PrismaModel>
+    not?: NestedEnumCustomerFeedbackSentimentWithAggregatesFilter<$PrismaModel> | $Enums.CustomerFeedbackSentiment
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCustomerFeedbackSentimentFilter<$PrismaModel>
+    _max?: NestedEnumCustomerFeedbackSentimentFilter<$PrismaModel>
+  }
+
+  export type NestedEnumCustomerRewardStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.CustomerRewardStatus | EnumCustomerRewardStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.CustomerRewardStatus[] | ListEnumCustomerRewardStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CustomerRewardStatus[] | ListEnumCustomerRewardStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumCustomerRewardStatusFilter<$PrismaModel> | $Enums.CustomerRewardStatus
+  }
+
+  export type NestedEnumCustomerRewardTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.CustomerRewardType | EnumCustomerRewardTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.CustomerRewardType[] | ListEnumCustomerRewardTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CustomerRewardType[] | ListEnumCustomerRewardTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumCustomerRewardTypeFilter<$PrismaModel> | $Enums.CustomerRewardType
+  }
+
+  export type NestedEnumCustomerRewardStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CustomerRewardStatus | EnumCustomerRewardStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.CustomerRewardStatus[] | ListEnumCustomerRewardStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CustomerRewardStatus[] | ListEnumCustomerRewardStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumCustomerRewardStatusWithAggregatesFilter<$PrismaModel> | $Enums.CustomerRewardStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCustomerRewardStatusFilter<$PrismaModel>
+    _max?: NestedEnumCustomerRewardStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumCustomerRewardTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CustomerRewardType | EnumCustomerRewardTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.CustomerRewardType[] | ListEnumCustomerRewardTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CustomerRewardType[] | ListEnumCustomerRewardTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumCustomerRewardTypeWithAggregatesFilter<$PrismaModel> | $Enums.CustomerRewardType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCustomerRewardTypeFilter<$PrismaModel>
+    _max?: NestedEnumCustomerRewardTypeFilter<$PrismaModel>
   }
 
   export type PreparationStepCreateWithoutStationInput = {
@@ -72247,6 +82792,7 @@ export namespace Prisma {
     exclusivePromotionProducts?: ExclusivePromotionProductCreateNestedManyWithoutProductInput
     OrderProducts?: OrderProductsCreateNestedManyWithoutProductInput
     prizeProducts?: ProgressiveDiscountPrizeProductCreateNestedManyWithoutProductInput
+    customerRewards?: CustomerRewardCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutPreparationStepsInput = {
@@ -72269,6 +82815,7 @@ export namespace Prisma {
     exclusivePromotionProducts?: ExclusivePromotionProductUncheckedCreateNestedManyWithoutProductInput
     OrderProducts?: OrderProductsUncheckedCreateNestedManyWithoutProductInput
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedCreateNestedManyWithoutProductInput
+    customerRewards?: CustomerRewardUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutPreparationStepsInput = {
@@ -72461,6 +83008,9 @@ export namespace Prisma {
     deliveryAddress?: DeliveryAddressCreateNestedOneWithoutOrdersInput
     externalAddress?: ExternalAddressCreateNestedOneWithoutOrdersInput
     orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
+    feedback?: CustomerFeedbackCreateNestedOneWithoutOrderInput
+    issuedRewards?: CustomerRewardCreateNestedManyWithoutIssuedForOrderInput
+    redeemedRewards?: CustomerRewardCreateNestedManyWithoutRedeemedByOrderInput
   }
 
   export type OrderUncheckedCreateWithoutPreparationStepCategoriesInput = {
@@ -72488,6 +83038,9 @@ export namespace Prisma {
     deliveryAddressId?: string | null
     externalAddressId?: string | null
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
+    feedback?: CustomerFeedbackUncheckedCreateNestedOneWithoutOrderInput
+    issuedRewards?: CustomerRewardUncheckedCreateNestedManyWithoutIssuedForOrderInput
+    redeemedRewards?: CustomerRewardUncheckedCreateNestedManyWithoutRedeemedByOrderInput
   }
 
   export type OrderCreateOrConnectWithoutPreparationStepCategoriesInput = {
@@ -72598,6 +83151,9 @@ export namespace Prisma {
     deliveryAddress?: DeliveryAddressUpdateOneWithoutOrdersNestedInput
     externalAddress?: ExternalAddressUpdateOneWithoutOrdersNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
+    feedback?: CustomerFeedbackUpdateOneWithoutOrderNestedInput
+    issuedRewards?: CustomerRewardUpdateManyWithoutIssuedForOrderNestedInput
+    redeemedRewards?: CustomerRewardUpdateManyWithoutRedeemedByOrderNestedInput
   }
 
   export type OrderUncheckedUpdateWithoutPreparationStepCategoriesInput = {
@@ -72625,6 +83181,9 @@ export namespace Prisma {
     deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
     externalAddressId?: NullableStringFieldUpdateOperationsInput | string | null
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
+    feedback?: CustomerFeedbackUncheckedUpdateOneWithoutOrderNestedInput
+    issuedRewards?: CustomerRewardUncheckedUpdateManyWithoutIssuedForOrderNestedInput
+    redeemedRewards?: CustomerRewardUncheckedUpdateManyWithoutRedeemedByOrderNestedInput
   }
 
   export type PreparationStepTrackUpsertWithWhereUniqueWithoutPreparationStepCategoryInput = {
@@ -73221,6 +83780,7 @@ export namespace Prisma {
     comboSlotOptions?: ComboSlotOptionCreateNestedManyWithoutProductInput
     exclusivePromotionProducts?: ExclusivePromotionProductCreateNestedManyWithoutProductInput
     OrderProducts?: OrderProductsCreateNestedManyWithoutProductInput
+    customerRewards?: CustomerRewardCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepCreateNestedManyWithoutProductsInput
   }
 
@@ -73243,6 +83803,7 @@ export namespace Prisma {
     comboSlotOptions?: ComboSlotOptionUncheckedCreateNestedManyWithoutProductInput
     exclusivePromotionProducts?: ExclusivePromotionProductUncheckedCreateNestedManyWithoutProductInput
     OrderProducts?: OrderProductsUncheckedCreateNestedManyWithoutProductInput
+    customerRewards?: CustomerRewardUncheckedCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepUncheckedCreateNestedManyWithoutProductsInput
   }
 
@@ -73312,6 +83873,7 @@ export namespace Prisma {
     comboSlotOptions?: ComboSlotOptionUpdateManyWithoutProductNestedInput
     exclusivePromotionProducts?: ExclusivePromotionProductUpdateManyWithoutProductNestedInput
     OrderProducts?: OrderProductsUpdateManyWithoutProductNestedInput
+    customerRewards?: CustomerRewardUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUpdateManyWithoutProductsNestedInput
   }
 
@@ -73334,6 +83896,7 @@ export namespace Prisma {
     comboSlotOptions?: ComboSlotOptionUncheckedUpdateManyWithoutProductNestedInput
     exclusivePromotionProducts?: ExclusivePromotionProductUncheckedUpdateManyWithoutProductNestedInput
     OrderProducts?: OrderProductsUncheckedUpdateManyWithoutProductNestedInput
+    customerRewards?: CustomerRewardUncheckedUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUncheckedUpdateManyWithoutProductsNestedInput
   }
 
@@ -73356,6 +83919,7 @@ export namespace Prisma {
     exclusivePromotionProducts?: ExclusivePromotionProductCreateNestedManyWithoutProductInput
     OrderProducts?: OrderProductsCreateNestedManyWithoutProductInput
     prizeProducts?: ProgressiveDiscountPrizeProductCreateNestedManyWithoutProductInput
+    customerRewards?: CustomerRewardCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepCreateNestedManyWithoutProductsInput
   }
 
@@ -73378,6 +83942,7 @@ export namespace Prisma {
     exclusivePromotionProducts?: ExclusivePromotionProductUncheckedCreateNestedManyWithoutProductInput
     OrderProducts?: OrderProductsUncheckedCreateNestedManyWithoutProductInput
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedCreateNestedManyWithoutProductInput
+    customerRewards?: CustomerRewardUncheckedCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepUncheckedCreateNestedManyWithoutProductsInput
   }
 
@@ -73450,6 +84015,7 @@ export namespace Prisma {
     exclusivePromotionProducts?: ExclusivePromotionProductUpdateManyWithoutProductNestedInput
     OrderProducts?: OrderProductsUpdateManyWithoutProductNestedInput
     prizeProducts?: ProgressiveDiscountPrizeProductUpdateManyWithoutProductNestedInput
+    customerRewards?: CustomerRewardUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUpdateManyWithoutProductsNestedInput
   }
 
@@ -73472,6 +84038,7 @@ export namespace Prisma {
     exclusivePromotionProducts?: ExclusivePromotionProductUncheckedUpdateManyWithoutProductNestedInput
     OrderProducts?: OrderProductsUncheckedUpdateManyWithoutProductNestedInput
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutProductNestedInput
+    customerRewards?: CustomerRewardUncheckedUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUncheckedUpdateManyWithoutProductsNestedInput
   }
 
@@ -73524,6 +84091,7 @@ export namespace Prisma {
     exclusivePromotionProducts?: ExclusivePromotionProductCreateNestedManyWithoutProductInput
     OrderProducts?: OrderProductsCreateNestedManyWithoutProductInput
     prizeProducts?: ProgressiveDiscountPrizeProductCreateNestedManyWithoutProductInput
+    customerRewards?: CustomerRewardCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepCreateNestedManyWithoutProductsInput
   }
 
@@ -73546,6 +84114,7 @@ export namespace Prisma {
     exclusivePromotionProducts?: ExclusivePromotionProductUncheckedCreateNestedManyWithoutProductInput
     OrderProducts?: OrderProductsUncheckedCreateNestedManyWithoutProductInput
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedCreateNestedManyWithoutProductInput
+    customerRewards?: CustomerRewardUncheckedCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepUncheckedCreateNestedManyWithoutProductsInput
   }
 
@@ -74272,6 +84841,9 @@ export namespace Prisma {
     externalAddress?: ExternalAddressCreateNestedOneWithoutOrdersInput
     orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryCreateNestedManyWithoutOrderInput
+    feedback?: CustomerFeedbackCreateNestedOneWithoutOrderInput
+    issuedRewards?: CustomerRewardCreateNestedManyWithoutIssuedForOrderInput
+    redeemedRewards?: CustomerRewardCreateNestedManyWithoutRedeemedByOrderInput
   }
 
   export type OrderUncheckedCreateWithoutDispatchInput = {
@@ -74299,6 +84871,9 @@ export namespace Prisma {
     externalAddressId?: string | null
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryUncheckedCreateNestedManyWithoutOrderInput
+    feedback?: CustomerFeedbackUncheckedCreateNestedOneWithoutOrderInput
+    issuedRewards?: CustomerRewardUncheckedCreateNestedManyWithoutIssuedForOrderInput
+    redeemedRewards?: CustomerRewardUncheckedCreateNestedManyWithoutRedeemedByOrderInput
   }
 
   export type OrderCreateOrConnectWithoutDispatchInput = {
@@ -74429,6 +85004,9 @@ export namespace Prisma {
     externalAddress?: ExternalAddressCreateNestedOneWithoutOrdersInput
     orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryCreateNestedManyWithoutOrderInput
+    feedback?: CustomerFeedbackCreateNestedOneWithoutOrderInput
+    issuedRewards?: CustomerRewardCreateNestedManyWithoutIssuedForOrderInput
+    redeemedRewards?: CustomerRewardCreateNestedManyWithoutRedeemedByOrderInput
   }
 
   export type OrderUncheckedCreateWithoutAddressInput = {
@@ -74456,6 +85034,9 @@ export namespace Prisma {
     externalAddressId?: string | null
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryUncheckedCreateNestedManyWithoutOrderInput
+    feedback?: CustomerFeedbackUncheckedCreateNestedOneWithoutOrderInput
+    issuedRewards?: CustomerRewardUncheckedCreateNestedManyWithoutIssuedForOrderInput
+    redeemedRewards?: CustomerRewardUncheckedCreateNestedManyWithoutRedeemedByOrderInput
   }
 
   export type OrderCreateOrConnectWithoutAddressInput = {
@@ -74755,6 +85336,58 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type CustomerRewardCreateWithoutProductInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    status?: $Enums.CustomerRewardStatus
+    type: $Enums.CustomerRewardType
+    title: string
+    description?: string | null
+    quantity?: number | null
+    value?: number | null
+    couponCode?: string | null
+    issuedAt?: Date | string
+    expiresAt?: Date | string | null
+    redeemedAt?: Date | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    customer: CustomerCreateNestedOneWithoutRewardsInput
+    feedback?: CustomerFeedbackCreateNestedOneWithoutIssuedRewardInput
+    issuedForOrder?: OrderCreateNestedOneWithoutIssuedRewardsInput
+    redeemedByOrder?: OrderCreateNestedOneWithoutRedeemedRewardsInput
+  }
+
+  export type CustomerRewardUncheckedCreateWithoutProductInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    customerId: string
+    status?: $Enums.CustomerRewardStatus
+    type: $Enums.CustomerRewardType
+    title: string
+    description?: string | null
+    quantity?: number | null
+    value?: number | null
+    couponCode?: string | null
+    issuedAt?: Date | string
+    expiresAt?: Date | string | null
+    redeemedAt?: Date | string | null
+    feedbackId?: string | null
+    issuedForOrderId?: string | null
+    redeemedByOrderId?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type CustomerRewardCreateOrConnectWithoutProductInput = {
+    where: CustomerRewardWhereUniqueInput
+    create: XOR<CustomerRewardCreateWithoutProductInput, CustomerRewardUncheckedCreateWithoutProductInput>
+  }
+
+  export type CustomerRewardCreateManyProductInputEnvelope = {
+    data: CustomerRewardCreateManyProductInput | CustomerRewardCreateManyProductInput[]
+    skipDuplicates?: boolean
+  }
+
   export type PreparationStepCreateWithoutProductsInput = {
     id: string
     createdAt?: Date | string
@@ -75016,6 +85649,47 @@ export namespace Prisma {
     data: XOR<ProgressiveDiscountPrizeProductUpdateManyMutationInput, ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutProductInput>
   }
 
+  export type CustomerRewardUpsertWithWhereUniqueWithoutProductInput = {
+    where: CustomerRewardWhereUniqueInput
+    update: XOR<CustomerRewardUpdateWithoutProductInput, CustomerRewardUncheckedUpdateWithoutProductInput>
+    create: XOR<CustomerRewardCreateWithoutProductInput, CustomerRewardUncheckedCreateWithoutProductInput>
+  }
+
+  export type CustomerRewardUpdateWithWhereUniqueWithoutProductInput = {
+    where: CustomerRewardWhereUniqueInput
+    data: XOR<CustomerRewardUpdateWithoutProductInput, CustomerRewardUncheckedUpdateWithoutProductInput>
+  }
+
+  export type CustomerRewardUpdateManyWithWhereWithoutProductInput = {
+    where: CustomerRewardScalarWhereInput
+    data: XOR<CustomerRewardUpdateManyMutationInput, CustomerRewardUncheckedUpdateManyWithoutProductInput>
+  }
+
+  export type CustomerRewardScalarWhereInput = {
+    AND?: CustomerRewardScalarWhereInput | CustomerRewardScalarWhereInput[]
+    OR?: CustomerRewardScalarWhereInput[]
+    NOT?: CustomerRewardScalarWhereInput | CustomerRewardScalarWhereInput[]
+    id?: StringFilter<"CustomerReward"> | string
+    createdAt?: DateTimeFilter<"CustomerReward"> | Date | string
+    updatedAt?: DateTimeFilter<"CustomerReward"> | Date | string
+    customerId?: StringFilter<"CustomerReward"> | string
+    status?: EnumCustomerRewardStatusFilter<"CustomerReward"> | $Enums.CustomerRewardStatus
+    type?: EnumCustomerRewardTypeFilter<"CustomerReward"> | $Enums.CustomerRewardType
+    title?: StringFilter<"CustomerReward"> | string
+    description?: StringNullableFilter<"CustomerReward"> | string | null
+    quantity?: IntNullableFilter<"CustomerReward"> | number | null
+    value?: IntNullableFilter<"CustomerReward"> | number | null
+    productId?: StringNullableFilter<"CustomerReward"> | string | null
+    couponCode?: StringNullableFilter<"CustomerReward"> | string | null
+    issuedAt?: DateTimeFilter<"CustomerReward"> | Date | string
+    expiresAt?: DateTimeNullableFilter<"CustomerReward"> | Date | string | null
+    redeemedAt?: DateTimeNullableFilter<"CustomerReward"> | Date | string | null
+    feedbackId?: StringNullableFilter<"CustomerReward"> | string | null
+    issuedForOrderId?: StringNullableFilter<"CustomerReward"> | string | null
+    redeemedByOrderId?: StringNullableFilter<"CustomerReward"> | string | null
+    metadata?: JsonNullableFilter<"CustomerReward">
+  }
+
   export type PreparationStepUpsertWithWhereUniqueWithoutProductsInput = {
     where: PreparationStepWhereUniqueInput
     update: XOR<PreparationStepUpdateWithoutProductsInput, PreparationStepUncheckedUpdateWithoutProductsInput>
@@ -75183,6 +85857,7 @@ export namespace Prisma {
     comboSlotOptions?: ComboSlotOptionCreateNestedManyWithoutProductInput
     OrderProducts?: OrderProductsCreateNestedManyWithoutProductInput
     prizeProducts?: ProgressiveDiscountPrizeProductCreateNestedManyWithoutProductInput
+    customerRewards?: CustomerRewardCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepCreateNestedManyWithoutProductsInput
   }
 
@@ -75205,6 +85880,7 @@ export namespace Prisma {
     comboSlotOptions?: ComboSlotOptionUncheckedCreateNestedManyWithoutProductInput
     OrderProducts?: OrderProductsUncheckedCreateNestedManyWithoutProductInput
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedCreateNestedManyWithoutProductInput
+    customerRewards?: CustomerRewardUncheckedCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepUncheckedCreateNestedManyWithoutProductsInput
   }
 
@@ -75276,6 +85952,7 @@ export namespace Prisma {
     comboSlotOptions?: ComboSlotOptionUpdateManyWithoutProductNestedInput
     OrderProducts?: OrderProductsUpdateManyWithoutProductNestedInput
     prizeProducts?: ProgressiveDiscountPrizeProductUpdateManyWithoutProductNestedInput
+    customerRewards?: CustomerRewardUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUpdateManyWithoutProductsNestedInput
   }
 
@@ -75298,6 +85975,7 @@ export namespace Prisma {
     comboSlotOptions?: ComboSlotOptionUncheckedUpdateManyWithoutProductNestedInput
     OrderProducts?: OrderProductsUncheckedUpdateManyWithoutProductNestedInput
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutProductNestedInput
+    customerRewards?: CustomerRewardUncheckedUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUncheckedUpdateManyWithoutProductsNestedInput
   }
 
@@ -75629,6 +86307,7 @@ export namespace Prisma {
     exclusivePromotionProducts?: ExclusivePromotionProductCreateNestedManyWithoutProductInput
     OrderProducts?: OrderProductsCreateNestedManyWithoutProductInput
     prizeProducts?: ProgressiveDiscountPrizeProductCreateNestedManyWithoutProductInput
+    customerRewards?: CustomerRewardCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepCreateNestedManyWithoutProductsInput
   }
 
@@ -75651,6 +86330,7 @@ export namespace Prisma {
     exclusivePromotionProducts?: ExclusivePromotionProductUncheckedCreateNestedManyWithoutProductInput
     OrderProducts?: OrderProductsUncheckedCreateNestedManyWithoutProductInput
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedCreateNestedManyWithoutProductInput
+    customerRewards?: CustomerRewardUncheckedCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepUncheckedCreateNestedManyWithoutProductsInput
   }
 
@@ -75985,6 +86665,7 @@ export namespace Prisma {
     exclusivePromotionProducts?: ExclusivePromotionProductCreateNestedManyWithoutProductInput
     OrderProducts?: OrderProductsCreateNestedManyWithoutProductInput
     prizeProducts?: ProgressiveDiscountPrizeProductCreateNestedManyWithoutProductInput
+    customerRewards?: CustomerRewardCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepCreateNestedManyWithoutProductsInput
   }
 
@@ -76007,6 +86688,7 @@ export namespace Prisma {
     exclusivePromotionProducts?: ExclusivePromotionProductUncheckedCreateNestedManyWithoutProductInput
     OrderProducts?: OrderProductsUncheckedCreateNestedManyWithoutProductInput
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedCreateNestedManyWithoutProductInput
+    customerRewards?: CustomerRewardUncheckedCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepUncheckedCreateNestedManyWithoutProductsInput
   }
 
@@ -76074,6 +86756,7 @@ export namespace Prisma {
     exclusivePromotionProducts?: ExclusivePromotionProductUpdateManyWithoutProductNestedInput
     OrderProducts?: OrderProductsUpdateManyWithoutProductNestedInput
     prizeProducts?: ProgressiveDiscountPrizeProductUpdateManyWithoutProductNestedInput
+    customerRewards?: CustomerRewardUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUpdateManyWithoutProductsNestedInput
   }
 
@@ -76096,6 +86779,7 @@ export namespace Prisma {
     exclusivePromotionProducts?: ExclusivePromotionProductUncheckedUpdateManyWithoutProductNestedInput
     OrderProducts?: OrderProductsUncheckedUpdateManyWithoutProductNestedInput
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutProductNestedInput
+    customerRewards?: CustomerRewardUncheckedUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUncheckedUpdateManyWithoutProductsNestedInput
   }
 
@@ -76153,6 +86837,7 @@ export namespace Prisma {
     exclusivePromotionProducts?: ExclusivePromotionProductCreateNestedManyWithoutProductInput
     OrderProducts?: OrderProductsCreateNestedManyWithoutProductInput
     prizeProducts?: ProgressiveDiscountPrizeProductCreateNestedManyWithoutProductInput
+    customerRewards?: CustomerRewardCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepCreateNestedManyWithoutProductsInput
   }
 
@@ -76175,6 +86860,7 @@ export namespace Prisma {
     exclusivePromotionProducts?: ExclusivePromotionProductUncheckedCreateNestedManyWithoutProductInput
     OrderProducts?: OrderProductsUncheckedCreateNestedManyWithoutProductInput
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedCreateNestedManyWithoutProductInput
+    customerRewards?: CustomerRewardUncheckedCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepUncheckedCreateNestedManyWithoutProductsInput
   }
 
@@ -76239,6 +86925,7 @@ export namespace Prisma {
     exclusivePromotionProducts?: ExclusivePromotionProductUpdateManyWithoutProductNestedInput
     OrderProducts?: OrderProductsUpdateManyWithoutProductNestedInput
     prizeProducts?: ProgressiveDiscountPrizeProductUpdateManyWithoutProductNestedInput
+    customerRewards?: CustomerRewardUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUpdateManyWithoutProductsNestedInput
   }
 
@@ -76261,6 +86948,7 @@ export namespace Prisma {
     exclusivePromotionProducts?: ExclusivePromotionProductUncheckedUpdateManyWithoutProductNestedInput
     OrderProducts?: OrderProductsUncheckedUpdateManyWithoutProductNestedInput
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutProductNestedInput
+    customerRewards?: CustomerRewardUncheckedUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUncheckedUpdateManyWithoutProductsNestedInput
   }
 
@@ -76330,6 +87018,7 @@ export namespace Prisma {
     exclusivePromotionProducts?: ExclusivePromotionProductCreateNestedManyWithoutProductInput
     OrderProducts?: OrderProductsCreateNestedManyWithoutProductInput
     prizeProducts?: ProgressiveDiscountPrizeProductCreateNestedManyWithoutProductInput
+    customerRewards?: CustomerRewardCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepCreateNestedManyWithoutProductsInput
   }
 
@@ -76352,6 +87041,7 @@ export namespace Prisma {
     exclusivePromotionProducts?: ExclusivePromotionProductUncheckedCreateNestedManyWithoutProductInput
     OrderProducts?: OrderProductsUncheckedCreateNestedManyWithoutProductInput
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedCreateNestedManyWithoutProductInput
+    customerRewards?: CustomerRewardUncheckedCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepUncheckedCreateNestedManyWithoutProductsInput
   }
 
@@ -76427,6 +87117,7 @@ export namespace Prisma {
     exclusivePromotionProducts?: ExclusivePromotionProductUpdateManyWithoutProductNestedInput
     OrderProducts?: OrderProductsUpdateManyWithoutProductNestedInput
     prizeProducts?: ProgressiveDiscountPrizeProductUpdateManyWithoutProductNestedInput
+    customerRewards?: CustomerRewardUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUpdateManyWithoutProductsNestedInput
   }
 
@@ -76449,6 +87140,7 @@ export namespace Prisma {
     exclusivePromotionProducts?: ExclusivePromotionProductUncheckedUpdateManyWithoutProductNestedInput
     OrderProducts?: OrderProductsUncheckedUpdateManyWithoutProductNestedInput
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutProductNestedInput
+    customerRewards?: CustomerRewardUncheckedUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUncheckedUpdateManyWithoutProductsNestedInput
   }
 
@@ -76528,6 +87220,9 @@ export namespace Prisma {
     externalAddress?: ExternalAddressCreateNestedOneWithoutOrdersInput
     orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryCreateNestedManyWithoutOrderInput
+    feedback?: CustomerFeedbackCreateNestedOneWithoutOrderInput
+    issuedRewards?: CustomerRewardCreateNestedManyWithoutIssuedForOrderInput
+    redeemedRewards?: CustomerRewardCreateNestedManyWithoutRedeemedByOrderInput
   }
 
   export type OrderUncheckedCreateWithoutCustomerInput = {
@@ -76555,6 +87250,9 @@ export namespace Prisma {
     externalAddressId?: string | null
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryUncheckedCreateNestedManyWithoutOrderInput
+    feedback?: CustomerFeedbackUncheckedCreateNestedOneWithoutOrderInput
+    issuedRewards?: CustomerRewardUncheckedCreateNestedManyWithoutIssuedForOrderInput
+    redeemedRewards?: CustomerRewardUncheckedCreateNestedManyWithoutRedeemedByOrderInput
   }
 
   export type OrderCreateOrConnectWithoutCustomerInput = {
@@ -76663,6 +87361,176 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type CustomerFeedbackCreateWithoutCustomerInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    language?: string | null
+    overallRating: number
+    sentiment: $Enums.CustomerFeedbackSentiment
+    productQuality?: number | null
+    temperature?: number | null
+    deliverySpeed?: number | null
+    serviceExperience?: number | null
+    comment?: string | null
+    source?: string | null
+    order: OrderCreateNestedOneWithoutFeedbackInput
+    issuedReward?: CustomerRewardCreateNestedOneWithoutFeedbackInput
+  }
+
+  export type CustomerFeedbackUncheckedCreateWithoutCustomerInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    orderId: string
+    language?: string | null
+    overallRating: number
+    sentiment: $Enums.CustomerFeedbackSentiment
+    productQuality?: number | null
+    temperature?: number | null
+    deliverySpeed?: number | null
+    serviceExperience?: number | null
+    comment?: string | null
+    source?: string | null
+    issuedReward?: CustomerRewardUncheckedCreateNestedOneWithoutFeedbackInput
+  }
+
+  export type CustomerFeedbackCreateOrConnectWithoutCustomerInput = {
+    where: CustomerFeedbackWhereUniqueInput
+    create: XOR<CustomerFeedbackCreateWithoutCustomerInput, CustomerFeedbackUncheckedCreateWithoutCustomerInput>
+  }
+
+  export type CustomerFeedbackCreateManyCustomerInputEnvelope = {
+    data: CustomerFeedbackCreateManyCustomerInput | CustomerFeedbackCreateManyCustomerInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CustomerRewardCreateWithoutCustomerInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    status?: $Enums.CustomerRewardStatus
+    type: $Enums.CustomerRewardType
+    title: string
+    description?: string | null
+    quantity?: number | null
+    value?: number | null
+    couponCode?: string | null
+    issuedAt?: Date | string
+    expiresAt?: Date | string | null
+    redeemedAt?: Date | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    product?: ProductCreateNestedOneWithoutCustomerRewardsInput
+    feedback?: CustomerFeedbackCreateNestedOneWithoutIssuedRewardInput
+    issuedForOrder?: OrderCreateNestedOneWithoutIssuedRewardsInput
+    redeemedByOrder?: OrderCreateNestedOneWithoutRedeemedRewardsInput
+  }
+
+  export type CustomerRewardUncheckedCreateWithoutCustomerInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    status?: $Enums.CustomerRewardStatus
+    type: $Enums.CustomerRewardType
+    title: string
+    description?: string | null
+    quantity?: number | null
+    value?: number | null
+    productId?: string | null
+    couponCode?: string | null
+    issuedAt?: Date | string
+    expiresAt?: Date | string | null
+    redeemedAt?: Date | string | null
+    feedbackId?: string | null
+    issuedForOrderId?: string | null
+    redeemedByOrderId?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type CustomerRewardCreateOrConnectWithoutCustomerInput = {
+    where: CustomerRewardWhereUniqueInput
+    create: XOR<CustomerRewardCreateWithoutCustomerInput, CustomerRewardUncheckedCreateWithoutCustomerInput>
+  }
+
+  export type CustomerRewardCreateManyCustomerInputEnvelope = {
+    data: CustomerRewardCreateManyCustomerInput | CustomerRewardCreateManyCustomerInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CustomerOtpChallengeCreateWithoutCustomerInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    phone: string
+    countryCode?: string | null
+    channel?: $Enums.CustomerOtpChannel
+    codeHash: string
+    expiresAt: Date | string
+    usedAt?: Date | string | null
+    attemptCount?: number
+    maxAttempts?: number
+    lastAttemptAt?: Date | string | null
+  }
+
+  export type CustomerOtpChallengeUncheckedCreateWithoutCustomerInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    phone: string
+    countryCode?: string | null
+    channel?: $Enums.CustomerOtpChannel
+    codeHash: string
+    expiresAt: Date | string
+    usedAt?: Date | string | null
+    attemptCount?: number
+    maxAttempts?: number
+    lastAttemptAt?: Date | string | null
+  }
+
+  export type CustomerOtpChallengeCreateOrConnectWithoutCustomerInput = {
+    where: CustomerOtpChallengeWhereUniqueInput
+    create: XOR<CustomerOtpChallengeCreateWithoutCustomerInput, CustomerOtpChallengeUncheckedCreateWithoutCustomerInput>
+  }
+
+  export type CustomerOtpChallengeCreateManyCustomerInputEnvelope = {
+    data: CustomerOtpChallengeCreateManyCustomerInput | CustomerOtpChallengeCreateManyCustomerInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CustomerAccessTokenCreateWithoutCustomerInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    tokenHash: string
+    expiresAt: Date | string
+    lastUsedAt?: Date | string | null
+    revokedAt?: Date | string | null
+    userAgent?: string | null
+    ipAddress?: string | null
+  }
+
+  export type CustomerAccessTokenUncheckedCreateWithoutCustomerInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    tokenHash: string
+    expiresAt: Date | string
+    lastUsedAt?: Date | string | null
+    revokedAt?: Date | string | null
+    userAgent?: string | null
+    ipAddress?: string | null
+  }
+
+  export type CustomerAccessTokenCreateOrConnectWithoutCustomerInput = {
+    where: CustomerAccessTokenWhereUniqueInput
+    create: XOR<CustomerAccessTokenCreateWithoutCustomerInput, CustomerAccessTokenUncheckedCreateWithoutCustomerInput>
+  }
+
+  export type CustomerAccessTokenCreateManyCustomerInputEnvelope = {
+    data: CustomerAccessTokenCreateManyCustomerInput | CustomerAccessTokenCreateManyCustomerInput[]
+    skipDuplicates?: boolean
+  }
+
   export type OrderUpsertWithWhereUniqueWithoutCustomerInput = {
     where: OrderWhereUniqueInput
     update: XOR<OrderUpdateWithoutCustomerInput, OrderUncheckedUpdateWithoutCustomerInput>
@@ -76759,6 +87627,293 @@ export namespace Prisma {
     customerId?: StringNullableFilter<"ExternalAddress"> | string | null
   }
 
+  export type CustomerFeedbackUpsertWithWhereUniqueWithoutCustomerInput = {
+    where: CustomerFeedbackWhereUniqueInput
+    update: XOR<CustomerFeedbackUpdateWithoutCustomerInput, CustomerFeedbackUncheckedUpdateWithoutCustomerInput>
+    create: XOR<CustomerFeedbackCreateWithoutCustomerInput, CustomerFeedbackUncheckedCreateWithoutCustomerInput>
+  }
+
+  export type CustomerFeedbackUpdateWithWhereUniqueWithoutCustomerInput = {
+    where: CustomerFeedbackWhereUniqueInput
+    data: XOR<CustomerFeedbackUpdateWithoutCustomerInput, CustomerFeedbackUncheckedUpdateWithoutCustomerInput>
+  }
+
+  export type CustomerFeedbackUpdateManyWithWhereWithoutCustomerInput = {
+    where: CustomerFeedbackScalarWhereInput
+    data: XOR<CustomerFeedbackUpdateManyMutationInput, CustomerFeedbackUncheckedUpdateManyWithoutCustomerInput>
+  }
+
+  export type CustomerFeedbackScalarWhereInput = {
+    AND?: CustomerFeedbackScalarWhereInput | CustomerFeedbackScalarWhereInput[]
+    OR?: CustomerFeedbackScalarWhereInput[]
+    NOT?: CustomerFeedbackScalarWhereInput | CustomerFeedbackScalarWhereInput[]
+    id?: StringFilter<"CustomerFeedback"> | string
+    createdAt?: DateTimeFilter<"CustomerFeedback"> | Date | string
+    updatedAt?: DateTimeFilter<"CustomerFeedback"> | Date | string
+    customerId?: StringFilter<"CustomerFeedback"> | string
+    orderId?: StringFilter<"CustomerFeedback"> | string
+    language?: StringNullableFilter<"CustomerFeedback"> | string | null
+    overallRating?: IntFilter<"CustomerFeedback"> | number
+    sentiment?: EnumCustomerFeedbackSentimentFilter<"CustomerFeedback"> | $Enums.CustomerFeedbackSentiment
+    productQuality?: IntNullableFilter<"CustomerFeedback"> | number | null
+    temperature?: IntNullableFilter<"CustomerFeedback"> | number | null
+    deliverySpeed?: IntNullableFilter<"CustomerFeedback"> | number | null
+    serviceExperience?: IntNullableFilter<"CustomerFeedback"> | number | null
+    comment?: StringNullableFilter<"CustomerFeedback"> | string | null
+    source?: StringNullableFilter<"CustomerFeedback"> | string | null
+  }
+
+  export type CustomerRewardUpsertWithWhereUniqueWithoutCustomerInput = {
+    where: CustomerRewardWhereUniqueInput
+    update: XOR<CustomerRewardUpdateWithoutCustomerInput, CustomerRewardUncheckedUpdateWithoutCustomerInput>
+    create: XOR<CustomerRewardCreateWithoutCustomerInput, CustomerRewardUncheckedCreateWithoutCustomerInput>
+  }
+
+  export type CustomerRewardUpdateWithWhereUniqueWithoutCustomerInput = {
+    where: CustomerRewardWhereUniqueInput
+    data: XOR<CustomerRewardUpdateWithoutCustomerInput, CustomerRewardUncheckedUpdateWithoutCustomerInput>
+  }
+
+  export type CustomerRewardUpdateManyWithWhereWithoutCustomerInput = {
+    where: CustomerRewardScalarWhereInput
+    data: XOR<CustomerRewardUpdateManyMutationInput, CustomerRewardUncheckedUpdateManyWithoutCustomerInput>
+  }
+
+  export type CustomerOtpChallengeUpsertWithWhereUniqueWithoutCustomerInput = {
+    where: CustomerOtpChallengeWhereUniqueInput
+    update: XOR<CustomerOtpChallengeUpdateWithoutCustomerInput, CustomerOtpChallengeUncheckedUpdateWithoutCustomerInput>
+    create: XOR<CustomerOtpChallengeCreateWithoutCustomerInput, CustomerOtpChallengeUncheckedCreateWithoutCustomerInput>
+  }
+
+  export type CustomerOtpChallengeUpdateWithWhereUniqueWithoutCustomerInput = {
+    where: CustomerOtpChallengeWhereUniqueInput
+    data: XOR<CustomerOtpChallengeUpdateWithoutCustomerInput, CustomerOtpChallengeUncheckedUpdateWithoutCustomerInput>
+  }
+
+  export type CustomerOtpChallengeUpdateManyWithWhereWithoutCustomerInput = {
+    where: CustomerOtpChallengeScalarWhereInput
+    data: XOR<CustomerOtpChallengeUpdateManyMutationInput, CustomerOtpChallengeUncheckedUpdateManyWithoutCustomerInput>
+  }
+
+  export type CustomerOtpChallengeScalarWhereInput = {
+    AND?: CustomerOtpChallengeScalarWhereInput | CustomerOtpChallengeScalarWhereInput[]
+    OR?: CustomerOtpChallengeScalarWhereInput[]
+    NOT?: CustomerOtpChallengeScalarWhereInput | CustomerOtpChallengeScalarWhereInput[]
+    id?: StringFilter<"CustomerOtpChallenge"> | string
+    createdAt?: DateTimeFilter<"CustomerOtpChallenge"> | Date | string
+    updatedAt?: DateTimeFilter<"CustomerOtpChallenge"> | Date | string
+    customerId?: StringNullableFilter<"CustomerOtpChallenge"> | string | null
+    phone?: StringFilter<"CustomerOtpChallenge"> | string
+    countryCode?: StringNullableFilter<"CustomerOtpChallenge"> | string | null
+    channel?: EnumCustomerOtpChannelFilter<"CustomerOtpChallenge"> | $Enums.CustomerOtpChannel
+    codeHash?: StringFilter<"CustomerOtpChallenge"> | string
+    expiresAt?: DateTimeFilter<"CustomerOtpChallenge"> | Date | string
+    usedAt?: DateTimeNullableFilter<"CustomerOtpChallenge"> | Date | string | null
+    attemptCount?: IntFilter<"CustomerOtpChallenge"> | number
+    maxAttempts?: IntFilter<"CustomerOtpChallenge"> | number
+    lastAttemptAt?: DateTimeNullableFilter<"CustomerOtpChallenge"> | Date | string | null
+  }
+
+  export type CustomerAccessTokenUpsertWithWhereUniqueWithoutCustomerInput = {
+    where: CustomerAccessTokenWhereUniqueInput
+    update: XOR<CustomerAccessTokenUpdateWithoutCustomerInput, CustomerAccessTokenUncheckedUpdateWithoutCustomerInput>
+    create: XOR<CustomerAccessTokenCreateWithoutCustomerInput, CustomerAccessTokenUncheckedCreateWithoutCustomerInput>
+  }
+
+  export type CustomerAccessTokenUpdateWithWhereUniqueWithoutCustomerInput = {
+    where: CustomerAccessTokenWhereUniqueInput
+    data: XOR<CustomerAccessTokenUpdateWithoutCustomerInput, CustomerAccessTokenUncheckedUpdateWithoutCustomerInput>
+  }
+
+  export type CustomerAccessTokenUpdateManyWithWhereWithoutCustomerInput = {
+    where: CustomerAccessTokenScalarWhereInput
+    data: XOR<CustomerAccessTokenUpdateManyMutationInput, CustomerAccessTokenUncheckedUpdateManyWithoutCustomerInput>
+  }
+
+  export type CustomerAccessTokenScalarWhereInput = {
+    AND?: CustomerAccessTokenScalarWhereInput | CustomerAccessTokenScalarWhereInput[]
+    OR?: CustomerAccessTokenScalarWhereInput[]
+    NOT?: CustomerAccessTokenScalarWhereInput | CustomerAccessTokenScalarWhereInput[]
+    id?: StringFilter<"CustomerAccessToken"> | string
+    createdAt?: DateTimeFilter<"CustomerAccessToken"> | Date | string
+    updatedAt?: DateTimeFilter<"CustomerAccessToken"> | Date | string
+    customerId?: StringFilter<"CustomerAccessToken"> | string
+    tokenHash?: StringFilter<"CustomerAccessToken"> | string
+    expiresAt?: DateTimeFilter<"CustomerAccessToken"> | Date | string
+    lastUsedAt?: DateTimeNullableFilter<"CustomerAccessToken"> | Date | string | null
+    revokedAt?: DateTimeNullableFilter<"CustomerAccessToken"> | Date | string | null
+    userAgent?: StringNullableFilter<"CustomerAccessToken"> | string | null
+    ipAddress?: StringNullableFilter<"CustomerAccessToken"> | string | null
+  }
+
+  export type CustomerCreateWithoutOtpChallengesInput = {
+    id: string
+    createdAt?: Date | string
+    name?: string | null
+    email?: string | null
+    phone?: string | null
+    address?: string | null
+    lastMessageSent?: Date | string | null
+    orders?: OrderCreateNestedManyWithoutCustomerInput
+    promotionalMessages?: PromotialMessageCreateNestedManyWithoutCustomerInput
+    addresses?: DeliveryAddressCreateNestedManyWithoutCustomerInput
+    externalAddresses?: ExternalAddressCreateNestedManyWithoutCustomerInput
+    feedbacks?: CustomerFeedbackCreateNestedManyWithoutCustomerInput
+    rewards?: CustomerRewardCreateNestedManyWithoutCustomerInput
+    accessTokens?: CustomerAccessTokenCreateNestedManyWithoutCustomerInput
+  }
+
+  export type CustomerUncheckedCreateWithoutOtpChallengesInput = {
+    id: string
+    createdAt?: Date | string
+    name?: string | null
+    email?: string | null
+    phone?: string | null
+    address?: string | null
+    lastMessageSent?: Date | string | null
+    orders?: OrderUncheckedCreateNestedManyWithoutCustomerInput
+    promotionalMessages?: PromotialMessageUncheckedCreateNestedManyWithoutCustomerInput
+    addresses?: DeliveryAddressUncheckedCreateNestedManyWithoutCustomerInput
+    externalAddresses?: ExternalAddressUncheckedCreateNestedManyWithoutCustomerInput
+    feedbacks?: CustomerFeedbackUncheckedCreateNestedManyWithoutCustomerInput
+    rewards?: CustomerRewardUncheckedCreateNestedManyWithoutCustomerInput
+    accessTokens?: CustomerAccessTokenUncheckedCreateNestedManyWithoutCustomerInput
+  }
+
+  export type CustomerCreateOrConnectWithoutOtpChallengesInput = {
+    where: CustomerWhereUniqueInput
+    create: XOR<CustomerCreateWithoutOtpChallengesInput, CustomerUncheckedCreateWithoutOtpChallengesInput>
+  }
+
+  export type CustomerUpsertWithoutOtpChallengesInput = {
+    update: XOR<CustomerUpdateWithoutOtpChallengesInput, CustomerUncheckedUpdateWithoutOtpChallengesInput>
+    create: XOR<CustomerCreateWithoutOtpChallengesInput, CustomerUncheckedCreateWithoutOtpChallengesInput>
+    where?: CustomerWhereInput
+  }
+
+  export type CustomerUpdateToOneWithWhereWithoutOtpChallengesInput = {
+    where?: CustomerWhereInput
+    data: XOR<CustomerUpdateWithoutOtpChallengesInput, CustomerUncheckedUpdateWithoutOtpChallengesInput>
+  }
+
+  export type CustomerUpdateWithoutOtpChallengesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    lastMessageSent?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    orders?: OrderUpdateManyWithoutCustomerNestedInput
+    promotionalMessages?: PromotialMessageUpdateManyWithoutCustomerNestedInput
+    addresses?: DeliveryAddressUpdateManyWithoutCustomerNestedInput
+    externalAddresses?: ExternalAddressUpdateManyWithoutCustomerNestedInput
+    feedbacks?: CustomerFeedbackUpdateManyWithoutCustomerNestedInput
+    rewards?: CustomerRewardUpdateManyWithoutCustomerNestedInput
+    accessTokens?: CustomerAccessTokenUpdateManyWithoutCustomerNestedInput
+  }
+
+  export type CustomerUncheckedUpdateWithoutOtpChallengesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    lastMessageSent?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    orders?: OrderUncheckedUpdateManyWithoutCustomerNestedInput
+    promotionalMessages?: PromotialMessageUncheckedUpdateManyWithoutCustomerNestedInput
+    addresses?: DeliveryAddressUncheckedUpdateManyWithoutCustomerNestedInput
+    externalAddresses?: ExternalAddressUncheckedUpdateManyWithoutCustomerNestedInput
+    feedbacks?: CustomerFeedbackUncheckedUpdateManyWithoutCustomerNestedInput
+    rewards?: CustomerRewardUncheckedUpdateManyWithoutCustomerNestedInput
+    accessTokens?: CustomerAccessTokenUncheckedUpdateManyWithoutCustomerNestedInput
+  }
+
+  export type CustomerCreateWithoutAccessTokensInput = {
+    id: string
+    createdAt?: Date | string
+    name?: string | null
+    email?: string | null
+    phone?: string | null
+    address?: string | null
+    lastMessageSent?: Date | string | null
+    orders?: OrderCreateNestedManyWithoutCustomerInput
+    promotionalMessages?: PromotialMessageCreateNestedManyWithoutCustomerInput
+    addresses?: DeliveryAddressCreateNestedManyWithoutCustomerInput
+    externalAddresses?: ExternalAddressCreateNestedManyWithoutCustomerInput
+    feedbacks?: CustomerFeedbackCreateNestedManyWithoutCustomerInput
+    rewards?: CustomerRewardCreateNestedManyWithoutCustomerInput
+    otpChallenges?: CustomerOtpChallengeCreateNestedManyWithoutCustomerInput
+  }
+
+  export type CustomerUncheckedCreateWithoutAccessTokensInput = {
+    id: string
+    createdAt?: Date | string
+    name?: string | null
+    email?: string | null
+    phone?: string | null
+    address?: string | null
+    lastMessageSent?: Date | string | null
+    orders?: OrderUncheckedCreateNestedManyWithoutCustomerInput
+    promotionalMessages?: PromotialMessageUncheckedCreateNestedManyWithoutCustomerInput
+    addresses?: DeliveryAddressUncheckedCreateNestedManyWithoutCustomerInput
+    externalAddresses?: ExternalAddressUncheckedCreateNestedManyWithoutCustomerInput
+    feedbacks?: CustomerFeedbackUncheckedCreateNestedManyWithoutCustomerInput
+    rewards?: CustomerRewardUncheckedCreateNestedManyWithoutCustomerInput
+    otpChallenges?: CustomerOtpChallengeUncheckedCreateNestedManyWithoutCustomerInput
+  }
+
+  export type CustomerCreateOrConnectWithoutAccessTokensInput = {
+    where: CustomerWhereUniqueInput
+    create: XOR<CustomerCreateWithoutAccessTokensInput, CustomerUncheckedCreateWithoutAccessTokensInput>
+  }
+
+  export type CustomerUpsertWithoutAccessTokensInput = {
+    update: XOR<CustomerUpdateWithoutAccessTokensInput, CustomerUncheckedUpdateWithoutAccessTokensInput>
+    create: XOR<CustomerCreateWithoutAccessTokensInput, CustomerUncheckedCreateWithoutAccessTokensInput>
+    where?: CustomerWhereInput
+  }
+
+  export type CustomerUpdateToOneWithWhereWithoutAccessTokensInput = {
+    where?: CustomerWhereInput
+    data: XOR<CustomerUpdateWithoutAccessTokensInput, CustomerUncheckedUpdateWithoutAccessTokensInput>
+  }
+
+  export type CustomerUpdateWithoutAccessTokensInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    lastMessageSent?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    orders?: OrderUpdateManyWithoutCustomerNestedInput
+    promotionalMessages?: PromotialMessageUpdateManyWithoutCustomerNestedInput
+    addresses?: DeliveryAddressUpdateManyWithoutCustomerNestedInput
+    externalAddresses?: ExternalAddressUpdateManyWithoutCustomerNestedInput
+    feedbacks?: CustomerFeedbackUpdateManyWithoutCustomerNestedInput
+    rewards?: CustomerRewardUpdateManyWithoutCustomerNestedInput
+    otpChallenges?: CustomerOtpChallengeUpdateManyWithoutCustomerNestedInput
+  }
+
+  export type CustomerUncheckedUpdateWithoutAccessTokensInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    lastMessageSent?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    orders?: OrderUncheckedUpdateManyWithoutCustomerNestedInput
+    promotionalMessages?: PromotialMessageUncheckedUpdateManyWithoutCustomerNestedInput
+    addresses?: DeliveryAddressUncheckedUpdateManyWithoutCustomerNestedInput
+    externalAddresses?: ExternalAddressUncheckedUpdateManyWithoutCustomerNestedInput
+    feedbacks?: CustomerFeedbackUncheckedUpdateManyWithoutCustomerNestedInput
+    rewards?: CustomerRewardUncheckedUpdateManyWithoutCustomerNestedInput
+    otpChallenges?: CustomerOtpChallengeUncheckedUpdateManyWithoutCustomerNestedInput
+  }
+
   export type CustomerCreateWithoutAddressesInput = {
     id: string
     createdAt?: Date | string
@@ -76770,6 +87925,10 @@ export namespace Prisma {
     orders?: OrderCreateNestedManyWithoutCustomerInput
     promotionalMessages?: PromotialMessageCreateNestedManyWithoutCustomerInput
     externalAddresses?: ExternalAddressCreateNestedManyWithoutCustomerInput
+    feedbacks?: CustomerFeedbackCreateNestedManyWithoutCustomerInput
+    rewards?: CustomerRewardCreateNestedManyWithoutCustomerInput
+    otpChallenges?: CustomerOtpChallengeCreateNestedManyWithoutCustomerInput
+    accessTokens?: CustomerAccessTokenCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUncheckedCreateWithoutAddressesInput = {
@@ -76783,6 +87942,10 @@ export namespace Prisma {
     orders?: OrderUncheckedCreateNestedManyWithoutCustomerInput
     promotionalMessages?: PromotialMessageUncheckedCreateNestedManyWithoutCustomerInput
     externalAddresses?: ExternalAddressUncheckedCreateNestedManyWithoutCustomerInput
+    feedbacks?: CustomerFeedbackUncheckedCreateNestedManyWithoutCustomerInput
+    rewards?: CustomerRewardUncheckedCreateNestedManyWithoutCustomerInput
+    otpChallenges?: CustomerOtpChallengeUncheckedCreateNestedManyWithoutCustomerInput
+    accessTokens?: CustomerAccessTokenUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerCreateOrConnectWithoutAddressesInput = {
@@ -76815,6 +87978,9 @@ export namespace Prisma {
     externalAddress?: ExternalAddressCreateNestedOneWithoutOrdersInput
     orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryCreateNestedManyWithoutOrderInput
+    feedback?: CustomerFeedbackCreateNestedOneWithoutOrderInput
+    issuedRewards?: CustomerRewardCreateNestedManyWithoutIssuedForOrderInput
+    redeemedRewards?: CustomerRewardCreateNestedManyWithoutRedeemedByOrderInput
   }
 
   export type OrderUncheckedCreateWithoutDeliveryAddressInput = {
@@ -76842,6 +88008,9 @@ export namespace Prisma {
     externalAddressId?: string | null
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryUncheckedCreateNestedManyWithoutOrderInput
+    feedback?: CustomerFeedbackUncheckedCreateNestedOneWithoutOrderInput
+    issuedRewards?: CustomerRewardUncheckedCreateNestedManyWithoutIssuedForOrderInput
+    redeemedRewards?: CustomerRewardUncheckedCreateNestedManyWithoutRedeemedByOrderInput
   }
 
   export type OrderCreateOrConnectWithoutDeliveryAddressInput = {
@@ -76876,6 +88045,10 @@ export namespace Prisma {
     orders?: OrderUpdateManyWithoutCustomerNestedInput
     promotionalMessages?: PromotialMessageUpdateManyWithoutCustomerNestedInput
     externalAddresses?: ExternalAddressUpdateManyWithoutCustomerNestedInput
+    feedbacks?: CustomerFeedbackUpdateManyWithoutCustomerNestedInput
+    rewards?: CustomerRewardUpdateManyWithoutCustomerNestedInput
+    otpChallenges?: CustomerOtpChallengeUpdateManyWithoutCustomerNestedInput
+    accessTokens?: CustomerAccessTokenUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateWithoutAddressesInput = {
@@ -76889,6 +88062,10 @@ export namespace Prisma {
     orders?: OrderUncheckedUpdateManyWithoutCustomerNestedInput
     promotionalMessages?: PromotialMessageUncheckedUpdateManyWithoutCustomerNestedInput
     externalAddresses?: ExternalAddressUncheckedUpdateManyWithoutCustomerNestedInput
+    feedbacks?: CustomerFeedbackUncheckedUpdateManyWithoutCustomerNestedInput
+    rewards?: CustomerRewardUncheckedUpdateManyWithoutCustomerNestedInput
+    otpChallenges?: CustomerOtpChallengeUncheckedUpdateManyWithoutCustomerNestedInput
+    accessTokens?: CustomerAccessTokenUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type OrderUpsertWithWhereUniqueWithoutDeliveryAddressInput = {
@@ -76918,6 +88095,10 @@ export namespace Prisma {
     orders?: OrderCreateNestedManyWithoutCustomerInput
     promotionalMessages?: PromotialMessageCreateNestedManyWithoutCustomerInput
     addresses?: DeliveryAddressCreateNestedManyWithoutCustomerInput
+    feedbacks?: CustomerFeedbackCreateNestedManyWithoutCustomerInput
+    rewards?: CustomerRewardCreateNestedManyWithoutCustomerInput
+    otpChallenges?: CustomerOtpChallengeCreateNestedManyWithoutCustomerInput
+    accessTokens?: CustomerAccessTokenCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUncheckedCreateWithoutExternalAddressesInput = {
@@ -76931,6 +88112,10 @@ export namespace Prisma {
     orders?: OrderUncheckedCreateNestedManyWithoutCustomerInput
     promotionalMessages?: PromotialMessageUncheckedCreateNestedManyWithoutCustomerInput
     addresses?: DeliveryAddressUncheckedCreateNestedManyWithoutCustomerInput
+    feedbacks?: CustomerFeedbackUncheckedCreateNestedManyWithoutCustomerInput
+    rewards?: CustomerRewardUncheckedCreateNestedManyWithoutCustomerInput
+    otpChallenges?: CustomerOtpChallengeUncheckedCreateNestedManyWithoutCustomerInput
+    accessTokens?: CustomerAccessTokenUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerCreateOrConnectWithoutExternalAddressesInput = {
@@ -76963,6 +88148,9 @@ export namespace Prisma {
     deliveryAddress?: DeliveryAddressCreateNestedOneWithoutOrdersInput
     orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryCreateNestedManyWithoutOrderInput
+    feedback?: CustomerFeedbackCreateNestedOneWithoutOrderInput
+    issuedRewards?: CustomerRewardCreateNestedManyWithoutIssuedForOrderInput
+    redeemedRewards?: CustomerRewardCreateNestedManyWithoutRedeemedByOrderInput
   }
 
   export type OrderUncheckedCreateWithoutExternalAddressInput = {
@@ -76990,6 +88178,9 @@ export namespace Prisma {
     deliveryAddressId?: string | null
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryUncheckedCreateNestedManyWithoutOrderInput
+    feedback?: CustomerFeedbackUncheckedCreateNestedOneWithoutOrderInput
+    issuedRewards?: CustomerRewardUncheckedCreateNestedManyWithoutIssuedForOrderInput
+    redeemedRewards?: CustomerRewardUncheckedCreateNestedManyWithoutRedeemedByOrderInput
   }
 
   export type OrderCreateOrConnectWithoutExternalAddressInput = {
@@ -77024,6 +88215,10 @@ export namespace Prisma {
     orders?: OrderUpdateManyWithoutCustomerNestedInput
     promotionalMessages?: PromotialMessageUpdateManyWithoutCustomerNestedInput
     addresses?: DeliveryAddressUpdateManyWithoutCustomerNestedInput
+    feedbacks?: CustomerFeedbackUpdateManyWithoutCustomerNestedInput
+    rewards?: CustomerRewardUpdateManyWithoutCustomerNestedInput
+    otpChallenges?: CustomerOtpChallengeUpdateManyWithoutCustomerNestedInput
+    accessTokens?: CustomerAccessTokenUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateWithoutExternalAddressesInput = {
@@ -77037,6 +88232,10 @@ export namespace Prisma {
     orders?: OrderUncheckedUpdateManyWithoutCustomerNestedInput
     promotionalMessages?: PromotialMessageUncheckedUpdateManyWithoutCustomerNestedInput
     addresses?: DeliveryAddressUncheckedUpdateManyWithoutCustomerNestedInput
+    feedbacks?: CustomerFeedbackUncheckedUpdateManyWithoutCustomerNestedInput
+    rewards?: CustomerRewardUncheckedUpdateManyWithoutCustomerNestedInput
+    otpChallenges?: CustomerOtpChallengeUncheckedUpdateManyWithoutCustomerNestedInput
+    accessTokens?: CustomerAccessTokenUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type OrderUpsertWithWhereUniqueWithoutExternalAddressInput = {
@@ -77144,6 +88343,10 @@ export namespace Prisma {
     orders?: OrderCreateNestedManyWithoutCustomerInput
     addresses?: DeliveryAddressCreateNestedManyWithoutCustomerInput
     externalAddresses?: ExternalAddressCreateNestedManyWithoutCustomerInput
+    feedbacks?: CustomerFeedbackCreateNestedManyWithoutCustomerInput
+    rewards?: CustomerRewardCreateNestedManyWithoutCustomerInput
+    otpChallenges?: CustomerOtpChallengeCreateNestedManyWithoutCustomerInput
+    accessTokens?: CustomerAccessTokenCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUncheckedCreateWithoutPromotionalMessagesInput = {
@@ -77157,6 +88360,10 @@ export namespace Prisma {
     orders?: OrderUncheckedCreateNestedManyWithoutCustomerInput
     addresses?: DeliveryAddressUncheckedCreateNestedManyWithoutCustomerInput
     externalAddresses?: ExternalAddressUncheckedCreateNestedManyWithoutCustomerInput
+    feedbacks?: CustomerFeedbackUncheckedCreateNestedManyWithoutCustomerInput
+    rewards?: CustomerRewardUncheckedCreateNestedManyWithoutCustomerInput
+    otpChallenges?: CustomerOtpChallengeUncheckedCreateNestedManyWithoutCustomerInput
+    accessTokens?: CustomerAccessTokenUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerCreateOrConnectWithoutPromotionalMessagesInput = {
@@ -77236,6 +88443,10 @@ export namespace Prisma {
     orders?: OrderUpdateManyWithoutCustomerNestedInput
     addresses?: DeliveryAddressUpdateManyWithoutCustomerNestedInput
     externalAddresses?: ExternalAddressUpdateManyWithoutCustomerNestedInput
+    feedbacks?: CustomerFeedbackUpdateManyWithoutCustomerNestedInput
+    rewards?: CustomerRewardUpdateManyWithoutCustomerNestedInput
+    otpChallenges?: CustomerOtpChallengeUpdateManyWithoutCustomerNestedInput
+    accessTokens?: CustomerAccessTokenUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateWithoutPromotionalMessagesInput = {
@@ -77249,6 +88460,10 @@ export namespace Prisma {
     orders?: OrderUncheckedUpdateManyWithoutCustomerNestedInput
     addresses?: DeliveryAddressUncheckedUpdateManyWithoutCustomerNestedInput
     externalAddresses?: ExternalAddressUncheckedUpdateManyWithoutCustomerNestedInput
+    feedbacks?: CustomerFeedbackUncheckedUpdateManyWithoutCustomerNestedInput
+    rewards?: CustomerRewardUncheckedUpdateManyWithoutCustomerNestedInput
+    otpChallenges?: CustomerOtpChallengeUncheckedUpdateManyWithoutCustomerNestedInput
+    accessTokens?: CustomerAccessTokenUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerCreateWithoutOrdersInput = {
@@ -77262,6 +88477,10 @@ export namespace Prisma {
     promotionalMessages?: PromotialMessageCreateNestedManyWithoutCustomerInput
     addresses?: DeliveryAddressCreateNestedManyWithoutCustomerInput
     externalAddresses?: ExternalAddressCreateNestedManyWithoutCustomerInput
+    feedbacks?: CustomerFeedbackCreateNestedManyWithoutCustomerInput
+    rewards?: CustomerRewardCreateNestedManyWithoutCustomerInput
+    otpChallenges?: CustomerOtpChallengeCreateNestedManyWithoutCustomerInput
+    accessTokens?: CustomerAccessTokenCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUncheckedCreateWithoutOrdersInput = {
@@ -77275,6 +88494,10 @@ export namespace Prisma {
     promotionalMessages?: PromotialMessageUncheckedCreateNestedManyWithoutCustomerInput
     addresses?: DeliveryAddressUncheckedCreateNestedManyWithoutCustomerInput
     externalAddresses?: ExternalAddressUncheckedCreateNestedManyWithoutCustomerInput
+    feedbacks?: CustomerFeedbackUncheckedCreateNestedManyWithoutCustomerInput
+    rewards?: CustomerRewardUncheckedCreateNestedManyWithoutCustomerInput
+    otpChallenges?: CustomerOtpChallengeUncheckedCreateNestedManyWithoutCustomerInput
+    accessTokens?: CustomerAccessTokenUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerCreateOrConnectWithoutOrdersInput = {
@@ -77450,6 +88673,149 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type CustomerFeedbackCreateWithoutOrderInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    language?: string | null
+    overallRating: number
+    sentiment: $Enums.CustomerFeedbackSentiment
+    productQuality?: number | null
+    temperature?: number | null
+    deliverySpeed?: number | null
+    serviceExperience?: number | null
+    comment?: string | null
+    source?: string | null
+    customer: CustomerCreateNestedOneWithoutFeedbacksInput
+    issuedReward?: CustomerRewardCreateNestedOneWithoutFeedbackInput
+  }
+
+  export type CustomerFeedbackUncheckedCreateWithoutOrderInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    customerId: string
+    language?: string | null
+    overallRating: number
+    sentiment: $Enums.CustomerFeedbackSentiment
+    productQuality?: number | null
+    temperature?: number | null
+    deliverySpeed?: number | null
+    serviceExperience?: number | null
+    comment?: string | null
+    source?: string | null
+    issuedReward?: CustomerRewardUncheckedCreateNestedOneWithoutFeedbackInput
+  }
+
+  export type CustomerFeedbackCreateOrConnectWithoutOrderInput = {
+    where: CustomerFeedbackWhereUniqueInput
+    create: XOR<CustomerFeedbackCreateWithoutOrderInput, CustomerFeedbackUncheckedCreateWithoutOrderInput>
+  }
+
+  export type CustomerRewardCreateWithoutIssuedForOrderInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    status?: $Enums.CustomerRewardStatus
+    type: $Enums.CustomerRewardType
+    title: string
+    description?: string | null
+    quantity?: number | null
+    value?: number | null
+    couponCode?: string | null
+    issuedAt?: Date | string
+    expiresAt?: Date | string | null
+    redeemedAt?: Date | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    customer: CustomerCreateNestedOneWithoutRewardsInput
+    product?: ProductCreateNestedOneWithoutCustomerRewardsInput
+    feedback?: CustomerFeedbackCreateNestedOneWithoutIssuedRewardInput
+    redeemedByOrder?: OrderCreateNestedOneWithoutRedeemedRewardsInput
+  }
+
+  export type CustomerRewardUncheckedCreateWithoutIssuedForOrderInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    customerId: string
+    status?: $Enums.CustomerRewardStatus
+    type: $Enums.CustomerRewardType
+    title: string
+    description?: string | null
+    quantity?: number | null
+    value?: number | null
+    productId?: string | null
+    couponCode?: string | null
+    issuedAt?: Date | string
+    expiresAt?: Date | string | null
+    redeemedAt?: Date | string | null
+    feedbackId?: string | null
+    redeemedByOrderId?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type CustomerRewardCreateOrConnectWithoutIssuedForOrderInput = {
+    where: CustomerRewardWhereUniqueInput
+    create: XOR<CustomerRewardCreateWithoutIssuedForOrderInput, CustomerRewardUncheckedCreateWithoutIssuedForOrderInput>
+  }
+
+  export type CustomerRewardCreateManyIssuedForOrderInputEnvelope = {
+    data: CustomerRewardCreateManyIssuedForOrderInput | CustomerRewardCreateManyIssuedForOrderInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CustomerRewardCreateWithoutRedeemedByOrderInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    status?: $Enums.CustomerRewardStatus
+    type: $Enums.CustomerRewardType
+    title: string
+    description?: string | null
+    quantity?: number | null
+    value?: number | null
+    couponCode?: string | null
+    issuedAt?: Date | string
+    expiresAt?: Date | string | null
+    redeemedAt?: Date | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    customer: CustomerCreateNestedOneWithoutRewardsInput
+    product?: ProductCreateNestedOneWithoutCustomerRewardsInput
+    feedback?: CustomerFeedbackCreateNestedOneWithoutIssuedRewardInput
+    issuedForOrder?: OrderCreateNestedOneWithoutIssuedRewardsInput
+  }
+
+  export type CustomerRewardUncheckedCreateWithoutRedeemedByOrderInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    customerId: string
+    status?: $Enums.CustomerRewardStatus
+    type: $Enums.CustomerRewardType
+    title: string
+    description?: string | null
+    quantity?: number | null
+    value?: number | null
+    productId?: string | null
+    couponCode?: string | null
+    issuedAt?: Date | string
+    expiresAt?: Date | string | null
+    redeemedAt?: Date | string | null
+    feedbackId?: string | null
+    issuedForOrderId?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type CustomerRewardCreateOrConnectWithoutRedeemedByOrderInput = {
+    where: CustomerRewardWhereUniqueInput
+    create: XOR<CustomerRewardCreateWithoutRedeemedByOrderInput, CustomerRewardUncheckedCreateWithoutRedeemedByOrderInput>
+  }
+
+  export type CustomerRewardCreateManyRedeemedByOrderInputEnvelope = {
+    data: CustomerRewardCreateManyRedeemedByOrderInput | CustomerRewardCreateManyRedeemedByOrderInput[]
+    skipDuplicates?: boolean
+  }
+
   export type CustomerUpsertWithoutOrdersInput = {
     update: XOR<CustomerUpdateWithoutOrdersInput, CustomerUncheckedUpdateWithoutOrdersInput>
     create: XOR<CustomerCreateWithoutOrdersInput, CustomerUncheckedCreateWithoutOrdersInput>
@@ -77472,6 +88838,10 @@ export namespace Prisma {
     promotionalMessages?: PromotialMessageUpdateManyWithoutCustomerNestedInput
     addresses?: DeliveryAddressUpdateManyWithoutCustomerNestedInput
     externalAddresses?: ExternalAddressUpdateManyWithoutCustomerNestedInput
+    feedbacks?: CustomerFeedbackUpdateManyWithoutCustomerNestedInput
+    rewards?: CustomerRewardUpdateManyWithoutCustomerNestedInput
+    otpChallenges?: CustomerOtpChallengeUpdateManyWithoutCustomerNestedInput
+    accessTokens?: CustomerAccessTokenUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateWithoutOrdersInput = {
@@ -77485,6 +88855,10 @@ export namespace Prisma {
     promotionalMessages?: PromotialMessageUncheckedUpdateManyWithoutCustomerNestedInput
     addresses?: DeliveryAddressUncheckedUpdateManyWithoutCustomerNestedInput
     externalAddresses?: ExternalAddressUncheckedUpdateManyWithoutCustomerNestedInput
+    feedbacks?: CustomerFeedbackUncheckedUpdateManyWithoutCustomerNestedInput
+    rewards?: CustomerRewardUncheckedUpdateManyWithoutCustomerNestedInput
+    otpChallenges?: CustomerOtpChallengeUncheckedUpdateManyWithoutCustomerNestedInput
+    accessTokens?: CustomerAccessTokenUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type DispatchUpsertWithoutOrdersInput = {
@@ -77653,6 +89027,951 @@ export namespace Prisma {
     data: XOR<PreparationStepCategoryUpdateManyMutationInput, PreparationStepCategoryUncheckedUpdateManyWithoutOrderInput>
   }
 
+  export type CustomerFeedbackUpsertWithoutOrderInput = {
+    update: XOR<CustomerFeedbackUpdateWithoutOrderInput, CustomerFeedbackUncheckedUpdateWithoutOrderInput>
+    create: XOR<CustomerFeedbackCreateWithoutOrderInput, CustomerFeedbackUncheckedCreateWithoutOrderInput>
+    where?: CustomerFeedbackWhereInput
+  }
+
+  export type CustomerFeedbackUpdateToOneWithWhereWithoutOrderInput = {
+    where?: CustomerFeedbackWhereInput
+    data: XOR<CustomerFeedbackUpdateWithoutOrderInput, CustomerFeedbackUncheckedUpdateWithoutOrderInput>
+  }
+
+  export type CustomerFeedbackUpdateWithoutOrderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    overallRating?: IntFieldUpdateOperationsInput | number
+    sentiment?: EnumCustomerFeedbackSentimentFieldUpdateOperationsInput | $Enums.CustomerFeedbackSentiment
+    productQuality?: NullableIntFieldUpdateOperationsInput | number | null
+    temperature?: NullableIntFieldUpdateOperationsInput | number | null
+    deliverySpeed?: NullableIntFieldUpdateOperationsInput | number | null
+    serviceExperience?: NullableIntFieldUpdateOperationsInput | number | null
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    source?: NullableStringFieldUpdateOperationsInput | string | null
+    customer?: CustomerUpdateOneRequiredWithoutFeedbacksNestedInput
+    issuedReward?: CustomerRewardUpdateOneWithoutFeedbackNestedInput
+  }
+
+  export type CustomerFeedbackUncheckedUpdateWithoutOrderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customerId?: StringFieldUpdateOperationsInput | string
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    overallRating?: IntFieldUpdateOperationsInput | number
+    sentiment?: EnumCustomerFeedbackSentimentFieldUpdateOperationsInput | $Enums.CustomerFeedbackSentiment
+    productQuality?: NullableIntFieldUpdateOperationsInput | number | null
+    temperature?: NullableIntFieldUpdateOperationsInput | number | null
+    deliverySpeed?: NullableIntFieldUpdateOperationsInput | number | null
+    serviceExperience?: NullableIntFieldUpdateOperationsInput | number | null
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    source?: NullableStringFieldUpdateOperationsInput | string | null
+    issuedReward?: CustomerRewardUncheckedUpdateOneWithoutFeedbackNestedInput
+  }
+
+  export type CustomerRewardUpsertWithWhereUniqueWithoutIssuedForOrderInput = {
+    where: CustomerRewardWhereUniqueInput
+    update: XOR<CustomerRewardUpdateWithoutIssuedForOrderInput, CustomerRewardUncheckedUpdateWithoutIssuedForOrderInput>
+    create: XOR<CustomerRewardCreateWithoutIssuedForOrderInput, CustomerRewardUncheckedCreateWithoutIssuedForOrderInput>
+  }
+
+  export type CustomerRewardUpdateWithWhereUniqueWithoutIssuedForOrderInput = {
+    where: CustomerRewardWhereUniqueInput
+    data: XOR<CustomerRewardUpdateWithoutIssuedForOrderInput, CustomerRewardUncheckedUpdateWithoutIssuedForOrderInput>
+  }
+
+  export type CustomerRewardUpdateManyWithWhereWithoutIssuedForOrderInput = {
+    where: CustomerRewardScalarWhereInput
+    data: XOR<CustomerRewardUpdateManyMutationInput, CustomerRewardUncheckedUpdateManyWithoutIssuedForOrderInput>
+  }
+
+  export type CustomerRewardUpsertWithWhereUniqueWithoutRedeemedByOrderInput = {
+    where: CustomerRewardWhereUniqueInput
+    update: XOR<CustomerRewardUpdateWithoutRedeemedByOrderInput, CustomerRewardUncheckedUpdateWithoutRedeemedByOrderInput>
+    create: XOR<CustomerRewardCreateWithoutRedeemedByOrderInput, CustomerRewardUncheckedCreateWithoutRedeemedByOrderInput>
+  }
+
+  export type CustomerRewardUpdateWithWhereUniqueWithoutRedeemedByOrderInput = {
+    where: CustomerRewardWhereUniqueInput
+    data: XOR<CustomerRewardUpdateWithoutRedeemedByOrderInput, CustomerRewardUncheckedUpdateWithoutRedeemedByOrderInput>
+  }
+
+  export type CustomerRewardUpdateManyWithWhereWithoutRedeemedByOrderInput = {
+    where: CustomerRewardScalarWhereInput
+    data: XOR<CustomerRewardUpdateManyMutationInput, CustomerRewardUncheckedUpdateManyWithoutRedeemedByOrderInput>
+  }
+
+  export type CustomerCreateWithoutFeedbacksInput = {
+    id: string
+    createdAt?: Date | string
+    name?: string | null
+    email?: string | null
+    phone?: string | null
+    address?: string | null
+    lastMessageSent?: Date | string | null
+    orders?: OrderCreateNestedManyWithoutCustomerInput
+    promotionalMessages?: PromotialMessageCreateNestedManyWithoutCustomerInput
+    addresses?: DeliveryAddressCreateNestedManyWithoutCustomerInput
+    externalAddresses?: ExternalAddressCreateNestedManyWithoutCustomerInput
+    rewards?: CustomerRewardCreateNestedManyWithoutCustomerInput
+    otpChallenges?: CustomerOtpChallengeCreateNestedManyWithoutCustomerInput
+    accessTokens?: CustomerAccessTokenCreateNestedManyWithoutCustomerInput
+  }
+
+  export type CustomerUncheckedCreateWithoutFeedbacksInput = {
+    id: string
+    createdAt?: Date | string
+    name?: string | null
+    email?: string | null
+    phone?: string | null
+    address?: string | null
+    lastMessageSent?: Date | string | null
+    orders?: OrderUncheckedCreateNestedManyWithoutCustomerInput
+    promotionalMessages?: PromotialMessageUncheckedCreateNestedManyWithoutCustomerInput
+    addresses?: DeliveryAddressUncheckedCreateNestedManyWithoutCustomerInput
+    externalAddresses?: ExternalAddressUncheckedCreateNestedManyWithoutCustomerInput
+    rewards?: CustomerRewardUncheckedCreateNestedManyWithoutCustomerInput
+    otpChallenges?: CustomerOtpChallengeUncheckedCreateNestedManyWithoutCustomerInput
+    accessTokens?: CustomerAccessTokenUncheckedCreateNestedManyWithoutCustomerInput
+  }
+
+  export type CustomerCreateOrConnectWithoutFeedbacksInput = {
+    where: CustomerWhereUniqueInput
+    create: XOR<CustomerCreateWithoutFeedbacksInput, CustomerUncheckedCreateWithoutFeedbacksInput>
+  }
+
+  export type OrderCreateWithoutFeedbackInput = {
+    id: string
+    number?: string | null
+    createdAt?: Date | string
+    scheduleFor?: Date | string | null
+    language?: string | null
+    paidAt?: Date | string | null
+    deliveredAt?: Date | string | null
+    estimatedDeliveryDurationMinutes?: number | null
+    dispatchOrderIndex?: number | null
+    amount: number
+    canceled?: boolean
+    status?: $Enums.OrderStatus
+    type?: $Enums.OrderType
+    paymentMethod?: $Enums.PaymentType
+    tipAmount?: number | null
+    tags?: OrderCreatetagsInput | string[]
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    externalId?: string | null
+    customer?: CustomerCreateNestedOneWithoutOrdersInput
+    dispatch?: DispatchCreateNestedOneWithoutOrdersInput
+    address?: AddressCreateNestedOneWithoutOrdersInput
+    deliveryAddress?: DeliveryAddressCreateNestedOneWithoutOrdersInput
+    externalAddress?: ExternalAddressCreateNestedOneWithoutOrdersInput
+    orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
+    preparationStepCategories?: PreparationStepCategoryCreateNestedManyWithoutOrderInput
+    issuedRewards?: CustomerRewardCreateNestedManyWithoutIssuedForOrderInput
+    redeemedRewards?: CustomerRewardCreateNestedManyWithoutRedeemedByOrderInput
+  }
+
+  export type OrderUncheckedCreateWithoutFeedbackInput = {
+    id: string
+    number?: string | null
+    createdAt?: Date | string
+    scheduleFor?: Date | string | null
+    language?: string | null
+    paidAt?: Date | string | null
+    deliveredAt?: Date | string | null
+    estimatedDeliveryDurationMinutes?: number | null
+    dispatchOrderIndex?: number | null
+    amount: number
+    canceled?: boolean
+    status?: $Enums.OrderStatus
+    type?: $Enums.OrderType
+    paymentMethod?: $Enums.PaymentType
+    tipAmount?: number | null
+    tags?: OrderCreatetagsInput | string[]
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    customerId?: string | null
+    externalId?: string | null
+    dispatchId?: string | null
+    addressId?: string | null
+    deliveryAddressId?: string | null
+    externalAddressId?: string | null
+    orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
+    preparationStepCategories?: PreparationStepCategoryUncheckedCreateNestedManyWithoutOrderInput
+    issuedRewards?: CustomerRewardUncheckedCreateNestedManyWithoutIssuedForOrderInput
+    redeemedRewards?: CustomerRewardUncheckedCreateNestedManyWithoutRedeemedByOrderInput
+  }
+
+  export type OrderCreateOrConnectWithoutFeedbackInput = {
+    where: OrderWhereUniqueInput
+    create: XOR<OrderCreateWithoutFeedbackInput, OrderUncheckedCreateWithoutFeedbackInput>
+  }
+
+  export type CustomerRewardCreateWithoutFeedbackInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    status?: $Enums.CustomerRewardStatus
+    type: $Enums.CustomerRewardType
+    title: string
+    description?: string | null
+    quantity?: number | null
+    value?: number | null
+    couponCode?: string | null
+    issuedAt?: Date | string
+    expiresAt?: Date | string | null
+    redeemedAt?: Date | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    customer: CustomerCreateNestedOneWithoutRewardsInput
+    product?: ProductCreateNestedOneWithoutCustomerRewardsInput
+    issuedForOrder?: OrderCreateNestedOneWithoutIssuedRewardsInput
+    redeemedByOrder?: OrderCreateNestedOneWithoutRedeemedRewardsInput
+  }
+
+  export type CustomerRewardUncheckedCreateWithoutFeedbackInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    customerId: string
+    status?: $Enums.CustomerRewardStatus
+    type: $Enums.CustomerRewardType
+    title: string
+    description?: string | null
+    quantity?: number | null
+    value?: number | null
+    productId?: string | null
+    couponCode?: string | null
+    issuedAt?: Date | string
+    expiresAt?: Date | string | null
+    redeemedAt?: Date | string | null
+    issuedForOrderId?: string | null
+    redeemedByOrderId?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type CustomerRewardCreateOrConnectWithoutFeedbackInput = {
+    where: CustomerRewardWhereUniqueInput
+    create: XOR<CustomerRewardCreateWithoutFeedbackInput, CustomerRewardUncheckedCreateWithoutFeedbackInput>
+  }
+
+  export type CustomerUpsertWithoutFeedbacksInput = {
+    update: XOR<CustomerUpdateWithoutFeedbacksInput, CustomerUncheckedUpdateWithoutFeedbacksInput>
+    create: XOR<CustomerCreateWithoutFeedbacksInput, CustomerUncheckedCreateWithoutFeedbacksInput>
+    where?: CustomerWhereInput
+  }
+
+  export type CustomerUpdateToOneWithWhereWithoutFeedbacksInput = {
+    where?: CustomerWhereInput
+    data: XOR<CustomerUpdateWithoutFeedbacksInput, CustomerUncheckedUpdateWithoutFeedbacksInput>
+  }
+
+  export type CustomerUpdateWithoutFeedbacksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    lastMessageSent?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    orders?: OrderUpdateManyWithoutCustomerNestedInput
+    promotionalMessages?: PromotialMessageUpdateManyWithoutCustomerNestedInput
+    addresses?: DeliveryAddressUpdateManyWithoutCustomerNestedInput
+    externalAddresses?: ExternalAddressUpdateManyWithoutCustomerNestedInput
+    rewards?: CustomerRewardUpdateManyWithoutCustomerNestedInput
+    otpChallenges?: CustomerOtpChallengeUpdateManyWithoutCustomerNestedInput
+    accessTokens?: CustomerAccessTokenUpdateManyWithoutCustomerNestedInput
+  }
+
+  export type CustomerUncheckedUpdateWithoutFeedbacksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    lastMessageSent?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    orders?: OrderUncheckedUpdateManyWithoutCustomerNestedInput
+    promotionalMessages?: PromotialMessageUncheckedUpdateManyWithoutCustomerNestedInput
+    addresses?: DeliveryAddressUncheckedUpdateManyWithoutCustomerNestedInput
+    externalAddresses?: ExternalAddressUncheckedUpdateManyWithoutCustomerNestedInput
+    rewards?: CustomerRewardUncheckedUpdateManyWithoutCustomerNestedInput
+    otpChallenges?: CustomerOtpChallengeUncheckedUpdateManyWithoutCustomerNestedInput
+    accessTokens?: CustomerAccessTokenUncheckedUpdateManyWithoutCustomerNestedInput
+  }
+
+  export type OrderUpsertWithoutFeedbackInput = {
+    update: XOR<OrderUpdateWithoutFeedbackInput, OrderUncheckedUpdateWithoutFeedbackInput>
+    create: XOR<OrderCreateWithoutFeedbackInput, OrderUncheckedCreateWithoutFeedbackInput>
+    where?: OrderWhereInput
+  }
+
+  export type OrderUpdateToOneWithWhereWithoutFeedbackInput = {
+    where?: OrderWhereInput
+    data: XOR<OrderUpdateWithoutFeedbackInput, OrderUncheckedUpdateWithoutFeedbackInput>
+  }
+
+  export type OrderUpdateWithoutFeedbackInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    number?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    scheduleFor?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
+    amount?: IntFieldUpdateOperationsInput | number
+    canceled?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+    paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
+    tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    tags?: OrderUpdatetagsInput | string[]
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    customer?: CustomerUpdateOneWithoutOrdersNestedInput
+    dispatch?: DispatchUpdateOneWithoutOrdersNestedInput
+    address?: AddressUpdateOneWithoutOrdersNestedInput
+    deliveryAddress?: DeliveryAddressUpdateOneWithoutOrdersNestedInput
+    externalAddress?: ExternalAddressUpdateOneWithoutOrdersNestedInput
+    orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
+    preparationStepCategories?: PreparationStepCategoryUpdateManyWithoutOrderNestedInput
+    issuedRewards?: CustomerRewardUpdateManyWithoutIssuedForOrderNestedInput
+    redeemedRewards?: CustomerRewardUpdateManyWithoutRedeemedByOrderNestedInput
+  }
+
+  export type OrderUncheckedUpdateWithoutFeedbackInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    number?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    scheduleFor?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
+    amount?: IntFieldUpdateOperationsInput | number
+    canceled?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+    paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
+    tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    tags?: OrderUpdatetagsInput | string[]
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    customerId?: NullableStringFieldUpdateOperationsInput | string | null
+    externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    dispatchId?: NullableStringFieldUpdateOperationsInput | string | null
+    addressId?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
+    externalAddressId?: NullableStringFieldUpdateOperationsInput | string | null
+    orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
+    preparationStepCategories?: PreparationStepCategoryUncheckedUpdateManyWithoutOrderNestedInput
+    issuedRewards?: CustomerRewardUncheckedUpdateManyWithoutIssuedForOrderNestedInput
+    redeemedRewards?: CustomerRewardUncheckedUpdateManyWithoutRedeemedByOrderNestedInput
+  }
+
+  export type CustomerRewardUpsertWithoutFeedbackInput = {
+    update: XOR<CustomerRewardUpdateWithoutFeedbackInput, CustomerRewardUncheckedUpdateWithoutFeedbackInput>
+    create: XOR<CustomerRewardCreateWithoutFeedbackInput, CustomerRewardUncheckedCreateWithoutFeedbackInput>
+    where?: CustomerRewardWhereInput
+  }
+
+  export type CustomerRewardUpdateToOneWithWhereWithoutFeedbackInput = {
+    where?: CustomerRewardWhereInput
+    data: XOR<CustomerRewardUpdateWithoutFeedbackInput, CustomerRewardUncheckedUpdateWithoutFeedbackInput>
+  }
+
+  export type CustomerRewardUpdateWithoutFeedbackInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumCustomerRewardStatusFieldUpdateOperationsInput | $Enums.CustomerRewardStatus
+    type?: EnumCustomerRewardTypeFieldUpdateOperationsInput | $Enums.CustomerRewardType
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    value?: NullableIntFieldUpdateOperationsInput | number | null
+    couponCode?: NullableStringFieldUpdateOperationsInput | string | null
+    issuedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    redeemedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    customer?: CustomerUpdateOneRequiredWithoutRewardsNestedInput
+    product?: ProductUpdateOneWithoutCustomerRewardsNestedInput
+    issuedForOrder?: OrderUpdateOneWithoutIssuedRewardsNestedInput
+    redeemedByOrder?: OrderUpdateOneWithoutRedeemedRewardsNestedInput
+  }
+
+  export type CustomerRewardUncheckedUpdateWithoutFeedbackInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customerId?: StringFieldUpdateOperationsInput | string
+    status?: EnumCustomerRewardStatusFieldUpdateOperationsInput | $Enums.CustomerRewardStatus
+    type?: EnumCustomerRewardTypeFieldUpdateOperationsInput | $Enums.CustomerRewardType
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    value?: NullableIntFieldUpdateOperationsInput | number | null
+    productId?: NullableStringFieldUpdateOperationsInput | string | null
+    couponCode?: NullableStringFieldUpdateOperationsInput | string | null
+    issuedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    redeemedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    issuedForOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    redeemedByOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type CustomerCreateWithoutRewardsInput = {
+    id: string
+    createdAt?: Date | string
+    name?: string | null
+    email?: string | null
+    phone?: string | null
+    address?: string | null
+    lastMessageSent?: Date | string | null
+    orders?: OrderCreateNestedManyWithoutCustomerInput
+    promotionalMessages?: PromotialMessageCreateNestedManyWithoutCustomerInput
+    addresses?: DeliveryAddressCreateNestedManyWithoutCustomerInput
+    externalAddresses?: ExternalAddressCreateNestedManyWithoutCustomerInput
+    feedbacks?: CustomerFeedbackCreateNestedManyWithoutCustomerInput
+    otpChallenges?: CustomerOtpChallengeCreateNestedManyWithoutCustomerInput
+    accessTokens?: CustomerAccessTokenCreateNestedManyWithoutCustomerInput
+  }
+
+  export type CustomerUncheckedCreateWithoutRewardsInput = {
+    id: string
+    createdAt?: Date | string
+    name?: string | null
+    email?: string | null
+    phone?: string | null
+    address?: string | null
+    lastMessageSent?: Date | string | null
+    orders?: OrderUncheckedCreateNestedManyWithoutCustomerInput
+    promotionalMessages?: PromotialMessageUncheckedCreateNestedManyWithoutCustomerInput
+    addresses?: DeliveryAddressUncheckedCreateNestedManyWithoutCustomerInput
+    externalAddresses?: ExternalAddressUncheckedCreateNestedManyWithoutCustomerInput
+    feedbacks?: CustomerFeedbackUncheckedCreateNestedManyWithoutCustomerInput
+    otpChallenges?: CustomerOtpChallengeUncheckedCreateNestedManyWithoutCustomerInput
+    accessTokens?: CustomerAccessTokenUncheckedCreateNestedManyWithoutCustomerInput
+  }
+
+  export type CustomerCreateOrConnectWithoutRewardsInput = {
+    where: CustomerWhereUniqueInput
+    create: XOR<CustomerCreateWithoutRewardsInput, CustomerUncheckedCreateWithoutRewardsInput>
+  }
+
+  export type ProductCreateWithoutCustomerRewardsInput = {
+    id: string
+    createdAt?: Date | string
+    itemType?: $Enums.ProductItemType
+    name: string
+    visible?: boolean
+    description?: string | null
+    price?: number | null
+    comparedAtPrice?: number | null
+    categoryIndex?: number | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
+    photos?: FileCreateNestedManyWithoutProductInput
+    modifierGroups?: ModifierGroupCreateNestedManyWithoutProductsInput
+    category?: CategoryCreateNestedOneWithoutProductsInput
+    productCategories?: ProductCategoryCreateNestedManyWithoutProductInput
+    comboSlots?: ComboSlotCreateNestedManyWithoutComboInput
+    comboSlotOptions?: ComboSlotOptionCreateNestedManyWithoutProductInput
+    exclusivePromotionProducts?: ExclusivePromotionProductCreateNestedManyWithoutProductInput
+    OrderProducts?: OrderProductsCreateNestedManyWithoutProductInput
+    prizeProducts?: ProgressiveDiscountPrizeProductCreateNestedManyWithoutProductInput
+    preparationSteps?: PreparationStepCreateNestedManyWithoutProductsInput
+  }
+
+  export type ProductUncheckedCreateWithoutCustomerRewardsInput = {
+    id: string
+    createdAt?: Date | string
+    itemType?: $Enums.ProductItemType
+    name: string
+    visible?: boolean
+    description?: string | null
+    price?: number | null
+    comparedAtPrice?: number | null
+    categoryIndex?: number | null
+    categoryId?: string | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
+    photos?: FileUncheckedCreateNestedManyWithoutProductInput
+    modifierGroups?: ModifierGroupUncheckedCreateNestedManyWithoutProductsInput
+    productCategories?: ProductCategoryUncheckedCreateNestedManyWithoutProductInput
+    comboSlots?: ComboSlotUncheckedCreateNestedManyWithoutComboInput
+    comboSlotOptions?: ComboSlotOptionUncheckedCreateNestedManyWithoutProductInput
+    exclusivePromotionProducts?: ExclusivePromotionProductUncheckedCreateNestedManyWithoutProductInput
+    OrderProducts?: OrderProductsUncheckedCreateNestedManyWithoutProductInput
+    prizeProducts?: ProgressiveDiscountPrizeProductUncheckedCreateNestedManyWithoutProductInput
+    preparationSteps?: PreparationStepUncheckedCreateNestedManyWithoutProductsInput
+  }
+
+  export type ProductCreateOrConnectWithoutCustomerRewardsInput = {
+    where: ProductWhereUniqueInput
+    create: XOR<ProductCreateWithoutCustomerRewardsInput, ProductUncheckedCreateWithoutCustomerRewardsInput>
+  }
+
+  export type CustomerFeedbackCreateWithoutIssuedRewardInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    language?: string | null
+    overallRating: number
+    sentiment: $Enums.CustomerFeedbackSentiment
+    productQuality?: number | null
+    temperature?: number | null
+    deliverySpeed?: number | null
+    serviceExperience?: number | null
+    comment?: string | null
+    source?: string | null
+    customer: CustomerCreateNestedOneWithoutFeedbacksInput
+    order: OrderCreateNestedOneWithoutFeedbackInput
+  }
+
+  export type CustomerFeedbackUncheckedCreateWithoutIssuedRewardInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    customerId: string
+    orderId: string
+    language?: string | null
+    overallRating: number
+    sentiment: $Enums.CustomerFeedbackSentiment
+    productQuality?: number | null
+    temperature?: number | null
+    deliverySpeed?: number | null
+    serviceExperience?: number | null
+    comment?: string | null
+    source?: string | null
+  }
+
+  export type CustomerFeedbackCreateOrConnectWithoutIssuedRewardInput = {
+    where: CustomerFeedbackWhereUniqueInput
+    create: XOR<CustomerFeedbackCreateWithoutIssuedRewardInput, CustomerFeedbackUncheckedCreateWithoutIssuedRewardInput>
+  }
+
+  export type OrderCreateWithoutIssuedRewardsInput = {
+    id: string
+    number?: string | null
+    createdAt?: Date | string
+    scheduleFor?: Date | string | null
+    language?: string | null
+    paidAt?: Date | string | null
+    deliveredAt?: Date | string | null
+    estimatedDeliveryDurationMinutes?: number | null
+    dispatchOrderIndex?: number | null
+    amount: number
+    canceled?: boolean
+    status?: $Enums.OrderStatus
+    type?: $Enums.OrderType
+    paymentMethod?: $Enums.PaymentType
+    tipAmount?: number | null
+    tags?: OrderCreatetagsInput | string[]
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    externalId?: string | null
+    customer?: CustomerCreateNestedOneWithoutOrdersInput
+    dispatch?: DispatchCreateNestedOneWithoutOrdersInput
+    address?: AddressCreateNestedOneWithoutOrdersInput
+    deliveryAddress?: DeliveryAddressCreateNestedOneWithoutOrdersInput
+    externalAddress?: ExternalAddressCreateNestedOneWithoutOrdersInput
+    orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
+    preparationStepCategories?: PreparationStepCategoryCreateNestedManyWithoutOrderInput
+    feedback?: CustomerFeedbackCreateNestedOneWithoutOrderInput
+    redeemedRewards?: CustomerRewardCreateNestedManyWithoutRedeemedByOrderInput
+  }
+
+  export type OrderUncheckedCreateWithoutIssuedRewardsInput = {
+    id: string
+    number?: string | null
+    createdAt?: Date | string
+    scheduleFor?: Date | string | null
+    language?: string | null
+    paidAt?: Date | string | null
+    deliveredAt?: Date | string | null
+    estimatedDeliveryDurationMinutes?: number | null
+    dispatchOrderIndex?: number | null
+    amount: number
+    canceled?: boolean
+    status?: $Enums.OrderStatus
+    type?: $Enums.OrderType
+    paymentMethod?: $Enums.PaymentType
+    tipAmount?: number | null
+    tags?: OrderCreatetagsInput | string[]
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    customerId?: string | null
+    externalId?: string | null
+    dispatchId?: string | null
+    addressId?: string | null
+    deliveryAddressId?: string | null
+    externalAddressId?: string | null
+    orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
+    preparationStepCategories?: PreparationStepCategoryUncheckedCreateNestedManyWithoutOrderInput
+    feedback?: CustomerFeedbackUncheckedCreateNestedOneWithoutOrderInput
+    redeemedRewards?: CustomerRewardUncheckedCreateNestedManyWithoutRedeemedByOrderInput
+  }
+
+  export type OrderCreateOrConnectWithoutIssuedRewardsInput = {
+    where: OrderWhereUniqueInput
+    create: XOR<OrderCreateWithoutIssuedRewardsInput, OrderUncheckedCreateWithoutIssuedRewardsInput>
+  }
+
+  export type OrderCreateWithoutRedeemedRewardsInput = {
+    id: string
+    number?: string | null
+    createdAt?: Date | string
+    scheduleFor?: Date | string | null
+    language?: string | null
+    paidAt?: Date | string | null
+    deliveredAt?: Date | string | null
+    estimatedDeliveryDurationMinutes?: number | null
+    dispatchOrderIndex?: number | null
+    amount: number
+    canceled?: boolean
+    status?: $Enums.OrderStatus
+    type?: $Enums.OrderType
+    paymentMethod?: $Enums.PaymentType
+    tipAmount?: number | null
+    tags?: OrderCreatetagsInput | string[]
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    externalId?: string | null
+    customer?: CustomerCreateNestedOneWithoutOrdersInput
+    dispatch?: DispatchCreateNestedOneWithoutOrdersInput
+    address?: AddressCreateNestedOneWithoutOrdersInput
+    deliveryAddress?: DeliveryAddressCreateNestedOneWithoutOrdersInput
+    externalAddress?: ExternalAddressCreateNestedOneWithoutOrdersInput
+    orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
+    preparationStepCategories?: PreparationStepCategoryCreateNestedManyWithoutOrderInput
+    feedback?: CustomerFeedbackCreateNestedOneWithoutOrderInput
+    issuedRewards?: CustomerRewardCreateNestedManyWithoutIssuedForOrderInput
+  }
+
+  export type OrderUncheckedCreateWithoutRedeemedRewardsInput = {
+    id: string
+    number?: string | null
+    createdAt?: Date | string
+    scheduleFor?: Date | string | null
+    language?: string | null
+    paidAt?: Date | string | null
+    deliveredAt?: Date | string | null
+    estimatedDeliveryDurationMinutes?: number | null
+    dispatchOrderIndex?: number | null
+    amount: number
+    canceled?: boolean
+    status?: $Enums.OrderStatus
+    type?: $Enums.OrderType
+    paymentMethod?: $Enums.PaymentType
+    tipAmount?: number | null
+    tags?: OrderCreatetagsInput | string[]
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    customerId?: string | null
+    externalId?: string | null
+    dispatchId?: string | null
+    addressId?: string | null
+    deliveryAddressId?: string | null
+    externalAddressId?: string | null
+    orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
+    preparationStepCategories?: PreparationStepCategoryUncheckedCreateNestedManyWithoutOrderInput
+    feedback?: CustomerFeedbackUncheckedCreateNestedOneWithoutOrderInput
+    issuedRewards?: CustomerRewardUncheckedCreateNestedManyWithoutIssuedForOrderInput
+  }
+
+  export type OrderCreateOrConnectWithoutRedeemedRewardsInput = {
+    where: OrderWhereUniqueInput
+    create: XOR<OrderCreateWithoutRedeemedRewardsInput, OrderUncheckedCreateWithoutRedeemedRewardsInput>
+  }
+
+  export type CustomerUpsertWithoutRewardsInput = {
+    update: XOR<CustomerUpdateWithoutRewardsInput, CustomerUncheckedUpdateWithoutRewardsInput>
+    create: XOR<CustomerCreateWithoutRewardsInput, CustomerUncheckedCreateWithoutRewardsInput>
+    where?: CustomerWhereInput
+  }
+
+  export type CustomerUpdateToOneWithWhereWithoutRewardsInput = {
+    where?: CustomerWhereInput
+    data: XOR<CustomerUpdateWithoutRewardsInput, CustomerUncheckedUpdateWithoutRewardsInput>
+  }
+
+  export type CustomerUpdateWithoutRewardsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    lastMessageSent?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    orders?: OrderUpdateManyWithoutCustomerNestedInput
+    promotionalMessages?: PromotialMessageUpdateManyWithoutCustomerNestedInput
+    addresses?: DeliveryAddressUpdateManyWithoutCustomerNestedInput
+    externalAddresses?: ExternalAddressUpdateManyWithoutCustomerNestedInput
+    feedbacks?: CustomerFeedbackUpdateManyWithoutCustomerNestedInput
+    otpChallenges?: CustomerOtpChallengeUpdateManyWithoutCustomerNestedInput
+    accessTokens?: CustomerAccessTokenUpdateManyWithoutCustomerNestedInput
+  }
+
+  export type CustomerUncheckedUpdateWithoutRewardsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    lastMessageSent?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    orders?: OrderUncheckedUpdateManyWithoutCustomerNestedInput
+    promotionalMessages?: PromotialMessageUncheckedUpdateManyWithoutCustomerNestedInput
+    addresses?: DeliveryAddressUncheckedUpdateManyWithoutCustomerNestedInput
+    externalAddresses?: ExternalAddressUncheckedUpdateManyWithoutCustomerNestedInput
+    feedbacks?: CustomerFeedbackUncheckedUpdateManyWithoutCustomerNestedInput
+    otpChallenges?: CustomerOtpChallengeUncheckedUpdateManyWithoutCustomerNestedInput
+    accessTokens?: CustomerAccessTokenUncheckedUpdateManyWithoutCustomerNestedInput
+  }
+
+  export type ProductUpsertWithoutCustomerRewardsInput = {
+    update: XOR<ProductUpdateWithoutCustomerRewardsInput, ProductUncheckedUpdateWithoutCustomerRewardsInput>
+    create: XOR<ProductCreateWithoutCustomerRewardsInput, ProductUncheckedCreateWithoutCustomerRewardsInput>
+    where?: ProductWhereInput
+  }
+
+  export type ProductUpdateToOneWithWhereWithoutCustomerRewardsInput = {
+    where?: ProductWhereInput
+    data: XOR<ProductUpdateWithoutCustomerRewardsInput, ProductUncheckedUpdateWithoutCustomerRewardsInput>
+  }
+
+  export type ProductUpdateWithoutCustomerRewardsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    itemType?: EnumProductItemTypeFieldUpdateOperationsInput | $Enums.ProductItemType
+    name?: StringFieldUpdateOperationsInput | string
+    visible?: BoolFieldUpdateOperationsInput | boolean
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: NullableIntFieldUpdateOperationsInput | number | null
+    comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
+    categoryIndex?: NullableIntFieldUpdateOperationsInput | number | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
+    photos?: FileUpdateManyWithoutProductNestedInput
+    modifierGroups?: ModifierGroupUpdateManyWithoutProductsNestedInput
+    category?: CategoryUpdateOneWithoutProductsNestedInput
+    productCategories?: ProductCategoryUpdateManyWithoutProductNestedInput
+    comboSlots?: ComboSlotUpdateManyWithoutComboNestedInput
+    comboSlotOptions?: ComboSlotOptionUpdateManyWithoutProductNestedInput
+    exclusivePromotionProducts?: ExclusivePromotionProductUpdateManyWithoutProductNestedInput
+    OrderProducts?: OrderProductsUpdateManyWithoutProductNestedInput
+    prizeProducts?: ProgressiveDiscountPrizeProductUpdateManyWithoutProductNestedInput
+    preparationSteps?: PreparationStepUpdateManyWithoutProductsNestedInput
+  }
+
+  export type ProductUncheckedUpdateWithoutCustomerRewardsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    itemType?: EnumProductItemTypeFieldUpdateOperationsInput | $Enums.ProductItemType
+    name?: StringFieldUpdateOperationsInput | string
+    visible?: BoolFieldUpdateOperationsInput | boolean
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: NullableIntFieldUpdateOperationsInput | number | null
+    comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
+    categoryIndex?: NullableIntFieldUpdateOperationsInput | number | null
+    categoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
+    photos?: FileUncheckedUpdateManyWithoutProductNestedInput
+    modifierGroups?: ModifierGroupUncheckedUpdateManyWithoutProductsNestedInput
+    productCategories?: ProductCategoryUncheckedUpdateManyWithoutProductNestedInput
+    comboSlots?: ComboSlotUncheckedUpdateManyWithoutComboNestedInput
+    comboSlotOptions?: ComboSlotOptionUncheckedUpdateManyWithoutProductNestedInput
+    exclusivePromotionProducts?: ExclusivePromotionProductUncheckedUpdateManyWithoutProductNestedInput
+    OrderProducts?: OrderProductsUncheckedUpdateManyWithoutProductNestedInput
+    prizeProducts?: ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutProductNestedInput
+    preparationSteps?: PreparationStepUncheckedUpdateManyWithoutProductsNestedInput
+  }
+
+  export type CustomerFeedbackUpsertWithoutIssuedRewardInput = {
+    update: XOR<CustomerFeedbackUpdateWithoutIssuedRewardInput, CustomerFeedbackUncheckedUpdateWithoutIssuedRewardInput>
+    create: XOR<CustomerFeedbackCreateWithoutIssuedRewardInput, CustomerFeedbackUncheckedCreateWithoutIssuedRewardInput>
+    where?: CustomerFeedbackWhereInput
+  }
+
+  export type CustomerFeedbackUpdateToOneWithWhereWithoutIssuedRewardInput = {
+    where?: CustomerFeedbackWhereInput
+    data: XOR<CustomerFeedbackUpdateWithoutIssuedRewardInput, CustomerFeedbackUncheckedUpdateWithoutIssuedRewardInput>
+  }
+
+  export type CustomerFeedbackUpdateWithoutIssuedRewardInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    overallRating?: IntFieldUpdateOperationsInput | number
+    sentiment?: EnumCustomerFeedbackSentimentFieldUpdateOperationsInput | $Enums.CustomerFeedbackSentiment
+    productQuality?: NullableIntFieldUpdateOperationsInput | number | null
+    temperature?: NullableIntFieldUpdateOperationsInput | number | null
+    deliverySpeed?: NullableIntFieldUpdateOperationsInput | number | null
+    serviceExperience?: NullableIntFieldUpdateOperationsInput | number | null
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    source?: NullableStringFieldUpdateOperationsInput | string | null
+    customer?: CustomerUpdateOneRequiredWithoutFeedbacksNestedInput
+    order?: OrderUpdateOneRequiredWithoutFeedbackNestedInput
+  }
+
+  export type CustomerFeedbackUncheckedUpdateWithoutIssuedRewardInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customerId?: StringFieldUpdateOperationsInput | string
+    orderId?: StringFieldUpdateOperationsInput | string
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    overallRating?: IntFieldUpdateOperationsInput | number
+    sentiment?: EnumCustomerFeedbackSentimentFieldUpdateOperationsInput | $Enums.CustomerFeedbackSentiment
+    productQuality?: NullableIntFieldUpdateOperationsInput | number | null
+    temperature?: NullableIntFieldUpdateOperationsInput | number | null
+    deliverySpeed?: NullableIntFieldUpdateOperationsInput | number | null
+    serviceExperience?: NullableIntFieldUpdateOperationsInput | number | null
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    source?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type OrderUpsertWithoutIssuedRewardsInput = {
+    update: XOR<OrderUpdateWithoutIssuedRewardsInput, OrderUncheckedUpdateWithoutIssuedRewardsInput>
+    create: XOR<OrderCreateWithoutIssuedRewardsInput, OrderUncheckedCreateWithoutIssuedRewardsInput>
+    where?: OrderWhereInput
+  }
+
+  export type OrderUpdateToOneWithWhereWithoutIssuedRewardsInput = {
+    where?: OrderWhereInput
+    data: XOR<OrderUpdateWithoutIssuedRewardsInput, OrderUncheckedUpdateWithoutIssuedRewardsInput>
+  }
+
+  export type OrderUpdateWithoutIssuedRewardsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    number?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    scheduleFor?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
+    amount?: IntFieldUpdateOperationsInput | number
+    canceled?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+    paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
+    tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    tags?: OrderUpdatetagsInput | string[]
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    customer?: CustomerUpdateOneWithoutOrdersNestedInput
+    dispatch?: DispatchUpdateOneWithoutOrdersNestedInput
+    address?: AddressUpdateOneWithoutOrdersNestedInput
+    deliveryAddress?: DeliveryAddressUpdateOneWithoutOrdersNestedInput
+    externalAddress?: ExternalAddressUpdateOneWithoutOrdersNestedInput
+    orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
+    preparationStepCategories?: PreparationStepCategoryUpdateManyWithoutOrderNestedInput
+    feedback?: CustomerFeedbackUpdateOneWithoutOrderNestedInput
+    redeemedRewards?: CustomerRewardUpdateManyWithoutRedeemedByOrderNestedInput
+  }
+
+  export type OrderUncheckedUpdateWithoutIssuedRewardsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    number?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    scheduleFor?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
+    amount?: IntFieldUpdateOperationsInput | number
+    canceled?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+    paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
+    tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    tags?: OrderUpdatetagsInput | string[]
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    customerId?: NullableStringFieldUpdateOperationsInput | string | null
+    externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    dispatchId?: NullableStringFieldUpdateOperationsInput | string | null
+    addressId?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
+    externalAddressId?: NullableStringFieldUpdateOperationsInput | string | null
+    orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
+    preparationStepCategories?: PreparationStepCategoryUncheckedUpdateManyWithoutOrderNestedInput
+    feedback?: CustomerFeedbackUncheckedUpdateOneWithoutOrderNestedInput
+    redeemedRewards?: CustomerRewardUncheckedUpdateManyWithoutRedeemedByOrderNestedInput
+  }
+
+  export type OrderUpsertWithoutRedeemedRewardsInput = {
+    update: XOR<OrderUpdateWithoutRedeemedRewardsInput, OrderUncheckedUpdateWithoutRedeemedRewardsInput>
+    create: XOR<OrderCreateWithoutRedeemedRewardsInput, OrderUncheckedCreateWithoutRedeemedRewardsInput>
+    where?: OrderWhereInput
+  }
+
+  export type OrderUpdateToOneWithWhereWithoutRedeemedRewardsInput = {
+    where?: OrderWhereInput
+    data: XOR<OrderUpdateWithoutRedeemedRewardsInput, OrderUncheckedUpdateWithoutRedeemedRewardsInput>
+  }
+
+  export type OrderUpdateWithoutRedeemedRewardsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    number?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    scheduleFor?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
+    amount?: IntFieldUpdateOperationsInput | number
+    canceled?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+    paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
+    tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    tags?: OrderUpdatetagsInput | string[]
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    customer?: CustomerUpdateOneWithoutOrdersNestedInput
+    dispatch?: DispatchUpdateOneWithoutOrdersNestedInput
+    address?: AddressUpdateOneWithoutOrdersNestedInput
+    deliveryAddress?: DeliveryAddressUpdateOneWithoutOrdersNestedInput
+    externalAddress?: ExternalAddressUpdateOneWithoutOrdersNestedInput
+    orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
+    preparationStepCategories?: PreparationStepCategoryUpdateManyWithoutOrderNestedInput
+    feedback?: CustomerFeedbackUpdateOneWithoutOrderNestedInput
+    issuedRewards?: CustomerRewardUpdateManyWithoutIssuedForOrderNestedInput
+  }
+
+  export type OrderUncheckedUpdateWithoutRedeemedRewardsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    number?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    scheduleFor?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
+    amount?: IntFieldUpdateOperationsInput | number
+    canceled?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+    paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
+    tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    tags?: OrderUpdatetagsInput | string[]
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    customerId?: NullableStringFieldUpdateOperationsInput | string | null
+    externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    dispatchId?: NullableStringFieldUpdateOperationsInput | string | null
+    addressId?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
+    externalAddressId?: NullableStringFieldUpdateOperationsInput | string | null
+    orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
+    preparationStepCategories?: PreparationStepCategoryUncheckedUpdateManyWithoutOrderNestedInput
+    feedback?: CustomerFeedbackUncheckedUpdateOneWithoutOrderNestedInput
+    issuedRewards?: CustomerRewardUncheckedUpdateManyWithoutIssuedForOrderNestedInput
+  }
+
   export type ProductCreateWithoutOrderProductsInput = {
     id: string
     createdAt?: Date | string
@@ -77672,6 +89991,7 @@ export namespace Prisma {
     comboSlotOptions?: ComboSlotOptionCreateNestedManyWithoutProductInput
     exclusivePromotionProducts?: ExclusivePromotionProductCreateNestedManyWithoutProductInput
     prizeProducts?: ProgressiveDiscountPrizeProductCreateNestedManyWithoutProductInput
+    customerRewards?: CustomerRewardCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepCreateNestedManyWithoutProductsInput
   }
 
@@ -77694,6 +90014,7 @@ export namespace Prisma {
     comboSlotOptions?: ComboSlotOptionUncheckedCreateNestedManyWithoutProductInput
     exclusivePromotionProducts?: ExclusivePromotionProductUncheckedCreateNestedManyWithoutProductInput
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedCreateNestedManyWithoutProductInput
+    customerRewards?: CustomerRewardUncheckedCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepUncheckedCreateNestedManyWithoutProductsInput
   }
 
@@ -77756,6 +90077,9 @@ export namespace Prisma {
     deliveryAddress?: DeliveryAddressCreateNestedOneWithoutOrdersInput
     externalAddress?: ExternalAddressCreateNestedOneWithoutOrdersInput
     preparationStepCategories?: PreparationStepCategoryCreateNestedManyWithoutOrderInput
+    feedback?: CustomerFeedbackCreateNestedOneWithoutOrderInput
+    issuedRewards?: CustomerRewardCreateNestedManyWithoutIssuedForOrderInput
+    redeemedRewards?: CustomerRewardCreateNestedManyWithoutRedeemedByOrderInput
   }
 
   export type OrderUncheckedCreateWithoutOrderProductsInput = {
@@ -77783,6 +90107,9 @@ export namespace Prisma {
     deliveryAddressId?: string | null
     externalAddressId?: string | null
     preparationStepCategories?: PreparationStepCategoryUncheckedCreateNestedManyWithoutOrderInput
+    feedback?: CustomerFeedbackUncheckedCreateNestedOneWithoutOrderInput
+    issuedRewards?: CustomerRewardUncheckedCreateNestedManyWithoutIssuedForOrderInput
+    redeemedRewards?: CustomerRewardUncheckedCreateNestedManyWithoutRedeemedByOrderInput
   }
 
   export type OrderCreateOrConnectWithoutOrderProductsInput = {
@@ -77820,6 +90147,7 @@ export namespace Prisma {
     comboSlotOptions?: ComboSlotOptionUpdateManyWithoutProductNestedInput
     exclusivePromotionProducts?: ExclusivePromotionProductUpdateManyWithoutProductNestedInput
     prizeProducts?: ProgressiveDiscountPrizeProductUpdateManyWithoutProductNestedInput
+    customerRewards?: CustomerRewardUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUpdateManyWithoutProductsNestedInput
   }
 
@@ -77842,6 +90170,7 @@ export namespace Prisma {
     comboSlotOptions?: ComboSlotOptionUncheckedUpdateManyWithoutProductNestedInput
     exclusivePromotionProducts?: ExclusivePromotionProductUncheckedUpdateManyWithoutProductNestedInput
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutProductNestedInput
+    customerRewards?: CustomerRewardUncheckedUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUncheckedUpdateManyWithoutProductsNestedInput
   }
 
@@ -77897,6 +90226,9 @@ export namespace Prisma {
     deliveryAddress?: DeliveryAddressUpdateOneWithoutOrdersNestedInput
     externalAddress?: ExternalAddressUpdateOneWithoutOrdersNestedInput
     preparationStepCategories?: PreparationStepCategoryUpdateManyWithoutOrderNestedInput
+    feedback?: CustomerFeedbackUpdateOneWithoutOrderNestedInput
+    issuedRewards?: CustomerRewardUpdateManyWithoutIssuedForOrderNestedInput
+    redeemedRewards?: CustomerRewardUpdateManyWithoutRedeemedByOrderNestedInput
   }
 
   export type OrderUncheckedUpdateWithoutOrderProductsInput = {
@@ -77924,6 +90256,9 @@ export namespace Prisma {
     deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
     externalAddressId?: NullableStringFieldUpdateOperationsInput | string | null
     preparationStepCategories?: PreparationStepCategoryUncheckedUpdateManyWithoutOrderNestedInput
+    feedback?: CustomerFeedbackUncheckedUpdateOneWithoutOrderNestedInput
+    issuedRewards?: CustomerRewardUncheckedUpdateManyWithoutIssuedForOrderNestedInput
+    redeemedRewards?: CustomerRewardUncheckedUpdateManyWithoutRedeemedByOrderNestedInput
   }
 
   export type InventoryStockCreateWithoutPlaceInput = {
@@ -79508,6 +91843,7 @@ export namespace Prisma {
     exclusivePromotionProducts?: ExclusivePromotionProductUpdateManyWithoutProductNestedInput
     OrderProducts?: OrderProductsUpdateManyWithoutProductNestedInput
     prizeProducts?: ProgressiveDiscountPrizeProductUpdateManyWithoutProductNestedInput
+    customerRewards?: CustomerRewardUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutPreparationStepsInput = {
@@ -79530,6 +91866,7 @@ export namespace Prisma {
     exclusivePromotionProducts?: ExclusivePromotionProductUncheckedUpdateManyWithoutProductNestedInput
     OrderProducts?: OrderProductsUncheckedUpdateManyWithoutProductNestedInput
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutProductNestedInput
+    customerRewards?: CustomerRewardUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateManyWithoutPreparationStepsInput = {
@@ -79817,6 +92154,7 @@ export namespace Prisma {
     exclusivePromotionProducts?: ExclusivePromotionProductUpdateManyWithoutProductNestedInput
     OrderProducts?: OrderProductsUpdateManyWithoutProductNestedInput
     prizeProducts?: ProgressiveDiscountPrizeProductUpdateManyWithoutProductNestedInput
+    customerRewards?: CustomerRewardUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUpdateManyWithoutProductsNestedInput
   }
 
@@ -79839,6 +92177,7 @@ export namespace Prisma {
     exclusivePromotionProducts?: ExclusivePromotionProductUncheckedUpdateManyWithoutProductNestedInput
     OrderProducts?: OrderProductsUncheckedUpdateManyWithoutProductNestedInput
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutProductNestedInput
+    customerRewards?: CustomerRewardUncheckedUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUncheckedUpdateManyWithoutProductsNestedInput
   }
 
@@ -80115,6 +92454,9 @@ export namespace Prisma {
     externalAddress?: ExternalAddressUpdateOneWithoutOrdersNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUpdateManyWithoutOrderNestedInput
+    feedback?: CustomerFeedbackUpdateOneWithoutOrderNestedInput
+    issuedRewards?: CustomerRewardUpdateManyWithoutIssuedForOrderNestedInput
+    redeemedRewards?: CustomerRewardUpdateManyWithoutRedeemedByOrderNestedInput
   }
 
   export type OrderUncheckedUpdateWithoutDispatchInput = {
@@ -80142,6 +92484,9 @@ export namespace Prisma {
     externalAddressId?: NullableStringFieldUpdateOperationsInput | string | null
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUncheckedUpdateManyWithoutOrderNestedInput
+    feedback?: CustomerFeedbackUncheckedUpdateOneWithoutOrderNestedInput
+    issuedRewards?: CustomerRewardUncheckedUpdateManyWithoutIssuedForOrderNestedInput
+    redeemedRewards?: CustomerRewardUncheckedUpdateManyWithoutRedeemedByOrderNestedInput
   }
 
   export type OrderUncheckedUpdateManyWithoutDispatchInput = {
@@ -80219,6 +92564,9 @@ export namespace Prisma {
     externalAddress?: ExternalAddressUpdateOneWithoutOrdersNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUpdateManyWithoutOrderNestedInput
+    feedback?: CustomerFeedbackUpdateOneWithoutOrderNestedInput
+    issuedRewards?: CustomerRewardUpdateManyWithoutIssuedForOrderNestedInput
+    redeemedRewards?: CustomerRewardUpdateManyWithoutRedeemedByOrderNestedInput
   }
 
   export type OrderUncheckedUpdateWithoutAddressInput = {
@@ -80246,6 +92594,9 @@ export namespace Prisma {
     externalAddressId?: NullableStringFieldUpdateOperationsInput | string | null
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUncheckedUpdateManyWithoutOrderNestedInput
+    feedback?: CustomerFeedbackUncheckedUpdateOneWithoutOrderNestedInput
+    issuedRewards?: CustomerRewardUncheckedUpdateManyWithoutIssuedForOrderNestedInput
+    redeemedRewards?: CustomerRewardUncheckedUpdateManyWithoutRedeemedByOrderNestedInput
   }
 
   export type OrderUncheckedUpdateManyWithoutAddressInput = {
@@ -80326,6 +92677,27 @@ export namespace Prisma {
     id: string
     createdAt?: Date | string
     prizeId: string
+  }
+
+  export type CustomerRewardCreateManyProductInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    customerId: string
+    status?: $Enums.CustomerRewardStatus
+    type: $Enums.CustomerRewardType
+    title: string
+    description?: string | null
+    quantity?: number | null
+    value?: number | null
+    couponCode?: string | null
+    issuedAt?: Date | string
+    expiresAt?: Date | string | null
+    redeemedAt?: Date | string | null
+    feedbackId?: string | null
+    issuedForOrderId?: string | null
+    redeemedByOrderId?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type FileUpdateWithoutProductInput = {
@@ -80532,6 +92904,69 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     prizeId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type CustomerRewardUpdateWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumCustomerRewardStatusFieldUpdateOperationsInput | $Enums.CustomerRewardStatus
+    type?: EnumCustomerRewardTypeFieldUpdateOperationsInput | $Enums.CustomerRewardType
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    value?: NullableIntFieldUpdateOperationsInput | number | null
+    couponCode?: NullableStringFieldUpdateOperationsInput | string | null
+    issuedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    redeemedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    customer?: CustomerUpdateOneRequiredWithoutRewardsNestedInput
+    feedback?: CustomerFeedbackUpdateOneWithoutIssuedRewardNestedInput
+    issuedForOrder?: OrderUpdateOneWithoutIssuedRewardsNestedInput
+    redeemedByOrder?: OrderUpdateOneWithoutRedeemedRewardsNestedInput
+  }
+
+  export type CustomerRewardUncheckedUpdateWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customerId?: StringFieldUpdateOperationsInput | string
+    status?: EnumCustomerRewardStatusFieldUpdateOperationsInput | $Enums.CustomerRewardStatus
+    type?: EnumCustomerRewardTypeFieldUpdateOperationsInput | $Enums.CustomerRewardType
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    value?: NullableIntFieldUpdateOperationsInput | number | null
+    couponCode?: NullableStringFieldUpdateOperationsInput | string | null
+    issuedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    redeemedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    feedbackId?: NullableStringFieldUpdateOperationsInput | string | null
+    issuedForOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    redeemedByOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type CustomerRewardUncheckedUpdateManyWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customerId?: StringFieldUpdateOperationsInput | string
+    status?: EnumCustomerRewardStatusFieldUpdateOperationsInput | $Enums.CustomerRewardStatus
+    type?: EnumCustomerRewardTypeFieldUpdateOperationsInput | $Enums.CustomerRewardType
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    value?: NullableIntFieldUpdateOperationsInput | number | null
+    couponCode?: NullableStringFieldUpdateOperationsInput | string | null
+    issuedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    redeemedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    feedbackId?: NullableStringFieldUpdateOperationsInput | string | null
+    issuedForOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    redeemedByOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type PreparationStepUpdateWithoutProductsInput = {
@@ -80802,6 +93237,7 @@ export namespace Prisma {
     exclusivePromotionProducts?: ExclusivePromotionProductUpdateManyWithoutProductNestedInput
     OrderProducts?: OrderProductsUpdateManyWithoutProductNestedInput
     prizeProducts?: ProgressiveDiscountPrizeProductUpdateManyWithoutProductNestedInput
+    customerRewards?: CustomerRewardUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUpdateManyWithoutProductsNestedInput
   }
 
@@ -80824,6 +93260,7 @@ export namespace Prisma {
     exclusivePromotionProducts?: ExclusivePromotionProductUncheckedUpdateManyWithoutProductNestedInput
     OrderProducts?: OrderProductsUncheckedUpdateManyWithoutProductNestedInput
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutProductNestedInput
+    customerRewards?: CustomerRewardUncheckedUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUncheckedUpdateManyWithoutProductsNestedInput
   }
 
@@ -81015,6 +93452,70 @@ export namespace Prisma {
     lng?: string | null
   }
 
+  export type CustomerFeedbackCreateManyCustomerInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    orderId: string
+    language?: string | null
+    overallRating: number
+    sentiment: $Enums.CustomerFeedbackSentiment
+    productQuality?: number | null
+    temperature?: number | null
+    deliverySpeed?: number | null
+    serviceExperience?: number | null
+    comment?: string | null
+    source?: string | null
+  }
+
+  export type CustomerRewardCreateManyCustomerInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    status?: $Enums.CustomerRewardStatus
+    type: $Enums.CustomerRewardType
+    title: string
+    description?: string | null
+    quantity?: number | null
+    value?: number | null
+    productId?: string | null
+    couponCode?: string | null
+    issuedAt?: Date | string
+    expiresAt?: Date | string | null
+    redeemedAt?: Date | string | null
+    feedbackId?: string | null
+    issuedForOrderId?: string | null
+    redeemedByOrderId?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type CustomerOtpChallengeCreateManyCustomerInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    phone: string
+    countryCode?: string | null
+    channel?: $Enums.CustomerOtpChannel
+    codeHash: string
+    expiresAt: Date | string
+    usedAt?: Date | string | null
+    attemptCount?: number
+    maxAttempts?: number
+    lastAttemptAt?: Date | string | null
+  }
+
+  export type CustomerAccessTokenCreateManyCustomerInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    tokenHash: string
+    expiresAt: Date | string
+    lastUsedAt?: Date | string | null
+    revokedAt?: Date | string | null
+    userAgent?: string | null
+    ipAddress?: string | null
+  }
+
   export type OrderUpdateWithoutCustomerInput = {
     id?: StringFieldUpdateOperationsInput | string
     number?: NullableStringFieldUpdateOperationsInput | string | null
@@ -81040,6 +93541,9 @@ export namespace Prisma {
     externalAddress?: ExternalAddressUpdateOneWithoutOrdersNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUpdateManyWithoutOrderNestedInput
+    feedback?: CustomerFeedbackUpdateOneWithoutOrderNestedInput
+    issuedRewards?: CustomerRewardUpdateManyWithoutIssuedForOrderNestedInput
+    redeemedRewards?: CustomerRewardUpdateManyWithoutRedeemedByOrderNestedInput
   }
 
   export type OrderUncheckedUpdateWithoutCustomerInput = {
@@ -81067,6 +93571,9 @@ export namespace Prisma {
     externalAddressId?: NullableStringFieldUpdateOperationsInput | string | null
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUncheckedUpdateManyWithoutOrderNestedInput
+    feedback?: CustomerFeedbackUncheckedUpdateOneWithoutOrderNestedInput
+    issuedRewards?: CustomerRewardUncheckedUpdateManyWithoutIssuedForOrderNestedInput
+    redeemedRewards?: CustomerRewardUncheckedUpdateManyWithoutRedeemedByOrderNestedInput
   }
 
   export type OrderUncheckedUpdateManyWithoutCustomerInput = {
@@ -81191,6 +93698,200 @@ export namespace Prisma {
     lng?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type CustomerFeedbackUpdateWithoutCustomerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    overallRating?: IntFieldUpdateOperationsInput | number
+    sentiment?: EnumCustomerFeedbackSentimentFieldUpdateOperationsInput | $Enums.CustomerFeedbackSentiment
+    productQuality?: NullableIntFieldUpdateOperationsInput | number | null
+    temperature?: NullableIntFieldUpdateOperationsInput | number | null
+    deliverySpeed?: NullableIntFieldUpdateOperationsInput | number | null
+    serviceExperience?: NullableIntFieldUpdateOperationsInput | number | null
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    source?: NullableStringFieldUpdateOperationsInput | string | null
+    order?: OrderUpdateOneRequiredWithoutFeedbackNestedInput
+    issuedReward?: CustomerRewardUpdateOneWithoutFeedbackNestedInput
+  }
+
+  export type CustomerFeedbackUncheckedUpdateWithoutCustomerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    orderId?: StringFieldUpdateOperationsInput | string
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    overallRating?: IntFieldUpdateOperationsInput | number
+    sentiment?: EnumCustomerFeedbackSentimentFieldUpdateOperationsInput | $Enums.CustomerFeedbackSentiment
+    productQuality?: NullableIntFieldUpdateOperationsInput | number | null
+    temperature?: NullableIntFieldUpdateOperationsInput | number | null
+    deliverySpeed?: NullableIntFieldUpdateOperationsInput | number | null
+    serviceExperience?: NullableIntFieldUpdateOperationsInput | number | null
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    source?: NullableStringFieldUpdateOperationsInput | string | null
+    issuedReward?: CustomerRewardUncheckedUpdateOneWithoutFeedbackNestedInput
+  }
+
+  export type CustomerFeedbackUncheckedUpdateManyWithoutCustomerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    orderId?: StringFieldUpdateOperationsInput | string
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    overallRating?: IntFieldUpdateOperationsInput | number
+    sentiment?: EnumCustomerFeedbackSentimentFieldUpdateOperationsInput | $Enums.CustomerFeedbackSentiment
+    productQuality?: NullableIntFieldUpdateOperationsInput | number | null
+    temperature?: NullableIntFieldUpdateOperationsInput | number | null
+    deliverySpeed?: NullableIntFieldUpdateOperationsInput | number | null
+    serviceExperience?: NullableIntFieldUpdateOperationsInput | number | null
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    source?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type CustomerRewardUpdateWithoutCustomerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumCustomerRewardStatusFieldUpdateOperationsInput | $Enums.CustomerRewardStatus
+    type?: EnumCustomerRewardTypeFieldUpdateOperationsInput | $Enums.CustomerRewardType
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    value?: NullableIntFieldUpdateOperationsInput | number | null
+    couponCode?: NullableStringFieldUpdateOperationsInput | string | null
+    issuedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    redeemedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    product?: ProductUpdateOneWithoutCustomerRewardsNestedInput
+    feedback?: CustomerFeedbackUpdateOneWithoutIssuedRewardNestedInput
+    issuedForOrder?: OrderUpdateOneWithoutIssuedRewardsNestedInput
+    redeemedByOrder?: OrderUpdateOneWithoutRedeemedRewardsNestedInput
+  }
+
+  export type CustomerRewardUncheckedUpdateWithoutCustomerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumCustomerRewardStatusFieldUpdateOperationsInput | $Enums.CustomerRewardStatus
+    type?: EnumCustomerRewardTypeFieldUpdateOperationsInput | $Enums.CustomerRewardType
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    value?: NullableIntFieldUpdateOperationsInput | number | null
+    productId?: NullableStringFieldUpdateOperationsInput | string | null
+    couponCode?: NullableStringFieldUpdateOperationsInput | string | null
+    issuedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    redeemedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    feedbackId?: NullableStringFieldUpdateOperationsInput | string | null
+    issuedForOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    redeemedByOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type CustomerRewardUncheckedUpdateManyWithoutCustomerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumCustomerRewardStatusFieldUpdateOperationsInput | $Enums.CustomerRewardStatus
+    type?: EnumCustomerRewardTypeFieldUpdateOperationsInput | $Enums.CustomerRewardType
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    value?: NullableIntFieldUpdateOperationsInput | number | null
+    productId?: NullableStringFieldUpdateOperationsInput | string | null
+    couponCode?: NullableStringFieldUpdateOperationsInput | string | null
+    issuedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    redeemedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    feedbackId?: NullableStringFieldUpdateOperationsInput | string | null
+    issuedForOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    redeemedByOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type CustomerOtpChallengeUpdateWithoutCustomerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    phone?: StringFieldUpdateOperationsInput | string
+    countryCode?: NullableStringFieldUpdateOperationsInput | string | null
+    channel?: EnumCustomerOtpChannelFieldUpdateOperationsInput | $Enums.CustomerOtpChannel
+    codeHash?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    attemptCount?: IntFieldUpdateOperationsInput | number
+    maxAttempts?: IntFieldUpdateOperationsInput | number
+    lastAttemptAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type CustomerOtpChallengeUncheckedUpdateWithoutCustomerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    phone?: StringFieldUpdateOperationsInput | string
+    countryCode?: NullableStringFieldUpdateOperationsInput | string | null
+    channel?: EnumCustomerOtpChannelFieldUpdateOperationsInput | $Enums.CustomerOtpChannel
+    codeHash?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    attemptCount?: IntFieldUpdateOperationsInput | number
+    maxAttempts?: IntFieldUpdateOperationsInput | number
+    lastAttemptAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type CustomerOtpChallengeUncheckedUpdateManyWithoutCustomerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    phone?: StringFieldUpdateOperationsInput | string
+    countryCode?: NullableStringFieldUpdateOperationsInput | string | null
+    channel?: EnumCustomerOtpChannelFieldUpdateOperationsInput | $Enums.CustomerOtpChannel
+    codeHash?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    attemptCount?: IntFieldUpdateOperationsInput | number
+    maxAttempts?: IntFieldUpdateOperationsInput | number
+    lastAttemptAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type CustomerAccessTokenUpdateWithoutCustomerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tokenHash?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type CustomerAccessTokenUncheckedUpdateWithoutCustomerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tokenHash?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type CustomerAccessTokenUncheckedUpdateManyWithoutCustomerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tokenHash?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
   export type OrderCreateManyDeliveryAddressInput = {
     id: string
     number?: string | null
@@ -81241,6 +93942,9 @@ export namespace Prisma {
     externalAddress?: ExternalAddressUpdateOneWithoutOrdersNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUpdateManyWithoutOrderNestedInput
+    feedback?: CustomerFeedbackUpdateOneWithoutOrderNestedInput
+    issuedRewards?: CustomerRewardUpdateManyWithoutIssuedForOrderNestedInput
+    redeemedRewards?: CustomerRewardUpdateManyWithoutRedeemedByOrderNestedInput
   }
 
   export type OrderUncheckedUpdateWithoutDeliveryAddressInput = {
@@ -81268,6 +93972,9 @@ export namespace Prisma {
     externalAddressId?: NullableStringFieldUpdateOperationsInput | string | null
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUncheckedUpdateManyWithoutOrderNestedInput
+    feedback?: CustomerFeedbackUncheckedUpdateOneWithoutOrderNestedInput
+    issuedRewards?: CustomerRewardUncheckedUpdateManyWithoutIssuedForOrderNestedInput
+    redeemedRewards?: CustomerRewardUncheckedUpdateManyWithoutRedeemedByOrderNestedInput
   }
 
   export type OrderUncheckedUpdateManyWithoutDeliveryAddressInput = {
@@ -81345,6 +94052,9 @@ export namespace Prisma {
     deliveryAddress?: DeliveryAddressUpdateOneWithoutOrdersNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUpdateManyWithoutOrderNestedInput
+    feedback?: CustomerFeedbackUpdateOneWithoutOrderNestedInput
+    issuedRewards?: CustomerRewardUpdateManyWithoutIssuedForOrderNestedInput
+    redeemedRewards?: CustomerRewardUpdateManyWithoutRedeemedByOrderNestedInput
   }
 
   export type OrderUncheckedUpdateWithoutExternalAddressInput = {
@@ -81372,6 +94082,9 @@ export namespace Prisma {
     deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUncheckedUpdateManyWithoutOrderNestedInput
+    feedback?: CustomerFeedbackUncheckedUpdateOneWithoutOrderNestedInput
+    issuedRewards?: CustomerRewardUncheckedUpdateManyWithoutIssuedForOrderNestedInput
+    redeemedRewards?: CustomerRewardUncheckedUpdateManyWithoutRedeemedByOrderNestedInput
   }
 
   export type OrderUncheckedUpdateManyWithoutExternalAddressInput = {
@@ -81444,6 +94157,48 @@ export namespace Prisma {
     completed?: boolean
   }
 
+  export type CustomerRewardCreateManyIssuedForOrderInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    customerId: string
+    status?: $Enums.CustomerRewardStatus
+    type: $Enums.CustomerRewardType
+    title: string
+    description?: string | null
+    quantity?: number | null
+    value?: number | null
+    productId?: string | null
+    couponCode?: string | null
+    issuedAt?: Date | string
+    expiresAt?: Date | string | null
+    redeemedAt?: Date | string | null
+    feedbackId?: string | null
+    redeemedByOrderId?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type CustomerRewardCreateManyRedeemedByOrderInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    customerId: string
+    status?: $Enums.CustomerRewardStatus
+    type: $Enums.CustomerRewardType
+    title: string
+    description?: string | null
+    quantity?: number | null
+    value?: number | null
+    productId?: string | null
+    couponCode?: string | null
+    issuedAt?: Date | string
+    expiresAt?: Date | string | null
+    redeemedAt?: Date | string | null
+    feedbackId?: string | null
+    issuedForOrderId?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
   export type OrderProductsUpdateWithoutOrderInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -81497,6 +94252,132 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     completed?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type CustomerRewardUpdateWithoutIssuedForOrderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumCustomerRewardStatusFieldUpdateOperationsInput | $Enums.CustomerRewardStatus
+    type?: EnumCustomerRewardTypeFieldUpdateOperationsInput | $Enums.CustomerRewardType
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    value?: NullableIntFieldUpdateOperationsInput | number | null
+    couponCode?: NullableStringFieldUpdateOperationsInput | string | null
+    issuedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    redeemedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    customer?: CustomerUpdateOneRequiredWithoutRewardsNestedInput
+    product?: ProductUpdateOneWithoutCustomerRewardsNestedInput
+    feedback?: CustomerFeedbackUpdateOneWithoutIssuedRewardNestedInput
+    redeemedByOrder?: OrderUpdateOneWithoutRedeemedRewardsNestedInput
+  }
+
+  export type CustomerRewardUncheckedUpdateWithoutIssuedForOrderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customerId?: StringFieldUpdateOperationsInput | string
+    status?: EnumCustomerRewardStatusFieldUpdateOperationsInput | $Enums.CustomerRewardStatus
+    type?: EnumCustomerRewardTypeFieldUpdateOperationsInput | $Enums.CustomerRewardType
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    value?: NullableIntFieldUpdateOperationsInput | number | null
+    productId?: NullableStringFieldUpdateOperationsInput | string | null
+    couponCode?: NullableStringFieldUpdateOperationsInput | string | null
+    issuedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    redeemedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    feedbackId?: NullableStringFieldUpdateOperationsInput | string | null
+    redeemedByOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type CustomerRewardUncheckedUpdateManyWithoutIssuedForOrderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customerId?: StringFieldUpdateOperationsInput | string
+    status?: EnumCustomerRewardStatusFieldUpdateOperationsInput | $Enums.CustomerRewardStatus
+    type?: EnumCustomerRewardTypeFieldUpdateOperationsInput | $Enums.CustomerRewardType
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    value?: NullableIntFieldUpdateOperationsInput | number | null
+    productId?: NullableStringFieldUpdateOperationsInput | string | null
+    couponCode?: NullableStringFieldUpdateOperationsInput | string | null
+    issuedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    redeemedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    feedbackId?: NullableStringFieldUpdateOperationsInput | string | null
+    redeemedByOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type CustomerRewardUpdateWithoutRedeemedByOrderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumCustomerRewardStatusFieldUpdateOperationsInput | $Enums.CustomerRewardStatus
+    type?: EnumCustomerRewardTypeFieldUpdateOperationsInput | $Enums.CustomerRewardType
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    value?: NullableIntFieldUpdateOperationsInput | number | null
+    couponCode?: NullableStringFieldUpdateOperationsInput | string | null
+    issuedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    redeemedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    customer?: CustomerUpdateOneRequiredWithoutRewardsNestedInput
+    product?: ProductUpdateOneWithoutCustomerRewardsNestedInput
+    feedback?: CustomerFeedbackUpdateOneWithoutIssuedRewardNestedInput
+    issuedForOrder?: OrderUpdateOneWithoutIssuedRewardsNestedInput
+  }
+
+  export type CustomerRewardUncheckedUpdateWithoutRedeemedByOrderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customerId?: StringFieldUpdateOperationsInput | string
+    status?: EnumCustomerRewardStatusFieldUpdateOperationsInput | $Enums.CustomerRewardStatus
+    type?: EnumCustomerRewardTypeFieldUpdateOperationsInput | $Enums.CustomerRewardType
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    value?: NullableIntFieldUpdateOperationsInput | number | null
+    productId?: NullableStringFieldUpdateOperationsInput | string | null
+    couponCode?: NullableStringFieldUpdateOperationsInput | string | null
+    issuedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    redeemedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    feedbackId?: NullableStringFieldUpdateOperationsInput | string | null
+    issuedForOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type CustomerRewardUncheckedUpdateManyWithoutRedeemedByOrderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customerId?: StringFieldUpdateOperationsInput | string
+    status?: EnumCustomerRewardStatusFieldUpdateOperationsInput | $Enums.CustomerRewardStatus
+    type?: EnumCustomerRewardTypeFieldUpdateOperationsInput | $Enums.CustomerRewardType
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    value?: NullableIntFieldUpdateOperationsInput | number | null
+    productId?: NullableStringFieldUpdateOperationsInput | string | null
+    couponCode?: NullableStringFieldUpdateOperationsInput | string | null
+    issuedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    redeemedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    feedbackId?: NullableStringFieldUpdateOperationsInput | string | null
+    issuedForOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type ModifierGroupItemUpdateWithoutOrderProductsInput = {

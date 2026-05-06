@@ -301,7 +301,7 @@ const ProductModal: React.FC<TProductModal> = ({
                   <ProductImage
                     src={productImageUrl}
                     alt={`${product.name} photo`}
-                    className="h-[300px] w-full object-cover bg-background lg:w-full lg:h-[300px] lg:rounded-xl"
+                    className="h-[300px] w-full object-cover bg-background lg:w-full lg:h-[500px] lg:rounded-xl"
                     quality={85}
                     sizes="(max-width: 1024px) 100vw, 50vw"
                   />

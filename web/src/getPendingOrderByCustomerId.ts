@@ -1,7 +1,8 @@
 "use server";
 
 import prisma from "@/prisma";
-import type { TOrderStatus, TOrderType } from "./types/order";
+import type { TOrderRedeemedReward, TOrderStatus, TOrderType } from "./types/order";
+import { getRedeemedRewardsByOrderIds } from "@/src/getRedeemedRewardsByOrderIds";
 
 export type TPendingOrder = {
   id: string;
@@ -9,6 +10,7 @@ export type TPendingOrder = {
   status: TOrderStatus;
   type: TOrderType;
   tip: number | null;
+  redeemedRewards?: TOrderRedeemedReward[];
 };
 
 const getPendingOrderByCustomerId = async (
@@ -45,7 +47,14 @@ const getPendingOrderByCustomerId = async (
     LIMIT 1
   `;
 
-  return order ?? null;
+  if (!order) return null;
+
+  const redeemedRewardsByOrderId = await getRedeemedRewardsByOrderIds([order.id]);
+
+  return {
+    ...order,
+    redeemedRewards: redeemedRewardsByOrderId.get(order.id) || [],
+  };
 };
 
 export default getPendingOrderByCustomerId;

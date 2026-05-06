@@ -12,15 +12,19 @@ import {
   TOrderProduct,
   TOrderType,
   TPaymentMethod,
+  TPaymentProvider,
 } from "./types/order";
 import { calculateProductPriceWithProgressiveDiscount } from "../utils/calculateProductPriceWithProgressiveDiscount";
 import { calculateCartWithProgressiveDiscount } from "../utils/calculatePrice";
 import { getProductsFresh } from "./getProducts";
+import { getRedeemedRewardsByOrderIds } from "@/src/getRedeemedRewardsByOrderIds";
 import { getOrderConfirmedWhatsAppMessage } from "./constants/whatsappMessages";
 import { buildPreparationStepCategories } from "@/src/modules/station/domain/buildPreparationStepCategories";
 import {
   processDispatchAssignmentJobs,
 } from "@/src/modules/dispatch/application/assignDeliveryOrderToDispatchQueue";
+import { assignDeliveryOrderToDispatchUseCase } from "@/src/modules/dispatch/application/assignDeliveryOrderToDispatch";
+import { prismaDispatchRepository } from "@/src/modules/dispatch/infrastructure/prisma/prismaDispatchRepository";
 import { calculateSalesTaxInCents } from "@/src/constants/pricing";
 import { cookies } from "next/headers";
 import {
@@ -32,12 +36,15 @@ import {
   MENU_TAGS_COOKIE_NAME,
   PROMOTION_ID_COOKIE_NAME,
 } from "@/src/constants/menu";
+import { getStripeClient } from "@/src/stripe";
 
 type TCreateOrder = {
   cart: TCart;
   customerId?: string;
   orderType: TOrderType;
   paymentMethod: TPaymentMethod;
+  paymentProvider?: TPaymentProvider;
+  selectedCardId?: string;
   menuId?: string;
   promotionId?: string;
   tags?: string[];
@@ -57,6 +64,10 @@ type CustomerContactRow = {
   name: string | null;
   phone: string | null;
 };
+
+type RedeemedRewardsByOrderId = Awaited<
+  ReturnType<typeof getRedeemedRewardsByOrderIds>
+>;
 
 type OrderCreationTransactionResult = {
   order: TOrder;
@@ -189,6 +200,66 @@ function normalizeOrderLanguage(value: unknown): string | undefined {
       code: "INVALID_PARAMS",
       data: {
         message: "INVALID_LANGUAGE",
+      },
+    };
+  }
+
+  return normalizedValue;
+}
+
+function normalizeOrderPaymentProvider(
+  value: unknown,
+): TPaymentProvider | undefined {
+  if (value === undefined || value === null) return undefined;
+
+  if (typeof value !== "string") {
+    throw {
+      code: "INVALID_PARAMS",
+      data: {
+        message: "INVALID_PAYMENT_PROVIDER",
+      },
+    };
+  }
+
+  const normalizedValue = value.trim().toUpperCase();
+  if (!normalizedValue) {
+    throw {
+      code: "INVALID_PARAMS",
+      data: {
+        message: "INVALID_PAYMENT_PROVIDER",
+      },
+    };
+  }
+
+  if (normalizedValue !== "STRIPE") {
+    throw {
+      code: "INVALID_PARAMS",
+      data: {
+        message: "INVALID_PAYMENT_PROVIDER",
+      },
+    };
+  }
+
+  return "STRIPE";
+}
+
+function normalizeSelectedCardId(value: unknown): string | undefined {
+  if (value === undefined || value === null) return undefined;
+  if (typeof value !== "string") {
+    throw {
+      code: "INVALID_PARAMS",
+      data: {
+        message: "INVALID_SELECTED_CARD",
+      },
+    };
+  }
+
+  const normalizedValue = value.trim();
+  if (!normalizedValue) {
+    throw {
+      code: "INVALID_PARAMS",
+      data: {
+        message: "INVALID_SELECTED_CARD",
       },
     };
   }
@@ -424,6 +495,25 @@ async function triggerDispatchQueueRun(): Promise<void> {
   }
 }
 
+async function ensureDeliveryOrderHasDispatch(input: {
+  orderId: string;
+  deliveryAddressId: string;
+}): Promise<void> {
+  const [orderRow] = await prisma.$queryRaw<{ dispatchId: string | null }[]>`
+    SELECT "dispatchId"
+    FROM "Order"
+    WHERE "id" = ${input.orderId}
+    LIMIT 1
+  `;
+
+  if (orderRow?.dispatchId) return;
+
+  await assignDeliveryOrderToDispatchUseCase(prismaDispatchRepository, {
+    orderId: input.orderId,
+    deliveryAddressId: input.deliveryAddressId,
+  });
+}
+
 async function createPreparationStepCategoriesForOrderTx(
   tx: Prisma.TransactionClient,
   order: TOrder,
@@ -490,8 +580,42 @@ function isRetryableOrderCreationTransactionError(error: unknown): boolean {
   );
 }
 
+function buildReadableOrderNumber(): string {
+  return `${Math.floor(Math.random() * 900) + 100}`;
+}
+
 const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
   let deliveryFeeInCents = 0;
+  const checkoutTimingStartedAt = Date.now();
+  let checkoutTimingLastAt = checkoutTimingStartedAt;
+  const checkoutTimingSteps: Array<{ step: string; ms: number }> = [];
+  const markCheckoutTimingStep = (step: string) => {
+    const nowMs = Date.now();
+    checkoutTimingSteps.push({
+      step,
+      ms: nowMs - checkoutTimingLastAt,
+    });
+    checkoutTimingLastAt = nowMs;
+  };
+  const flushCheckoutTiming = (
+    status: "SUCCESS" | "FAILED",
+    failureCode?: string,
+  ) => {
+    console.info(
+      "[checkout-timing]",
+      JSON.stringify({
+        status,
+        ...(failureCode ? { failureCode } : {}),
+        totalMs: Date.now() - checkoutTimingStartedAt,
+        orderType: data.orderType,
+        paymentMethod: data.paymentMethod,
+        paymentProvider: data.paymentProvider ?? null,
+        source: data.source ?? "MENU",
+        cartItemsCount: Array.isArray(data.cart?.items) ? data.cart.items.length : 0,
+        steps: checkoutTimingSteps,
+      }),
+    );
+  };
 
   if (!Array.isArray(data.cart?.items) || data.cart.items.length === 0) {
     throw {
@@ -539,15 +663,8 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
 
     deliveryFeeInCents = deliveryAddress[0].deliveryFee;
   }
+  markCheckoutTimingStep("delivery-fee");
   const now = new Date();
-
-  const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-
-  const endOfDay = new Date(
-    now.getFullYear(),
-    now.getMonth(),
-    now.getDate() + 1,
-  );
   const progressiveDiscount = await getProgressiveDiscount();
   const normalizedMenuId =
     typeof data.menuId === "string" && data.menuId.trim().length > 0
@@ -600,7 +717,21 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
     normalizedMenuId ?? menuIdFromCookie,
     normalizedPromotionId ?? promotionIdFromCookie,
   );
+  markCheckoutTimingStep("catalog-load");
   const language = normalizeOrderLanguage(data.language);
+  const paymentProvider = normalizeOrderPaymentProvider(data.paymentProvider);
+  if (paymentProvider && data.paymentMethod !== "CARD") {
+    throw {
+      code: "INVALID_PARAMS",
+      data: {
+        message: "INVALID_PAYMENT_PROVIDER",
+      },
+    };
+  }
+  const selectedCardId = normalizeSelectedCardId(data.selectedCardId);
+  const normalizedCustomerId =
+    typeof data.customerId === "string" ? data.customerId.trim() : "";
+  const resolvedCustomerId = normalizedCustomerId || null;
   const scheduleFor = ensureValidScheduleFor(data.scheduleFor);
   const getCatalogProductById = (productId: string) => {
     for (const category of productData.categories) {
@@ -685,6 +816,287 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
     tipAmountInCents +
     (data.orderType === "DELIVERY" ? deliveryFeeInCents : 0) +
     salesTaxInCents;
+  markCheckoutTimingStep("pricing");
+  const createdOrderId = randomUUID();
+  const nextOrderNumber = buildReadableOrderNumber();
+
+  type PosPricingProduct = {
+    id: string;
+    name: string;
+    categoryId: string | null;
+    itemType: "PRODUCT" | "COMBO";
+    translations: unknown;
+    price: number | null;
+    comparedAtPrice: number | null;
+    modifierGroups: Array<{
+      items: Array<{
+        id: string;
+        price: number;
+      }>;
+    }>;
+    comboSlots: Array<{
+      id: string;
+      options: Array<{
+        productId: string;
+        extraPrice: number;
+      }>;
+    }>;
+  };
+  const posPricingProductIdsToLoad = new Set<string>();
+
+  const resolvedCartItemPrices = data.cart.items.map((cartItem) => {
+    const menuPrice = calculateProductPriceWithProgressiveDiscount(
+      cartItem.productId,
+      progressiveDiscount,
+      data.cart,
+      productData.categories,
+      productData.activePromotion?.products,
+      productData.promotionProductIds,
+      { cartItem },
+    );
+    if (!menuPrice && data.source === "POS") {
+      posPricingProductIdsToLoad.add(cartItem.productId);
+    }
+
+    return {
+      cartItem,
+      price: menuPrice,
+    };
+  });
+
+  const posPricingProducts =
+    posPricingProductIdsToLoad.size > 0
+      ? await prisma.product.findMany({
+          where: {
+            id: {
+              in: Array.from(posPricingProductIdsToLoad),
+            },
+          },
+          select: {
+            id: true,
+            name: true,
+            categoryId: true,
+            itemType: true,
+            translations: true,
+            price: true,
+            comparedAtPrice: true,
+            modifierGroups: {
+              select: {
+                items: {
+                  select: {
+                    id: true,
+                    price: true,
+                  },
+                },
+              },
+            },
+            comboSlots: {
+              select: {
+                id: true,
+                options: {
+                  select: {
+                    productId: true,
+                    extraPrice: true,
+                  },
+                },
+              },
+            },
+          },
+        })
+      : [];
+  const posPricingProductsById = new Map<string, PosPricingProduct>(
+    posPricingProducts.map((product) => [product.id, product as PosPricingProduct]),
+  );
+
+  const preparedOrderProducts = resolvedCartItemPrices.map(
+    ({ cartItem, price }) => {
+      let resolvedPrice = price;
+      if (!resolvedPrice && data.source === "POS") {
+        const posProduct = posPricingProductsById.get(cartItem.productId);
+        if (posProduct) {
+          const posUnitPrice = calculatePosItemUnitPrice({
+            product: posProduct,
+            cartItem,
+          });
+          resolvedPrice = {
+            fullPrice: posUnitPrice.fullPrice,
+            actualPrice: posUnitPrice.actualPrice,
+            discountedPrice: posUnitPrice.actualPrice,
+            discountAmount: Number(
+              (posUnitPrice.fullPrice - posUnitPrice.actualPrice).toFixed(2),
+            ),
+            appliedStep: null,
+          };
+        }
+      }
+
+      if (!resolvedPrice) {
+        throw {
+          code: "PRODUCT_NOT_AVAILABLE_IN_MENU_CONTEXT",
+          data: {
+            productId: cartItem.productId,
+            menuId: data.menuId ?? null,
+            promotionId: data.promotionId ?? null,
+            source: data.source ?? "MENU",
+          },
+        };
+      }
+
+      const itemDescription =
+        typeof cartItem.description === "string" ? cartItem.description.trim() : "";
+      const comboSelectionDescription = buildComboSelectionComments(cartItem);
+      const comments = [itemDescription, comboSelectionDescription]
+        .filter((value): value is string => Boolean(value))
+        .join("\n");
+      const catalogProduct = getCatalogProductById(cartItem.productId)?.product;
+      const posProduct = posPricingProductsById.get(cartItem.productId);
+
+      return {
+        id: randomUUID(),
+        amount: resolvedPrice.actualPrice,
+        fullAmount: resolvedPrice.fullPrice,
+        productId: cartItem.productId,
+        quantity: cartItem.quantity,
+        comments: comments.length > 0 ? comments : null,
+        modifierItemIds: cartItem.modifiers.map((modItem) => modItem.modifierItemId),
+        productName: catalogProduct?.name ?? posProduct?.name ?? "Product",
+        productCategoryId:
+          catalogProduct?.categoryId ?? posProduct?.categoryId ?? undefined,
+      };
+    },
+  );
+
+  markCheckoutTimingStep("prepare-order-products");
+
+  const shouldChargeWithStripe =
+    data.paymentMethod === "CARD" && paymentProvider === "STRIPE";
+
+  const chargeStripeCard = async (): Promise<{ paymentIntentId: string }> => {
+    if (!resolvedCustomerId) {
+      throw {
+        code: "INVALID_PARAMS",
+        data: {
+          message: "CARD_PAYMENT_REQUIRES_CUSTOMER",
+        },
+      };
+    }
+
+    const stripeCustomerRows = await prisma.$queryRaw<
+      { stripeCustomerId: string | null }[]
+    >`
+      SELECT "stripeCustomerId"
+      FROM "Customer"
+      WHERE "id" = ${resolvedCustomerId}
+      LIMIT 1
+    `;
+    const stripeCustomerId = stripeCustomerRows[0]?.stripeCustomerId?.trim();
+
+    if (!stripeCustomerId) {
+      throw {
+        code: "STRIPE_PAYMENT_FAILED",
+        data: {
+          message: "STRIPE_CUSTOMER_NOT_FOUND",
+        },
+      };
+    }
+
+    const cardRows = selectedCardId
+      ? await prisma.$queryRaw<{ stripePaymentMethodId: string }[]>`
+          SELECT "stripePaymentMethodId"
+          FROM "CustomerCard"
+          WHERE "id" = ${selectedCardId}
+            AND "customerId" = ${resolvedCustomerId}
+          LIMIT 1
+        `
+      : await prisma.$queryRaw<{ stripePaymentMethodId: string }[]>`
+          SELECT "stripePaymentMethodId"
+          FROM "CustomerCard"
+          WHERE "customerId" = ${resolvedCustomerId}
+          ORDER BY "isDefault" DESC, "createdAt" ASC
+          LIMIT 1
+        `;
+
+    const stripePaymentMethodId = cardRows[0]?.stripePaymentMethodId?.trim();
+    if (!stripePaymentMethodId) {
+      throw {
+        code: "STRIPE_PAYMENT_FAILED",
+        data: {
+          message: selectedCardId
+            ? "STRIPE_SELECTED_CARD_NOT_FOUND"
+            : "STRIPE_CARD_REQUIRED",
+        },
+      };
+    }
+
+    try {
+      const stripe = getStripeClient();
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: orderTotalInCents,
+        currency: "usd",
+        customer: stripeCustomerId,
+        payment_method: stripePaymentMethodId,
+        confirm: true,
+        off_session: true,
+        metadata: {
+          source: data.source ?? "MENU",
+          orderType: data.orderType,
+          customerId: resolvedCustomerId,
+        },
+      });
+
+      if (paymentIntent.status !== "succeeded") {
+        throw {
+          code: "STRIPE_PAYMENT_FAILED",
+          data: {
+            message: "STRIPE_PAYMENT_NOT_COMPLETED",
+            paymentIntentStatus: paymentIntent.status,
+          },
+        };
+      }
+
+      return { paymentIntentId: paymentIntent.id };
+    } catch (error) {
+      flushCheckoutTiming("FAILED", "STRIPE_PAYMENT_FAILED");
+      if (
+        typeof error === "object" &&
+        error !== null &&
+        "code" in error &&
+        (error as { code?: string }).code === "STRIPE_PAYMENT_FAILED"
+      ) {
+        throw error;
+      }
+
+      throw {
+        code: "STRIPE_PAYMENT_FAILED",
+        data: {
+          message: "STRIPE_PAYMENT_FAILED",
+          error:
+            error instanceof Error
+              ? error.message
+              : "Unknown Stripe payment error",
+        },
+      };
+    }
+  };
+
+  const refundStripeCharge = async (paymentIntentId: string): Promise<void> => {
+    try {
+      const stripe = getStripeClient();
+      await stripe.refunds.create({
+        payment_intent: paymentIntentId,
+      });
+    } catch (error) {
+      console.error("Failed to refund Stripe payment after order error:", error);
+      throw {
+        code: "STRIPE_CHARGED_BUT_REFUND_FAILED",
+        data: {
+          message: "STRIPE_CHARGED_BUT_REFUND_FAILED",
+          paymentIntentId,
+        },
+      };
+    }
+  };
+
   const selectedPrizeSnapshot = (() => {
     if (!data.selectedPrize) return null;
     if (!progressiveDiscount) {
@@ -767,25 +1179,8 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
   const runOrderCreationTransaction = async (): Promise<OrderCreationTransactionResult> =>
     prisma.$transaction(
       async (tx) => {
-        const orderNumberLockKey = `order-number:${startOfDay.toISOString().slice(0, 10)}`;
-
-        await tx.$executeRaw`
-          SELECT pg_advisory_xact_lock(hashtext(${orderNumberLockKey})::bigint)
-        `;
-
-        const [todayOrderCount] = await tx.$queryRaw<{ count: bigint }[]>`
-          SELECT COUNT(*)::BIGINT AS "count"
-          FROM "Order"
-          WHERE "createdAt" >= ${startOfDay}
-            AND "createdAt" < ${endOfDay}
-        `;
-        const nextOrderNumber = (Number(todayOrderCount?.count ?? 0) + 1).toString();
-        const providedCustomerId =
-          typeof data.customerId === "string" ? data.customerId.trim() : "";
-        const resolvedCustomerId = providedCustomerId || null;
-
         const orderCreateData = {
-          id: randomUUID(),
+          id: createdOrderId,
           amount: 0,
           number: nextOrderNumber,
           scheduleFor,
@@ -793,6 +1188,7 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
             data.orderType === "DELIVERY" ? data.addressId : undefined,
           ...(resolvedCustomerId ? { customerId: resolvedCustomerId } : {}),
           paymentMethod: data.paymentMethod,
+          ...(shouldChargeWithStripe ? { paidAt: now } : {}),
           tipAmount: sanitizedTipPercentage,
           language,
           progressiveDiscountSnapshot: progressiveDiscountSnapshot || undefined,
@@ -803,6 +1199,14 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
           data: orderCreateData,
         });
 
+        if (paymentProvider) {
+          await tx.$executeRaw`
+            UPDATE "Order"
+            SET "paymentProvider" = ${paymentProvider}::"PaymentProvider"
+            WHERE "id" = ${createdOrder.id}
+          `;
+        }
+
         if (orderTags.length > 0) {
           await tx.$executeRaw`
             UPDATE "Order"
@@ -811,151 +1215,91 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
           `;
         }
 
-        for (const item of data.cart.items) {
-          let price = calculateProductPriceWithProgressiveDiscount(
-            item.productId,
-            progressiveDiscount,
-            data.cart,
-            productData.categories,
-            productData.activePromotion?.products,
-            productData.promotionProductIds,
-            { cartItem: item },
-          );
-          if (!price && data.source === "POS") {
-            const posProduct = await tx.product.findUnique({
-              where: { id: item.productId },
-              select: {
-                price: true,
-                comparedAtPrice: true,
-                modifierGroups: {
-                  select: {
-                    items: {
-                      select: {
-                        id: true,
-                        price: true,
-                      },
-                    },
-                  },
-                },
-                comboSlots: {
-                  select: {
-                    id: true,
-                    options: {
-                      select: {
-                        productId: true,
-                        extraPrice: true,
-                      },
-                    },
-                  },
-                },
-              },
-            });
+        const redeemedRewardProductCountsMap = new Map<string, number>();
+        if (resolvedCustomerId) {
+          const rewardsToRedeem = await tx.customerReward.findMany({
+            where: {
+              customerId: resolvedCustomerId,
+              status: "ACTIVE",
+              redeemedByOrderId: null,
+              OR: [{ expiresAt: null }, { expiresAt: { gte: now } }],
+            },
+            select: {
+              id: true,
+              productId: true,
+              quantity: true,
+            },
+          });
 
-            if (posProduct) {
-              const posUnitPrice = calculatePosItemUnitPrice({
-                product: posProduct,
-                cartItem: item,
-              });
-              price = {
-                fullPrice: posUnitPrice.fullPrice,
-                actualPrice: posUnitPrice.actualPrice,
-                discountedPrice: posUnitPrice.actualPrice,
-                discountAmount: Number(
-                  (posUnitPrice.fullPrice - posUnitPrice.actualPrice).toFixed(2),
-                ),
-                appliedStep: null,
-              };
-            }
+          for (const reward of rewardsToRedeem) {
+            if (!reward.productId) continue;
+            const rewardQuantity =
+              typeof reward.quantity === "number" &&
+              Number.isInteger(reward.quantity) &&
+              reward.quantity > 0
+                ? reward.quantity
+                : 1;
+            redeemedRewardProductCountsMap.set(
+              reward.productId,
+              (redeemedRewardProductCountsMap.get(reward.productId) ?? 0) +
+                rewardQuantity,
+            );
           }
-          if (!price)
-            throw {
-              code: "PRODUCT_NOT_AVAILABLE_IN_MENU_CONTEXT",
-              data: {
-                productId: item.productId,
-                menuId: data.menuId ?? null,
-                promotionId: data.promotionId ?? null,
-                source: data.source ?? "MENU",
-              },
-            };
-          const itemDescription =
-            typeof item.description === "string" ? item.description.trim() : "";
-          const comboSelectionDescription = buildComboSelectionComments(item);
-          const comments = [itemDescription, comboSelectionDescription]
-            .filter((value): value is string => Boolean(value))
-            .join("\n");
 
-          await tx.orderProducts.create({
+          await tx.customerReward.updateMany({
+            where: {
+              id: {
+                in: rewardsToRedeem.map((reward) => reward.id),
+              },
+            },
             data: {
-              id: randomUUID(),
-              amount: price.actualPrice,
-              productId: item.productId,
-              orderId: createdOrder.id,
-              fullAmount: price.fullPrice,
-              quantity: item.quantity,
-              comments: comments.length > 0 ? comments : undefined,
+              status: "REDEEMED",
+              redeemedAt: now,
+              redeemedByOrderId: createdOrder.id,
+            },
+          });
+        }
+
+        await tx.orderProducts.createMany({
+          data: preparedOrderProducts.map((item) => ({
+            id: item.id,
+            amount: item.amount,
+            productId: item.productId,
+            orderId: createdOrder.id,
+            fullAmount: item.fullAmount,
+            quantity: item.quantity,
+            comments: item.comments,
+          })),
+        });
+
+        for (const item of preparedOrderProducts) {
+          if (item.modifierItemIds.length === 0) continue;
+          await tx.orderProducts.update({
+            where: {
+              id: item.id,
+            },
+            data: {
               modifierGroupItems: {
-                connect: item.modifiers.map((modItem) => ({
-                  id: modItem.modifierItemId,
+                connect: item.modifierItemIds.map((modifierItemId) => ({
+                  id: modifierItemId,
                 })),
               },
             },
           });
         }
 
-        type CreatedOrderProductRow = {
-          id: string;
-          comments: string | null;
-          quantity: number;
-          fullAmount: number;
-          amount: number;
-          productId: string;
-          product: {
-            id: string;
-            name: string;
-            createdAt: Date;
-            price: number | null;
-            categoryId: string | null;
-            description: string | null;
-            comparedAtPrice: number | null;
-            translations: unknown;
-          };
-          modifierGroupItems: {
-            id: string;
-            name: string;
-            createdAt: Date;
-            price: number;
-            modifierGroupId: string | null;
-            fileId: string | null;
-          }[];
-        };
-
-        const createdOrderProducts = (await tx.orderProducts.findMany({
-          where: {
-            orderId: createdOrder.id,
-          },
-          include: {
-            modifierGroupItems: true,
-            product: true,
-          },
-          orderBy: {
-            createdAt: "asc",
-          },
-        })) as unknown as CreatedOrderProductRow[];
-
-        const orderProducts: TOrderProduct[] = createdOrderProducts.map((item) => ({
+        const orderProducts: TOrderProduct[] = preparedOrderProducts.map((item) => ({
           id: item.id,
           amount: item.amount,
           fullAmount: item.fullAmount,
           productId: item.productId,
           quantity: item.quantity,
           comments: item.comments || undefined,
-          selectedModifierGroupItemIds: item.modifierGroupItems.map(
-            (modifierItem) => modifierItem.id,
-          ),
+          selectedModifierGroupItemIds: item.modifierItemIds,
           product: {
-            id: item.product.id,
-            name: item.product.name,
-            categoryId: item.product.categoryId || undefined,
+            id: item.productId,
+            name: item.productName,
+            categoryId: item.productCategoryId || undefined,
             preparationStep: [],
           },
         }));
@@ -969,6 +1313,9 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
         }
         for (const selectedPrizeProduct of selectedPrizeSnapshot?.selectedProductIds ?? []) {
           preparationLookupProductIds.add(selectedPrizeProduct);
+        }
+        for (const rewardProductId of redeemedRewardProductCountsMap.keys()) {
+          preparationLookupProductIds.add(rewardProductId);
         }
 
         const preparationLookupProducts =
@@ -1079,29 +1426,60 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
             });
           }
         }
+        const rewardPreparationOrderProducts: TOrderProduct[] = [];
+        for (const [rewardProductId, rewardQuantity] of redeemedRewardProductCountsMap) {
+          if (rewardQuantity <= 0) continue;
+
+          const catalogProduct = getCatalogProductById(rewardProductId);
+          const rewardProduct =
+            catalogProduct?.product ??
+            preparationLookupProductById.get(rewardProductId);
+          if (!rewardProduct) continue;
+
+          const categoryId = rewardProduct.categoryId ?? catalogProduct?.categoryId;
+          if (!categoryId) continue;
+
+          rewardPreparationOrderProducts.push({
+            id: randomUUID(),
+            amount: 0,
+            fullAmount: 0,
+            productId: rewardProductId,
+            quantity: rewardQuantity,
+            selectedModifierGroupItemIds: [],
+            product: {
+              id: rewardProduct.id,
+              name: rewardProduct.name,
+              categoryId,
+              preparationStep: [],
+            },
+          });
+        }
         const order: TOrder = {
           id: createdOrder.id,
           createdAt: createdOrder.createdAt.toISOString(),
           scheduleFor: scheduleFor?.toISOString() ?? null,
           language: language ?? null,
-          paidAt: null,
+          paidAt: createdOrder.paidAt ? createdOrder.paidAt.toISOString() : null,
           status: "ACCEPTED",
           tip: sanitizedTipPercentage,
           tipAmount: sanitizedTipPercentage,
           orderProducts,
           paymentMethod: createdOrder.paymentMethod,
+          ...(paymentProvider ? { paymentProvider } : {}),
           type: createdOrder.type,
           preparationStepCategory: [],
         };
         const orderForPreparationSteps =
           comboPreparationOrderProducts.length > 0 ||
-          prizePreparationOrderProducts.length > 0
+          prizePreparationOrderProducts.length > 0 ||
+          rewardPreparationOrderProducts.length > 0
             ? {
                 ...order,
                 orderProducts: [
                   ...order.orderProducts,
                   ...comboPreparationOrderProducts,
                   ...prizePreparationOrderProducts,
+                  ...rewardPreparationOrderProducts,
                 ],
               }
             : order;
@@ -1162,53 +1540,99 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
       },
     );
 
+  let stripePaymentIntentId: string | null = null;
+  if (shouldChargeWithStripe) {
+    const chargedPayment = await chargeStripeCard();
+    stripePaymentIntentId = chargedPayment.paymentIntentId;
+    markCheckoutTimingStep("stripe-charge");
+  }
+
   let transactionResult: OrderCreationTransactionResult | null = null;
+  let transactionFailureError: unknown = null;
   let attempt = 0;
 
   while (attempt < MAX_ORDER_CREATION_TRANSACTION_RETRIES) {
     try {
       transactionResult = await runOrderCreationTransaction();
+      markCheckoutTimingStep("db-transaction");
       break;
     } catch (error) {
       attempt += 1;
+      transactionFailureError = error;
       const canRetry =
         attempt < MAX_ORDER_CREATION_TRANSACTION_RETRIES &&
         isRetryableOrderCreationTransactionError(error);
 
       if (!canRetry) {
-        throw error;
+        break;
       }
     }
   }
 
   if (!transactionResult) {
+    if (stripePaymentIntentId) {
+      await refundStripeCharge(stripePaymentIntentId);
+      markCheckoutTimingStep("stripe-refund");
+      flushCheckoutTiming("FAILED", "ORDER_CREATION_FAILED_AFTER_CHARGE_REFUNDED");
+      throw {
+        code: "ORDER_CREATION_FAILED_AFTER_CHARGE_REFUNDED",
+        data: {
+          message: "ORDER_CREATION_FAILED_AFTER_CHARGE_REFUNDED",
+        },
+      };
+    }
+
+    if (transactionFailureError) {
+      flushCheckoutTiming("FAILED", "ORDER_CREATION_TRANSACTION_FAILED");
+      throw transactionFailureError;
+    }
+
+    flushCheckoutTiming("FAILED", "ORDER_CREATION_TRANSACTION_FAILED");
     throw new Error("ORDER_CREATION_TRANSACTION_FAILED");
   }
 
-  const [customerContact] = transactionResult.customerId
-    ? await prisma.$queryRaw<CustomerContactRow[]>`
-        SELECT "name", "phone"
-        FROM "Customer"
-        WHERE "id" = ${transactionResult.customerId}
-        LIMIT 1
-      `
-    : [null];
+  let customerContact: CustomerContactRow | null = null;
+  if (transactionResult.customerId) {
+    try {
+      const [resolvedCustomerContact] = await prisma.$queryRaw<CustomerContactRow[]>`
+          SELECT "name", "phone"
+          FROM "Customer"
+          WHERE "id" = ${transactionResult.customerId}
+          LIMIT 1
+        `;
+      customerContact = resolvedCustomerContact ?? null;
+    } catch (error) {
+      console.error("Failed to resolve order customer contact:", error);
+    }
+  }
 
   if (data.orderType === "DELIVERY" && data.addressId) {
     after(async () => {
       await triggerDispatchQueueRun().catch((error: unknown) => {
         console.error("Failed to trigger dispatch assignment processing:", error);
       });
+
+      await ensureDeliveryOrderHasDispatch({
+        orderId: transactionResult.orderId,
+        deliveryAddressId: data.addressId!,
+      }).catch((error: unknown) => {
+        console.error(
+          "Failed to ensure delivery order dispatch assignment:",
+          error,
+        );
+      });
     });
   }
+  markCheckoutTimingStep("dispatch-post-processing-queued");
 
+  const customerName = customerContact?.name ?? null;
   const customerPhone = customerContact?.phone;
 
   if (customerPhone) {
     after(async () => {
       await sendOrderConfirmationWhatsAppMessage({
         language: language ?? null,
-        customerName: customerContact.name,
+        customerName,
         customerPhone,
         orderNumber: transactionResult.orderNumber,
         totalInCents: orderTotalInCents,
@@ -1217,7 +1641,24 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
     });
   }
 
-  return transactionResult.order;
+  let redeemedRewardsByOrderId: RedeemedRewardsByOrderId = new Map();
+  try {
+    redeemedRewardsByOrderId = await getRedeemedRewardsByOrderIds([
+      transactionResult.orderId,
+    ]);
+  } catch (error) {
+    console.error("Failed to load redeemed rewards for created order:", error);
+  }
+  markCheckoutTimingStep("rewards-fetch");
+
+  const orderResponse = {
+    ...transactionResult.order,
+    redeemedRewards:
+      redeemedRewardsByOrderId.get(transactionResult.orderId) || [],
+  };
+  flushCheckoutTiming("SUCCESS");
+
+  return orderResponse;
 };
 
 export default createOrder;

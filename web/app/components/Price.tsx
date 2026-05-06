@@ -21,7 +21,7 @@ import {
   FiX,
 } from "react-icons/fi";
 import { FaStar } from "react-icons/fa6";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { findProductById } from "./MenuPage";
 import { calculateProductPriceWithProgressiveDiscount } from "@/utils/calculateProductPriceWithProgressiveDiscount";
 import { QuantitySelector } from "./ProductModal";
@@ -36,12 +36,14 @@ import AddressAutocompleteInput, { TAddressValue } from "./AddressInput";
 import addNewDeliveryAddress from "../../src/addNewDeliveryAddress";
 import TAddress from "../../src/types/address";
 import updateCustomerName from "../../src/updateCustomerName";
+import CustomerCardSelector from "./CustomerCardSelector";
 import {
   TOrder,
   TOrderProgressiveDiscountSnapshot,
   TOrderType,
   TPaymentMethod,
 } from "../../src/types/order";
+import { InputOTP } from "@/components/ui/input-otp";
 import createOrder from "../../src/createOrder";
 import Link from "next/link";
 import { Montserrat } from "next/font/google";
@@ -78,6 +80,26 @@ const PROMOTION_BADGE_BY_LOCALE: Record<string, string> = {
   en: "Promotion",
   pt: "Promoção",
   es: "Promoción",
+};
+const REWARD_BANNER_TITLE_BY_LOCALE: Record<string, string> = {
+  en: "Reward available",
+  pt: "Recompensa disponível",
+  es: "Recompensa disponible",
+};
+const REWARD_ITEM_LABEL_BY_LOCALE: Record<string, string> = {
+  en: "Reward",
+  pt: "Recompensa",
+  es: "Recompensa",
+};
+const REWARD_AUTO_MESSAGE_BY_LOCALE: Record<string, string> = {
+  en: "Will be sent on next order.",
+  pt: "Será enviado no proximo pedido.",
+  es: "Lo recibirás en tu próximo pedido.2",
+};
+const MORE_REWARD_SUFFIX_BY_LOCALE: Record<string, string> = {
+  en: "more reward",
+  pt: "recompensa adicional",
+  es: "recompensa adicional",
 };
 
 type TSummaryModifierItem = {
@@ -125,13 +147,13 @@ const resolveModifierGroupTitle = (
 const resolveComboOptionTitle = (
   option:
     | {
-        productName: string;
-        productTranslations?: {
-          [key: string]: {
-            [key: string]: string;
-          };
+      productName: string;
+      productTranslations?: {
+        [key: string]: {
+          [key: string]: string;
         };
-      }
+      };
+    }
     | undefined,
   lg: string,
 ) =>
@@ -143,13 +165,13 @@ const resolveComboOptionTitle = (
 const resolveComboSlotTitle = (
   slot:
     | {
-        name: string;
-        translations?: {
-          [key: string]: {
-            [key: string]: string;
-          };
+      name: string;
+      translations?: {
+        [key: string]: {
+          [key: string]: string;
         };
-      }
+      };
+    }
     | undefined,
   lg: string,
 ) =>
@@ -217,8 +239,8 @@ const buildSelectedComboGroupsFromCartItem = (
               : selection.extraPrice ?? 0;
           const normalizedQuantity =
             typeof selection.quantity === "number" &&
-            Number.isInteger(selection.quantity) &&
-            selection.quantity > 0
+              Number.isInteger(selection.quantity) &&
+              selection.quantity > 0
               ? selection.quantity
               : 1;
 
@@ -328,6 +350,19 @@ const getUniquePrizeProducts = (
 
   return Array.from(productMap.values());
 };
+
+function resolvePreferredCardId(
+  cards: TCustomer["cards"] | undefined,
+  selectedCardId: string | null,
+): string | null {
+  if (!cards || cards.length === 0) return null;
+
+  if (selectedCardId && cards.some((card) => card.id === selectedCardId)) {
+    return selectedCardId;
+  }
+
+  return cards.find((card) => card.isDefault)?.id || cards[0]?.id || null;
+}
 
 type TPrizeSummaryLineItem = {
   id: string;
@@ -706,6 +741,17 @@ function resolveCheckoutErrorMessage(
       return content["selectPrizeToContinue"] || "Select a prize to continue";
     case "INVALID_SCHEDULE_FOR":
       return content["selectDateAndTime"] || "Select a date and time";
+    case "STRIPE_CARD_REQUIRED":
+    case "STRIPE_SELECTED_CARD_NOT_FOUND":
+      return content["cardRequired"] || "Please select or add a card to continue.";
+    case "STRIPE_CUSTOMER_NOT_FOUND":
+    case "STRIPE_PAYMENT_NOT_COMPLETED":
+    case "STRIPE_PAYMENT_FAILED":
+      return "We could not charge your card. Please try another card.";
+    case "ORDER_CREATION_FAILED_AFTER_CHARGE_REFUNDED":
+      return "We could not create your order. Your card charge was refunded.";
+    case "STRIPE_CHARGED_BUT_REFUND_FAILED":
+      return "Payment issue detected. Please contact support right away.";
     default:
       return (
         content["checkoutError"] ||
@@ -722,8 +768,9 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
     parseAsStringLiteral(["DELIVERY", "TAKEAWAY"]),
   );
   const [paymentType, setPaymentType] = useState<TPaymentMethod | null>("CARD");
-  const [selectedTip, setSelectedTip] = useState<string | null>("15");
+  const [selectedTip, setSelectedTip] = useState<string | null>("5");
   const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
+  const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
   const [customer, setCustomer] = useState<TCustomer | null>(null);
   const [loading, setLoading] = useState(false);
   const [openSummaryModal, setOpenSummaryModal] = useState(false);
@@ -737,9 +784,26 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
   const [scheduledAt, setScheduledAt] = useState<ScheduleSelection | null>(null);
   const [scheduleError, setScheduleError] = useState<string | null>(null);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
+  const [cardError, setCardError] = useState<string | null>(null);
 
   const router = useRouter();
   const content = text[lg];
+  const activeRewards = customer?.rewards || [];
+  const hasActiveReward = activeRewards.length > 0;
+  const primaryReward = activeRewards[0] || null;
+  const rewardProductLabel =
+    primaryReward?.productName || primaryReward?.title || null;
+  const rewardQuantity =
+    typeof primaryReward?.quantity === "number" && primaryReward.quantity > 0
+      ? primaryReward.quantity
+      : 1;
+  const rewardBannerTitle = REWARD_BANNER_TITLE_BY_LOCALE[lg] || REWARD_BANNER_TITLE_BY_LOCALE.en;
+  const rewardItemLabel = REWARD_ITEM_LABEL_BY_LOCALE[lg] || REWARD_ITEM_LABEL_BY_LOCALE.en;
+  const rewardAutoMessage =
+    REWARD_AUTO_MESSAGE_BY_LOCALE[lg] || REWARD_AUTO_MESSAGE_BY_LOCALE.en;
+  const moreRewardSuffix =
+    MORE_REWARD_SUFFIX_BY_LOCALE[lg] || MORE_REWARD_SUFFIX_BY_LOCALE.en;
+  const customerAccessToken = getStoredCustomerSession()?.accessToken || "";
 
   useEffect(() => {
     const controller = new AbortController();
@@ -771,6 +835,50 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
     loadOperationHours();
 
     return () => controller.abort();
+  }, []);
+
+  useEffect(() => {
+    const storedSession = getStoredCustomerSession();
+    const accessToken = storedSession?.accessToken;
+    if (!accessToken) return;
+
+    const loadCustomer = async () => {
+      try {
+        const response = await fetch("/api/customers/auth/token/refresh", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            accessToken,
+          }),
+        });
+
+        if (!response.ok) {
+          clearStoredCustomerSession();
+          setCustomer(null);
+          setSelectedCardId(null);
+          setName(null);
+          return;
+        }
+
+        const authPayload = (await response.json()) as {
+          customer?: TCustomer;
+        };
+        const currentCustomer = authPayload.customer;
+        if (!currentCustomer || typeof currentCustomer.id !== "string") return;
+
+        setCustomer(currentCustomer);
+        setName(currentCustomer.name || null);
+        setSelectedCardId((currentValue) =>
+          resolvePreferredCardId(currentCustomer.cards, currentValue),
+        );
+      } catch (error) {
+        console.error("Failed to load customer session on cart page", error);
+      }
+    };
+
+    void loadCustomer();
   }, []);
 
   const price = calculateCartWithProgressiveDiscount(
@@ -833,6 +941,10 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
     tipAmount;
   const orderTotal = price.discountedPrice + tipAmount + deliveryFee + taxAmount;
   const isDeliveryEligible = price.discountedPrice >= DELIVERY_MINIMUM_ORDER_CENTS;
+  const resolvedSelectedCardId = resolvePreferredCardId(
+    customer?.cards,
+    selectedCardId,
+  );
 
   const handleServiceTypeSelection = (type: TOrderType) => {
     if (type === "DELIVERY" && !isDeliveryEligible) {
@@ -867,6 +979,7 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
   const handleConfirm = async () => {
     try {
       setCheckoutError(null);
+      setCardError(null);
       if (!Array.isArray(cart.items) || cart.items.length === 0) {
         setCheckoutError(content["yourCart"] || "Your cart is empty");
         return;
@@ -886,12 +999,23 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
       }
 
       setScheduleError(null);
+      if (
+        paymentType === "CARD" &&
+        !resolvedSelectedCardId
+      ) {
+        setCardError(
+          content["cardRequired"] || "Please select or add a card to continue.",
+        );
+        return;
+      }
       setLoading(true);
       const scheduleFor = toScheduleForIsoString(scheduledAt);
       const order = await createOrder({
         cart: cart,
         orderType,
         paymentMethod: paymentType,
+        paymentProvider: paymentType === "CARD" ? "STRIPE" : undefined,
+        selectedCardId: paymentType === "CARD" ? resolvedSelectedCardId || undefined : undefined,
         customerId: customer.id,
         language: lg,
         addressId: selectedAddress || undefined,
@@ -920,7 +1044,6 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
       });
 
       clearCart();
-      setLoading(false);
       router.push(`/menu/${lg}/confirmation/${order.id}`);
     } catch (err) {
       console.error("Checkout failed:", err);
@@ -935,12 +1058,12 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
         <div className="bg-foreground p-4 border-[#B9BFBF] border-b flex flex-row justify-center w-full">
           <div className="max-w-[900px] w-full">
             <Button
-            onClick={() => setStep(2)}
-            className="p-0! text-[16px] font-semibold text-text! bg-transparent flex flex-row gap-2 items-center"
-          >
-            <FiArrowLeft size={18} />
-            <span>{content["back"]}</span>
-          </Button>
+              onClick={() => setStep(2)}
+              className="p-0! text-[16px] font-semibold text-text! bg-transparent flex flex-row gap-2 items-center"
+            >
+              <FiArrowLeft size={18} />
+              <span>{content["back"]}</span>
+            </Button>
           </div>
         </div>
         <div className="py-6 px-4 flex flex-1 flex-col gap-4 overflow-y-auto pb-36 max-w-[900px] w-full">
@@ -1024,9 +1147,50 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
           )}
           <PaymentTypeSelector
             selectedPaymentType={paymentType}
-            onSelect={setPaymentType}
+            onSelect={(value) => {
+              setPaymentType(value);
+              setCardError(null);
+              setCheckoutError(null);
+            }}
             content={content}
           />
+          {paymentType === "CARD" && customer && customerAccessToken && (
+            <div className="flex flex-col gap-2">
+              {/* <span className="text-base font-semibold text-text">
+                {content["savedCards"] || "Saved cards"}
+              </span> */}
+              {/* <span className="text-xs text-[#64748B]">
+                {content["saveCardHint"] ||
+                  "Save your card to speed up future checkouts. Your card details stay secured by Stripe."}
+              </span> */}
+              <CustomerCardSelector
+                accessToken={customerAccessToken}
+                content={content}
+                selectedCardId={resolvedSelectedCardId}
+                onSelectCard={(cardId) => {
+                  setCardError(null);
+                  setCheckoutError(null);
+                  setSelectedCardId(cardId);
+                }}
+                onCardsChange={(cards) => {
+                  setCustomer((currentCustomer) =>
+                    currentCustomer ? { ...currentCustomer, cards } : currentCustomer,
+                  );
+                  setSelectedCardId((currentValue) =>
+                    resolvePreferredCardId(cards, currentValue),
+                  );
+                  if (cards.length > 0) {
+                    setCardError(null);
+                  }
+                }}
+              />
+            </div>
+          )}
+          {paymentType === "CARD" && cardError ? (
+            <p role="alert" className="text-[16px] font-medium text-red-500">
+              {cardError}
+            </p>
+          ) : null}
           <TipSelector onSelect={setSelectedTip} tipSelected={selectedTip} />
         </div>
         <div className="bg-foreground pt-4 pb-8 px-4 border-[#B9BFBF] border-t fixed bottom-0 w-full flex flex-col items-center gap-2.5">
@@ -1083,6 +1247,38 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
     <div className="flex flex-col items-center w-full">
       <Price cart={cart} data={data} content={content} />
       <div className="py-6 px-4 flex flex-col gap-6 pb-55 max-w-[900px] w-full">
+        {hasActiveReward && (
+          <div className="w-full rounded-xl border border-[#E8E8E8] bg-white overflow-hidden">
+
+            {rewardProductLabel ? (
+              <div className=" flex flex-row overflow-hidden bg-[#FFF7E8]">
+                <div className="flex px-3 items-center justify-center bg-[#FFF7E8]">
+                  <FaStar size={14} className="shrink-0 text-[#D79B13]" />
+                </div>
+                <span className="block text-base font-bold tracking-[-0.01em] text-[#111827] py-2">
+                  {rewardQuantity}x {rewardProductLabel}
+                </span>
+              </div>
+            ) : (
+              <div className="mt-2.5 rounded-xl border bg-[#FFF7E8] border-[#F1F1F1]  px-3 py-2">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#FFF7E8]">
+                  <FaStar size={14} className="shrink-0 text-[#D79B13]" />
+                </div>
+                <span className="block text-[14px] font-medium text-[#6B7280]">
+                  {rewardItemLabel}
+                </span>
+              </div>
+            )}
+            <span className="py-2 px-3 block text-[13px] border-t border-[#E8E8E8] bg-[#FAFAFA] font-medium text-[#4B5563]">
+              {rewardAutoMessage}
+            </span>
+            {activeRewards.length > 1 ? (
+              <span className="mt-2 block text-[12px] font-medium text-[#6B7280]">
+                +{activeRewards.length - 1} {moreRewardSuffix}
+              </span>
+            ) : null}
+          </div>
+        )}
         {prizeSelectionRequired && (
           <div
             key={`prize-banner-${prizeBannerShakeSignal}`}
@@ -1357,8 +1553,8 @@ const PrizeSelectionModal: React.FC<TPrizeSelectionModal> = ({
 
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
-      <Dialog.Overlay className="fixed inset-0 z-40 bg-black/40" />
-      <Dialog.Content className="w-dvw h-dvh max-w-[900px] bg-[#E7E9E9] fixed top-0 left-0 right-0 mx-auto z-50 flex flex-col gap-4 p-4 overflow-hidden">
+      <Dialog.Overlay className="fixed inset-0 z-40 bg-black/45 backdrop-blur-[2px] duration-300 ease-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0" />
+      <Dialog.Content className="w-dvw h-dvh max-w-[900px] bg-[#E7E9E9] fixed top-0 left-0 right-0 mx-auto z-50 flex flex-col gap-4 p-4 overflow-hidden duration-300 ease-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0 data-[state=open]:slide-in-from-bottom-3 data-[state=closed]:slide-out-to-bottom-3">
         <Dialog.Title className="sr-only">
           {content["prizeSelection"] || "Prize selection"}
         </Dialog.Title>
@@ -1565,8 +1761,8 @@ const ScheduleSelector: React.FC<TScheduleSelector> = ({
             aria-invalid={Boolean(error)}
             aria-describedby={error ? errorId : undefined}
             className={`w-full flex items-center justify-between rounded-xl bg-foreground text-lg px-3 py-3 transition border-2 ${error
-                ? "border-red-500"
-                : "border-foreground"
+              ? "border-red-500"
+              : "border-foreground"
               } ${scheduleOptions.length === 0 ? "opacity-50" : ""}`}
           >
             <div className="flex items-center gap-2 min-w-0">
@@ -1581,7 +1777,8 @@ const ScheduleSelector: React.FC<TScheduleSelector> = ({
             <FiChevronDown className="text-neutral-500 shrink-0" />
           </button>
         </Dialog.Trigger>
-        <Dialog.Content className="w-dvw h-dvh bg-background fixed top-0 left-0 z-50 flex flex-col">
+        <Dialog.Overlay className="fixed inset-0 z-40 bg-black/45 backdrop-blur-[2px] duration-300 ease-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0" />
+        <Dialog.Content className="w-dvw h-dvh bg-background fixed top-0 left-0 z-50 flex flex-col duration-300 ease-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0 data-[state=open]:slide-in-from-bottom-3 data-[state=closed]:slide-out-to-bottom-3">
           <Dialog.Title className="sr-only">
             {content["scheduleDateTime"]}
           </Dialog.Title>
@@ -1609,8 +1806,8 @@ const ScheduleSelector: React.FC<TScheduleSelector> = ({
                     type="button"
                     onClick={() => setSelectedDate(option.value)}
                     className={`rounded-xl border-2 px-3 py-3 text-left transition ${selectedDate === option.value
-                        ? "border-brandBackground bg-brandBackground/10"
-                        : "border-foreground bg-foreground"
+                      ? "border-brandBackground bg-brandBackground/10"
+                      : "border-foreground bg-foreground"
                       }`}
                   >
                     <span className="block font-semibold capitalize">
@@ -1642,8 +1839,8 @@ const ScheduleSelector: React.FC<TScheduleSelector> = ({
                         setOpen(false);
                       }}
                       className={`rounded-xl border-2 px-3 py-3 text-left transition ${isSelected
-                          ? "border-brandBackground bg-brandBackground/10"
-                          : "border-foreground bg-foreground"
+                        ? "border-brandBackground bg-brandBackground/10"
+                        : "border-foreground bg-foreground"
                         }`}
                     >
                       <span className="flex items-center gap-2 font-semibold">
@@ -1845,9 +2042,9 @@ export const OrderSummaryModal: React.FC<TOrderSummaryModal> = ({
         </div>
       )}
       <Dialog.Root open={resolvedOpen} onOpenChange={resolvedOnOpenChange}>
-        <Dialog.Overlay className="bg-black/40 fixed inset-0 z-40" />
+        <Dialog.Overlay className="fixed inset-0 z-40 bg-black/45 backdrop-blur-[2px] duration-300 ease-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0" />
         <Dialog.Content
-          className={`w-dvw h-dvh bg-background fixed top-0 left-0 z-50 flex flex-col max-w-[900px] right-0 mx-auto ${montserrat.className}`}
+          className={`w-dvw h-dvh bg-background fixed top-0 left-0 z-50 flex flex-col max-w-[900px] right-0 mx-auto duration-300 ease-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0 data-[state=open]:slide-in-from-bottom-3 data-[state=closed]:slide-out-to-bottom-3 ${montserrat.className}`}
         >
           <Dialog.Title className="sr-only">{title}</Dialog.Title>
           <div className="flex flex-row items-center gap-3 px-4 py-4 bg-foreground border-[#E6E6E6] border-b justify-between">
@@ -2067,48 +2264,109 @@ const AddressStep: React.FC<TAddressStep> = ({
   const [phoneCountry, setPhoneCountry] = useState<PhoneValue["country"]>("US");
   const [loading, setLoading] = useState(false);
   const [openAddress, setOpenAddress] = useState(false);
+  const [otpCode, setOtpCode] = useState("");
+  const [otpSent, setOtpSent] = useState(false);
+  const [otpInfo, setOtpInfo] = useState<string | null>(null);
+  const [otpResending, setOtpResending] = useState(false);
   const [error, setError] = useState<TInputError>(null);
+  const pathname = usePathname();
+  const cartLanguage = pathname?.split("/")[2] || "en";
+
+  const sendOtpCode = async (phoneForCustomerLookup: string) => {
+    const sendOtpResponse = await fetch("/api/customers/auth/otp/send", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        phone: phoneForCustomerLookup,
+        channel: "WHATSAPP",
+        language: cartLanguage,
+        sendAlsoSms: true,
+      }),
+    });
+
+    if (!sendOtpResponse.ok) {
+      const errorData = (await sendOtpResponse.json().catch(() => null)) as
+        | { error?: string }
+        | null;
+      throw new Error(errorData?.error || "Could not send OTP code.");
+    }
+
+    setOtpSent(true);
+    setOtpCode("");
+    setOtpInfo(
+      content["otpSentMessage"] || "Verification code sent to WhatsApp and SMS.",
+    );
+  };
 
   useEffect(() => {
     const storedSession = getStoredCustomerSession();
-    if (!storedSession) return;
+    const accessToken = storedSession?.accessToken;
+    if (!accessToken) return;
 
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setPhoneValue(storedSession.phone);
-    setPhoneCountry(
-      (storedSession.phoneCountry as PhoneValue["country"] | undefined) || "US",
-    );
-    setPhoneData({
-      country:
-        (storedSession.phoneCountry as PhoneValue["country"] | undefined) || "US",
-      raw: storedSession.phone,
-      formatted: storedSession.phone,
-      e164: null,
-      isValid: true,
-    });
-    setCustomer(storedSession.customer);
-    setName(storedSession.customer.name);
+    const loadCustomerSession = async () => {
+      try {
+        const response = await fetch("/api/customers/auth/token/refresh", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            accessToken,
+          }),
+        });
 
-    if (
-      storedSession.selectedAddressId &&
-      storedSession.customer.addresses?.some(
-        (address) => address.id === storedSession.selectedAddressId,
-      )
-    ) {
-      setSelectedAddress(storedSession.selectedAddressId);
-    }
+        if (!response.ok) {
+          clearStoredCustomerSession();
+          return;
+        }
+
+        const authPayload = (await response.json()) as {
+          customer?: TCustomer;
+        };
+        const resolvedCustomer = authPayload.customer;
+        if (!resolvedCustomer || typeof resolvedCustomer.id !== "string") return;
+
+        const resolvedPhone = resolvedCustomer.phone?.trim() || "";
+        setCustomer(resolvedCustomer);
+        setName(resolvedCustomer.name || null);
+
+        if (resolvedPhone.length > 0) {
+          setPhoneValue(resolvedPhone);
+          setPhoneData({
+            country: "US",
+            raw: resolvedPhone,
+            formatted: resolvedPhone,
+            e164: null,
+            isValid: true,
+          });
+        }
+
+        if (
+          storedSession?.selectedAddressId &&
+          resolvedCustomer.addresses?.some(
+            (address) => address.id === storedSession.selectedAddressId,
+          )
+        ) {
+          setSelectedAddress(storedSession.selectedAddressId);
+        }
+      } catch (error) {
+        console.error("Failed to hydrate customer from access token", error);
+      }
+    };
+
+    void loadCustomerSession();
   }, [setCustomer, setName, setSelectedAddress]);
 
   useEffect(() => {
-    if (!customer || !phoneData?.raw) return;
+    const session = getStoredCustomerSession();
+    if (!session?.accessToken) return;
 
     setStoredCustomerSession({
-      customer,
-      phone: phoneData.raw,
-      phoneCountry: phoneData.country,
       selectedAddressId: selectedAddress || undefined,
     });
-  }, [customer, phoneData?.raw, selectedAddress]);
+  }, [selectedAddress]);
 
   const handleConfirm = async () => {
     if (phoneData === null)
@@ -2127,18 +2385,78 @@ const AddressStep: React.FC<TAddressStep> = ({
       const phoneForCustomerLookup = phoneData.e164
         ? phoneData.e164.replace(/\D/g, "")
         : phoneData.raw.replace(/\D/g, "");
-      const customer = await getCustomerData({
-        phone: phoneForCustomerLookup,
-      });
-      setName(customer.name);
-      setCustomer(customer);
-      setStoredCustomerSession({
-        customer,
-        phone: phoneData.raw,
-        phoneCountry: phoneData.country,
-        selectedAddressId: selectedAddress || undefined,
-      });
-      setLoading(false);
+      try {
+        if (!otpSent) {
+          await sendOtpCode(phoneForCustomerLookup);
+        } else {
+          if (!otpCode || otpCode.length < 4) {
+            setError({
+              field: "code",
+              message: content["otpInvalid"] || "Enter a valid code.",
+            });
+            return;
+          }
+
+          const verifyOtpResponse = await fetch("/api/customers/auth/otp/verify", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              phone: phoneForCustomerLookup,
+              code: otpCode,
+            }),
+          });
+
+          const verifyOtpPayload = (await verifyOtpResponse
+            .json()
+            .catch(() => null)) as
+            | {
+                error?: string;
+                customer?: TCustomer;
+                accessToken?: string;
+                expiresAt?: string;
+              }
+            | null;
+
+          if (
+            !verifyOtpResponse.ok ||
+            !verifyOtpPayload?.customer ||
+            typeof verifyOtpPayload.accessToken !== "string" ||
+            typeof verifyOtpPayload.expiresAt !== "string"
+          ) {
+            throw new Error(
+              verifyOtpPayload?.error ||
+                content["otpError"] ||
+                "Could not verify code. Please try again.",
+            );
+          }
+
+          setName(verifyOtpPayload.customer.name);
+          setCustomer(verifyOtpPayload.customer);
+          setStoredCustomerSession({
+            selectedAddressId: selectedAddress || undefined,
+            accessToken: verifyOtpPayload.accessToken,
+            accessTokenExpiresAt: verifyOtpPayload.expiresAt,
+          });
+          setOtpSent(false);
+          setOtpCode("");
+          setOtpInfo(null);
+        }
+      } catch (otpError) {
+        console.error("OTP flow failed on cart:", otpError);
+        setOtpInfo(null);
+
+        setError({
+          field: "code",
+          message:
+            otpError instanceof Error
+              ? otpError.message
+              : content["otpError"] || "Could not verify code. Please try again.",
+        });
+      } finally {
+        setLoading(false);
+      }
     } else {
       if (!name || name.length === 0)
         return setError({
@@ -2163,18 +2481,51 @@ const AddressStep: React.FC<TAddressStep> = ({
           name: updatedCustomer.name,
         });
         setStoredCustomerSession({
-          customer: {
-            ...customer,
-            name: updatedCustomer.name,
-          },
-          phone: phoneData.raw,
-          phoneCountry: phoneData.country,
           selectedAddressId: selectedAddress || undefined,
         });
         setLoading(false);
       }
 
       onNext();
+    }
+  };
+
+  const handleResendOtp = async () => {
+    if (!phoneData || phoneData.isValid === false) {
+      setError({
+        field: "phone",
+        message: content["validPhone"],
+      });
+      return;
+    }
+
+    const phoneForCustomerLookup = phoneData.e164
+      ? phoneData.e164.replace(/\D/g, "")
+      : phoneData.raw.replace(/\D/g, "");
+
+    if (!phoneForCustomerLookup) {
+      setError({
+        field: "phone",
+        message: content["validPhone"],
+      });
+      return;
+    }
+
+    setOtpResending(true);
+    setError(null);
+    try {
+      await sendOtpCode(phoneForCustomerLookup);
+    } catch (otpError) {
+      setOtpInfo(null);
+      setError({
+        field: "code",
+        message:
+          otpError instanceof Error
+            ? otpError.message
+            : content["otpError"] || "Could not resend code. Please try again.",
+      });
+    } finally {
+      setOtpResending(false);
     }
   };
 
@@ -2189,9 +2540,6 @@ const AddressStep: React.FC<TAddressStep> = ({
     setCustomer(customer);
     setSelectedAddress(data.id);
     setStoredCustomerSession({
-      customer,
-      phone: phoneData.raw,
-      phoneCountry: phoneData.country,
       selectedAddressId: data.id,
     });
     // if (!data.address.raw.address?.house_number || !customer) return;
@@ -2225,12 +2573,12 @@ const AddressStep: React.FC<TAddressStep> = ({
         <div className="bg-foreground p-4 border-[#B9BFBF] border-b justify-between flex flex-col items-center w-full">
           <div className="max-w-[900px] w-full">
             <Button
-            onClick={() => onBack()}
-            className="p-0! text-[16px] font-semibold text-text! bg-transparent flex flex-row gap-2 items-center"
-          >
-            <FiArrowLeft size={18} />
-            <span>{content["back"]}</span>
-          </Button>
+              onClick={() => onBack()}
+              className="p-0! text-[16px] font-semibold text-text! bg-transparent flex flex-row gap-2 items-center"
+            >
+              <FiArrowLeft size={18} />
+              <span>{content["back"]}</span>
+            </Button>
           </div>
         </div>
         <div className="pt-6 px-4 flex flex-1 flex-col gap-6 overflow-y-auto max-w-[900px] w-full">
@@ -2248,9 +2596,18 @@ const AddressStep: React.FC<TAddressStep> = ({
                 setPhoneCountry("US");
                 setName(null);
                 setSelectedAddress(null);
+                setOtpCode("");
+                setOtpSent(false);
+                setOtpInfo(null);
               }}
               value={phoneValue}
               onChange={(value) => {
+                const previousRaw = phoneData?.raw ?? "";
+                if (value.raw !== previousRaw) {
+                  setOtpCode("");
+                  setOtpSent(false);
+                  setOtpInfo(null);
+                }
                 setPhoneData(value);
               }}
               block={customer !== null}
@@ -2259,6 +2616,45 @@ const AddressStep: React.FC<TAddressStep> = ({
               <span className="text-red-600 text-sm">{error.message}</span>
             )}
           </div>
+          {!customer && otpSent && (
+            <div className="flex flex-col gap-2">
+              <span className="font-semibold text-[16px]">
+                {content["otpCode"] || "Verification code"}
+              </span>
+              <InputOTP
+                value={otpCode}
+                onChange={(value) => {
+                  setError(null);
+                  setOtpCode(value.replace(/\D/g, "").slice(0, 8));
+                }}
+                length={6}
+                disabled={loading}
+              />
+              {otpInfo && <span className="text-sm text-[#4A4A4A]">{otpInfo}</span>}
+              <button
+                type="button"
+                onClick={handleResendOtp}
+                disabled={loading || otpResending}
+                className="w-fit text-sm text-[#4A4A4A] disabled:opacity-50"
+              >
+                {otpResending ? (
+                  <span className="font-semibold text-text">
+                    {content["loading"] || "Loading..."}
+                  </span>
+                ) : (
+                  <>
+                    {(content["otpNotReceived"] || "Didn't receive it?") + " "}
+                    <span className="font-semibold text-text">
+                      {content["otpResend"] || "Resend code"}
+                    </span>
+                  </>
+                )}
+              </button>
+              {error?.field === "code" && (
+                <span className="text-red-600 text-sm">{error.message}</span>
+              )}
+            </div>
+          )}
           {customer && (
             <>
               <TextInput
@@ -2313,7 +2709,13 @@ const AddressStep: React.FC<TAddressStep> = ({
             className="bg-brandBackground w-full py-3 gap-3 max-w-[900px]"
           >
             <span className="text-lg">
-              {loading ? content["loading"] : content["confirm"]}
+              {loading
+                ? content["loading"]
+                : !customer && otpSent
+                  ? content["verify"] || "Verify"
+                  : !customer
+                    ? content["sendCode"] || "Send code"
+                    : content["confirm"]}
             </span>
           </Button>
         </div>
@@ -2338,12 +2740,20 @@ type TTipSelector = {
 
 const TipSelector: React.FC<TTipSelector> = ({ onSelect, tipSelected }) => {
   const customTipValue =
-    tipSelected && !["10", "15", "20"].includes(tipSelected) ? tipSelected : "";
+    tipSelected && !["5", "10", "15"].includes(tipSelected) ? tipSelected : "";
 
   return (
     <div className="flex flex-col gap-2">
       <span className="font-semibold">Tip</span>
       <div className="flex flex-rowa gap-2">
+        <div
+          onClick={() => onSelect("5")}
+          className={`px-3 py-3 rounded-xl bg-foreground font-medium text-lg flex flex-row justify-between items-center border-2 transition ${"5" === tipSelected ? "border-brandBackground" : "border-foreground"}`}
+        >
+          <div>
+            <span className="flex-1">%5</span>
+          </div>
+        </div>
         <div
           onClick={() => onSelect("10")}
           className={`px-3 py-3 rounded-xl bg-foreground font-medium text-lg flex flex-row justify-between items-center border-2 transition ${"10" === tipSelected ? "border-brandBackground" : "border-foreground"}`}
@@ -2358,14 +2768,6 @@ const TipSelector: React.FC<TTipSelector> = ({ onSelect, tipSelected }) => {
         >
           <div>
             <span className="flex-1">%15</span>
-          </div>
-        </div>
-        <div
-          onClick={() => onSelect("20")}
-          className={`px-3 py-3 rounded-xl bg-foreground font-medium text-lg flex flex-row justify-between items-center border-2 transition ${"20" === tipSelected ? "border-brandBackground" : "border-foreground"}`}
-        >
-          <div>
-            <span className="flex-1">%20</span>
           </div>
         </div>
         <div>
@@ -2577,8 +2979,8 @@ const FindAddressModal: React.FC<TFindAddressModal> = ({
 
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
-      <Dialog.Overlay className="fixed inset-0 z-[79] bg-black/40" />
-      <Dialog.Content className="w-dvw h-dvh bg-background fixed top-0 left-0 z-[80]">
+      <Dialog.Overlay className="fixed inset-0 z-[79] bg-black/45 backdrop-blur-[2px] duration-300 ease-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0" />
+      <Dialog.Content className="w-dvw h-dvh bg-background fixed top-0 left-0 z-[80] duration-300 ease-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0 data-[state=open]:slide-in-from-bottom-3 data-[state=closed]:slide-out-to-bottom-3">
         <Dialog.Title className="sr-only">
           {content["addAddress"]}
         </Dialog.Title>

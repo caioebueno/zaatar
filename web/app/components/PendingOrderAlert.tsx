@@ -3,6 +3,7 @@
 import text from "@/constants/text";
 import {
   CUSTOMER_SESSION_UPDATED_EVENT,
+  clearStoredCustomerSession,
   getStoredCustomerSession,
 } from "@/utils/customerSession";
 import Link from "next/link";
@@ -36,15 +37,51 @@ const PendingOrderAlert: React.FC<TPendingOrderAlert> = ({ lg }) => {
 
     const loadPendingOrder = async () => {
       const session = getStoredCustomerSession();
+      const accessToken = session?.accessToken;
 
-      if (!session?.customer?.id) {
+      if (!accessToken) {
         if (!cancelled) setPendingOrder(null);
         return;
       }
 
       try {
+        const authResponse = await fetch("/api/customers/auth/token/refresh", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            accessToken,
+          }),
+          cache: "no-store",
+        });
+
+        if (!authResponse.ok) {
+          clearStoredCustomerSession();
+          if (!cancelled) setPendingOrder(null);
+          return;
+        }
+
+        const authData = (await authResponse.json()) as {
+          customer?: {
+            id?: string;
+          };
+          accessToken?: string;
+          expiresAt?: string;
+        };
+        const customerId = authData.customer?.id;
+
+        if (
+          typeof customerId !== "string" ||
+          customerId.length === 0 ||
+          typeof authData.accessToken !== "string"
+        ) {
+          if (!cancelled) setPendingOrder(null);
+          return;
+        }
+
         const response = await fetch(
-          `/api/customers/${session.customer.id}/pending-order`,
+          `/api/customers/${customerId}/pending-order`,
           {
             cache: "no-store",
           },
