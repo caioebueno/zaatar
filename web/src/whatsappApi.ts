@@ -1,5 +1,15 @@
 import { normalizePhoneWithCountryCode } from "./phone";
 
+function isWhatsAppMessagingDisabled(): boolean {
+  const rawValue = process.env.DISABLE_WHATSAPP_MESSAGING?.trim().toLowerCase();
+  return (
+    rawValue === "1" ||
+    rawValue === "true" ||
+    rawValue === "yes" ||
+    rawValue === "on"
+  );
+}
+
 export function toWhatsAppAddress(phone: string): string | undefined {
   const countryCode = (
     process.env.WHATSAPP_COUNTRY_CODE?.trim() || "1"
@@ -60,6 +70,13 @@ async function sendTwilioWhatsAppMessage(input: {
   contentSid?: string;
   contentVariables?: Record<string, string>;
 }): Promise<void> {
+  if (isWhatsAppMessagingDisabled()) {
+    console.info(
+      "Skipping WhatsApp message: DISABLE_WHATSAPP_MESSAGING is enabled.",
+    );
+    return;
+  }
+
   const config = getTwilioConfig();
   if (!config) return;
 

@@ -4,6 +4,7 @@ import cron from "node-cron";
 import axios from "axios";
 import { Pool } from "pg";
 import { processDispatchAssignmentJobs as runDispatchAssignmentJobs } from "./dispatchAssignment.js";
+import { processFeedbackWhatsAppJobs as runFeedbackWhatsAppJobs } from "./feedbackWhatsAppQueue.js";
 
 const PORT = Number(process.env.PORT || 4000);
 const CRON_SCHEDULE = process.env.CRON_SCHEDULE || "0 0 * * *";
@@ -12,6 +13,8 @@ const JOBS_PER_RUN = Number(process.env.JOBS_PER_RUN || 10);
 const RUN_TRIGGER_SECRET = process.env.RUN_TRIGGER_SECRET?.trim();
 const EXTERNAL_ORDER_SCAN_ENABLED =
   process.env.EXTERNAL_ORDER_SCAN_ENABLED === "true";
+const EXTERNAL_ORDER_IMPORT_ENABLED =
+  process.env.EXTERNAL_ORDER_IMPORT_ENABLED !== "false";
 const EXTERNAL_ORDER_SCAN_SCHEDULE =
   process.env.EXTERNAL_ORDER_SCAN_SCHEDULE || "* * * * *";
 const EXTERNAL_ORDER_SCAN_ON_START =
@@ -258,7 +261,7 @@ async function scanExternalOrders() {
       .filter(({ externalId }) => !existingExternalIds.has(externalId))
       .map(({ externalId }) => externalId);
 
-    if (ORDER_IMPORT_API_URL && ordersToImport.length > 0) {
+    if (EXTERNAL_ORDER_IMPORT_ENABLED && ORDER_IMPORT_API_URL && ordersToImport.length > 0) {
       const importHeaders = {
         "Content-Type": "application/json",
       };
@@ -308,6 +311,8 @@ async function scanExternalOrders() {
           `[queue-worker] External order import queue run warning: ${queueRunError}`,
         );
       }
+    } else if (!EXTERNAL_ORDER_IMPORT_ENABLED) {
+      lastExternalOrderImportStatus = "disabled";
     } else if (!ORDER_IMPORT_API_URL) {
       lastExternalOrderImportStatus = "disabled";
     } else {
@@ -408,7 +413,13 @@ async function readJsonBody(request) {
 async function processDispatchAssignmentJobs(limitOverride) {
   if (isProcessing) {
     console.log("[queue-worker] Skipping run because a previous run is still active.");
-    return;
+    return {
+      dispatch: { processed: 0, failed: 0 },
+      feedback: { processed: 0, failed: 0 },
+      processed: 0,
+      failed: 0,
+      skipped: true,
+    };
   }
 
   isProcessing = true;
@@ -422,11 +433,28 @@ async function processDispatchAssignmentJobs(limitOverride) {
       `[queue-worker] Triggering queue processing at ${new Date().toISOString()} with limit=${jobsPerRun}`,
     );
 
-    const result = await runDispatchAssignmentJobs(jobsPerRun);
+    const dispatchResult = await runDispatchAssignmentJobs(jobsPerRun);
+    const feedbackResult = await runFeedbackWhatsAppJobs(jobsPerRun);
+    const result = {
+      dispatch: dispatchResult,
+      feedback: feedbackResult,
+      processed: dispatchResult.processed + feedbackResult.processed,
+      failed: dispatchResult.failed + feedbackResult.failed,
+      skipped: false,
+    };
 
     console.log("[queue-worker] Queue processing completed:", result);
+    return result;
   } catch (error) {
     console.error("[queue-worker] Queue processing error:", error);
+    return {
+      dispatch: { processed: 0, failed: 0 },
+      feedback: { processed: 0, failed: 0 },
+      processed: 0,
+      failed: 1,
+      skipped: false,
+      error: "QUEUE_PROCESSING_ERROR",
+    };
   } finally {
     isProcessing = false;
   }
@@ -451,6 +479,7 @@ function handleRequest(request, response) {
           lastScanStatus: lastExternalOrderScanStatus,
           lastNewOrderCount: lastExternalOrderNewCount,
           importApiConfigured: Boolean(ORDER_IMPORT_API_URL),
+          importEnabled: EXTERNAL_ORDER_IMPORT_ENABLED,
           lastImportAt: lastExternalOrderImportAt,
           lastImportStatus: lastExternalOrderImportStatus,
           lastImportCreatedCount: lastExternalOrderImportCreatedCount,
@@ -488,6 +517,10 @@ function handleRequest(request, response) {
             ok: true,
             processed: result.processed,
             failed: result.failed,
+            skipped: Boolean(result.skipped),
+            dispatch: result.dispatch,
+            feedback: result.feedback,
+            ...(result.error ? { error: result.error } : {}),
           }),
         );
       })

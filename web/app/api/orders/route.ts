@@ -5,7 +5,11 @@ import {
   PROMOTION_ID_COOKIE_NAME,
 } from "@/src/constants/menu";
 import type TCart from "@/types/cart";
-import type { TOrderType, TPaymentMethod } from "@/src/types/order";
+import type {
+  TOrderType,
+  TPaymentMethod,
+  TPaymentProvider,
+} from "@/src/types/order";
 import { NextRequest, NextResponse } from "next/server";
 
 type PostBody = {
@@ -13,6 +17,8 @@ type PostBody = {
   customerId?: unknown;
   orderType?: unknown;
   paymentMethod?: unknown;
+  paymentProvider?: unknown;
+  selectedCardId?: unknown;
   menuId?: unknown;
   promotionId?: unknown;
   tags?: unknown;
@@ -27,6 +33,7 @@ type PostBody = {
 
 const VALID_ORDER_TYPES: TOrderType[] = ["DELIVERY", "TAKEAWAY"];
 const VALID_PAYMENT_METHODS: TPaymentMethod[] = ["CARD", "CASH", "ZELLE"];
+const VALID_PAYMENT_PROVIDERS: TPaymentProvider[] = ["STRIPE"];
 const VALID_ORDER_SOURCES = ["MENU", "POS"] as const;
 
 function parseRequiredString(value: unknown, field: string): string {
@@ -94,6 +101,20 @@ function parsePaymentMethod(value: unknown): TPaymentMethod {
   }
 
   return value as TPaymentMethod;
+}
+
+function parseOptionalPaymentProvider(value: unknown): TPaymentProvider | undefined {
+  if (value === undefined || value === null) return undefined;
+  if (typeof value !== "string") {
+    throw { code: "INVALID_PARAMS", details: { field: "paymentProvider" } };
+  }
+
+  const normalized = value.trim().toUpperCase();
+  if (!VALID_PAYMENT_PROVIDERS.includes(normalized as TPaymentProvider)) {
+    throw { code: "INVALID_PARAMS", details: { field: "paymentProvider" } };
+  }
+
+  return normalized as TPaymentProvider;
 }
 
 function parseTipAmount(value: unknown): number | undefined {
@@ -298,6 +319,12 @@ function mapInvalidParamsField(message?: string): string | undefined {
       return "language";
     case "INVALID_SCHEDULE_FOR":
       return "scheduleFor";
+    case "INVALID_PAYMENT_PROVIDER":
+      return "paymentProvider";
+    case "INVALID_SELECTED_CARD":
+      return "selectedCardId";
+    case "CARD_PAYMENT_REQUIRES_CUSTOMER":
+      return "customerId";
     default:
       return undefined;
   }
@@ -377,6 +404,40 @@ function mapKnownError(error: unknown) {
     );
   }
 
+  if (code === "STRIPE_PAYMENT_FAILED") {
+    return NextResponse.json(
+      {
+        error: "Payment failed",
+        reason: "STRIPE_PAYMENT_FAILED",
+        ...(message ? { message } : {}),
+      },
+      { status: 402 },
+    );
+  }
+
+  if (code === "ORDER_CREATION_FAILED_AFTER_CHARGE_REFUNDED") {
+    return NextResponse.json(
+      {
+        error: "Order could not be created",
+        reason: "ORDER_CREATION_FAILED_AFTER_CHARGE_REFUNDED",
+        message: "The card charge was reversed automatically.",
+      },
+      { status: 500 },
+    );
+  }
+
+  if (code === "STRIPE_CHARGED_BUT_REFUND_FAILED") {
+    return NextResponse.json(
+      {
+        error: "Order could not be created",
+        reason: "STRIPE_CHARGED_BUT_REFUND_FAILED",
+        message:
+          "Payment was charged but automatic refund failed. Please contact support immediately.",
+      },
+      { status: 500 },
+    );
+  }
+
   return null;
 }
 
@@ -387,6 +448,8 @@ export async function POST(request: NextRequest) {
     const customerId = parseOptionalString(body.customerId, "customerId");
     const orderType = parseOrderType(body.orderType);
     const paymentMethod = parsePaymentMethod(body.paymentMethod);
+    const paymentProvider = parseOptionalPaymentProvider(body.paymentProvider);
+    const selectedCardId = parseOptionalString(body.selectedCardId, "selectedCardId");
     const menuIdFromBody = parseOptionalString(body.menuId, "menuId");
     const promotionIdFromBody = parseOptionalString(
       body.promotionId,
@@ -425,6 +488,8 @@ export async function POST(request: NextRequest) {
       customerId,
       orderType,
       paymentMethod,
+      paymentProvider,
+      selectedCardId,
       menuId,
       promotionId,
       tags,

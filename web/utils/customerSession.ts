@@ -1,12 +1,9 @@
-import TCustomer from "@/src/types/customer";
-
 const CUSTOMER_SESSION_KEY = "foody-customer-session";
 export const CUSTOMER_SESSION_UPDATED_EVENT = "foody-customer-session-updated";
 
 type StoredCustomerSession = {
-  customer: TCustomer;
-  phone: string;
-  phoneCountry?: string;
+  accessToken?: string;
+  accessTokenExpiresAt?: string;
   selectedAddressId?: string;
 };
 
@@ -14,16 +11,20 @@ function isCustomerSession(value: unknown): value is StoredCustomerSession {
   if (!value || typeof value !== "object") return false;
 
   const candidate = value as {
-    customer?: unknown;
-    phone?: unknown;
-    phoneCountry?: unknown;
+    accessToken?: unknown;
+    accessTokenExpiresAt?: unknown;
     selectedAddressId?: unknown;
   };
 
-  if (typeof candidate.phone !== "string") return false;
   if (
-    candidate.phoneCountry !== undefined &&
-    typeof candidate.phoneCountry !== "string"
+    candidate.accessToken !== undefined &&
+    typeof candidate.accessToken !== "string"
+  ) {
+    return false;
+  }
+  if (
+    candidate.accessTokenExpiresAt !== undefined &&
+    typeof candidate.accessTokenExpiresAt !== "string"
   ) {
     return false;
   }
@@ -34,21 +35,7 @@ function isCustomerSession(value: unknown): value is StoredCustomerSession {
     return false;
   }
 
-  const customer = candidate.customer as
-    | {
-        id?: unknown;
-        name?: unknown;
-        addresses?: unknown;
-      }
-    | undefined;
-
-  return (
-    typeof customer?.id === "string" &&
-    (customer.name === null ||
-      customer.name === undefined ||
-      typeof customer.name === "string") &&
-    (customer.addresses === undefined || Array.isArray(customer.addresses))
-  );
+  return true;
 }
 
 export function getStoredCustomerSession(): StoredCustomerSession | null {
@@ -68,7 +55,27 @@ export function getStoredCustomerSession(): StoredCustomerSession | null {
 export function setStoredCustomerSession(session: StoredCustomerSession) {
   if (typeof window === "undefined") return;
 
-  window.localStorage.setItem(CUSTOMER_SESSION_KEY, JSON.stringify(session));
+  const currentSession = getStoredCustomerSession();
+  const nextSession: StoredCustomerSession = {
+    selectedAddressId:
+      session.selectedAddressId !== undefined
+        ? session.selectedAddressId
+        : currentSession?.selectedAddressId,
+    accessToken:
+      session.accessToken !== undefined
+        ? session.accessToken
+        : currentSession?.accessToken,
+    accessTokenExpiresAt:
+      session.accessTokenExpiresAt !== undefined
+        ? session.accessTokenExpiresAt
+        : currentSession?.accessTokenExpiresAt,
+  };
+
+  if (!nextSession.accessToken) {
+    window.localStorage.removeItem(CUSTOMER_SESSION_KEY);
+  } else {
+    window.localStorage.setItem(CUSTOMER_SESSION_KEY, JSON.stringify(nextSession));
+  }
   window.dispatchEvent(new CustomEvent(CUSTOMER_SESSION_UPDATED_EVENT));
 }
 

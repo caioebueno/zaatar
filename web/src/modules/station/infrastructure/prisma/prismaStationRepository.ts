@@ -82,6 +82,14 @@ class PrismaStationRepository implements StationRepository {
             },
           },
         },
+        redeemedRewards: {
+          include: {
+            product: true,
+          },
+          orderBy: {
+            createdAt: "asc",
+          },
+        },
       },
       orderBy: {
         createdAt: "asc",
@@ -217,6 +225,40 @@ class PrismaStationRepository implements StationRepository {
                 },
               }
             : {}),
+          redeemedRewards: order.redeemedRewards.map((reward) => ({
+            id: reward.id,
+            customerId: reward.customerId,
+            status: reward.status,
+            type: reward.type,
+            title: reward.title,
+            description: reward.description || undefined,
+            quantity: reward.quantity,
+            value: reward.value,
+            couponCode: reward.couponCode,
+            issuedAt: reward.issuedAt.toISOString(),
+            expiresAt: reward.expiresAt ? reward.expiresAt.toISOString() : null,
+            redeemedAt: reward.redeemedAt ? reward.redeemedAt.toISOString() : null,
+            productId: reward.productId,
+            product: reward.product
+              ? {
+                  id: reward.product.id,
+                  name: reward.product.name,
+                  categoryId: reward.product.categoryId ?? undefined,
+                  description: reward.product.description ?? undefined,
+                  price: reward.product.price,
+                  comparedAtPrice: reward.product.comparedAtPrice,
+                  translations:
+                    reward.product.translations &&
+                    typeof reward.product.translations === "object"
+                      ? (reward.product.translations as {
+                          [key: string]: {
+                            [key: string]: string;
+                          };
+                        })
+                      : undefined,
+                }
+              : undefined,
+          })),
           orderProducts: order.orderProducts.map((item) => ({
             id: item.id,
             productId: item.productId,

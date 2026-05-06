@@ -1,4 +1,5 @@
 import PendingOrderAlert from "@/app/components/PendingOrderAlert";
+import CustomerAuthSessionBootstrap from "@/app/components/CustomerAuthSessionBootstrap";
 import { MenuProductsProvider } from "@/app/components/MenuProductsContext";
 import MenuVisitTracker from "@/app/components/MenuVisitTracker";
 import {
@@ -42,6 +43,7 @@ export default async function MenuLayout({
   return (
     <div className="min-h-dvh flex flex-col">
       <MenuProductsProvider initialData={products}>
+        <CustomerAuthSessionBootstrap />
         <MenuVisitTracker
           menuId={menuId}
           promotionId={promotionId}

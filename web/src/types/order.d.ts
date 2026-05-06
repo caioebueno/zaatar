@@ -8,6 +8,7 @@ import TProgressiveDiscount, {
 import { TPreparationStepCategory } from "./station";
 
 export type TPaymentMethod = "CARD" | "CASH" | "ZELLE";
+export type TPaymentProvider = "STRIPE";
 export type TOrderType = "DELIVERY" | "TAKEAWAY";
 export type TOrderStatus =
   | "ACCEPTED"
@@ -40,10 +41,29 @@ export type TOrder = {
   costumerId?: string;
   customer?: TCustomer;
   paymentMethod: TPaymentMethod;
+  paymentProvider?: TPaymentProvider | null;
+  redeemedRewards?: TOrderRedeemedReward[];
   addressId?: string;
   address?: TAddress;
   orderProducts: TOrderProduct[];
   preparationStepCategory: TPreparationStepCategory[];
+};
+
+export type TOrderRedeemedReward = {
+  id: string;
+  customerId: string;
+  status: "ACTIVE" | "REDEEMED" | "EXPIRED" | "CANCELED";
+  type: "FREE_PRODUCT" | "PERCENT_DISCOUNT" | "FIXED_DISCOUNT" | "CUSTOM";
+  title: string;
+  description?: string;
+  quantity?: number | null;
+  value?: number | null;
+  couponCode?: string | null;
+  issuedAt: string;
+  expiresAt?: string | null;
+  redeemedAt?: string | null;
+  productId?: string | null;
+  product?: TProduct;
 };
 
 export type TOrderProgressiveDiscountSnapshot = {

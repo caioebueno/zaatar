@@ -47,6 +47,10 @@ const Confirmation: NextPage<{
       : order.paymentMethod === "CARD"
         ? content["card"]
         : content["zelle"];
+  const isPaymentPaid = Boolean(order.paidAt);
+  const paymentStatusLabel = isPaymentPaid
+    ? content["paymentPaid"] || "Paid"
+    : content["paymentPending"] || "Pending";
 
   return (
     <div className={`${montserrat.className} flex flex-col items-center`}>
@@ -98,9 +102,19 @@ const Confirmation: NextPage<{
       />
       <div className="w-full max-w-[900px] px-4">
         <div className="flex flex-col  border-t border-t-[#E6E6E6] pt-6">
-          <span className="text-base font-bold text-text">
-            {content["paymentInfo"]}
-          </span>
+          <div className="flex items-center justify-between gap-3">
+            <span className="text-base font-bold text-text">
+              {content["paymentInfo"]}
+            </span>
+            <span
+              className={`rounded-full px-3 py-1 text-xs font-bold ${isPaymentPaid
+                ? "bg-[#E8F7EE] text-[#1A7F45]"
+                : "bg-[#FFF4E5] text-[#A15C00]"
+                }`}
+            >
+              {paymentStatusLabel}
+            </span>
+          </div>
           <div className="flex items-center font-medium text-lightText">
             <span className="">{`${paymentMethodLabel} ${formatCurrency(order.totalAmount ?? 0)}`}</span>
           </div>

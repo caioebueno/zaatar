@@ -3,13 +3,20 @@
 import { randomUUID } from "crypto";
 import { Prisma } from "@/src/generated/prisma";
 import prisma from "@/prisma";
-import type { TOrder, TOrderType, TPaymentMethod } from "@/src/types/order";
+import type {
+  TOrder,
+  TOrderType,
+  TPaymentMethod,
+  TPaymentProvider,
+} from "@/src/types/order";
 import getOrder from "./getOrder";
+import enqueueFeedbackWhatsAppJob from "./enqueueFeedbackWhatsAppJob";
 
 type UpdateOrderPaymentAndDeliveryInput = {
   orderId: string;
   paidAt?: unknown;
   paymentMethod?: unknown;
+  paymentProvider?: unknown;
   deliveredAt?: unknown;
   canceled?: unknown;
   orderType?: unknown;
@@ -19,6 +26,7 @@ type UpdateOrderPaymentAndDeliveryInput = {
 };
 
 const VALID_PAYMENT_METHODS: TPaymentMethod[] = ["CARD", "CASH", "ZELLE"];
+const VALID_PAYMENT_PROVIDERS: TPaymentProvider[] = ["STRIPE"];
 const VALID_ORDER_TYPES: TOrderType[] = ["DELIVERY", "TAKEAWAY"];
 
 type ParsedOrderProductUpdate = {
@@ -95,6 +103,31 @@ function ensureValidPaymentMethod(paymentMethod: unknown): TPaymentMethod {
   }
 
   return paymentMethod as TPaymentMethod;
+}
+
+function ensureValidPaymentProvider(
+  paymentProvider: unknown,
+): TPaymentProvider | null {
+  if (paymentProvider === null) {
+    return null;
+  }
+
+  if (typeof paymentProvider !== "string") {
+    throw {
+      code: "INVALID_PARAMS",
+      details: { field: "paymentProvider" },
+    };
+  }
+
+  const normalizedProvider = paymentProvider.trim().toUpperCase();
+  if (!VALID_PAYMENT_PROVIDERS.includes(normalizedProvider as TPaymentProvider)) {
+    throw {
+      code: "INVALID_PARAMS",
+      details: { field: "paymentProvider" },
+    };
+  }
+
+  return normalizedProvider as TPaymentProvider;
 }
 
 function ensureValidOrderType(orderType: unknown): TOrderType {
@@ -367,7 +400,7 @@ export default async function updateOrderPaymentAndDelivery(
 
   const existingOrder = await prisma.order.findUnique({
     where: { id: orderId },
-    select: { id: true, type: true, deliveryAddressId: true },
+    select: { id: true, type: true, deliveryAddressId: true, deliveredAt: true },
   });
 
   if (!existingOrder) {
@@ -503,6 +536,7 @@ export default async function updateOrderPaymentAndDelivery(
     customerId?: string | null;
     deliveryAddressId?: string | null;
   } = {};
+  let paymentProviderUpdate: TPaymentProvider | null | undefined;
 
   if (data.paidAt !== undefined) {
     const parsedPaidAt = ensureValidTimestamp(data.paidAt, "paidAt");
@@ -511,6 +545,10 @@ export default async function updateOrderPaymentAndDelivery(
 
   if (data.paymentMethod !== undefined) {
     updates.paymentMethod = ensureValidPaymentMethod(data.paymentMethod);
+  }
+
+  if (data.paymentProvider !== undefined) {
+    paymentProviderUpdate = ensureValidPaymentProvider(data.paymentProvider);
   }
 
   if (data.deliveredAt !== undefined) {
@@ -588,9 +626,14 @@ export default async function updateOrderPaymentAndDelivery(
   }
 
   const hasOrderUpdates = Object.keys(updates).length > 0;
+  const hasPaymentProviderUpdate = paymentProviderUpdate !== undefined;
   const hasOrderProductUpdates = orderProductChanges.length > 0;
+  const shouldEnqueueFeedbackJob =
+    existingOrder.deliveredAt === null &&
+    updates.deliveredAt !== undefined &&
+    updates.deliveredAt !== null;
 
-  if (!hasOrderUpdates && !hasOrderProductUpdates) {
+  if (!hasOrderUpdates && !hasPaymentProviderUpdate && !hasOrderProductUpdates) {
     throw {
       code: "INVALID_PARAMS",
       details: { field: "body" },
@@ -643,6 +686,22 @@ export default async function updateOrderPaymentAndDelivery(
         where: { id: orderId },
         data: orderUpdateData,
       });
+    }
+
+    if (hasPaymentProviderUpdate) {
+      if (paymentProviderUpdate === null) {
+        await tx.$executeRaw`
+          UPDATE "Order"
+          SET "paymentProvider" = NULL
+          WHERE "id" = ${orderId}
+        `;
+      } else {
+        await tx.$executeRaw`
+          UPDATE "Order"
+          SET "paymentProvider" = ${paymentProviderUpdate}::"PaymentProvider"
+          WHERE "id" = ${orderId}
+        `;
+      }
     }
 
     for (const orderProductUpdate of orderProductUpdates) {
@@ -725,6 +784,13 @@ export default async function updateOrderPaymentAndDelivery(
       });
     }
   });
+
+  if (shouldEnqueueFeedbackJob && updates.deliveredAt) {
+    await enqueueFeedbackWhatsAppJob({
+      orderId,
+      deliveredAt: updates.deliveredAt,
+    });
+  }
 
   return getOrder(orderId);
 }

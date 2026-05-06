@@ -13,7 +13,7 @@ import formatCurrency from "@/utils/formatCurrecy";
 import Button from "./Button";
 import ProductImage from "./ProductImage";
 import { FiArrowLeft, FiMinus, FiPlus, FiTrash2, FiX } from "react-icons/fi";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import { TSelectedComboSlotOption, TSelectedModifier } from "@/types/cart";
 import { FiAlertCircle } from "react-icons/fi";
 
@@ -272,6 +272,49 @@ const ProductModal: React.FC<TProductModal> = ({
   const hasProductDescription =
     typeof productDescription === "string" && productDescription.trim().length > 0;
   const isProductModalOpen = product !== null;
+  const [visibleViewportHeight, setVisibleViewportHeight] = useState("100svh");
+
+  useEffect(() => {
+    if (!isProductModalOpen) return;
+
+    const updateVisibleViewportHeight = () => {
+      const viewportHeight =
+        window.visualViewport?.height && Number.isFinite(window.visualViewport.height)
+          ? window.visualViewport.height
+          : window.innerHeight;
+      if (!Number.isFinite(viewportHeight) || viewportHeight <= 0) return;
+
+      setVisibleViewportHeight(`${Math.floor(viewportHeight)}px`);
+    };
+
+    updateVisibleViewportHeight();
+    window.addEventListener("resize", updateVisibleViewportHeight);
+    window.addEventListener("orientationchange", updateVisibleViewportHeight);
+    window.visualViewport?.addEventListener("resize", updateVisibleViewportHeight);
+    window.visualViewport?.addEventListener("scroll", updateVisibleViewportHeight);
+
+    return () => {
+      window.removeEventListener("resize", updateVisibleViewportHeight);
+      window.removeEventListener("orientationchange", updateVisibleViewportHeight);
+      window.visualViewport?.removeEventListener(
+        "resize",
+        updateVisibleViewportHeight,
+      );
+      window.visualViewport?.removeEventListener(
+        "scroll",
+        updateVisibleViewportHeight,
+      );
+    };
+  }, [isProductModalOpen]);
+
+  const fullscreenModalStyle = useMemo<CSSProperties>(
+    () => ({
+      height: visibleViewportHeight,
+      maxHeight: visibleViewportHeight,
+    }),
+    [visibleViewportHeight],
+  );
+
   const isModifierModalOpen =
     isProductModalOpen && activeModifierGroupIndex !== null;
   const isComboSlotModalOpen = isProductModalOpen && activeComboSlotIndex !== null;
@@ -285,13 +328,14 @@ const ProductModal: React.FC<TProductModal> = ({
     >
       <DialogContent
         showCloseButton={false}
-        className="!top-0 !left-0 !translate-x-0 !translate-y-0 !w-screen !max-w-none !h-[100svh] !max-h-[100svh] !p-0 !gap-0 bg-foreground transition-all overflow-hidden rounded-none"
+        className="!top-0 !left-0 !right-0 !bottom-0 !translate-x-0 !translate-y-0 !w-screen !max-w-none !h-[100svh] !max-h-[100svh] !p-0 !gap-0 bg-foreground transition-all overflow-hidden rounded-none"
+        style={fullscreenModalStyle}
       >
         <DialogTitle className="sr-only">
           {product ? product.name : "Product details"}
         </DialogTitle>
         {product && (
-          <div className="h-full flex flex-col max-h-dvh">
+          <div className="h-full min-h-0 flex flex-col">
             <div className="flex-1 min-h-0 overflow-y-auto">
               <div className="flex flex-col lg:flex-row">
                 <div className="lg:flex-1 lg:p-4">
@@ -301,7 +345,7 @@ const ProductModal: React.FC<TProductModal> = ({
                   <ProductImage
                     src={productImageUrl}
                     alt={`${product.name} photo`}
-                    className="h-[300px] w-full object-cover bg-background lg:w-full lg:h-[300px] lg:rounded-xl"
+                    className="h-[300px] w-full object-cover bg-background lg:w-full lg:h-[500px] lg:rounded-xl"
                     quality={85}
                     sizes="(max-width: 1024px) 100vw, 50vw"
                   />
@@ -459,6 +503,7 @@ const ProductModal: React.FC<TProductModal> = ({
             activeModifierGroupIndex !== null &&
             activeModifierGroupIndex < orderedModifierGroups.length - 1
           }
+          fullscreenModalStyle={fullscreenModalStyle}
           onConfirm={handleModifier}
         />
         <ComboSlotModal
@@ -477,6 +522,7 @@ const ProductModal: React.FC<TProductModal> = ({
           selectedComboSelections={selectedComboSelections}
           lg={lg}
           content={content}
+          fullscreenModalStyle={fullscreenModalStyle}
           onConfirm={(slot, selections) =>
             handleSaveComboSlotSelections(slot, selections)
           }
@@ -495,6 +541,7 @@ type TComboSlotModal = {
   content: {
     [key: string]: string;
   };
+  fullscreenModalStyle: CSSProperties;
   onConfirm: (
     slot: TComboSlot,
     selections: TSelectedComboSlotOption[],
@@ -508,6 +555,7 @@ const ComboSlotModal: React.FC<TComboSlotModal> = ({
   selectedComboSelections,
   lg,
   content,
+  fullscreenModalStyle,
   onConfirm,
 }) => {
   const [selectionQuantityByProductId, setSelectionQuantityByProductId] = useState<
@@ -621,7 +669,8 @@ const ComboSlotModal: React.FC<TComboSlotModal> = ({
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent
         showCloseButton={false}
-        className="!top-0 !left-0 !translate-x-0 !translate-y-0 !w-screen sm:!max-w-[900px] !h-[100svh] !max-h-[100svh] !min-h-0 !flex !flex-col !p-0 !gap-0 bg-foreground transition-all"
+        className="!top-0 !left-0 !right-0 !bottom-0 !translate-x-0 !translate-y-0 !w-screen sm:!max-w-[900px] !h-[100svh] !max-h-[100svh] !min-h-0 !flex !flex-col !p-0 !gap-0 bg-foreground transition-all"
+        style={fullscreenModalStyle}
       >
         <DialogTitle className="sr-only">{slotTitle}</DialogTitle>
         <div className="absolute right-4 top-4 z-10">
@@ -702,6 +751,7 @@ type TModifierModal = {
   content: {
     [key: string]: string;
   };
+  fullscreenModalStyle: CSSProperties;
   hasNextModifierGroup?: boolean;
   product: TProduct | null;
   onConfirm: (value: TSelectedModifier[]) => void;
@@ -714,6 +764,7 @@ const ModifierModal: React.FC<TModifierModal> = ({
   modifierId,
   lg,
   content,
+  fullscreenModalStyle,
   hasNextModifierGroup,
   onConfirm,
 }) => {
@@ -789,6 +840,7 @@ const ModifierModal: React.FC<TModifierModal> = ({
       <DialogContent
         showCloseButton={false}
         className="!top-0 !left-0 !translate-x-0 !translate-y-0 !w-screen sm:!max-w-[900px] !h-[100svh] !max-h-[100svh] !min-h-0 !flex !flex-col !p-0 !gap-0 bg-foreground transition-all"
+        style={fullscreenModalStyle}
       >
         <DialogTitle className="sr-only">
           {resolveModifierGroupTitle(modifierGroup, lg)}

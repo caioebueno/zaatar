@@ -88,8 +88,8 @@ const InformationModal: React.FC<TInformationModal> = ({
 
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
-      <Dialog.Overlay className="bg-black/50 h-dvh w-dvw fixed top-0 left-0 z-40"></Dialog.Overlay>
-      <Dialog.Content className="transition fixed bottom-0 left-1/2 z-50 grid w-full bg-white -translate-x-1/2 max-w-[900px] rounded-t-xl">
+      <Dialog.Overlay className="fixed inset-0 z-40 bg-black/45 backdrop-blur-[2px] duration-300 ease-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0" />
+      <Dialog.Content className="fixed bottom-0 left-1/2 z-50 grid w-full bg-white -translate-x-1/2 max-w-[900px] rounded-t-xl duration-300 ease-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0 data-[state=open]:slide-in-from-bottom-4 data-[state=closed]:slide-out-to-bottom-4">
         <Dialog.Title className="sr-only">
           {content["information"]}
         </Dialog.Title>

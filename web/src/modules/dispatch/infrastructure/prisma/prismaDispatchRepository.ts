@@ -6,6 +6,7 @@ import type { Driver } from "@/src/modules/driver/domain/driver.types";
 import type TAddress from "@/src/types/address";
 import type TCustomer from "@/src/types/customer";
 import type { TOrder } from "@/src/types/order";
+import { getRedeemedRewardsByOrderIds } from "@/src/getRedeemedRewardsByOrderIds";
 import getMapboxRouteDurationInMinutes from "@/utils/getMapboxRouteDurationInMinutes";
 import type { DispatchRepository } from "../../domain/dispatch.repository";
 import type {
@@ -183,6 +184,7 @@ function mapDispatch(
   orderRows: DispatchOrderRow[],
   ordersByDispatchId: Map<string, DispatchApiOrder[]>,
   orderProductsByOrderId: Map<TOrder["id"], TOrder["orderProducts"]>,
+  redeemedRewardsByOrderId: Map<string, NonNullable<TOrder["redeemedRewards"]>>,
   preparationStepCategoriesByOrderId: Map<
     TOrder["id"],
     TOrder["preparationStepCategory"]
@@ -232,6 +234,7 @@ function mapDispatch(
                 },
               }
             : {}),
+          redeemedRewards: redeemedRewardsByOrderId.get(orderRow.id) || [],
           ...(orderRow.deliveryAddressId
             ? {
                 deliveryAddress: {
@@ -1439,6 +1442,9 @@ class PrismaDispatchRepository implements DispatchRepository {
     const orderProductsByOrderId = await getDispatchOrderProducts(
       orderRows.map((order) => order.id),
     );
+    const redeemedRewardsByOrderId = await getRedeemedRewardsByOrderIds(
+      orderRows.map((order) => order.id),
+    );
     const preparationStepCategoriesByOrderId =
       await getDispatchPreparationStepCategories(
         orderRows.map((order) => order.id),
@@ -1449,6 +1455,7 @@ class PrismaDispatchRepository implements DispatchRepository {
       orderRows,
       new Map(),
       orderProductsByOrderId,
+      redeemedRewardsByOrderId,
       preparationStepCategoriesByOrderId,
     );
   }
@@ -1651,6 +1658,9 @@ class PrismaDispatchRepository implements DispatchRepository {
     const orderProductsByOrderId = await getDispatchOrderProducts(
       orderRows.map((order) => order.id),
     );
+    const redeemedRewardsByOrderId = await getRedeemedRewardsByOrderIds(
+      orderRows.map((order) => order.id),
+    );
     const preparationStepCategoriesByOrderId =
       await getDispatchPreparationStepCategories(
         orderRows.map((order) => order.id),
@@ -1661,6 +1671,7 @@ class PrismaDispatchRepository implements DispatchRepository {
       orderRows,
       new Map(),
       orderProductsByOrderId,
+      redeemedRewardsByOrderId,
       preparationStepCategoriesByOrderId,
     );
   }
@@ -1713,6 +1724,9 @@ class PrismaDispatchRepository implements DispatchRepository {
     const orderProductsByOrderId = await getDispatchOrderProducts(
       orderRows.map((order) => order.id),
     );
+    const redeemedRewardsByOrderId = await getRedeemedRewardsByOrderIds(
+      orderRows.map((order) => order.id),
+    );
     const preparationStepCategoriesByOrderId =
       await getDispatchPreparationStepCategories(
         orderRows.map((order) => order.id),
@@ -1725,6 +1739,7 @@ class PrismaDispatchRepository implements DispatchRepository {
         orderRows,
         ordersByDispatchId,
         orderProductsByOrderId,
+        redeemedRewardsByOrderId,
         preparationStepCategoriesByOrderId,
       ),
     );
@@ -1866,6 +1881,9 @@ class PrismaDispatchRepository implements DispatchRepository {
     const orderProductsByOrderId = await getDispatchOrderProducts(
       orderRows.map((order) => order.id),
     );
+    const redeemedRewardsByOrderId = await getRedeemedRewardsByOrderIds(
+      orderRows.map((order) => order.id),
+    );
     const preparationStepCategoriesByOrderId =
       await getDispatchPreparationStepCategories(
         orderRows.map((order) => order.id),
@@ -1876,6 +1894,7 @@ class PrismaDispatchRepository implements DispatchRepository {
       orderRows,
       new Map(),
       orderProductsByOrderId,
+      redeemedRewardsByOrderId,
       preparationStepCategoriesByOrderId,
     );
   }
@@ -1960,6 +1979,9 @@ class PrismaDispatchRepository implements DispatchRepository {
     const orderProductsByOrderId = await getDispatchOrderProducts(
       orderRows.map((order) => order.id),
     );
+    const redeemedRewardsByOrderId = await getRedeemedRewardsByOrderIds(
+      orderRows.map((order) => order.id),
+    );
     const preparationStepCategoriesByOrderId =
       await getDispatchPreparationStepCategories(
         orderRows.map((order) => order.id),
@@ -1970,6 +1992,7 @@ class PrismaDispatchRepository implements DispatchRepository {
       orderRows,
       new Map(),
       orderProductsByOrderId,
+      redeemedRewardsByOrderId,
       preparationStepCategoriesByOrderId,
     );
   }

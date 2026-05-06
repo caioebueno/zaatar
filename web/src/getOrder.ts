@@ -1,8 +1,15 @@
 "use server";
 
 import prisma from "@/prisma";
-import { TOrder, TOrderStatus, TOrderType, TPaymentMethod } from "./types/order";
+import {
+  TOrder,
+  TOrderStatus,
+  TOrderType,
+  TPaymentMethod,
+  TPaymentProvider,
+} from "./types/order";
 import { calculateSalesTaxInCents } from "@/src/constants/pricing";
+import { getRedeemedRewardsByOrderIds } from "@/src/getRedeemedRewardsByOrderIds";
 
 type OrderRow = {
   id: string;
@@ -20,6 +27,7 @@ type OrderRow = {
   status: TOrderStatus;
   type: TOrderType;
   paymentMethod: TPaymentMethod;
+  paymentProvider: TPaymentProvider | null;
   amount: number | bigint;
   tipAmount: number | bigint | null;
   deliveryFee: number | bigint | null;
@@ -64,6 +72,7 @@ const getOrder = async (orderId: string): Promise<TOrder> => {
       END AS "status",
       o."type",
       o."paymentMethod",
+      o."paymentProvider",
       o."amount",
       o."tipAmount",
       da."deliveryFee",
@@ -87,6 +96,7 @@ const getOrder = async (orderId: string): Promise<TOrder> => {
       o."canceled",
       o."type",
       o."paymentMethod",
+      o."paymentProvider",
       o."amount",
       o."tipAmount",
       o."dispatchId",
@@ -141,6 +151,8 @@ const getOrder = async (orderId: string): Promise<TOrder> => {
   };
   const orderProductsWithTranslations =
     orderProducts as unknown as OrderProductWithModifierTranslations[];
+  const redeemedRewardsByOrderId = await getRedeemedRewardsByOrderIds([order.id]);
+  const redeemedRewards = redeemedRewardsByOrderId.get(order.id) || [];
 
   return {
     id: order.id,
@@ -165,6 +177,8 @@ const getOrder = async (orderId: string): Promise<TOrder> => {
     tipAmount,
     deliveryFee,
     paymentMethod: order.paymentMethod,
+    paymentProvider: order.paymentProvider,
+    redeemedRewards,
     orderProducts: orderProductsWithTranslations.map((item) => ({
       id: item.id,
       productId: item.productId,

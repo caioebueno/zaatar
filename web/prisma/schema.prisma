@@ -243,6 +243,27 @@ model DispatchAssignmentJob {
   deliveryAddressId   String
 }
 
+enum FeedbackWhatsAppJobStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+model FeedbackWhatsAppJob {
+  id                  String                 @id
+  createdAt           DateTime               @default(now())
+  status              FeedbackWhatsAppJobStatus @default(PENDING)
+  attempts            Int                    @default(0)
+  availableAt         DateTime               @default(now())
+  processingStartedAt DateTime?
+  completedAt         DateTime?
+  lastError           String?
+  orderId             String                 @unique
+  customerPhone       String
+  language            String?
+}
+
 model Address {
   id            String   @id
   createdAt     DateTime @default(now())
@@ -272,6 +293,7 @@ model Product {
   exclusivePromotionProducts ExclusivePromotionProduct[]
   OrderProducts     OrderProducts[]
   prizeProducts     ProgressiveDiscountPrizeProduct[]
+  customerRewards   CustomerReward[]
   translations      Json?
   preparationSteps  PreparationStep[]
 
@@ -438,12 +460,83 @@ model Customer {
   name                String?
   email               String?
   phone               String?
+  stripeCustomerId    String?
   address             String?
   lastMessageSent     DateTime?
   orders              Order[]
   promotionalMessages PromotialMessage[]
   addresses           DeliveryAddress[]
   externalAddresses   ExternalAddress[]
+  feedbacks           CustomerFeedback[]
+  rewards             CustomerReward[]
+  otpChallenges       CustomerOtpChallenge[]
+  accessTokens        CustomerAccessToken[]
+  cards               CustomerCard[]
+
+  @@index([stripeCustomerId])
+}
+
+model CustomerCard {
+  id                    String    @id
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  customer              Customer  @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  customerId            String
+  stripePaymentMethodId String    @unique
+  brand                 String
+  last4                 String
+  expMonth              Int
+  expYear               Int
+  funding               String?
+  country               String?
+  fingerprint           String?
+  isDefault             Boolean   @default(false)
+
+  @@index([customerId, isDefault])
+  @@index([customerId, createdAt])
+}
+
+enum CustomerOtpChannel {
+  WHATSAPP
+  SMS
+}
+
+model CustomerOtpChallenge {
+  id           String             @id
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+  customer     Customer?          @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  customerId   String?
+  phone        String
+  countryCode  String?
+  channel      CustomerOtpChannel @default(WHATSAPP)
+  codeHash     String
+  expiresAt    DateTime
+  usedAt       DateTime?
+  attemptCount Int                @default(0)
+  maxAttempts  Int                @default(5)
+  lastAttemptAt DateTime?
+
+  @@index([phone, createdAt])
+  @@index([customerId, createdAt])
+  @@index([expiresAt])
+}
+
+model CustomerAccessToken {
+  id         String    @id
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  customer   Customer  @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  customerId String
+  tokenHash  String    @unique
+  expiresAt  DateTime
+  lastUsedAt DateTime?
+  revokedAt  DateTime?
+  userAgent  String?
+  ipAddress  String?
+
+  @@index([customerId, expiresAt])
+  @@index([expiresAt])
 }
 
 model DeliveryAddress {
@@ -514,6 +607,7 @@ model Order {
   status                           OrderStatus               @default(ACCEPTED)
   type                             OrderType                 @default(DELIVERY)
   paymentMethod                    PaymentType               @default(CARD)
+  paymentProvider                  PaymentProvider?
   tipAmount                        Int?
   tags                             String[]                  @default([])
   progressiveDiscountSnapshot      Json?
@@ -529,14 +623,100 @@ model Order {
   deliveryAddressId                String?
   externalAddressId                String?
   preparationStepCategories        PreparationStepCategory[]
+  feedback                         CustomerFeedback?
+  issuedRewards                    CustomerReward[]          @relation("IssuedRewardOrder")
+  redeemedRewards                  CustomerReward[]          @relation("RedeemedRewardOrder")
 
   @@index([dispatchId, dispatchOrderIndex])
+}
+
+enum CustomerFeedbackSentiment {
+  NEGATIVE
+  NEUTRAL
+  POSITIVE
+}
+
+enum CustomerRewardStatus {
+  ACTIVE
+  REDEEMED
+  EXPIRED
+  CANCELED
+}
+
+enum CustomerRewardType {
+  FREE_PRODUCT
+  PERCENT_DISCOUNT
+  FIXED_DISCOUNT
+  CUSTOM
+}
+
+model CustomerFeedback {
+  id                 String                   @id
+  createdAt          DateTime                 @default(now())
+  updatedAt          DateTime                 @updatedAt
+  customer           Customer                 @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  customerId         String
+  order              Order                    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId            String                   @unique
+  language           String?
+  overallRating      Int
+  sentiment          CustomerFeedbackSentiment
+  productQuality     Int?
+  temperature        Int?
+  deliverySpeed      Int?
+  serviceExperience  Int?
+  comment            String?
+  source             String?                  @default("MENU_FEEDBACK")
+  issuedReward       CustomerReward?
+
+  @@index([customerId, createdAt])
+  @@index([sentiment, createdAt])
+}
+
+model CustomerReward {
+  id                String              @id
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  customer          Customer            @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  customerId        String
+  status            CustomerRewardStatus @default(ACTIVE)
+  type              CustomerRewardType
+  title             String
+  description       String?
+  // Quantity/value by reward type:
+  // - FREE_PRODUCT: quantity + optional productId
+  // - PERCENT_DISCOUNT: value as percentage points
+  // - FIXED_DISCOUNT: value in cents
+  quantity          Int?                @default(1)
+  value             Int?
+  product           Product?            @relation(fields: [productId], references: [id], onDelete: SetNull)
+  productId         String?
+  couponCode        String?
+  issuedAt          DateTime            @default(now())
+  expiresAt         DateTime?
+  redeemedAt        DateTime?
+  feedback          CustomerFeedback?   @relation(fields: [feedbackId], references: [id], onDelete: SetNull)
+  feedbackId        String?             @unique
+  issuedForOrder    Order?              @relation("IssuedRewardOrder", fields: [issuedForOrderId], references: [id], onDelete: SetNull)
+  issuedForOrderId  String?
+  redeemedByOrder   Order?              @relation("RedeemedRewardOrder", fields: [redeemedByOrderId], references: [id], onDelete: SetNull)
+  redeemedByOrderId String?
+  metadata          Json?
+
+  @@index([customerId, status, expiresAt])
+  @@index([status, expiresAt])
+  @@index([productId])
+  @@index([issuedForOrderId])
 }
 
 enum PaymentType {
   CASH
   CARD
   ZELLE
+}
+
+enum PaymentProvider {
+  STRIPE
 }
 
 enum OrderType {
@@ -733,4 +913,13 @@ model InventoryStockEvent {
   metadata       Json?
 
   @@index([placeId, productId, createdAt], map: "InventoryStockEvent_placeId_productId_createdAt_idx")
+}
+
+model FeedbackSettings {
+  id             String   @id
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  active         Boolean  @default(true)
+  rewardProductId String?
+  rewardQuantity Int      @default(1)
 }
