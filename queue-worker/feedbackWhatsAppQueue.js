@@ -91,6 +91,16 @@ function toWhatsAppAddress(phone) {
   return `whatsapp:+${normalized}`;
 }
 
+function isWhatsAppMessagingDisabled() {
+  const rawValue = process.env.DISABLE_WHATSAPP_MESSAGING?.trim().toLowerCase();
+  return (
+    rawValue === "1" ||
+    rawValue === "true" ||
+    rawValue === "yes" ||
+    rawValue === "on"
+  );
+}
+
 function getTwilioConfig() {
   const accountSid = process.env.TWILIO_ACCOUNT_SID?.trim();
   const authToken = process.env.TWILIO_AUTH_TOKEN?.trim();
@@ -127,6 +137,13 @@ function getTwilioConfig() {
 }
 
 async function sendFeedbackTemplateWhatsAppMessage(input) {
+  if (isWhatsAppMessagingDisabled()) {
+    console.info(
+      `[queue-worker] Skipping feedback WhatsApp send order=${input.orderId}: DISABLE_WHATSAPP_MESSAGING is enabled.`,
+    );
+    return;
+  }
+
   const config = getTwilioConfig();
   const toAddress = toWhatsAppAddress(input.customerPhone);
 
