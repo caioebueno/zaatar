@@ -3,11 +3,11 @@ import { Pool } from "pg";
 const DEFAULT_MAX_JOBS_PER_RUN = 10;
 
 const DEFAULT_TWILIO_FEEDBACK_TEMPLATE_SID_EN =
-  "HXaf24fd36c9b384c0d481b79cbb9ac3d1";
+  "HXa1728d7711e5ea52947eed912d6ec611";
 const DEFAULT_TWILIO_FEEDBACK_TEMPLATE_SID_PT =
-  "HXf431688a42986b9789d51c36509d5fea";
+  "HX5a5bc294ff63f75e3eff2ab5a37001a4";
 const DEFAULT_TWILIO_FEEDBACK_TEMPLATE_SID_ES =
-  "HX31a99745530e5c4083a657ed30a61dea";
+  "HX2439261ac2def9cb76cae135733fba25";
 
 if (!process.env.DATABASE_URL) {
   throw new Error("Missing DATABASE_URL");
@@ -48,6 +48,24 @@ function resolveFeedbackTemplateSid(language) {
     process.env.TWILIO_FEEDBACK_TEMPLATE_SID?.trim() ||
     DEFAULT_TWILIO_FEEDBACK_TEMPLATE_SID_EN
   );
+}
+
+function resolveFeedbackVariableKey() {
+  const configuredKey =
+    process.env.TWILIO_FEEDBACK_TEMPLATE_VARIABLE_KEY?.trim() || "1";
+  return configuredKey.length > 0 ? configuredKey : "1";
+}
+
+function resolveFeedbackVariableValue(input) {
+  const language = normalizeLanguageForTemplate(input.language);
+  const defaultTemplate = "{orderId}";
+  const template =
+    process.env.TWILIO_FEEDBACK_TEMPLATE_VARIABLE_VALUE_TEMPLATE?.trim() ||
+    defaultTemplate;
+
+  return template
+    .replaceAll("{orderId}", String(input.orderId))
+    .replaceAll("{language}", language);
 }
 
 function toErrorMessage(error) {
@@ -155,16 +173,33 @@ async function sendFeedbackTemplateWhatsAppMessage(input) {
   const params = new URLSearchParams({
     To: toAddress,
     ContentSid: input.contentSid,
-    ContentVariables: JSON.stringify({
-      "1": input.orderId,
-    }),
   });
+
+  if (
+    input.contentVariables &&
+    typeof input.contentVariables === "object" &&
+    Object.keys(input.contentVariables).length > 0
+  ) {
+    params.set("ContentVariables", JSON.stringify(input.contentVariables));
+  }
 
   if (config.messagingServiceSid) {
     params.set("MessagingServiceSid", config.messagingServiceSid);
   } else if (config.fromWhatsAppAddress) {
     params.set("From", config.fromWhatsAppAddress);
   }
+
+  const debugPayload = {
+    To: params.get("To"),
+    From: params.get("From"),
+    MessagingServiceSid: params.get("MessagingServiceSid"),
+    ContentSid: params.get("ContentSid"),
+    ContentVariables: params.get("ContentVariables"),
+  };
+  console.log(
+    `[queue-worker] Twilio feedback request body order=${input.orderId}:`,
+    debugPayload,
+  );
 
   const authorization = `Basic ${Buffer.from(
     `${config.accountSid}:${config.authToken}`,
@@ -181,10 +216,86 @@ async function sendFeedbackTemplateWhatsAppMessage(input) {
 
   if (!response.ok) {
     const errorBody = await response.text().catch(() => "");
+    console.error(
+      `[queue-worker] Twilio feedback request failed order=${input.orderId} payload=`,
+      debugPayload,
+    );
     throw new Error(
       `Twilio WhatsApp API request failed (${response.status}): ${errorBody}`,
     );
   }
+}
+
+function isInvalidContentVariablesError(error) {
+  if (!(error instanceof Error)) return false;
+  return (
+    error.message.includes("Twilio WhatsApp API request failed (400)") &&
+    error.message.includes('"code":21656')
+  );
+}
+
+async function sendFeedbackTemplateWhatsAppMessageWithFallback(input) {
+  const configuredVariableKey = resolveFeedbackVariableKey();
+  const configuredVariableValue = resolveFeedbackVariableValue(input);
+
+  const attempts = [
+    {
+      label: "configured_key_and_value",
+      contentVariables: {
+        [configuredVariableKey]: configuredVariableValue,
+      },
+    },
+    {
+      label: "numeric_variable_key_feedback_path_suffix",
+      contentVariables: {
+        "1": `${normalizeLanguageForTemplate(input.language)}/feedback/${input.orderId}`,
+      },
+    },
+    {
+      label: "numeric_variable_key_order_id",
+      contentVariables: {
+        "1": String(input.orderId),
+      },
+    },
+    {
+      label: "named_variable_key_order_id",
+      contentVariables: {
+        orderId: String(input.orderId),
+      },
+    },
+    {
+      label: "no_content_variables",
+      contentVariables: undefined,
+    },
+  ];
+
+  let lastError = null;
+
+  for (const attempt of attempts) {
+    try {
+      await sendFeedbackTemplateWhatsAppMessage({
+        ...input,
+        contentVariables: attempt.contentVariables,
+      });
+      if (attempt.label !== "numeric_variable_key") {
+        console.warn(
+          `[queue-worker] feedback WhatsApp sent using fallback strategy=${attempt.label} order=${input.orderId}`,
+        );
+      }
+      return;
+    } catch (error) {
+      lastError = error;
+      if (!isInvalidContentVariablesError(error)) {
+        throw error;
+      }
+      console.warn(
+        `[queue-worker] feedback WhatsApp variable strategy failed strategy=${attempt.label} order=${input.orderId}:`,
+        error instanceof Error ? error.message : error,
+      );
+    }
+  }
+
+  throw lastError;
 }
 
 async function claimFeedbackWhatsAppJobs(limit) {
@@ -297,7 +408,7 @@ export async function processFeedbackWhatsAppJobs(limit = DEFAULT_MAX_JOBS_PER_R
         `[queue-worker] triggering feedback WhatsApp send order=${job.orderId} job=${job.id} language=${templateLanguage}`,
       );
 
-      await sendFeedbackTemplateWhatsAppMessage({
+      await sendFeedbackTemplateWhatsAppMessageWithFallback({
         customerPhone: job.customerPhone,
         contentSid: templateSid,
         orderId: job.orderId,
