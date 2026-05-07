@@ -7,6 +7,10 @@ import TProduct from "./types/product";
 import TProgressiveDiscount from "./types/progressiveDiscount";
 import getProgressiveDiscount from "./getProgressiveDiscount";
 import { DEFAULT_MENU_ID, DEFAULT_MENU_NAME } from "./constants/menu";
+import {
+  ensureComboProductItemTable,
+  getComboProductsByComboIds,
+} from "./comboProductsStore";
 
 export type TGetProductsResponse = {
   categories: TCategory[];
@@ -150,6 +154,7 @@ export const getProductsFresh = async (
     promotionId: requestedPromotionId,
   });
 
+  await ensureComboProductItemTable(prisma);
   await ensureDefaultMenuRecord();
   const { selectedMenuId, defaultMenuId } = await resolveMenuIds(
     normalizedRequestedMenuId,
@@ -255,6 +260,7 @@ export const getProductsFresh = async (
     productVisibilityRows,
     modifierGroupTranslationsRows,
     exclusivePromotionProductRows,
+    comboProductRows,
     requestedPromotion,
     progressiveDiscount,
   ] = await Promise.all([
@@ -287,6 +293,7 @@ export const getProductsFresh = async (
           FROM "ExclusivePromotionProduct" ep
           WHERE ep."productId" IN (${Prisma.join(productIds)})
         `,
+    getComboProductsByComboIds(prisma, productIds),
     requestedPromotionId
       ? prisma.exclusivePromotion.findUnique({
           where: {
@@ -335,6 +342,15 @@ export const getProductsFresh = async (
 
   const productsById = new Map(prismaProducts.map((product) => [product.id, product]));
   const productCategoryRowsByCategoryId = new Map<string, ProductCategoryRow[]>();
+  const comboProductsByComboId = new Map<
+    string,
+    {
+      productId: string;
+      quantity: number;
+      productName: string;
+      productTranslations: Prisma.JsonValue | null;
+    }[]
+  >();
   const allExclusivePromotionProductIds = new Set<string>();
   const requestedPromotionProductIds = new Set<string>();
   const currentPromotionWeekday = getCurrentPromotionWeekday();
@@ -384,12 +400,26 @@ export const getProductsFresh = async (
     productCategoryRowsByCategoryId.set(row.categoryId, current);
   }
 
+  for (const row of comboProductRows) {
+    const current = comboProductsByComboId.get(row.comboId) ?? [];
+    current.push({
+      productId: row.productId,
+      quantity: row.quantity,
+      productName: row.productName,
+      productTranslations: row.productTranslations,
+    });
+    comboProductsByComboId.set(row.comboId, current);
+  }
+
   type LoadedProduct = (typeof prismaProducts)[number];
 
   const mapLoadedProduct = (
     product: LoadedProduct,
     categoryIndex?: number | null,
-  ): TProduct => ({
+  ): TProduct => {
+    const directComboProducts = comboProductsByComboId.get(product.id) ?? [];
+
+    return {
     visible:
       visibleByProductId.get(product.id) ??
       (product as typeof product & { visible?: boolean }).visible ??
@@ -493,7 +523,22 @@ export const getProductsFresh = async (
         sortIndex: option.sortIndex,
       })),
     })),
-  });
+    products: directComboProducts.map((directProduct) => ({
+      productId: directProduct.productId,
+      quantity: directProduct.quantity,
+      productName: directProduct.productName,
+      productTranslations:
+        directProduct.productTranslations &&
+        typeof directProduct.productTranslations === "object"
+          ? (directProduct.productTranslations as {
+              [key: string]: {
+                [key: string]: string;
+              };
+            })
+          : undefined,
+    })),
+  };
+  };
 
   const categories = prismaCategories.map((category) => ({
     id: category.id,

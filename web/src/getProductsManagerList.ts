@@ -1,6 +1,10 @@
 import prisma from "@/prisma";
 import type { Prisma } from "@/src/generated/prisma";
 import { DEFAULT_MENU_ID, DEFAULT_MENU_NAME } from "@/src/constants/menu";
+import {
+  ensureComboProductItemTable,
+  getComboProductsByComboIds,
+} from "@/src/comboProductsStore";
 
 export type ProductManagerTranslations = Record<string, Record<string, string>>;
 
@@ -27,6 +31,12 @@ export type ProductManagerModifierGroup = {
 export type ProductManagerProductItemType = "PRODUCT" | "COMBO";
 
 export type ProductManagerComboItem = {
+  productId: string;
+  productName: string;
+  quantity: number;
+};
+
+export type ProductManagerFixedComboProduct = {
   productId: string;
   productName: string;
   quantity: number;
@@ -65,6 +75,7 @@ export type ProductManagerProduct = {
   photoUrls: string[];
   mainPhotoUrl: string | null;
   modifierGroups: ProductManagerModifierGroup[];
+  products: ProductManagerFixedComboProduct[];
   comboItems: ProductManagerComboItem[];
   comboSlots: ProductManagerComboSlot[];
 };
@@ -287,7 +298,10 @@ function sortProducts(left: ProductListRow, right: ProductListRow): number {
   return left.createdAt.getTime() - right.createdAt.getTime();
 }
 
-function mapProduct(product: ProductListRow): ProductManagerProduct {
+function mapProduct(
+  product: ProductListRow,
+  directComboProducts: ProductManagerFixedComboProduct[],
+): ProductManagerProduct {
   return {
     id: product.id,
     itemType: product.itemType,
@@ -305,6 +319,7 @@ function mapProduct(product: ProductListRow): ProductManagerProduct {
     modifierGroups: product.modifierGroups.map((modifierGroup) =>
       mapModifierGroup(modifierGroup),
     ),
+    products: directComboProducts,
     comboSlots: product.comboSlots.map((slot) => ({
       id: slot.id,
       name: slot.name,
@@ -339,10 +354,11 @@ function mapProduct(product: ProductListRow): ProductManagerProduct {
 
 function mapProductForCategory(
   product: ProductListRow,
+  directComboProducts: ProductManagerFixedComboProduct[],
   categoryId: string | null,
   categoryIndex: number | null,
 ): ProductManagerProduct {
-  const mapped = mapProduct(product);
+  const mapped = mapProduct(product, directComboProducts);
 
   return {
     ...mapped,
@@ -364,6 +380,7 @@ export default async function getProductsManagerList(
 ): Promise<ProductManagerListResponse> {
   const normalizedMenuId = menuId.trim() || DEFAULT_MENU_ID;
 
+  await ensureComboProductItemTable(prisma);
   await ensureDefaultMenuRecord();
 
   const [menuCategories, products, productCategories, lookupModifierGroups] =
@@ -518,6 +535,23 @@ export default async function getProductsManagerList(
 
   const menuCategoryIds = new Set(categories.map((category) => category.id));
   const productById = new Map(products.map((product) => [product.id, product]));
+  const directComboProductRows = await getComboProductsByComboIds(
+    prisma,
+    products.map((product) => product.id),
+  );
+  const directComboProductsByComboId = new Map<
+    string,
+    ProductManagerFixedComboProduct[]
+  >();
+  for (const row of directComboProductRows) {
+    const current = directComboProductsByComboId.get(row.comboId) ?? [];
+    current.push({
+      productId: row.productId,
+      productName: row.productName,
+      quantity: row.quantity,
+    });
+    directComboProductsByComboId.set(row.comboId, current);
+  }
   const productCategoriesByCategoryId = new Map<
     string,
     ProductCategoryAssignmentRow[]
@@ -538,7 +572,12 @@ export default async function getProductsManagerList(
         const product = productById.get(row.productId);
         if (!product) return null;
 
-        return mapProductForCategory(product, category.id, row.categoryIndex);
+        return mapProductForCategory(
+          product,
+          directComboProductsByComboId.get(product.id) ?? [],
+          category.id,
+          row.categoryIndex,
+        );
       })
       .filter((product): product is ProductManagerProduct => Boolean(product)),
   }));
@@ -552,7 +591,14 @@ export default async function getProductsManagerList(
   const uncategorized = products
     .filter((product) => !categorizedProductIds.has(product.id))
     .sort(sortProducts)
-    .map((product) => mapProductForCategory(product, null, null));
+    .map((product) =>
+      mapProductForCategory(
+        product,
+        directComboProductsByComboId.get(product.id) ?? [],
+        null,
+        null,
+      ),
+    );
 
   return {
     categories: categorized,

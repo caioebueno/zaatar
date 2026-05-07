@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type {
   ProductManagerCategory,
+  ProductManagerFixedComboProduct,
   ProductManagerComboSlot,
   ProductManagerModifierGroup,
   ProductManagerModifierGroupItem,
@@ -62,6 +63,12 @@ type ProductEditorComboSlot = {
   optionLookupExtraPriceInput: string;
 };
 
+type ProductEditorDirectComboProduct = {
+  id: string;
+  productId: string;
+  quantity: number;
+};
+
 type ProductEditorState = {
   mode: ProductEditorMode;
   productId: string | null;
@@ -74,6 +81,9 @@ type ProductEditorState = {
   priceInput: string;
   comparedAtPriceInput: string;
   itemType: ProductManagerProductItemType;
+  comboProducts: ProductEditorDirectComboProduct[];
+  comboProductLookupId: string;
+  comboProductLookupQuantityInput: string;
   comboSlots: ProductEditorComboSlot[];
   esName: string;
   esDescription: string;
@@ -275,6 +285,16 @@ function comboItemsFromSlots(slots: ProductManagerComboSlot[]) {
     .filter((item): item is { productId: string; productName: string; quantity: number } => item !== null);
 }
 
+function cloneDirectComboProducts(
+  products: ProductManagerFixedComboProduct[],
+): ProductEditorDirectComboProduct[] {
+  return products.map((product) => ({
+    id: createLocalId(),
+    productId: product.productId,
+    quantity: product.quantity,
+  }));
+}
+
 function parseModifierGroupType(value: unknown): "MULTI" | "SINGLE" | null {
   if (value === "MULTI" || value === "SINGLE") return value;
   return null;
@@ -431,6 +451,36 @@ function mapComboSlotFromUnknown(value: unknown): ProductManagerComboSlot | null
         };
       })
       .filter((option): option is ProductManagerComboSlot["options"][number] => option !== null),
+  };
+}
+
+function mapFixedComboProductFromUnknown(
+  value: unknown,
+): ProductManagerFixedComboProduct | null {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    return null;
+  }
+
+  const record = value as {
+    productId?: unknown;
+    productName?: unknown;
+    quantity?: unknown;
+  };
+
+  if (
+    typeof record.productId !== "string" ||
+    typeof record.productName !== "string" ||
+    typeof record.quantity !== "number" ||
+    !Number.isInteger(record.quantity) ||
+    record.quantity <= 0
+  ) {
+    return null;
+  }
+
+  return {
+    productId: record.productId,
+    productName: record.productName,
+    quantity: record.quantity,
   };
 }
 
@@ -1373,6 +1423,9 @@ export default function ProductManagerList({
       priceInput: formatCurrencyInput(product.price),
       comparedAtPriceInput: formatCurrencyInput(product.comparedAtPrice),
       itemType: product.itemType,
+      comboProducts: cloneDirectComboProducts(product.products ?? []),
+      comboProductLookupId: "",
+      comboProductLookupQuantityInput: "1",
       comboSlots: cloneComboSlots(product.comboSlots),
       esName: es.title ?? es.name ?? "",
       esDescription: es.description ?? "",
@@ -1418,6 +1471,9 @@ export default function ProductManagerList({
       priceInput: "",
       comparedAtPriceInput: "",
       itemType: "PRODUCT",
+      comboProducts: [],
+      comboProductLookupId: "",
+      comboProductLookupQuantityInput: "1",
       comboSlots: [],
       esName: "",
       esDescription: "",
@@ -1640,6 +1696,13 @@ export default function ProductManagerList({
   function addComboSlot() {
     setEditor((current) => {
       if (!current) return current;
+      if (current.comboProducts.length > 0) {
+        return {
+          ...current,
+          error:
+            "Remove fixed combo products first, or use direct products only. Fixed products and slots cannot be mixed.",
+        };
+      }
 
       return {
         ...current,
@@ -1807,6 +1870,102 @@ export default function ProductManagerList({
               }
             : slot,
         ),
+      };
+    });
+  }
+
+  function addDirectComboProduct() {
+    setEditor((current) => {
+      if (!current) return current;
+      if (current.comboSlots.length > 0) {
+        return {
+          ...current,
+          error:
+            "Remove combo slots first, or use slots only. Fixed products and slots cannot be mixed.",
+        };
+      }
+
+      const productId = current.comboProductLookupId.trim();
+      if (!productId) {
+        return {
+          ...current,
+          error: "Select a product to attach",
+        };
+      }
+      if (current.productId && productId === current.productId) {
+        return {
+          ...current,
+          error: "Combo cannot include itself",
+        };
+      }
+
+      const parsedQuantity = Number.parseInt(
+        current.comboProductLookupQuantityInput,
+        10,
+      );
+      if (!Number.isInteger(parsedQuantity) || parsedQuantity <= 0) {
+        return {
+          ...current,
+          error: "Quantity must be a whole number greater than 0",
+        };
+      }
+
+      if (current.comboProducts.some((item) => item.productId === productId)) {
+        return {
+          ...current,
+          comboProducts: current.comboProducts.map((item) =>
+            item.productId === productId
+              ? { ...item, quantity: item.quantity + parsedQuantity }
+              : item,
+          ),
+          comboProductLookupId: "",
+          comboProductLookupQuantityInput: "1",
+          error: null,
+        };
+      }
+
+      return {
+        ...current,
+        comboProducts: [
+          ...current.comboProducts,
+          {
+            id: createLocalId(),
+            productId,
+            quantity: parsedQuantity,
+          },
+        ],
+        comboProductLookupId: "",
+        comboProductLookupQuantityInput: "1",
+        error: null,
+      };
+    });
+  }
+
+  function updateDirectComboProductQuantity(productId: string, quantity: number) {
+    setEditor((current) => {
+      if (!current) return current;
+
+      return {
+        ...current,
+        comboProducts: current.comboProducts.map((item) =>
+          item.id === productId
+            ? {
+                ...item,
+                quantity,
+              }
+            : item,
+        ),
+      };
+    });
+  }
+
+  function removeDirectComboProduct(productId: string) {
+    setEditor((current) => {
+      if (!current) return current;
+
+      return {
+        ...current,
+        comboProducts: current.comboProducts.filter((item) => item.id !== productId),
       };
     });
   }
@@ -2651,8 +2810,13 @@ export default function ProductManagerList({
       }
 
       if (editor.itemType === "COMBO") {
-        if (editor.comboSlots.length === 0) {
-          throw new Error("Add at least one combo slot");
+        for (const directProduct of editor.comboProducts) {
+          if (
+            !Number.isInteger(directProduct.quantity) ||
+            directProduct.quantity <= 0
+          ) {
+            throw new Error("Each fixed combo product must have quantity > 0");
+          }
         }
 
         for (const slot of editor.comboSlots) {
@@ -2674,6 +2838,35 @@ export default function ProductManagerList({
         }
       }
 
+      const comboSlotsPayload =
+        editor.itemType === "COMBO"
+          ? editor.comboSlots.map((slot, slotIndex) => ({
+              name: slot.name.trim(),
+              translations: normalizeTranslations(slot.translations),
+              minSelect: slot.minSelect,
+              maxSelect: slot.maxSelect,
+              allowDuplicates: slot.allowDuplicates,
+              sortIndex: slotIndex + 1,
+              options: slot.options.map((option, optionIndex) => ({
+                productId: option.productId,
+                extraPrice:
+                  parseCurrencyInput(
+                    option.extraPriceInput || "0",
+                    "Option extra price",
+                  ) ?? 0,
+                sortIndex: optionIndex + 1,
+              })),
+            }))
+          : [];
+
+      const comboProductsPayload =
+        editor.itemType === "COMBO"
+          ? editor.comboProducts.map((product) => ({
+              productId: product.productId,
+              quantity: product.quantity,
+            }))
+          : [];
+
       const body = {
         name: normalizedName,
         description: editor.description.trim() || null,
@@ -2685,23 +2878,15 @@ export default function ProductManagerList({
         itemType: editor.itemType,
         comboSlots:
           editor.itemType === "COMBO"
-            ? editor.comboSlots.map((slot, slotIndex) => ({
-                name: slot.name.trim(),
-                translations: normalizeTranslations(slot.translations),
-                minSelect: slot.minSelect,
-                maxSelect: slot.maxSelect,
-                allowDuplicates: slot.allowDuplicates,
-                sortIndex: slotIndex + 1,
-                options: slot.options.map((option, optionIndex) => ({
-                  productId: option.productId,
-                  extraPrice:
-                    parseCurrencyInput(
-                      option.extraPriceInput || "0",
-                      "Option extra price",
-                    ) ?? 0,
-                  sortIndex: optionIndex + 1,
-                })),
-              }))
+            ? comboProductsPayload.length > 0
+              ? undefined
+              : comboSlotsPayload
+            : [],
+        products:
+          editor.itemType === "COMBO"
+            ? comboProductsPayload.length > 0
+              ? comboProductsPayload
+              : undefined
             : [],
         translations:
           Object.keys(translationsPayload).length > 0 ? translationsPayload : null,
@@ -2748,6 +2933,7 @@ export default function ProductManagerList({
         modifierGroups?: unknown;
         comboSlots?: unknown;
         comboItems?: unknown;
+        products?: unknown;
         error?: string;
       };
 
@@ -2838,9 +3024,28 @@ export default function ProductManagerList({
                 sortIndex: optionIndex + 1,
               })),
             })),
+        products: Array.isArray(payload.products)
+          ? payload.products
+              .map(mapFixedComboProductFromUnknown)
+              .filter(
+                (product): product is ProductManagerFixedComboProduct =>
+                  product !== null,
+              )
+          : [],
         comboItems: [],
       };
 
+      if (updatedProduct.products.length === 0) {
+        updatedProduct.products =
+          editor.comboProducts.length > 0
+            ? editor.comboProducts.map((product) => ({
+                productId: product.productId,
+                productName:
+                  productNameById.get(product.productId) || "Unknown product",
+                quantity: product.quantity,
+              }))
+            : comboItemsFromSlots(updatedProduct.comboSlots);
+      }
       updatedProduct.comboItems = comboItemsFromSlots(updatedProduct.comboSlots);
 
       upsertProductLocally(updatedProduct);
@@ -3380,6 +3585,14 @@ export default function ProductManagerList({
                           return {
                             ...current,
                             itemType: nextItemType,
+                            comboProducts:
+                              nextItemType === "COMBO" ? current.comboProducts : [],
+                            comboProductLookupId:
+                              nextItemType === "COMBO" ? current.comboProductLookupId : "",
+                            comboProductLookupQuantityInput:
+                              nextItemType === "COMBO"
+                                ? current.comboProductLookupQuantityInput
+                                : "1",
                             comboSlots:
                               nextItemType === "COMBO" ? current.comboSlots : [],
                           };
@@ -3535,7 +3748,97 @@ export default function ProductManagerList({
                 <section className="border-b border-zinc-200 px-6 py-5">
                   <SectionTitle>Combo Composition</SectionTitle>
 
-                  <div className="mb-3">
+                  <div className="mb-4 rounded-lg border border-zinc-200 bg-zinc-50 p-3">
+                    <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-zinc-500">
+                      Fixed products (direct)
+                    </p>
+                    <div className="grid grid-cols-[1fr_100px_auto] gap-2">
+                      <select
+                        value={editor.comboProductLookupId}
+                        onChange={(event) =>
+                          updateEditorField("comboProductLookupId", event.target.value)
+                        }
+                        className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none ring-zinc-300 focus:ring-2"
+                      >
+                        <option value="">Select product...</option>
+                        {productLookupList
+                          .filter((product) => product.id !== editor.productId)
+                          .map((product) => (
+                            <option key={product.id} value={product.id}>
+                              {product.name}
+                            </option>
+                          ))}
+                      </select>
+                      <input
+                        type="number"
+                        min={1}
+                        step={1}
+                        value={editor.comboProductLookupQuantityInput}
+                        onChange={(event) =>
+                          updateEditorField(
+                            "comboProductLookupQuantityInput",
+                            event.target.value,
+                          )
+                        }
+                        placeholder="Qty"
+                        className="rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 outline-none ring-zinc-300 focus:ring-2"
+                      />
+                      <button
+                        type="button"
+                        onClick={addDirectComboProduct}
+                        className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-100"
+                      >
+                        Add
+                      </button>
+                    </div>
+
+                    <div className="mt-2 space-y-2">
+                      {editor.comboProducts.map((item) => (
+                        <div
+                          key={item.id}
+                          className="grid grid-cols-[1fr_100px_auto] items-center gap-2 rounded-lg border border-zinc-200 bg-white px-2 py-2"
+                        >
+                          <p className="text-sm text-zinc-800">
+                            {productNameById.get(item.productId) || "Unknown product"}
+                          </p>
+                          <input
+                            type="number"
+                            min={1}
+                            step={1}
+                            value={item.quantity}
+                            onChange={(event) => {
+                              const parsedQuantity = Number.parseInt(
+                                event.target.value || "0",
+                                10,
+                              );
+                              updateDirectComboProductQuantity(
+                                item.id,
+                                Number.isNaN(parsedQuantity) ? 0 : parsedQuantity,
+                              );
+                            }}
+                            className="rounded-lg border border-zinc-300 px-2 py-1.5 text-sm text-zinc-900 outline-none ring-zinc-300 focus:ring-2"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => removeDirectComboProduct(item.id)}
+                            className="rounded-md px-2 py-1 text-xs font-medium text-rose-700 hover:bg-rose-50"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      ))}
+                      {editor.comboProducts.length === 0 ? (
+                        <p className="text-xs text-zinc-500">
+                          Attach fixed products for combos with no choice step.
+                        </p>
+                      ) : null}
+                    </div>
+                  </div>
+
+                  <div className="mb-3 flex items-center justify-between gap-3">
+                    <p className="text-xs text-zinc-500">
+                      Slot-based choices (use this instead of fixed products).
+                    </p>
                     <button
                       type="button"
                       onClick={addComboSlot}
@@ -3730,7 +4033,7 @@ export default function ProductManagerList({
 
                     {editor.comboSlots.length === 0 ? (
                       <p className="text-xs text-zinc-500">
-                        Add at least one slot and attach product options.
+                        No slots configured. This is optional.
                       </p>
                     ) : null}
                   </div>

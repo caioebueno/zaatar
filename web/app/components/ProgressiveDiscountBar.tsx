@@ -9,6 +9,9 @@ import TProduct from "../../src/types/product";
 import { getProgressiveDiscountStepProgress } from "@/utils/getProgressiveDiscountStepProgress";
 import type { CSSProperties } from "react";
 
+const PROGRESS_FILL_COLOR = "#304240";
+const PROGRESS_INACTIVE_BG_COLOR = "#ffffff";
+
 type TProgressiveDiscountBar = {
   progressiveDiscount: TProgressiveDiscount;
   cart?: TCart;
@@ -49,11 +52,11 @@ const ProgressiveDiscountBar: React.FC<TProgressiveDiscountBar> = ({
 
         @keyframes progressive-discount-badge-fill {
           0% {
-            background: #ffffff;
+            background-color: #ffffff;
             color: #1f2937;
           }
           100% {
-            background: #304240;
+            background-color: #304240;
             color: #ffffff;
           }
         }
@@ -158,8 +161,12 @@ const ProgressiveDiscountBarStep: React.FC<TProgressiveDiscountBarStep> = ({
     "--pd-target-width": `${targetWidth}%`,
     width: animateFill ? undefined : `${targetWidth}%`,
     height: "10px",
-    background: "#304240",
+    backgroundColor: PROGRESS_FILL_COLOR,
     animationDelay: demoFill ? `${stepIndex * 260}ms` : undefined,
+    transform: "translateZ(0)",
+    willChange: "width",
+    backfaceVisibility: "hidden",
+    WebkitBackfaceVisibility: "hidden",
   } as CSSProperties & { ["--pd-target-width"]: string };
   const badgeFillStyle = demoFill
     ? ({
@@ -173,12 +180,15 @@ const ProgressiveDiscountBarStep: React.FC<TProgressiveDiscountBarStep> = ({
     : undefined;
   const fillClassName = animateFill || demoFill
     ? "progressive-discount-fill"
-    : "transition-all duration-1000";
+    : "transition-[width] duration-1000";
 
   if (progressiveDiscountStep.type === "GIFT")
     return (
       <>
-        <div className={`h-2.5 -m-0.5 flex-1 bg-background `}>
+        <div
+          className="h-2.5 -m-0.5 flex-1"
+          style={{ backgroundColor: PROGRESS_INACTIVE_BG_COLOR }}
+        >
           <div style={fillStyle} className={fillClassName}></div>
         </div>
         <div
@@ -197,9 +207,12 @@ const ProgressiveDiscountBarStep: React.FC<TProgressiveDiscountBarStep> = ({
     );
   return (
     <>
-      <div className={`h-2.5 -m-0.5 flex-1 bg-background `}>
-        <div style={fillStyle} className={fillClassName}></div>
-      </div>
+        <div
+          className="h-2.5 -m-0.5 flex-1"
+          style={{ backgroundColor: PROGRESS_INACTIVE_BG_COLOR }}
+        >
+          <div style={fillStyle} className={fillClassName}></div>
+        </div>
       <div
         style={badgeFillStyle}
         className={`p-2.5 text-sm z-10 font-bold rounded-full transition-all duration-1000 ${

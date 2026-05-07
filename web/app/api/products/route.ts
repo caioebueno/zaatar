@@ -1,4 +1,10 @@
 import prisma from "@/prisma";
+import {
+  ensureComboProductItemTable,
+  getComboProductsByComboIds,
+  replaceComboProducts,
+  type ComboProductInput,
+} from "@/src/comboProductsStore";
 import { Prisma } from "@/src/generated/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -11,6 +17,12 @@ type ProductCategoryEntry = {
   productId: string;
   categoryId: string;
   categoryIndex: number | null;
+};
+
+type DirectComboProductResponse = {
+  productId: string;
+  productName: string;
+  quantity: number;
 };
 
 type ProductItemType = "PRODUCT" | "COMBO";
@@ -54,6 +66,7 @@ type PostBody = {
   itemType?: unknown;
   comboSlots?: unknown;
   comboItems?: unknown;
+  products?: unknown;
 };
 
 type ProductRowResponse = {
@@ -121,6 +134,11 @@ type ProductRowResponse = {
     productName: string;
     quantity: number;
   }[];
+  products: {
+    productId: string;
+    productName: string;
+    quantity: number;
+  }[];
 };
 
 function mapProductRow(product: {
@@ -178,7 +196,7 @@ function mapProductRow(product: {
       };
     }[];
   }[];
-}, productCategoryEntries: ProductCategoryEntry[]): ProductRowResponse {
+}, productCategoryEntries: ProductCategoryEntry[], directComboProducts: DirectComboProductResponse[]): ProductRowResponse {
   return {
     id: product.id,
     createdAt: product.createdAt.toISOString(),
@@ -260,6 +278,7 @@ function mapProductRow(product: {
         (item): item is { productId: string; productName: string; quantity: number } =>
           item !== null,
       ),
+    products: directComboProducts,
   };
 }
 
@@ -570,6 +589,8 @@ function buildFileNameFromUrl(urlValue: string): string {
 
 export async function POST(request: NextRequest) {
   try {
+    await ensureComboProductItemTable(prisma);
+
     const body = (await request.json()) as PostBody;
     const id = body.id === undefined ? createId() : parseString(body.id, "id");
     const name = parseString(body.name, "name");
@@ -598,6 +619,10 @@ export async function POST(request: NextRequest) {
       body.comboItems === undefined
         ? null
         : parseLegacyComboItems(body.comboItems, "comboItems");
+    const fixedComboProducts =
+      body.products === undefined
+        ? null
+        : parseLegacyComboItems(body.products, "products");
     const comboSlots =
       comboSlotsFromBody ??
       (legacyComboItems
@@ -629,12 +654,29 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    if (itemType !== "COMBO" && (fixedComboProducts?.length ?? 0) > 0) {
+      return NextResponse.json(
+        { error: "Invalid payload", field: "products" },
+        { status: 400 },
+      );
+    }
+
     if (
       itemType === "COMBO" &&
       comboSlots.some((slot) => slot.options.some((option) => option.productId === id))
     ) {
       return NextResponse.json(
         { error: "Invalid payload", field: "comboSlots" },
+        { status: 400 },
+      );
+    }
+
+    if (
+      itemType === "COMBO" &&
+      (fixedComboProducts ?? []).some((item) => item.productId === id)
+    ) {
+      return NextResponse.json(
+        { error: "Invalid payload", field: "products" },
         { status: 400 },
       );
     }
@@ -757,6 +799,26 @@ export async function POST(request: NextRequest) {
       if (comboProductCount !== comboProductIds.length) {
         return NextResponse.json(
           { error: "Invalid payload", field: "comboSlots" },
+          { status: 400 },
+        );
+      }
+    }
+
+    if ((fixedComboProducts?.length ?? 0) > 0) {
+      const comboProductIds = Array.from(
+        new Set((fixedComboProducts ?? []).map((item) => item.productId)),
+      );
+      const comboProductCount = await prisma.product.count({
+        where: {
+          id: {
+            in: comboProductIds,
+          },
+        },
+      });
+
+      if (comboProductCount !== comboProductIds.length) {
+        return NextResponse.json(
+          { error: "Invalid payload", field: "products" },
           { status: 400 },
         );
       }
@@ -1010,6 +1072,18 @@ export async function POST(request: NextRequest) {
         }
       }
 
+      if (itemType === "COMBO") {
+        await replaceComboProducts(
+          tx,
+          created.id,
+          (fixedComboProducts ?? []).map((item, index) => ({
+            productId: item.productId,
+            quantity: item.quantity,
+            sortIndex: index + 1,
+          })) satisfies ComboProductInput[],
+        );
+      }
+
       return tx.product.findUniqueOrThrow({
         where: {
           id: created.id,
@@ -1026,9 +1100,17 @@ export async function POST(request: NextRequest) {
         COALESCE("categoryIndex", 2147483647) ASC,
         "createdAt" ASC
     `;
+    const createdProductDirectRows = await getComboProductsByComboIds(prisma, [
+      createdProduct.id,
+    ]);
+    const directProducts: DirectComboProductResponse[] = createdProductDirectRows.map((row) => ({
+      productId: row.productId,
+      productName: row.productName,
+      quantity: row.quantity,
+    }));
 
     return NextResponse.json(
-      mapProductRow(createdProduct, createdProductCategoryRows),
+      mapProductRow(createdProduct, createdProductCategoryRows, directProducts),
       { status: 201 },
     );
   } catch (error) {
@@ -1062,6 +1144,8 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   try {
+    await ensureComboProductItemTable(prisma);
+
     const [
       products,
       productVisibilityRows,
@@ -1250,6 +1334,24 @@ export async function GET() {
       current.push(row);
       productCategoriesByProductId.set(row.productId, current);
     }
+    const directComboProductRows = await getComboProductsByComboIds(
+      prisma,
+      productIds,
+    );
+    const directComboProductsByProductId = new Map<
+      string,
+      DirectComboProductResponse[]
+    >();
+
+    for (const row of directComboProductRows) {
+      const current = directComboProductsByProductId.get(row.comboId) ?? [];
+      current.push({
+        productId: row.productId,
+        productName: row.productName,
+        quantity: row.quantity,
+      });
+      directComboProductsByProductId.set(row.comboId, current);
+    }
 
     return NextResponse.json({
       products: products.map((product) =>
@@ -1261,6 +1363,7 @@ export async function GET() {
               (product as typeof product & { visible?: boolean }).visible,
           },
           productCategoriesByProductId.get(product.id) ?? [],
+          directComboProductsByProductId.get(product.id) ?? [],
         ),
       ),
       lookup: {

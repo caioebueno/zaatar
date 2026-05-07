@@ -1,4 +1,10 @@
 import prisma from "@/prisma";
+import {
+  ensureComboProductItemTable,
+  getComboProductsByComboIds,
+  replaceComboProducts,
+  type ComboProductInput,
+} from "@/src/comboProductsStore";
 import { NextRequest, NextResponse } from "next/server";
 import { Prisma } from "@/src/generated/prisma";
 
@@ -25,6 +31,7 @@ type PatchBody = {
   itemType?: unknown;
   comboSlots?: unknown;
   comboItems?: unknown;
+  products?: unknown;
 };
 
 type ProductVisibleRow = {
@@ -35,6 +42,12 @@ type ProductCategoryEntry = {
   productId: string;
   categoryId: string;
   categoryIndex: number | null;
+};
+
+type DirectComboProductResponse = {
+  productId: string;
+  productName: string;
+  quantity: number;
 };
 
 type ProductItemType = "PRODUCT" | "COMBO";
@@ -115,7 +128,7 @@ function mapProductRow(product: {
       };
     }[];
   }[];
-}, productCategoryEntries: ProductCategoryEntry[]) {
+}, productCategoryEntries: ProductCategoryEntry[], directComboProducts: DirectComboProductResponse[]) {
   return {
     id: product.id,
     createdAt: product.createdAt.toISOString(),
@@ -197,6 +210,7 @@ function mapProductRow(product: {
         (item): item is { productId: string; productName: string; quantity: number } =>
           item !== null,
       ),
+    products: directComboProducts,
   };
 }
 
@@ -516,6 +530,8 @@ function buildFileNameFromUrl(urlValue: string): string {
 
 export async function PATCH(request: NextRequest, context: RouteContext) {
   try {
+    await ensureComboProductItemTable(prisma);
+
     const { productId } = await context.params;
     const normalizedProductId = productId.trim();
 
@@ -545,6 +561,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     let visibleToPersist: boolean | undefined = undefined;
     let itemTypeToPersist: ProductItemType | undefined = undefined;
     let comboSlotsToPersist: ComboSlotInput[] | null = null;
+    let comboProductsToPersist: LegacyComboItemInput[] | null = null;
     let hasAnyField = false;
 
     if (body.photoIds !== undefined && body.photoUrls !== undefined) {
@@ -588,9 +605,15 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       hasAnyField = true;
     }
 
-    if (body.comboSlots !== undefined || body.comboItems !== undefined) {
+    if (
+      body.comboSlots !== undefined ||
+      body.comboItems !== undefined ||
+      body.products !== undefined
+    ) {
       if (body.comboSlots !== undefined) {
         comboSlotsToPersist = parseComboSlots(body.comboSlots, "comboSlots");
+      } else if (body.products !== undefined) {
+        comboProductsToPersist = parseLegacyComboItems(body.products, "products");
       } else {
         const legacyComboItems = parseLegacyComboItems(body.comboItems, "comboItems");
         comboSlotsToPersist = legacyComboItems.map((item, index) => ({
@@ -853,6 +876,17 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     }
 
     if (
+      comboProductsToPersist !== null &&
+      resolvedItemType !== "COMBO" &&
+      comboProductsToPersist.length > 0
+    ) {
+      return NextResponse.json(
+        { error: "Invalid payload", field: "products" },
+        { status: 400 },
+      );
+    }
+
+    if (
       comboSlotsToPersist !== null &&
       comboSlotsToPersist.some((slot) =>
         slot.options.some((option) => option.productId === normalizedProductId),
@@ -860,6 +894,18 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     ) {
       return NextResponse.json(
         { error: "Invalid payload", field: "comboSlots" },
+        { status: 400 },
+      );
+    }
+
+    if (
+      comboProductsToPersist !== null &&
+      comboProductsToPersist.some(
+        (product) => product.productId === normalizedProductId,
+      )
+    ) {
+      return NextResponse.json(
+        { error: "Invalid payload", field: "products" },
         { status: 400 },
       );
     }
@@ -883,6 +929,26 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       if (comboProductCount !== comboProductIds.length) {
         return NextResponse.json(
           { error: "Invalid payload", field: "comboSlots" },
+          { status: 400 },
+        );
+      }
+    }
+
+    if (comboProductsToPersist !== null && comboProductsToPersist.length > 0) {
+      const comboProductIds = Array.from(
+        new Set(comboProductsToPersist.map((item) => item.productId)),
+      );
+      const comboProductCount = await prisma.product.count({
+        where: {
+          id: {
+            in: comboProductIds,
+          },
+        },
+      });
+
+      if (comboProductCount !== comboProductIds.length) {
+        return NextResponse.json(
+          { error: "Invalid payload", field: "products" },
           { status: 400 },
         );
       }
@@ -1026,7 +1092,11 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       `;
     }
 
-    if (resolvedItemType === "PRODUCT" || comboSlotsToPersist !== null) {
+    if (
+      resolvedItemType === "PRODUCT" ||
+      comboSlotsToPersist !== null ||
+      comboProductsToPersist !== null
+    ) {
       await prisma.$transaction(async (tx) => {
         await tx.comboSlot.deleteMany({
           where: {
@@ -1065,6 +1135,23 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
             }
           }
         }
+
+        if (resolvedItemType === "PRODUCT") {
+          await replaceComboProducts(tx, normalizedProductId, []);
+          return;
+        }
+
+        if (comboProductsToPersist !== null) {
+          await replaceComboProducts(
+            tx,
+            normalizedProductId,
+            comboProductsToPersist.map((item, index) => ({
+              productId: item.productId,
+              quantity: item.quantity,
+              sortIndex: index + 1,
+            })) satisfies ComboProductInput[],
+          );
+        }
       });
     }
 
@@ -1089,6 +1176,14 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
         COALESCE("categoryIndex", 2147483647) ASC,
         "createdAt" ASC
     `;
+    const directComboProductRows = await getComboProductsByComboIds(prisma, [
+      normalizedProductId,
+    ]);
+    const directProducts: DirectComboProductResponse[] = directComboProductRows.map((row) => ({
+      productId: row.productId,
+      productName: row.productName,
+      quantity: row.quantity,
+    }));
 
     return NextResponse.json(
       mapProductRow(
@@ -1097,6 +1192,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
           visible: visibleRow?.visible ?? visibleToPersist ?? refreshedProduct.visible,
         },
         productCategoryRows,
+        directProducts,
       ),
     );
   } catch (error) {

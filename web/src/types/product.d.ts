@@ -14,12 +14,25 @@ type TProduct = {
   comparedAtPrice?: number | null;
   modifierGroups?: TModifierGroup[];
   comboSlots?: TComboSlot[];
+  products?: TComboProduct[];
   preparationStep?: TPreparationStep[];
   translations?: {
     [key: string]: {
       [key: string];
     };
   };
+};
+
+type TComboProduct = {
+  productId: string;
+  quantity: number;
+  productName?: string;
+  productTranslations?: {
+    [key: string]: {
+      [key: string]: string;
+    };
+  };
+  productPhotoUrl?: string;
 };
 
 type TComboSlot = {
@@ -83,4 +96,10 @@ type TModifierGroupItem = {
 };
 
 export default TProduct;
-export { TModifierGroup, TModifierGroupItem, TComboSlot, TComboSlotOption };
+export {
+  TModifierGroup,
+  TModifierGroupItem,
+  TComboSlot,
+  TComboSlotOption,
+  TComboProduct,
+};
