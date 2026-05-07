@@ -4,11 +4,11 @@ import {
 } from "@/src/whatsappApi";
 
 const DEFAULT_TWILIO_FEEDBACK_TEMPLATE_SID_EN =
-  "HXaf24fd36c9b384c0d481b79cbb9ac3d1";
+  "HXa1728d7711e5ea52947eed912d6ec611";
 const DEFAULT_TWILIO_FEEDBACK_TEMPLATE_SID_PT =
-  "HXf431688a42986b9789d51c36509d5fea";
+  "HX5a5bc294ff63f75e3eff2ab5a37001a4";
 const DEFAULT_TWILIO_FEEDBACK_TEMPLATE_SID_ES =
-  "HX31a99745530e5c4083a657ed30a61dea";
+  "HX2439261ac2def9cb76cae135733fba25";
 
 function normalizeLanguageForTemplate(
   value: string | null | undefined,
@@ -45,6 +45,27 @@ function resolveFeedbackTemplateSid(language: "en" | "pt" | "es"): string {
   );
 }
 
+function resolveFeedbackVariableKey(): string {
+  const configuredKey =
+    process.env.TWILIO_FEEDBACK_TEMPLATE_VARIABLE_KEY?.trim() || "1";
+  return configuredKey.length > 0 ? configuredKey : "1";
+}
+
+function resolveFeedbackVariableValue(input: {
+  orderId: string;
+  language?: string | null;
+}): string {
+  const language = normalizeLanguageForTemplate(input.language);
+  const defaultTemplate = "{orderId}";
+  const template =
+    process.env.TWILIO_FEEDBACK_TEMPLATE_VARIABLE_VALUE_TEMPLATE?.trim() ||
+    defaultTemplate;
+
+  return template
+    .replaceAll("{orderId}", String(input.orderId))
+    .replaceAll("{language}", language);
+}
+
 export default async function sendFeedbackWhatsAppMessage(input: {
   customerPhone: string;
   orderId: string;
@@ -52,6 +73,8 @@ export default async function sendFeedbackWhatsAppMessage(input: {
 }) {
   const templateLanguage = normalizeLanguageForTemplate(input.language);
   const templateSid = resolveFeedbackTemplateSid(templateLanguage);
+  const configuredVariableKey = resolveFeedbackVariableKey();
+  const configuredVariableValue = resolveFeedbackVariableValue(input);
 
   try {
     if (templateSid) {
@@ -59,7 +82,7 @@ export default async function sendFeedbackWhatsAppMessage(input: {
         customerPhone: input.customerPhone,
         contentSid: templateSid,
         contentVariables: {
-          "1": input.orderId,
+          [configuredVariableKey]: configuredVariableValue,
         },
       });
       return;
@@ -73,4 +96,3 @@ export default async function sendFeedbackWhatsAppMessage(input: {
     console.error("Failed to send feedback WhatsApp message:", error);
   }
 }
-
