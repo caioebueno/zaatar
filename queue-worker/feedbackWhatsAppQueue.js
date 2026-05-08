@@ -1,6 +1,7 @@
 import { Pool } from "pg";
 
 const DEFAULT_MAX_JOBS_PER_RUN = 10;
+const DEFAULT_MAX_FEEDBACK_RETRIES = 2;
 
 const DEFAULT_TWILIO_FEEDBACK_TEMPLATE_SID_EN =
   "HXa1728d7711e5ea52947eed912d6ec611";
@@ -89,22 +90,42 @@ function getRetryDate(attempts) {
   return new Date(Date.now() + delayInSeconds * 1000);
 }
 
-function normalizePhoneWithCountryCode(phone) {
-  const digits = (phone || "").replace(/\D/g, "");
+function getMaxFeedbackRetries() {
+  const rawValue = process.env.FEEDBACK_WHATSAPP_MAX_RETRIES?.trim();
+  if (!rawValue) return DEFAULT_MAX_FEEDBACK_RETRIES;
+
+  const parsed = Number.parseInt(rawValue, 10);
+  if (!Number.isInteger(parsed) || parsed < 0) {
+    return DEFAULT_MAX_FEEDBACK_RETRIES;
+  }
+
+  return parsed;
+}
+
+function getMaxFeedbackAttempts() {
+  // Total attempts = first attempt + configured retries.
+  return getMaxFeedbackRetries() + 1;
+}
+
+function normalizeInternationalPhoneDigits(phone) {
+  let digits = (phone || "").replace(/\D/g, "");
   if (!digits) return null;
 
-  const countryCode = (process.env.WHATSAPP_COUNTRY_CODE?.trim() || "1").replace(
-    /\D/g,
-    "",
-  );
+  // Support inputs that may come as international "00..." prefix.
+  if (digits.startsWith("00")) {
+    digits = digits.slice(2);
+  }
 
-  if (!countryCode) return digits;
-  if (digits.startsWith(countryCode)) return digits;
-  return `${countryCode}${digits}`;
+  // E.164 allows up to 15 digits (without the "+" sign).
+  if (digits.length < 8 || digits.length > 15) {
+    return null;
+  }
+
+  return digits;
 }
 
 function toWhatsAppAddress(phone) {
-  const normalized = normalizePhoneWithCountryCode(phone);
+  const normalized = normalizeInternationalPhoneDigits(phone);
   if (!normalized) return undefined;
   return `whatsapp:+${normalized}`;
 }
@@ -298,7 +319,7 @@ async function sendFeedbackTemplateWhatsAppMessageWithFallback(input) {
   throw lastError;
 }
 
-async function claimFeedbackWhatsAppJobs(limit) {
+async function claimFeedbackWhatsAppJobs(limit, maxAttempts) {
   const client = await pool.connect();
 
   try {
@@ -310,6 +331,7 @@ async function claimFeedbackWhatsAppJobs(limit) {
           FROM "FeedbackWhatsAppJob"
           WHERE "status" IN ('PENDING', 'FAILED')
             AND "availableAt" <= NOW()
+            AND "attempts" < $2
           ORDER BY "createdAt" ASC
           LIMIT $1
           FOR UPDATE SKIP LOCKED
@@ -328,7 +350,7 @@ async function claimFeedbackWhatsAppJobs(limit) {
           job."language",
           job."attempts"
       `,
-      [limit],
+      [limit, maxAttempts],
     );
     await client.query("COMMIT");
     return result.rows;
@@ -364,25 +386,46 @@ async function markFeedbackWhatsAppJobCompleted(jobId) {
 }
 
 async function markFeedbackWhatsAppJobFailed(jobId, attempts, error) {
+  const maxAttempts = getMaxFeedbackAttempts();
+  const hasRetriesRemaining = attempts < maxAttempts;
+
+  if (!hasRetriesRemaining) {
+    await pool.query(
+      `
+        UPDATE "FeedbackWhatsAppJob"
+        SET
+          "status" = 'FAILED',
+          "lastError" = $2,
+          "processingStartedAt" = NULL
+        WHERE "id" = $1
+      `,
+      [jobId, toErrorMessage(error)],
+    );
+    return { exhaustedRetries: true };
+  }
+
   await pool.query(
     `
       UPDATE "FeedbackWhatsAppJob"
       SET
         "status" = 'FAILED',
         "availableAt" = $2,
-        "lastError" = $3
+        "lastError" = $3,
+        "processingStartedAt" = NULL
       WHERE "id" = $1
     `,
     [jobId, getRetryDate(attempts), toErrorMessage(error)],
   );
+  return { exhaustedRetries: false };
 }
 
 export async function processFeedbackWhatsAppJobs(limit = DEFAULT_MAX_JOBS_PER_RUN) {
   const normalizedLimit =
     Number.isInteger(limit) && limit > 0 ? limit : DEFAULT_MAX_JOBS_PER_RUN;
+  const maxAttempts = getMaxFeedbackAttempts();
   let jobs = [];
   try {
-    jobs = await claimFeedbackWhatsAppJobs(normalizedLimit);
+    jobs = await claimFeedbackWhatsAppJobs(normalizedLimit, maxAttempts);
   } catch (error) {
     if (isMissingFeedbackQueueTableError(error)) {
       console.warn(
@@ -420,11 +463,20 @@ export async function processFeedbackWhatsAppJobs(limit = DEFAULT_MAX_JOBS_PER_R
       );
       processed += 1;
     } catch (error) {
-      await markFeedbackWhatsAppJobFailed(job.id, job.attempts, error);
+      const failResult = await markFeedbackWhatsAppJobFailed(
+        job.id,
+        job.attempts,
+        error,
+      );
       console.error(
         `[queue-worker] feedback WhatsApp failed order=${job.orderId} job=${job.id}:`,
         error,
       );
+      if (failResult.exhaustedRetries) {
+        console.warn(
+          `[queue-worker] feedback WhatsApp retries exhausted order=${job.orderId} job=${job.id} attempts=${job.attempts} maxAttempts=${maxAttempts}`,
+        );
+      }
       failed += 1;
     }
   }

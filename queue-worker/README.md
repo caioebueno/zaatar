@@ -19,10 +19,10 @@ This replaces Vercel Cron and is intended to run on Railway.
 - `TWILIO_AUTH_TOKEN`: Twilio auth token (required for feedback WhatsApp queue)
 - `TWILIO_MESSAGING_SERVICE_SID`: Twilio messaging service SID (recommended)
 - `TWILIO_WHATSAPP_FROM`: fallback sender when messaging service SID is not used
-- `WHATSAPP_COUNTRY_CODE`: optional country code fallback for phone normalization (default `1`)
 - `TWILIO_FEEDBACK_TEMPLATE_SID_EN`: feedback template SID (EN)
 - `TWILIO_FEEDBACK_TEMPLATE_SID_PT`: feedback template SID (PT)
 - `TWILIO_FEEDBACK_TEMPLATE_SID_ES`: feedback template SID (ES)
+- `FEEDBACK_WHATSAPP_MAX_RETRIES`: retries after first attempt before giving up (default `2`)
 - `EXTERNAL_ORDER_SCAN_ENABLED`: enable polling of external orders API (`false` by default)
 - `EXTERNAL_ORDER_SCAN_SCHEDULE`: cron for external polling (default `* * * * *`, every minute)
 - `EXTERNAL_ORDER_SCAN_ON_START`: run external scan once on boot (`false` by default)

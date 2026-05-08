@@ -28,6 +28,10 @@ import { prismaDispatchRepository } from "@/src/modules/dispatch/infrastructure/
 import { calculateSalesTaxInCents } from "@/src/constants/pricing";
 import { cookies } from "next/headers";
 import {
+  ensureComboProductItemTable,
+  getComboProductsByComboIds,
+} from "./comboProductsStore";
+import {
   sendWhatsAppTemplateMessage,
   sendWhatsAppTextMessage,
 } from "@/src/whatsappApi";
@@ -68,6 +72,11 @@ type CustomerContactRow = {
 type RedeemedRewardsByOrderId = Awaited<
   ReturnType<typeof getRedeemedRewardsByOrderIds>
 >;
+
+type DirectComboProductForPrep = {
+  productId: string;
+  quantity: number;
+};
 
 type OrderCreationTransactionResult = {
   order: TOrder;
@@ -768,6 +777,7 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
   }
   const orderTags = normalizedTags.length > 0 ? normalizedTags : tagsFromCookie;
 
+  await ensureComboProductItemTable(prisma);
   const productData = await getProductsFresh(
     normalizedMenuId ?? menuIdFromCookie,
     normalizedPromotionId ?? promotionIdFromCookie,
@@ -1378,8 +1388,10 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
         const preparationLookupProductIds = new Set<string>();
         for (const cartItem of data.cart.items) {
           preparationLookupProductIds.add(cartItem.productId);
-          for (const selection of cartItem.comboSelections ?? []) {
-            preparationLookupProductIds.add(selection.optionProductId);
+          if (Array.isArray(cartItem.comboSelections) && cartItem.comboSelections.length > 0) {
+            for (const selection of cartItem.comboSelections) {
+              preparationLookupProductIds.add(selection.optionProductId);
+            }
           }
         }
         for (const selectedPrizeProduct of selectedPrizeSnapshot?.selectedProductIds ?? []) {
@@ -1409,6 +1421,100 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
         const preparationLookupProductById = new Map(
           preparationLookupProducts.map((product) => [product.id, product]),
         );
+        const comboIdsForDirectProducts = Array.from(
+          new Set(
+            data.cart.items
+              .map((item) => item.productId)
+              .filter((productId) => {
+                const catalogProduct = getCatalogProductById(productId)?.product;
+                const fallbackProduct = preparationLookupProductById.get(productId);
+
+                return (
+                  catalogProduct?.itemType === "COMBO" ||
+                  fallbackProduct?.itemType === "COMBO"
+                );
+              }),
+          ),
+        );
+        const directComboProductRows = await getComboProductsByComboIds(
+          tx,
+          comboIdsForDirectProducts,
+        );
+        const directComboProductsByComboId = new Map<
+          string,
+          DirectComboProductForPrep[]
+        >();
+        for (const row of directComboProductRows) {
+          const current = directComboProductsByComboId.get(row.comboId) ?? [];
+          current.push({
+            productId: row.productId,
+            quantity: row.quantity,
+          });
+          directComboProductsByComboId.set(row.comboId, current);
+        }
+        for (const row of directComboProductRows) {
+          preparationLookupProductIds.add(row.productId);
+        }
+        const missingDirectProductIds = Array.from(
+          new Set(
+            directComboProductRows
+              .map((row) => row.productId)
+              .filter(
+                (productId) => !preparationLookupProductById.has(productId),
+              ),
+          ),
+        );
+        if (missingDirectProductIds.length > 0) {
+          const missingDirectProducts = await tx.product.findMany({
+            where: {
+              id: {
+                in: missingDirectProductIds,
+              },
+            },
+            select: {
+              id: true,
+              name: true,
+              categoryId: true,
+              itemType: true,
+              translations: true,
+            },
+          });
+
+          for (const product of missingDirectProducts) {
+            preparationLookupProductById.set(product.id, product);
+          }
+        }
+        const productIdsForCategoryFallback = Array.from(
+          preparationLookupProductById.keys(),
+        );
+        const productCategoryFallbackRows =
+          productIdsForCategoryFallback.length > 0
+            ? await tx.$queryRaw<
+                { productId: string; categoryId: string }[]
+              >`
+                SELECT DISTINCT ON ("productId")
+                  "productId",
+                  "categoryId"
+                FROM "ProductCategory"
+                WHERE "productId" IN (${Prisma.join(productIdsForCategoryFallback)})
+                ORDER BY
+                  "productId" ASC,
+                  COALESCE("categoryIndex", 2147483647) ASC,
+                  "createdAt" ASC
+              `
+            : [];
+        const categoryFallbackByProductId = new Map(
+          productCategoryFallbackRows.map((row) => [row.productId, row.categoryId]),
+        );
+        const resolvePreparationCategoryId = (
+          productId: string,
+          primaryCategoryId?: string | null,
+          secondaryCategoryId?: string | null,
+        ): string | null =>
+          primaryCategoryId ??
+          secondaryCategoryId ??
+          categoryFallbackByProductId.get(productId) ??
+          null;
 
         const comboPreparationOrderProducts: TOrderProduct[] = [];
         for (const cartItem of data.cart.items) {
@@ -1416,12 +1522,6 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
           const comboProduct =
             comboCatalogProduct ?? preparationLookupProductById.get(cartItem.productId);
           if (!comboProduct || comboProduct.itemType !== "COMBO") continue;
-          if (
-            !Array.isArray(cartItem.comboSelections) ||
-            cartItem.comboSelections.length === 0
-          ) {
-            continue;
-          }
 
           const parentQuantity =
             typeof cartItem.quantity === "number" &&
@@ -1429,6 +1529,50 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
             cartItem.quantity > 0
               ? cartItem.quantity
               : 1;
+
+          if (
+            !Array.isArray(cartItem.comboSelections) ||
+            cartItem.comboSelections.length === 0
+          ) {
+            const fixedComboProducts =
+              directComboProductsByComboId.get(cartItem.productId) ?? [];
+
+            for (const fixedComboProduct of fixedComboProducts) {
+              if (fixedComboProduct.quantity <= 0) continue;
+
+              const fixedProductCatalog = getCatalogProductById(
+                fixedComboProduct.productId,
+              );
+              const fixedProduct =
+                fixedProductCatalog?.product ??
+                preparationLookupProductById.get(fixedComboProduct.productId);
+              if (!fixedProduct) continue;
+
+              const fixedProductCategoryId = resolvePreparationCategoryId(
+                fixedProduct.id,
+                fixedProduct.categoryId,
+                fixedProductCatalog?.categoryId,
+              );
+              if (!fixedProductCategoryId) continue;
+
+              comboPreparationOrderProducts.push({
+                id: randomUUID(),
+                amount: 0,
+                fullAmount: 0,
+                productId: fixedProduct.id,
+                quantity: parentQuantity * fixedComboProduct.quantity,
+                selectedModifierGroupItemIds: [],
+                product: {
+                  id: fixedProduct.id,
+                  name: fixedProduct.name,
+                  categoryId: fixedProductCategoryId,
+                  preparationStep: [],
+                },
+              });
+            }
+
+            continue;
+          }
 
           for (const selection of cartItem.comboSelections) {
             const selectionQuantity =
@@ -1447,8 +1591,11 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
               preparationLookupProductById.get(selection.optionProductId);
             if (!selectedProduct) continue;
 
-            const selectedProductCategoryId =
-              selectedProduct.categoryId ?? selectedProductCatalog?.categoryId;
+            const selectedProductCategoryId = resolvePreparationCategoryId(
+              selectedProduct.id,
+              selectedProduct.categoryId,
+              selectedProductCatalog?.categoryId,
+            );
             if (!selectedProductCategoryId) continue;
 
             comboPreparationOrderProducts.push({
@@ -1478,7 +1625,11 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
               preparationLookupProductById.get(selectedPrizeProduct.productId);
             if (!prizeProduct) continue;
 
-            const categoryId = prizeProduct.categoryId ?? catalogProduct?.categoryId;
+            const categoryId = resolvePreparationCategoryId(
+              prizeProduct.id,
+              prizeProduct.categoryId,
+              catalogProduct?.categoryId,
+            );
             if (!categoryId) continue;
 
             prizePreparationOrderProducts.push({
@@ -1507,7 +1658,11 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
             preparationLookupProductById.get(rewardProductId);
           if (!rewardProduct) continue;
 
-          const categoryId = rewardProduct.categoryId ?? catalogProduct?.categoryId;
+          const categoryId = resolvePreparationCategoryId(
+            rewardProduct.id,
+            rewardProduct.categoryId,
+            catalogProduct?.categoryId,
+          );
           if (!categoryId) continue;
 
           rewardPreparationOrderProducts.push({

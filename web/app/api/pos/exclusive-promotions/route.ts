@@ -1,5 +1,9 @@
 import prisma from "@/prisma";
 import { ExclusivePromotionWeekday } from "@/src/generated/prisma";
+import {
+  ensureComboProductItemTable,
+  getComboProductsByComboIds,
+} from "@/src/comboProductsStore";
 import { NextRequest, NextResponse } from "next/server";
 
 const DEFAULT_PROMOTION_TIMEZONE =
@@ -91,6 +95,8 @@ function isAvailableAt(input: {
 
 export async function GET(request: NextRequest) {
   try {
+    await ensureComboProductItemTable(prisma);
+
     const onlyAvailable = parseBooleanQuery(
       request.nextUrl.searchParams.get("onlyAvailable"),
       true,
@@ -165,6 +171,31 @@ export async function GET(request: NextRequest) {
         createdAt: "asc",
       },
     });
+    const comboIds = promotions
+      .flatMap((promotion) => promotion.products.map((item) => item.product))
+      .filter((product) => product.itemType === "COMBO")
+      .map((product) => product.id);
+    const comboProductRows = await getComboProductsByComboIds(prisma, comboIds);
+    const comboProductsByComboId = new Map<
+      string,
+      {
+        productId: string;
+        productName: string;
+        productTranslations: unknown | null;
+        quantity: number;
+      }[]
+    >();
+
+    for (const row of comboProductRows) {
+      const current = comboProductsByComboId.get(row.comboId) ?? [];
+      current.push({
+        productId: row.productId,
+        productName: row.productName,
+        productTranslations: row.productTranslations,
+        quantity: row.quantity,
+      });
+      comboProductsByComboId.set(row.comboId, current);
+    }
 
     const payload = promotions
       .map((promotion) => {
@@ -215,6 +246,17 @@ export async function GET(request: NextRequest) {
                       sortIndex: option.sortIndex,
                     })),
                   }))
+                : [],
+            products:
+              item.product.itemType === "COMBO"
+                ? (comboProductsByComboId.get(item.product.id) ?? []).map(
+                    (directProduct) => ({
+                      productId: directProduct.productId,
+                      productName: directProduct.productName,
+                      productTranslations: directProduct.productTranslations,
+                      quantity: directProduct.quantity,
+                    }),
+                  )
                 : [],
           })),
         };
