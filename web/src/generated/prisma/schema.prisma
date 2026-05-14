@@ -313,6 +313,7 @@ model Driver {
   id            String     @id
   createdAt     DateTime   @default(now())
   name          String
+  phone         String?    @unique
   active        Boolean    @default(true)
   priorityLevel Int
   dispatches    Dispatch[]
