@@ -27,8 +27,12 @@ const secretAccessKey =
   process.env.RAILWAY_BUCKET_SECRET_ACCESS_KEY?.trim() ||
   process.env.SECRET_ACCESS_KEY?.trim() ||
   "";
-const forcePathStyle =
-  process.env.RAILWAY_BUCKET_FORCE_PATH_STYLE === "true";
+const forcePathStyleRaw =
+  process.env.RAILWAY_BUCKET_FORCE_PATH_STYLE?.trim().toLowerCase() ||
+  process.env.BUCKET_FORCE_PATH_STYLE?.trim().toLowerCase() ||
+  process.env.FORCE_PATH_STYLE?.trim().toLowerCase() ||
+  "";
+const forcePathStyle = forcePathStyleRaw === "true";
 
 const isConfigured =
   bucketName.length > 0 &&
@@ -56,6 +60,32 @@ function getBucketClient(): S3Client {
   }
 
   return bucketClient;
+}
+
+function isAclNotSupportedError(error: unknown): boolean {
+  if (!error || typeof error !== "object") {
+    return false;
+  }
+
+  const name =
+    "name" in error && typeof error.name === "string"
+      ? error.name
+      : "";
+  const code =
+    "Code" in error && typeof (error as { Code?: unknown }).Code === "string"
+      ? ((error as { Code: string }).Code ?? "")
+      : "";
+  const message =
+    "message" in error && typeof error.message === "string"
+      ? error.message
+      : "";
+
+  return (
+    name === "AccessControlListNotSupported" ||
+    code === "AccessControlListNotSupported" ||
+    /does not allow ACLs/i.test(message) ||
+    /ACLs?.*not.*supported/i.test(message)
+  );
 }
 
 function sanitizeFileName(value: string): string {
@@ -114,22 +144,14 @@ export async function uploadImageToBucket(input: {
     Body: input.body,
     ContentType: input.contentType,
     CacheControl: input.cacheControl ?? "public, max-age=31536000, immutable",
-    ...(input.publicRead !== false ? { ACL: "public-read" as const } : {}),
+    ...(input.publicRead === true ? { ACL: "public-read" as const } : {}),
   };
 
   try {
     await client.send(new PutObjectCommand(params));
   } catch (error) {
-    const errorCode =
-      typeof error === "object" &&
-      error !== null &&
-      "name" in error &&
-      typeof error.name === "string"
-        ? error.name
-        : null;
-
     // Some S3-compatible buckets disable ACLs at bucket level.
-    if (errorCode === "AccessControlListNotSupported") {
+    if (isAclNotSupportedError(error)) {
       const fallbackParams: PutObjectCommandInput = {
         ...params,
       };

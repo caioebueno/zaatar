@@ -70,7 +70,22 @@ function getProductTitle(product: TProduct, lg: string): string {
   return product.name;
 }
 
+function normalizeBrandImageSrc(src: string | null | undefined): string | null {
+  if (!src) return null;
+
+  try {
+    const parsed = new URL(src);
+    if (parsed.pathname.startsWith("/api/bucket/")) {
+      return `${parsed.pathname}${parsed.search}${parsed.hash}`;
+    }
+    return src;
+  } catch {
+    return src;
+  }
+}
+
 const MenuPage: React.FC<TMenuPage> = ({ data, lg }) => {
+  console.log(data)
   const [openDiscountModal, setOpenDiscountModal] = useState(true);
   const [selectedProductId, setSelectedProductId] = useState<null | string>(
     null,
@@ -238,6 +253,14 @@ const MenuPage: React.FC<TMenuPage> = ({ data, lg }) => {
   const selectedProductIsExclusiveDeal = selectedProduct
     ? exclusiveDealProductIdSet.has(selectedProduct.id)
     : false;
+  const orderLinkSettings = data.orderLinkSettings;
+  const bannerImageUrl =
+    normalizeBrandImageSrc(orderLinkSettings?.bannerPhotoUrl?.trim() || null) ||
+    "/pizza.png";
+  const logoImageUrl =
+    normalizeBrandImageSrc(orderLinkSettings?.logoUrl?.trim() || null) || "/logo.png";
+  const businessName = orderLinkSettings?.businessName?.trim() || "";
+  const resolvedBusinessName = businessName.length > 0 ? businessName : "No name";
 
   const addProduct = (
     productId: string,
@@ -313,7 +336,7 @@ const MenuPage: React.FC<TMenuPage> = ({ data, lg }) => {
       <div className="flex flex-col items-center w-full max-w-[900px]">
         <div className="relative w-full">
           <Image
-            src="/pizza.png"
+            src={bannerImageUrl}
             width={1800}
             height={320}
             priority
@@ -333,8 +356,8 @@ const MenuPage: React.FC<TMenuPage> = ({ data, lg }) => {
                   className={clsx(
                     "flex items-center gap-1 rounded-full px-2 py-1 text-[11px] font-semibold transition-colors",
                     active
-                      ? "bg-[#142826] text-white"
-                      : "text-[#142826] hover:bg-[#E8EFEE]",
+                      ? "bg-brandBackground text-white"
+                      : "text-text hover:bg-[#E8EFEE]",
                   )}
                 >
                   <Image
@@ -377,7 +400,7 @@ const MenuPage: React.FC<TMenuPage> = ({ data, lg }) => {
         </div>
         <div className="rounded-xl border-[3px] border-white overflow-hidden w-fit  mt-[-60px] z-10">
           <Image
-            src="/logo.png"
+            src={logoImageUrl}
             width={100}
             height={100}
             priority
@@ -386,7 +409,7 @@ const MenuPage: React.FC<TMenuPage> = ({ data, lg }) => {
           />
         </div>
         <div className="flex flex-col gap-4 pt-4 w-full items-center p-4">
-          <h1 className="text-[32px] font-bold">Zaatar Grill & Pizza</h1>
+          <h1 className="text-[32px] font-bold">{resolvedBusinessName}</h1>
           <div className="flex flex-row w-full gap-3">
             <Button
               onClick={() => setOpenInformationModal(true)}
@@ -417,7 +440,7 @@ const MenuPage: React.FC<TMenuPage> = ({ data, lg }) => {
       <div className="px-4 pb-55 flex flex-col max-w-[900px] lg:px-0">
         {promotionProducts.length > 0 && (
           <section className="pt-6 -mx-4 lg:mx-0">
-            <div className="rounded-none bg-transparent px-4 text-[#0f2722] md:px-0">
+            <div className="rounded-none bg-transparent px-4 text-brandBackground md:px-0">
               <div className="flex flex-col gap-1 items-center">
                 <p className="text-xl font-bold text-white bg-brandBackground w-fit px-3 py-1.5 rounded-xl">
                   {promotionLabel.eyebrow}
@@ -442,7 +465,7 @@ const MenuPage: React.FC<TMenuPage> = ({ data, lg }) => {
                       key={promotionProduct.id}
                       type="button"
                       onClick={() => setSelectedProductId(promotionProduct.id)}
-                      className="group relative w-full snap-start overflow-hidden rounded-2xl bg-[#e8efee] text-left text-[#0f2722]"
+                      className="group relative w-full snap-start overflow-hidden rounded-2xl bg-[#e8efee] text-left text-brandBackground"
                     >
                       <ProductImage
                         src={product.photos?.[0]?.url ?? null}

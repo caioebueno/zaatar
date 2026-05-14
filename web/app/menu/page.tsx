@@ -2,6 +2,8 @@ import { Montserrat } from "next/font/google";
 import Image from "next/image"
 import Button from "../components/Button";
 import Link from "next/link";
+import { getOrderLinkSettings } from "@/src/getOrderLinkSettings";
+import type { CSSProperties } from "react";
 
 const montserrat = Montserrat({
   variable: "--font-geist-mono",
@@ -15,8 +17,26 @@ type MenuLandingPageProps = {
   }>;
 };
 
+function normalizeBrandImageSrc(src: string | null | undefined): string | null {
+  if (!src) return null;
+
+  try {
+    const parsed = new URL(src);
+    if (parsed.pathname.startsWith("/api/bucket/")) {
+      return `${parsed.pathname}${parsed.search}${parsed.hash}`;
+    }
+    return src;
+  } catch {
+    return src;
+  }
+}
+
 const Menu = async ({ searchParams }: MenuLandingPageProps) => {
   const resolvedSearchParams = await searchParams;
+  const orderLinkSettings = await getOrderLinkSettings();
+  const logoUrl =
+    normalizeBrandImageSrc(orderLinkSettings.logoUrl?.trim() || null) || "/logo.svg";
+  const businessName = orderLinkSettings.businessName?.trim() || "Business";
   const rawMenuId = resolvedSearchParams.menuId;
   const rawPromotionId = resolvedSearchParams.promotionId;
   const menuId =
@@ -34,8 +54,17 @@ const Menu = async ({ searchParams }: MenuLandingPageProps) => {
   const querySuffix = menuQuery ? `?${menuQuery}` : "";
 
   return (
-    <div className={`bg-brandBackground h-dvh flex flex-col items-center pt-9 ${montserrat.className}`}>
-      <Image src="/logo.svg" width="195" height="102" alt="Zaatar Logo" />
+    <div
+      className={`bg-brandBackground h-dvh flex flex-col items-center pt-9 ${montserrat.className}`}
+      style={
+        {
+          "--brandBackground": orderLinkSettings.brandColor,
+          "--color-brandBackground": orderLinkSettings.brandColor,
+        } as CSSProperties
+      }
+    >
+      <Image src={logoUrl} width="195" height="102" alt={businessName} />
+      <p className="mt-3 px-4 text-center text-white text-lg font-semibold">{businessName}</p>
       <div className="flex flex-col items-center gap-2 py-6 text-white">
         <span className="text-2xl font-semibold">Choose language</span>
         <span className="text-2xl font-semibold">Escolha idioma</span>

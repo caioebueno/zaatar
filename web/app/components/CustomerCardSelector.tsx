@@ -182,7 +182,7 @@ const AddCardForm: React.FC<{
         </div>
         {error && <span className="text-sm text-red-600">{error}</span>}
       </div>
-      <div className="sticky bottom-0 -mx-4 mt-auto border-t border-[#CCD0D0] bg-foreground px-4 pt-4 pb-8">
+      <div className="sticky bottom-0 -mx-4 mt-auto border-t border-brandBackground/15 bg-foreground px-4 pt-4 pb-8">
         <Button
           type="button"
           onClick={handleSave}

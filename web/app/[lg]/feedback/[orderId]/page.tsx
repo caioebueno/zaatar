@@ -1,5 +1,7 @@
 import prisma from "@/prisma";
+import { getOrderLinkSettings } from "@/src/getOrderLinkSettings";
 import FeedbackForm from "./FeedbackForm";
+import type { CSSProperties } from "react";
 
 type FeedbackPageProps = {
   params: Promise<{
@@ -10,6 +12,7 @@ type FeedbackPageProps = {
 
 export default async function FeedbackPage({ params }: FeedbackPageProps) {
   const { orderId, lg } = await params;
+  const orderLinkSettings = await getOrderLinkSettings();
   let feedbackAlreadySent = false;
 
   try {
@@ -40,13 +43,22 @@ export default async function FeedbackPage({ params }: FeedbackPageProps) {
   });
 
   return (
-    <FeedbackForm
-      orderId={orderId}
-      lg={lg}
-      orderFound={Boolean(order)}
-      customerName={order?.customer?.name ?? null}
-      customerPhone={order?.customer?.phone ?? null}
-      initialSubmitted={feedbackAlreadySent}
-    />
+    <div
+      style={
+        {
+          "--brandBackground": orderLinkSettings.brandColor,
+          "--color-brandBackground": orderLinkSettings.brandColor,
+        } as CSSProperties
+      }
+    >
+      <FeedbackForm
+        orderId={orderId}
+        lg={lg}
+        orderFound={Boolean(order)}
+        customerName={order?.customer?.name ?? null}
+        customerPhone={order?.customer?.phone ?? null}
+        initialSubmitted={feedbackAlreadySent}
+      />
+    </div>
   );
 }

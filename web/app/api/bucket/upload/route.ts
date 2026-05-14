@@ -69,9 +69,27 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error("POST /api/bucket/upload error:", error);
 
+    const message =
+      error instanceof Error && error.message
+        ? error.message
+        : "Unknown upload error";
+    const reason = /Bucket is not configured/i.test(message)
+      ? "BUCKET_NOT_CONFIGURED"
+      : /AccessDenied|InvalidAccessKeyId|SignatureDoesNotMatch/i.test(message)
+        ? "BUCKET_AUTH_FAILED"
+        : /ENOTFOUND|ECONNREFUSED|fetch failed|TimeoutError|NetworkingError/i.test(
+              message,
+            )
+          ? "BUCKET_UNREACHABLE"
+          : "UPLOAD_FAILED";
+
     return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 },
+      {
+        error: "Internal Server Error",
+        reason,
+        ...(process.env.NODE_ENV !== "production" ? { message } : {}),
+      },
+      { status: reason === "BUCKET_NOT_CONFIGURED" ? 503 : 500 },
     );
   }
 }

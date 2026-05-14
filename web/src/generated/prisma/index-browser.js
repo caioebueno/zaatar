@@ -227,7 +227,17 @@ exports.Prisma.ModifierGroupItemScalarFieldEnum = {
 exports.Prisma.BusinessScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
-  name: 'name'
+  updatedAt: 'updatedAt',
+  name: 'name',
+  bannerPhotoUrl: 'bannerPhotoUrl',
+  logoUrl: 'logoUrl',
+  brandColor: 'brandColor',
+  stripeAccountId: 'stripeAccountId',
+  stripeDetailsSubmitted: 'stripeDetailsSubmitted',
+  stripeChargesEnabled: 'stripeChargesEnabled',
+  stripePayoutsEnabled: 'stripePayoutsEnabled',
+  stripeOnboardingCompletedAt: 'stripeOnboardingCompletedAt',
+  onboardingCompletedAt: 'onboardingCompletedAt'
 };
 
 exports.Prisma.UserScalarFieldEnum = {
@@ -239,6 +249,63 @@ exports.Prisma.UserScalarFieldEnum = {
   passwordHash: 'passwordHash',
   emailVerifiedAt: 'emailVerifiedAt',
   lastLoginAt: 'lastLoginAt'
+};
+
+exports.Prisma.ExternalIntegrationConnectionScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  provider: 'provider',
+  environment: 'environment',
+  userId: 'userId',
+  businessId: 'businessId',
+  accessToken: 'accessToken',
+  refreshToken: 'refreshToken',
+  scope: 'scope',
+  tokenType: 'tokenType',
+  expiresAt: 'expiresAt',
+  connectedAt: 'connectedAt',
+  rawPayload: 'rawPayload'
+};
+
+exports.Prisma.ExternalMenuEntityMapScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  provider: 'provider',
+  userId: 'userId',
+  businessId: 'businessId',
+  menuId: 'menuId',
+  entityType: 'entityType',
+  internalEntityId: 'internalEntityId',
+  externalEntityId: 'externalEntityId',
+  connectionId: 'connectionId',
+  rawPayload: 'rawPayload'
+};
+
+exports.Prisma.ExternalMenuSyncRunScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  provider: 'provider',
+  status: 'status',
+  userId: 'userId',
+  businessId: 'businessId',
+  menuId: 'menuId',
+  storeId: 'storeId',
+  dryRun: 'dryRun',
+  forced: 'forced',
+  requestHash: 'requestHash',
+  categoriesCount: 'categoriesCount',
+  itemsCount: 'itemsCount',
+  modifierGroupsCount: 'modifierGroupsCount',
+  modifierItemsCount: 'modifierItemsCount',
+  startedAt: 'startedAt',
+  finishedAt: 'finishedAt',
+  errorMessage: 'errorMessage',
+  requestPayload: 'requestPayload',
+  responsePayload: 'responsePayload',
+  connectionId: 'connectionId'
 };
 
 exports.Prisma.BusinessOwnerScalarFieldEnum = {
@@ -306,6 +373,16 @@ exports.Prisma.AddressScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
   description: 'description',
+  lat: 'lat',
+  lng: 'lng',
+  city: 'city',
+  zipCode: 'zipCode',
+  State: 'State',
+  street: 'street',
+  number: 'number',
+  complement: 'complement',
+  numberComplement: 'numberComplement',
+  placeId: 'placeId',
   googleMapsUrl: 'googleMapsUrl'
 };
 
@@ -321,6 +398,14 @@ exports.Prisma.ProductScalarFieldEnum = {
   categoryIndex: 'categoryIndex',
   categoryId: 'categoryId',
   translations: 'translations'
+};
+
+exports.Prisma.ComboProductItemScalarFieldEnum = {
+  comboId: 'comboId',
+  productId: 'productId',
+  quantity: 'quantity',
+  sortIndex: 'sortIndex',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.ExclusivePromotionScalarFieldEnum = {
@@ -419,8 +504,25 @@ exports.Prisma.CustomerScalarFieldEnum = {
   name: 'name',
   email: 'email',
   phone: 'phone',
+  stripeCustomerId: 'stripeCustomerId',
   address: 'address',
   lastMessageSent: 'lastMessageSent'
+};
+
+exports.Prisma.CustomerCardScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  customerId: 'customerId',
+  stripePaymentMethodId: 'stripePaymentMethodId',
+  brand: 'brand',
+  last4: 'last4',
+  expMonth: 'expMonth',
+  expYear: 'expYear',
+  funding: 'funding',
+  country: 'country',
+  fingerprint: 'fingerprint',
+  isDefault: 'isDefault'
 };
 
 exports.Prisma.CustomerOtpChallengeScalarFieldEnum = {
@@ -509,6 +611,7 @@ exports.Prisma.OrderScalarFieldEnum = {
   status: 'status',
   type: 'type',
   paymentMethod: 'paymentMethod',
+  paymentProvider: 'paymentProvider',
   tipAmount: 'tipAmount',
   tags: 'tags',
   progressiveDiscountSnapshot: 'progressiveDiscountSnapshot',
@@ -711,6 +814,30 @@ exports.ModifierGroupType = exports.$Enums.ModifierGroupType = {
   SINGLE: 'SINGLE'
 };
 
+exports.ExternalIntegrationProvider = exports.$Enums.ExternalIntegrationProvider = {
+  UBER_EATS: 'UBER_EATS'
+};
+
+exports.ExternalIntegrationEnvironment = exports.$Enums.ExternalIntegrationEnvironment = {
+  SANDBOX: 'SANDBOX',
+  PRODUCTION: 'PRODUCTION'
+};
+
+exports.ExternalMenuEntityType = exports.$Enums.ExternalMenuEntityType = {
+  MENU: 'MENU',
+  CATEGORY: 'CATEGORY',
+  ITEM: 'ITEM',
+  MODIFIER_GROUP: 'MODIFIER_GROUP',
+  MODIFIER_ITEM: 'MODIFIER_ITEM'
+};
+
+exports.ExternalMenuSyncStatus = exports.$Enums.ExternalMenuSyncStatus = {
+  PENDING: 'PENDING',
+  SUCCESS: 'SUCCESS',
+  FAILED: 'FAILED',
+  SKIPPED: 'SKIPPED'
+};
+
 exports.DispatchAssignmentJobStatus = exports.$Enums.DispatchAssignmentJobStatus = {
   PENDING: 'PENDING',
   PROCESSING: 'PROCESSING',
@@ -763,6 +890,10 @@ exports.PaymentType = exports.$Enums.PaymentType = {
   ZELLE: 'ZELLE'
 };
 
+exports.PaymentProvider = exports.$Enums.PaymentProvider = {
+  STRIPE: 'STRIPE'
+};
+
 exports.CustomerFeedbackSentiment = exports.$Enums.CustomerFeedbackSentiment = {
   NEGATIVE: 'NEGATIVE',
   NEUTRAL: 'NEUTRAL',
@@ -798,6 +929,9 @@ exports.Prisma.ModelName = {
   ModifierGroupItem: 'ModifierGroupItem',
   Business: 'Business',
   User: 'User',
+  ExternalIntegrationConnection: 'ExternalIntegrationConnection',
+  ExternalMenuEntityMap: 'ExternalMenuEntityMap',
+  ExternalMenuSyncRun: 'ExternalMenuSyncRun',
   BusinessOwner: 'BusinessOwner',
   Branch: 'Branch',
   Driver: 'Driver',
@@ -806,6 +940,7 @@ exports.Prisma.ModelName = {
   FeedbackWhatsAppJob: 'FeedbackWhatsAppJob',
   Address: 'Address',
   Product: 'Product',
+  ComboProductItem: 'ComboProductItem',
   ExclusivePromotion: 'ExclusivePromotion',
   ExclusivePromotionProduct: 'ExclusivePromotionProduct',
   Menu: 'Menu',
@@ -817,6 +952,7 @@ exports.Prisma.ModelName = {
   ComboSlotOption: 'ComboSlotOption',
   Campaign: 'Campaign',
   Customer: 'Customer',
+  CustomerCard: 'CustomerCard',
   CustomerOtpChallenge: 'CustomerOtpChallenge',
   CustomerAccessToken: 'CustomerAccessToken',
   DeliveryAddress: 'DeliveryAddress',

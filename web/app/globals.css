@@ -46,7 +46,7 @@
 @theme {
     --color-background: #ffffff;
     --color-foreground: #e7e9e9;
-    --color-brandBackground: #142826;
+    --color-brandBackground: var(--brandBackground);
     --color-text: #0c0c0c;
     --color-lightText: #555555;
 }

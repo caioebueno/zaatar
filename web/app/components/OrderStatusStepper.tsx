@@ -106,7 +106,7 @@ const OrderStatusStepper: React.FC<TOrderStatusStepper> = ({
                     className={`h-10 w-10 rounded-full border-2 flex items-center justify-center transition-transform ${
                       isCompleted
                         ? "border-brandBackground bg-brandBackground text-white"
-                        : "border-[#CCD0D0] bg-white text-lightText"
+                        : "border-brandBackground/15 bg-white text-lightText"
                     }`}
                   >
                     <Icon size={18} className={isActive ? "scale-110" : ""} />
@@ -118,7 +118,7 @@ const OrderStatusStepper: React.FC<TOrderStatusStepper> = ({
                     className={`mx-2 h-0.5 flex-1 rounded-full ${
                       index < activeStepIndex
                         ? "bg-brandBackground"
-                        : "bg-[#CCD0D0]"
+                        : "bg-brandBackground/15"
                     }`}
                   />
                 )}

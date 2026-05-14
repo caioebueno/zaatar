@@ -477,7 +477,7 @@ const Price: React.FC<TPrice> = ({ data, cart, content }) => {
         </Button>
         <div className="flex flex-row items-center gap-2.5">
           <div>
-            <div className="bg-[#CCD0D0] rounded-md">
+            <div className="bg-brandBackground/15 rounded-md">
               {price.discountAmount > 0 && (
                 <span className="text-xs font-semibold text-brandBackground py-1 px-1.5">
                   {formatDiscountOffLabel(price.discountAmount)}
@@ -1090,7 +1090,7 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
                     </span>
                   </div>
                   <div>
-                    <div className="bg-[#CCD0D0] rounded-md">
+                    <div className="bg-brandBackground/15 rounded-md">
                       {price.discountAmount > 0 && (
                         <span className="text-xs font-semibold text-brandBackground py-1 px-1.5">
                           {formatDiscountOffLabel(price.discountAmount)}
@@ -1305,7 +1305,7 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
                 <button
                   type="button"
                   onClick={() => setOpenPrizeModal(true)}
-                  className="shrink-0 rounded-[8px] border border-[rgba(20,40,38,0.3)] bg-[#304240] px-4 py-3 text-[14px] font-bold leading-[1.1] text-white"
+                  className="shrink-0 rounded-[8px] border border-brandBackground/15 bg-brandBackground px-4 py-3 text-[14px] font-bold leading-[1.1] text-white"
                 >
                   {content["change"] || "Change"}
                 </button>
@@ -1600,7 +1600,7 @@ const PrizeSelectionModal: React.FC<TPrizeSelectionModal> = ({
             return (
               <div
                 key={prize.id}
-                className={`w-full rounded-[12px] bg-white ${isSelected ? "border-2 border-[#142826]" : ""
+                className={`w-full rounded-[12px] bg-white ${isSelected ? "border-2 border-brandBackground" : ""
                   }`}
               >
                 <button
@@ -1619,11 +1619,11 @@ const PrizeSelectionModal: React.FC<TPrizeSelectionModal> = ({
                     </span>
                   </div>
                   <span
-                    className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 ${isSelected ? "border-[#142826]" : "border-[#CCCCCC]"
+                    className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 ${isSelected ? "border-brandBackground" : "border-[#CCCCCC]"
                       }`}
                   >
                     {isSelected && (
-                      <span className="h-2.5 w-2.5 rounded-full bg-[#142826]" />
+                      <span className="h-2.5 w-2.5 rounded-full bg-brandBackground" />
                     )}
                   </span>
                 </button>
@@ -1664,11 +1664,11 @@ const PrizeSelectionModal: React.FC<TPrizeSelectionModal> = ({
                               <ProductImage
                                 alt={resolvePrizeProductTitle(product, lg)}
                                 src={product.photos?.[0]?.url}
-                                className={`aspect-square w-full rounded-[12px] object-cover ${productSelectedCount > 0 ? "ring-2 ring-[#142826]" : ""
+                                className={`aspect-square w-full rounded-[12px] object-cover ${productSelectedCount > 0 ? "ring-2 ring-brandBackground" : ""
                                   }`}
                               />
                               {productSelectedCount > 0 && (
-                                <div className="absolute right-1 top-1 flex h-6 min-w-6 items-center justify-center rounded-full bg-[#304240] px-1">
+                                <div className="absolute right-1 top-1 flex h-6 min-w-6 items-center justify-center rounded-full bg-brandBackground px-1">
                                   <span className="text-xs font-bold text-white">
                                     {productSelectedCount}
                                   </span>
@@ -1684,7 +1684,7 @@ const PrizeSelectionModal: React.FC<TPrizeSelectionModal> = ({
                     </div>
                     <div className="mt-3 h-[15px] w-full overflow-hidden rounded-[100px] bg-[#E7E9E9]">
                       <div
-                        className="h-full rounded-[100px] bg-[#142826] transition-all"
+                        className="h-full rounded-[100px] bg-brandBackground transition-all"
                         style={{ width: `${progressRatio * 100}%` }}
                       />
                     </div>
@@ -1698,7 +1698,7 @@ const PrizeSelectionModal: React.FC<TPrizeSelectionModal> = ({
           type="button"
           onClick={handleConfirm}
           disabled={!isPendingSelectedPrizeReady}
-          className={`h-[52px] w-full rounded-[8px] border border-[rgba(20,40,38,0.3)] bg-[#304240] text-[18px] font-bold leading-[1.1] text-white ${!isPendingSelectedPrizeReady ? "opacity-50" : ""
+          className={`h-[52px] w-full rounded-[8px] border border-brandBackground/15 bg-brandBackground text-[18px] font-bold leading-[1.1] text-white ${!isPendingSelectedPrizeReady ? "opacity-50" : ""
             }`}
         >
           {content["confirm"] || "Confirm"}
@@ -1783,7 +1783,7 @@ const ScheduleSelector: React.FC<TScheduleSelector> = ({
           <Dialog.Title className="sr-only">
             {content["scheduleDateTime"]}
           </Dialog.Title>
-          <div className="flex flex-row justify-between items-center px-4 py-3 bg-foreground border-[#CCD0D0] border-b">
+          <div className="flex flex-row justify-between items-center px-4 py-3 bg-foreground border-brandBackground/15 border-b">
             <Button className="p-2! bg-transparent text-text! opacity-0">
               <FiX />
             </Button>
@@ -2838,7 +2838,7 @@ const PaymentTypeSelector: React.FC<TPaymentTypeSelector> = ({
           <span className="flex-1">{content["cash"]}</span>
         </div>
         <div
-          className={`h-5 w-5 flex items-center justify-center ${"CASH" === selectedPaymentType ? "border-brandBackground" : "border-[#CCD0D0]"} border-2 rounded-full`}
+          className={`h-5 w-5 flex items-center justify-center ${"CASH" === selectedPaymentType ? "border-brandBackground" : "border-brandBackground/15"} border-2 rounded-full`}
         >
           <div
             className={`h-3 w-3 rounded-full ${"CASH" === selectedPaymentType ? "bg-brandBackground" : "bg-transparent"}`}
@@ -2853,7 +2853,7 @@ const PaymentTypeSelector: React.FC<TPaymentTypeSelector> = ({
           <span className="flex-1">{content["card"]}</span>
         </div>
         <div
-          className={`h-5 w-5 flex items-center justify-center ${"CARD" === selectedPaymentType ? "border-brandBackground" : "border-[#CCD0D0]"} border-2 rounded-full`}
+          className={`h-5 w-5 flex items-center justify-center ${"CARD" === selectedPaymentType ? "border-brandBackground" : "border-brandBackground/15"} border-2 rounded-full`}
         >
           <div
             className={`h-3 w-3 rounded-full ${"CARD" === selectedPaymentType ? "bg-brandBackground" : "bg-transparent"}`}
@@ -2902,7 +2902,7 @@ const AddressSelector: React.FC<TAddressSelector> = ({
 
           </div>
           <div
-            className={`h-5 w-5 flex items-center justify-center ${address.id === selectedAddress ? "border-brandBackground" : "border-[#CCD0D0]"} border-2 rounded-full`}
+            className={`h-5 w-5 flex items-center justify-center ${address.id === selectedAddress ? "border-brandBackground" : "border-brandBackground/15"} border-2 rounded-full`}
           >
             <div
               className={`h-3 w-3 rounded-full ${address.id === selectedAddress ? "bg-brandBackground" : "bg-transparent"}`}
@@ -2985,7 +2985,7 @@ const FindAddressModal: React.FC<TFindAddressModal> = ({
         <Dialog.Title className="sr-only">
           {content["addAddress"]}
         </Dialog.Title>
-        <div className="flex flex-row justify-between items-center px-4 py-3 bg-foreground border-[#CCD0D0] border-b">
+        <div className="flex flex-row justify-between items-center px-4 py-3 bg-foreground border-brandBackground/15 border-b">
           <Button className="p-2! bg-transparent text-text! opacity-0">
             <FiX />
           </Button>
@@ -3027,7 +3027,7 @@ const FindAddressModal: React.FC<TFindAddressModal> = ({
           )}
           {error && <span className="text-red-600 text-sm">{error}</span>}
         </div>
-        <div className="bottom-0 bg-foreground pt-4 px-4 pb-8 w-full fixed border-t border-[#CCD0D0]">
+        <div className="bottom-0 bg-foreground pt-4 px-4 pb-8 w-full fixed border-t border-brandBackground/15">
           <Button
             disabled={selectedAddress === null || loading}
             onClick={() => handleConfirm()}
@@ -3247,7 +3247,7 @@ const CartListItem: React.FC<TCartListItem> = ({
           <div>
             <div className={`flex flex-row items-center gap-2 pt-1`}>
               <div>
-                <div className="bg-[#CCD0D0] rounded-md">
+                <div className="bg-brandBackground/15 rounded-md">
                   {price && price.discountAmount > 0 && (
                     <span className="text-xs font-semibold text-brandBackground py-0.5 px-1">
                       {formatDiscountOffLabel(price.discountAmount)}

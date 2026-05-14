@@ -275,8 +275,8 @@ export default function FeedbackForm({
                 const baseClasses =
                   "flex items-center gap-1 rounded-full px-2 py-1 text-[11px] font-semibold transition-colors";
                 const stateClasses = active
-                  ? "bg-[#142826] text-white"
-                  : "text-[#142826] hover:bg-[#E8EFEE]";
+                  ? "bg-brandBackground text-white"
+                  : "text-text hover:bg-[#E8EFEE]";
 
                 return (
                   <Link
@@ -339,8 +339,8 @@ export default function FeedbackForm({
               const baseClasses =
                 "flex items-center gap-1 rounded-full px-2 py-1 text-[11px] font-semibold transition-colors";
               const stateClasses = active
-                ? "bg-[#142826] text-white"
-                : "text-[#142826] hover:bg-[#E8EFEE]";
+                ? "bg-brandBackground text-white"
+                : "text-text hover:bg-[#E8EFEE]";
 
               return (
                 <Link

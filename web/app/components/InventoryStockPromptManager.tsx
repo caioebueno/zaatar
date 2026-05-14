@@ -211,13 +211,13 @@ export default function InventoryStockPromptManager() {
             </div>
 
             <div className="grid min-w-full gap-3 md:min-w-[340px] md:grid-cols-2">
-              <div className="rounded-2xl bg-[#142826] px-5 py-4 text-white">
+              <div className="rounded-2xl bg-brandBackground px-5 py-4 text-white">
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/60">
                   Visible in checklist
                 </p>
                 <p className="mt-2 text-3xl font-black">{includedCount}</p>
               </div>
-              <div className="rounded-2xl bg-[#edf2ef] px-5 py-4 text-[#142826]">
+              <div className="rounded-2xl bg-[#edf2ef] px-5 py-4 text-brandBackground">
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#64706d]">
                   Hidden from checklist
                 </p>
@@ -237,7 +237,7 @@ export default function InventoryStockPromptManager() {
                   Place
                 </span>
                 <select
-                  className="h-12 rounded-2xl border border-[#d6dfdb] bg-[#f8faf8] px-4 text-sm font-semibold text-[#142826] outline-none"
+                  className="h-12 rounded-2xl border border-[#d6dfdb] bg-[#f8faf8] px-4 text-sm font-semibold text-brandBackground outline-none"
                   value={selectedPlaceId}
                   onChange={(event) => setSelectedPlaceId(event.target.value)}
                 >
@@ -255,7 +255,7 @@ export default function InventoryStockPromptManager() {
                   Search
                 </span>
                 <input
-                  className="h-12 rounded-2xl border border-[#d6dfdb] bg-[#f8faf8] px-4 text-sm font-medium text-[#142826] outline-none placeholder:text-[#93a09c]"
+                  className="h-12 rounded-2xl border border-[#d6dfdb] bg-[#f8faf8] px-4 text-sm font-medium text-brandBackground outline-none placeholder:text-[#93a09c]"
                   placeholder="Find by product or place"
                   value={search}
                   onChange={(event) => setSearch(event.target.value)}
@@ -308,7 +308,7 @@ export default function InventoryStockPromptManager() {
                       className="grid gap-4 border-t border-[#edf1ee] px-6 py-5 first:border-t-0 md:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_120px_160px] md:items-center"
                     >
                       <div>
-                        <p className="text-base font-bold text-[#142826]">
+                        <p className="text-base font-bold text-brandBackground">
                           {stock.productName}
                         </p>
                         <p className="mt-1 text-xs font-medium uppercase tracking-[0.14em] text-[#8a9792]">
@@ -325,7 +325,7 @@ export default function InventoryStockPromptManager() {
                         </p>
                       </div>
 
-                      <div className="text-sm font-bold text-[#142826]">
+                      <div className="text-sm font-bold text-brandBackground">
                         {stock.currentQuantity}
                       </div>
 
@@ -336,7 +336,7 @@ export default function InventoryStockPromptManager() {
                           aria-checked={stock.includeInChecklist}
                           aria-label={`Toggle checklist prompt for ${stock.productName} at ${stock.placeName}`}
                           className={`relative inline-flex h-8 w-14 items-center rounded-full transition ${
-                            stock.includeInChecklist ? "bg-[#1d6b5f]" : "bg-[#c5cfca]"
+                            stock.includeInChecklist ? "bg-brandBackground" : "bg-[#c5cfca]"
                           } ${isPending ? "opacity-60" : ""}`}
                           onClick={() =>
                             void handleToggle(stock, !stock.includeInChecklist)

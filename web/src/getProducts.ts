@@ -11,8 +11,10 @@ import {
   ensureComboProductItemTable,
   getComboProductsByComboIds,
 } from "./comboProductsStore";
+import type { TOrderLinkSettings } from "./getOrderLinkSettings";
 
 export type TGetProductsResponse = {
+  orderLinkSettings?: TOrderLinkSettings;
   categories: TCategory[];
   progressiveDiscount: TProgressiveDiscount | null;
   activePromotionId?: string | null;

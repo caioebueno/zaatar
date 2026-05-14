@@ -85,7 +85,7 @@ const CartBar: React.FC<TCartBar> = ({
             </span>
           </div>
           <div>
-            <div className="bg-[#CCD0D0] rounded-md">
+            <div className="bg-brandBackground/15 rounded-md">
               {Math.floor(price.discountAmount / 100) !== 0 && (
                 <span className="text-xs font-semibold text-brandBackground py-1 px-1.5">
                   ${Math.floor(price.discountAmount / 100)} off
