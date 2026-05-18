@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import ProductManagerList from "../components/ProductManagerList";
 import getProductsManagerList from "@/src/getProductsManagerList";
 import prisma from "@/prisma";

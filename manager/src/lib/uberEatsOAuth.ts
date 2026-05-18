@@ -1,6 +1,5 @@
 export const UBER_EATS_OAUTH_STATE_COOKIE_NAME = "manager_uber_eats_oauth_state";
 
-const DEFAULT_API_BASE_URL = "http://127.0.0.1:4000";
 const DEFAULT_MANAGER_BASE_URL = "http://localhost:3000";
 
 export function normalizeBaseUrl(value: string | undefined, fallback: string): string {
@@ -14,7 +13,16 @@ export function normalizeBaseUrl(value: string | undefined, fallback: string): s
 }
 
 export function getApiBaseUrl(): string {
-  return normalizeBaseUrl(process.env.NEXT_PUBLIC_API_BASE_URL, DEFAULT_API_BASE_URL);
+  const raw = process.env.NEXT_PUBLIC_API_BASE_URL?.trim();
+  if (!raw) {
+    throw new Error("NEXT_PUBLIC_API_BASE_URL is not set");
+  }
+  try {
+    const parsed = new URL(raw);
+    return parsed.href.replace(/\/+$/, "").replace(/\/api$/, "");
+  } catch {
+    throw new Error(`NEXT_PUBLIC_API_BASE_URL is not a valid URL: "${raw}"`);
+  }
 }
 
 export function getUberEatsCallbackUrl(options?: { origin?: string }): string {

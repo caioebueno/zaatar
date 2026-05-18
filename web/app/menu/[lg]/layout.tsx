@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import PendingOrderAlert from "@/app/components/PendingOrderAlert";
 import CustomerAuthSessionBootstrap from "@/app/components/CustomerAuthSessionBootstrap";
 import { MenuProductsProvider } from "@/app/components/MenuProductsContext";
