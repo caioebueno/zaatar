@@ -187,7 +187,7 @@ function mapDispatch(
   redeemedRewardsByOrderId: Map<string, NonNullable<TOrder["redeemedRewards"]>>,
   preparationStepCategoriesByOrderId: Map<
     TOrder["id"],
-    TOrder["preparationStepCategory"]
+    TOrder["preparationTaskStation"]
   >,
 ): Dispatch {
   if (!ordersByDispatchId.has(row.id)) {
@@ -260,7 +260,7 @@ function mapDispatch(
               }
             : {}),
           orderProducts: orderProductsByOrderId.get(orderRow.id) || [],
-          preparationStepCategory:
+          preparationTaskStation:
             preparationStepCategoriesByOrderId.get(orderRow.id) || [],
         })),
     );
@@ -544,7 +544,7 @@ async function getDispatchOrderProducts(
 
 async function getDispatchPreparationStepCategories(
   orderIds: string[],
-): Promise<Map<TOrder["id"], TOrder["preparationStepCategory"]>> {
+): Promise<Map<TOrder["id"], TOrder["preparationTaskStation"]>> {
   if (orderIds.length === 0) {
     return new Map();
   }
@@ -556,7 +556,7 @@ async function getDispatchPreparationStepCategories(
       },
     },
     include: {
-      category: true,
+      station: true,
       preparationStepTracks: {
         include: {
           preparationStep: true,
@@ -589,36 +589,21 @@ async function getDispatchPreparationStepCategories(
   });
   const categoriesByOrderId = new Map<
     TOrder["id"],
-    TOrder["preparationStepCategory"]
+    TOrder["preparationTaskStation"]
   >();
 
   for (const category of categories) {
-    if (!category.categoryId || !category.category) {
-      continue;
-    }
-
     const current = categoriesByOrderId.get(category.orderId) || [];
 
     current.push({
       id: category.id,
-      categoryId: category.categoryId,
+      stationId: category.stationId ?? undefined,
       completed: category.completed,
       orderId: category.orderId,
       snoozes: [],
-      category: {
-        id: category.category.id,
-        title: category.category.name,
-        products: [],
-        ...(category.category.translations &&
-        typeof category.category.translations === "object"
-          ? {
-              translations: category.category.translations as {
-                [key: string]: {
-                  [key: string]: string;
-                };
-              },
-            }
-          : {}),
+      station: {
+        id: category.station?.id ?? category.id,
+        name: category.station?.name ?? "Preparation",
       },
       steps: category.preparationStepTracks.map((track) => ({
         id: track.id,

@@ -1,0 +1,23 @@
+{
+    "name": "zappy",
+    "version": "0.1.0",
+    "private": true,
+    "packageManager": "npm@10.8.2",
+    "workspaces": [
+        "api",
+        "manager",
+        "web",
+        "queue-worker",
+        "packages/*"
+    ],
+    "scripts": {
+        "build": "turbo build",
+        "dev": "turbo dev",
+        "typecheck": "turbo typecheck"
+    },
+    "devDependencies": {
+        "@tailwindcss/postcss": "^4.3.0",
+        "tailwindcss": "^4.3.0",
+        "turbo": "^2.5.4"
+    }
+}

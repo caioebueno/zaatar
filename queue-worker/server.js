@@ -5,6 +5,7 @@ import axios from "axios";
 import { Pool } from "pg";
 import { processDispatchAssignmentJobs as runDispatchAssignmentJobs } from "./dispatchAssignment.js";
 import { processFeedbackWhatsAppJobs as runFeedbackWhatsAppJobs } from "./feedbackWhatsAppQueue.js";
+import { processDispatchEtaRecalculationJobs as runDispatchEtaRecalculationJobs } from "./dispatchEtaRecalculationQueue.js";
 
 const PORT = Number(process.env.PORT || 4000);
 const CRON_SCHEDULE = process.env.CRON_SCHEDULE || "0 0 * * *";
@@ -416,6 +417,7 @@ async function processDispatchAssignmentJobs(limitOverride) {
     return {
       dispatch: { processed: 0, failed: 0 },
       feedback: { processed: 0, failed: 0 },
+      dispatchEta: { processed: 0, failed: 0 },
       processed: 0,
       failed: 0,
       skipped: true,
@@ -435,11 +437,17 @@ async function processDispatchAssignmentJobs(limitOverride) {
 
     const dispatchResult = await runDispatchAssignmentJobs(jobsPerRun);
     const feedbackResult = await runFeedbackWhatsAppJobs(jobsPerRun);
+    const dispatchEtaResult = await runDispatchEtaRecalculationJobs(jobsPerRun);
     const result = {
       dispatch: dispatchResult,
       feedback: feedbackResult,
-      processed: dispatchResult.processed + feedbackResult.processed,
-      failed: dispatchResult.failed + feedbackResult.failed,
+      dispatchEta: dispatchEtaResult,
+      processed:
+        dispatchResult.processed +
+        feedbackResult.processed +
+        dispatchEtaResult.processed,
+      failed:
+        dispatchResult.failed + feedbackResult.failed + dispatchEtaResult.failed,
       skipped: false,
     };
 
@@ -450,6 +458,7 @@ async function processDispatchAssignmentJobs(limitOverride) {
     return {
       dispatch: { processed: 0, failed: 0 },
       feedback: { processed: 0, failed: 0 },
+      dispatchEta: { processed: 0, failed: 0 },
       processed: 0,
       failed: 1,
       skipped: false,
@@ -520,6 +529,7 @@ function handleRequest(request, response) {
             skipped: Boolean(result.skipped),
             dispatch: result.dispatch,
             feedback: result.feedback,
+            dispatchEta: result.dispatchEta,
             ...(result.error ? { error: result.error } : {}),
           }),
         );

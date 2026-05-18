@@ -9,7 +9,7 @@ import TProduct from "../../src/types/product";
 import { getProgressiveDiscountStepProgress } from "@/utils/getProgressiveDiscountStepProgress";
 import type { CSSProperties } from "react";
 
-const PROGRESS_FILL_COLOR = "#304240";
+const PROGRESS_FILL_COLOR = "var(--color-brandBackground)";
 const PROGRESS_INACTIVE_BG_COLOR = "#ffffff";
 
 type TProgressiveDiscountBar = {
@@ -56,7 +56,7 @@ const ProgressiveDiscountBar: React.FC<TProgressiveDiscountBar> = ({
             color: #1f2937;
           }
           100% {
-            background-color: #304240;
+            background-color: var(--color-brandBackground);
             color: #ffffff;
           }
         }

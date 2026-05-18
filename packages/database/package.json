@@ -1,0 +1,18 @@
+{
+  "name": "@foody/database",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Shared Prisma schema and migrations",
+  "dependencies": {
+    "@prisma/client": "^7.8.0"
+  },
+  "devDependencies": {
+    "prisma": "^7.6.0"
+  },
+  "scripts": {
+    "build": "prisma generate --schema prisma/schema.prisma",
+    "prisma:generate": "prisma generate --schema prisma/schema.prisma",
+    "prisma:migrate:dev": "prisma migrate dev --schema prisma/schema.prisma",
+    "prisma:migrate:deploy": "prisma migrate deploy --schema prisma/schema.prisma"
+  }
+}

@@ -41,6 +41,7 @@ import {
   PROMOTION_ID_COOKIE_NAME,
 } from "@/src/constants/menu";
 import { getStripeClient } from "@/src/stripe";
+import { getConfiguredBusinessId } from "@/src/constants/business";
 
 type TCreateOrder = {
   cart: TCart;
@@ -60,6 +61,7 @@ type TCreateOrder = {
   };
   tipAmount?: number;
   addressId?: string;
+  branchId?: string;
   cupom?: string;
   source?: "MENU" | "POS";
 };
@@ -598,6 +600,13 @@ async function createPreparationStepCategoriesForOrderTx(
       id: step.id,
       name: step.name,
       stationId: step.stationId,
+      goalMinutes:
+        typeof (step as { goalMinutes?: unknown }).goalMinutes === "number"
+          ? Math.max(
+              0,
+              Math.floor((step as { goalMinutes?: number }).goalMinutes ?? 0),
+            )
+          : 0,
       includeComments: step.includeComments,
       includeModifiers: step.includeModifiers,
       productIds: step.products.map((product) => product.id),
@@ -608,13 +617,16 @@ async function createPreparationStepCategoriesForOrderTx(
     await tx.preparationStepCategory.create({
       data: {
         id: category.id,
-        categoryId: category.categoryId,
+        stationId: category.stationId ?? null,
         orderId: category.orderId,
         preparationStepTracks: {
           create: category.steps.map((track) => ({
             id: track.id,
             preparationStepId: track.preparationStepId,
             quantity: track.quantity,
+            goalMinutes: track.goalMinutes,
+            expectedAt: track.expectedAt ? new Date(track.expectedAt) : null,
+            completedAt: track.completedAt ? new Date(track.completedAt) : null,
             comments: track.comments,
             completedComments: track.completedComments,
             preparationStepModifierTracks: track.preparationStepModifiers
@@ -649,6 +661,7 @@ function buildReadableOrderNumber(): string {
 }
 
 const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
+  console.log('[createOrder] called', { paymentMethod: data.paymentMethod, paymentProvider: data.paymentProvider, orderType: data.orderType });
   let deliveryFeeInCents = 0;
   const checkoutTimingStartedAt = Date.now();
   let checkoutTimingLastAt = checkoutTimingStartedAt;
@@ -796,7 +809,96 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
   const selectedCardId = normalizeSelectedCardId(data.selectedCardId);
   const normalizedCustomerId =
     typeof data.customerId === "string" ? data.customerId.trim() : "";
+  const normalizedBranchId =
+    typeof data.branchId === "string" ? data.branchId.trim() : "";
   const resolvedCustomerId = normalizedCustomerId || null;
+  const configuredBusinessId = getConfiguredBusinessId();
+  const resolveBranchIdForOrder = async (): Promise<string | null> => {
+    if (configuredBusinessId) {
+      const branches = await prisma.branch.findMany({
+        where: {
+          businessId: configuredBusinessId,
+        },
+        select: {
+          id: true,
+        },
+        orderBy: {
+          createdAt: "asc",
+        },
+      });
+
+      if (branches.length === 1) {
+        const onlyBranchId = branches[0]!.id;
+        if (normalizedBranchId && normalizedBranchId !== onlyBranchId) {
+          throw {
+            code: "INVALID_PARAMS",
+            data: {
+              message: "INVALID_BRANCH_ID",
+            },
+          };
+        }
+
+        return onlyBranchId;
+      }
+
+      if (branches.length > 1) {
+        if (!normalizedBranchId) {
+          throw {
+            code: "INVALID_PARAMS",
+            data: {
+              message: "BRANCH_ID_REQUIRED",
+            },
+          };
+        }
+
+        const hasBranch = branches.some((branch) => branch.id === normalizedBranchId);
+        if (!hasBranch) {
+          throw {
+            code: "INVALID_PARAMS",
+            data: {
+              message: "INVALID_BRANCH_ID",
+            },
+          };
+        }
+
+        return normalizedBranchId;
+      }
+
+      if (normalizedBranchId) {
+        throw {
+          code: "INVALID_PARAMS",
+          data: {
+            message: "INVALID_BRANCH_ID",
+          },
+        };
+      }
+
+      return null;
+    }
+
+    if (!normalizedBranchId) return null;
+
+    const branch = await prisma.branch.findUnique({
+      where: {
+        id: normalizedBranchId,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!branch) {
+      throw {
+        code: "INVALID_PARAMS",
+        data: {
+          message: "INVALID_BRANCH_ID",
+        },
+      };
+    }
+
+    return branch.id;
+  };
+  const resolvedBranchId = await resolveBranchIdForOrder();
   const scheduleFor = ensureValidScheduleFor(data.scheduleFor);
   const getCatalogProductById = (productId: string) => {
     for (const category of productData.categories) {
@@ -1099,6 +1201,31 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
       };
     }
 
+    // Resolve the business's Stripe connected account for payment routing
+    let connectedStripeAccountId: string | null = null;
+    const businessId = configuredBusinessId;
+    console.log('[createOrder] chargeStripeCard start', { businessId, orderTotalInCents, stripeCustomerId, stripePaymentMethodId });
+    try {
+      if (businessId) {
+        const businessRows = await prisma.$queryRaw<
+          { stripeAccountId: string | null; stripeChargesEnabled: boolean }[]
+        >`
+          SELECT "stripeAccountId", "stripeChargesEnabled"
+          FROM "Business"
+          WHERE "id" = ${businessId}
+          LIMIT 1
+        `;
+        const biz = businessRows[0];
+        console.log('[createOrder] business lookup', { biz });
+        if (biz?.stripeAccountId && biz.stripeChargesEnabled) {
+          connectedStripeAccountId = biz.stripeAccountId;
+        }
+      }
+    } catch (bizErr) {
+      console.error('[createOrder] business lookup failed, falling back to direct charge', bizErr);
+    }
+    console.log('[createOrder] connectedStripeAccountId', connectedStripeAccountId);
+
     try {
       if (!Number.isInteger(orderTotalInCents) || orderTotalInCents <= 0) {
         throw {
@@ -1111,6 +1238,14 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
       }
 
       const stripe = getStripeClient();
+
+      // Platform fee: set STRIPE_PLATFORM_FEE_PERCENT in env (e.g. "2.5" for 2.5%)
+      const feePct = parseFloat(process.env.STRIPE_PLATFORM_FEE_PERCENT ?? "0");
+      const applicationFeeAmount =
+        connectedStripeAccountId && feePct > 0
+          ? Math.round(orderTotalInCents * (feePct / 100))
+          : undefined;
+
       const paymentIntent = await stripe.paymentIntents.create({
         amount: orderTotalInCents,
         currency: "usd",
@@ -1122,7 +1257,16 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
           source: data.source ?? "MENU",
           orderType: data.orderType,
           customerId: resolvedCustomerId,
+          ...(businessId ? { businessId } : {}),
         },
+        ...(connectedStripeAccountId
+          ? {
+              transfer_data: { destination: connectedStripeAccountId },
+              ...(applicationFeeAmount !== undefined
+                ? { application_fee_amount: applicationFeeAmount }
+                : {}),
+            }
+          : {}),
       });
 
       if (paymentIntent.status !== "succeeded") {
@@ -1279,6 +1423,14 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
         const createdOrder = await tx.order.create({
           data: orderCreateData,
         });
+
+        if (resolvedBranchId) {
+          await tx.$executeRaw`
+            UPDATE "Order"
+            SET "branchId" = ${resolvedBranchId}
+            WHERE "id" = ${createdOrder.id}
+          `;
+        }
 
         if (paymentProvider) {
           await tx.$executeRaw`
@@ -1693,7 +1845,7 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
           paymentMethod: createdOrder.paymentMethod,
           ...(paymentProvider ? { paymentProvider } : {}),
           type: createdOrder.type,
-          preparationStepCategory: [],
+          preparationTaskStation: [],
         };
         const orderForPreparationSteps =
           comboPreparationOrderProducts.length > 0 ||
@@ -1779,12 +1931,15 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
 
   while (attempt < MAX_ORDER_CREATION_TRANSACTION_RETRIES) {
     try {
+      console.log(`[createOrder] transaction attempt ${attempt + 1}`);
       transactionResult = await runOrderCreationTransaction();
       markCheckoutTimingStep("db-transaction");
+      console.log('[createOrder] transaction succeeded');
       break;
     } catch (error) {
       attempt += 1;
       transactionFailureError = error;
+      console.error(`[createOrder] transaction attempt ${attempt} failed`, error);
       const canRetry =
         attempt < MAX_ORDER_CREATION_TRANSACTION_RETRIES &&
         isRetryableOrderCreationTransactionError(error);
@@ -1810,6 +1965,7 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
 
     if (transactionFailureError) {
       flushCheckoutTiming("FAILED", "ORDER_CREATION_TRANSACTION_FAILED");
+      console.error('[createOrder] throwing transactionFailureError', transactionFailureError);
       throw transactionFailureError;
     }
 

@@ -27,6 +27,7 @@ type PostBody = {
   selectedPrize?: unknown;
   tipAmount?: unknown;
   addressId?: unknown;
+  branchId?: unknown;
   cupom?: unknown;
   source?: unknown;
 };
@@ -325,6 +326,9 @@ function mapInvalidParamsField(message?: string): string | undefined {
       return "selectedCardId";
     case "CARD_PAYMENT_REQUIRES_CUSTOMER":
       return "customerId";
+    case "BRANCH_ID_REQUIRED":
+    case "INVALID_BRANCH_ID":
+      return "branchId";
     default:
       return undefined;
   }
@@ -480,6 +484,7 @@ export async function POST(request: NextRequest) {
     const selectedPrize = parseSelectedPrize(body.selectedPrize);
     const tipAmount = parseTipAmount(body.tipAmount);
     const addressId = parseOptionalString(body.addressId, "addressId");
+    const branchId = parseOptionalString(body.branchId, "branchId");
     const cupom = parseOptionalString(body.cupom, "cupom");
     const source = parseOrderSource(body.source);
 
@@ -498,6 +503,7 @@ export async function POST(request: NextRequest) {
       selectedPrize,
       tipAmount,
       addressId,
+      branchId,
       cupom,
       source,
     });

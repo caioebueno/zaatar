@@ -1,0 +1,14 @@
+
+
+> @foody/database@0.1.0 build
+> prisma generate --schema prisma/schema.prisma
+
+[1G[0K[2mPrisma schema loaded from prisma/schema.prisma.[22m
+
+
+✔ Generated [1mPrisma Client[22m (v7.8.0)[2m to ./../../web/src/generated/prisma[22m in 300ms
+
+Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
+
+
+[1G[0K⠙[1G[0K

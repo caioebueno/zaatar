@@ -1,5 +1,5 @@
 const colors = {
-  brandBg: '#142826',
+  brandBg: 'var(--color-brandBackground)',
   bg: '#ffffff',
   lightBg: '#E7E9E9',
   font: '#0C0C0C',

@@ -102,7 +102,7 @@ const InformationModal: React.FC<TInformationModal> = ({
         <div className="px-4 py-3">
           <div className="px-4 py-2 flex flex-row rounded-xl border-gray-300 border items-center justify-between">
             <div className="flex flex-row gap-2 items-center">
-              <FiShoppingBag size={24} color="#142826" />
+              <FiShoppingBag size={24} className="text-brandBackground" />
               <span className="text-lg font-bold">{content["takeaway"]}</span>
             </div>
             <FiCheck size={24} />
@@ -111,7 +111,7 @@ const InformationModal: React.FC<TInformationModal> = ({
         <div className="px-4 py-3 flex flex-col">
           <div className="px-4 py-2 flex flex-row rounded-t-xl border-gray-300 border items-center justify-between">
             <div className="flex flex-row gap-2 items-center">
-              <FiTruck size={24} color="#142826" />
+              <FiTruck size={24} className="text-brandBackground" />
               <span className="text-lg font-bold">{content["delivery"]}</span>
             </div>
             <FiCheck size={24} />

@@ -6,24 +6,25 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
+  output   = "../../../web/src/generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
-  // url      = env("DATABASE_URL")
 }
 
 model Station {
-  id               String            @id
-  name             String
-  preparationSteps PreparationStep[]
+  id                        String                    @id
+  name                      String
+  preparationSteps          PreparationStep[]
+  preparationStepCategories PreparationStepCategory[]
 }
 
 model PreparationStep {
   id                    String                 @id
   createdAt             DateTime               @default(now())
   name                  String
+  goalMinutes           Int                    @default(0)
   includeComments       Boolean                @default(false)
   includeModifiers      Boolean                @default(false)
   products              Product[]
@@ -37,17 +38,24 @@ model PreparationStepCategory {
   createdAt             DateTime               @default(now())
   category              Category?              @relation(fields: [categoryId], references: [id])
   categoryId            String?
+  station               Station?               @relation(fields: [stationId], references: [id])
+  stationId             String?
   completed             Boolean                @default(false)
   order                 Order                  @relation(fields: [orderId], references: [id], onDelete: Cascade)
   orderId               String
   preparationStepTracks PreparationStepTrack[]
+
+  @@index([orderId, stationId])
 }
 
 model PreparationStepTrack {
   id                            String                         @id
   createdAt                     DateTime                       @default(now())
   completed                     Boolean                        @default(false)
+  completedAt                   DateTime?
   quantity                      Int?
+  goalMinutes                   Int                            @default(0)
+  expectedAt                    DateTime?
   comments                      String?
   completedComments             Boolean                        @default(false)
   preparationStepModifierTracks PreparationStepModifierTrack[]
@@ -158,33 +166,165 @@ enum ModifierGroupType {
 }
 
 model Business {
-  id        String          @id
-  createdAt DateTime        @default(now())
-  name      String
-  branches  Branch[]
-  owners    BusinessOwner[]
+  id                          String                          @id
+  createdAt                   DateTime                        @default(now())
+  updatedAt                   DateTime                        @updatedAt
+  name                        String
+  bannerPhotoUrl              String?
+  logoUrl                     String?
+  brandColor                  String                          @default("#0f766e")
+  stripeAccountId             String?                         @unique
+  stripeDetailsSubmitted      Boolean                         @default(false)
+  stripeChargesEnabled        Boolean                         @default(false)
+  stripePayoutsEnabled        Boolean                         @default(false)
+  stripeOnboardingCompletedAt DateTime?
+  onboardingCompletedAt       DateTime?
+  branches                    Branch[]
+  owner                       BusinessOwner?
+  integrations                ExternalIntegrationConnection[]
 }
 
 model User {
-  id              String          @id
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
-  email           String          @unique
+  id              String                          @id
+  createdAt       DateTime                        @default(now())
+  updatedAt       DateTime                        @updatedAt
+  email           String                          @unique
+  phone           String?                         @unique
   name            String
   passwordHash    String
   emailVerifiedAt DateTime?
   lastLoginAt     DateTime?
   ownedBusinesses BusinessOwner[]
+  integrations    ExternalIntegrationConnection[]
+  otpChallenges   OwnerOtpChallenge[]
+}
+
+model OwnerOtpChallenge {
+  id            String    @id
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  owner         User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId       String
+  phone         String
+  codeHash      String
+  expiresAt     DateTime
+  usedAt        DateTime?
+  attemptCount  Int       @default(0)
+  maxAttempts   Int       @default(5)
+  lastAttemptAt DateTime?
+
+  @@index([phone, createdAt])
+  @@index([ownerId, createdAt])
+  @@index([expiresAt])
+}
+
+enum ExternalIntegrationProvider {
+  UBER_EATS
+}
+
+enum ExternalIntegrationEnvironment {
+  SANDBOX
+  PRODUCTION
+}
+
+enum ExternalMenuSyncStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  SKIPPED
+}
+
+enum ExternalMenuEntityType {
+  MENU
+  CATEGORY
+  ITEM
+  MODIFIER_GROUP
+  MODIFIER_ITEM
+}
+
+model ExternalIntegrationConnection {
+  id             String                         @id
+  createdAt      DateTime                       @default(now())
+  updatedAt      DateTime                       @updatedAt
+  provider       ExternalIntegrationProvider
+  environment    ExternalIntegrationEnvironment @default(SANDBOX)
+  user           User                           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         String
+  business       Business?                      @relation(fields: [businessId], references: [id], onDelete: SetNull)
+  businessId     String?
+  accessToken    String
+  refreshToken   String?
+  scope          String?
+  tokenType      String?
+  expiresAt      DateTime?
+  connectedAt    DateTime                       @default(now())
+  rawPayload     Json?
+  menuEntityMaps ExternalMenuEntityMap[]
+  menuSyncRuns   ExternalMenuSyncRun[]
+
+  @@unique([provider, userId])
+  @@index([userId, provider])
+  @@index([businessId])
+}
+
+model ExternalMenuEntityMap {
+  id                            String                         @id
+  createdAt                     DateTime                       @default(now())
+  updatedAt                     DateTime                       @updatedAt
+  provider                      ExternalIntegrationProvider
+  userId                        String
+  businessId                    String?
+  menuId                        String?
+  entityType                    ExternalMenuEntityType
+  internalEntityId              String
+  externalEntityId              String
+  externalIntegrationConnection ExternalIntegrationConnection? @relation(fields: [connectionId], references: [id], onDelete: SetNull)
+  connectionId                  String?
+  rawPayload                    Json?
+
+  @@unique([provider, userId, entityType, internalEntityId])
+  @@index([provider, userId, menuId, entityType])
+  @@index([connectionId])
+  @@index([businessId])
+}
+
+model ExternalMenuSyncRun {
+  id                            String                         @id
+  createdAt                     DateTime                       @default(now())
+  updatedAt                     DateTime                       @updatedAt
+  provider                      ExternalIntegrationProvider
+  status                        ExternalMenuSyncStatus
+  userId                        String
+  businessId                    String?
+  menuId                        String
+  storeId                       String
+  dryRun                        Boolean                        @default(false)
+  forced                        Boolean                        @default(false)
+  requestHash                   String
+  categoriesCount               Int                            @default(0)
+  itemsCount                    Int                            @default(0)
+  modifierGroupsCount           Int                            @default(0)
+  modifierItemsCount            Int                            @default(0)
+  startedAt                     DateTime?
+  finishedAt                    DateTime?
+  errorMessage                  String?
+  requestPayload                Json?
+  responsePayload               Json?
+  externalIntegrationConnection ExternalIntegrationConnection? @relation(fields: [connectionId], references: [id], onDelete: SetNull)
+  connectionId                  String?
+
+  @@index([provider, userId, menuId, createdAt])
+  @@index([status, createdAt])
+  @@index([connectionId])
 }
 
 model BusinessOwner {
   business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
-  businessId String
+  businessId String   @id
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId     String
   createdAt  DateTime @default(now())
 
-  @@id([businessId, userId])
   @@index([userId])
 }
 
@@ -200,27 +340,104 @@ model Branch {
 }
 
 model Driver {
-  id            String     @id
-  createdAt     DateTime   @default(now())
-  name          String
-  active        Boolean    @default(true)
-  priorityLevel Int
-  dispatches    Dispatch[]
+  id               String                  @id
+  createdAt        DateTime                @default(now())
+  name             String
+  phone            String?                 @unique
+  active           Boolean                 @default(true)
+  activatedAt      DateTime?
+  deactivatedAt    DateTime?
+  priorityLevel    Int
+  dispatches       Dispatch[]
+  routeSessions    DispatchRouteSession[]
+  activationEvents DriverActivationEvent[]
+}
+
+enum DriverActivationStatus {
+  ACTIVATED
+  DEACTIVATED
+}
+
+model DriverActivationEvent {
+  id        String                 @id
+  createdAt DateTime               @default(now())
+  driver    Driver                 @relation(fields: [driverId], references: [id], onDelete: Cascade)
+  driverId  String
+  status    DriverActivationStatus
+
+  @@index([driverId, createdAt])
 }
 
 model Dispatch {
-  id                                String    @id
-  createdAt                         DateTime  @default(now())
+  id                                String                        @id
+  createdAt                         DateTime                      @default(now())
   queueIndex                        Int?
-  dispatched                        Boolean   @default(false)
+  dispatched                        Boolean                       @default(false)
   dispatchAt                        DateTime?
+  startedDeliveryAt                 DateTime?
   estimatedDeliveryDurationMinutes  Int?
   estimatedRoundTripDurationMinutes Int?
-  driver                            Driver?   @relation(fields: [driverId], references: [id])
+  driver                            Driver?                       @relation(fields: [driverId], references: [id])
   driverId                          String?
   orders                            Order[]
+  routeSessions                     DispatchRouteSession[]
+  etaRecalculationJobs              DispatchEtaRecalculationJob[]
 
   @@index([queueIndex])
+}
+
+enum DispatchRouteSessionStatus {
+  ACTIVE
+  COMPLETED
+  CANCELED
+}
+
+enum DispatchRoutePointSource {
+  GPS
+  NETWORK
+  MANUAL
+}
+
+model DispatchRouteSession {
+  id                  String                     @id
+  createdAt           DateTime                   @default(now())
+  updatedAt           DateTime                   @updatedAt
+  dispatch            Dispatch                   @relation(fields: [dispatchId], references: [id], onDelete: Cascade)
+  dispatchId          String
+  driver              Driver                     @relation(fields: [driverId], references: [id], onDelete: Cascade)
+  driverId            String
+  startedAt           DateTime                   @default(now())
+  endedAt             DateTime?
+  status              DispatchRouteSessionStatus @default(ACTIVE)
+  totalDistanceMeters Int?
+  durationSeconds     Int?
+  polyline            String?
+  points              DispatchRoutePoint[]
+
+  @@index([dispatchId, status])
+  @@index([driverId, status])
+  @@index([dispatchId, driverId, createdAt])
+}
+
+model DispatchRoutePoint {
+  id             String                   @id
+  createdAt      DateTime                 @default(now())
+  session        DispatchRouteSession     @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  sessionId      String
+  sequence       Int
+  recordedAt     DateTime
+  lat            Float
+  lng            Float
+  accuracyMeters Int?
+  speedMps       Float?
+  headingDegrees Float?
+  altitudeMeters Float?
+  source         DispatchRoutePointSource @default(GPS)
+  isMocked       Boolean?
+
+  @@unique([sessionId, sequence])
+  @@index([sessionId, recordedAt])
+  @@index([sessionId, createdAt])
 }
 
 enum DispatchAssignmentJobStatus {
@@ -241,6 +458,29 @@ model DispatchAssignmentJob {
   lastError           String?
   orderId             String                      @unique
   deliveryAddressId   String
+}
+
+enum DispatchEtaRecalculationJobStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+model DispatchEtaRecalculationJob {
+  id                  String                            @id
+  createdAt           DateTime                          @default(now())
+  updatedAt           DateTime                          @updatedAt
+  status              DispatchEtaRecalculationJobStatus @default(PENDING)
+  attempts            Int                               @default(0)
+  availableAt         DateTime                          @default(now())
+  processingStartedAt DateTime?
+  completedAt         DateTime?
+  lastError           String?
+  dispatch            Dispatch                          @relation(fields: [dispatchId], references: [id], onDelete: Cascade)
+  dispatchId          String                            @unique
+
+  @@index([status, availableAt, createdAt])
 }
 
 enum FeedbackWhatsAppJobStatus {
@@ -265,12 +505,22 @@ model FeedbackWhatsAppJob {
 }
 
 model Address {
-  id            String   @id
-  createdAt     DateTime @default(now())
-  description   String
-  googleMapsUrl String
-  branch        Branch?
-  orders        Order[]
+  id               String   @id
+  createdAt        DateTime @default(now())
+  description      String
+  lat              String?
+  lng              String?
+  city             String?
+  zipCode          String?
+  State            String?
+  street           String?
+  number           String?
+  complement       String?
+  numberComplement String?
+  placeId          String?
+  googleMapsUrl    String
+  branch           Branch?
+  orders           Order[]
 }
 
 model Product {
@@ -290,6 +540,8 @@ model Product {
   productCategories          ProductCategory[]
   comboSlots                 ComboSlot[]                       @relation("ComboProduct")
   comboSlotOptions           ComboSlotOption[]                 @relation("ComboOptionProduct")
+  comboProductItems          ComboProductItem[]                @relation("ComboProductItemCombo")
+  comboUsedInItems           ComboProductItem[]                @relation("ComboProductItemProduct")
   exclusivePromotionProducts ExclusivePromotionProduct[]
   OrderProducts              OrderProducts[]
   prizeProducts              ProgressiveDiscountPrizeProduct[]
@@ -298,6 +550,20 @@ model Product {
   preparationSteps           PreparationStep[]
 
   @@index([categoryId, categoryIndex])
+}
+
+model ComboProductItem {
+  comboId   String
+  productId String
+  quantity  Int      @default(1)
+  sortIndex Int?
+  createdAt DateTime @default(now())
+  combo     Product  @relation("ComboProductItemCombo", fields: [comboId], references: [id], onDelete: Cascade)
+  product   Product  @relation("ComboProductItemProduct", fields: [productId], references: [id], onDelete: Restrict)
+
+  @@id([comboId, productId])
+  @@index([comboId, sortIndex])
+  @@index([productId])
 }
 
 model ExclusivePromotion {
@@ -460,6 +726,7 @@ model Customer {
   name                String?
   email               String?
   phone               String?
+  stripeCustomerId    String?
   address             String?
   lastMessageSent     DateTime?
   orders              Order[]
@@ -470,6 +737,29 @@ model Customer {
   rewards             CustomerReward[]
   otpChallenges       CustomerOtpChallenge[]
   accessTokens        CustomerAccessToken[]
+  cards               CustomerCard[]
+
+  @@index([stripeCustomerId])
+}
+
+model CustomerCard {
+  id                    String   @id
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  customer              Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  customerId            String
+  stripePaymentMethodId String   @unique
+  brand                 String
+  last4                 String
+  expMonth              Int
+  expYear               Int
+  funding               String?
+  country               String?
+  fingerprint           String?
+  isDefault             Boolean  @default(false)
+
+  @@index([customerId, isDefault])
+  @@index([customerId, createdAt])
 }
 
 enum CustomerOtpChannel {
@@ -583,6 +873,7 @@ model Order {
   status                           OrderStatus               @default(ACCEPTED)
   type                             OrderType                 @default(DELIVERY)
   paymentMethod                    PaymentType               @default(CARD)
+  paymentProvider                  PaymentProvider?
   tipAmount                        Int?
   tags                             String[]                  @default([])
   progressiveDiscountSnapshot      Json?
@@ -688,6 +979,10 @@ enum PaymentType {
   CASH
   CARD
   ZELLE
+}
+
+enum PaymentProvider {
+  STRIPE
 }
 
 enum OrderType {

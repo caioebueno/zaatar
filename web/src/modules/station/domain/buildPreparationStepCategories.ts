@@ -9,32 +9,47 @@ export function buildPreparationStepCategories(
   order: TOrder,
   preparationSteps: PreparationStep[],
 ): PreparationStepCategory[] {
+  const orderCreatedAt = new Date(order.createdAt);
+  const baseCreatedAt = Number.isNaN(orderCreatedAt.getTime())
+    ? new Date()
+    : orderCreatedAt;
+  const stationGoalMinutesMap = new Map<string, number>();
+
+  for (const step of preparationSteps) {
+    const goalMinutes =
+      typeof step.goalMinutes === "number" && step.goalMinutes > 0
+        ? Math.floor(step.goalMinutes)
+        : 0;
+    const currentGoal = stationGoalMinutesMap.get(step.stationId) ?? 0;
+    if (goalMinutes > currentGoal) {
+      stationGoalMinutesMap.set(step.stationId, goalMinutes);
+    } else if (!stationGoalMinutesMap.has(step.stationId)) {
+      stationGoalMinutesMap.set(step.stationId, currentGoal);
+    }
+  }
   const categoriesMap = new Map<string, PreparationStepCategory>();
 
   for (const orderProduct of order.orderProducts) {
-    const categoryId = orderProduct.product?.categoryId;
-    if (!categoryId) continue;
-
-    let category = categoriesMap.get(categoryId);
-
-    if (!category) {
-      category = {
-        id: crypto.randomUUID(),
-        categoryId,
-        completed: false,
-        orderId: order.id,
-        steps: [],
-        snoozes: [],
-      };
-
-      categoriesMap.set(categoryId, category);
-    }
-
     const productSteps = preparationSteps.filter((step) =>
       step.productIds.includes(orderProduct.productId),
     );
 
     for (const step of productSteps) {
+      let category = categoriesMap.get(step.stationId);
+
+      if (!category) {
+        category = {
+          id: crypto.randomUUID(),
+          stationId: step.stationId,
+          completed: false,
+          orderId: order.id,
+          steps: [],
+          snoozes: [],
+        };
+
+        categoriesMap.set(step.stationId, category);
+      }
+
       const comments =
         step.includeComments && orderProduct.comments?.trim()
           ? orderProduct.comments.trim()
@@ -77,6 +92,14 @@ export function buildPreparationStepCategories(
         name: step.name,
         quantity: orderProduct.quantity,
         completed: false,
+        goalMinutes: stationGoalMinutesMap.get(step.stationId) ?? 0,
+        expectedAt:
+          (stationGoalMinutesMap.get(step.stationId) ?? 0) > 0
+            ? new Date(
+                baseCreatedAt.getTime() +
+                  (stationGoalMinutesMap.get(step.stationId) ?? 0) * 60_000,
+              ).toISOString()
+            : undefined,
         comments,
         completedComments: false,
         preparationStepModifiers: resolvedModifiers,

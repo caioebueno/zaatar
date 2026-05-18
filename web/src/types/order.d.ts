@@ -5,7 +5,7 @@ import TProgressiveDiscount, {
   TProgressiveDiscountPrizeProduct,
   TProgressiveDiscountStep,
 } from "./progressiveDiscount";
-import { TPreparationStepCategory } from "./station";
+import { TPreparationTaskStation } from "./station";
 
 export type TPaymentMethod = "CARD" | "CASH" | "ZELLE";
 export type TPaymentProvider = "STRIPE";
@@ -46,7 +46,7 @@ export type TOrder = {
   addressId?: string;
   address?: TAddress;
   orderProducts: TOrderProduct[];
-  preparationStepCategory: TPreparationStepCategory[];
+  preparationTaskStation: TPreparationTaskStation[];
 };
 
 export type TOrderRedeemedReward = {

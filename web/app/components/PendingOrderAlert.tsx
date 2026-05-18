@@ -172,12 +172,12 @@ const PendingOrderAlert: React.FC<TPendingOrderAlert> = ({ lg }) => {
         className={`mx-auto flex w-full max-w-[900px] items-center justify-between gap-3 px-4 py-4 text-text ${montserrat.className}`}
       >
         <div className="flex items-center gap-3">
-          <FiShoppingBag size={20} className="shrink-0 text-[#142826]" />
-          <span className="font-semibold text-[14px] leading-tight text-[#142826]">
+          <FiShoppingBag size={20} className="shrink-0 text-brandBackground" />
+          <span className="font-semibold text-[14px] leading-tight text-brandBackground">
             {content["pendingOrderAlert"]}
           </span>
         </div>
-        <span className="text-[13px] font-semibold text-[#142826]">
+        <span className="text-[13px] font-semibold text-brandBackground">
           {content["viewOrder"]}
         </span>
       </Link>

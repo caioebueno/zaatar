@@ -9,7 +9,18 @@ import {
   PROMOTION_ID_HEADER_NAME,
 } from "@/src/constants/menu";
 import { getProductsFresh } from "@/src/getProducts";
+import { getOrderLinkSettings } from "@/src/getOrderLinkSettings";
 import { cookies, headers } from "next/headers";
+import type { CSSProperties } from "react";
+
+const DEFAULT_BRAND_COLOR = "#142826";
+
+function normalizeBrandColor(value: string): string {
+  const normalized = value.trim();
+  return /^#[0-9a-fA-F]{6}$/.test(normalized)
+    ? normalized
+    : DEFAULT_BRAND_COLOR;
+}
 
 export default async function MenuLayout({
   children,
@@ -38,11 +49,36 @@ export default async function MenuLayout({
     resolvedPromotionId.trim().length > 0
       ? resolvedPromotionId.trim()
       : null;
-  const products = await getProductsFresh(menuId, promotionId);
+  const [products, orderLinkSettings] = await Promise.all([
+    getProductsFresh(menuId, promotionId),
+    getOrderLinkSettings(),
+  ]);
+  const brandColor = normalizeBrandColor(orderLinkSettings.brandColor);
+  const productsWithSettings = {
+    ...products,
+    orderLinkSettings: {
+      ...orderLinkSettings,
+      brandColor,
+    },
+  };
 
   return (
-    <div className="min-h-dvh flex flex-col">
-      <MenuProductsProvider initialData={products}>
+    <div
+      className="min-h-dvh flex flex-col"
+      style={
+        {
+          "--brandBackground": brandColor,
+          "--color-brandBackground": brandColor,
+        } as CSSProperties
+      }
+    >
+      <style>{`
+        :root {
+          --brandBackground: ${brandColor};
+          --color-brandBackground: ${brandColor};
+        }
+      `}</style>
+      <MenuProductsProvider initialData={productsWithSettings}>
         <CustomerAuthSessionBootstrap />
         <MenuVisitTracker
           menuId={menuId}

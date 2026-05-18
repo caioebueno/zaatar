@@ -10,6 +10,7 @@ type RouteContext = {
 type PatchBody = {
   name?: unknown;
   stationId?: unknown;
+  goalMinutes?: unknown;
   includeComments?: unknown;
   includeModifiers?: unknown;
 };
@@ -28,6 +29,13 @@ function parseString(value: unknown, field: string): string {
   return normalized;
 }
 
+function parseGoalMinutes(value: unknown): number | null {
+  if (value === undefined) return null;
+  if (typeof value !== "number" || !Number.isFinite(value)) return null;
+  if (!Number.isInteger(value) || value < 0) return null;
+  return value;
+}
+
 export async function PATCH(request: NextRequest, context: RouteContext) {
   try {
     const { preparationStepId } = await context.params;
@@ -44,6 +52,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     const data: {
       name?: string;
       stationId?: string;
+      goalMinutes?: number;
       includeComments?: boolean;
       includeModifiers?: boolean;
     } = {};
@@ -73,6 +82,19 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       }
 
       data.stationId = stationId;
+      hasAnyField = true;
+    }
+
+    if (body.goalMinutes !== undefined) {
+      const goalMinutes = parseGoalMinutes(body.goalMinutes);
+      if (goalMinutes === null) {
+        return NextResponse.json(
+          { error: "Invalid payload", field: "goalMinutes" },
+          { status: 400 },
+        );
+      }
+
+      data.goalMinutes = goalMinutes;
       hasAnyField = true;
     }
 
@@ -107,19 +129,39 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       );
     }
 
-    const updatedPreparationStep = await prisma.preparationStep.update({
-      where: {
-        id: normalizedPreparationStepId,
-      },
-      data,
-      include: {
-        station: {
-          select: {
-            id: true,
-            name: true,
+    const updatedPreparationStep = await prisma.$transaction(async (tx) => {
+      const currentStep = await tx.preparationStep.findUnique({
+        where: { id: normalizedPreparationStepId },
+        select: { stationId: true },
+      });
+
+      if (!currentStep) {
+        throw Object.assign(new Error("NOT_FOUND"), { code: "P2025" });
+      }
+
+      const updated = await tx.preparationStep.update({
+        where: {
+          id: normalizedPreparationStepId,
+        },
+        data,
+        include: {
+          station: {
+            select: {
+              id: true,
+              name: true,
+            },
           },
         },
-      },
+      });
+
+      if (data.goalMinutes !== undefined) {
+        await tx.preparationStep.updateMany({
+          where: { stationId: currentStep.stationId },
+          data: { goalMinutes: data.goalMinutes },
+        });
+      }
+
+      return updated;
     });
 
     return NextResponse.json({
@@ -127,6 +169,16 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       name: updatedPreparationStep.name,
       stationId: updatedPreparationStep.stationId,
       stationName: updatedPreparationStep.station?.name || null,
+      goalMinutes:
+        typeof (updatedPreparationStep as { goalMinutes?: unknown }).goalMinutes ===
+        "number"
+          ? Math.max(
+              0,
+              Math.floor(
+                (updatedPreparationStep as { goalMinutes?: number }).goalMinutes ?? 0,
+              ),
+            )
+          : 0,
       includeComments: updatedPreparationStep.includeComments,
       includeModifiers: updatedPreparationStep.includeModifiers,
     });

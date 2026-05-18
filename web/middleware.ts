@@ -6,6 +6,11 @@ import {
   PROMOTION_ID_COOKIE_NAME,
   PROMOTION_ID_HEADER_NAME,
 } from "./src/constants/menu";
+import {
+  BUSINESS_ID_COOKIE_NAME,
+  BUSINESS_ID_HEADER_NAME,
+  getConfiguredBusinessId,
+} from "./src/constants/business";
 
 const CORS_METHODS = "GET,POST,PUT,PATCH,DELETE,OPTIONS";
 const CORS_HEADERS = "Content-Type, Authorization";
@@ -80,6 +85,7 @@ function applyCorsHeaders(response: NextResponse, request: NextRequest): void {
 export function middleware(request: NextRequest) {
   const isApiRoute = request.nextUrl.pathname.startsWith("/api");
   const isMenuRoute = request.nextUrl.pathname.startsWith("/menu");
+  const configuredBusinessId = getConfiguredBusinessId();
 
   if (request.method === "OPTIONS") {
     if (!isApiRoute) {
@@ -116,6 +122,9 @@ export function middleware(request: NextRequest) {
   if (menuIdFromQuery) {
     requestHeaders.set(MENU_ID_HEADER_NAME, menuIdFromQuery);
   }
+  if (configuredBusinessId) {
+    requestHeaders.set(BUSINESS_ID_HEADER_NAME, configuredBusinessId);
+  }
   if (hasPromotionIdQueryParam) {
     requestHeaders.set(PROMOTION_ID_HEADER_NAME, promotionIdFromQuery);
   }
@@ -132,6 +141,13 @@ export function middleware(request: NextRequest) {
 
   if (menuIdFromQuery) {
     response.cookies.set(MENU_ID_COOKIE_NAME, menuIdFromQuery, {
+      sameSite: "lax",
+      path: "/",
+      maxAge: MENU_CONTEXT_COOKIE_MAX_AGE_SECONDS,
+    });
+  }
+  if (configuredBusinessId) {
+    response.cookies.set(BUSINESS_ID_COOKIE_NAME, configuredBusinessId, {
       sameSite: "lax",
       path: "/",
       maxAge: MENU_CONTEXT_COOKIE_MAX_AGE_SECONDS,

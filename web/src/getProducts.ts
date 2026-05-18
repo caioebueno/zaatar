@@ -11,8 +11,11 @@ import {
   ensureComboProductItemTable,
   getComboProductsByComboIds,
 } from "./comboProductsStore";
+import type { TOrderLinkSettings } from "./getOrderLinkSettings";
 
 export type TGetProductsResponse = {
+  orderLinkSettings?: TOrderLinkSettings;
+  menuId?: string;
   categories: TCategory[];
   progressiveDiscount: TProgressiveDiscount | null;
   activePromotionId?: string | null;
@@ -670,6 +673,7 @@ export const getProductsFresh = async (
 
   const response: TGetProductsResponse = {
     progressiveDiscount,
+    menuId: selectedMenuId,
     activePromotionId,
     promotionProductIds: Array.from(requestedPromotionProductIds),
     activePromotion:

@@ -222,7 +222,7 @@ const getOrder = async (orderId: string): Promise<TOrder> => {
       fullAmount: item.fullAmount,
       quantity: item.quantity,
     })),
-    preparationStepCategory: [],
+    preparationTaskStation: [],
   };
 };
 
