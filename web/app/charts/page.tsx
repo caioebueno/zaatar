@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import clientOrderCount from "../../src/chartData/clientOrderCout";
 import OrderCountChart from "../components/orderCountChart";
 import { averageTicketByMonth } from "../../src/chartData/averageTicketByMonth";
