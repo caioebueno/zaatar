@@ -6,6 +6,11 @@ export type OrderListQuery = {
   to?: string;
 };
 
+export type DayWindow = {
+  end: Date;
+  start: Date;
+};
+
 export type OrderListItem = {
   canceled: boolean;
   createdAt: Date;
@@ -48,7 +53,55 @@ export type OrderDetail = {
   totalCents: number;
 };
 
+export type UpdateOrderDeliveryInput = {
+  deliveredAt: Date | null;
+  orderId: string;
+};
+
+export type UpdateOrderDeliveryResult = {
+  deliveredAt: string | null;
+  id: string;
+};
+
+export type OrdersByStationItem = {
+  address?: unknown;
+  addressId?: string;
+  canceled?: boolean;
+  createdAt: string;
+  customer?: unknown;
+  dispatchId?: string;
+  dispatchOrderIndex?: number;
+  estimatedDeliveryDurationMinutes?: number | null;
+  externalId?: string | null;
+  id: string;
+  language?: string | null;
+  number?: string;
+  orderProducts: Array<{
+    amount: number;
+    fullAmount: number;
+    id: string;
+    product?: unknown;
+    productId: string;
+    quantity: number;
+  }>;
+  paidAt?: string | null;
+  paymentMethod: string;
+  paymentProvider?: string | null;
+  preparationTaskStation: unknown[];
+  productionIndex?: number;
+  progressiveDiscountSnapshot?: unknown;
+  redeemedRewards?: unknown[];
+  scheduleFor?: string | null;
+  status: string;
+  tip?: number;
+  tipAmount?: number;
+  type: string;
+};
+
 export interface OrdersRepository {
+  findByStation(stationId: string, window: DayWindow): Promise<OrdersByStationItem[]>;
   getById(orderId: string): Promise<OrderDetail | null>;
+  findAssignedDriverIdByOrderId(orderId: string): Promise<string | null>;
   list(query: OrderListQuery): Promise<OrderListItem[]>;
+  updateDelivery(input: UpdateOrderDeliveryInput): Promise<UpdateOrderDeliveryResult | null>;
 }

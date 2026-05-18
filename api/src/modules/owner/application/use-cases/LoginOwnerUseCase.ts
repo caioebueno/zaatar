@@ -20,6 +20,7 @@ export type LoginOwnerOutput = {
     email: string;
     id: string;
     name: string;
+    phone: string | null;
   };
 };
 
@@ -64,6 +65,7 @@ export class LoginOwnerUseCase {
         id: owner.id,
         email: owner.email,
         name: owner.name,
+        phone: owner.phone,
       },
       selectedBusinessId,
       businesses: businesses.map((business) => ({

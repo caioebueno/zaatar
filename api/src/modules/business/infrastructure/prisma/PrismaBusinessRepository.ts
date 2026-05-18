@@ -1,9 +1,12 @@
 import { randomUUID } from "node:crypto";
 import prisma from "../../../../prisma.js";
 import type {
+  BusinessBranchRecord,
   BusinessRecord,
   BusinessRepository,
+  CurrentBusinessRecord,
   CreateOwnedBusinessInput,
+  OwnedBusinessRecord,
 } from "../../application/ports/BusinessRepository.js";
 
 export class PrismaBusinessRepository implements BusinessRepository {
@@ -110,5 +113,119 @@ export class PrismaBusinessRepository implements BusinessRepository {
         brandColor: created.brandColor ?? "#0f766e",
       };
     });
+  }
+
+  async findOwnedBusinesses(userId: string): Promise<OwnedBusinessRecord[]> {
+    const rows = await prisma.businessOwner.findMany({
+      where: { userId },
+      select: {
+        businessId: true,
+        business: {
+          select: {
+            id: true,
+            name: true,
+            logoUrl: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "asc",
+      },
+    });
+
+    return rows
+      .map((row) => {
+        if (!row.business) return null;
+        return {
+          businessId: row.business.id,
+          name: row.business.name,
+          logoUrl: row.business.logoUrl,
+        } satisfies OwnedBusinessRecord;
+      })
+      .filter((row): row is OwnedBusinessRecord => row !== null);
+  }
+
+  async findCurrentBusinessById(
+    businessId: string,
+  ): Promise<CurrentBusinessRecord | null> {
+    const business = await prisma.business.findUnique({
+      where: {
+        id: businessId,
+      },
+      select: {
+        id: true,
+        createdAt: true,
+        name: true,
+        logoUrl: true,
+        bannerPhotoUrl: true,
+        brandColor: true,
+        branches: {
+          select: {
+            id: true,
+            createdAt: true,
+            name: true,
+            operationHours: true,
+            address: {
+              select: {
+                description: true,
+                googleMapsUrl: true,
+                placeId: true,
+                lat: true,
+                lng: true,
+                street: true,
+                number: true,
+                city: true,
+                State: true,
+                zipCode: true,
+                complement: true,
+                numberComplement: true,
+              },
+            },
+          },
+          orderBy: {
+            createdAt: "asc",
+          },
+        },
+      },
+    });
+
+    if (!business) {
+      return null;
+    }
+
+    return {
+      id: business.id,
+      createdAt: business.createdAt,
+      name: business.name,
+      logoUrl: business.logoUrl,
+      bannerPhotoUrl: business.bannerPhotoUrl,
+      brandColor: business.brandColor,
+      branches: business.branches.map((branch) => {
+        const mapped: BusinessBranchRecord = {
+          id: branch.id,
+          createdAt: branch.createdAt,
+          name: branch.name,
+          operationHours: branch.operationHours,
+          address: branch.address
+            ? {
+                description: branch.address.description,
+                googleMapsUrl: branch.address.googleMapsUrl,
+                placeId: branch.address.placeId,
+                lat: branch.address.lat,
+                lng: branch.address.lng,
+                street: branch.address.street,
+                number: branch.address.number,
+                city: branch.address.city,
+                state: branch.address.State,
+                zipCode: branch.address.zipCode,
+                complement: branch.address.complement,
+                numberComplement: branch.address.numberComplement,
+              }
+            : null,
+        };
+
+        return mapped;
+      }),
+    };
   }
 }

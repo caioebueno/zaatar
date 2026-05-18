@@ -1,10 +1,13 @@
+import { randomUUID } from "node:crypto";
 import { createServer, type IncomingMessage } from "node:http";
 import { ensureEnvLoaded } from "./shared/env/loadEnv.js";
 import { makeNativeCatalogController } from "./modules/catalog/main/makeNativeCatalogController.js";
 import { makeLoginOwnerController } from "./modules/owner/main/makeLoginOwnerController.js";
+import { makeOwnerAuthController } from "./modules/owner/main/makeOwnerAuthController.js";
 import { makeRegisterOwnerController } from "./modules/owner/main/makeRegisterOwnerController.js";
-import { makeListOwnedBusinessesController } from "./modules/owner/main/makeListOwnedBusinessesController.js";
 import { makeCreateBusinessController } from "./modules/business/main/makeCreateBusinessController.js";
+import { makeGetCurrentBusinessController } from "./modules/business/main/makeGetCurrentBusinessController.js";
+import { makeListOwnedBusinessesController } from "./modules/business/main/makeListOwnedBusinessesController.js";
 import { makeGetCurrentBusinessSettingsController } from "./modules/business-settings/main/makeGetCurrentBusinessSettingsController.js";
 import { makeGetPublicBusinessSettingsController } from "./modules/business-settings/main/makeGetPublicBusinessSettingsController.js";
 import { makeUpdateCurrentBusinessSettingsController } from "./modules/business-settings/main/makeUpdateCurrentBusinessSettingsController.js";
@@ -12,12 +15,23 @@ import { makeUberEatsOAuthController } from "./modules/integrations/main/makeUbe
 import { makeGetOrderSalesAnalyticsController } from "./modules/analytics/main/makeGetOrderSalesAnalyticsController.js";
 import { makeListOrdersController } from "./modules/orders/main/makeListOrdersController.js";
 import { makeGetOrderByIdController } from "./modules/orders/main/makeGetOrderByIdController.js";
+import { makeGetOrdersByStationController } from "./modules/orders/main/makeGetOrdersByStationController.js";
+import { makeUpdateOrderController } from "./modules/orders/main/makeUpdateOrderController.js";
+import { makeManageOrdersController } from "./modules/orders/main/makeManageOrdersController.js";
 import { makeListFeedbackController } from "./modules/feedback/main/makeListFeedbackController.js";
 import { makeOnboardingController } from "./modules/onboarding/main/makeOnboardingController.js";
 import { makeBranchesController } from "./modules/branches/main/makeBranchesController.js";
 import { makeDriverAuthController } from "./modules/driver/main/makeDriverAuthController.js";
 import { makeDriverController } from "./modules/driver/main/makeDriverController.js";
+import { makeDriverSelfController } from "./modules/driver/main/makeDriverSelfController.js";
 import { makeGetNextDispatchForDriverController } from "./modules/dispatch/main/makeGetNextDispatchForDriverController.js";
+import { makeSetDispatchStartedDeliveryAtController } from "./modules/dispatch/main/makeSetDispatchStartedDeliveryAtController.js";
+import { makeListDispatchesController } from "./modules/dispatch/main/makeListDispatchesController.js";
+import { makeUpdateDispatchController } from "./modules/dispatch/main/makeUpdateDispatchController.js";
+import { makeMoveDispatchOrderController } from "./modules/dispatch/main/makeMoveDispatchOrderController.js";
+import { makeDispatchRouteController } from "./modules/dispatch-route/main/makeDispatchRouteController.js";
+import { makeStationController } from "./modules/station/main/makeStationController.js";
+import { makePreparationTaskController } from "./modules/preparation-task/main/makePreparationTaskController.js";
 import { HmacDriverAccessTokenVerifier } from "./modules/driver/infrastructure/security/HmacDriverAccessTokenVerifier.js";
 import { HmacAccessTokenVerifier } from "./modules/owner/infrastructure/security/HmacAccessTokenVerifier.js";
 import prisma from "./prisma.js";
@@ -36,11 +50,14 @@ const MANAGER_ACCESS_TOKEN_COOKIE_NAME = "manager_access_token";
 const MANAGER_BUSINESS_ID_COOKIE_NAME = "manager_business_id";
 const BUSINESS_ID_HEADER_NAME = "x-business-id";
 const port = Number(process.env.PORT ?? 4000);
+const isDevLoggingEnabled = process.env.DEV === "1";
 
 const registerOwnerController = makeRegisterOwnerController();
 const loginOwnerController = makeLoginOwnerController();
+const ownerAuthController = makeOwnerAuthController();
 const listOwnedBusinessesController = makeListOwnedBusinessesController();
 const createBusinessController = makeCreateBusinessController();
+const getCurrentBusinessController = makeGetCurrentBusinessController();
 const getCurrentBusinessSettingsController = makeGetCurrentBusinessSettingsController();
 const getPublicBusinessSettingsController = makeGetPublicBusinessSettingsController();
 const updateCurrentBusinessSettingsController =
@@ -50,12 +67,24 @@ const uberEatsOAuthController = makeUberEatsOAuthController();
 const getOrderSalesAnalyticsController = makeGetOrderSalesAnalyticsController();
 const listOrdersController = makeListOrdersController();
 const getOrderByIdController = makeGetOrderByIdController();
+const getOrdersByStationController = makeGetOrdersByStationController();
+const updateOrderController = makeUpdateOrderController();
+const manageOrdersController = makeManageOrdersController();
 const listFeedbackController = makeListFeedbackController();
 const onboardingController = makeOnboardingController();
 const branchesController = makeBranchesController();
+const stationController = makeStationController();
+const preparationTaskController = makePreparationTaskController();
 const driverAuthController = makeDriverAuthController();
 const driverController = makeDriverController();
+const driverSelfController = makeDriverSelfController();
+const listDispatchesController = makeListDispatchesController();
+const updateDispatchController = makeUpdateDispatchController();
+const moveDispatchOrderController = makeMoveDispatchOrderController();
 const getNextDispatchForDriverController = makeGetNextDispatchForDriverController();
+const setDispatchStartedDeliveryAtController =
+  makeSetDispatchStartedDeliveryAtController();
+const dispatchRouteController = makeDispatchRouteController();
 const accessTokenVerifier = new HmacAccessTokenVerifier();
 const driverAccessTokenVerifier = new HmacDriverAccessTokenVerifier();
 
@@ -92,6 +121,20 @@ const routes: Route[] = [
   },
   {
     method: "POST",
+    matcher: /^\/owners\/auth\/otp\/send$/,
+    controller: ownerAuthController,
+    requiresAuth: false,
+    bodyMode: "json",
+  },
+  {
+    method: "POST",
+    matcher: /^\/owners\/auth\/otp\/verify$/,
+    controller: ownerAuthController,
+    requiresAuth: false,
+    bodyMode: "json",
+  },
+  {
+    method: "POST",
     matcher: /^\/drivers\/auth\/otp\/send$/,
     controller: driverAuthController,
     requiresAuth: false,
@@ -112,10 +155,90 @@ const routes: Route[] = [
   },
   {
     method: "GET",
+    matcher: /^\/dispatches$/,
+    controller: listDispatchesController,
+    requiresAuth: true,
+  },
+  {
+    method: "PATCH",
+    matcher: /^\/dispatches\/[^/]+$/,
+    controller: updateDispatchController,
+    requiresAuth: true,
+    bodyMode: "json",
+  },
+  {
+    method: "PATCH",
+    matcher: /^\/dispatches\/orders\/[^/]+$/,
+    controller: moveDispatchOrderController,
+    requiresAuth: true,
+    bodyMode: "json",
+  },
+  {
+    method: "GET",
     matcher: /^\/dispatches\/next$/,
     controller: getNextDispatchForDriverController,
     requiresAuth: false,
     requiresDriverAuth: true,
+  },
+  {
+    method: "PATCH",
+    matcher: /^\/drivers\/dispatches\/[^/]+\/started-delivery$/,
+    controller: setDispatchStartedDeliveryAtController,
+    requiresAuth: false,
+    requiresDriverAuth: true,
+    bodyMode: "json",
+  },
+  {
+    method: "POST",
+    matcher: /^\/drivers\/location$/,
+    controller: dispatchRouteController,
+    requiresAuth: false,
+    requiresDriverAuth: true,
+    bodyMode: "json",
+  },
+  {
+    method: "POST",
+    matcher: /^\/drivers\/dispatches\/[^/]+\/route\/start$/,
+    controller: dispatchRouteController,
+    requiresAuth: false,
+    requiresDriverAuth: true,
+    bodyMode: "json",
+  },
+  {
+    method: "POST",
+    matcher: /^\/drivers\/dispatches\/[^/]+\/route\/points\/batch$/,
+    controller: dispatchRouteController,
+    requiresAuth: false,
+    requiresDriverAuth: true,
+    bodyMode: "json",
+  },
+  {
+    method: "POST",
+    matcher: /^\/drivers\/dispatches\/[^/]+\/route\/stop$/,
+    controller: dispatchRouteController,
+    requiresAuth: false,
+    requiresDriverAuth: true,
+    bodyMode: "json",
+  },
+  {
+    method: "PATCH",
+    matcher: /^\/drivers\/me\/activate$/,
+    controller: driverSelfController,
+    requiresAuth: false,
+    requiresDriverAuth: true,
+  },
+  {
+    method: "PATCH",
+    matcher: /^\/drivers\/me\/deactivate$/,
+    controller: driverSelfController,
+    requiresAuth: false,
+    requiresDriverAuth: true,
+  },
+  {
+    method: "GET",
+    matcher: /^\/dispatches\/[^/]+\/route$/,
+    controller: dispatchRouteController,
+    requiresAuth: true,
   },
   {
     method: "POST",
@@ -132,6 +255,123 @@ const routes: Route[] = [
   },
   {
     method: "GET",
+    matcher: /^\/stations$/,
+    controller: stationController,
+    requiresAuth: true,
+  },
+  {
+    method: "POST",
+    matcher: /^\/stations$/,
+    controller: stationController,
+    requiresAuth: true,
+    bodyMode: "json",
+  },
+  {
+    method: "PATCH",
+    matcher: /^\/stations\/[^/]+$/,
+    controller: stationController,
+    requiresAuth: true,
+    bodyMode: "json",
+  },
+  {
+    method: "DELETE",
+    matcher: /^\/stations\/[^/]+$/,
+    controller: stationController,
+    requiresAuth: true,
+  },
+  {
+    method: "POST",
+    matcher: /^\/stations\/[^/]+\/steps$/,
+    controller: stationController,
+    requiresAuth: true,
+    bodyMode: "json",
+  },
+  {
+    method: "PATCH",
+    matcher: /^\/stations\/[^/]+\/steps\/[^/]+$/,
+    controller: stationController,
+    requiresAuth: true,
+    bodyMode: "json",
+  },
+  {
+    method: "DELETE",
+    matcher: /^\/stations\/[^/]+\/steps\/[^/]+$/,
+    controller: stationController,
+    requiresAuth: true,
+  },
+  {
+    method: "POST",
+    matcher: /^\/stations\/[^/]+\/orders\/[^/]+\/complete$/,
+    controller: stationController,
+    requiresAuth: true,
+    bodyMode: "json",
+  },
+  {
+    method: "GET",
+    matcher: /^\/preparation-task-(stations|categories)$/,
+    controller: preparationTaskController,
+    requiresAuth: true,
+  },
+  {
+    method: "POST",
+    matcher: /^\/preparation-task-(stations|categories)$/,
+    controller: preparationTaskController,
+    requiresAuth: true,
+    bodyMode: "json",
+  },
+  {
+    method: "GET",
+    matcher: /^\/preparation-task-(stations|categories)\/[^/]+$/,
+    controller: preparationTaskController,
+    requiresAuth: true,
+  },
+  {
+    method: "PATCH",
+    matcher: /^\/preparation-task-(stations|categories)\/[^/]+$/,
+    controller: preparationTaskController,
+    requiresAuth: true,
+    bodyMode: "json",
+  },
+  {
+    method: "DELETE",
+    matcher: /^\/preparation-task-(stations|categories)\/[^/]+$/,
+    controller: preparationTaskController,
+    requiresAuth: true,
+  },
+  {
+    method: "GET",
+    matcher: /^\/preparation-tasks$/,
+    controller: preparationTaskController,
+    requiresAuth: true,
+  },
+  {
+    method: "POST",
+    matcher: /^\/preparation-tasks$/,
+    controller: preparationTaskController,
+    requiresAuth: true,
+    bodyMode: "json",
+  },
+  {
+    method: "GET",
+    matcher: /^\/preparation-tasks\/[^/]+$/,
+    controller: preparationTaskController,
+    requiresAuth: true,
+  },
+  {
+    method: "PATCH",
+    matcher: /^\/preparation-tasks\/[^/]+$/,
+    controller: preparationTaskController,
+    requiresAuth: true,
+    bodyMode: "json",
+  },
+  {
+    method: "DELETE",
+    matcher: /^\/preparation-tasks\/[^/]+$/,
+    controller: preparationTaskController,
+    requiresAuth: true,
+  },
+  {
+    method: "GET",
     matcher: /^\/drivers\/[^/]+$/,
     controller: driverController,
     requiresAuth: true,
@@ -142,6 +382,18 @@ const routes: Route[] = [
     controller: driverController,
     requiresAuth: true,
     bodyMode: "json",
+  },
+  {
+    method: "PATCH",
+    matcher: /^\/drivers\/[^/]+\/activate$/,
+    controller: driverController,
+    requiresAuth: true,
+  },
+  {
+    method: "PATCH",
+    matcher: /^\/drivers\/[^/]+\/deactivate$/,
+    controller: driverController,
+    requiresAuth: true,
   },
   {
     method: "DELETE",
@@ -160,6 +412,12 @@ const routes: Route[] = [
     method: "GET",
     matcher: /^\/businesses$/,
     controller: listOwnedBusinessesController,
+    requiresAuth: true,
+  },
+  {
+    method: "GET",
+    matcher: /^\/businesses\/current$/,
+    controller: getCurrentBusinessController,
     requiresAuth: true,
   },
   {
@@ -224,6 +482,12 @@ const routes: Route[] = [
   },
   {
     method: "GET",
+    matcher: /^\/orders-by-station$/,
+    controller: getOrdersByStationController,
+    requiresAuth: true,
+  },
+  {
+    method: "GET",
     matcher: /^\/orders$/,
     controller: listOrdersController,
     requiresAuth: true,
@@ -233,6 +497,28 @@ const routes: Route[] = [
     matcher: /^\/orders\/[^/]+$/,
     controller: getOrderByIdController,
     requiresAuth: true,
+  },
+  {
+    method: "PATCH",
+    matcher: /^\/orders\/[^/]+$/,
+    controller: manageOrdersController,
+    requiresAuth: true,
+    bodyMode: "json",
+  },
+  {
+    method: "POST",
+    matcher: /^\/orders$/,
+    controller: manageOrdersController,
+    requiresAuth: true,
+    bodyMode: "json",
+  },
+  {
+    method: "PATCH",
+    matcher: /^\/drivers\/orders\/[^/]+$/,
+    controller: updateOrderController,
+    requiresAuth: false,
+    requiresDriverAuth: true,
+    bodyMode: "json",
   },
   {
     method: "GET",
@@ -297,6 +583,37 @@ const routes: Route[] = [
   {
     method: "GET",
     matcher: /^\/categories$/,
+    controller: nativeCatalogController,
+    requiresAuth: true,
+  },
+  {
+    method: "GET",
+    matcher: /^\/pos\/exclusive-promotions$/,
+    controller: nativeCatalogController,
+    requiresAuth: true,
+  },
+  {
+    method: "GET",
+    matcher: /^\/progressive-discount$/,
+    controller: nativeCatalogController,
+    requiresAuth: true,
+  },
+  {
+    method: "GET",
+    matcher: /^\/customers\/search$/,
+    controller: nativeCatalogController,
+    requiresAuth: true,
+  },
+  {
+    method: "POST",
+    matcher: /^\/customers$/,
+    controller: nativeCatalogController,
+    requiresAuth: true,
+    bodyMode: "json",
+  },
+  {
+    method: "GET",
+    matcher: /^\/address-search$/,
     controller: nativeCatalogController,
     requiresAuth: true,
   },
@@ -446,11 +763,32 @@ const routes: Route[] = [
 const server = createServer(async (request, response) => {
   const method = request.method;
   const url = request.url;
+  const requestId = randomUUID();
+  const startedAt = Date.now();
+
+  const sendJsonWithLog = (statusCode: number, payload: unknown) => {
+    const durationMs = Date.now() - startedAt;
+    console.log("[api] response sent", {
+      requestId,
+      method: method ?? "UNKNOWN",
+      url: url ?? "UNKNOWN",
+      statusCode,
+      durationMs,
+      body: formatPayloadForLog(payload),
+    });
+    sendJson(response, statusCode, payload);
+  };
 
   if (!method || !url) {
-    sendJson(response, 400, { error: "Invalid request" });
+    sendJsonWithLog(400, { error: "Invalid request" });
     return;
   }
+
+  console.log("[api] call received", {
+    requestId,
+    method,
+    url,
+  });
 
   if (method === "OPTIONS") {
     setCorsHeaders(response);
@@ -460,10 +798,10 @@ const server = createServer(async (request, response) => {
   }
 
   const parsedUrl = new URL(url, "http://localhost");
-  const path = parsedUrl.pathname;
+  const path = normalizeApiPath(parsedUrl.pathname);
 
   if (method === "GET" && path === "/health") {
-    sendJson(response, 200, {
+    sendJsonWithLog(200, {
       service: "foody-api",
       status: "ok",
       timestamp: new Date().toISOString(),
@@ -476,7 +814,7 @@ const server = createServer(async (request, response) => {
   );
 
   if (!route) {
-    sendJson(response, 404, { error: "Not found" });
+    sendJsonWithLog(404, { error: "Not found" });
     return;
   }
 
@@ -502,7 +840,7 @@ const server = createServer(async (request, response) => {
       ? driverAccessTokenVerifier.verify(accessToken)
       : null;
     if (!tokenPayload) {
-      sendJson(response, 401, { error: "Unauthorized" });
+      sendJsonWithLog(401, { error: "Unauthorized" });
       return;
     }
 
@@ -511,7 +849,7 @@ const server = createServer(async (request, response) => {
     const accessToken = extractAccessToken(request);
     const tokenPayload = accessToken ? accessTokenVerifier.verify(accessToken) : null;
     if (!tokenPayload) {
-      sendJson(response, 401, { error: "Unauthorized" });
+      sendJsonWithLog(401, { error: "Unauthorized" });
       return;
     }
 
@@ -522,7 +860,10 @@ const server = createServer(async (request, response) => {
     );
 
     if (businessContext === "__forbidden__") {
-      sendJson(response, 403, { error: "Forbidden", reason: "BUSINESS_ACCESS_DENIED" });
+      sendJsonWithLog(403, {
+        error: "Forbidden",
+        reason: "BUSINESS_ACCESS_DENIED",
+      });
       return;
     }
 
@@ -552,6 +893,19 @@ const server = createServer(async (request, response) => {
       }
     }
 
+    if (isDevLoggingEnabled) {
+      console.log("[api] body sent to request", {
+        requestId,
+        method,
+        url,
+        body: formatRequestBodyForLog({
+          body,
+          formData,
+          rawBody,
+        }),
+      });
+    }
+
     const incomingBusinessIdHeader = readHeaderValue(
       request.headers[BUSINESS_ID_HEADER_NAME],
     );
@@ -570,25 +924,30 @@ const server = createServer(async (request, response) => {
       },
     });
 
-    sendJson(response, result.statusCode, result.body);
+    sendJsonWithLog(result.statusCode, result.body);
   } catch (error) {
     if (error instanceof Error && error.message === "PAYLOAD_TOO_LARGE") {
-      sendJson(response, 413, { error: "Payload too large" });
+      sendJsonWithLog(413, { error: "Payload too large" });
       return;
     }
 
     if (error instanceof Error && error.message === "INVALID_JSON") {
-      sendJson(response, 400, { error: "Invalid JSON payload" });
+      sendJsonWithLog(400, { error: "Invalid JSON payload" });
       return;
     }
 
     if (error instanceof Error && error.message === "INVALID_FORM_DATA") {
-      sendJson(response, 400, { error: "Invalid multipart form-data payload" });
+      sendJsonWithLog(400, { error: "Invalid multipart form-data payload" });
       return;
     }
 
-    console.error("[api] request failed:", error);
-    sendJson(response, 500, { error: "Internal Server Error" });
+    console.error("[api] request failed", {
+      requestId,
+      method: method ?? "UNKNOWN",
+      url: url ?? "UNKNOWN",
+      error,
+    });
+    sendJsonWithLog(500, { error: "Internal Server Error" });
   }
 });
 
@@ -701,4 +1060,70 @@ async function resolveBusinessIdForUser(
   }
 
   return owned[0]?.businessId ?? null;
+}
+
+function formatPayloadForLog(payload: unknown): unknown {
+  if (typeof payload === "string") {
+    return payload.length > 1000 ? `${payload.slice(0, 1000)}...[truncated]` : payload;
+  }
+
+  try {
+    const serialized = JSON.stringify(payload);
+    if (!serialized) {
+      return payload;
+    }
+
+    return serialized.length > 2000
+      ? `${serialized.slice(0, 2000)}...[truncated]`
+      : payload;
+  } catch {
+    return "[unserializable payload]";
+  }
+}
+
+function formatRequestBodyForLog(input: {
+  body: unknown;
+  formData?: FormData;
+  rawBody?: Buffer;
+}): unknown {
+  const { body, formData, rawBody } = input;
+
+  if (formData) {
+    const data: Record<string, unknown> = {};
+    for (const [key, value] of formData.entries()) {
+      if (value instanceof File) {
+        data[key] = {
+          fileName: value.name,
+          fileSize: value.size,
+          fileType: value.type || "application/octet-stream",
+        };
+      } else {
+        data[key] = value;
+      }
+    }
+    return { type: "form-data", data };
+  }
+
+  if (rawBody) {
+    return {
+      type: "raw",
+      size: rawBody.length,
+      preview: rawBody.toString("utf8", 0, Math.min(300, rawBody.length)),
+    };
+  }
+
+  return body ?? {};
+}
+
+function normalizeApiPath(pathname: string): string {
+  if (pathname === "/api") {
+    return "/";
+  }
+
+  if (pathname.startsWith("/api/")) {
+    const normalized = pathname.slice("/api".length);
+    return normalized.startsWith("/") ? normalized : `/${normalized}`;
+  }
+
+  return pathname;
 }

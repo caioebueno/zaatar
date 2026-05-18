@@ -1,27 +1,20 @@
- "use client";
+"use client";
 
-import Link from "next/link";
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { saveAuthSession, setSelectedBusinessIdSession } from "@/src/lib/auth";
+import {
+  AuthBtn,
+  AuthLayout,
+  AuthLinkBtn,
+  D,
+  Kicker,
+  OTPScreen,
+  PhoneInput,
+  SuccessScreen,
+} from "@/app/components/auth/AuthComponents";
 
-type LoginResponse = {
-  accessToken?: string;
-  businesses?: Array<{
-    id: string;
-    name: string;
-  }>;
-  error?: string;
-  expiresAt?: string;
-  field?: string;
-  ok?: boolean;
-  owner?: {
-    email: string;
-    id: string;
-    name: string;
-  };
-  selectedBusinessId?: string | null;
-};
+type Screen = "phone" | "otp" | "success";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -29,116 +22,107 @@ export default function LoginPage() {
     () => process.env.NEXT_PUBLIC_API_BASE_URL?.trim() || "http://localhost:4000",
     [],
   );
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (isSubmitting) return;
+  const [screen, setScreen] = useState<Screen>("phone");
+  const [phone, setPhone] = useState("");
+  const [countryCode, setCountryCode] = useState("+1");
+  const [phoneError, setPhoneError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-    setErrorMessage(null);
-    setIsSubmitting(true);
+  const fullPhone = `${countryCode}${phone.replace(/\D/g, "")}`;
 
+  async function handleContinue() {
+    const digits = phone.replace(/\D/g, "");
+    if (digits.length < 10) {
+      setPhoneError("Enter a valid 10-digit number");
+      return;
+    }
+    setPhoneError("");
+    setLoading(true);
     try {
-      const response = await fetch(`${apiBaseUrl}/owners/login`, {
+      const res = await fetch(`${apiBaseUrl}/owners/auth/otp/send`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone: `${countryCode}${digits}`, language: "en" }),
       });
-
-      const data = (await response.json().catch(() => ({}))) as LoginResponse;
-
-      if (!response.ok || !data.accessToken || !data.owner) {
-        const message = data.field
-          ? `${data.error ?? "Invalid payload"} (${data.field})`
-          : (data.error ?? "Failed to login");
-        setErrorMessage(message);
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({})) as { error?: string };
+        setPhoneError(data.error ?? "Could not send code. Check your number.");
         return;
       }
-
-      const businesses = Array.isArray(data.businesses) ? data.businesses : [];
-
-      saveAuthSession({
-        accessToken: data.accessToken,
-        owner: data.owner,
-        businesses,
-        selectedBusinessId: null,
-      });
-
-      setSelectedBusinessIdSession(null);
-
-      if (businesses.length === 0) {
-        router.push("/onboarding");
-        return;
-      }
-
-      router.push("/business/select");
+      setScreen("otp");
     } catch {
-      setErrorMessage("Could not reach API server. Please try again.");
+      setPhoneError("Could not reach server. Try again.");
     } finally {
-      setIsSubmitting(false);
+      setLoading(false);
     }
   }
 
+  function handleOTPSuccess(result: {
+    accessToken: string;
+    owner: { id: string; email: string; name: string };
+    businesses: Array<{ id: string; name: string }>;
+    selectedBusinessId: string | null;
+  }) {
+    setScreen("success");
+    saveAuthSession({
+      accessToken: result.accessToken,
+      owner: result.owner,
+      businesses: result.businesses,
+      selectedBusinessId: result.selectedBusinessId,
+    });
+    setSelectedBusinessIdSession(result.selectedBusinessId);
+    setTimeout(() => {
+      if (result.businesses.length === 0) {
+        router.push("/onboarding");
+      } else {
+        router.push("/business/select");
+      }
+    }, 800);
+  }
+
   return (
-    <main className="auth-shell">
-      <section className="auth-card">
-        <h1 className="auth-title">Login</h1>
-        <p className="auth-subtitle">Access your manager account.</p>
+    <AuthLayout>
+      {screen === "phone" && (
+        <div style={{ animation: "auth-in 260ms ease", width: "100%", maxWidth: 400 }}>
+          <Kicker>Sign in</Kicker>
+          <h1 style={{ fontSize: 32, fontWeight: 800, letterSpacing: "-0.048em", color: D.text, lineHeight: 1.08, marginBottom: 10 }}>
+            Welcome back.
+          </h1>
+          <p style={{ fontSize: 14, color: D.dim, lineHeight: 1.65, marginBottom: 32 }}>
+            Enter your number and we&apos;ll send a one-time code via SMS.
+          </p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+            <PhoneInput
+              value={phone}
+              onChange={setPhone}
+              error={phoneError}
+              countryCode={countryCode}
+              onCountryChange={setCountryCode}
+            />
+            <AuthBtn
+              label="Continue →"
+              onClick={handleContinue}
+              loading={loading}
+              disabled={!phone}
+            />
+          </div>
+          <div style={{ marginTop: 28, textAlign: "center" }}>
+            <span style={{ fontSize: 13.5, color: D.faint }}>No account?&nbsp;</span>
+            <AuthLinkBtn onClick={() => router.push("/register")}>Create one →</AuthLinkBtn>
+          </div>
+        </div>
+      )}
 
-        <form className="auth-form" onSubmit={onSubmit}>
-          <label className="field-label" htmlFor="email">
-            Email
-          </label>
-          <input
-            className="field-input"
-            id="email"
-            name="email"
-            type="email"
-            placeholder="you@business.com"
-            autoComplete="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            disabled={isSubmitting}
-            required
-          />
+      {screen === "otp" && (
+        <OTPScreen
+          phone={fullPhone}
+          onBack={() => setScreen("phone")}
+          onSuccess={handleOTPSuccess}
+        />
+      )}
 
-          <label className="field-label" htmlFor="password">
-            Password
-          </label>
-          <input
-            className="field-input"
-            id="password"
-            name="password"
-            type="password"
-            placeholder="Enter your password"
-            autoComplete="current-password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            disabled={isSubmitting}
-            required
-          />
-
-          {errorMessage ? (
-            <p className="form-message form-message-error">{errorMessage}</p>
-          ) : null}
-
-          <button className="button button-primary" type="submit">
-            {isSubmitting ? "Signing in..." : "Sign in"}
-          </button>
-        </form>
-
-        <p className="auth-footnote">
-          Don&apos;t have an account?{" "}
-          <Link className="text-link" href="/register">
-            Create one
-          </Link>
-        </p>
-      </section>
-    </main>
+      {screen === "success" && <SuccessScreen />}
+    </AuthLayout>
   );
 }

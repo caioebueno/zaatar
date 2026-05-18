@@ -7,6 +7,7 @@ export type RegisterOwnerInput = {
   email: unknown;
   name: unknown;
   password: unknown;
+  phone: unknown;
 };
 
 export type RegisterOwnerOutput = {
@@ -23,6 +24,7 @@ export class RegisterOwnerUseCase {
   async execute(input: RegisterOwnerInput): Promise<RegisterOwnerOutput> {
     const name = normalizeRequiredString(input.name, "name");
     const email = normalizeEmail(input.email);
+    const phone = normalizePhone(input.phone);
     const password = normalizePassword(input.password);
 
     const passwordHash = await this.passwordHasher.hash(password);
@@ -31,6 +33,7 @@ export class RegisterOwnerUseCase {
       id: this.idGenerator.generate(),
       name,
       email,
+      phone,
       passwordHash,
     });
 
@@ -69,4 +72,13 @@ function normalizePassword(value: unknown): string {
   }
 
   return password;
+}
+
+function normalizePhone(value: unknown): string {
+  const rawPhone = normalizeRequiredString(value, "phone");
+  const normalized = rawPhone.replace(/\D/g, "");
+  if (normalized.length < 10 || normalized.length > 20) {
+    throw new InvalidPayloadError("phone");
+  }
+  return normalized;
 }

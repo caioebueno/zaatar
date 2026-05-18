@@ -2,6 +2,8 @@ import type { DriverOtpChannel } from "./DriverOtpSender.js";
 
 export type DriverAuthEntity = {
   active: boolean;
+  activatedAt: Date | null;
+  deactivatedAt: Date | null;
   id: string;
   name: string;
   phone: string | null;

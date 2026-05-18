@@ -5,12 +5,30 @@ import type {
 } from "../ports/AnalyticsRepository.js";
 
 export type GetOrderSalesAnalyticsInput = {
+  businessId?: string;
+  endDate?: string;
   from?: string;
+  startDate?: string;
+  start?: string;
+  end?: string;
   timezone?: string;
   to?: string;
 };
 
 export type GetOrderSalesAnalyticsOutput = {
+  endDate: string;
+  evolucaoReceita: Array<{
+    date: string;
+    receita: number;
+  }>;
+  receitaTotal: number;
+  startDate: string;
+  ticketMedio: number;
+  totalPedidos: number;
+  volumePedidos: Array<{
+    date: string;
+    pedidos: number;
+  }>;
   daily: Array<{
     averageTicket: number;
     date: string;
@@ -33,9 +51,15 @@ export class GetOrderSalesAnalyticsUseCase {
   async execute(
     input: GetOrderSalesAnalyticsInput,
   ): Promise<GetOrderSalesAnalyticsOutput> {
+    const businessId = (input.businessId ?? "").trim();
+    if (!businessId) {
+      throw new InvalidAnalyticsRangeError("businessId", "businessId is required");
+    }
+
     const defaults = getDefaultDateRange();
-    const from = (input.from ?? "").trim() || defaults.from;
-    const to = (input.to ?? "").trim() || defaults.to;
+    const from =
+      (input.startDate ?? input.start ?? input.from ?? "").trim() || defaults.from;
+    const to = (input.endDate ?? input.end ?? input.to ?? "").trim() || defaults.to;
     const timezone = (input.timezone ?? "").trim() || "America/New_York";
 
     if (!isValidDateOnly(from)) {
@@ -67,6 +91,7 @@ export class GetOrderSalesAnalyticsUseCase {
     }
 
     const rows = await this.repository.getOrderSalesByDateRange({
+      businessId,
       from,
       to,
       timezone,
@@ -84,6 +109,8 @@ export class GetOrderSalesAnalyticsUseCase {
     const averageTicket = totalOrders > 0 ? Math.round(totalSales / totalOrders) : 0;
 
     return {
+      startDate: from,
+      endDate: to,
       from,
       to,
       timezone,
@@ -93,6 +120,17 @@ export class GetOrderSalesAnalyticsUseCase {
         averageTicket,
       },
       daily,
+      receitaTotal: totalSales,
+      ticketMedio: averageTicket,
+      totalPedidos: totalOrders,
+      evolucaoReceita: daily.map((item) => ({
+        date: item.date,
+        receita: item.sales,
+      })),
+      volumePedidos: daily.map((item) => ({
+        date: item.date,
+        pedidos: item.orders,
+      })),
     };
   }
 }

@@ -10,6 +10,8 @@ import type {
 
 type DriverRow = {
   active: boolean;
+  activatedAt: Date | null;
+  deactivatedAt: Date | null;
   id: string;
   name: string;
   phone: string | null;
@@ -30,6 +32,8 @@ export class PrismaDriverAuthRepository implements DriverAuthRepository {
         "id",
         "name",
         "active",
+        "activatedAt",
+        "deactivatedAt",
         "priorityLevel",
         "phone"
       FROM "Driver"

@@ -8,6 +8,7 @@ import type {
   ProductManagerComboSlot,
   ProductManagerModifierGroup,
   ProductManagerModifierGroupItem,
+  ProductManagerPreparationTask,
   ProductManagerProduct,
   ProductManagerProductItemType,
   ProductManagerTranslations,
@@ -60,6 +61,92 @@ type Props = {
   }[];
 };
 
+type MenuExportModifierGroupItem = {
+  id: string;
+  name: string;
+  description: string | null;
+  price: number;
+  translations: ProductManagerTranslations | null;
+  photoUrl: string | null;
+};
+
+type MenuExportModifierGroup = {
+  id: string;
+  title: string;
+  required: boolean;
+  type: "MULTI" | "SINGLE" | null;
+  minSelection: number | null;
+  maxSelection: number | null;
+  translations: ProductManagerTranslations | null;
+  items: MenuExportModifierGroupItem[];
+};
+
+type MenuExportComboSlotOption = {
+  productId: string;
+  extraPrice: number;
+  sortIndex: number | null;
+};
+
+type MenuExportComboSlot = {
+  id: string;
+  name: string;
+  translations: ProductManagerTranslations | null;
+  minSelect: number;
+  maxSelect: number;
+  allowDuplicates: boolean;
+  sortIndex: number | null;
+  options: MenuExportComboSlotOption[];
+};
+
+type MenuExportFixedComboProduct = {
+  productId: string;
+  quantity: number;
+};
+
+type MenuExportPreparationTask = {
+  id: string;
+  name: string;
+  stationId: string | null;
+  stationName: string | null;
+  includeComments: boolean;
+  includeModifiers: boolean;
+};
+
+type MenuExportProduct = {
+  id: string;
+  itemType: ProductManagerProductItemType;
+  name: string;
+  description: string | null;
+  price: number | null;
+  comparedAtPrice: number | null;
+  visible: boolean;
+  categoryIndex: number | null;
+  translations: ProductManagerTranslations | null;
+  photos: string[];
+  preparationStepIds: string[];
+  preparationTasks: MenuExportPreparationTask[];
+  modifierGroups: MenuExportModifierGroup[];
+  comboSlots: MenuExportComboSlot[];
+  products: MenuExportFixedComboProduct[];
+};
+
+type MenuExportCategory = {
+  id: string;
+  name: string;
+  menuIndex: number | null;
+  products: MenuExportProduct[];
+};
+
+type MenuExportPayload = {
+  menu?: {
+    id?: string;
+    name?: string;
+  };
+  categories: MenuExportCategory[];
+  uncategorized: MenuExportProduct[];
+  lookupModifierGroups: MenuExportModifierGroup[];
+};
+
 type CategoryView = {
   id: string;
   title: string;
@@ -92,6 +179,28 @@ type DragProductState = {
 type DrawerLanguage = "es" | "pt";
 type ProductEditorMode = "create" | "edit";
 type ProductEditorFocusSection = "translations";
+
+type EditorPrepTask = {
+  stepId: string;
+  stepName: string;
+  stationId: string;
+  stationName: string;
+  includeComments: boolean;
+  includeModifiers: boolean;
+  goalMinutes: number;
+};
+
+type AvailableStation = {
+  id: string;
+  name: string;
+  preparationSteps: {
+    id: string;
+    name: string;
+    goalMinutes: number;
+    includeComments: boolean;
+    includeModifiers: boolean;
+  }[];
+};
 
 type ProductEditorComboSlotOption = {
   id: string;
@@ -154,6 +263,15 @@ type ProductEditorState = {
   focusSection: ProductEditorFocusSection | null;
   saving: boolean;
   error: string | null;
+  prepTasks: EditorPrepTask[];
+  prepTaskLookupStepId: string;
+  newPrepStepFormOpen: boolean;
+  newPrepStepStationId: string;
+  newPrepStepName: string;
+  newPrepStepGoalMinutes: string;
+  newPrepStepIncludeComments: boolean;
+  newPrepStepIncludeModifiers: boolean;
+  creatingPrepStep: boolean;
 };
 
 const currencyFormatter = new Intl.NumberFormat("en-US", {
@@ -532,6 +650,367 @@ function mapFixedComboProductFromUnknown(
   };
 }
 
+function mapPreparationTaskFromUnknown(
+  value: unknown,
+): MenuExportPreparationTask | null {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    return null;
+  }
+
+  const record = value as {
+    id?: unknown;
+    name?: unknown;
+    stationId?: unknown;
+    stationName?: unknown;
+    includeComments?: unknown;
+    includeModifiers?: unknown;
+  };
+
+  if (typeof record.id !== "string" || typeof record.name !== "string") {
+    return null;
+  }
+
+  return {
+    id: record.id,
+    name: record.name,
+    stationId: typeof record.stationId === "string" ? record.stationId : null,
+    stationName:
+      typeof record.stationName === "string" ? record.stationName : null,
+    includeComments: record.includeComments === true,
+    includeModifiers: record.includeModifiers === true,
+  };
+}
+
+function parseMenuExportPayload(value: unknown): MenuExportPayload {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    throw new Error("Invalid import file");
+  }
+
+  const record = value as {
+    categories?: unknown;
+    uncategorized?: unknown;
+    lookupModifierGroups?: unknown;
+    menu?: unknown;
+  };
+
+  if (!Array.isArray(record.categories)) {
+    throw new Error("Invalid import file: categories");
+  }
+
+  const categories = record.categories
+    .map((entry): MenuExportCategory | null => {
+      if (!entry || typeof entry !== "object" || Array.isArray(entry)) return null;
+      const item = entry as {
+        id?: unknown;
+        name?: unknown;
+        menuIndex?: unknown;
+        products?: unknown;
+      };
+      if (
+        typeof item.id !== "string" ||
+        typeof item.name !== "string" ||
+        !Array.isArray(item.products)
+      ) {
+        return null;
+      }
+
+      const menuIndex =
+        typeof item.menuIndex === "number" && Number.isInteger(item.menuIndex)
+          ? item.menuIndex
+          : null;
+
+      return {
+        id: item.id,
+        name: item.name,
+        menuIndex,
+        products: item.products
+          .map((product) => mapExportProductFromUnknown(product))
+          .filter((product): product is MenuExportProduct => product !== null),
+      };
+    })
+    .filter((entry): entry is MenuExportCategory => entry !== null);
+
+  const uncategorized = Array.isArray(record.uncategorized)
+    ? record.uncategorized
+        .map((product) => mapExportProductFromUnknown(product))
+        .filter((product): product is MenuExportProduct => product !== null)
+    : [];
+
+  const lookupModifierGroups = Array.isArray(record.lookupModifierGroups)
+    ? record.lookupModifierGroups
+        .map((group) => mapExportModifierGroupFromUnknown(group))
+        .filter((group): group is MenuExportModifierGroup => group !== null)
+    : [];
+
+  const menu =
+    record.menu && typeof record.menu === "object" && !Array.isArray(record.menu)
+      ? {
+          id:
+            "id" in record.menu && typeof record.menu.id === "string"
+              ? record.menu.id
+              : undefined,
+          name:
+            "name" in record.menu && typeof record.menu.name === "string"
+              ? record.menu.name
+              : undefined,
+        }
+      : undefined;
+
+  return {
+    menu,
+    categories,
+    uncategorized,
+    lookupModifierGroups,
+  };
+}
+
+function mapExportProductFromUnknown(value: unknown): MenuExportProduct | null {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    return null;
+  }
+
+  const record = value as {
+    id?: unknown;
+    itemType?: unknown;
+    name?: unknown;
+    description?: unknown;
+    price?: unknown;
+    comparedAtPrice?: unknown;
+    visible?: unknown;
+    categoryIndex?: unknown;
+    translations?: unknown;
+    photos?: unknown;
+    preparationStepIds?: unknown;
+    preparationTasks?: unknown;
+    modifierGroups?: unknown;
+    comboSlots?: unknown;
+    products?: unknown;
+  };
+
+  if (
+    typeof record.id !== "string" ||
+    (record.itemType !== "PRODUCT" && record.itemType !== "COMBO") ||
+    typeof record.name !== "string"
+  ) {
+    return null;
+  }
+
+  const description =
+    typeof record.description === "string" || record.description === null
+      ? record.description
+      : null;
+  const price = typeof record.price === "number" ? record.price : null;
+  const comparedAtPrice =
+    typeof record.comparedAtPrice === "number" ? record.comparedAtPrice : null;
+  const visible = typeof record.visible === "boolean" ? record.visible : true;
+  const categoryIndex =
+    typeof record.categoryIndex === "number" && Number.isInteger(record.categoryIndex)
+      ? record.categoryIndex
+      : null;
+  const photos = Array.isArray(record.photos)
+    ? record.photos.filter((entry): entry is string => typeof entry === "string")
+    : [];
+  const preparationStepIds = Array.isArray(record.preparationStepIds)
+    ? record.preparationStepIds.filter(
+        (entry): entry is string => typeof entry === "string",
+      )
+    : [];
+  const preparationTasks = Array.isArray(record.preparationTasks)
+    ? record.preparationTasks
+        .map((task) => mapPreparationTaskFromUnknown(task))
+        .filter((task): task is MenuExportPreparationTask => task !== null)
+    : [];
+
+  const modifierGroups = Array.isArray(record.modifierGroups)
+    ? record.modifierGroups
+        .map((group) => mapExportModifierGroupFromUnknown(group))
+        .filter((group): group is MenuExportModifierGroup => group !== null)
+    : [];
+
+  const comboSlots = Array.isArray(record.comboSlots)
+    ? record.comboSlots
+        .map((slot) => mapExportComboSlotFromUnknown(slot))
+        .filter((slot): slot is MenuExportComboSlot => slot !== null)
+    : [];
+
+  const products = Array.isArray(record.products)
+    ? record.products
+        .map((item): MenuExportFixedComboProduct | null => {
+          if (!item || typeof item !== "object" || Array.isArray(item)) return null;
+          const comboItem = item as { productId?: unknown; quantity?: unknown };
+          if (
+            typeof comboItem.productId !== "string" ||
+            typeof comboItem.quantity !== "number" ||
+            !Number.isInteger(comboItem.quantity) ||
+            comboItem.quantity <= 0
+          ) {
+            return null;
+          }
+          return {
+            productId: comboItem.productId,
+            quantity: comboItem.quantity,
+          };
+        })
+        .filter((item): item is MenuExportFixedComboProduct => item !== null)
+    : [];
+
+  return {
+    id: record.id,
+    itemType: record.itemType,
+    name: record.name,
+    description,
+    price,
+    comparedAtPrice,
+    visible,
+    categoryIndex,
+    translations: normalizeTranslations(record.translations),
+    photos,
+    preparationStepIds,
+    preparationTasks,
+    modifierGroups,
+    comboSlots,
+    products,
+  };
+}
+
+function mapExportModifierGroupFromUnknown(
+  value: unknown,
+): MenuExportModifierGroup | null {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    return null;
+  }
+
+  const record = value as {
+    id?: unknown;
+    title?: unknown;
+    required?: unknown;
+    type?: unknown;
+    minSelection?: unknown;
+    maxSelection?: unknown;
+    translations?: unknown;
+    items?: unknown;
+  };
+
+  if (typeof record.id !== "string" || typeof record.title !== "string") {
+    return null;
+  }
+
+  return {
+    id: record.id,
+    title: record.title,
+    required: typeof record.required === "boolean" ? record.required : false,
+    type: record.type === "MULTI" || record.type === "SINGLE" ? record.type : null,
+    minSelection:
+      typeof record.minSelection === "number" && Number.isInteger(record.minSelection)
+        ? record.minSelection
+        : null,
+    maxSelection:
+      typeof record.maxSelection === "number" && Number.isInteger(record.maxSelection)
+        ? record.maxSelection
+        : null,
+    translations: normalizeTranslations(record.translations),
+    items: Array.isArray(record.items)
+      ? record.items
+          .map((item): MenuExportModifierGroupItem | null => {
+            if (!item || typeof item !== "object" || Array.isArray(item)) return null;
+            const entry = item as {
+              id?: unknown;
+              name?: unknown;
+              description?: unknown;
+              price?: unknown;
+              translations?: unknown;
+              photoUrl?: unknown;
+            };
+            if (
+              typeof entry.id !== "string" ||
+              typeof entry.name !== "string" ||
+              typeof entry.price !== "number"
+            ) {
+              return null;
+            }
+
+            return {
+              id: entry.id,
+              name: entry.name,
+              description:
+                typeof entry.description === "string" || entry.description === null
+                  ? entry.description
+                  : null,
+              price: entry.price,
+              translations: normalizeTranslations(entry.translations),
+              photoUrl: typeof entry.photoUrl === "string" ? entry.photoUrl : null,
+            };
+          })
+          .filter((entry): entry is MenuExportModifierGroupItem => entry !== null)
+      : [],
+  };
+}
+
+function mapExportComboSlotFromUnknown(value: unknown): MenuExportComboSlot | null {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    return null;
+  }
+
+  const record = value as {
+    id?: unknown;
+    name?: unknown;
+    translations?: unknown;
+    minSelect?: unknown;
+    maxSelect?: unknown;
+    allowDuplicates?: unknown;
+    sortIndex?: unknown;
+    options?: unknown;
+  };
+
+  if (
+    typeof record.id !== "string" ||
+    typeof record.name !== "string" ||
+    typeof record.minSelect !== "number" ||
+    typeof record.maxSelect !== "number" ||
+    typeof record.allowDuplicates !== "boolean"
+  ) {
+    return null;
+  }
+
+  const options = Array.isArray(record.options)
+    ? record.options
+        .map((option): MenuExportComboSlotOption | null => {
+          if (!option || typeof option !== "object" || Array.isArray(option)) return null;
+          const entry = option as {
+            productId?: unknown;
+            extraPrice?: unknown;
+            sortIndex?: unknown;
+          };
+          if (typeof entry.productId !== "string" || typeof entry.extraPrice !== "number") {
+            return null;
+          }
+          return {
+            productId: entry.productId,
+            extraPrice: entry.extraPrice,
+            sortIndex:
+              typeof entry.sortIndex === "number" && Number.isInteger(entry.sortIndex)
+                ? entry.sortIndex
+                : null,
+          };
+        })
+        .filter((option): option is MenuExportComboSlotOption => option !== null)
+    : [];
+
+  return {
+    id: record.id,
+    name: record.name,
+    translations: normalizeTranslations(record.translations),
+    minSelect: record.minSelect,
+    maxSelect: record.maxSelect,
+    allowDuplicates: record.allowDuplicates,
+    sortIndex:
+      typeof record.sortIndex === "number" && Number.isInteger(record.sortIndex)
+        ? record.sortIndex
+        : null,
+    options,
+  };
+}
+
 function sortProducts(
   left: Pick<ProductManagerProduct, "categoryIndex" | "createdAt">,
   right: Pick<ProductManagerProduct, "categoryIndex" | "createdAt">,
@@ -782,12 +1261,15 @@ function SectionInsertControl({
 // ── Menu Builder UI ───────────────────────────────────────────────────────────
 
 function MBMenuSelector({
-  menus, activeId, onSelect, onCreateMenu, disabled,
+  menus, activeId, onSelect, onCreateMenu, onImportMenu, onSetDefault, settingDefaultId, disabled,
 }: {
   menus: { id: string; name: string; active: boolean; isDefault: boolean }[];
   activeId: string;
   onSelect: (id: string) => void;
   onCreateMenu: () => void;
+  onImportMenu: () => void;
+  onSetDefault: (id: string) => void;
+  settingDefaultId: string | null;
   disabled: boolean;
 }) {
   const [open, setOpen] = useState(false);
@@ -814,17 +1296,30 @@ function MBMenuSelector({
         <svg width={13} height={13} viewBox="0 0 16 16" fill="none" stroke="var(--slate)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ display: "block", flexShrink: 0, transform: open ? "rotate(180deg)" : "none", transition: "transform 0.2s" }}><path d="M4 6l4 4 4-4" /></svg>
       </button>
       {open && (
-        <div style={{ position: "absolute", top: "calc(100% + 6px)", left: 0, minWidth: 220, zIndex: 100, background: "var(--paper)", borderRadius: 12, border: "1px solid rgba(22,18,15,0.16)", boxShadow: "0 8px 32px rgba(22,18,15,0.12), 0 0 0 1px rgba(22,18,15,0.04)", overflow: "hidden" }}>
+        <div style={{ position: "absolute", top: "calc(100% + 6px)", left: 0, minWidth: 240, zIndex: 100, background: "var(--paper)", borderRadius: 12, border: "1px solid rgba(22,18,15,0.16)", boxShadow: "0 8px 32px rgba(22,18,15,0.12), 0 0 0 1px rgba(22,18,15,0.04)", overflow: "hidden" }}>
           <div style={{ padding: "6px 6px 0" }}>
             {menus.map(m => (
-              <div key={m.id} onMouseDown={() => { onSelect(m.id); setOpen(false); }}
-                style={{ display: "flex", alignItems: "center", gap: 9, padding: "9px 10px", borderRadius: 7, cursor: "pointer", background: m.id === activeId ? "rgba(255,61,20,0.07)" : "transparent", transition: "background 0.1s" }}
+              <div key={m.id}
+                style={{ display: "flex", alignItems: "center", gap: 9, padding: "9px 10px", borderRadius: 7, background: m.id === activeId ? "rgba(255,61,20,0.07)" : "transparent", transition: "background 0.1s" }}
                 onMouseEnter={e => m.id !== activeId && ((e.currentTarget as HTMLElement).style.background = "#efe7da")}
                 onMouseLeave={e => m.id !== activeId && ((e.currentTarget as HTMLElement).style.background = "transparent")}
               >
-                <div style={{ width: 8, height: 8, borderRadius: 2, background: m.active ? "#00a866" : "var(--slate)", flexShrink: 0 }} />
-                <span style={{ fontFamily: "var(--font-sans)", fontWeight: m.id === activeId ? 600 : 400, fontSize: 13, color: "var(--ink)", flex: 1 }}>{m.name}{m.isDefault ? " · Default" : ""}</span>
-                {m.id === activeId && <svg width={12} height={12} viewBox="0 0 16 16" fill="none" stroke="var(--zippy)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ display: "block" }}><path d="M2.5 8.5l3.5 3.5 7.5-7.5" /></svg>}
+                <div onMouseDown={() => { onSelect(m.id); setOpen(false); }} style={{ display: "flex", alignItems: "center", gap: 9, flex: 1, cursor: "pointer" }}>
+                  <div style={{ width: 8, height: 8, borderRadius: 2, background: m.active ? "#00a866" : "var(--slate)", flexShrink: 0 }} />
+                  <span style={{ fontFamily: "var(--font-sans)", fontWeight: m.id === activeId ? 600 : 400, fontSize: 13, color: "var(--ink)", flex: 1 }}>{m.name}{m.isDefault ? " · Default" : ""}</span>
+                  {m.id === activeId && <svg width={12} height={12} viewBox="0 0 16 16" fill="none" stroke="var(--zippy)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ display: "block" }}><path d="M2.5 8.5l3.5 3.5 7.5-7.5" /></svg>}
+                </div>
+                {!m.isDefault && (
+                  <button
+                    type="button"
+                    title="Set as default menu"
+                    disabled={settingDefaultId !== null}
+                    onMouseDown={e => { e.stopPropagation(); onSetDefault(m.id); setOpen(false); }}
+                    style={{ flexShrink: 0, padding: "3px 7px", borderRadius: 5, border: "1px solid rgba(22,18,15,0.16)", background: "transparent", cursor: settingDefaultId !== null ? "not-allowed" : "pointer", fontFamily: "var(--font-sans)", fontSize: 11, fontWeight: 500, color: "var(--slate)", opacity: settingDefaultId !== null ? 0.5 : 1, whiteSpace: "nowrap" }}
+                  >
+                    {settingDefaultId === m.id ? "Saving…" : "Set default"}
+                  </button>
+                )}
               </div>
             ))}
           </div>
@@ -838,6 +1333,16 @@ function MBMenuSelector({
               <svg width={12} height={12} viewBox="0 0 16 16" fill="none" stroke="var(--slate)" strokeWidth="2.2" strokeLinecap="round"><path d="M8 3v10M3 8h10" /></svg>
             </div>
             <span style={{ fontFamily: "var(--font-sans)", fontWeight: 500, fontSize: 12.5, color: "var(--slate)" }}>Create new menu</span>
+          </div>
+          <div onMouseDown={e => { e.preventDefault(); onImportMenu(); setOpen(false); }}
+            style={{ display: "flex", alignItems: "center", gap: 9, padding: "0 16px 12px", cursor: "pointer" }}
+            onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = "#efe7da")}
+            onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = "transparent")}
+          >
+            <div style={{ width: 24, height: 24, borderRadius: 6, border: "1px dashed rgba(22,18,15,0.16)", display: "grid", placeItems: "center" }}>
+              <svg width={12} height={12} viewBox="0 0 16 16" fill="none" stroke="var(--slate)" strokeWidth="1.8" strokeLinecap="round"><path d="M8 2.5v7"/><path d="M5.5 7.5L8 10l2.5-2.5"/><path d="M3.5 12.5h9"/></svg>
+            </div>
+            <span style={{ fontFamily: "var(--font-sans)", fontWeight: 500, fontSize: 12.5, color: "var(--slate)" }}>Import menu</span>
           </div>
         </div>
       )}
@@ -1112,6 +1617,287 @@ function MBSectionBlock({ category, isFirst, isLast, collapsed, savingProductId,
   );
 }
 
+// ── Editor design-system helpers ──────────────────────────────────────────
+
+const edInput: React.CSSProperties = {
+  width: "100%",
+  background: "rgba(255,255,255,0.06)",
+  border: "1px solid rgba(255,255,255,0.1)",
+  borderRadius: 8,
+  padding: "9px 12px",
+  fontSize: 14,
+  color: "#f5f0e8",
+  outline: "none",
+  fontFamily: "var(--font-sans)",
+  boxSizing: "border-box",
+};
+
+const edSelect: React.CSSProperties = {
+  ...edInput,
+  cursor: "pointer",
+  appearance: "none",
+  width: "100%",
+};
+
+const edSecondaryBtn: React.CSSProperties = {
+  padding: "7px 14px",
+  borderRadius: 8,
+  border: "none",
+  background: "#ff3d14",
+  color: "#fff",
+  fontSize: 12.5,
+  fontWeight: 600,
+  cursor: "pointer",
+  fontFamily: "var(--font-sans)",
+  whiteSpace: "nowrap",
+};
+
+const edOutlineBtn: React.CSSProperties = {
+  padding: "7px 14px",
+  borderRadius: 8,
+  border: "1px solid rgba(255,255,255,0.16)",
+  background: "transparent",
+  color: "rgba(245,240,232,0.7)",
+  fontSize: 12.5,
+  fontWeight: 600,
+  cursor: "pointer",
+  fontFamily: "var(--font-sans)",
+  whiteSpace: "nowrap",
+};
+
+function EdSection({
+  num,
+  title,
+  subtitle,
+  right,
+  children,
+}: {
+  num: string;
+  title: string;
+  subtitle?: string;
+  right?: React.ReactNode;
+  children?: React.ReactNode;
+}) {
+  return (
+    <div style={{ marginBottom: 32 }}>
+      <div style={{ display: "flex", alignItems: "baseline", gap: 10, marginBottom: 14, flexWrap: "wrap" }}>
+        <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(245,240,232,0.3)", fontFamily: "var(--font-mono)", letterSpacing: "0.1em", textTransform: "uppercase" }}>{num}</span>
+        <h3 style={{ fontSize: 15, fontWeight: 700, color: "#f5f0e8", margin: 0 }}>{title}</h3>
+        {subtitle && <span style={{ fontSize: 12, color: "rgba(245,240,232,0.35)", marginLeft: 4 }}>{subtitle}</span>}
+        {right && <span style={{ marginLeft: "auto" }}>{right}</span>}
+      </div>
+      <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 12, padding: "20px 22px" }}>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function EdFieldLabel({ required, children }: { required?: boolean; children: React.ReactNode }) {
+  return (
+    <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "rgba(245,240,232,0.45)", letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: 6 }}>
+      {children}{required && <span style={{ color: "#ff3d14", marginLeft: 2 }}>*</span>}
+    </label>
+  );
+}
+
+function EdTranslationPill({ count, open, onToggle }: { count: number; open: boolean; onToggle: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onToggle}
+      style={{
+        marginTop: 7,
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 5,
+        padding: "3px 10px 3px 8px",
+        borderRadius: 20,
+        border: "1px solid rgba(255,255,255,0.12)",
+        background: open ? "rgba(255,61,20,0.1)" : "transparent",
+        fontSize: 11,
+        fontWeight: 500,
+        color: count > 0 ? "#ff7a5c" : "rgba(245,240,232,0.4)",
+        cursor: "pointer",
+      }}
+    >
+      <span style={{ display: "inline-block", fontSize: 9, transform: open ? "rotate(90deg)" : "rotate(0deg)" }}>▶</span>
+      {count > 0 ? `Translations (${count})` : "Translations"}
+    </button>
+  );
+}
+
+type ModifierGroupCardProps = {
+  modifierGroup: ProductManagerModifierGroup;
+  savingId: string | null;
+  deletingId: string | null;
+  creatingItemGroupId: string | null;
+  savingItemId: string | null;
+  deletingItemId: string | null;
+  onUpdateTitle: (v: string) => void;
+  onUpdateType: (v: string) => void;
+  onUpdateRequired: (v: boolean) => void;
+  onUpdateMin: (v: number | null) => void;
+  onUpdateMax: (v: number | null) => void;
+  onUpdateTitleES: (v: string) => void;
+  onUpdateTitlePT: (v: string) => void;
+  onSave: () => void;
+  onRemove: () => void;
+  onDelete: () => void;
+  onAddItem: () => void;
+  onUpdateItem: (itemId: string, patch: Partial<ProductManagerModifierGroupItem>) => void;
+  onUpdateItemTranslation: (itemId: string, lg: "es" | "pt", field: "name" | "description", v: string) => void;
+  onSaveItem: (item: ProductManagerModifierGroupItem) => void;
+  onDeleteItem: (itemId: string) => void;
+  readTranslationField: (t: ProductManagerTranslations | null, locale: "es" | "pt", field: string) => string;
+};
+
+function ModifierGroupCard({
+  modifierGroup: mg,
+  savingId,
+  deletingId,
+  creatingItemGroupId,
+  savingItemId,
+  deletingItemId,
+  onUpdateTitle,
+  onUpdateType,
+  onUpdateRequired,
+  onUpdateMin,
+  onUpdateMax,
+  onUpdateTitleES,
+  onUpdateTitlePT,
+  onSave,
+  onRemove,
+  onDelete,
+  onAddItem,
+  onUpdateItem,
+  onUpdateItemTranslation,
+  onSaveItem,
+  onDeleteItem,
+  readTranslationField,
+}: ModifierGroupCardProps) {
+  const [open, setOpen] = React.useState(true);
+  const isSaving = savingId === mg.id;
+  const isDeleting = deletingId === mg.id;
+  const isCreatingItem = creatingItemGroupId === mg.id;
+
+  return (
+    <div style={{ border: "1px solid rgba(255,255,255,0.09)", borderRadius: 10, overflow: "hidden" }}>
+      <div
+        style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 14px", background: "rgba(255,255,255,0.04)", cursor: "pointer" }}
+        onClick={() => setOpen((v) => !v)}
+      >
+        <span style={{ fontSize: 11, color: "rgba(245,240,232,0.35)", display: "inline-block", transform: open ? "rotate(90deg)" : "rotate(0deg)" }}>▶</span>
+        <span style={{ flex: 1, fontSize: 13.5, fontWeight: 600, color: "#f5f0e8" }}>{mg.title || "(untitled group)"}</span>
+        <span style={{ fontSize: 11, color: "rgba(245,240,232,0.35)", marginRight: 4 }}>
+          {mg.items.length} item{mg.items.length !== 1 ? "s" : ""}
+        </span>
+        <button
+          type="button"
+          onClick={(e) => { e.stopPropagation(); onRemove(); }}
+          style={{ padding: "3px 8px", fontSize: 11, borderRadius: 5, border: "1px solid rgba(255,255,255,0.12)", background: "transparent", color: "rgba(245,240,232,0.5)", cursor: "pointer" }}
+        >
+          Detach
+        </button>
+      </div>
+
+      {open && (
+        <div style={{ padding: "16px 14px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 14 }}>
+            <div style={{ gridColumn: "1/-1" }}>
+              <EdFieldLabel>Group title</EdFieldLabel>
+              <input value={mg.title} onChange={(e) => onUpdateTitle(e.target.value)} placeholder="e.g. Extras" style={edInput} />
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginTop: 8 }}>
+                <input value={readTranslationField(mg.translations, "es", "title")} onChange={(e) => onUpdateTitleES(e.target.value)} placeholder="Title (ES)" style={{ ...edInput, fontSize: 12 }} />
+                <input value={readTranslationField(mg.translations, "pt", "title")} onChange={(e) => onUpdateTitlePT(e.target.value)} placeholder="Title (PT)" style={{ ...edInput, fontSize: 12 }} />
+              </div>
+            </div>
+            <div>
+              <EdFieldLabel>Type</EdFieldLabel>
+              <select value={mg.type ?? ""} onChange={(e) => onUpdateType(e.target.value)} style={edSelect}>
+                <option value="">—</option>
+                <option value="SINGLE">Single</option>
+                <option value="MULTI">Multi</option>
+              </select>
+            </div>
+            <div>
+              <EdFieldLabel>Required</EdFieldLabel>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "8px 12px", background: "rgba(255,255,255,0.04)", borderRadius: 8, border: "1px solid rgba(255,255,255,0.09)" }}>
+                <input type="checkbox" id={`req-${mg.id}`} checked={mg.required} onChange={(e) => onUpdateRequired(e.target.checked)} />
+                <label htmlFor={`req-${mg.id}`} style={{ fontSize: 13, color: "#f5f0e8", cursor: "pointer" }}>Required</label>
+              </div>
+            </div>
+            <div>
+              <EdFieldLabel>Min selection</EdFieldLabel>
+              <input type="number" min={0} value={mg.minSelection ?? ""} onChange={(e) => onUpdateMin(e.target.value === "" ? null : Number(e.target.value))} placeholder="0" style={edInput} />
+            </div>
+            <div>
+              <EdFieldLabel>Max selection</EdFieldLabel>
+              <input type="number" min={0} value={mg.maxSelection ?? ""} onChange={(e) => onUpdateMax(e.target.value === "" ? null : Number(e.target.value))} placeholder="∞" style={edInput} />
+            </div>
+          </div>
+
+          <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
+            <button type="button" onClick={onSave} disabled={isSaving || isDeleting} style={{ ...edSecondaryBtn, fontSize: 12 }}>
+              {isSaving ? "Saving…" : "Save group"}
+            </button>
+            <button type="button" onClick={onDelete} disabled={isSaving || isDeleting} style={{ ...edOutlineBtn, fontSize: 12, borderColor: "rgba(255,61,20,0.35)", color: "#ff8066" }}>
+              {isDeleting ? "Deleting…" : "Delete group"}
+            </button>
+          </div>
+
+          <div style={{ borderTop: "1px solid rgba(255,255,255,0.07)", paddingTop: 14 }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
+              <span style={{ fontSize: 12, fontWeight: 600, color: "rgba(245,240,232,0.5)", textTransform: "uppercase", letterSpacing: "0.06em" }}>Items</span>
+              <button type="button" onClick={onAddItem} disabled={isCreatingItem} style={{ ...edSecondaryBtn, fontSize: 11, padding: "4px 10px" }}>
+                {isCreatingItem ? "Adding…" : "+ Add item"}
+              </button>
+            </div>
+            {mg.items.length === 0 ? (
+              <p style={{ fontSize: 12, color: "rgba(245,240,232,0.3)", padding: "6px 0" }}>No items yet.</p>
+            ) : (
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                {mg.items.map((item) => {
+                  const isSavingItem = savingItemId === item.id;
+                  const isDeletingItem = deletingItemId === item.id;
+                  return (
+                    <div key={item.id} style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 8, padding: "12px 12px" }}>
+                      <div style={{ display: "grid", gridTemplateColumns: "1fr auto auto", gap: 8, alignItems: "center", marginBottom: 8 }}>
+                        <input value={item.name} onChange={(e) => onUpdateItem(item.id, { name: e.target.value })} placeholder="Item name" style={{ ...edInput, fontSize: 13 }} />
+                        <input
+                          type="number" min={0} step={0.01}
+                          value={(item.price / 100).toFixed(2)}
+                          onChange={(e) => { const n = Math.round(Number(e.target.value) * 100); onUpdateItem(item.id, { price: Number.isNaN(n) ? 0 : n }); }}
+                          placeholder="0.00"
+                          style={{ ...edInput, width: 80, fontSize: 13 }}
+                        />
+                        <div style={{ display: "flex", gap: 6 }}>
+                          <button type="button" onClick={() => onSaveItem(item)} disabled={isSavingItem || isDeletingItem} style={{ ...edSecondaryBtn, fontSize: 11, padding: "4px 9px" }}>
+                            {isSavingItem ? "…" : "Save"}
+                          </button>
+                          <button type="button" onClick={() => onDeleteItem(item.id)} disabled={isSavingItem || isDeletingItem} style={{ ...edOutlineBtn, fontSize: 11, padding: "4px 9px", borderColor: "rgba(255,61,20,0.35)", color: "#ff8066" }}>
+                            {isDeletingItem ? "…" : "✕"}
+                          </button>
+                        </div>
+                      </div>
+                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+                        <input value={readTranslationField(item.translations, "es", "name")} onChange={(e) => onUpdateItemTranslation(item.id, "es", "name", e.target.value)} placeholder="Name (ES)" style={{ ...edInput, fontSize: 12 }} />
+                        <input value={readTranslationField(item.translations, "pt", "name")} onChange={(e) => onUpdateItemTranslation(item.id, "pt", "name", e.target.value)} placeholder="Name (PT)" style={{ ...edInput, fontSize: 12 }} />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── End editor helpers ─────────────────────────────────────────────────────
+
 export default function ProductManagerList({
   initialCategories,
   initialUncategorized,
@@ -1134,6 +1920,11 @@ export default function ProductManagerList({
   const [lookupModifierGroups, setLookupModifierGroups] = useState(
     initialLookupModifierGroups,
   );
+  const [localMenus, setLocalMenus] = useState(menus);
+  const [settingDefaultMenuId, setSettingDefaultMenuId] = useState<string | null>(null);
+  const [availableStations, setAvailableStations] = useState<AvailableStation[]>([]);
+  const [editorNameTranslationsOpen, setEditorNameTranslationsOpen] = useState(false);
+  const [editorDescTranslationsOpen, setEditorDescTranslationsOpen] = useState(false);
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
   const [search, setSearch] = useState("");
   const [savingProductId, setSavingProductId] = useState<string | null>(null);
@@ -1143,6 +1934,7 @@ export default function ProductManagerList({
   const [editor, setEditor] = useState<ProductEditorState | null>(null);
   const [switchingMenu, setSwitchingMenu] = useState(false);
   const [creatingMenu, setCreatingMenu] = useState(false);
+  const [importingMenu, setImportingMenu] = useState(false);
   const [linkingSection, setLinkingSection] = useState(false);
   const [creatingSection, setCreatingSection] = useState(false);
   const [detachingSectionId, setDetachingSectionId] = useState<string | null>(null);
@@ -1150,9 +1942,10 @@ export default function ProductManagerList({
   const [syncPreviewOpen, setSyncPreviewOpen] = useState(false);
   const [menuSelectorOpen, setMenuSelectorOpen] = useState(false);
   const translationsSectionRef = useRef<HTMLElement | null>(null);
+  const importMenuInputRef = useRef<HTMLInputElement | null>(null);
 
   function exportMenu() {
-    const activeMenu = menus.find((m) => m.id === selectedMenuId);
+    const activeMenu = localMenus.find((m) => m.id === selectedMenuId);
     const payload = {
       version: "1.0",
       exportedAt: new Date().toISOString(),
@@ -1194,6 +1987,15 @@ export default function ProductManagerList({
           categoryIndex: p.categoryIndex,
           translations: p.translations,
           photos: p.photoUrls,
+          preparationStepIds: p.preparationStepIds,
+          preparationTasks: p.preparationTasks.map((task) => ({
+            id: task.id,
+            name: task.name,
+            stationId: task.stationId,
+            stationName: task.stationName,
+            includeComments: task.includeComments,
+            includeModifiers: task.includeModifiers,
+          })),
           modifierGroups: p.modifierGroups.map((g) => ({
             id: g.id,
             title: g.title,
@@ -1243,6 +2045,15 @@ export default function ProductManagerList({
         visible: p.visible,
         translations: p.translations,
         photos: p.photoUrls,
+        preparationStepIds: p.preparationStepIds,
+        preparationTasks: p.preparationTasks.map((task) => ({
+          id: task.id,
+          name: task.name,
+          stationId: task.stationId,
+          stationName: task.stationName,
+          includeComments: task.includeComments,
+          includeModifiers: task.includeModifiers,
+        })),
         modifierGroups: p.modifierGroups.map((g) => ({
           id: g.id,
           title: g.title,
@@ -1604,6 +2415,44 @@ export default function ProductManagerList({
     };
   }, [editor]);
 
+  const editorOpenRef = useRef(false);
+  useEffect(() => {
+    if (editor && !editorOpenRef.current) {
+      editorOpenRef.current = true;
+      apiFetch("/api/stations")
+        .then((r) => r.json())
+        .then((data: unknown) => {
+          const raw = (data as { items?: unknown[] })?.items ?? [];
+          const items: AvailableStation[] = raw.map((s: unknown) => {
+            const st = s as { id?: string; name?: string; preparationSteps?: unknown[] };
+            return {
+              id: typeof st.id === "string" ? st.id : "",
+              name: typeof st.name === "string" ? st.name : "",
+              preparationSteps: Array.isArray(st.preparationSteps)
+                ? st.preparationSteps.map((p: unknown) => {
+                    const step = p as { id?: string; name?: string; goalMinutes?: number; includeComments?: boolean; includeModifiers?: boolean };
+                    return {
+                      id: typeof step.id === "string" ? step.id : "",
+                      name: typeof step.name === "string" ? step.name : "",
+                      goalMinutes: typeof step.goalMinutes === "number" ? step.goalMinutes : 0,
+                      includeComments: step.includeComments === true,
+                      includeModifiers: step.includeModifiers === true,
+                    };
+                  }).filter((p) => p.id)
+                : [],
+            };
+          }).filter((s) => s.id);
+          setAvailableStations(items);
+        })
+        .catch(() => {});
+    }
+    if (!editor) {
+      editorOpenRef.current = false;
+      setEditorNameTranslationsOpen(false);
+      setEditorDescTranslationsOpen(false);
+    }
+  }, [editor]);
+
   useEffect(() => {
     setSwitchingMenu(false);
   }, [selectedMenuId]);
@@ -1874,6 +2723,654 @@ export default function ProductManagerList({
     }
   }
 
+  async function parseJsonResponseSafe(response: Response): Promise<unknown> {
+    return response.json().catch(() => ({}));
+  }
+
+  function extractErrorMessage(payload: unknown, fallback: string): string {
+    if (!payload || typeof payload !== "object") return fallback;
+
+    if ("error" in payload && typeof payload.error === "string" && payload.error.trim()) {
+      return payload.error;
+    }
+
+    if ("field" in payload && typeof payload.field === "string" && payload.field.trim()) {
+      return `Invalid ${payload.field}`;
+    }
+
+    return fallback;
+  }
+
+  function normalizeLookupName(value: string): string {
+    return value.trim().replace(/\s+/g, " ").toLowerCase();
+  }
+
+  function pickPrimaryCategoryRef(
+    refs: Array<{ oldCategoryId: string | null; categoryIndex: number | null }>,
+  ): { oldCategoryId: string | null; categoryIndex: number | null } | null {
+    if (refs.length === 0) return null;
+    const withCategory = refs.find((ref) => ref.oldCategoryId);
+    return withCategory ?? refs[0] ?? null;
+  }
+
+  async function onImportMenuFile(file: File) {
+    setImportingMenu(true);
+    setError(null);
+
+    try {
+      const rawText = await file.text();
+      let parsedJson: unknown;
+      try {
+        parsedJson = JSON.parse(rawText);
+      } catch {
+        throw new Error("Invalid JSON file");
+      }
+
+      const imported = parseMenuExportPayload(parsedJson);
+      const suggestedMenuName =
+        imported.menu?.name && imported.menu.name.trim().length > 0
+          ? `${imported.menu.name.trim()} Copy`
+          : "Imported menu";
+      const nameInput = window.prompt("Name for imported menu", suggestedMenuName);
+      const menuName = nameInput?.trim();
+      if (!menuName) {
+        setImportingMenu(false);
+        return;
+      }
+
+      const createMenuResponse = await apiFetch("/api/menus", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: menuName,
+          active: true,
+        }),
+      });
+
+      const createMenuPayload = await parseJsonResponseSafe(createMenuResponse);
+      if (!createMenuResponse.ok) {
+        throw new Error(extractErrorMessage(createMenuPayload, "Failed to create menu"));
+      }
+
+      const createMenuData =
+        createMenuPayload && typeof createMenuPayload === "object"
+          ? (createMenuPayload as { id?: unknown })
+          : null;
+
+      if (
+        !createMenuData ||
+        typeof createMenuData.id !== "string" ||
+        !createMenuData.id.trim()
+      ) {
+        throw new Error("Menu created but response is invalid");
+      }
+
+      const importedMenuId = createMenuData.id.trim();
+      const categoryIdMap = new Map<string, string>();
+      const modifierGroupIdMap = new Map<string, string>();
+      const productIdMap = new Map<string, string>();
+      type ImportStation = {
+        id: string;
+        name: string;
+        preparationSteps: Array<{
+          id: string;
+          name: string;
+          includeComments: boolean;
+          includeModifiers: boolean;
+        }>;
+      };
+      const stationByNameKey = new Map<string, ImportStation>();
+      const stepIdBySignature = new Map<string, string>();
+
+      const stationsResponse = await apiFetch("/api/stations");
+      const stationsPayload = await parseJsonResponseSafe(stationsResponse);
+      if (!stationsResponse.ok) {
+        throw new Error(
+          extractErrorMessage(stationsPayload, "Failed to load stations"),
+        );
+      }
+
+      const existingStations = Array.isArray(
+        (stationsPayload as { items?: unknown }).items,
+      )
+        ? ((stationsPayload as { items: unknown[] }).items ?? [])
+        : [];
+
+      for (const stationValue of existingStations) {
+        if (!stationValue || typeof stationValue !== "object") continue;
+        const stationRecord = stationValue as {
+          id?: unknown;
+          name?: unknown;
+          preparationSteps?: unknown;
+        };
+        if (
+          typeof stationRecord.id !== "string" ||
+          typeof stationRecord.name !== "string"
+        ) {
+          continue;
+        }
+
+        const station: ImportStation = {
+          id: stationRecord.id,
+          name: stationRecord.name,
+          preparationSteps: Array.isArray(stationRecord.preparationSteps)
+            ? stationRecord.preparationSteps
+                .map((stepValue) => {
+                  if (!stepValue || typeof stepValue !== "object") return null;
+                  const stepRecord = stepValue as {
+                    id?: unknown;
+                    name?: unknown;
+                    includeComments?: unknown;
+                    includeModifiers?: unknown;
+                  };
+                  if (
+                    typeof stepRecord.id !== "string" ||
+                    typeof stepRecord.name !== "string"
+                  ) {
+                    return null;
+                  }
+                  return {
+                    id: stepRecord.id,
+                    name: stepRecord.name,
+                    includeComments: stepRecord.includeComments === true,
+                    includeModifiers: stepRecord.includeModifiers === true,
+                  };
+                })
+                .filter(
+                  (
+                    step,
+                  ): step is {
+                    id: string;
+                    name: string;
+                    includeComments: boolean;
+                    includeModifiers: boolean;
+                  } => step !== null,
+                )
+            : [],
+        };
+
+        stationByNameKey.set(normalizeLookupName(station.name), station);
+        for (const step of station.preparationSteps) {
+          const stepSignature = `${station.id}::${normalizeLookupName(
+            step.name,
+          )}::${step.includeComments ? "1" : "0"}::${
+            step.includeModifiers ? "1" : "0"
+          }`;
+          stepIdBySignature.set(stepSignature, step.id);
+        }
+      }
+
+      const ensureStationByName = async (stationName: string): Promise<ImportStation> => {
+        const normalizedStationName = stationName.trim();
+        const stationKey = normalizeLookupName(normalizedStationName);
+        const existing = stationByNameKey.get(stationKey);
+        if (existing) return existing;
+
+        const createStationResponse = await apiFetch("/api/stations", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: normalizedStationName,
+          }),
+        });
+        const createStationPayload = await parseJsonResponseSafe(
+          createStationResponse,
+        );
+        if (!createStationResponse.ok) {
+          throw new Error(
+            extractErrorMessage(createStationPayload, "Failed to create station"),
+          );
+        }
+
+        const createdStationRecord =
+          createStationPayload && typeof createStationPayload === "object"
+            ? (createStationPayload as { id?: unknown; name?: unknown })
+            : null;
+        if (
+          !createdStationRecord ||
+          typeof createdStationRecord.id !== "string" ||
+          typeof createdStationRecord.name !== "string"
+        ) {
+          throw new Error("Station created but response is invalid");
+        }
+
+        const createdStation: ImportStation = {
+          id: createdStationRecord.id,
+          name: createdStationRecord.name,
+          preparationSteps: [],
+        };
+        stationByNameKey.set(stationKey, createdStation);
+        return createdStation;
+      };
+
+      const ensurePreparationStepId = async (
+        task: MenuExportPreparationTask,
+      ): Promise<string | null> => {
+        const stepName = task.name.trim();
+        if (!stepName) return null;
+
+        const fallbackStationName = "General";
+        const stationName =
+          (task.stationName && task.stationName.trim()) || fallbackStationName;
+        const station = await ensureStationByName(stationName);
+
+        const signature = `${station.id}::${normalizeLookupName(stepName)}::${
+          task.includeComments ? "1" : "0"
+        }::${task.includeModifiers ? "1" : "0"}`;
+        const existingStepId = stepIdBySignature.get(signature);
+        if (existingStepId) return existingStepId;
+
+        const matchedStationStep = station.preparationSteps.find(
+          (step) =>
+            normalizeLookupName(step.name) === normalizeLookupName(stepName) &&
+            step.includeComments === task.includeComments &&
+            step.includeModifiers === task.includeModifiers,
+        );
+        if (matchedStationStep) {
+          stepIdBySignature.set(signature, matchedStationStep.id);
+          return matchedStationStep.id;
+        }
+
+        const createStepResponse = await apiFetch(
+          `/api/stations/${encodeURIComponent(station.id)}/steps`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              name: stepName,
+              includeComments: task.includeComments,
+              includeModifiers: task.includeModifiers,
+            }),
+          },
+        );
+        const createStepPayload = await parseJsonResponseSafe(createStepResponse);
+        if (!createStepResponse.ok) {
+          throw new Error(
+            extractErrorMessage(
+              createStepPayload,
+              "Failed to create preparation task",
+            ),
+          );
+        }
+
+        const createdStepRecord =
+          createStepPayload && typeof createStepPayload === "object"
+            ? (createStepPayload as {
+                id?: unknown;
+                name?: unknown;
+                includeComments?: unknown;
+                includeModifiers?: unknown;
+              })
+            : null;
+        if (
+          !createdStepRecord ||
+          typeof createdStepRecord.id !== "string" ||
+          typeof createdStepRecord.name !== "string"
+        ) {
+          throw new Error("Preparation task created but response is invalid");
+        }
+
+        station.preparationSteps.push({
+          id: createdStepRecord.id,
+          name: createdStepRecord.name,
+          includeComments:
+            createdStepRecord.includeComments === true || task.includeComments,
+          includeModifiers:
+            createdStepRecord.includeModifiers === true || task.includeModifiers,
+        });
+        stepIdBySignature.set(signature, createdStepRecord.id);
+        return createdStepRecord.id;
+      };
+
+      const sortedCategories = imported.categories.slice().sort((left, right) => {
+        const leftIndex =
+          typeof left.menuIndex === "number" ? left.menuIndex : Number.MAX_SAFE_INTEGER;
+        const rightIndex =
+          typeof right.menuIndex === "number" ? right.menuIndex : Number.MAX_SAFE_INTEGER;
+        return leftIndex - rightIndex;
+      });
+
+      for (let index = 0; index < sortedCategories.length; index += 1) {
+        const sourceCategory = sortedCategories[index];
+        const newCategoryId = createLocalId();
+        const menuIndex =
+          typeof sourceCategory.menuIndex === "number"
+            ? sourceCategory.menuIndex
+            : index;
+
+        const createCategoryResponse = await apiFetch("/api/categories", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id: newCategoryId,
+            name: sourceCategory.name,
+            menuId: importedMenuId,
+            menuIndex,
+          }),
+        });
+
+        const createCategoryPayload = await parseJsonResponseSafe(createCategoryResponse);
+        if (!createCategoryResponse.ok) {
+          throw new Error(
+            extractErrorMessage(createCategoryPayload, "Failed to create section"),
+          );
+        }
+
+        categoryIdMap.set(sourceCategory.id, newCategoryId);
+      }
+
+      const modifierGroupsByOldId = new Map<string, MenuExportModifierGroup>();
+      const collectModifierGroup = (group: MenuExportModifierGroup) => {
+        const existing = modifierGroupsByOldId.get(group.id);
+        if (existing) return;
+        modifierGroupsByOldId.set(group.id, group);
+      };
+
+      for (const group of imported.lookupModifierGroups) {
+        collectModifierGroup(group);
+      }
+      for (const category of imported.categories) {
+        for (const product of category.products) {
+          for (const group of product.modifierGroups) {
+            collectModifierGroup(group);
+          }
+        }
+      }
+      for (const product of imported.uncategorized) {
+        for (const group of product.modifierGroups) {
+          collectModifierGroup(group);
+        }
+      }
+
+      for (const sourceGroup of modifierGroupsByOldId.values()) {
+        const newModifierGroupId = createLocalId();
+        const createModifierGroupResponse = await apiFetch("/api/modifier-groups", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id: newModifierGroupId,
+            title: sourceGroup.title,
+            required: sourceGroup.required,
+            type: sourceGroup.type,
+            minSelection: sourceGroup.minSelection,
+            maxSelection: sourceGroup.maxSelection,
+            translations: sourceGroup.translations,
+          }),
+        });
+
+        const createModifierGroupPayload = await parseJsonResponseSafe(
+          createModifierGroupResponse,
+        );
+        if (!createModifierGroupResponse.ok) {
+          throw new Error(
+            extractErrorMessage(
+              createModifierGroupPayload,
+              "Failed to create modifier group",
+            ),
+          );
+        }
+
+        modifierGroupIdMap.set(sourceGroup.id, newModifierGroupId);
+
+        for (const sourceItem of sourceGroup.items) {
+          const createItemResponse = await apiFetch("/api/modifier-group-items", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              id: createLocalId(),
+              modifierGroupId: newModifierGroupId,
+              name: sourceItem.name,
+              description: sourceItem.description,
+              price: sourceItem.price,
+              translations: sourceItem.translations,
+            }),
+          });
+
+          const createItemPayload = await parseJsonResponseSafe(createItemResponse);
+          if (!createItemResponse.ok) {
+            throw new Error(
+              extractErrorMessage(createItemPayload, "Failed to create modifier item"),
+            );
+          }
+        }
+      }
+
+      type ProductImportDraft = {
+        source: MenuExportProduct;
+        categoryRefs: Array<{
+          oldCategoryId: string | null;
+          categoryIndex: number | null;
+        }>;
+      };
+      const productsByOldId = new Map<string, ProductImportDraft>();
+      const upsertProductDraft = (
+        product: MenuExportProduct,
+        categoryRef: { oldCategoryId: string | null; categoryIndex: number | null },
+      ) => {
+        const existing = productsByOldId.get(product.id);
+        if (!existing) {
+          productsByOldId.set(product.id, {
+            source: product,
+            categoryRefs: [categoryRef],
+          });
+          return;
+        }
+
+        existing.categoryRefs.push(categoryRef);
+      };
+
+      for (const category of sortedCategories) {
+        const orderedProducts = category.products
+          .slice()
+          .sort((left, right) => {
+            const leftIndex =
+              typeof left.categoryIndex === "number"
+                ? left.categoryIndex
+                : Number.MAX_SAFE_INTEGER;
+            const rightIndex =
+              typeof right.categoryIndex === "number"
+                ? right.categoryIndex
+                : Number.MAX_SAFE_INTEGER;
+            return leftIndex - rightIndex;
+          });
+
+        for (const product of orderedProducts) {
+          upsertProductDraft(product, {
+            oldCategoryId: category.id,
+            categoryIndex: product.categoryIndex,
+          });
+        }
+      }
+
+      for (const product of imported.uncategorized) {
+        upsertProductDraft(product, {
+          oldCategoryId: null,
+          categoryIndex: product.categoryIndex,
+        });
+      }
+
+      const productDrafts = Array.from(productsByOldId.values());
+      for (const draft of productDrafts) {
+        productIdMap.set(draft.source.id, createLocalId());
+      }
+
+      for (const draft of productDrafts) {
+        const newProductId = productIdMap.get(draft.source.id);
+        if (!newProductId) {
+          throw new Error("Failed to prepare product mapping");
+        }
+
+        const primaryCategoryRef = pickPrimaryCategoryRef(draft.categoryRefs);
+        const primaryCategoryId =
+          primaryCategoryRef?.oldCategoryId
+            ? categoryIdMap.get(primaryCategoryRef.oldCategoryId) ?? null
+            : null;
+        const linkedCategoryIds = Array.from(
+          new Set(
+            draft.categoryRefs
+              .map((ref) =>
+                ref.oldCategoryId ? categoryIdMap.get(ref.oldCategoryId) ?? null : null,
+              )
+              .filter((id): id is string => Boolean(id)),
+          ),
+        );
+
+        const mappedModifierGroupIds = Array.from(
+          new Set(
+            draft.source.modifierGroups
+              .map((group) => modifierGroupIdMap.get(group.id) ?? null)
+              .filter((id): id is string => Boolean(id)),
+          ),
+        );
+        const mappedPreparationStepIds =
+          draft.source.preparationTasks.length > 0
+            ? Array.from(
+                new Set(
+                  (
+                    await Promise.all(
+                      draft.source.preparationTasks.map((task) =>
+                        ensurePreparationStepId(task),
+                      ),
+                    )
+                  ).filter((stepId): stepId is string => Boolean(stepId)),
+                ),
+              )
+            : draft.source.preparationStepIds;
+
+        const createProductResponse = await apiFetch("/api/products", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id: newProductId,
+            itemType: draft.source.itemType,
+            name: draft.source.name,
+            visible: draft.source.visible,
+            description: draft.source.description,
+            price: draft.source.price,
+            comparedAtPrice: draft.source.comparedAtPrice,
+            categoryId: primaryCategoryId,
+            categoryIds: linkedCategoryIds,
+            categoryIndex: primaryCategoryRef?.categoryIndex ?? null,
+            translations: draft.source.translations,
+            photoUrls: draft.source.photos,
+            modifierGroupIds: mappedModifierGroupIds,
+            preparationStepIds: mappedPreparationStepIds,
+            comboSlots: [],
+            products: [],
+          }),
+        });
+
+        const createProductPayload = await parseJsonResponseSafe(createProductResponse);
+        if (!createProductResponse.ok) {
+          throw new Error(extractErrorMessage(createProductPayload, "Failed to create product"));
+        }
+      }
+
+      for (const draft of productDrafts) {
+        if (draft.source.itemType !== "COMBO") continue;
+
+        const newProductId = productIdMap.get(draft.source.id);
+        if (!newProductId) continue;
+
+        const mappedComboSlots = draft.source.comboSlots.map((slot, slotIndex) => ({
+          name: slot.name,
+          translations: slot.translations,
+          minSelect: slot.minSelect,
+          maxSelect: slot.maxSelect,
+          allowDuplicates: slot.allowDuplicates,
+          sortIndex: slot.sortIndex ?? slotIndex + 1,
+          options: slot.options
+            .map((option, optionIndex) => {
+              const mappedProductId = productIdMap.get(option.productId);
+              if (!mappedProductId) return null;
+              return {
+                productId: mappedProductId,
+                extraPrice: option.extraPrice,
+                sortIndex: option.sortIndex ?? optionIndex + 1,
+              };
+            })
+            .filter(
+              (
+                option,
+              ): option is { productId: string; extraPrice: number; sortIndex: number } =>
+                option !== null,
+            ),
+        }));
+
+        const mappedDirectProducts = draft.source.products
+          .map((item) => {
+            const mappedProductId = productIdMap.get(item.productId);
+            if (!mappedProductId) return null;
+            return {
+              productId: mappedProductId,
+              quantity: item.quantity,
+            };
+          })
+          .filter(
+            (item): item is { productId: string; quantity: number } => item !== null,
+          );
+
+        const updateComboResponse = await apiFetch(
+          `/api/products/${encodeURIComponent(newProductId)}`,
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              itemType: "COMBO",
+              comboSlots: mappedComboSlots,
+              products: mappedDirectProducts,
+            }),
+          },
+        );
+
+        const updateComboPayload = await parseJsonResponseSafe(updateComboResponse);
+        if (!updateComboResponse.ok) {
+          throw new Error(
+            extractErrorMessage(updateComboPayload, "Failed to configure combo product"),
+          );
+        }
+      }
+
+      setImportingMenu(false);
+      onMenuChange(importedMenuId);
+    } catch (importError) {
+      setError(
+        importError instanceof Error ? importError.message : "Failed to import menu",
+      );
+      setImportingMenu(false);
+    }
+  }
+
+  function onImportMenuClick() {
+    importMenuInputRef.current?.click();
+  }
+
+  async function onImportMenuInputChange(
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) {
+    const selectedFile = event.target.files?.[0] ?? null;
+    event.currentTarget.value = "";
+    if (!selectedFile) return;
+
+    await onImportMenuFile(selectedFile);
+  }
+
   async function onCreateMenu() {
     const menuNameInput = window.prompt("New menu name");
     const menuName = menuNameInput?.trim();
@@ -1915,12 +3412,22 @@ export default function ProductManagerList({
         throw new Error(detail);
       }
 
-      const payload = (await response.json()) as { id?: unknown };
+      const payload = (await response.json()) as { id?: unknown; name?: unknown; active?: unknown; isDefault?: unknown };
       if (typeof payload.id !== "string" || !payload.id.trim()) {
         throw new Error("Menu created but response is invalid");
       }
 
-      onMenuChange(payload.id.trim());
+      const newId = payload.id.trim();
+      setLocalMenus((prev) => [
+        ...prev,
+        {
+          id: newId,
+          name: typeof payload.name === "string" ? payload.name : menuName,
+          active: payload.active !== false,
+          isDefault: payload.isDefault === true,
+        },
+      ]);
+      onMenuChange(newId);
     } catch (createError) {
       setError(
         createError instanceof Error
@@ -1928,6 +3435,36 @@ export default function ProductManagerList({
           : "Failed to create menu",
       );
       setCreatingMenu(false);
+    }
+  }
+
+  async function onSetDefaultMenu(menuId: string) {
+    if (settingDefaultMenuId) return;
+    try {
+      setSettingDefaultMenuId(menuId);
+      setError(null);
+      const response = await apiFetch(`/api/menus/${encodeURIComponent(menuId)}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ isDefault: true }),
+      });
+      if (!response.ok) {
+        let detail = "Failed to set default menu";
+        try {
+          const payload = (await response.json()) as { error?: unknown };
+          if (typeof payload.error === "string" && payload.error.trim()) {
+            detail = payload.error;
+          }
+        } catch { /* no-op */ }
+        throw new Error(detail);
+      }
+      setLocalMenus((prev) =>
+        prev.map((m) => ({ ...m, isDefault: m.id === menuId })),
+      );
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to set default menu");
+    } finally {
+      setSettingDefaultMenuId(null);
     }
   }
 
@@ -2241,6 +3778,23 @@ export default function ProductManagerList({
       focusSection: options?.focusSection ?? null,
       saving: false,
       error: null,
+      prepTasks: product.preparationTasks.map((task) => ({
+        stepId: task.id,
+        stepName: task.name,
+        stationId: task.stationId ?? "",
+        stationName: task.stationName ?? "",
+        includeComments: task.includeComments,
+        includeModifiers: task.includeModifiers,
+        goalMinutes: 0,
+      })),
+      prepTaskLookupStepId: "",
+      newPrepStepFormOpen: false,
+      newPrepStepStationId: "",
+      newPrepStepName: "",
+      newPrepStepGoalMinutes: "",
+      newPrepStepIncludeComments: false,
+      newPrepStepIncludeModifiers: false,
+      creatingPrepStep: false,
     });
   }
 
@@ -2289,6 +3843,15 @@ export default function ProductManagerList({
       focusSection: null,
       saving: false,
       error: null,
+      prepTasks: [],
+      prepTaskLookupStepId: "",
+      newPrepStepFormOpen: false,
+      newPrepStepStationId: "",
+      newPrepStepName: "",
+      newPrepStepGoalMinutes: "",
+      newPrepStepIncludeComments: false,
+      newPrepStepIncludeModifiers: false,
+      creatingPrepStep: false,
     });
   }
 
@@ -2297,6 +3860,116 @@ export default function ProductManagerList({
       if (current?.saving) return current;
       return null;
     });
+  }
+
+  function attachPrepStep(stepId: string) {
+    const station = availableStations.find((s) =>
+      s.preparationSteps.some((p) => p.id === stepId),
+    );
+    const step = station?.preparationSteps.find((p) => p.id === stepId);
+    if (!station || !step) return;
+    setEditor((current) => {
+      if (!current) return current;
+      if (current.prepTasks.some((t) => t.stepId === stepId)) return current;
+      return {
+        ...current,
+        prepTaskLookupStepId: "",
+        prepTasks: [
+          ...current.prepTasks,
+          {
+            stepId: step.id,
+            stepName: step.name,
+            stationId: station.id,
+            stationName: station.name,
+            includeComments: step.includeComments,
+            includeModifiers: step.includeModifiers,
+            goalMinutes: step.goalMinutes,
+          },
+        ],
+      };
+    });
+  }
+
+  function removePrepTask(stepId: string) {
+    setEditor((current) => {
+      if (!current) return current;
+      return {
+        ...current,
+        prepTasks: current.prepTasks.filter((t) => t.stepId !== stepId),
+      };
+    });
+  }
+
+  async function createAndAttachPrepStep() {
+    if (!editor) return;
+    const stationId = editor.newPrepStepStationId || availableStations[0]?.id;
+    const name = editor.newPrepStepName.trim();
+    if (!stationId || !name) return;
+    const station = availableStations.find((s) => s.id === stationId);
+    if (!station) return;
+
+    const goalMinutes = Math.max(0, Number.parseInt(editor.newPrepStepGoalMinutes || "0", 10) || 0);
+
+    setEditor((c) => c ? { ...c, creatingPrepStep: true } : c);
+    try {
+      const res = await apiFetch(`/api/stations/${stationId}/steps`, {
+        method: "POST",
+        body: JSON.stringify({
+          name,
+          goalMinutes,
+          includeComments: editor.newPrepStepIncludeComments,
+          includeModifiers: editor.newPrepStepIncludeModifiers,
+        }),
+      });
+      const payload = (await res.json().catch(() => ({}))) as {
+        id?: string; name?: string; goalMinutes?: number;
+        includeComments?: boolean; includeModifiers?: boolean; error?: string;
+      };
+      if (!res.ok) {
+        setEditor((c) => c ? { ...c, creatingPrepStep: false, error: payload.error ?? "Failed to create step" } : c);
+        return;
+      }
+      const newStep = {
+        id: payload.id ?? "",
+        name: payload.name ?? name,
+        goalMinutes: payload.goalMinutes ?? goalMinutes,
+        includeComments: payload.includeComments ?? editor.newPrepStepIncludeComments,
+        includeModifiers: payload.includeModifiers ?? editor.newPrepStepIncludeModifiers,
+      };
+      setAvailableStations((prev) =>
+        prev.map((s) =>
+          s.id === stationId
+            ? { ...s, preparationSteps: [...s.preparationSteps, newStep] }
+            : s,
+        ),
+      );
+      setEditor((c) => {
+        if (!c) return c;
+        return {
+          ...c,
+          creatingPrepStep: false,
+          newPrepStepFormOpen: false,
+          newPrepStepName: "",
+          newPrepStepGoalMinutes: "",
+          newPrepStepIncludeComments: false,
+          newPrepStepIncludeModifiers: false,
+          prepTasks: [
+            ...c.prepTasks,
+            {
+              stepId: newStep.id,
+              stepName: newStep.name,
+              stationId: station.id,
+              stationName: station.name,
+              includeComments: newStep.includeComments,
+              includeModifiers: newStep.includeModifiers,
+              goalMinutes: newStep.goalMinutes,
+            },
+          ],
+        };
+      });
+    } catch {
+      setEditor((c) => c ? { ...c, creatingPrepStep: false, error: "Could not reach server" } : c);
+    }
   }
 
   async function toggleVisibility(productId: string, currentVisible: boolean) {
@@ -3685,6 +5358,7 @@ export default function ProductManagerList({
           Object.keys(translationsPayload).length > 0 ? translationsPayload : null,
         photoUrls: editor.photoUrls,
         modifierGroupIds: editor.modifierGroups.map((modifierGroup) => modifierGroup.id),
+        preparationStepIds: editor.prepTasks.map((t) => t.stepId),
       };
 
       setEditor((current) =>
@@ -3724,6 +5398,8 @@ export default function ProductManagerList({
         translations?: unknown;
         photos?: unknown;
         modifierGroups?: unknown;
+        preparationStepIds?: unknown;
+        preparationTasks?: unknown;
         comboSlots?: unknown;
         comboItems?: unknown;
         products?: unknown;
@@ -3750,6 +5426,22 @@ export default function ProductManagerList({
             })
             .filter((urlValue): urlValue is string => Boolean(urlValue))
         : editor.photoUrls;
+      const existingProduct =
+        [...categories.flatMap((category) => category.products), ...uncategorized].find(
+          (product) => product.id === persistedId || product.id === editor.productId,
+        ) ?? null;
+      const nextPreparationStepIds = Array.isArray(payload.preparationStepIds)
+        ? payload.preparationStepIds.filter(
+            (entry): entry is string => typeof entry === "string",
+          )
+        : existingProduct?.preparationStepIds ?? [];
+      const nextPreparationTasks = Array.isArray(payload.preparationTasks)
+        ? payload.preparationTasks
+            .map((task) => mapPreparationTaskFromUnknown(task))
+            .filter(
+              (task): task is ProductManagerPreparationTask => task !== null,
+            )
+        : existingProduct?.preparationTasks ?? [];
 
       const updatedProduct: ProductManagerProduct = {
         id: persistedId,
@@ -3785,6 +5477,8 @@ export default function ProductManagerList({
         translations: normalizeTranslations(payload.translations),
         photoUrls,
         mainPhotoUrl: photoUrls[0] ?? null,
+        preparationStepIds: nextPreparationStepIds,
+        preparationTasks: nextPreparationTasks,
         modifierGroups: Array.isArray(payload.modifierGroups)
           ? payload.modifierGroups
               .map(mapModifierGroupFromUnknown)
@@ -3959,7 +5653,9 @@ export default function ProductManagerList({
       newModifierGroupTitle: "", creatingModifierGroup: false, savingModifierGroupId: null,
       deletingModifierGroupId: null, creatingModifierItemGroupId: null, savingModifierItemId: null,
       deletingModifierItemId: null, uploadingPhoto: false, activeLanguage: "es", focusSection: null,
-      saving: false, error: null,
+      saving: false, error: null, prepTasks: [], prepTaskLookupStepId: "",
+      newPrepStepFormOpen: false, newPrepStepStationId: "", newPrepStepName: "",
+      newPrepStepGoalMinutes: "", newPrepStepIncludeComments: false, newPrepStepIncludeModifiers: false, creatingPrepStep: false,
     });
   }
 
@@ -3968,6 +5664,13 @@ export default function ProductManagerList({
 
   return (
     <>
+      <input
+        ref={importMenuInputRef}
+        type="file"
+        accept="application/json,.json"
+        style={{ display: "none" }}
+        onChange={(event) => void onImportMenuInputChange(event)}
+      />
       {/* ── Menu Builder shell ─────────────────────────────────────────────── */}
       <div style={{ display: "flex", flexDirection: "column", height: "100dvh", background: "#f0eee9" }}>
 
@@ -3983,11 +5686,14 @@ export default function ProductManagerList({
             </svg>
             <div style={{ width: 1, height: 20, background: "rgba(22,18,15,0.1)" }} />
             <MBMenuSelector
-              menus={menus}
+              menus={localMenus}
               activeId={selectedMenuId}
               onSelect={onMenuChange}
               onCreateMenu={() => void onCreateMenu()}
-              disabled={switchingMenu || creatingMenu}
+              onImportMenu={onImportMenuClick}
+              onSetDefault={(id) => void onSetDefaultMenu(id)}
+              settingDefaultId={settingDefaultMenuId}
+              disabled={switchingMenu || creatingMenu || importingMenu}
             />
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
@@ -3997,6 +5703,13 @@ export default function ProductManagerList({
             <button type="button" onClick={exportMenu}
               style={{ padding: "6px 12px", borderRadius: 8, border: "1px solid rgba(22,18,15,0.16)", background: "transparent", color: "var(--ink)", fontFamily: "var(--font-sans)", fontSize: 12, fontWeight: 600, cursor: "pointer" }}>
               Export
+            </button>
+            <button
+              type="button"
+              onClick={onImportMenuClick}
+              disabled={switchingMenu || creatingMenu || importingMenu}
+              style={{ padding: "6px 12px", borderRadius: 8, border: "1px solid rgba(22,18,15,0.16)", background: "transparent", color: "var(--ink)", fontFamily: "var(--font-sans)", fontSize: 12, fontWeight: 600, cursor: switchingMenu || creatingMenu || importingMenu ? "not-allowed" : "pointer", opacity: switchingMenu || creatingMenu || importingMenu ? 0.55 : 1 }}>
+              {importingMenu ? "Importing..." : "Import"}
             </button>
             <button type="button" onClick={onPreviewMenu}
               style={{ padding: "6px 12px", borderRadius: 8, border: "1px solid rgba(22,18,15,0.16)", background: "transparent", color: "var(--ink)", fontFamily: "var(--font-sans)", fontSize: 12, fontWeight: 600, cursor: "pointer" }}>
@@ -4092,7 +5805,7 @@ export default function ProductManagerList({
                 onChange={(event) => onMenuChange(event.target.value)}
                 className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none ring-zinc-300 focus:ring-2 md:w-[240px]"
               >
-                {menus.map((menu) => (
+                {localMenus.map((menu) => (
                   <option key={menu.id} value={menu.id}>
                     {menu.name}
                     {menu.isDefault ? " (Default)" : ""}
@@ -4660,1043 +6373,511 @@ export default function ProductManagerList({
       {/* ── end hidden legacy layout ─────────────────────────────────────────── */}
 
       {editor ? (
-        <div className="fixed inset-0 z-50">
-          <button
-            type="button"
-            aria-label="Close product editor"
-            onClick={closeEditor}
-            className="absolute inset-0 bg-zinc-900/30"
-          />
-
-          <aside className="absolute right-0 top-0 flex h-full w-full max-w-[720px] flex-col border-l border-zinc-200 bg-white shadow-2xl">
-            <header className="border-b border-zinc-200 px-6 py-4">
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <h2 className="text-2xl font-semibold text-zinc-900">
-                    {editor.mode === "create" ? "Create Product" : "Edit Product"}
-                  </h2>
-                  <p className="text-sm text-zinc-500">
-                    {editor.mode === "create" ? "New product" : editor.name || "Product"}
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  onClick={closeEditor}
-                  className="rounded-lg border border-zinc-200 px-2.5 py-1.5 text-zinc-500 hover:bg-zinc-100"
-                  aria-label="Close"
-                >
-                  x
-                </button>
+        <div style={{ position: "fixed", inset: 0, zIndex: 60, display: "flex", flexDirection: "column", background: "#171310", fontFamily: "var(--font-sans)" }}>
+          {/* ── Top navigation bar ──────────────────────────────────────────────── */}
+          <div style={{ height: 48, background: "#171310", borderBottom: "1px solid rgba(255,255,255,0.08)", display: "flex", alignItems: "center", padding: "0 24px", justifyContent: "space-between", flexShrink: 0 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              <button type="button" onClick={closeEditor} disabled={editor.saving}
+                style={{ width: 30, height: 30, borderRadius: 7, border: "1px solid rgba(255,255,255,0.12)", background: "rgba(255,255,255,0.05)", color: "rgba(245,240,232,0.7)", display: "flex", alignItems: "center", justifyContent: "center", cursor: editor.saving ? "not-allowed" : "pointer", flexShrink: 0 }}>
+                <svg width={14} height={14} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M10 12L6 8l4-4"/></svg>
+              </button>
+              <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "rgba(245,240,232,0.4)", fontFamily: "var(--font-mono)", letterSpacing: "0.04em" }}>
+                <span style={{ cursor: "pointer", color: "rgba(245,240,232,0.4)" }} onClick={closeEditor}>PRODUCTS</span>
+                <span>/</span>
+                <span>MENU</span>
+                <span>/</span>
+                <span style={{ color: "rgba(245,240,232,0.8)", fontWeight: 600 }}>{editor.name || "New Product"}</span>
               </div>
-            </header>
-
-            <div className="flex-1 overflow-y-auto">
-              <section className="border-b border-zinc-200 px-6 py-5">
-                <SectionTitle>Basic Info</SectionTitle>
-
-                <div className="space-y-3">
-                  <div>
-                    <InputLabel>Product name</InputLabel>
-                    <input
-                      value={editor.name}
-                      onChange={(event) => updateEditorField("name", event.target.value)}
-                      placeholder="e.g. Shawarma Wrap"
-                      className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 outline-none ring-zinc-300 focus:ring-2"
-                    />
-                  </div>
-
-                  <div>
-                    <InputLabel>Description</InputLabel>
-                    <textarea
-                      value={editor.description}
-                      onChange={(event) =>
-                        updateEditorField("description", event.target.value)
-                      }
-                      placeholder="Short product description..."
-                      rows={3}
-                      className="w-full resize-none rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 outline-none ring-zinc-300 focus:ring-2"
-                    />
-                  </div>
-
-                  <div>
-                    <InputLabel>Category</InputLabel>
-                    <select
-                      value={editor.categoryId}
-                      onChange={(event) =>
-                        updateEditorField("categoryId", event.target.value)
-                      }
-                      className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none ring-zinc-300 focus:ring-2"
-                    >
-                      {categories.map((category) => (
-                        <option key={category.id} value={category.id}>
-                          {category.title}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div>
-                    <InputLabel>Product index</InputLabel>
-                    <input
-                      type="number"
-                      min={0}
-                      step={1}
-                      value={editor.categoryIndex ?? ""}
-                      onChange={(event) => {
-                        if (event.target.value === "") {
-                          updateEditorField("categoryIndex", null);
-                          return;
-                        }
-
-                        const parsedValue = Number.parseInt(
-                          event.target.value,
-                          10,
-                        );
-
-                        updateEditorField(
-                          "categoryIndex",
-                          Number.isNaN(parsedValue) ? null : parsedValue,
-                        );
-                      }}
-                      placeholder="e.g. 1"
-                      className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 outline-none ring-zinc-300 focus:ring-2"
-                    />
-                  </div>
-
-                  <div>
-                    <InputLabel>Item type</InputLabel>
-                    <select
-                      value={editor.itemType}
-                      onChange={(event) => {
-                        const nextItemType =
-                          event.target.value === "COMBO" ? "COMBO" : "PRODUCT";
-                        setEditor((current) => {
-                          if (!current) return current;
-
-                          return {
-                            ...current,
-                            itemType: nextItemType,
-                            comboProducts:
-                              nextItemType === "COMBO" ? current.comboProducts : [],
-                            comboProductLookupId:
-                              nextItemType === "COMBO" ? current.comboProductLookupId : "",
-                            comboProductLookupQuantityInput:
-                              nextItemType === "COMBO"
-                                ? current.comboProductLookupQuantityInput
-                                : "1",
-                            comboSlots:
-                              nextItemType === "COMBO" ? current.comboSlots : [],
-                          };
-                        });
-                      }}
-                      className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none ring-zinc-300 focus:ring-2"
-                    >
-                      <option value="PRODUCT">Regular product</option>
-                      <option value="COMBO">Combo</option>
-                    </select>
-                  </div>
-
-                  <div className="flex items-center justify-between rounded-lg border border-zinc-200 px-3 py-2">
-                    <div>
-                      <p className="text-sm font-medium text-zinc-900">Active</p>
-                      <p className="text-xs text-zinc-500">Visible to customers</p>
-                    </div>
-                    <Toggle
-                      checked={editor.visible}
-                      disabled={editor.saving}
-                      onChange={() => updateEditorField("visible", !editor.visible)}
-                    />
-                  </div>
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              {!editor.saving && !editor.error && (
+                <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 12, color: "#00a866" }}>
+                  <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#00a866", display: "inline-block" }} />
+                  SAVED
                 </div>
-              </section>
+              )}
+              <button type="button" onClick={closeEditor} disabled={editor.saving}
+                style={{ padding: "5px 14px", borderRadius: 7, border: "1px solid rgba(255,255,255,0.14)", background: "transparent", fontSize: 12.5, fontWeight: 500, color: "rgba(245,240,232,0.7)", cursor: editor.saving ? "not-allowed" : "pointer" }}>
+                Discard
+              </button>
+              <button type="button" onClick={() => void saveEditor()} disabled={editor.saving || editor.uploadingPhoto}
+                style={{ display: "flex", alignItems: "center", gap: 6, padding: "5px 16px", borderRadius: 7, border: "none", background: "#ff3d14", fontSize: 12.5, fontWeight: 700, color: "#fff", cursor: editor.saving || editor.uploadingPhoto ? "not-allowed" : "pointer", opacity: editor.saving || editor.uploadingPhoto ? 0.6 : 1 }}>
+                <svg width={12} height={12} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M2.5 8.5l3.5 3.5 7.5-7.5"/></svg>
+                {editor.saving ? "Saving…" : editor.uploadingPhoto ? "Uploading…" : editor.mode === "create" ? "Create" : "Save"}
+              </button>
+            </div>
+          </div>
 
-              <section
-                ref={translationsSectionRef}
-                className="border-b border-zinc-200 px-6 py-5"
-              >
-                <SectionTitle>Translations</SectionTitle>
+          {/* ── Scrollable body ──────────────────────────────────────────────────── */}
+          <div style={{ flex: 1, overflowY: "auto", padding: "40px 24px 80px" }}>
+            <div style={{ maxWidth: 660, margin: "0 auto" }}>
 
-                <div className="mb-3 flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => updateEditorField("activeLanguage", "es")}
-                    className={`rounded-md px-3 py-1.5 text-sm font-medium ${
-                      editor.activeLanguage === "es"
-                        ? "bg-violet-100 text-violet-700"
-                        : "text-zinc-600 hover:bg-zinc-100"
-                    }`}
-                  >
-                    Spanish (ES)
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => updateEditorField("activeLanguage", "pt")}
-                    className={`rounded-md px-3 py-1.5 text-sm font-medium ${
-                      editor.activeLanguage === "pt"
-                        ? "bg-violet-100 text-violet-700"
-                        : "text-zinc-600 hover:bg-zinc-100"
-                    }`}
-                  >
-                    Portuguese (PT)
-                  </button>
+              {/* Page header */}
+              <div style={{ marginBottom: 32 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
+                  <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", color: "#ff3d14" }}>
+                    {editor.mode === "create" ? "NEW PRODUCT" : "EDITING PRODUCT"}
+                  </span>
+                  {editor.categoryId && (
+                    <>
+                      <span style={{ color: "rgba(245,240,232,0.25)", fontSize: 11 }}>·</span>
+                      <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "rgba(245,240,232,0.4)", letterSpacing: "0.06em" }}>
+                        {categories.find((c) => c.id === editor.categoryId)?.title?.toUpperCase() ?? ""}
+                      </span>
+                    </>
+                  )}
                 </div>
-
-                {editor.activeLanguage === "es" ? (
-                  <div className="space-y-3">
-                    <div>
-                      <InputLabel>Name (ES)</InputLabel>
-                      <input
-                        ref={esTranslationNameInputRef}
-                        value={editor.esName}
-                        onChange={(event) =>
-                          updateEditorField("esName", event.target.value)
-                        }
-                        placeholder="Nombre del producto..."
-                        className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 outline-none ring-zinc-300 focus:ring-2"
-                      />
-                    </div>
-                    <div>
-                      <InputLabel>Description (ES)</InputLabel>
-                      <textarea
-                        value={editor.esDescription}
-                        onChange={(event) =>
-                          updateEditorField("esDescription", event.target.value)
-                        }
-                        placeholder="Descripcion en espanol..."
-                        rows={3}
-                        className="w-full resize-none rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 outline-none ring-zinc-300 focus:ring-2"
-                      />
-                    </div>
+                <h1 style={{ fontSize: 32, fontWeight: 800, color: "#f5f0e8", letterSpacing: "-0.03em", lineHeight: 1.1, margin: "0 0 10px" }}>
+                  {editor.name || (editor.mode === "create" ? "New product" : "Product")}
+                </h1>
+                {editor.mode === "edit" && (
+                  <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                    {editor.priceInput && (
+                      <span style={{ fontSize: 20, fontWeight: 700, color: "#f5f0e8" }}>
+                        ${editor.priceInput}
+                      </span>
+                    )}
+                    {editor.comparedAtPriceInput && (
+                      <span style={{ fontSize: 14, color: "rgba(245,240,232,0.4)", textDecoration: "line-through" }}>
+                        ${editor.comparedAtPriceInput}
+                      </span>
+                    )}
+                    {editor.visible && (
+                      <span style={{ display: "flex", alignItems: "center", gap: 5, padding: "3px 8px", borderRadius: 20, background: "rgba(0,168,102,0.12)", border: "1px solid rgba(0,168,102,0.3)", fontSize: 11, fontWeight: 600, color: "#00a866" }}>
+                        <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#00a866" }} />
+                        LIVE
+                      </span>
+                    )}
                   </div>
-                ) : (
-                  <div className="space-y-3">
-                    <div>
-                      <InputLabel>Name (PT)</InputLabel>
-                      <input
-                        ref={ptTranslationNameInputRef}
-                        value={editor.ptName}
-                        onChange={(event) =>
-                          updateEditorField("ptName", event.target.value)
-                        }
-                        placeholder="Nome do produto..."
-                        className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 outline-none ring-zinc-300 focus:ring-2"
-                      />
-                    </div>
-                    <div>
-                      <InputLabel>Description (PT)</InputLabel>
-                      <textarea
-                        value={editor.ptDescription}
-                        onChange={(event) =>
-                          updateEditorField("ptDescription", event.target.value)
-                        }
-                        placeholder="Descricao em portugues..."
-                        rows={3}
-                        className="w-full resize-none rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 outline-none ring-zinc-300 focus:ring-2"
-                      />
-                    </div>
+                )}
+              </div>
+
+              {editor.error && (
+                <div style={{ marginBottom: 16, padding: "10px 14px", background: "rgba(255,61,20,0.1)", border: "1px solid rgba(255,61,20,0.25)", borderRadius: 8, fontSize: 13, color: "#ff8066" }}>
+                  {editor.error}
+                </div>
+              )}
+
+              {/* ── Section 01: Basics ──────────────────────────────────────────── */}
+              <EdSection num="01" title="Basics" subtitle="Name, description, where it lives, and whether it's visible.">
+                <EdFieldLabel required>Product name</EdFieldLabel>
+                <input value={editor.name}
+                  onChange={(e) => updateEditorField("name", e.target.value)}
+                  placeholder="e.g. Spaghetti Carbonara"
+                  style={edInput} />
+                <EdTranslationPill
+                  count={(editor.esName ? 1 : 0) + (editor.ptName ? 1 : 0)}
+                  open={editorNameTranslationsOpen}
+                  onToggle={() => setEditorNameTranslationsOpen((v) => !v)}
+                />
+                {editorNameTranslationsOpen && (
+                  <div style={{ marginTop: 8, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+                    <input value={editor.esName} onChange={(e) => updateEditorField("esName", e.target.value)} placeholder="Name (ES)" style={edInput} />
+                    <input value={editor.ptName} onChange={(e) => updateEditorField("ptName", e.target.value)} placeholder="Name (PT)" style={edInput} />
                   </div>
                 )}
 
-                <p className="mt-2 text-xs text-zinc-400">
-                  Optional - falls back to default language if empty
-                </p>
-              </section>
+                <div style={{ height: 16 }} />
+                <EdFieldLabel>Description</EdFieldLabel>
+                <textarea value={editor.description}
+                  onChange={(e) => updateEditorField("description", e.target.value)}
+                  placeholder="Short, descriptive line. What's in it, how it's made."
+                  rows={3}
+                  style={{ ...edInput, resize: "vertical" as const }} />
+                <EdTranslationPill
+                  count={(editor.esDescription ? 1 : 0) + (editor.ptDescription ? 1 : 0)}
+                  open={editorDescTranslationsOpen}
+                  onToggle={() => setEditorDescTranslationsOpen((v) => !v)}
+                />
+                {editorDescTranslationsOpen && (
+                  <div style={{ marginTop: 8, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+                    <textarea value={editor.esDescription} onChange={(e) => updateEditorField("esDescription", e.target.value)} placeholder="Description (ES)" rows={2} style={{ ...edInput, resize: "vertical" as const }} />
+                    <textarea value={editor.ptDescription} onChange={(e) => updateEditorField("ptDescription", e.target.value)} placeholder="Description (PT)" rows={2} style={{ ...edInput, resize: "vertical" as const }} />
+                  </div>
+                )}
+                <p style={{ marginTop: 6, fontSize: 12, color: "rgba(245,240,232,0.3)" }}>A short, descriptive line. What's in it, how it's made.</p>
 
-              <section className="border-b border-zinc-200 px-6 py-5">
-                <SectionTitle>Pricing</SectionTitle>
-
-                <div className="grid grid-cols-2 gap-3">
+                <div style={{ height: 16 }} />
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
                   <div>
-                    <InputLabel>Price</InputLabel>
-                    <input
-                      value={editor.priceInput}
-                      onChange={(event) =>
-                        updateEditorField("priceInput", event.target.value)
-                      }
-                      placeholder="12.00"
-                      className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 outline-none ring-zinc-300 focus:ring-2"
-                    />
+                    <EdFieldLabel required>Menu category</EdFieldLabel>
+                    <select value={editor.categoryId} onChange={(e) => updateEditorField("categoryId", e.target.value)} style={edSelect}>
+                      {categories.map((c) => <option key={c.id} value={c.id}>{c.title}</option>)}
+                    </select>
                   </div>
                   <div>
-                    <InputLabel>Compared at price</InputLabel>
-                    <input
-                      value={editor.comparedAtPriceInput}
-                      onChange={(event) =>
-                        updateEditorField("comparedAtPriceInput", event.target.value)
-                      }
-                      placeholder="14.00"
-                      className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 outline-none ring-zinc-300 focus:ring-2"
-                    />
+                    <EdFieldLabel>Visibility</EdFieldLabel>
+                    <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "9px 12px", background: "rgba(255,255,255,0.05)", borderRadius: 8, border: "1px solid rgba(255,255,255,0.09)" }}>
+                      <Toggle checked={editor.visible} disabled={editor.saving} onChange={() => updateEditorField("visible", !editor.visible)} />
+                      <span style={{ fontSize: 13, color: editor.visible ? "#f5f0e8" : "rgba(245,240,232,0.4)", fontWeight: 500 }}>
+                        {editor.visible ? "Active" : "Hidden"}
+                      </span>
+                    </div>
                   </div>
                 </div>
 
-                <p className="mt-2 text-xs text-zinc-400">
-                  Compared price displays as strikethrough discount
-                </p>
-              </section>
+                <div style={{ height: 12 }} />
+                <EdFieldLabel>Item type</EdFieldLabel>
+                <select value={editor.itemType} onChange={(e) => {
+                  const nextItemType = e.target.value === "COMBO" ? "COMBO" : "PRODUCT";
+                  setEditor((current) => {
+                    if (!current) return current;
+                    return { ...current, itemType: nextItemType, comboProducts: nextItemType === "COMBO" ? current.comboProducts : [], comboProductLookupId: nextItemType === "COMBO" ? current.comboProductLookupId : "", comboProductLookupQuantityInput: nextItemType === "COMBO" ? current.comboProductLookupQuantityInput : "1", comboSlots: nextItemType === "COMBO" ? current.comboSlots : [] };
+                  });
+                }} style={edSelect}>
+                  <option value="PRODUCT">Regular product</option>
+                  <option value="COMBO">Combo</option>
+                </select>
+              </EdSection>
 
-              {editor.itemType === "COMBO" ? (
-                <section className="border-b border-zinc-200 px-6 py-5">
-                  <SectionTitle>Combo Composition</SectionTitle>
+              {/* ── Section 02: Media ───────────────────────────────────────────── */}
+              <EdSection num="02" title="Media" subtitle="The first image becomes the primary. Up to 8 images recommended."
+                right={<span style={{ fontSize: 12, fontFamily: "var(--font-mono)", color: "rgba(245,240,232,0.4)" }}>{editor.photoUrls.length} / 8</span>}>
+                <input id={photoFileInputId} type="file" accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml" style={{ display: "none" }}
+                  disabled={editor.uploadingPhoto}
+                  onChange={(e) => { const f = e.target.files?.[0]; if (f) void uploadPhotoFile(f); e.currentTarget.value = ""; }} />
+                <label htmlFor={photoFileInputId}
+                  style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6, padding: "24px 16px", borderRadius: 10, border: "1px dashed rgba(255,255,255,0.15)", background: "rgba(255,255,255,0.02)", cursor: editor.uploadingPhoto ? "not-allowed" : "pointer", textAlign: "center" }}>
+                  <svg width={20} height={20} viewBox="0 0 24 24" fill="none" stroke="rgba(245,240,232,0.4)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                  <p style={{ margin: 0, fontSize: 13, color: "rgba(245,240,232,0.6)" }}>
+                    {editor.uploadingPhoto ? "Uploading…" : <>Drop images or <span style={{ color: "#ff3d14", cursor: "pointer" }}>browse</span></>}
+                  </p>
+                  <p style={{ margin: 0, fontSize: 11, color: "rgba(245,240,232,0.25)" }}>PNG, JPG, WebP · up to 8MB · first image is the primary</p>
+                </label>
 
-                  <div className="mb-4 rounded-lg border border-zinc-200 bg-zinc-50 p-3">
-                    <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-zinc-500">
-                      Fixed products (direct)
-                    </p>
-                    <div className="grid grid-cols-[1fr_100px_auto] gap-2">
-                      <select
-                        value={editor.comboProductLookupId}
-                        onChange={(event) =>
-                          updateEditorField("comboProductLookupId", event.target.value)
-                        }
-                        className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none ring-zinc-300 focus:ring-2"
-                      >
-                        <option value="">Select product...</option>
-                        {productLookupList
-                          .filter((product) => product.id !== editor.productId)
-                          .map((product) => (
-                            <option key={product.id} value={product.id}>
-                              {product.name}
-                            </option>
-                          ))}
-                      </select>
-                      <input
-                        type="number"
-                        min={1}
-                        step={1}
-                        value={editor.comboProductLookupQuantityInput}
-                        onChange={(event) =>
-                          updateEditorField(
-                            "comboProductLookupQuantityInput",
-                            event.target.value,
-                          )
-                        }
-                        placeholder="Qty"
-                        className="rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 outline-none ring-zinc-300 focus:ring-2"
-                      />
-                      <button
-                        type="button"
-                        onClick={addDirectComboProduct}
-                        className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-100"
-                      >
-                        Add
-                      </button>
+                {editor.photoUrls.length > 0 && (
+                  <div style={{ marginTop: 14, display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8 }}>
+                    {editor.photoUrls.map((url, idx) => (
+                      <div key={url} style={{ position: "relative", aspectRatio: "1", borderRadius: 8, overflow: "hidden", background: "rgba(255,255,255,0.06)", border: idx === 0 ? "2px solid #ff3d14" : "1px solid rgba(255,255,255,0.1)" }}>
+                        <div style={{ width: "100%", height: "100%", backgroundImage: `url("${url}")`, backgroundSize: "cover", backgroundPosition: "center" }} />
+                        {idx === 0 && (
+                          <div style={{ position: "absolute", top: 5, left: 5, padding: "2px 6px", borderRadius: 4, background: "#ff3d14", fontSize: 9, fontWeight: 700, color: "#fff", letterSpacing: "0.06em" }}>PRIMARY</div>
+                        )}
+                        <button type="button" onClick={() => removePhotoUrl(url)}
+                          style={{ position: "absolute", top: 4, right: 4, width: 20, height: 20, borderRadius: 4, background: "rgba(0,0,0,0.65)", border: "none", color: "rgba(245,240,232,0.8)", fontSize: 12, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                          ×
+                        </button>
+                      </div>
+                    ))}
+                    {editor.photoUrls.length < 8 && (
+                      <label htmlFor={photoFileInputId} style={{ aspectRatio: "1", borderRadius: 8, border: "1px dashed rgba(255,255,255,0.15)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 4, cursor: "pointer", color: "rgba(245,240,232,0.3)", fontSize: 11 }}>
+                        <span style={{ fontSize: 18 }}>+</span>
+                        <span>ADD</span>
+                      </label>
+                    )}
+                  </div>
+                )}
+
+                <div style={{ marginTop: 12, display: "flex", gap: 8 }}>
+                  <input value={editor.newPhotoUrl} onChange={(e) => updateEditorField("newPhotoUrl", e.target.value)} placeholder="Or paste image URL https://…" style={{ ...edInput, flex: 1 }} />
+                  <button type="button" onClick={addPhotoUrl} style={edSecondaryBtn}>Add URL</button>
+                </div>
+              </EdSection>
+
+              {/* ── Section 03: Pricing & tax ───────────────────────────────────── */}
+              <EdSection num="03" title="Pricing & tax" subtitle="Live price, optional compare-at strikethrough, tax rule.">
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                  <div>
+                    <EdFieldLabel required>Price</EdFieldLabel>
+                    <div style={{ position: "relative" }}>
+                      <span style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", fontSize: 13, color: "rgba(245,240,232,0.4)" }}>$</span>
+                      <input value={editor.priceInput} onChange={(e) => updateEditorField("priceInput", e.target.value)} placeholder="18.00" style={{ ...edInput, paddingLeft: 24 }} />
                     </div>
+                  </div>
+                  <div>
+                    <EdFieldLabel>Compare-at price</EdFieldLabel>
+                    <div style={{ position: "relative" }}>
+                      <span style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", fontSize: 13, color: "rgba(245,240,232,0.4)" }}>$</span>
+                      <input value={editor.comparedAtPriceInput} onChange={(e) => updateEditorField("comparedAtPriceInput", e.target.value)} placeholder="22.00" style={{ ...edInput, paddingLeft: 24 }} />
+                    </div>
+                    <p style={{ marginTop: 4, fontSize: 11, color: "rgba(245,240,232,0.3)" }}>Optional — shown as strikethrough.</p>
+                  </div>
+                </div>
+              </EdSection>
 
-                    <div className="mt-2 space-y-2">
-                      {editor.comboProducts.map((item) => (
-                        <div
-                          key={item.id}
-                          className="grid grid-cols-[1fr_100px_auto] items-center gap-2 rounded-lg border border-zinc-200 bg-white px-2 py-2"
-                        >
-                          <p className="text-sm text-zinc-800">
-                            {productNameById.get(item.productId) || "Unknown product"}
-                          </p>
-                          <input
-                            type="number"
-                            min={1}
-                            step={1}
-                            value={item.quantity}
-                            onChange={(event) => {
-                              const parsedQuantity = Number.parseInt(
-                                event.target.value || "0",
-                                10,
-                              );
-                              updateDirectComboProductQuantity(
-                                item.id,
-                                Number.isNaN(parsedQuantity) ? 0 : parsedQuantity,
-                              );
-                            }}
-                            className="rounded-lg border border-zinc-300 px-2 py-1.5 text-sm text-zinc-900 outline-none ring-zinc-300 focus:ring-2"
-                          />
-                          <button
-                            type="button"
-                            onClick={() => removeDirectComboProduct(item.id)}
-                            className="rounded-md px-2 py-1 text-xs font-medium text-rose-700 hover:bg-rose-50"
-                          >
+              {/* ── Section 04: Modifier groups ─────────────────────────────────── */}
+              <EdSection num="04" title="Modifier groups" subtitle="Sizes, add-ons, dietary tweaks. Attach a reusable group or create one just for this product.">
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  {editor.modifierGroups.map((mg) => (
+                    <ModifierGroupCard key={mg.id} modifierGroup={mg}
+                      savingId={editor.savingModifierGroupId}
+                      deletingId={editor.deletingModifierGroupId}
+                      creatingItemGroupId={editor.creatingModifierItemGroupId}
+                      savingItemId={editor.savingModifierItemId}
+                      deletingItemId={editor.deletingModifierItemId}
+                      onUpdateTitle={(v) => updateModifierGroupDraft(mg.id, { title: v })}
+                      onUpdateType={(v) => updateModifierGroupDraft(mg.id, { type: parseModifierGroupType(v) })}
+                      onUpdateRequired={(v) => updateModifierGroupDraft(mg.id, { required: v })}
+                      onUpdateMin={(v) => updateModifierGroupDraft(mg.id, { minSelection: v })}
+                      onUpdateMax={(v) => updateModifierGroupDraft(mg.id, { maxSelection: v })}
+                      onUpdateTitleES={(v) => updateModifierGroupTranslationDraft(mg.id, "es", v)}
+                      onUpdateTitlePT={(v) => updateModifierGroupTranslationDraft(mg.id, "pt", v)}
+                      onSave={() => void saveModifierGroup(mg.id)}
+                      onRemove={() => removeModifierGroupFromProduct(mg.id)}
+                      onDelete={() => void deleteModifierGroup(mg.id)}
+                      onAddItem={() => void createModifierItem(mg.id)}
+                      onUpdateItem={(itemId, patch) => updateModifierItemDraft(mg.id, itemId, patch)}
+                      onUpdateItemTranslation={(itemId, lg, field, v) => updateModifierItemTranslationDraft(mg.id, itemId, lg, field, v)}
+                      onSaveItem={(item) => void saveModifierItem(mg.id, item)}
+                      onDeleteItem={(itemId) => void deleteModifierItem(mg.id, itemId)}
+                      readTranslationField={readTranslationField}
+                    />
+                  ))}
+                  {editor.modifierGroups.length === 0 && (
+                    <p style={{ fontSize: 13, color: "rgba(245,240,232,0.3)", padding: "8px 0" }}>No modifier groups attached yet.</p>
+                  )}
+                </div>
+                <div style={{ marginTop: 14, display: "flex", gap: 10 }}>
+                  <div style={{ flex: 1, display: "flex", gap: 8 }}>
+                    <select value={editor.modifierLookupIdToAttach} onChange={(e) => updateEditorField("modifierLookupIdToAttach", e.target.value)} style={{ ...edSelect, flex: 1 }}>
+                      <option value="">Select existing group…</option>
+                      {lookupModifierGroups.map((mg) => <option key={mg.id} value={mg.id}>{mg.title}</option>)}
+                    </select>
+                    <button type="button" onClick={attachExistingModifierGroup} style={{ ...edOutlineBtn, borderColor: "#ff3d14", color: "#ff3d14", whiteSpace: "nowrap" as const }}>
+                      🔗 Attach group
+                    </button>
+                  </div>
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <input value={editor.newModifierGroupTitle} onChange={(e) => updateEditorField("newModifierGroupTitle", e.target.value)} placeholder="New group name…" style={{ ...edInput, width: 160 }} />
+                    <button type="button" onClick={() => void createModifierGroup()} disabled={editor.creatingModifierGroup} style={edSecondaryBtn}>
+                      {editor.creatingModifierGroup ? "Creating…" : "+ New group"}
+                    </button>
+                  </div>
+                </div>
+              </EdSection>
+
+              {/* ── Section 05: Preparation tasks ───────────────────────────────── */}
+              {(() => {
+                const allSteps = availableStations.flatMap((s) =>
+                  s.preparationSteps.map((p) => ({ ...p, stationId: s.id, stationName: s.name })),
+                );
+                const attachedStepIds = new Set(editor.prepTasks.map((t) => t.stepId));
+                const unattachedSteps = allSteps.filter((s) => !attachedStepIds.has(s.id));
+                return (
+                  <EdSection num="05" title="Preparation tasks" subtitle="Steps fire in parallel at their respective stations when an order is placed.">
+                    {editor.prepTasks.length === 0 && (
+                      <p style={{ fontSize: 13, color: "rgba(245,240,232,0.3)", padding: "4px 0 10px" }}>No steps attached yet.</p>
+                    )}
+                    <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: editor.prepTasks.length > 0 ? 14 : 0 }}>
+                      {editor.prepTasks.map((task) => (
+                        <div key={task.stepId} style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 14px", background: "rgba(255,255,255,0.04)", borderRadius: 8, border: "1px solid rgba(255,255,255,0.09)" }}>
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <div style={{ fontSize: 13, fontWeight: 600, color: "#f5f0e8", marginBottom: 3 }}>{task.stepName}</div>
+                            <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" as const }}>
+                              <span style={{ fontSize: 11, color: "rgba(245,240,232,0.45)", background: "rgba(255,255,255,0.06)", padding: "1px 7px", borderRadius: 4 }}>{task.stationName || "No station"}</span>
+                              {task.goalMinutes > 0 && (
+                                <span style={{ fontSize: 11, color: "rgba(245,240,232,0.4)", background: "rgba(255,255,255,0.05)", padding: "1px 7px", borderRadius: 4 }}>⏱ {task.goalMinutes} min</span>
+                              )}
+                              {task.includeComments && (
+                                <span style={{ fontSize: 11, color: "rgba(245,240,232,0.4)", background: "rgba(255,255,255,0.05)", padding: "1px 7px", borderRadius: 4 }}>comments</span>
+                              )}
+                              {task.includeModifiers && (
+                                <span style={{ fontSize: 11, color: "rgba(245,240,232,0.4)", background: "rgba(255,255,255,0.05)", padding: "1px 7px", borderRadius: 4 }}>modifiers</span>
+                              )}
+                            </div>
+                          </div>
+                          <button type="button" onClick={() => removePrepTask(task.stepId)}
+                            style={{ padding: "3px 8px", borderRadius: 5, border: "1px solid rgba(255,61,20,0.3)", background: "transparent", fontSize: 11, color: "#ff8066", cursor: "pointer", flexShrink: 0 }}>
                             Remove
                           </button>
                         </div>
                       ))}
-                      {editor.comboProducts.length === 0 ? (
-                        <p className="text-xs text-zinc-500">
-                          Attach fixed products for combos with no choice step.
-                        </p>
-                      ) : null}
                     </div>
-                  </div>
-
-                  <div className="mb-3 flex items-center justify-between gap-3">
-                    <p className="text-xs text-zinc-500">
-                      Slot-based choices (use this instead of fixed products).
-                    </p>
-                    <button
-                      type="button"
-                      onClick={addComboSlot}
-                      className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-100"
-                    >
-                      Add Combo Slot
-                    </button>
-                  </div>
-
-                  <div className="space-y-3">
-                    {editor.comboSlots.map((slot, slotIndex) => (
-                      <div
-                        key={slot.id}
-                        className="rounded-xl border border-zinc-200 bg-zinc-50 p-3"
+                    {/* Attach existing step row */}
+                    <div style={{ display: "flex", gap: 8, marginBottom: editor.newPrepStepFormOpen ? 0 : 10 }}>
+                      <select
+                        value={editor.prepTaskLookupStepId}
+                        onChange={(e) => updateEditorField("prepTaskLookupStepId", e.target.value)}
+                        style={{ ...edSelect, flex: 1 }}
+                        disabled={editor.newPrepStepFormOpen}
                       >
-                        <div className="mb-3 flex items-center justify-between gap-2">
-                          <p className="text-sm font-semibold text-zinc-900">
-                            Slot {slotIndex + 1}
-                          </p>
-                          <button
-                            type="button"
-                            onClick={() => removeComboSlot(slot.id)}
-                            className="rounded-md px-2 py-1 text-xs font-medium text-rose-700 hover:bg-rose-50"
-                          >
-                            Remove slot
-                          </button>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-2">
-                          <input
-                            value={slot.name}
-                            onChange={(event) =>
-                              updateComboSlot(slot.id, { name: event.target.value })
-                            }
-                            placeholder="Slot name (e.g. Choose your pizzas)"
-                            className="col-span-2 rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 outline-none ring-zinc-300 focus:ring-2"
-                          />
-                          <input
-                            value={readTranslationField(
-                              slot.translations,
-                              "es",
-                              "title",
-                            )}
-                            onChange={(event) =>
-                              updateComboSlotTranslation(
-                                slot.id,
-                                "es",
-                                "title",
-                                event.target.value,
-                              )
-                            }
-                            placeholder="Slot name (ES)"
-                            className="rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 outline-none ring-zinc-300 focus:ring-2"
-                          />
-                          <input
-                            value={readTranslationField(
-                              slot.translations,
-                              "pt",
-                              "title",
-                            )}
-                            onChange={(event) =>
-                              updateComboSlotTranslation(
-                                slot.id,
-                                "pt",
-                                "title",
-                                event.target.value,
-                              )
-                            }
-                            placeholder="Slot name (PT-BR)"
-                            className="rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 outline-none ring-zinc-300 focus:ring-2"
-                          />
-                          <input
-                            type="number"
-                            min={0}
-                            step={1}
-                            value={slot.minSelect}
-                            onChange={(event) =>
-                              updateComboSlot(slot.id, {
-                                minSelect: Number.parseInt(event.target.value || "0", 10),
-                              })
-                            }
-                            placeholder="Min select"
-                            className="rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 outline-none ring-zinc-300 focus:ring-2"
-                          />
-                          <input
-                            type="number"
-                            min={0}
-                            step={1}
-                            value={slot.maxSelect}
-                            onChange={(event) =>
-                              updateComboSlot(slot.id, {
-                                maxSelect: Number.parseInt(event.target.value || "0", 10),
-                              })
-                            }
-                            placeholder="Max select"
-                            className="rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 outline-none ring-zinc-300 focus:ring-2"
-                          />
-                          <label className="col-span-2 flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-700">
-                            <input
-                              type="checkbox"
-                              checked={slot.allowDuplicates}
-                              onChange={(event) =>
-                                updateComboSlot(slot.id, {
-                                  allowDuplicates: event.target.checked,
-                                })
-                              }
-                            />
-                            Allow duplicate picks in this slot
-                          </label>
-                        </div>
-
-                        <div className="mt-3 rounded-lg border border-zinc-200 bg-white p-2">
-                          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-zinc-500">
-                            Attach products
-                          </p>
-                          <div className="grid grid-cols-[1fr_110px_auto] gap-2">
-                            <select
-                              value={slot.optionLookupProductId}
-                              onChange={(event) =>
-                                updateComboSlot(slot.id, {
-                                  optionLookupProductId: event.target.value,
-                                })
-                              }
-                              className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none ring-zinc-300 focus:ring-2"
-                            >
-                              <option value="">Select product...</option>
-                              {productLookupList
-                                .filter((product) => product.id !== editor.productId)
-                                .map((product) => (
-                                  <option key={product.id} value={product.id}>
-                                    {product.name}
-                                  </option>
-                                ))}
-                            </select>
-                            <input
-                              value={slot.optionLookupExtraPriceInput}
-                              onChange={(event) =>
-                                updateComboSlot(slot.id, {
-                                  optionLookupExtraPriceInput: event.target.value,
-                                })
-                              }
-                              placeholder="Extra $"
-                              className="rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 outline-none ring-zinc-300 focus:ring-2"
-                            />
-                            <button
-                              type="button"
-                              onClick={() => addComboSlotOption(slot.id)}
-                              className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-100"
-                            >
-                              Add
-                            </button>
-                          </div>
-
-                          <div className="mt-2 space-y-2">
-                            {slot.options.map((option) => (
-                              <div
-                                key={option.id}
-                                className="grid grid-cols-[1fr_110px_auto] items-center gap-2 rounded-lg border border-zinc-200 bg-zinc-50 px-2 py-2"
-                              >
-                                <p className="text-sm text-zinc-800">
-                                  {productNameById.get(option.productId) || "Unknown product"}
-                                </p>
-                                <input
-                                  value={option.extraPriceInput}
-                                  onChange={(event) =>
-                                    updateComboSlotOption(slot.id, option.id, {
-                                      extraPriceInput: event.target.value,
-                                    })
-                                  }
-                                  placeholder="Extra $"
-                                  className="rounded-lg border border-zinc-300 px-2 py-1.5 text-sm text-zinc-900 outline-none ring-zinc-300 focus:ring-2"
-                                />
-                                <button
-                                  type="button"
-                                  onClick={() => removeComboSlotOption(slot.id, option.id)}
-                                  className="rounded-md px-2 py-1 text-xs font-medium text-rose-700 hover:bg-rose-50"
-                                >
-                                  Remove
-                                </button>
-                              </div>
+                        <option value="">Attach an existing step…</option>
+                        {availableStations.map((station) => (
+                          <optgroup key={station.id} label={station.name}>
+                            {station.preparationSteps.map((step) => (
+                              <option key={step.id} value={step.id} disabled={attachedStepIds.has(step.id)}>
+                                {step.name}{attachedStepIds.has(step.id) ? " (attached)" : ""}
+                              </option>
                             ))}
-
-                            {slot.options.length === 0 ? (
-                              <p className="text-xs text-zinc-500">
-                                No products attached to this slot yet.
-                              </p>
-                            ) : null}
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-
-                    {editor.comboSlots.length === 0 ? (
-                      <p className="text-xs text-zinc-500">
-                        No slots configured. This is optional.
-                      </p>
-                    ) : null}
-                  </div>
-                </section>
-              ) : null}
-
-              <section className="border-b border-zinc-200 px-6 py-5">
-                <SectionTitle>Modifier Groups</SectionTitle>
-
-                <div className="mb-4 flex flex-col gap-2">
-                  <label className="text-xs font-medium text-zinc-500">
-                    Attach existing group
-                  </label>
-                  <div className="flex gap-2">
-                    <select
-                      value={editor.modifierLookupIdToAttach}
-                      onChange={(event) =>
-                        updateEditorField("modifierLookupIdToAttach", event.target.value)
-                      }
-                      className="flex-1 rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none ring-zinc-300 focus:ring-2"
-                    >
-                      <option value="">Select a modifier group</option>
-                      {lookupModifierGroups.map((modifierGroup) => (
-                        <option key={modifierGroup.id} value={modifierGroup.id}>
-                          {modifierGroup.title}
-                        </option>
-                      ))}
-                    </select>
-                    <button
-                      type="button"
-                      onClick={attachExistingModifierGroup}
-                      className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-100"
-                    >
-                      Attach
-                    </button>
-                  </div>
-                </div>
-
-                <div className="mb-4 flex flex-col gap-2">
-                  <label className="text-xs font-medium text-zinc-500">
-                    Create new group
-                  </label>
-                  <div className="flex gap-2">
-                    <input
-                      value={editor.newModifierGroupTitle}
-                      onChange={(event) =>
-                        updateEditorField("newModifierGroupTitle", event.target.value)
-                      }
-                      placeholder="e.g. Sauces"
-                      className="flex-1 rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 outline-none ring-zinc-300 focus:ring-2"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => void createModifierGroup()}
-                      disabled={editor.creatingModifierGroup}
-                      className="rounded-lg bg-violet-600 px-3 py-2 text-sm font-medium text-white hover:bg-violet-500 disabled:opacity-50"
-                    >
-                      {editor.creatingModifierGroup ? "Creating..." : "Create"}
-                    </button>
-                  </div>
-                </div>
-
-                <div className="space-y-3">
-                  {editor.modifierGroups.map((modifierGroup) => (
-                    <div
-                      key={modifierGroup.id}
-                      className="rounded-xl border border-zinc-200 bg-zinc-50 p-3"
-                    >
-                      <div className="mb-3 grid grid-cols-2 gap-2">
-                        <input
-                          value={modifierGroup.title}
-                          onChange={(event) =>
-                            updateModifierGroupDraft(modifierGroup.id, {
-                              title: event.target.value,
-                            })
-                          }
-                          placeholder="Group title"
-                          className="col-span-2 rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 outline-none ring-zinc-300 focus:ring-2"
-                        />
-                        <input
-                          value={readTranslationField(
-                            modifierGroup.translations,
-                            "es",
-                            "title",
-                          )}
-                          onChange={(event) =>
-                            updateModifierGroupTranslationDraft(
-                              modifierGroup.id,
-                              "es",
-                              event.target.value,
-                            )
-                          }
-                          placeholder="Group title (ES)"
-                          className="rounded-lg border border-zinc-300 px-3 py-2 text-xs text-zinc-900 outline-none ring-zinc-300 focus:ring-2"
-                        />
-                        <input
-                          value={readTranslationField(
-                            modifierGroup.translations,
-                            "pt",
-                            "title",
-                          )}
-                          onChange={(event) =>
-                            updateModifierGroupTranslationDraft(
-                              modifierGroup.id,
-                              "pt",
-                              event.target.value,
-                            )
-                          }
-                          placeholder="Group title (PT-BR)"
-                          className="rounded-lg border border-zinc-300 px-3 py-2 text-xs text-zinc-900 outline-none ring-zinc-300 focus:ring-2"
-                        />
-                        <select
-                          value={modifierGroup.type ?? ""}
-                          onChange={(event) =>
-                            updateModifierGroupDraft(modifierGroup.id, {
-                              type: parseModifierGroupType(event.target.value),
-                            })
-                          }
-                          className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none ring-zinc-300 focus:ring-2"
-                        >
-                          <option value="">No type</option>
-                          <option value="SINGLE">Single</option>
-                          <option value="MULTI">Multi</option>
-                        </select>
-                        <label className="flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-700">
-                          <input
-                            type="checkbox"
-                            checked={modifierGroup.required}
-                            onChange={(event) =>
-                              updateModifierGroupDraft(modifierGroup.id, {
-                                required: event.target.checked,
-                              })
-                            }
-                          />
-                          Required
-                        </label>
-                        <input
-                          type="number"
-                          min={0}
-                          value={modifierGroup.minSelection ?? ""}
-                          onChange={(event) =>
-                            updateModifierGroupDraft(modifierGroup.id, {
-                              minSelection: event.target.value
-                                ? Number(event.target.value)
-                                : null,
-                            })
-                          }
-                          placeholder="Min selection"
-                          className="rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 outline-none ring-zinc-300 focus:ring-2"
-                        />
-                        <input
-                          type="number"
-                          min={0}
-                          value={modifierGroup.maxSelection ?? ""}
-                          onChange={(event) =>
-                            updateModifierGroupDraft(modifierGroup.id, {
-                              maxSelection: event.target.value
-                                ? Number(event.target.value)
-                                : null,
-                            })
-                          }
-                          placeholder="Max selection"
-                          className="rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 outline-none ring-zinc-300 focus:ring-2"
-                        />
-                      </div>
-
-                      <div className="mb-3 flex flex-wrap items-center gap-2">
-                        <button
-                          type="button"
-                          onClick={() => void saveModifierGroup(modifierGroup.id)}
-                          disabled={editor.savingModifierGroupId === modifierGroup.id}
-                          className="rounded-lg border border-zinc-300 bg-white px-3 py-1.5 text-xs font-medium text-zinc-700 hover:bg-zinc-100 disabled:opacity-50"
-                        >
-                          {editor.savingModifierGroupId === modifierGroup.id
-                            ? "Saving..."
-                            : "Save group"}
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => removeModifierGroupFromProduct(modifierGroup.id)}
-                          className="rounded-lg border border-zinc-300 bg-white px-3 py-1.5 text-xs font-medium text-zinc-700 hover:bg-zinc-100"
-                        >
-                          Remove from product
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => void deleteModifierGroup(modifierGroup.id)}
-                          disabled={editor.deletingModifierGroupId === modifierGroup.id}
-                          className="rounded-lg border border-rose-200 bg-rose-50 px-3 py-1.5 text-xs font-medium text-rose-700 hover:bg-rose-100 disabled:opacity-50"
-                        >
-                          {editor.deletingModifierGroupId === modifierGroup.id
-                            ? "Deleting..."
-                            : "Delete group"}
-                        </button>
-                      </div>
-
-                      <div className="space-y-2">
-                        {modifierGroup.items.map((item) => (
-                          <div
-                            key={item.id}
-                            className="rounded-lg border border-zinc-200 bg-white p-2"
-                          >
-                            <div className="grid grid-cols-2 gap-2">
-                              <input
-                                value={item.name}
-                                onChange={(event) =>
-                                  updateModifierItemDraft(modifierGroup.id, item.id, {
-                                    name: event.target.value,
-                                  })
-                                }
-                                placeholder="Modifier item name"
-                                className="col-span-2 rounded-lg border border-zinc-300 px-3 py-2 text-xs text-zinc-900 outline-none ring-zinc-300 focus:ring-2"
-                              />
-                              <textarea
-                                value={item.description ?? ""}
-                                onChange={(event) =>
-                                  updateModifierItemDraft(modifierGroup.id, item.id, {
-                                    description: event.target.value || null,
-                                  })
-                                }
-                                rows={2}
-                                placeholder="Description"
-                                className="col-span-2 resize-none rounded-lg border border-zinc-300 px-3 py-2 text-xs text-zinc-900 outline-none ring-zinc-300 focus:ring-2"
-                              />
-                              <input
-                                value={readTranslationField(
-                                  item.translations,
-                                  "es",
-                                  "name",
-                                )}
-                                onChange={(event) =>
-                                  updateModifierItemTranslationDraft(
-                                    modifierGroup.id,
-                                    item.id,
-                                    "es",
-                                    "name",
-                                    event.target.value,
-                                  )
-                                }
-                                placeholder="Name (ES)"
-                                className="rounded-lg border border-zinc-300 px-3 py-2 text-xs text-zinc-900 outline-none ring-zinc-300 focus:ring-2"
-                              />
-                              <input
-                                value={readTranslationField(
-                                  item.translations,
-                                  "pt",
-                                  "name",
-                                )}
-                                onChange={(event) =>
-                                  updateModifierItemTranslationDraft(
-                                    modifierGroup.id,
-                                    item.id,
-                                    "pt",
-                                    "name",
-                                    event.target.value,
-                                  )
-                                }
-                                placeholder="Name (PT-BR)"
-                                className="rounded-lg border border-zinc-300 px-3 py-2 text-xs text-zinc-900 outline-none ring-zinc-300 focus:ring-2"
-                              />
-                              <textarea
-                                value={readTranslationField(
-                                  item.translations,
-                                  "es",
-                                  "description",
-                                )}
-                                onChange={(event) =>
-                                  updateModifierItemTranslationDraft(
-                                    modifierGroup.id,
-                                    item.id,
-                                    "es",
-                                    "description",
-                                    event.target.value,
-                                  )
-                                }
-                                rows={2}
-                                placeholder="Description (ES)"
-                                className="col-span-2 resize-none rounded-lg border border-zinc-300 px-3 py-2 text-xs text-zinc-900 outline-none ring-zinc-300 focus:ring-2"
-                              />
-                              <textarea
-                                value={readTranslationField(
-                                  item.translations,
-                                  "pt",
-                                  "description",
-                                )}
-                                onChange={(event) =>
-                                  updateModifierItemTranslationDraft(
-                                    modifierGroup.id,
-                                    item.id,
-                                    "pt",
-                                    "description",
-                                    event.target.value,
-                                  )
-                                }
-                                rows={2}
-                                placeholder="Description (PT-BR)"
-                                className="col-span-2 resize-none rounded-lg border border-zinc-300 px-3 py-2 text-xs text-zinc-900 outline-none ring-zinc-300 focus:ring-2"
-                              />
-                              <input
-                                type="number"
-                                min={0}
-                                value={item.price}
-                                onChange={(event) =>
-                                  updateModifierItemDraft(modifierGroup.id, item.id, {
-                                    price: Number(event.target.value || 0),
-                                  })
-                                }
-                                placeholder="Price (cents)"
-                                className="rounded-lg border border-zinc-300 px-3 py-2 text-xs text-zinc-900 outline-none ring-zinc-300 focus:ring-2"
-                              />
-                              <div className="flex items-center justify-end gap-2">
-                                <button
-                                  type="button"
-                                  onClick={() => void saveModifierItem(modifierGroup.id, item)}
-                                  disabled={editor.savingModifierItemId === item.id}
-                                  className="rounded-lg border border-zinc-300 bg-white px-2.5 py-1.5 text-xs font-medium text-zinc-700 hover:bg-zinc-100 disabled:opacity-50"
-                                >
-                                  {editor.savingModifierItemId === item.id
-                                    ? "Saving..."
-                                    : "Save"}
-                                </button>
-                                <button
-                                  type="button"
-                                  onClick={() =>
-                                    void deleteModifierItem(modifierGroup.id, item.id)
-                                  }
-                                  disabled={editor.deletingModifierItemId === item.id}
-                                  className="rounded-lg border border-rose-200 bg-rose-50 px-2.5 py-1.5 text-xs font-medium text-rose-700 hover:bg-rose-100 disabled:opacity-50"
-                                >
-                                  {editor.deletingModifierItemId === item.id
-                                    ? "Deleting..."
-                                    : "Delete"}
-                                </button>
-                              </div>
-                            </div>
-                          </div>
+                          </optgroup>
                         ))}
-                      </div>
-
+                        {unattachedSteps.length === 0 && allSteps.length > 0 && (
+                          <option value="" disabled>All steps already attached</option>
+                        )}
+                      </select>
                       <button
                         type="button"
-                        onClick={() => void createModifierItem(modifierGroup.id)}
-                        disabled={editor.creatingModifierItemGroupId === modifierGroup.id}
-                        className="mt-3 rounded-lg border border-zinc-300 bg-white px-3 py-1.5 text-xs font-medium text-zinc-700 hover:bg-zinc-100 disabled:opacity-50"
+                        disabled={!editor.prepTaskLookupStepId || editor.newPrepStepFormOpen}
+                        onClick={() => editor.prepTaskLookupStepId && attachPrepStep(editor.prepTaskLookupStepId)}
+                        style={{ ...edOutlineBtn, borderColor: "#ff3d14", color: "#ff3d14", opacity: editor.prepTaskLookupStepId && !editor.newPrepStepFormOpen ? 1 : 0.4 }}
                       >
-                        {editor.creatingModifierItemGroupId === modifierGroup.id
-                          ? "Adding..."
-                          : "Add modifier item"}
+                        Attach
                       </button>
                     </div>
-                  ))}
 
-                  {editor.modifierGroups.length === 0 ? (
-                    <p className="text-xs text-zinc-500">
-                      No modifier groups attached to this product yet.
-                    </p>
-                  ) : null}
-                </div>
-              </section>
-
-              <section className="px-6 py-5">
-                <SectionTitle>Photos</SectionTitle>
-
-                <div className="rounded-xl border border-dashed border-zinc-300 bg-zinc-50 px-4 py-6 text-center text-zinc-500">
-                  <input
-                    id={photoFileInputId}
-                    type="file"
-                    accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml"
-                    className="hidden"
-                    onChange={(event) => {
-                      const file = event.target.files?.[0];
-                      if (file) {
-                        void uploadPhotoFile(file);
-                      }
-                      event.currentTarget.value = "";
-                    }}
-                    disabled={editor.uploadingPhoto}
-                  />
-                  <label
-                    htmlFor={photoFileInputId}
-                    className={`inline-flex flex-col items-center gap-1 ${
-                      editor.uploadingPhoto ? "cursor-not-allowed opacity-60" : "cursor-pointer"
-                    }`}
-                  >
-                    <p className="text-lg">^</p>
-                    <p className="text-sm">
-                      {editor.uploadingPhoto
-                        ? "Uploading image..."
-                        : "Click to upload or drag and drop"}
-                    </p>
-                  </label>
-                </div>
-
-                <div className="mt-3 flex items-center gap-2">
-                  <input
-                    value={editor.newPhotoUrl}
-                    onChange={(event) =>
-                      updateEditorField("newPhotoUrl", event.target.value)
-                    }
-                    placeholder="https://..."
-                    className="flex-1 rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 outline-none ring-zinc-300 focus:ring-2"
-                  />
-                  <button
-                    type="button"
-                    onClick={addPhotoUrl}
-                    className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-100"
-                  >
-                    Add
-                  </button>
-                </div>
-
-                {editor.photoUrls.length > 0 ? (
-                  <div className="mt-3 space-y-2">
-                    {editor.photoUrls.map((urlValue) => (
-                      <div
-                        key={urlValue}
-                        className="flex items-center gap-2 rounded-lg border border-zinc-200 px-2 py-2"
+                    {/* New step form / toggle */}
+                    {!editor.newPrepStepFormOpen ? (
+                      <button
+                        type="button"
+                        onClick={() => updateEditorField("newPrepStepFormOpen", true)}
+                        style={{ ...edOutlineBtn, borderColor: "rgba(255,255,255,0.18)", color: "rgba(245,240,232,0.55)", fontSize: 12, padding: "5px 12px" }}
                       >
-                        <div
-                          className="h-10 w-10 rounded-md bg-zinc-200 bg-cover bg-center"
-                          style={{ backgroundImage: `url("${urlValue}")` }}
-                        />
-                        <p className="line-clamp-1 flex-1 text-xs text-zinc-500">
-                          {urlValue}
-                        </p>
-                        <button
-                          type="button"
-                          onClick={() => removePhotoUrl(urlValue)}
-                          className="rounded-md px-2 py-1 text-xs text-rose-600 hover:bg-rose-50"
-                        >
-                          Remove
-                        </button>
+                        + Create new step
+                      </button>
+                    ) : (
+                      <div style={{ marginTop: 12, padding: "16px 14px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 10 }}>
+                        <p style={{ margin: "0 0 12px", fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", color: "rgba(245,240,232,0.4)", textTransform: "uppercase" as const }}>New preparation step</p>
+                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 10 }}>
+                          <div style={{ gridColumn: "1/-1" }}>
+                            <EdFieldLabel required>Step name</EdFieldLabel>
+                            <input
+                              autoFocus
+                              value={editor.newPrepStepName}
+                              onChange={(e) => updateEditorField("newPrepStepName", e.target.value)}
+                              placeholder="e.g. Grill patty"
+                              style={edInput}
+                            />
+                          </div>
+                          <div>
+                            <EdFieldLabel required>Station</EdFieldLabel>
+                            <select
+                              value={editor.newPrepStepStationId || availableStations[0]?.id || ""}
+                              onChange={(e) => updateEditorField("newPrepStepStationId", e.target.value)}
+                              style={edSelect}
+                            >
+                              {availableStations.length === 0 && <option value="">No stations yet</option>}
+                              {availableStations.map((s) => (
+                                <option key={s.id} value={s.id}>{s.name}</option>
+                              ))}
+                            </select>
+                          </div>
+                          <div>
+                            <EdFieldLabel>Goal minutes</EdFieldLabel>
+                            <input
+                              type="number"
+                              min={0}
+                              value={editor.newPrepStepGoalMinutes}
+                              onChange={(e) => updateEditorField("newPrepStepGoalMinutes", e.target.value)}
+                              placeholder="0"
+                              style={edInput}
+                            />
+                          </div>
+                        </div>
+                        <div style={{ display: "flex", gap: 20, marginBottom: 14 }}>
+                          <label style={{ display: "flex", alignItems: "center", gap: 7, cursor: "pointer", userSelect: "none" as const }}>
+                            <input
+                              type="checkbox"
+                              checked={editor.newPrepStepIncludeComments}
+                              onChange={(e) => updateEditorField("newPrepStepIncludeComments", e.target.checked)}
+                              style={{ accentColor: "#ff3d14" }}
+                            />
+                            <span style={{ fontSize: 12.5, color: "rgba(245,240,232,0.65)" }}>Include comments</span>
+                          </label>
+                          <label style={{ display: "flex", alignItems: "center", gap: 7, cursor: "pointer", userSelect: "none" as const }}>
+                            <input
+                              type="checkbox"
+                              checked={editor.newPrepStepIncludeModifiers}
+                              onChange={(e) => updateEditorField("newPrepStepIncludeModifiers", e.target.checked)}
+                              style={{ accentColor: "#ff3d14" }}
+                            />
+                            <span style={{ fontSize: 12.5, color: "rgba(245,240,232,0.65)" }}>Include modifiers</span>
+                          </label>
+                        </div>
+                        <div style={{ display: "flex", gap: 8 }}>
+                          <button
+                            type="button"
+                            disabled={editor.creatingPrepStep || !editor.newPrepStepName.trim() || availableStations.length === 0}
+                            onClick={() => void createAndAttachPrepStep()}
+                            style={{ ...edSecondaryBtn, opacity: editor.creatingPrepStep || !editor.newPrepStepName.trim() || availableStations.length === 0 ? 0.5 : 1, cursor: editor.creatingPrepStep || !editor.newPrepStepName.trim() ? "not-allowed" : "pointer" }}
+                          >
+                            {editor.creatingPrepStep ? "Creating…" : "Create & attach"}
+                          </button>
+                          <button
+                            type="button"
+                            disabled={editor.creatingPrepStep}
+                            onClick={() => {
+                              updateEditorField("newPrepStepFormOpen", false);
+                              updateEditorField("newPrepStepName", "");
+                              updateEditorField("newPrepStepGoalMinutes", "");
+                              updateEditorField("newPrepStepIncludeComments", false);
+                              updateEditorField("newPrepStepIncludeModifiers", false);
+                            }}
+                            style={{ ...edOutlineBtn, fontSize: 12 }}
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </EdSection>
+                );
+              })()}
+
+              {/* ── COMBO section (conditionally shown) ─────────────────────────── */}
+              {editor.itemType === "COMBO" && (
+                <EdSection num="06" title="Combo composition" subtitle="Fixed products or slot-based choices.">
+                  <div style={{ marginBottom: 16, padding: "12px 14px", background: "rgba(255,255,255,0.04)", borderRadius: 8, border: "1px solid rgba(255,255,255,0.08)" }}>
+                    <p style={{ margin: "0 0 10px", fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", color: "rgba(245,240,232,0.4)", textTransform: "uppercase" as const }}>Fixed products</p>
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 90px auto", gap: 8, marginBottom: 8 }}>
+                      <select value={editor.comboProductLookupId} onChange={(e) => updateEditorField("comboProductLookupId", e.target.value)} style={edSelect}>
+                        <option value="">Select product…</option>
+                        {productLookupList.filter((p) => p.id !== editor.productId).map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
+                      </select>
+                      <input type="number" min={1} value={editor.comboProductLookupQuantityInput} onChange={(e) => updateEditorField("comboProductLookupQuantityInput", e.target.value)} placeholder="Qty" style={edInput} />
+                      <button type="button" onClick={addDirectComboProduct} style={edSecondaryBtn}>Add</button>
+                    </div>
+                    {editor.comboProducts.map((item) => (
+                      <div key={item.id} style={{ display: "grid", gridTemplateColumns: "1fr 90px auto", alignItems: "center", gap: 8, marginBottom: 6 }}>
+                        <span style={{ fontSize: 13, color: "#f5f0e8" }}>{productNameById.get(item.productId) || "Unknown"}</span>
+                        <input type="number" min={1} value={item.quantity} onChange={(e) => { const v = Number.parseInt(e.target.value || "0", 10); updateDirectComboProductQuantity(item.id, Number.isNaN(v) ? 0 : v); }} style={edInput} />
+                        <button type="button" onClick={() => removeDirectComboProduct(item.id)} style={{ ...edOutlineBtn, borderColor: "rgba(255,61,20,0.4)", color: "#ff3d14" }}>✕</button>
                       </div>
                     ))}
                   </div>
-                ) : null}
-              </section>
-            </div>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+                    <p style={{ margin: 0, fontSize: 12, color: "rgba(245,240,232,0.35)" }}>Or use slot-based choices.</p>
+                    <button type="button" onClick={addComboSlot} style={edSecondaryBtn}>+ Add slot</button>
+                  </div>
+                  {editor.comboSlots.map((slot, si) => (
+                    <div key={slot.id} style={{ background: "rgba(255,255,255,0.03)", borderRadius: 10, border: "1px solid rgba(255,255,255,0.08)", padding: "14px", marginBottom: 8 }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
+                        <span style={{ fontSize: 13, fontWeight: 600, color: "#f5f0e8" }}>Slot {si + 1}</span>
+                        <button type="button" onClick={() => removeComboSlot(slot.id)} style={{ ...edOutlineBtn, borderColor: "rgba(255,61,20,0.4)", color: "#ff3d14", padding: "2px 8px", fontSize: 11 }}>Remove</button>
+                      </div>
+                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 8 }}>
+                        <input value={slot.name} onChange={(e) => updateComboSlot(slot.id, { name: e.target.value })} placeholder="Slot name" style={{ ...edInput, gridColumn: "1/-1" }} />
+                        <input value={readTranslationField(slot.translations, "es", "title")} onChange={(e) => updateComboSlotTranslation(slot.id, "es", "title", e.target.value)} placeholder="Slot name (ES)" style={edInput} />
+                        <input value={readTranslationField(slot.translations, "pt", "title")} onChange={(e) => updateComboSlotTranslation(slot.id, "pt", "title", e.target.value)} placeholder="Slot name (PT)" style={edInput} />
+                        <input type="number" min={0} value={slot.minSelect} onChange={(e) => updateComboSlot(slot.id, { minSelect: Number.parseInt(e.target.value || "0", 10) })} placeholder="Min" style={edInput} />
+                        <input type="number" min={0} value={slot.maxSelect} onChange={(e) => updateComboSlot(slot.id, { maxSelect: Number.parseInt(e.target.value || "0", 10) })} placeholder="Max" style={edInput} />
+                        <label style={{ gridColumn: "1/-1", display: "flex", alignItems: "center", gap: 8, fontSize: 13, color: "rgba(245,240,232,0.6)", cursor: "pointer" }}>
+                          <input type="checkbox" checked={slot.allowDuplicates} onChange={(e) => updateComboSlot(slot.id, { allowDuplicates: e.target.checked })} />
+                          Allow duplicate picks
+                        </label>
+                      </div>
+                      <p style={{ margin: "0 0 8px", fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", color: "rgba(245,240,232,0.4)", textTransform: "uppercase" as const }}>Products in slot</p>
+                      <div style={{ display: "grid", gridTemplateColumns: "1fr 100px auto", gap: 8, marginBottom: 6 }}>
+                        <select value={slot.optionLookupProductId} onChange={(e) => updateComboSlot(slot.id, { optionLookupProductId: e.target.value })} style={edSelect}>
+                          <option value="">Select product…</option>
+                          {productLookupList.filter((p) => p.id !== editor.productId).map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
+                        </select>
+                        <input value={slot.optionLookupExtraPriceInput} onChange={(e) => updateComboSlot(slot.id, { optionLookupExtraPriceInput: e.target.value })} placeholder="Extra $" style={edInput} />
+                        <button type="button" onClick={() => addComboSlotOption(slot.id)} style={edSecondaryBtn}>Add</button>
+                      </div>
+                      {slot.options.map((opt) => (
+                        <div key={opt.id} style={{ display: "grid", gridTemplateColumns: "1fr 100px auto", alignItems: "center", gap: 8, marginBottom: 4 }}>
+                          <span style={{ fontSize: 13, color: "#f5f0e8" }}>{productNameById.get(opt.productId) || "Unknown"}</span>
+                          <input value={opt.extraPriceInput} onChange={(e) => updateComboSlotOption(slot.id, opt.id, { extraPriceInput: e.target.value })} placeholder="Extra $" style={edInput} />
+                          <button type="button" onClick={() => removeComboSlotOption(slot.id, opt.id)} style={{ ...edOutlineBtn, borderColor: "rgba(255,61,20,0.4)", color: "#ff3d14" }}>✕</button>
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+                </EdSection>
+              )}
 
-            <footer className="border-t border-zinc-200 px-6 py-4">
-              {editor.error ? (
-                <p className="mb-3 rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">
-                  {editor.error}
-                </p>
-              ) : null}
-
-              <div className="flex items-center justify-end gap-2">
-                <button
-                  type="button"
-                  onClick={closeEditor}
-                  className="rounded-lg border border-zinc-300 bg-white px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-100"
-                  disabled={editor.saving}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="button"
-                  onClick={() => void saveEditor()}
-                  className="rounded-lg bg-violet-600 px-4 py-2 text-sm font-medium text-white hover:bg-violet-500 disabled:cursor-not-allowed disabled:opacity-50"
-                  disabled={editor.saving || editor.uploadingPhoto}
-                >
-                  {editor.saving
-                    ? "Saving..."
-                    : editor.uploadingPhoto
-                      ? "Uploading image..."
-                    : editor.mode === "create"
-                      ? "Create product"
-                      : "Save changes"}
-                </button>
-              </div>
-            </footer>
-          </aside>
+            </div>{/* end max-width container */}
+          </div>{/* end scrollable body */}
         </div>
       ) : null}
     </>

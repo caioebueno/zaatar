@@ -496,7 +496,7 @@ export default function LocationPermissionScreen() {
   // Skip screen if already granted
   useEffect(() => {
     Location.getBackgroundPermissionsAsync().then(({ granted }) => {
-      if (granted) router.replace('/delivery');
+      if (granted) router.replace('/(tabs)');
     });
   }, []);
 
@@ -515,17 +515,20 @@ export default function LocationPermissionScreen() {
   const requestPermission = useCallback(async () => {
     setState('checking');
     try {
-      // Single call — on iOS this triggers the system location dialog.
-      // Do NOT request foreground first: iOS won't show a second dialog
-      // for background immediately after granting foreground.
+      // iOS requires foreground to be granted before it will show the
+      // background ("Always Allow") prompt.
+      const fg = await Location.requestForegroundPermissionsAsync();
+      if (!fg.granted) {
+        setState('denied');
+        return;
+      }
       const bg = await Location.requestBackgroundPermissionsAsync();
       if (bg.granted) {
         setState('activating');
       } else {
-        // Not granted yet — could be:
-        //   iOS: user chose "When In Use" (needs to change to "Always" in Settings)
-        //   Android 11+: system redirected to Settings without blocking
-        // The AppState listener will catch the result when user returns.
+        // iOS: user chose "When In Use" — must change to "Always" in Settings.
+        // Android 11+: system redirected to Settings without blocking.
+        // AppState listener will catch it when the user returns.
         setState('denied');
       }
     } catch {
@@ -551,7 +554,7 @@ export default function LocationPermissionScreen() {
   }, []);
 
   const handleDone = useCallback(() => {
-    router.replace('/delivery');
+    router.replace('/(tabs)');
   }, []);
 
   if (state === 'activating') {
@@ -627,7 +630,7 @@ export default function LocationPermissionScreen() {
           {/* CTA */}
           <TouchableOpacity
             style={s.ctaBtn}
-            onPress={() => setState('dialog')}
+            onPress={requestPermission}
             activeOpacity={0.88}
             disabled={state === 'checking'}
           >

@@ -2,6 +2,94 @@
 
 Base URL (local): `http://localhost:4000`
 
+## List Dispatches (Manager Owner Auth)
+
+Endpoint:
+
+`GET /dispatches`
+
+Description:
+
+- Returns dispatches using the same visibility logic as the existing dispatch board:
+  - today's dispatches
+  - plus non-today dispatches that are not dispatched yet or still have pending orders
+- Ordered by `dispatched`, then `queueIndex`, then dispatch/create time.
+- Supports query filters.
+
+Authentication:
+
+- Requires manager owner access token:
+  - `Authorization: Bearer <manager-access-token>`
+
+Query filters:
+
+- `status=active`
+  - Returns only active dispatches.
+  - Active means:
+    - `startedDeliveryAt` is set
+    - dispatch still has undelivered orders
+    - driver has not started a newer active dispatch
+
+Examples:
+
+- `GET /dispatches`
+- `GET /dispatches?status=active`
+
+Success (`200`):
+
+- Returns `DispatchEntity[]` (same shape documented below in "Get Next Dispatch For Driver").
+
+Validation error (`400`):
+
+```json
+{
+  "error": "Invalid payload",
+  "field": "status"
+}
+```
+
+## Update Dispatch Driver (Manager Owner Auth)
+
+Endpoint:
+
+`PATCH /dispatches/:dispatchId`
+
+Description:
+
+- Assigns or unassigns a driver from a dispatch.
+- `dispatchAt` is legacy and not used by this endpoint.
+
+Authentication:
+
+- Requires manager owner access token:
+  - `Authorization: Bearer <manager-access-token>`
+
+Request body:
+
+```json
+{
+  "driverId": "driver-id"
+}
+```
+
+To unassign driver:
+
+```json
+{
+  "driverId": null
+}
+```
+
+Success (`200`):
+
+- Returns updated `DispatchEntity`.
+
+Errors:
+
+- `400` invalid payload (for example missing/invalid `driverId`)
+- `404` dispatch not found
+- `404` driver not found
+
 ## Get Next Dispatch For Driver
 
 Endpoint:
@@ -30,7 +118,24 @@ type DispatchEntity = {
   id: string;
   createdAt: string; // ISO datetime
   queueIndex?: number;
-  dispatchAt?: string; // ISO datetime
+  dispatchAt?: string; // ISO datetime (legacy)
+  startedDeliveryAt?: string; // ISO datetime
+  status: "PREPARING" | "READY_FOR_DELIVERY" | "OUT_FOR_DELIVERY" | "DELIVERED";
+  latestRoutePoint?: {
+    id: string;
+    sessionId: string;
+    sequence: number;
+    createdAt: string; // ISO datetime
+    recordedAt: string; // ISO datetime
+    lat: number;
+    lng: number;
+    accuracyMeters: number | null;
+    speedMps: number | null;
+    headingDegrees: number | null;
+    altitudeMeters: number | null;
+    source: string;
+    isMocked: boolean | null;
+  };
   dispatched: boolean;
   estimatedDeliveryDurationMinutes?: number;
   estimatedRoundTripDurationMinutes?: number;
@@ -131,17 +236,15 @@ type DispatchEntity = {
       fullAmount: number;
       quantity: number;
     }>;
-    preparationStepCategory: Array<{
+    preparationTaskStation: Array<{
       id: string;
-      categoryId: string;
+      stationId?: string;
       completed: boolean;
       orderId: string;
       snoozes: unknown[];
-      category: {
+      station: {
         id: string;
-        title: string;
-        products: unknown[];
-        translations?: Record<string, Record<string, string>>;
+        name: string;
       };
       steps: Array<{
         id: string;
@@ -175,6 +278,17 @@ type DispatchEntity = {
 };
 ```
 
+Notes:
+
+- `startedDeliveryAt` is the canonical public delivery start timestamp.
+- Route tracking APIs do not expose route session `startedAt`.
+- `dispatchAt` is legacy and should not be used for new dispatch status logic.
+- Dispatch status logic:
+  - `DELIVERED`: all dispatch orders are delivered
+  - `OUT_FOR_DELIVERY`: `startedDeliveryAt` is set and not all orders are delivered
+  - `READY_FOR_DELIVERY`: all order tasks are ready (no incomplete preparation tasks) and dispatch is not out for delivery yet
+  - `PREPARING`: fallback when tasks are still in progress
+
 Success (`200`) sample:
 
 ```json
@@ -183,6 +297,23 @@ Success (`200`) sample:
   "createdAt": "2026-05-13T13:04:11.123Z",
   "queueIndex": 2,
   "dispatchAt": "2026-05-13T13:10:00.000Z",
+  "startedDeliveryAt": "2026-05-13T13:18:00.000Z",
+  "status": "OUT_FOR_DELIVERY",
+  "latestRoutePoint": {
+    "id": "route-point-id",
+    "sessionId": "route-session-id",
+    "sequence": 18,
+    "createdAt": "2026-05-13T13:19:01.000Z",
+    "recordedAt": "2026-05-13T13:19:00.000Z",
+    "lat": 27.9506,
+    "lng": -82.4572,
+    "accuracyMeters": 5,
+    "speedMps": 9.4,
+    "headingDegrees": 200,
+    "altitudeMeters": 3.2,
+    "source": "GPS",
+    "isMocked": false
+  },
   "dispatched": true,
   "estimatedDeliveryDurationMinutes": 24,
   "estimatedRoundTripDurationMinutes": 39,
@@ -217,5 +348,69 @@ Server error (`500`):
 ```json
 {
   "error": "Internal Server Error"
+}
+```
+
+## Set Dispatch Started Delivery At (Driver)
+
+Endpoint:
+
+`PATCH /drivers/dispatches/:dispatchId/started-delivery`
+
+Description:
+
+- Sets `Dispatch.startedDeliveryAt`.
+- Only the driver assigned to that dispatch can update it.
+- Driver identity is read from driver access token.
+- Also ensures an active `DispatchRouteSession` exists for this dispatch+driver (created automatically if missing).
+
+Authentication:
+
+- Requires driver access token in header:
+  - `Authorization: Bearer <driver-access-token>`
+
+Request body:
+
+```json
+{
+  "startedDeliveryAt": "2026-05-15T16:25:00.000Z"
+}
+```
+
+- `startedDeliveryAt` is optional. If omitted, server uses current time.
+
+Success (`200`):
+
+```json
+{
+  "ok": true,
+  "dispatchId": "dispatch-id",
+  "startedDeliveryAt": "2026-05-15T16:25:00.000Z"
+}
+```
+
+Validation error (`400`):
+
+```json
+{
+  "error": "Invalid payload",
+  "field": "startedDeliveryAt"
+}
+```
+
+Forbidden (`403`):
+
+```json
+{
+  "error": "Forbidden",
+  "reason": "DRIVER_DISPATCH_ACCESS_DENIED"
+}
+```
+
+Not found (`404`):
+
+```json
+{
+  "error": "Dispatch not found"
 }
 ```

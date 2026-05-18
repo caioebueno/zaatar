@@ -391,7 +391,6 @@ function PhoneStep({ onNext }: { onNext: (apiPhone: string, dialCode: string) =>
         {/* Form */}
         <View style={{ flex: 1 }}>
           <Text style={styles.headline}>Bem-vindo de volta.</Text>
-          <Text style={styles.subline}>Digite seu número para acessar suas entregas.</Text>
 
           <Text style={styles.fieldLabel}>Número de Telefone</Text>
 
@@ -512,7 +511,22 @@ function OTPStep({ phone, dialCode, onBack, onVerified }: {
   };
 
   const onChange = (i: number, val: string) => {
-    const d = val.replace(/\D/g, '').slice(-1);
+    const cleaned = val.replace(/\D/g, '');
+
+    if (cleaned.length > 1) {
+      const next = [...digits];
+      cleaned.slice(0, 6 - i).split('').forEach((char, offset) => {
+        next[i + offset] = char;
+      });
+      setDigits(next);
+      setErrMsg('');
+      const lastFilled = Math.min(i + cleaned.length - 1, 5);
+      refs.current[lastFilled]?.focus();
+      if (next.every(x => x !== '')) verify(next);
+      return;
+    }
+
+    const d = cleaned;
     const next = [...digits];
     next[i] = d;
     setDigits(next);
@@ -579,6 +593,7 @@ function OTPStep({ phone, dialCode, onBack, onVerified }: {
               style={otpBoxStyle(i)}
               keyboardType="number-pad"
               maxLength={1}
+              textContentType="oneTimeCode"
               value={digits[i]}
               onChangeText={val => onChange(i, val)}
               onKeyPress={({ nativeEvent }) => onKeyPress(i, nativeEvent.key)}
@@ -599,6 +614,7 @@ function OTPStep({ phone, dialCode, onBack, onVerified }: {
               style={otpBoxStyle(i)}
               keyboardType="number-pad"
               maxLength={1}
+              textContentType="oneTimeCode"
               value={digits[i]}
               onChangeText={val => onChange(i, val)}
               onKeyPress={({ nativeEvent }) => onKeyPress(i, nativeEvent.key)}
@@ -685,8 +701,8 @@ export default function LoginScreen() {
   const { login } = useAuth();
   const router = useRouter();
 
-  const handleVerified = (driver: Driver, token: string) => {
-    login(token, driver);
+  const handleVerified = async (driver: Driver, token: string) => {
+    await login(token, driver);
     setDriverName(driver.name);
     setStep('success');
   };
@@ -728,7 +744,7 @@ const styles = StyleSheet.create({
   logoZone: {
     alignItems: 'center',
     paddingTop: 24,
-    paddingBottom: 36,
+    paddingBottom: 52,
   },
   portalLabel: {
     fontFamily: MONO,

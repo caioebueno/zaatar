@@ -1,7 +1,9 @@
+import { randomUUID } from "node:crypto";
 import prisma from "../../../../prisma.js";
 import { DriverPhoneAlreadyInUseError } from "../../application/errors/DriverPhoneAlreadyInUseError.js";
 import type {
   CreateDriverInput,
+  DriverActivationEventRecord,
   DriverRecord,
   DriverRepository,
   UpdateDriverInput,
@@ -9,11 +11,19 @@ import type {
 
 type DriverRow = {
   active: boolean;
+  activatedAt: Date | null;
   createdAt: Date;
+  deactivatedAt: Date | null;
   id: string;
   name: string;
   phone: string | null;
   priorityLevel: number;
+};
+
+type DriverActivationEventRow = {
+  createdAt: Date;
+  driverId: string;
+  status: "ACTIVATED" | "DEACTIVATED";
 };
 
 export class PrismaDriverRepository implements DriverRepository {
@@ -37,6 +47,8 @@ export class PrismaDriverRepository implements DriverRepository {
           "name",
           "phone",
           "active",
+          "activatedAt",
+          "deactivatedAt",
           "priorityLevel"
         )
         VALUES (
@@ -45,24 +57,31 @@ export class PrismaDriverRepository implements DriverRepository {
           ${input.name},
           ${input.phone},
           ${input.active},
+          CASE WHEN ${input.active} THEN NOW() ELSE NULL END,
+          CASE WHEN ${input.active} THEN NULL ELSE NOW() END,
           ${input.priorityLevel}
         )
       `;
 
-      const createdRows = await prisma.$queryRaw<DriverRow[]>`
-        SELECT
+      const activationStatus: "ACTIVATED" | "DEACTIVATED" = input.active
+        ? "ACTIVATED"
+        : "DEACTIVATED";
+      await prisma.$executeRaw`
+        INSERT INTO "DriverActivationEvent" (
           "id",
           "createdAt",
-          "name",
-          "phone",
-          "active",
-          "priorityLevel"
-        FROM "Driver"
-        WHERE "id" = ${input.id}
-        LIMIT 1
+          "driverId",
+          "status"
+        )
+        VALUES (
+          ${randomUUID()},
+          NOW(),
+          ${input.id},
+          CAST(${activationStatus} AS "DriverActivationStatus")
+        )
       `;
 
-      const created = createdRows[0];
+      const created = await this.findById(input.id);
       if (!created) {
         throw new Error("Failed to create driver");
       }
@@ -91,40 +110,53 @@ export class PrismaDriverRepository implements DriverRepository {
   }
 
   async list(): Promise<DriverRecord[]> {
-    const rows = await prisma.$queryRaw<DriverRow[]>`
-      SELECT
-        "id",
-        "createdAt",
-        "name",
-        "phone",
-        "active",
-        "priorityLevel"
+    const driverRows = await prisma.$queryRaw<DriverRow[]>`
+        SELECT
+          "id",
+          "createdAt",
+          "name",
+          "phone",
+          "active",
+          "activatedAt",
+          "deactivatedAt",
+          "priorityLevel"
       FROM "Driver"
       ORDER BY "priorityLevel" ASC, "createdAt" ASC
     `;
 
-    return rows;
+    return this.buildDriverRecordsWithEvents(driverRows);
   }
 
   async findById(id: string): Promise<DriverRecord | null> {
-    const rows = await prisma.$queryRaw<DriverRow[]>`
-      SELECT
-        "id",
-        "createdAt",
-        "name",
-        "phone",
-        "active",
-        "priorityLevel"
+    const driverRows = await prisma.$queryRaw<DriverRow[]>`
+        SELECT
+          "id",
+          "createdAt",
+          "name",
+          "phone",
+          "active",
+          "activatedAt",
+          "deactivatedAt",
+          "priorityLevel"
       FROM "Driver"
       WHERE "id" = ${id}
       LIMIT 1
     `;
 
-    return rows[0] ?? null;
+    const records = await this.buildDriverRecordsWithEvents(driverRows);
+    return records[0] ?? null;
   }
 
   async update(input: UpdateDriverInput): Promise<DriverRecord> {
     try {
+      const currentStateRows = await prisma.$queryRaw<Array<{ active: boolean }>>`
+        SELECT "active"
+        FROM "Driver"
+        WHERE "id" = ${input.id}
+        LIMIT 1
+      `;
+      const currentState = currentStateRows[0];
+
       if (input.phone) {
         const existingRows = await prisma.$queryRaw<Array<{ id: string }>>`
           SELECT "id"
@@ -145,24 +177,40 @@ export class PrismaDriverRepository implements DriverRepository {
           "name" = ${input.name},
           "phone" = ${input.phone},
           "active" = ${input.active},
+          "activatedAt" = CASE
+            WHEN "active" <> ${input.active} AND ${input.active} = TRUE THEN NOW()
+            ELSE "activatedAt"
+          END,
+          "deactivatedAt" = CASE
+            WHEN "active" <> ${input.active} AND ${input.active} = FALSE THEN NOW()
+            ELSE "deactivatedAt"
+          END,
           "priorityLevel" = ${input.priorityLevel}
         WHERE "id" = ${input.id}
       `;
 
-      const rows = await prisma.$queryRaw<DriverRow[]>`
-        SELECT
-          "id",
-          "createdAt",
-          "name",
-          "phone",
-          "active",
-          "priorityLevel"
-        FROM "Driver"
-        WHERE "id" = ${input.id}
-        LIMIT 1
-      `;
+      if (currentState && currentState.active !== input.active) {
+        const activationStatus: "ACTIVATED" | "DEACTIVATED" = input.active
+          ? "ACTIVATED"
+          : "DEACTIVATED";
 
-      const updated = rows[0];
+        await prisma.$executeRaw`
+          INSERT INTO "DriverActivationEvent" (
+            "id",
+            "createdAt",
+            "driverId",
+            "status"
+          )
+          VALUES (
+            ${randomUUID()},
+            NOW(),
+            ${input.id},
+            CAST(${activationStatus} AS "DriverActivationStatus")
+          )
+        `;
+      }
+
+      const updated = await this.findById(input.id);
       if (!updated) {
         throw new Error("Failed to update driver");
       }
@@ -188,6 +236,49 @@ export class PrismaDriverRepository implements DriverRepository {
     `;
 
     return Number(result) > 0;
+  }
+
+  private async buildDriverRecordsWithEvents(driverRows: DriverRow[]): Promise<DriverRecord[]> {
+    if (driverRows.length === 0) return [];
+
+    const driverIds = driverRows.map((row) => row.id);
+    const eventsByDriver = await this.loadActivationEventsByDriverIds(driverIds);
+
+    return driverRows.map((row) => ({
+      ...row,
+      activationEvents: eventsByDriver.get(row.id) ?? [],
+    }));
+  }
+
+  private async loadActivationEventsByDriverIds(
+    driverIds: string[],
+  ): Promise<Map<string, DriverActivationEventRecord[]>> {
+    if (driverIds.length === 0) {
+      return new Map();
+    }
+
+    const rows = await prisma.$queryRaw<DriverActivationEventRow[]>`
+      SELECT
+        "driverId",
+        "createdAt",
+        "status"
+      FROM "DriverActivationEvent"
+      WHERE "driverId" = ANY(${driverIds}::text[])
+      ORDER BY "createdAt" ASC
+    `;
+
+    const map = new Map<string, DriverActivationEventRecord[]>();
+
+    for (const row of rows) {
+      const current = map.get(row.driverId) ?? [];
+      current.push({
+        createdAt: row.createdAt,
+        status: row.status,
+      });
+      map.set(row.driverId, current);
+    }
+
+    return map;
   }
 }
 

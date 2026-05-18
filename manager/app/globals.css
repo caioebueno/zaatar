@@ -1,5 +1,17 @@
 @import "tailwindcss";
 
+/* ── Auth flow animations ─────────────────────────────────────────────────── */
+@keyframes auth-in    { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes auth-out   { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateY(-8px); } }
+@keyframes auth-shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-7px)} 40%{transform:translateX(7px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
+@keyframes auth-spin  { to { transform: rotate(360deg); } }
+@keyframes auth-ring  { 0% { transform: translate(-50%,-50%) scale(1); opacity: 0.45; } 100% { transform: translate(-50%,-50%) scale(4); opacity: 0; } }
+@keyframes auth-pop   { from { transform: scale(0.72); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@keyframes auth-check { from { stroke-dashoffset: 30; } to { stroke-dashoffset: 0; } }
+@keyframes auth-scan  { 0%{top:4%;opacity:0} 6%{opacity:1} 94%{opacity:1} 100%{top:96%;opacity:0} }
+@keyframes auth-dot   { 0%,100%{opacity:.6;transform:scale(1)} 50%{opacity:1;transform:scale(1.15)} }
+@keyframes auth-count { from{opacity:0;transform:translateY(4px)} to{opacity:1;transform:none} }
+
 :root {
   color-scheme: light;
 

@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import '@/lib/route-tracking';
 import { Stack, useRouter, useSegments } from 'expo-router';
 import { useFonts } from 'expo-font';
 import {
@@ -21,17 +22,23 @@ import { AuthProvider, useAuth } from '@/context/auth';
 SplashScreen.preventAutoHideAsync();
 
 function RootLayoutNav() {
-  const { token } = useAuth();
+  const { token, loading } = useAuth();
   const router = useRouter();
   const segments = useSegments();
 
   useEffect(() => {
-    const inTabs = segments[0] === '(tabs)';
+    if (loading) return;
+    const inTabs  = segments[0] === '(tabs)';
+    const onLogin = segments[0] === 'login';
     if (!token && inTabs) {
       const t = setTimeout(() => router.replace('/login'), 0);
       return () => clearTimeout(t);
     }
-  }, [token, segments]);
+    if (token && onLogin) {
+      const t = setTimeout(() => router.replace('/(tabs)'), 0);
+      return () => clearTimeout(t);
+    }
+  }, [token, loading, segments]);
 
   return (
     <Stack>

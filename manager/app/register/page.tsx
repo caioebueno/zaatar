@@ -1,31 +1,21 @@
- "use client";
+"use client";
 
-import Link from "next/link";
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { saveAuthSession } from "@/src/lib/auth";
+import {
+  AuthBtn,
+  AuthLayout,
+  AuthLinkBtn,
+  AuthTextInput,
+  D,
+  Kicker,
+  OTPScreen,
+  PhoneInput,
+  SuccessScreen,
+} from "@/app/components/auth/AuthComponents";
 
-type RegisterResponse = {
-  error?: string;
-  field?: string;
-  ok?: boolean;
-};
-
-type LoginResponse = {
-  accessToken?: string;
-  businesses?: Array<{
-    id: string;
-    name: string;
-  }>;
-  error?: string;
-  field?: string;
-  owner?: {
-    email: string;
-    id: string;
-    name: string;
-  };
-  selectedBusinessId?: string | null;
-};
+type Screen = "details" | "otp" | "success";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -33,159 +23,141 @@ export default function RegisterPage() {
     () => process.env.NEXT_PUBLIC_API_BASE_URL?.trim() || "http://localhost:4000",
     [],
   );
+
+  const [screen, setScreen] = useState<Screen>("details");
   const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [phone, setPhone] = useState("");
+  const [countryCode, setCountryCode] = useState("+1");
+  const [errors, setErrors] = useState<{ name?: string; phone?: string; general?: string }>({});
+  const [loading, setLoading] = useState(false);
 
-  async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  const digits = phone.replace(/\D/g, "");
+  const fullPhone = `${countryCode}${digits}`;
 
-    if (isSubmitting) return;
+  async function handleRegister() {
+    const e: typeof errors = {};
+    if (!name.trim()) e.name = "Name is required";
+    if (digits.length < 10) e.phone = "Enter a valid 10-digit number";
+    setErrors(e);
+    if (Object.keys(e).length) return;
 
-    setErrorMessage(null);
-    setSuccessMessage(null);
-    setIsSubmitting(true);
-
+    setLoading(true);
     try {
-      const response = await fetch(`${apiBaseUrl}/owners/register`, {
+      // Register — auto-generate email+password since auth is phone+OTP only
+      const autoEmail = `${countryCode.replace("+", "")}${digits}@auth.zippy.app`;
+      const autoPassword = `Zippy${Math.random().toString(36).slice(2)}${Math.random().toString(36).slice(2)}`;
+
+      const regRes = await fetch(`${apiBaseUrl}/owners/register`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name,
-          email,
-          password,
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: name.trim(), email: autoEmail, phone: fullPhone, password: autoPassword }),
       });
 
-      const data = (await response.json().catch(() => ({}))) as RegisterResponse;
-
-      if (!response.ok) {
-        const message = data.field
-          ? `${data.error ?? "Invalid payload"} (${data.field})`
-          : (data.error ?? "Failed to create account");
-        setErrorMessage(message);
+      if (!regRes.ok) {
+        const data = await regRes.json().catch(() => ({})) as { error?: string; field?: string };
+        if (data.field === "emailOrPhone") {
+          setErrors({ general: "This phone number is already registered. Sign in instead." });
+        } else {
+          setErrors({ general: data.error ?? "Registration failed. Try again." });
+        }
         return;
       }
 
-      const loginResponse = await fetch(`${apiBaseUrl}/owners/login`, {
+      // Send OTP
+      const otpRes = await fetch(`${apiBaseUrl}/owners/auth/otp/send`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone: fullPhone, language: "en" }),
       });
-      const loginPayload = (await loginResponse.json().catch(() => ({}))) as LoginResponse;
 
-      if (loginResponse.ok && loginPayload.accessToken && loginPayload.owner) {
-        saveAuthSession({
-          accessToken: loginPayload.accessToken,
-          owner: loginPayload.owner,
-          businesses: Array.isArray(loginPayload.businesses) ? loginPayload.businesses : [],
-          selectedBusinessId:
-            typeof loginPayload.selectedBusinessId === "string"
-              ? loginPayload.selectedBusinessId
-              : null,
-        });
-        router.push("/onboarding");
+      if (!otpRes.ok) {
+        setErrors({ general: "Account created but could not send verification code. Try signing in." });
         return;
       }
 
-      setSuccessMessage("Account created successfully. Please sign in.");
-      setName("");
-      setEmail("");
-      setPassword("");
-      setTimeout(() => {
-        router.push("/login");
-      }, 900);
+      setScreen("otp");
     } catch {
-      setErrorMessage("Could not reach API server. Please try again.");
+      setErrors({ general: "Could not reach server. Try again." });
     } finally {
-      setIsSubmitting(false);
+      setLoading(false);
     }
   }
 
+  function handleOTPSuccess(result: {
+    accessToken: string;
+    owner: { id: string; email: string; name: string };
+    businesses: Array<{ id: string; name: string }>;
+    selectedBusinessId: string | null;
+  }) {
+    setScreen("success");
+    saveAuthSession({
+      accessToken: result.accessToken,
+      owner: result.owner,
+      businesses: result.businesses,
+      selectedBusinessId: result.selectedBusinessId,
+    });
+    setTimeout(() => {
+      router.push("/onboarding");
+    }, 800);
+  }
+
   return (
-    <main className="auth-shell">
-      <section className="auth-card">
-        <h1 className="auth-title">Register</h1>
-        <p className="auth-subtitle">Create your manager account.</p>
+    <AuthLayout>
+      {screen === "details" && (
+        <div style={{ animation: "auth-in 260ms ease", width: "100%", maxWidth: 400 }}>
+          <Kicker>Create account</Kicker>
+          <h1 style={{ fontSize: 32, fontWeight: 800, letterSpacing: "-0.048em", color: D.text, lineHeight: 1.08, marginBottom: 10 }}>
+            Get started.
+          </h1>
+          <p style={{ fontSize: 14, color: D.dim, lineHeight: 1.65, marginBottom: 32 }}>
+            We&apos;ll send an SMS to verify your number before you&apos;re in.
+          </p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+            <AuthTextInput
+              label="Full name"
+              value={name}
+              onChange={setName}
+              placeholder="e.g. Jamie Rivera"
+              error={errors.name}
+              autoFocus
+            />
+            <PhoneInput
+              value={phone}
+              onChange={setPhone}
+              error={errors.phone}
+              countryCode={countryCode}
+              onCountryChange={setCountryCode}
+            />
+            {errors.general && (
+              <div style={{ fontFamily: D.mono, fontSize: 12, color: "#ff6688", letterSpacing: "0.04em" }}>
+                ⚠ {errors.general}
+              </div>
+            )}
+            <div style={{ marginTop: 4 }}>
+              <AuthBtn
+                label="Send verification code →"
+                onClick={handleRegister}
+                loading={loading}
+                disabled={!name || !phone}
+              />
+            </div>
+          </div>
+          <div style={{ marginTop: 28, textAlign: "center" }}>
+            <span style={{ fontSize: 13.5, color: D.faint }}>Have an account?&nbsp;</span>
+            <AuthLinkBtn onClick={() => router.push("/login")}>Sign in →</AuthLinkBtn>
+          </div>
+        </div>
+      )}
 
-        <form className="auth-form" onSubmit={onSubmit}>
-          <label className="field-label" htmlFor="name">
-            Name
-          </label>
-          <input
-            className="field-input"
-            id="name"
-            name="name"
-            type="text"
-            placeholder="Your full name"
-            autoComplete="name"
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-            disabled={isSubmitting}
-            required
-          />
+      {screen === "otp" && (
+        <OTPScreen
+          phone={fullPhone}
+          onBack={() => setScreen("details")}
+          onSuccess={handleOTPSuccess}
+        />
+      )}
 
-          <label className="field-label" htmlFor="email">
-            Email
-          </label>
-          <input
-            className="field-input"
-            id="email"
-            name="email"
-            type="email"
-            placeholder="you@business.com"
-            autoComplete="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            disabled={isSubmitting}
-            required
-          />
-
-          <label className="field-label" htmlFor="password">
-            Password
-          </label>
-          <input
-            className="field-input"
-            id="password"
-            name="password"
-            type="password"
-            placeholder="Create a password"
-            autoComplete="new-password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            disabled={isSubmitting}
-            required
-          />
-
-          {errorMessage ? (
-            <p className="form-message form-message-error">{errorMessage}</p>
-          ) : null}
-          {successMessage ? (
-            <p className="form-message form-message-success">{successMessage}</p>
-          ) : null}
-
-          <button className="button button-primary" type="submit">
-            {isSubmitting ? "Creating..." : "Create account"}
-          </button>
-        </form>
-
-        <p className="auth-footnote">
-          Already have an account?{" "}
-          <Link className="text-link" href="/login">
-            Login
-          </Link>
-        </p>
-      </section>
-    </main>
+      {screen === "success" && <SuccessScreen />}
+    </AuthLayout>
   );
 }

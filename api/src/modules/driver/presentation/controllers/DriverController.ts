@@ -60,6 +60,46 @@ export class DriverController implements HttpController {
         };
       }
 
+      const activateDriverId = extractDriverActionDriverId(pathname, "activate");
+      if (request.method === "PATCH" && activateDriverId) {
+        const current = await this.getDriverByIdUseCase.execute({
+          driverId: activateDriverId,
+        });
+
+        const result = await this.updateDriverUseCase.execute({
+          driverId: activateDriverId,
+          name: current.name,
+          phone: current.phone,
+          active: true,
+          priorityLevel: current.priorityLevel,
+        });
+
+        return {
+          statusCode: 200,
+          body: result,
+        };
+      }
+
+      const deactivateDriverId = extractDriverActionDriverId(pathname, "deactivate");
+      if (request.method === "PATCH" && deactivateDriverId) {
+        const current = await this.getDriverByIdUseCase.execute({
+          driverId: deactivateDriverId,
+        });
+
+        const result = await this.updateDriverUseCase.execute({
+          driverId: deactivateDriverId,
+          name: current.name,
+          phone: current.phone,
+          active: false,
+          priorityLevel: current.priorityLevel,
+        });
+
+        return {
+          statusCode: 200,
+          body: result,
+        };
+      }
+
       const driverId = extractDriverId(pathname);
 
       if (request.method === "GET" && driverId) {
@@ -167,6 +207,20 @@ function toObject(value: unknown): Record<string, unknown> {
 
 function extractDriverId(pathname: string): string | null {
   const match = pathname.match(/^\/drivers\/([^/]+)$/);
+  if (!match) return null;
+
+  const driverId = match[1]?.trim();
+  if (!driverId) return null;
+
+  return driverId;
+}
+
+function extractDriverActionDriverId(
+  pathname: string,
+  action: "activate" | "deactivate",
+): string | null {
+  const escapedAction = action.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const match = pathname.match(new RegExp(`^/drivers/([^/]+)/${escapedAction}$`));
   if (!match) return null;
 
   const driverId = match[1]?.trim();

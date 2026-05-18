@@ -38,9 +38,12 @@ export class PrismaAnalyticsRepository implements AnalyticsRepository {
             ELSE COALESCE(SUM(op."amount" * op."quantity"), 0)::numeric
           END AS discounted_subtotal_cents
         FROM "Order" orders
+        INNER JOIN "Branch" branch
+          ON branch."id" = orders."branchId"
         LEFT JOIN "OrderProducts" op
           ON op."orderId" = orders."id"
         WHERE orders."canceled" = false
+          AND branch."businessId" = ${query.businessId}
           AND timezone(${query.timezone}, orders."createdAt")::date BETWEEN ${query.from}::date AND ${query.to}::date
         GROUP BY
           orders."id",

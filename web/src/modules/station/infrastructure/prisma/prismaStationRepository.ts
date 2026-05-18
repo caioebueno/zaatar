@@ -19,6 +19,13 @@ class PrismaStationRepository implements StationRepository {
       name: item.name,
       productIds: item.products.map((product) => product.id),
       stationId: item.stationId,
+      goalMinutes:
+        typeof (item as { goalMinutes?: unknown }).goalMinutes === "number"
+          ? Math.max(
+              0,
+              Math.floor((item as { goalMinutes?: number }).goalMinutes ?? 0),
+            )
+          : 0,
       includeComments: item.includeComments,
       includeModifiers: item.includeModifiers,
     }));
@@ -64,7 +71,7 @@ class PrismaStationRepository implements StationRepository {
         },
         preparationStepCategories: {
           include: {
-            category: true,
+            station: true,
             preparationStepTracks: {
               include: {
                 preparationStep: true,
@@ -159,6 +166,22 @@ class PrismaStationRepository implements StationRepository {
                   name: track.preparationStep.name,
                   quantity: track.quantity || 1,
                   completed: track.completed,
+                  completedAt: track.completedAt
+                    ? track.completedAt.toISOString()
+                    : undefined,
+                  goalMinutes:
+                    typeof (track as { goalMinutes?: unknown }).goalMinutes ===
+                    "number"
+                      ? Math.max(
+                          0,
+                          Math.floor(
+                            (track as { goalMinutes?: number }).goalMinutes ?? 0,
+                          ),
+                        )
+                      : 0,
+                  expectedAt: track.expectedAt
+                    ? track.expectedAt.toISOString()
+                    : undefined,
                   preparationStepId: track.preparationStepId,
                   preparationStepCategoryId: track.preparationStepCategoryId,
                   comments: track.comments || undefined,
@@ -180,18 +203,16 @@ class PrismaStationRepository implements StationRepository {
               );
 
               if (steps.length === 0) return null;
-              if (!category.categoryId || !category.category) return null;
 
               return {
                 id: category.id,
-                categoryId: category.categoryId,
+                stationId: category.stationId ?? undefined,
                 completed: category.completed,
                 orderId: category.orderId,
                 snoozes: [],
-                category: {
-                  id: category.category.id,
-                  products: [],
-                  title: category.category.name,
+                station: {
+                  id: category.station?.id ?? category.id,
+                  name: category.station?.name ?? "Preparation",
                 },
                 steps,
               };
@@ -285,7 +306,7 @@ class PrismaStationRepository implements StationRepository {
             fullAmount: item.fullAmount,
             quantity: item.quantity,
           })),
-          preparationStepCategory: categories,
+            preparationTaskStation: categories,
         };
 
         return {
@@ -394,7 +415,7 @@ class PrismaStationRepository implements StationRepository {
       await prisma.preparationStepCategory.create({
         data: {
           id: category.id,
-          categoryId: category.categoryId,
+          stationId: category.stationId ?? null,
           orderId: category.orderId,
           preparationStepTracks: {
             create: category.steps.map((track) => ({
@@ -402,10 +423,13 @@ class PrismaStationRepository implements StationRepository {
               preparationStepId: track.preparationStepId,
               quantity: track.quantity,
               comments: track.comments,
-              completedComments: track.completedComments,
-              preparationStepModifierTracks: track.preparationStepModifiers
-                ? {
-                    createMany: {
+            completedComments: track.completedComments,
+            goalMinutes: track.goalMinutes,
+            expectedAt: track.expectedAt ? new Date(track.expectedAt) : null,
+            completedAt: track.completedAt ? new Date(track.completedAt) : null,
+            preparationStepModifierTracks: track.preparationStepModifiers
+              ? {
+                  createMany: {
                       data: track.preparationStepModifiers.map((item) => ({
                         id: item.id,
                         completed: item.completed,
@@ -434,7 +458,10 @@ class PrismaStationRepository implements StationRepository {
             quantity: step.quantity,
             comments: step.comments,
             ...(typeof step.completed === "boolean"
-              ? { completed: step.completed }
+              ? {
+                  completed: step.completed,
+                  completedAt: step.completed ? new Date() : null,
+                }
               : {}),
             ...(typeof step.completedComments === "boolean"
               ? { completedComments: step.completedComments }
@@ -472,6 +499,7 @@ class PrismaStationRepository implements StationRepository {
   }
 
   async markPreparationCategoryAsCompleted(categoryId: string): Promise<void> {
+    const completedAt = new Date();
     await prisma.$transaction([
       prisma.preparationStepModifierTrack.updateMany({
         where: {
@@ -489,6 +517,8 @@ class PrismaStationRepository implements StationRepository {
         },
         data: {
           completed: true,
+          completedComments: true,
+          completedAt,
         },
       }),
       prisma.preparationStepCategory.update({

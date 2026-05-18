@@ -13,7 +13,13 @@ export type UpdateDriverUseCaseInput = {
 
 export type UpdateDriverUseCaseOutput = {
   active: boolean;
+  activatedAt: string | null;
+  activationEvents: Array<{
+    createdAt: string;
+    status: "ACTIVATED" | "DEACTIVATED";
+  }>;
   createdAt: string;
+  deactivatedAt: string | null;
   id: string;
   name: string;
   phone: string | null;
@@ -65,6 +71,12 @@ export class UpdateDriverUseCase {
       name: updated.name,
       phone: updated.phone,
       active: updated.active,
+      activatedAt: updated.activatedAt ? updated.activatedAt.toISOString() : null,
+      activationEvents: updated.activationEvents.map((event) => ({
+        createdAt: event.createdAt.toISOString(),
+        status: event.status,
+      })),
+      deactivatedAt: updated.deactivatedAt ? updated.deactivatedAt.toISOString() : null,
       priorityLevel: updated.priorityLevel,
     };
   }

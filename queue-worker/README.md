@@ -13,6 +13,9 @@ This replaces Vercel Cron and is intended to run on Railway.
 - `JOBS_PER_RUN`: max queue jobs processed per run (default `10`)
 - `DATABASE_URL`: PostgreSQL connection string (same database as app)
 - `MAPBOX_API`: required by dispatch route-duration calculation
+- `DISPATCH_STORE_LAT`: optional branch/store latitude for round-trip ETA fallback (default hardcoded)
+- `DISPATCH_STORE_LNG`: optional branch/store longitude for round-trip ETA fallback (default hardcoded)
+- `ETA_FALLBACK_SPEED_METERS_PER_SECOND`: fallback speed when `MAPBOX_API` is missing (default `8.33`)
 - `PROCESS_ON_START`: `true` to run once immediately on boot (default `false`)
 - `RUN_TRIGGER_SECRET`: optional bearer token required by `POST /run`
 - `TWILIO_ACCOUNT_SID`: Twilio account SID (required for feedback WhatsApp queue)
@@ -39,7 +42,7 @@ This replaces Vercel Cron and is intended to run on Railway.
 - `GET /health` - health/status
 - `POST /run` - trigger queue processing manually
   - if `RUN_TRIGGER_SECRET` is configured, send `Authorization: Bearer <RUN_TRIGGER_SECRET>`
-  - processes both dispatch assignment queue and feedback WhatsApp queue
+  - processes dispatch assignment queue, feedback WhatsApp queue, and dispatch ETA recalculation queue
 
 `GET /health` now also includes external polling status:
 

@@ -1,4 +1,3 @@
-import type TCategory from "@/src/types/category";
 import type { TModifierGroupItem } from "@/src/types/product";
 
 export type Station = {
@@ -11,6 +10,7 @@ export type PreparationStep = {
   id: string;
   name: string;
   stationId: string;
+  goalMinutes?: number;
   includeModifiers?: boolean;
   includeComments?: boolean;
   productIds: string[];
@@ -21,6 +21,9 @@ export type PreparationStepTrack = {
   name: string;
   quantity: number;
   completed: boolean;
+  completedAt?: string;
+  goalMinutes?: number;
+  expectedAt?: string;
   comments?: string;
   completedComments: boolean;
   preparationStepModifiers?: PreparationStepModifierTrack[];
@@ -37,8 +40,11 @@ export type PreparationStepModifierTrack = {
 
 export type PreparationStepCategory = {
   id: string;
-  categoryId: string;
-  category?: TCategory;
+  stationId?: string;
+  station?: {
+    id: string;
+    name: string;
+  };
   completed: boolean;
   orderId: string;
   snoozes: Snooze[];
@@ -56,4 +62,5 @@ export type TPreparationStep = PreparationStep;
 export type TPreparationStepTrack = PreparationStepTrack;
 export type TTPreparationStepModifierTrack = PreparationStepModifierTrack;
 export type TPreparationStepCategory = PreparationStepCategory;
+export type TPreparationTaskStation = PreparationStepCategory;
 export type TSnooze = Snooze;

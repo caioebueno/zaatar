@@ -111,7 +111,13 @@ const OrderStatusStepper: React.FC<TOrderStatusStepper> = ({
                   >
                     <Icon size={18} className={isActive ? "scale-110" : ""} />
                   </div>
-                  <span className="sr-only">{content[step.label]}</span>
+                  <span
+                    className={`mt-1.5 text-[11px] font-semibold text-center leading-tight max-w-15 ${
+                      isCompleted ? "text-brandBackground" : "text-lightText"
+                    }`}
+                  >
+                    {content[step.label]}
+                  </span>
                 </div>
                 {!isLast && (
                   <div

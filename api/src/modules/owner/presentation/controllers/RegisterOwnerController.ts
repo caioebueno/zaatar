@@ -13,6 +13,7 @@ export class RegisterOwnerController implements HttpController {
       const result = await this.registerOwnerUseCase.execute({
         name: body.name,
         email: body.email,
+        phone: body.phone,
         password: body.password,
       });
 
@@ -28,8 +29,8 @@ export class RegisterOwnerController implements HttpController {
         return {
           statusCode: 409,
           body: {
-            error: "Email already registered",
-            field: "email",
+            error: "Email or phone already registered",
+            field: "emailOrPhone",
           },
         };
       }

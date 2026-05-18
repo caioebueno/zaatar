@@ -2,6 +2,7 @@ export type {
   Snooze as TSnooze,
   PreparationStep as TPreparationStep,
   PreparationStepCategory as TPreparationStepCategory,
+  PreparationStepCategory as TPreparationTaskStation,
   PreparationStepModifierTrack as TTPreparationStepModifierTrack,
   PreparationStepTrack as TPreparationStepTrack,
   Station as default,

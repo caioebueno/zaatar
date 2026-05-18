@@ -17,12 +17,14 @@ model Station {
   id               String            @id
   name             String
   preparationSteps PreparationStep[]
+  preparationStepCategories PreparationStepCategory[]
 }
 
 model PreparationStep {
   id                    String                 @id
   createdAt             DateTime               @default(now())
   name                  String
+  goalMinutes           Int                    @default(0)
   includeComments       Boolean                @default(false)
   includeModifiers      Boolean                @default(false)
   products              Product[]
@@ -36,17 +38,24 @@ model PreparationStepCategory {
   createdAt             DateTime               @default(now())
   category              Category?              @relation(fields: [categoryId], references: [id])
   categoryId            String?
+  station               Station?               @relation(fields: [stationId], references: [id])
+  stationId             String?
   completed             Boolean                @default(false)
   order                 Order                  @relation(fields: [orderId], references: [id], onDelete: Cascade)
   orderId               String
   preparationStepTracks PreparationStepTrack[]
+
+  @@index([orderId, stationId])
 }
 
 model PreparationStepTrack {
   id                            String                         @id
   createdAt                     DateTime                       @default(now())
   completed                     Boolean                        @default(false)
+  completedAt                   DateTime?
   quantity                      Int?
+  goalMinutes                   Int                            @default(0)
+  expectedAt                    DateTime?
   comments                      String?
   completedComments             Boolean                        @default(false)
   preparationStepModifierTracks PreparationStepModifierTrack[]
@@ -180,12 +189,33 @@ model User {
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
   email           String          @unique
+  phone           String?         @unique
   name            String
   passwordHash    String
   emailVerifiedAt DateTime?
   lastLoginAt     DateTime?
   ownedBusinesses BusinessOwner[]
   integrations    ExternalIntegrationConnection[]
+  otpChallenges   OwnerOtpChallenge[]
+}
+
+model OwnerOtpChallenge {
+  id            String   @id
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  owner         User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId       String
+  phone         String
+  codeHash      String
+  expiresAt     DateTime
+  usedAt        DateTime?
+  attemptCount  Int      @default(0)
+  maxAttempts   Int      @default(5)
+  lastAttemptAt DateTime?
+
+  @@index([phone, createdAt])
+  @@index([ownerId, createdAt])
+  @@index([expiresAt])
 }
 
 enum ExternalIntegrationProvider {
@@ -307,6 +337,7 @@ model Branch {
   addressId      String?   @unique
   business       Business? @relation(fields: [businessId], references: [id])
   businessId     String?
+  orders         Order[]
 }
 
 model Driver {
@@ -315,8 +346,27 @@ model Driver {
   name          String
   phone         String?    @unique
   active        Boolean    @default(true)
+  activatedAt   DateTime?
+  deactivatedAt DateTime?
   priorityLevel Int
   dispatches    Dispatch[]
+  routeSessions DispatchRouteSession[]
+  activationEvents DriverActivationEvent[]
+}
+
+enum DriverActivationStatus {
+  ACTIVATED
+  DEACTIVATED
+}
+
+model DriverActivationEvent {
+  id        String                 @id
+  createdAt DateTime               @default(now())
+  driver    Driver                 @relation(fields: [driverId], references: [id], onDelete: Cascade)
+  driverId  String
+  status    DriverActivationStatus
+
+  @@index([driverId, createdAt])
 }
 
 model Dispatch {
@@ -325,13 +375,70 @@ model Dispatch {
   queueIndex                        Int?
   dispatched                        Boolean   @default(false)
   dispatchAt                        DateTime?
+  startedDeliveryAt                 DateTime?
   estimatedDeliveryDurationMinutes  Int?
   estimatedRoundTripDurationMinutes Int?
   driver                            Driver?   @relation(fields: [driverId], references: [id])
   driverId                          String?
   orders                            Order[]
+  routeSessions                     DispatchRouteSession[]
+  etaRecalculationJobs              DispatchEtaRecalculationJob[]
 
   @@index([queueIndex])
+}
+
+enum DispatchRouteSessionStatus {
+  ACTIVE
+  COMPLETED
+  CANCELED
+}
+
+enum DispatchRoutePointSource {
+  GPS
+  NETWORK
+  MANUAL
+}
+
+model DispatchRouteSession {
+  id                  String                     @id
+  createdAt           DateTime                   @default(now())
+  updatedAt           DateTime                   @updatedAt
+  dispatch            Dispatch                   @relation(fields: [dispatchId], references: [id], onDelete: Cascade)
+  dispatchId          String
+  driver              Driver                     @relation(fields: [driverId], references: [id], onDelete: Cascade)
+  driverId            String
+  startedAt           DateTime                   @default(now())
+  endedAt             DateTime?
+  status              DispatchRouteSessionStatus @default(ACTIVE)
+  totalDistanceMeters Int?
+  durationSeconds     Int?
+  polyline            String?
+  points              DispatchRoutePoint[]
+
+  @@index([dispatchId, status])
+  @@index([driverId, status])
+  @@index([dispatchId, driverId, createdAt])
+}
+
+model DispatchRoutePoint {
+  id             String                   @id
+  createdAt      DateTime                 @default(now())
+  session        DispatchRouteSession     @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  sessionId      String
+  sequence       Int
+  recordedAt     DateTime
+  lat            Float
+  lng            Float
+  accuracyMeters Int?
+  speedMps       Float?
+  headingDegrees Float?
+  altitudeMeters Float?
+  source         DispatchRoutePointSource @default(GPS)
+  isMocked       Boolean?
+
+  @@unique([sessionId, sequence])
+  @@index([sessionId, recordedAt])
+  @@index([sessionId, createdAt])
 }
 
 enum DispatchAssignmentJobStatus {
@@ -352,6 +459,29 @@ model DispatchAssignmentJob {
   lastError           String?
   orderId             String                      @unique
   deliveryAddressId   String
+}
+
+enum DispatchEtaRecalculationJobStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+model DispatchEtaRecalculationJob {
+  id                  String                            @id
+  createdAt           DateTime                          @default(now())
+  updatedAt           DateTime                          @updatedAt
+  status              DispatchEtaRecalculationJobStatus @default(PENDING)
+  attempts            Int                               @default(0)
+  availableAt         DateTime                          @default(now())
+  processingStartedAt DateTime?
+  completedAt         DateTime?
+  lastError           String?
+  dispatch            Dispatch                          @relation(fields: [dispatchId], references: [id], onDelete: Cascade)
+  dispatchId          String                            @unique
+
+  @@index([status, availableAt, createdAt])
 }
 
 enum FeedbackWhatsAppJobStatus {
@@ -752,6 +882,7 @@ model Order {
   address                          Address?                  @relation(fields: [addressId], references: [id])
   deliveryAddress                  DeliveryAddress?          @relation(fields: [deliveryAddressId], references: [id])
   externalAddress                  ExternalAddress?          @relation(fields: [externalAddressId], references: [id])
+  branch                           Branch?                   @relation(fields: [branchId], references: [id])
   orderProducts                    OrderProducts[]
   customerId                       String?
   externalId                       String?                   @unique
@@ -759,12 +890,14 @@ model Order {
   addressId                        String?
   deliveryAddressId                String?
   externalAddressId                String?
+  branchId                         String?
   preparationStepCategories        PreparationStepCategory[]
   feedback                         CustomerFeedback?
   issuedRewards                    CustomerReward[]          @relation("IssuedRewardOrder")
   redeemedRewards                  CustomerReward[]          @relation("RedeemedRewardOrder")
 
   @@index([dispatchId, dispatchOrderIndex])
+  @@index([branchId])
 }
 
 enum CustomerFeedbackSentiment {

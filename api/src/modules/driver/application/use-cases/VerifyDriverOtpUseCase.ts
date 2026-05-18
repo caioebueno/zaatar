@@ -21,6 +21,8 @@ export type VerifyDriverOtpOutput = {
   accessToken: string;
   driver: {
     active: boolean;
+    activatedAt: string | null;
+    deactivatedAt: string | null;
     id: string;
     name: string;
     phone: string;
@@ -107,6 +109,8 @@ export class VerifyDriverOtpUseCase {
         name: driver.name,
         phone: normalizedPhone,
         active: driver.active,
+        activatedAt: driver.activatedAt ? driver.activatedAt.toISOString() : null,
+        deactivatedAt: driver.deactivatedAt ? driver.deactivatedAt.toISOString() : null,
         priorityLevel: driver.priorityLevel,
       },
     };

@@ -14,6 +14,11 @@ export class GetOrderSalesAnalyticsController implements HttpController {
       const url = new URL(request.path, "http://localhost");
 
       const result = await this.useCase.execute({
+        businessId: request.auth?.businessId ?? undefined,
+        startDate: url.searchParams.get("startDate") ?? undefined,
+        endDate: url.searchParams.get("endDate") ?? undefined,
+        start: url.searchParams.get("start") ?? undefined,
+        end: url.searchParams.get("end") ?? undefined,
         from: url.searchParams.get("from") ?? undefined,
         to: url.searchParams.get("to") ?? undefined,
         timezone: url.searchParams.get("timezone") ?? undefined,

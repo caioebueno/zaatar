@@ -79,6 +79,7 @@ import {
   BiCheck,
   BiPlus,
   BiLogOut,
+  BiStation,
 } from "react-icons/bi";
 
 const biProps = { size: 14 } as const;
@@ -91,6 +92,7 @@ const IOnboarding   = () => <BiFlag         {...biProps} />;
 const ISettings     = () => <BiCog          {...biProps} />;
 const IOrders       = () => <BiReceipt      {...biProps} />;
 const IDrivers      = () => <BiUser         {...biProps} />;
+const IStations     = () => <BiStation      {...biProps} />;
 
 const IChevDown = ({ open }: { open?: boolean }) => (
   <div style={{ transform: open ? "rotate(180deg)" : "none", transition: "transform 0.2s", display: "flex", flexShrink: 0 }}>
@@ -123,10 +125,8 @@ const NAV_GROUPS: NavGroup[] = [
     label: "Operations",
     cat: "operations",
     items: [
-      {
-        type: "link", href: '/menu/products', label: "Menu", icon: <IMenu />,
-
-      },
+      { type: "link", href: "/menu/products", label: "Menu", icon: <IMenu /> },
+      { type: "link", href: "/menu/stations", label: "Stations", icon: <IStations /> },
       // {
       //   type: "expand", key: "sales", label: "Sales Channels", icon: <ISalesChannels />,
       //   children: [

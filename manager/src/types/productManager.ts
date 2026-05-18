@@ -52,6 +52,15 @@ export type ProductManagerComboSlot = {
   options: ProductManagerComboSlotOption[];
 };
 
+export type ProductManagerPreparationTask = {
+  id: string;
+  name: string;
+  stationId: string | null;
+  stationName: string | null;
+  includeComments: boolean;
+  includeModifiers: boolean;
+};
+
 export type ProductManagerProduct = {
   id: string;
   itemType: ProductManagerProductItemType;
@@ -67,6 +76,8 @@ export type ProductManagerProduct = {
   photoUrls: string[];
   mainPhotoUrl: string | null;
   modifierGroups: ProductManagerModifierGroup[];
+  preparationStepIds: string[];
+  preparationTasks: ProductManagerPreparationTask[];
   products: ProductManagerFixedComboProduct[];
   comboItems: ProductManagerComboItem[];
   comboSlots: ProductManagerComboSlot[];

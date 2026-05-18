@@ -5,6 +5,7 @@ export type OrderSalesDailyPoint = {
 };
 
 export type OrderSalesRangeQuery = {
+  businessId: string;
   from: string;
   timezone: string;
   to: string;

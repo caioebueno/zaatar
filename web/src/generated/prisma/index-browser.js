@@ -129,6 +129,7 @@ exports.Prisma.PreparationStepScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
   name: 'name',
+  goalMinutes: 'goalMinutes',
   includeComments: 'includeComments',
   includeModifiers: 'includeModifiers',
   stationId: 'stationId'
@@ -138,6 +139,7 @@ exports.Prisma.PreparationStepCategoryScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
   categoryId: 'categoryId',
+  stationId: 'stationId',
   completed: 'completed',
   orderId: 'orderId'
 };
@@ -146,7 +148,10 @@ exports.Prisma.PreparationStepTrackScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
   completed: 'completed',
+  completedAt: 'completedAt',
   quantity: 'quantity',
+  goalMinutes: 'goalMinutes',
+  expectedAt: 'expectedAt',
   comments: 'comments',
   completedComments: 'completedComments',
   preparationStepId: 'preparationStepId',
@@ -245,10 +250,25 @@ exports.Prisma.UserScalarFieldEnum = {
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   email: 'email',
+  phone: 'phone',
   name: 'name',
   passwordHash: 'passwordHash',
   emailVerifiedAt: 'emailVerifiedAt',
   lastLoginAt: 'lastLoginAt'
+};
+
+exports.Prisma.OwnerOtpChallengeScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  ownerId: 'ownerId',
+  phone: 'phone',
+  codeHash: 'codeHash',
+  expiresAt: 'expiresAt',
+  usedAt: 'usedAt',
+  attemptCount: 'attemptCount',
+  maxAttempts: 'maxAttempts',
+  lastAttemptAt: 'lastAttemptAt'
 };
 
 exports.Prisma.ExternalIntegrationConnectionScalarFieldEnum = {
@@ -329,7 +349,16 @@ exports.Prisma.DriverScalarFieldEnum = {
   name: 'name',
   phone: 'phone',
   active: 'active',
+  activatedAt: 'activatedAt',
+  deactivatedAt: 'deactivatedAt',
   priorityLevel: 'priorityLevel'
+};
+
+exports.Prisma.DriverActivationEventScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  driverId: 'driverId',
+  status: 'status'
 };
 
 exports.Prisma.DispatchScalarFieldEnum = {
@@ -338,9 +367,40 @@ exports.Prisma.DispatchScalarFieldEnum = {
   queueIndex: 'queueIndex',
   dispatched: 'dispatched',
   dispatchAt: 'dispatchAt',
+  startedDeliveryAt: 'startedDeliveryAt',
   estimatedDeliveryDurationMinutes: 'estimatedDeliveryDurationMinutes',
   estimatedRoundTripDurationMinutes: 'estimatedRoundTripDurationMinutes',
   driverId: 'driverId'
+};
+
+exports.Prisma.DispatchRouteSessionScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  dispatchId: 'dispatchId',
+  driverId: 'driverId',
+  startedAt: 'startedAt',
+  endedAt: 'endedAt',
+  status: 'status',
+  totalDistanceMeters: 'totalDistanceMeters',
+  durationSeconds: 'durationSeconds',
+  polyline: 'polyline'
+};
+
+exports.Prisma.DispatchRoutePointScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  sessionId: 'sessionId',
+  sequence: 'sequence',
+  recordedAt: 'recordedAt',
+  lat: 'lat',
+  lng: 'lng',
+  accuracyMeters: 'accuracyMeters',
+  speedMps: 'speedMps',
+  headingDegrees: 'headingDegrees',
+  altitudeMeters: 'altitudeMeters',
+  source: 'source',
+  isMocked: 'isMocked'
 };
 
 exports.Prisma.DispatchAssignmentJobScalarFieldEnum = {
@@ -354,6 +414,19 @@ exports.Prisma.DispatchAssignmentJobScalarFieldEnum = {
   lastError: 'lastError',
   orderId: 'orderId',
   deliveryAddressId: 'deliveryAddressId'
+};
+
+exports.Prisma.DispatchEtaRecalculationJobScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  status: 'status',
+  attempts: 'attempts',
+  availableAt: 'availableAt',
+  processingStartedAt: 'processingStartedAt',
+  completedAt: 'completedAt',
+  lastError: 'lastError',
+  dispatchId: 'dispatchId'
 };
 
 exports.Prisma.FeedbackWhatsAppJobScalarFieldEnum = {
@@ -839,7 +912,31 @@ exports.ExternalMenuSyncStatus = exports.$Enums.ExternalMenuSyncStatus = {
   SKIPPED: 'SKIPPED'
 };
 
+exports.DriverActivationStatus = exports.$Enums.DriverActivationStatus = {
+  ACTIVATED: 'ACTIVATED',
+  DEACTIVATED: 'DEACTIVATED'
+};
+
+exports.DispatchRouteSessionStatus = exports.$Enums.DispatchRouteSessionStatus = {
+  ACTIVE: 'ACTIVE',
+  COMPLETED: 'COMPLETED',
+  CANCELED: 'CANCELED'
+};
+
+exports.DispatchRoutePointSource = exports.$Enums.DispatchRoutePointSource = {
+  GPS: 'GPS',
+  NETWORK: 'NETWORK',
+  MANUAL: 'MANUAL'
+};
+
 exports.DispatchAssignmentJobStatus = exports.$Enums.DispatchAssignmentJobStatus = {
+  PENDING: 'PENDING',
+  PROCESSING: 'PROCESSING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED'
+};
+
+exports.DispatchEtaRecalculationJobStatus = exports.$Enums.DispatchEtaRecalculationJobStatus = {
   PENDING: 'PENDING',
   PROCESSING: 'PROCESSING',
   COMPLETED: 'COMPLETED',
@@ -930,14 +1027,19 @@ exports.Prisma.ModelName = {
   ModifierGroupItem: 'ModifierGroupItem',
   Business: 'Business',
   User: 'User',
+  OwnerOtpChallenge: 'OwnerOtpChallenge',
   ExternalIntegrationConnection: 'ExternalIntegrationConnection',
   ExternalMenuEntityMap: 'ExternalMenuEntityMap',
   ExternalMenuSyncRun: 'ExternalMenuSyncRun',
   BusinessOwner: 'BusinessOwner',
   Branch: 'Branch',
   Driver: 'Driver',
+  DriverActivationEvent: 'DriverActivationEvent',
   Dispatch: 'Dispatch',
+  DispatchRouteSession: 'DispatchRouteSession',
+  DispatchRoutePoint: 'DispatchRoutePoint',
   DispatchAssignmentJob: 'DispatchAssignmentJob',
+  DispatchEtaRecalculationJob: 'DispatchEtaRecalculationJob',
   FeedbackWhatsAppJob: 'FeedbackWhatsAppJob',
   Address: 'Address',
   Product: 'Product',

@@ -1,6 +1,14 @@
+export type DriverActivationEventRecord = {
+  createdAt: Date;
+  status: "ACTIVATED" | "DEACTIVATED";
+};
+
 export type DriverRecord = {
   active: boolean;
+  activatedAt: Date | null;
+  activationEvents: DriverActivationEventRecord[];
   createdAt: Date;
+  deactivatedAt: Date | null;
   id: string;
   name: string;
   phone: string | null;

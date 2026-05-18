@@ -11,7 +11,13 @@ export type CreateDriverUseCaseInput = {
 
 export type CreateDriverUseCaseOutput = {
   active: boolean;
+  activatedAt: string | null;
+  activationEvents: Array<{
+    createdAt: string;
+    status: "ACTIVATED" | "DEACTIVATED";
+  }>;
   createdAt: string;
+  deactivatedAt: string | null;
   id: string;
   name: string;
   phone: string | null;
@@ -100,6 +106,12 @@ function mapDriverOutput(driver: DriverRecord): CreateDriverUseCaseOutput {
     name: driver.name,
     phone: driver.phone,
     active: driver.active,
+    activatedAt: driver.activatedAt ? driver.activatedAt.toISOString() : null,
+    activationEvents: driver.activationEvents.map((event) => ({
+      createdAt: event.createdAt.toISOString(),
+      status: event.status,
+    })),
+    deactivatedAt: driver.deactivatedAt ? driver.deactivatedAt.toISOString() : null,
     priorityLevel: driver.priorityLevel,
   };
 }

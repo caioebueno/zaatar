@@ -1019,6 +1019,7 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
         selectedCardId: paymentType === "CARD" ? resolvedSelectedCardId || undefined : undefined,
         customerId: customer.id,
         language: lg,
+        menuId: data.menuId,
         addressId: selectedAddress || undefined,
         scheduleFor,
         selectedPrize: selectedPrize

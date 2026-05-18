@@ -11,6 +11,11 @@ import * as modifierGroupIdRoute from "../../infrastructure/native/modifier-grou
 import * as modifierGroupItemsRoute from "../../infrastructure/native/modifier-group-items/route.js";
 import * as modifierGroupItemIdRoute from "../../infrastructure/native/modifier-group-items/itemIdRoute.js";
 import * as bucketUploadRoute from "../../infrastructure/native/bucket/uploadRoute.js";
+import * as progressiveDiscountRoute from "../../infrastructure/native/progressive-discount/route.js";
+import * as posExclusivePromotionsRoute from "../../infrastructure/native/pos-exclusive-promotions/route.js";
+import * as customerSearchRoute from "../../infrastructure/native/customers/searchRoute.js";
+import * as customersRoute from "../../infrastructure/native/customers/route.js";
+import * as addressSearchRoute from "../../infrastructure/native/address-search/route.js";
 
 export class NativeCatalogController implements HttpController {
   async handle(request: HttpRequest): Promise<HttpResponse> {
@@ -120,6 +125,26 @@ export class NativeCatalogController implements HttpController {
 
     if (request.method === "POST" && pathname === "/bucket/upload") {
       return bucketUploadRoute.POST(nextRequest);
+    }
+
+    if (request.method === "GET" && pathname === "/progressive-discount") {
+      return progressiveDiscountRoute.GET();
+    }
+
+    if (request.method === "GET" && pathname === "/pos/exclusive-promotions") {
+      return posExclusivePromotionsRoute.GET(nextRequest);
+    }
+
+    if (request.method === "GET" && pathname === "/customers/search") {
+      return customerSearchRoute.GET(nextRequest);
+    }
+
+    if (request.method === "POST" && pathname === "/customers") {
+      return customersRoute.POST(nextRequest);
+    }
+
+    if (request.method === "GET" && pathname === "/address-search") {
+      return addressSearchRoute.GET(nextRequest);
     }
 
     return {

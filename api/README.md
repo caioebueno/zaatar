@@ -36,6 +36,13 @@ This API now follows a clean-architecture style split:
 - `POST /owners`
 - `POST /owners/register`
 - `POST /owners/login`
+- `GET /dispatches` (auth required)
+- `PATCH /dispatches/:dispatchId` (auth required)
+- `POST /drivers/location` (driver auth required)
+- `GET /orders` (auth required)
+- `GET /orders/:orderId` (auth required)
+- `PATCH /orders/:orderId` (auth required)
+- `PATCH /drivers/orders/:orderId` (driver auth required)
 - `GET /products` (auth required)
 - `POST /products` (auth required)
 - `PATCH /products/:productId` (auth required)
@@ -85,6 +92,7 @@ Responses:
 
 - `MANAGER_ACCESS_TOKEN_SECRET`: required in production to sign access tokens
 - `MANAGER_ACCESS_TOKEN_TTL_DAYS`: optional, defaults to `90`
+- `DEV`: set to `1` to log incoming request bodies (development only)
 
 ## Stripe Connect Environment Variables
 

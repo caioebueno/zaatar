@@ -65,6 +65,7 @@ export type DispatchEntity = {
   queueIndex?: number;
   dispatchAt?: string;
   dispatched: boolean;
+  startedDeliveryAt?: string | null;
   estimatedDeliveryDurationMinutes?: number;
   estimatedRoundTripDurationMinutes?: number;
   driverId?: string;
@@ -76,6 +77,53 @@ export type DispatchEntity = {
   };
   orders: DispatchOrder[];
 };
+
+export async function activateDriver(token: string): Promise<void> {
+  const r = await fetch(`${BASE}/drivers/me/activate`, {
+    method: 'PATCH',
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!r.ok) {
+    const e = await r.json().catch(() => ({}));
+    throw Object.assign(new Error('activate_failed'), { data: e, status: r.status });
+  }
+}
+
+export async function deactivateDriver(token: string): Promise<void> {
+  const r = await fetch(`${BASE}/drivers/me/deactivate`, {
+    method: 'PATCH',
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!r.ok) {
+    const e = await r.json().catch(() => ({}));
+    throw Object.assign(new Error('deactivate_failed'), { data: e, status: r.status });
+  }
+}
+
+export async function markOrderDelivered(token: string, orderId: string): Promise<void> {
+  const r = await fetch(`${BASE}/drivers/orders/${orderId}`, {
+    method: 'PATCH',
+    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ deliveredAt: new Date().toISOString() }),
+  });
+  if (!r.ok) {
+    const e = await r.json().catch(() => ({}));
+    throw Object.assign(new Error('mark_delivered_failed'), { data: e, status: r.status });
+  }
+}
+
+export async function startDelivery(token: string, dispatchId: string): Promise<{ ok: boolean; dispatchId: string; startedDeliveryAt: string }> {
+  const r = await fetch(`${BASE}/drivers/dispatches/${dispatchId}/started-delivery`, {
+    method: 'PATCH',
+    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({}),
+  });
+  if (!r.ok) {
+    const e = await r.json().catch(() => ({}));
+    throw Object.assign(new Error('start_failed'), { data: e, status: r.status });
+  }
+  return r.json();
+}
 
 export async function getNextDispatch(token: string): Promise<DispatchEntity | null> {
   const r = await fetch(`${BASE}/dispatches/next`, {

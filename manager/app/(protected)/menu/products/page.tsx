@@ -9,6 +9,7 @@ import type {
   ProductManagerFixedComboProduct,
   ProductManagerModifierGroup,
   ProductManagerModifierGroupItem,
+  ProductManagerPreparationTask,
   ProductManagerProduct,
   ProductManagerProductItemType,
   ProductManagerTranslations,
@@ -257,9 +258,38 @@ function toFixedComboProducts(value: unknown): ProductManagerFixedComboProduct[]
     );
 }
 
+function toPreparationStepIds(value: unknown): string[] {
+  if (!Array.isArray(value)) return [];
+  return value.filter((entry): entry is string => typeof entry === "string");
+}
+
+function toPreparationTaskLookupMap(
+  value: unknown,
+): Map<string, ProductManagerPreparationTask> {
+  const map = new Map<string, ProductManagerPreparationTask>();
+  if (!Array.isArray(value)) return map;
+
+  for (const entry of value) {
+    if (!isRecord(entry) || typeof entry.id !== "string") continue;
+    if (typeof entry.name !== "string") continue;
+
+    map.set(entry.id, {
+      id: entry.id,
+      name: entry.name,
+      stationId: typeof entry.stationId === "string" ? entry.stationId : null,
+      stationName: typeof entry.stationName === "string" ? entry.stationName : null,
+      includeComments: entry.includeComments === true,
+      includeModifiers: entry.includeModifiers === true,
+    });
+  }
+
+  return map;
+}
+
 function mapProduct(
   value: unknown,
   assignment: { categoryId: string | null; categoryIndex: number | null },
+  preparationTaskLookupById: Map<string, ProductManagerPreparationTask>,
 ): ProductManagerProduct | null {
   if (!isRecord(value)) return null;
   if (typeof value.id !== "string" || typeof value.name !== "string") return null;
@@ -274,6 +304,7 @@ function mapProduct(
 
   const comboSlots = toComboSlots(value.comboSlots);
   const products = toFixedComboProducts(value.products);
+  const preparationStepIds = toPreparationStepIds(value.preparationStepIds);
 
   return {
     id: value.id,
@@ -299,6 +330,12 @@ function mapProduct(
           .map(toModifierGroup)
           .filter((group): group is ProductManagerModifierGroup => group !== null)
       : [],
+    preparationStepIds,
+    preparationTasks: preparationStepIds
+      .map((stepId) => preparationTaskLookupById.get(stepId) ?? null)
+      .filter(
+        (step): step is ProductManagerPreparationTask => step !== null,
+      ),
     products,
     comboSlots,
     comboItems: comboSlots
@@ -466,6 +503,7 @@ export default async function MenuProductsPage({ searchParams }: PageProps) {
     lookup?: {
       categories?: unknown;
       modifierGroups?: unknown;
+      preparationSteps?: unknown;
     };
   };
   let menuCategoriesResponse: unknown[];
@@ -477,6 +515,7 @@ export default async function MenuProductsPage({ searchParams }: PageProps) {
         lookup?: {
           categories?: unknown;
           modifierGroups?: unknown;
+          preparationSteps?: unknown;
         };
       }>(apiBaseUrls, "/products", accessToken, businessId),
       fetchApiJson<unknown[]>(
@@ -526,6 +565,9 @@ export default async function MenuProductsPage({ searchParams }: PageProps) {
         )
     : [];
   const categoryIdsInMenu = new Set(menuCategories.map((category) => category.id));
+  const preparationTaskLookupById = toPreparationTaskLookupMap(
+    productsResponse.lookup?.preparationSteps,
+  );
 
   const categories: ProductManagerCategory[] = menuCategories.map((category) => {
     const categoryProducts = products
@@ -537,7 +579,7 @@ export default async function MenuProductsPage({ searchParams }: PageProps) {
         return mapProduct(product, {
           categoryId: category.id,
           categoryIndex: assignment.categoryIndex,
-        });
+        }, preparationTaskLookupById);
       })
       .filter((product): product is ProductManagerProduct => product !== null)
       .sort(sortProducts);
@@ -559,7 +601,7 @@ export default async function MenuProductsPage({ searchParams }: PageProps) {
       mapProduct(product, {
         categoryId: null,
         categoryIndex: null,
-      }),
+      }, preparationTaskLookupById),
     )
     .filter((product): product is ProductManagerProduct => product !== null)
     .sort(sortProducts);
