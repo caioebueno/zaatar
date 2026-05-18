@@ -132,7 +132,7 @@ Sample:
 
 - Values are returned in **cents** to avoid floating point issues.
 - Canceled orders are excluded.
-- Sales totals include discounted subtotal + tip, following the same order pricing logic used in list analytics.
+- Sales totals include `OrderProducts subtotal + tip + deliveryFee` (delivery orders), without using `Order.amount`.
 
 ### Validation errors (`400`)
 
