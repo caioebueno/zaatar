@@ -477,26 +477,43 @@ function NextCard({ order, sequenceIdx }: { order: DispatchOrder; sequenceIdx: n
 
   return (
     <View style={nextStyles.card}>
-      <View style={nextStyles.badge}>
-        <Text style={nextStyles.badgeNum}>{sequenceIdx}</Text>
-      </View>
-      <View style={{ flex: 1, minWidth: 0 }}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginBottom: 3 }}>
-          <Text style={nextStyles.name} numberOfLines={1}>
-            {order.customer?.name ?? 'Cliente'}
-          </Text>
-          {needsCash && (
-            <Text style={nextStyles.cashBadge}>Cobrar</Text>
+      <View style={nextStyles.header}>
+        <View style={nextStyles.badge}>
+          <Text style={nextStyles.badgeNum}>{sequenceIdx}</Text>
+        </View>
+        <View style={{ flex: 1, minWidth: 0 }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginBottom: 3 }}>
+            <Text style={nextStyles.name} numberOfLines={1}>
+              {order.customer?.name ?? 'Cliente'}
+            </Text>
+            {needsCash && (
+              <Text style={nextStyles.cashBadge}>Cobrar</Text>
+            )}
+          </View>
+          {addr && (
+            <Text style={nextStyles.addr} numberOfLines={1}>
+              {addr.street}, {addr.number}
+            </Text>
           )}
         </View>
-        {addr && (
-          <Text style={nextStyles.addr} numberOfLines={1}>
-            {addr.street}, {addr.number}
-          </Text>
-        )}
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 5 }}>
-          <Text style={nextStyles.meta}>{order.paymentMethod}</Text>
-        </View>
+      </View>
+      <View style={{ height: 1, backgroundColor: D.line }} />
+      <View style={{ gap: 6 }}>
+        {order.orderProducts.map((op) => (
+          <View key={op.id} style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 10 }}>
+            <View style={nextStyles.qtyBox}>
+              <Text style={nextStyles.qty}>{op.quantity}×</Text>
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={nextStyles.itemName}>{op.product.name}</Text>
+              {op.selectedModifierGroupItems.length > 0 && (
+                <Text style={nextStyles.itemMods} numberOfLines={2}>
+                  {op.selectedModifierGroupItems.map(m => m.name).join(', ')}
+                </Text>
+              )}
+            </View>
+          </View>
+        ))}
       </View>
     </View>
   );
@@ -504,7 +521,7 @@ function NextCard({ order, sequenceIdx }: { order: DispatchOrder; sequenceIdx: n
 
 const nextStyles = StyleSheet.create({
   card: {
-    flexDirection: 'row', alignItems: 'center', gap: 13,
+    flexDirection: 'column', gap: 12,
     backgroundColor: D.surf,
     borderWidth: 1, borderColor: D.line,
     borderRadius: 14, padding: 13,
@@ -514,9 +531,15 @@ const nextStyles = StyleSheet.create({
     backgroundColor: D.surf3, borderWidth: 1, borderColor: D.line,
     alignItems: 'center', justifyContent: 'center',
   },
+  header:   { flexDirection: 'row', alignItems: 'center', gap: 13 },
+  items:    { marginTop: 0 },
+  qtyBox:   { width: 34, height: 34, borderRadius: 9, flexShrink: 0, backgroundColor: 'rgba(255,61,20,0.11)', borderWidth: 1, borderColor: 'rgba(255,61,20,0.22)', alignItems: 'center', justifyContent: 'center' },
+  qty:      { fontFamily: MONO_B, fontSize: 12, color: D.zippy },
+  itemName: { fontSize: 14, color: D.text, fontFamily: SANS_M },
+  itemMods: { fontSize: 12, color: D.dim, marginTop: 2 },
   badgeNum: { fontFamily: MONO_B, fontSize: 13, color: D.faint },
   name:     { fontSize: 14, fontFamily: SANS_B, color: D.text, letterSpacing: -0.1, flexShrink: 1 },
-  addr:     { fontSize: 12, color: D.faint, lineHeight: 18 },
+  addr:     { fontSize: 12, color: D.dim, lineHeight: 18 },
   meta:     { fontFamily: MONO, fontSize: 11, color: D.faint },
   cashBadge: {
     fontFamily: MONO_B, fontSize: 10, color: D.amber,
@@ -673,9 +696,19 @@ function DeliveryContent({
 }: {
   dispatch: DispatchEntity; onDelivered: () => void; onStartDelivery: () => void;
 }) {
-  const [confirming, setConfirming] = useState(false);
-  const [swipeKey,   setSwipeKey]   = useState(0);
+  const [confirming,   setConfirming]   = useState(false);
+  const [swipeKey,     setSwipeKey]     = useState(0);
+  const [selectedPill, setSelectedPill] = useState<number | null>(null);
+  const pillTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const insets = useSafeAreaInsets();
+
+  const handlePillPress = (i: number) => {
+    if (pillTimerRef.current) clearTimeout(pillTimerRef.current);
+    setSelectedPill(i);
+    pillTimerRef.current = setTimeout(() => setSelectedPill(null), 2200);
+  };
+
+  useEffect(() => () => { if (pillTimerRef.current) clearTimeout(pillTimerRef.current); }, []);
 
   const sorted       = [...dispatch.orders].sort((a, b) => a.dispatchOrderIndex - b.dispatchOrderIndex);
   const activeIdx    = sorted.findIndex(o => !o.deliveredAt);
@@ -710,16 +743,20 @@ function DeliveryContent({
             const active = i === activeIdx;
             return (
               <React.Fragment key={i}>
-                <View style={{
-                  width: active ? 20 : 8, height: 8, borderRadius: 4,
-                  backgroundColor: past ? D.green : active ? D.zippy : D.surf3,
-                  borderWidth: past || active ? 0 : 1,
-                  borderColor: 'rgba(250,245,238,0.14)',
-                }} />
+                <TouchableOpacity
+                  onPress={() => handlePillPress(i)}
+                  activeOpacity={0.7}
+                  hitSlop={{ top: 10, bottom: 10, left: 6, right: 6 }}
+                >
+                  <View style={{
+                    width: active ? 20 : 8, height: 8, borderRadius: 4,
+                    backgroundColor: past ? D.green : D.zippy,
+                  }} />
+                </TouchableOpacity>
                 {i < sorted.length - 1 && (
                   <View style={{
                     width: 14, height: 1.5, borderRadius: 1,
-                    backgroundColor: past ? D.green : D.surf3,
+                    backgroundColor: D.zippy,
                   }} />
                 )}
               </React.Fragment>
@@ -728,9 +765,20 @@ function DeliveryContent({
         </View>
 
         <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginLeft: 12 }}>
-          <Text style={progStyles.stopLabel}>
-            Parada {deliveredCount + 1} de {sorted.length}
-          </Text>
+          {selectedPill !== null ? (
+            <View style={progStyles.valueBadge}>
+              <Text style={progStyles.valueBadgeText}>
+                {sorted[selectedPill].customer?.name?.split(' ')[0] ?? 'Cliente'}
+              </Text>
+              <Text style={progStyles.valueBadgeAmount}>
+                {' '}· R$ {(orderTotal(sorted[selectedPill]) / 100).toFixed(2).replace('.', ',')}
+              </Text>
+            </View>
+          ) : (
+            <Text style={progStyles.stopLabel}>
+              Parada {deliveredCount + 1} de {sorted.length}
+            </Text>
+          )}
           {remainingKm !== null && (
             <Text style={progStyles.kmLabel}>{remainingKm} km restantes</Text>
           )}
@@ -793,7 +841,7 @@ function DeliveryContent({
               Próximas Entregas ({upNext.length})
             </Text>
             {upNext.map((o, i) => (
-              <NextCard key={o.id} order={o} sequenceIdx={deliveredCount + 2 + i} />
+              <NextCard key={o.id} order={o} sequenceIdx={i + 1} />
             ))}
           </View>
         )}

@@ -29,6 +29,11 @@ export class PrismaAnalyticsRepository implements AnalyticsRepository {
           timezone(${query.timezone}, orders."createdAt")::date AS day,
           COALESCE(orders."tipAmount", 0)::numeric AS tip_percentage,
           CASE
+            WHEN orders."type"::text = 'DELIVERY'
+            THEN COALESCE(MAX(delivery_address."deliveryFee"), 0)::numeric
+            ELSE 0::numeric
+          END AS delivery_fee_cents,
+          CASE
             WHEN orders."progressiveDiscountSnapshot" IS NOT NULL
               AND jsonb_typeof(orders."progressiveDiscountSnapshot"::jsonb) = 'object'
               AND (orders."progressiveDiscountSnapshot"::jsonb ? 'discountedPrice')
@@ -40,6 +45,8 @@ export class PrismaAnalyticsRepository implements AnalyticsRepository {
         FROM "Order" orders
         INNER JOIN "Branch" branch
           ON branch."id" = orders."branchId"
+        LEFT JOIN "DeliveryAddress" delivery_address
+          ON delivery_address."id" = orders."deliveryAddressId"
         LEFT JOIN "OrderProducts" op
           ON op."orderId" = orders."id"
         WHERE orders."canceled" = false
@@ -61,6 +68,7 @@ export class PrismaAnalyticsRepository implements AnalyticsRepository {
               + ROUND(
                   (GREATEST(0, order_totals.discounted_subtotal_cents) * order_totals.tip_percentage) / 100.0
                 )
+              + GREATEST(0, order_totals.delivery_fee_cents)
             ),
             0
           )::bigint::text AS sales
