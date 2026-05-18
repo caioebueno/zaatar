@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import prisma from "@/prisma";
 import PromotionManager from "@/app/components/PromotionManager";
 import type {
