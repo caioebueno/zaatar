@@ -37,8 +37,7 @@ export class PrismaDriverAuthRepository implements DriverAuthRepository {
         "priorityLevel",
         "phone"
       FROM "Driver"
-      WHERE "active" = true
-        AND "phone" IN (${Prisma.join(phoneCandidates)})
+      WHERE "phone" IN (${Prisma.join(phoneCandidates)})
       ORDER BY "createdAt" ASC
       LIMIT 1
     `;
