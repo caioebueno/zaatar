@@ -45,7 +45,7 @@ export class VerifyDriverOtpUseCase {
 
     const phoneCandidates = buildPhoneCandidates(normalizedPhone);
     const driver = await this.driverAuthRepository.findActiveDriverByPhone(phoneCandidates);
-    if (!driver || !driver.active) {
+    if (!driver) {
       throw new DriverNotFoundError();
     }
 
