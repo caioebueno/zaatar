@@ -29,6 +29,7 @@ import { makeSetDispatchStartedDeliveryAtController } from "./modules/dispatch/m
 import { makeListDispatchesController } from "./modules/dispatch/main/makeListDispatchesController.js";
 import { makeUpdateDispatchController } from "./modules/dispatch/main/makeUpdateDispatchController.js";
 import { makeMoveDispatchOrderController } from "./modules/dispatch/main/makeMoveDispatchOrderController.js";
+import { makeListDriverDispatchesByDateRangeController } from "./modules/dispatch/main/makeListDriverDispatchesByDateRangeController.js";
 import { makeDispatchRouteController } from "./modules/dispatch-route/main/makeDispatchRouteController.js";
 import { makeStationController } from "./modules/station/main/makeStationController.js";
 import { makePreparationTaskController } from "./modules/preparation-task/main/makePreparationTaskController.js";
@@ -82,6 +83,8 @@ const listDispatchesController = makeListDispatchesController();
 const updateDispatchController = makeUpdateDispatchController();
 const moveDispatchOrderController = makeMoveDispatchOrderController();
 const getNextDispatchForDriverController = makeGetNextDispatchForDriverController();
+const listDriverDispatchesByDateRangeController =
+  makeListDriverDispatchesByDateRangeController();
 const setDispatchStartedDeliveryAtController =
   makeSetDispatchStartedDeliveryAtController();
 const dispatchRouteController = makeDispatchRouteController();
@@ -177,6 +180,13 @@ const routes: Route[] = [
     method: "GET",
     matcher: /^\/dispatches\/next$/,
     controller: getNextDispatchForDriverController,
+    requiresAuth: false,
+    requiresDriverAuth: true,
+  },
+  {
+    method: "GET",
+    matcher: /^\/drivers\/dispatches$/,
+    controller: listDriverDispatchesByDateRangeController,
     requiresAuth: false,
     requiresDriverAuth: true,
   },

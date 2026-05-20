@@ -15,11 +15,11 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 
-import * as Location from 'expo-location';
-
 import { useAuth } from '@/context/auth';
 import { getNextDispatch, startDelivery, markOrderDelivered, DispatchEntity, DispatchOrder } from '@/lib/dispatch-api';
 import { startRouteTracking, stopRouteTracking } from '@/lib/route-tracking';
+import { startDeliveryActivity, endDeliveryActivity } from '@/lib/live-activity';
+import { calculateOrderTotal } from '@/utils/orderTotal';
 
 // ─── Design tokens ───────────────────────────────────────────────────────────
 const D = {
@@ -36,8 +36,6 @@ const D = {
   amber: '#f2b338',
 };
 
-const orderTotal = (o: DispatchOrder) =>
-  o.orderProducts.reduce((s, p) => s + p.fullAmount, 0);
 
 const SANS    = 'Geist_400Regular';
 const SANS_M  = 'Geist_500Medium';
@@ -357,117 +355,6 @@ const confirmStyles = StyleSheet.create({
   },
 });
 
-// ─── RouteComplete ────────────────────────────────────────────────────────────
-function RouteComplete({ dispatch, onClose }: { dispatch: DispatchEntity; onClose: () => void }) {
-  const insets    = useSafeAreaInsets();
-  const popScale  = useRef(new Animated.Value(0.55)).current;
-  const fadeAnim  = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    Animated.parallel([
-      Animated.spring(popScale, { toValue: 1, useNativeDriver: true, bounciness: 10 }),
-      Animated.timing(fadeAnim, { toValue: 1, duration: 360, useNativeDriver: true }),
-    ]).start();
-  }, []);
-
-  const sorted      = [...dispatch.orders].sort((a, b) => a.dispatchOrderIndex - b.dispatchOrderIndex);
-  const totalAmount = sorted.reduce((s, o) => s + orderTotal(o), 0);
-
-  return (
-    <View style={[StyleSheet.absoluteFillObject, { backgroundColor: D.bg, zIndex: 200 }]}>
-      <ScrollView
-        contentContainerStyle={[
-          routeStyles.container,
-          { paddingTop: insets.top + 28, paddingBottom: insets.bottom + 28 },
-        ]}
-        showsVerticalScrollIndicator={false}
-      >
-        {/* Icon */}
-        <Animated.View style={[routeStyles.iconWrap, { transform: [{ scale: popScale }] }]}>
-          <ZippyMark size={38} />
-        </Animated.View>
-
-        <Animated.Text style={[routeStyles.title, { opacity: fadeAnim }]}>
-          Rota concluída!
-        </Animated.Text>
-        <Animated.Text style={[routeStyles.subtitle, { opacity: fadeAnim }]}>
-          {sorted.length} de {sorted.length} entregas realizadas.
-        </Animated.Text>
-
-        {/* Total card */}
-        <Animated.View style={[routeStyles.totalCard, { opacity: fadeAnim }]}>
-          <Text style={routeStyles.totalLabel}>Total da rota</Text>
-          <Text style={routeStyles.totalValue}>
-            R$ {(totalAmount / 100).toFixed(2).replace('.', ',')}
-          </Text>
-        </Animated.View>
-
-        {/* Per-order rows */}
-        <Animated.View style={[routeStyles.orderList, { opacity: fadeAnim }]}>
-          {sorted.map((o) => (
-            <View key={o.id} style={routeStyles.orderRow}>
-              <View style={routeStyles.orderCheck}>
-                <Ionicons name="checkmark" size={12} color={D.green} />
-              </View>
-              <Text style={routeStyles.orderName} numberOfLines={1}>
-                {o.customer?.name ?? 'Cliente'}
-              </Text>
-              <Text style={routeStyles.orderAmount}>
-                R$ {(orderTotal(o) / 100).toFixed(2).replace('.', ',')}
-              </Text>
-            </View>
-          ))}
-        </Animated.View>
-
-        <TouchableOpacity style={routeStyles.doneBtn} onPress={onClose} activeOpacity={0.82}>
-          <Text style={routeStyles.doneBtnText}>Aguardar próximo despacho</Text>
-        </TouchableOpacity>
-      </ScrollView>
-    </View>
-  );
-}
-
-const routeStyles = StyleSheet.create({
-  container: { alignItems: 'center', paddingHorizontal: 24, gap: 16 },
-  iconWrap: {
-    width: 72, height: 72, borderRadius: 20,
-    backgroundColor: D.zippy,
-    alignItems: 'center', justifyContent: 'center',
-    marginBottom: 4,
-  },
-  title:    { color: D.text, fontSize: 28, fontFamily: SANS_EB, letterSpacing: -1.1, textAlign: 'center' },
-  subtitle: { color: D.dim,  fontSize: 15, textAlign: 'center', lineHeight: 22 },
-  totalCard: {
-    width: '100%', backgroundColor: D.surf,
-    borderWidth: 1, borderColor: D.line, borderRadius: 16,
-    paddingVertical: 18, paddingHorizontal: 20,
-    alignItems: 'center', marginTop: 8,
-  },
-  totalLabel: { fontFamily: MONO, fontSize: 10, color: D.faint, letterSpacing: 1.6, textTransform: 'uppercase', marginBottom: 8 },
-  totalValue: { fontFamily: SANS_EB, fontSize: 28, color: D.text, letterSpacing: -1 },
-  orderList: { width: '100%', gap: 8 },
-  orderRow: {
-    flexDirection: 'row', alignItems: 'center',
-    paddingVertical: 10, paddingHorizontal: 14,
-    backgroundColor: D.surf3,
-    borderWidth: 1, borderColor: D.line, borderRadius: 12, gap: 10,
-  },
-  orderCheck: {
-    width: 24, height: 24, borderRadius: 6,
-    backgroundColor: 'rgba(52,211,154,0.14)',
-    borderWidth: 1, borderColor: 'rgba(52,211,154,0.25)',
-    alignItems: 'center', justifyContent: 'center',
-  },
-  orderName:   { flex: 1, fontSize: 13, fontFamily: SANS_SB, color: D.dim },
-  orderAmount: { fontFamily: MONO_B, fontSize: 13, color: D.text },
-  doneBtn: {
-    alignSelf: 'stretch', backgroundColor: D.zippy,
-    borderRadius: 16, paddingVertical: 18, alignItems: 'center',
-    shadowColor: D.zippy, shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.26, shadowRadius: 16, elevation: 6,
-  },
-  doneBtnText: { color: '#fff', fontSize: 16, fontFamily: SANS_B },
-});
 
 // ─── NextCard ─────────────────────────────────────────────────────────────────
 function NextCard({ order, sequenceIdx }: { order: DispatchOrder; sequenceIdx: number }) {
@@ -771,7 +658,7 @@ function DeliveryContent({
                 {sorted[selectedPill].customer?.name?.split(' ')[0] ?? 'Cliente'}
               </Text>
               <Text style={progStyles.valueBadgeAmount}>
-                {' '}· R$ {(orderTotal(sorted[selectedPill]) / 100).toFixed(2).replace('.', ',')}
+                {' '}· R$ {(calculateOrderTotal(sorted[selectedPill]) / 100).toFixed(2).replace('.', ',')}
               </Text>
             </View>
           ) : (
@@ -825,7 +712,7 @@ function DeliveryContent({
               Valor · {paymentLabel(order.paymentMethod)}
             </Text>
             <Text style={contentStyles.payAmount}>
-              R$ {(orderTotal(order) / 100).toFixed(2).replace('.', ',')}
+              R$ {(calculateOrderTotal(order) / 100).toFixed(2).replace('.', ',')}
             </Text>
           </View>
           <PayBadge paid={paid} />
@@ -894,6 +781,13 @@ const progStyles = StyleSheet.create({
   },
   stopLabel: { fontFamily: MONO_B, fontSize: 11, color: D.dim, letterSpacing: 0.4 },
   kmLabel:   { fontFamily: MONO,   fontSize: 11, color: D.faint },
+  valueBadge: {
+    flexDirection: 'row', alignItems: 'center',
+    backgroundColor: D.surf3, borderRadius: 999, borderWidth: 1, borderColor: D.line,
+    paddingHorizontal: 10, paddingVertical: 3,
+  },
+  valueBadgeText:   { fontFamily: SANS_B,  fontSize: 11, color: D.text, letterSpacing: -0.1 },
+  valueBadgeAmount: { fontFamily: MONO_B,  fontSize: 11, color: D.faint },
 });
 
 const contentStyles = StyleSheet.create({
@@ -961,15 +855,14 @@ export default function DeliveryScreen() {
 
   const [dispatch,   setDispatch]   = useState<DispatchEntity | null>(null);
   const [loading,    setLoading]    = useState(true);
-  const [routeDone,  setRouteDone]  = useState(false);
 
   const fetchDispatch = useCallback(async () => {
     if (!token) return;
     setLoading(true);
     try {
       const data = await getNextDispatch(token);
+      console.log('[delivery] dispatch loaded', JSON.stringify(data, null, 2));
       setDispatch(data);
-      setRouteDone(false);
     } catch {
       // keep previous on error
     } finally {
@@ -979,11 +872,6 @@ export default function DeliveryScreen() {
 
   useEffect(() => { fetchDispatch(); }, []);
 
-  useEffect(() => {
-    Location.getBackgroundPermissionsAsync().then(({ granted }) => {
-      if (!granted) router.replace('/location-permission');
-    });
-  }, [router]);
 
   const handleDelivered = useCallback(async () => {
     if (!dispatch || !token) return;
@@ -996,9 +884,12 @@ export default function DeliveryScreen() {
     );
     setDispatch(prev => prev ? { ...prev, orders: updatedOrders } : prev);
     if (updatedOrders.every(o => !!o.deliveredAt)) {
-      setRouteDone(true);
+      stopRouteTracking().catch(() => {});
+      endDeliveryActivity();
+      setDispatch(null);
+      fetchDispatch();
     }
-  }, [dispatch, token]);
+  }, [dispatch, token, fetchDispatch]);
 
   const handleStartDelivery = useCallback(async () => {
     if (!token || !dispatch) return;
@@ -1007,6 +898,18 @@ export default function DeliveryScreen() {
       const { startedDeliveryAt } = await startDelivery(token, dispatch.id);
       setDispatch(prev => prev ? { ...prev, startedDeliveryAt } : prev);
       startRouteTracking(token, dispatch.id).catch((e) => console.log('[delivery] startRouteTracking error', e));
+
+      const sorted = [...dispatch.orders].sort((a, b) => a.dispatchOrderIndex - b.dispatchOrderIndex);
+      const first  = sorted[0];
+      const eta    = dispatch.estimatedDeliveryDurationMinutes ?? first?.estimatedDeliveryDurationMinutes ?? 0;
+      const addr   = first?.deliveryAddress;
+      startDeliveryActivity({
+        deliveryId:   dispatch.id,
+        customerName: first?.customer?.name ?? 'Cliente',
+        address:      addr ? `${addr.street}, ${addr.number}` : '',
+        etaMinutes:   eta,
+        startedAt:    new Date(startedDeliveryAt).getTime(),
+      });
     } catch (e) {
       console.log('[delivery] startDelivery error', e);
     }
@@ -1019,13 +922,6 @@ export default function DeliveryScreen() {
       startRouteTracking(token, dispatch.id).catch((e) => console.log('[delivery] resume tracking error', e));
     }
   }, [token, dispatch?.id, dispatch?.startedDeliveryAt]);
-
-  const handleRouteClose = () => {
-    stopRouteTracking().catch(() => {});
-    setRouteDone(false);
-    setDispatch(null);
-    fetchDispatch();
-  };
 
   useEffect(() => () => { stopRouteTracking().catch(() => {}); }, []);
 
@@ -1073,9 +969,6 @@ export default function DeliveryScreen() {
         />
       )}
 
-      {routeDone && dispatch && (
-        <RouteComplete dispatch={dispatch} onClose={handleRouteClose} />
-      )}
     </View>
   );
 }

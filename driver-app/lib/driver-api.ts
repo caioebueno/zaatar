@@ -1,10 +1,12 @@
 const BASE = process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:4000';
 
 export async function sendOtp(phone: string) {
+  const body = { phone, channel: 'SMS', language: 'pt' };
+  console.log('[driver-api] sendOtp →', JSON.stringify(body));
   const r = await fetch(`${BASE}/drivers/auth/otp/send`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ phone, channel: 'SMS', language: 'pt' }),
+    body: JSON.stringify(body),
   });
   if (!r.ok) {
     const e = await r.json().catch(() => ({}));
@@ -27,10 +29,12 @@ export type VerifyOtpResult = {
 };
 
 export async function verifyOtp(phone: string, code: string): Promise<VerifyOtpResult> {
+  const body = { phone, code };
+  console.log('[driver-api] verifyOtp →', JSON.stringify(body));
   const r = await fetch(`${BASE}/drivers/auth/otp/verify`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ phone, code }),
+    body: JSON.stringify(body),
   });
   const data = await r.json().catch(() => ({}));
   if (!r.ok) {

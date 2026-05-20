@@ -336,7 +336,7 @@ function CTABtn({ label, onPress, disabled, loading }: {
 /* ── PHONE STEP ───────────────────────────────────────────────── */
 function PhoneStep({ onNext }: { onNext: (apiPhone: string, dialCode: string) => void }) {
   const [phone, setPhone] = useState('');
-  const [country, setCountry] = useState<Country>(COUNTRIES[0]);
+  const [country, setCountry] = useState<Country>(COUNTRIES.find(c => c.code === 'US')!);
   const [pickerVisible, setPickerVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [focused, setFocused] = useState(false);
@@ -358,6 +358,7 @@ function PhoneStep({ onNext }: { onNext: (apiPhone: string, dialCode: string) =>
     Keyboard.dismiss();
     setLoading(true);
     setError('');
+    console.log('[login] phone submit — raw digits:', digits, '| dialCode:', country.dialCode, '| apiPhone:', apiPhone);
     try {
       await sendOtp(apiPhone);
       onNext(apiPhone, country.dialCode);
@@ -447,6 +448,19 @@ function PhoneStep({ onNext }: { onNext: (apiPhone: string, dialCode: string) =>
 }
 
 /* ── OTP STEP ─────────────────────────────────────────────────── */
+function OtpCursor() {
+  const opacity = useRef(new Animated.Value(1)).current;
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(opacity, { toValue: 0, duration: 500, useNativeDriver: true }),
+        Animated.timing(opacity, { toValue: 1, duration: 500, useNativeDriver: true }),
+      ])
+    ).start();
+  }, []);
+  return <Animated.View style={{ width: 2, height: 26, borderRadius: 1, backgroundColor: D.zippy, opacity }} />;
+}
+
 function OTPStep({ phone, dialCode, onBack, onVerified }: {
   phone: string;
   dialCode: string;
@@ -456,16 +470,17 @@ function OTPStep({ phone, dialCode, onBack, onVerified }: {
   const [digits, setDigits] = useState(Array(6).fill(''));
   const [loading, setLoading] = useState(false);
   const [errMsg, setErrMsg] = useState('');
+  const [focused, setFocused] = useState(false);
   const [countdown, setCountdown] = useState(30);
   const [resending, setResending] = useState(false);
-  const refs = useRef<(TextInput | null)[]>([]);
+  const hiddenRef = useRef<TextInput>(null);
   const shakeAnim = useRef(new Animated.Value(0)).current;
   const insets = useSafeAreaInsets();
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     Animated.timing(fadeAnim, { toValue: 1, duration: 260, useNativeDriver: true }).start();
-    const t = setTimeout(() => refs.current[0]?.focus(), 120);
+    const t = setTimeout(() => hiddenRef.current?.focus(), 120);
     const timer = setInterval(() => setCountdown(c => (c > 0 ? c - 1 : 0)), 1000);
     return () => { clearTimeout(t); clearInterval(timer); };
   }, []);
@@ -504,39 +519,19 @@ function OTPStep({ phone, dialCode, onBack, onVerified }: {
       }
       shake();
       setDigits(Array(6).fill(''));
-      setTimeout(() => refs.current[0]?.focus(), 80);
+      setTimeout(() => hiddenRef.current?.focus(), 80);
     } finally {
       setLoading(false);
     }
   };
 
-  const onChange = (i: number, val: string) => {
-    const cleaned = val.replace(/\D/g, '');
-
-    if (cleaned.length > 1) {
-      const next = [...digits];
-      cleaned.slice(0, 6 - i).split('').forEach((char, offset) => {
-        next[i + offset] = char;
-      });
-      setDigits(next);
-      setErrMsg('');
-      const lastFilled = Math.min(i + cleaned.length - 1, 5);
-      refs.current[lastFilled]?.focus();
-      if (next.every(x => x !== '')) verify(next);
-      return;
-    }
-
-    const d = cleaned;
-    const next = [...digits];
-    next[i] = d;
+  const onHiddenChange = (val: string) => {
+    const cleaned = val.replace(/\D/g, '').slice(0, 6);
+    const next = Array(6).fill('') as string[];
+    cleaned.split('').forEach((c, i) => { next[i] = c; });
     setDigits(next);
     setErrMsg('');
-    if (d && i < 5) refs.current[i + 1]?.focus();
-    if (i === 5 && d && next.every(x => x !== '')) verify(next);
-  };
-
-  const onKeyPress = (i: number, key: string) => {
-    if (key === 'Backspace' && !digits[i] && i > 0) refs.current[i - 1]?.focus();
+    if (cleaned.length === 6) verify(next);
   };
 
   const resend = async () => {
@@ -555,11 +550,14 @@ function OTPStep({ phone, dialCode, onBack, onVerified }: {
 
   const all = digits.every(d => d !== '');
   const hasErr = !!errMsg;
+  const activeBox = digits.findIndex(d => d === '');
+  const cursorBox = activeBox === -1 ? 5 : activeBox;
 
-  const otpBoxStyle = (i: number) => [
+  const boxStyle = (i: number) => [
     styles.otpBox,
     hasErr && styles.otpBoxErr,
     !hasErr && digits[i] ? styles.otpBoxFilled : null,
+    focused && i === cursorBox && !hasErr && styles.otpBoxActive,
   ];
 
   return (
@@ -585,45 +583,43 @@ function OTPStep({ phone, dialCode, onBack, onVerified }: {
         </Text>
 
         {/* OTP boxes 3 — 3 */}
-        <Animated.View style={[styles.otpRow, { transform: [{ translateX: shakeAnim }] }]}>
-          {[0, 1, 2].map(i => (
-            <TextInput
-              key={i}
-              ref={el => { refs.current[i] = el; }}
-              style={otpBoxStyle(i)}
-              keyboardType="number-pad"
-              maxLength={1}
-              textContentType="oneTimeCode"
-              value={digits[i]}
-              onChangeText={val => onChange(i, val)}
-              onKeyPress={({ nativeEvent }) => onKeyPress(i, nativeEvent.key)}
-              onFocus={() => setErrMsg('')}
-              selectTextOnFocus
-              caretHidden
-            />
-          ))}
+        <TouchableOpacity activeOpacity={1} onPress={() => hiddenRef.current?.focus()}>
+          <Animated.View style={[styles.otpRow, { transform: [{ translateX: shakeAnim }] }]}>
+            {[0, 1, 2].map(i => (
+              <View key={i} style={boxStyle(i)}>
+                {digits[i]
+                  ? <Text style={[styles.otpDigit, hasErr && { color: D.zippy }]}>{digits[i]}</Text>
+                  : focused && i === cursorBox ? <OtpCursor /> : null}
+              </View>
+            ))}
 
-          <View style={styles.otpDash}>
-            <View style={{ width: 7, height: 1.5, borderRadius: 1, backgroundColor: D.faint }} />
-          </View>
+            <View style={styles.otpDash}>
+              <View style={{ width: 7, height: 1.5, borderRadius: 1, backgroundColor: D.faint }} />
+            </View>
 
-          {[3, 4, 5].map(i => (
-            <TextInput
-              key={i}
-              ref={el => { refs.current[i] = el; }}
-              style={otpBoxStyle(i)}
-              keyboardType="number-pad"
-              maxLength={1}
-              textContentType="oneTimeCode"
-              value={digits[i]}
-              onChangeText={val => onChange(i, val)}
-              onKeyPress={({ nativeEvent }) => onKeyPress(i, nativeEvent.key)}
-              onFocus={() => setErrMsg('')}
-              selectTextOnFocus
-              caretHidden
-            />
-          ))}
-        </Animated.View>
+            {[3, 4, 5].map(i => (
+              <View key={i} style={boxStyle(i)}>
+                {digits[i]
+                  ? <Text style={[styles.otpDigit, hasErr && { color: D.zippy }]}>{digits[i]}</Text>
+                  : focused && i === cursorBox ? <OtpCursor /> : null}
+              </View>
+            ))}
+          </Animated.View>
+        </TouchableOpacity>
+
+        {/* Hidden input that captures all typing and paste */}
+        <TextInput
+          ref={hiddenRef}
+          style={{ position: 'absolute', width: 1, height: 1, opacity: 0, top: 0, left: 0 }}
+          value={digits.join('')}
+          maxLength={6}
+          keyboardType="number-pad"
+          textContentType="oneTimeCode"
+          onChangeText={onHiddenChange}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
+          caretHidden
+        />
 
         <Text style={[styles.otpError, { opacity: hasErr ? 1 : 0 }]}>
           {errMsg || ' '}
@@ -802,18 +798,16 @@ const styles = StyleSheet.create({
     borderRightColor: D.line,
   },
   ccText: {
-    fontFamily: MONO,
-    fontSize: 14,
     fontFamily: MONO_SB,
+    fontSize: 14,
     color: D.dim,
   },
   phoneInput: {
     flex: 1,
     height: 54,
     paddingHorizontal: 16,
-    fontFamily: MONO,
-    fontSize: 15,
     fontFamily: MONO_M,
+    fontSize: 15,
     color: D.text,
     letterSpacing: 0.9,
   },
@@ -911,10 +905,8 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     borderColor: D.line,
     backgroundColor: D.surf,
-    textAlign: 'center',
-    fontFamily: MONO_B,
-    fontSize: 24,
-    color: D.text,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   otpBoxFilled: {
     borderColor: 'rgba(250,245,238,0.15)',
@@ -923,7 +915,14 @@ const styles = StyleSheet.create({
   otpBoxErr: {
     borderColor: 'rgba(255,61,20,0.45)',
     backgroundColor: 'rgba(255,61,20,0.06)',
-    color: D.zippy,
+  },
+  otpBoxActive: {
+    borderColor: D.zippy,
+  },
+  otpDigit: {
+    fontFamily: MONO_B,
+    fontSize: 24,
+    color: D.text,
   },
   otpDash: {
     width: 14,

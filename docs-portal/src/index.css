@@ -1,0 +1,107 @@
+@import "tailwindcss";
+@import "highlight.js/styles/atom-one-dark.min.css";
+
+@theme {
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+
+  --color-bg: #070911;
+  --color-surface: #0c0f1c;
+  --color-elevated: #111525;
+  --color-border: #1c2440;
+  --color-border-subtle: #141a30;
+  --color-foreground: #dde4f5;
+  --color-muted: #566280;
+  --color-faint: #2d3a5e;
+  --color-accent: #4f8ef7;
+  --color-accent-dim: #1e3a70;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: hidden;
+}
+
+/* Thin scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-faint);
+}
+
+/* Remove hljs background so our code block bg wins */
+.hljs {
+  background: transparent !important;
+  padding: 0 !important;
+  font-size: 0.8125rem;
+  line-height: 1.7;
+  font-family: var(--font-mono);
+}
+
+/* Doc content fade-in on navigation */
+@keyframes docFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.doc-content {
+  animation: docFadeIn 0.18s ease forwards;
+}
+
+/* Search modal backdrop blur */
+.search-backdrop {
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+/* Pulsing status dot */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.status-dot {
+  animation: pulse-dot 2.4s ease-in-out infinite;
+}
+
+/* Sidebar active glow */
+.nav-active {
+  background: linear-gradient(90deg, rgba(79, 142, 247, 0.12) 0%, transparent 100%);
+  border-left: 2px solid #4f8ef7;
+}
+
+/* Prose table striping */
+.prose-table tr:nth-child(even) td {
+  background: rgba(255, 255, 255, 0.015);
+}

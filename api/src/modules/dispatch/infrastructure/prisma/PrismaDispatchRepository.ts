@@ -861,6 +861,60 @@ export class PrismaDispatchRepository implements DispatchRepository {
     return Boolean(row?.id);
   }
 
+  async findByDriverDateRange(
+    driverId: string,
+    start: Date,
+    end: Date,
+  ): Promise<DispatchEntity[]> {
+    const dispatchRows = await prisma.$queryRaw<DispatchRow[]>`
+      SELECT
+        dispatch."id",
+        dispatch."createdAt",
+        dispatch."queueIndex",
+        dispatch."dispatchAt",
+        dispatch."startedDeliveryAt",
+        dispatch."dispatched",
+        dispatch."estimatedDeliveryDurationMinutes",
+        dispatch."estimatedRoundTripDurationMinutes",
+        dispatch."driverId",
+        driver."createdAt" AS "driverCreatedAt",
+        driver."name" AS "driverName",
+        driver."active" AS "driverActive",
+        driver."priorityLevel" AS "driverPriorityLevel"
+      FROM "Dispatch" dispatch
+      LEFT JOIN "Driver" driver ON driver."id" = dispatch."driverId"
+      WHERE dispatch."driverId" = ${driverId}
+        AND dispatch."createdAt" >= ${start}
+        AND dispatch."createdAt" <= ${end}
+      ORDER BY
+        dispatch."createdAt" DESC,
+        COALESCE(dispatch."queueIndex", 2147483647) ASC
+    `;
+
+    const dispatchIds = dispatchRows.map((dispatch) => dispatch.id);
+    const orderRows = await getDispatchOrders(dispatchIds);
+    const orderIds = orderRows.map((order) => order.id);
+    const orderProductsByOrderId = await getDispatchOrderProducts(orderIds);
+    const redeemedRewardsByOrderId = await getRedeemedRewardsByOrderIds(orderIds);
+    const preparationStepCategoriesByOrderId =
+      await getDispatchPreparationStepCategories(orderIds);
+    const orderReadinessByOrderId = await getOrderReadinessByOrderIds(orderIds);
+    const latestRoutePointByDispatchId =
+      await getLatestRoutePointByDispatchIds(dispatchIds);
+
+    return dispatchRows.map((dispatch) =>
+      mapDispatch(
+        dispatch,
+        orderRows,
+        orderProductsByOrderId,
+        redeemedRewardsByOrderId,
+        preparationStepCategoriesByOrderId,
+        orderReadinessByOrderId,
+        latestRoutePointByDispatchId,
+      ),
+    );
+  }
+
   async updateDriverAssignment(
     dispatchId: string,
     driverId: string | null,

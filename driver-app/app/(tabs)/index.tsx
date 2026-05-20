@@ -1,8 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
+  Alert,
   Animated,
-  Linking,
-  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -14,7 +13,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 
 import { useAuth } from '@/context/auth';
-import { getNextDispatch, activateDriver, deactivateDriver, DispatchEntity, DispatchOrder } from '@/lib/dispatch-api';
+import { getNextDispatch, listDriverDispatches, activateDriver, deactivateDriver, DispatchEntity } from '@/lib/dispatch-api';
+import { calculateOrderTotal } from '@/utils/orderTotal';
 import { startDriverTracking, stopDriverTracking } from '@/lib/route-tracking';
 
 // ─── Design tokens ────────────────────────────────────────────────────────────
@@ -35,21 +35,61 @@ const D = {
 };
 
 const SANS    = 'Geist_400Regular';
-const SANS_M  = 'Geist_500Medium';
 const SANS_B  = 'Geist_700Bold';
 const SANS_EB = 'Geist_800ExtraBold';
 const MONO    = 'GeistMono_400Regular';
 const MONO_B  = 'GeistMono_700Bold';
 
-// ─── Mock past deliveries ────────────────────────────────────────────────────
-const PAST = [
-  { id: 4829, customer: 'Caio Bueno',     address: '16419 Happy Eagle Dr',  distKm: 2.4, etaMin: 8,  actualMin: 7,  at: '22:14', status: 'delivered' },
-  { id: 4826, customer: 'Marina Costa',   address: 'R. das Flores, 445',    distKm: 3.1, etaMin: 14, actualMin: 13, at: '21:38', status: 'delivered' },
-  { id: 4821, customer: 'Lucas Ferreira', address: 'Av. Central, 1802',     distKm: 5.8, etaMin: 26, actualMin: 38, at: '20:55', status: 'late' },
-  { id: 4818, customer: 'Ana Souza',      address: 'Rua Ipiranga, 88',      distKm: 1.9, etaMin: 7,  actualMin: 6,  at: '20:12', status: 'delivered' },
-  { id: 4812, customer: 'Pedro Maia',     address: 'Alameda Santos, 321',   distKm: 4.2, etaMin: 18, actualMin: 17, at: '19:40', status: 'delivered' },
-  { id: 4807, customer: 'Julia Nunes',    address: 'R. Augusta, 654',       distKm: 2.0, etaMin: 9,  actualMin: 9,  at: '18:58', status: 'delivered' },
-];
+// ─── Past delivery type ───────────────────────────────────────────────────────
+type PastDelivery = {
+  id: string;
+  customer: string;
+  extraCount: number;
+  address: string;
+  etaMin: number | null;
+  actualMin: number | null;
+  at: string;
+  status: 'delivered' | 'late';
+};
+
+function mapDispatchToPast(d: DispatchEntity): PastDelivery | null {
+  const sorted = [...d.orders].sort((a, b) => a.dispatchOrderIndex - b.dispatchOrderIndex);
+  const first = sorted[0];
+  if (!first || !d.startedDeliveryAt) return null;
+
+  const lastDeliveredAt = sorted.reduce<string | null>((max, o) => {
+    if (!o.deliveredAt) return max;
+    return !max || o.deliveredAt > max ? o.deliveredAt : max;
+  }, null);
+  if (!lastDeliveredAt) return null;
+
+  const actualMin = Math.round(
+    (new Date(lastDeliveredAt).getTime() - new Date(d.startedDeliveryAt).getTime()) / 60000,
+  );
+  const etaMin = d.estimatedDeliveryDurationMinutes ?? first.estimatedDeliveryDurationMinutes ?? null;
+
+  return {
+    id: d.id,
+    customer: first.customer?.name ?? 'Cliente',
+    extraCount: sorted.length - 1,
+    address: first.deliveryAddress
+      ? `${first.deliveryAddress.street}, ${first.deliveryAddress.number}`
+      : '—',
+    etaMin,
+    actualMin,
+    at: new Date(d.startedDeliveryAt).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
+    status: etaMin !== null && actualMin > etaMin ? 'late' : 'delivered',
+  };
+}
+
+function dateRangeFor(filter: 'today' | 'week' | 'month'): { start: string; end: string } {
+  const now = new Date();
+  const end = now.toISOString().split('T')[0];
+  const from = new Date(now);
+  if (filter === 'week')  from.setDate(now.getDate() - 6);
+  if (filter === 'month') from.setDate(now.getDate() - 29);
+  return { start: from.toISOString().split('T')[0], end };
+}
 
 // ─── ZippyMark ────────────────────────────────────────────────────────────────
 function ZippyMark({ size = 24 }: { size?: number }) {
@@ -94,21 +134,11 @@ function RingDot({ color = D.green, size = 8 }: { color?: string; size?: number 
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-const orderTotal = (o: DispatchOrder) =>
-  o.orderProducts.reduce((s, p) => s + p.fullAmount, 0);
 
 function paymentLabel(m: string) {
   if (m === 'cash') return 'Dinheiro';
   if (m === 'card') return 'Cartão';
   return m;
-}
-
-function openMaps(addr: NonNullable<DispatchOrder['deliveryAddress']>) {
-  const q = `${addr.street} ${addr.number}, ${addr.city}`;
-  const ios = `maps://?q=${encodeURIComponent(q)}`;
-  const android = `geo:0,0?q=${encodeURIComponent(q)}`;
-  Linking.openURL(Platform.OS === 'ios' ? ios : android)
-    .catch(() => Linking.openURL(`https://maps.google.com/?q=${encodeURIComponent(q)}`));
 }
 
 // ─── ActivateCard ─────────────────────────────────────────────────────────────
@@ -273,7 +303,7 @@ function ActiveDeliveryCard({ dispatch, onNavigate }: { dispatch: DispatchEntity
 
   const addr       = order.deliveryAddress;
   const eta        = dispatch.estimatedDeliveryDurationMinutes ?? order.estimatedDeliveryDurationMinutes ?? '—';
-  const total      = orderTotal(order);
+  const total      = calculateOrderTotal(order);
   const paid       = !!order.paidAt;
 
   return (
@@ -372,150 +402,214 @@ const activeStyles = StyleSheet.create({
   navBtnText:   { fontFamily: SANS_B, fontSize: 14, color: '#fff', letterSpacing: -0.1 },
 });
 
-// ─── PastDeliveryRow ──────────────────────────────────────────────────────────
-function PastDeliveryRow({ delivery }: { delivery: typeof PAST[0] }) {
-  const isLate  = delivery.status === 'late';
-  const delta   = delivery.actualMin - delivery.etaMin;
-  const early   = delta < 0;
-  const fillPct = Math.min(100, Math.round((delivery.actualMin / Math.max(delivery.etaMin, delivery.actualMin)) * 100));
-  const etaPct  = Math.round((delivery.etaMin / Math.max(delivery.etaMin, delivery.actualMin, 1)) * 100);
+// ─── PastSummaryCard ──────────────────────────────────────────────────────────
+function PastSummaryCard({ onPress }: { onPress: () => void }) {
+  const { token } = useAuth();
+  const [rows,    setRows]    = useState<PastDelivery[]>([]);
+  const [fetched, setFetched] = useState(false);
+
+  useEffect(() => {
+    if (!token) return;
+    const { start, end } = dateRangeFor('today');
+    listDriverDispatches(token, start, end)
+      .then(dispatches => {
+        const mapped = dispatches
+          .map(mapDispatchToPast)
+          .filter((d): d is PastDelivery => d !== null)
+          .sort((a, b) => b.at.localeCompare(a.at));
+        setRows(mapped);
+      })
+      .catch(() => {})
+      .finally(() => setFetched(true));
+  }, [token]);
+
+  const withTime  = rows.filter(d => d.actualMin !== null && d.etaMin !== null);
+  const avgActual = withTime.length ? Math.round(withTime.reduce((s, d) => s + d.actualMin!, 0) / withTime.length) : null;
+  const avgEta    = withTime.length ? Math.round(withTime.filter(d => d.etaMin !== null).reduce((s, d) => s + d.etaMin!, 0) / withTime.filter(d => d.etaMin !== null).length) : null;
+  const onTimePct = rows.length ? Math.round((rows.filter(d => d.status !== 'late').length / rows.length) * 100) : null;
+  const delta     = avgActual !== null && avgEta !== null ? avgActual - avgEta : null;
+
+  const chartRows = rows.slice(0, 6);
+  const maxVal    = Math.max(...chartRows.flatMap(r => [r.etaMin ?? 0, r.actualMin ?? 0]), 1);
+  const CHART_H   = 52;
 
   return (
-    <View style={rowStyles.row}>
-      <View style={[rowStyles.icon, isLate ? rowStyles.iconAmber : rowStyles.iconGreen]}>
-        <Ionicons name={isLate ? 'time-outline' : 'checkmark-outline'} size={16} color={isLate ? D.amber : D.green} />
+    <TouchableOpacity style={summaryStyles.card} onPress={onPress} activeOpacity={0.85}>
+      {/* Header */}
+      <View style={summaryStyles.headerRow}>
+        <View style={{ flex: 1 }}>
+          <Text style={summaryStyles.kicker}>Performance de Hoje</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 4, flexWrap: 'wrap' }}>
+            <Text style={summaryStyles.heroNum}>{avgActual ?? (fetched ? '—' : '…')}</Text>
+            {avgActual !== null && <Text style={summaryStyles.heroUnit}>min</Text>}
+            {delta !== null && (
+              <View style={[summaryStyles.deltaBadge, delta > 0 ? summaryStyles.deltaBadgeLate : summaryStyles.deltaBadgeGood]}>
+                <Text style={[summaryStyles.deltaText, { color: delta > 0 ? D.amber : D.green }]}>
+                  {delta > 0 ? `+${delta}m acima` : delta < 0 ? `${Math.abs(delta)}m abaixo` : 'no prazo'}
+                </Text>
+              </View>
+            )}
+          </View>
+          {avgEta !== null && (
+            <Text style={summaryStyles.heroSub}>média real vs ETA de {avgEta} min</Text>
+          )}
+        </View>
+        <View style={summaryStyles.verTudoBtn}>
+          <Text style={summaryStyles.verTudoText}>Ver tudo</Text>
+          <Ionicons name="chevron-forward" size={12} color={D.faint} />
+        </View>
       </View>
-      <View style={{ flex: 1 }}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 5 }}>
-          <Text style={rowStyles.customer} numberOfLines={1}>{delivery.customer}</Text>
-          <View style={[rowStyles.badge, isLate ? rowStyles.badgeAmber : rowStyles.badgeGreen]}>
-            <Text style={[rowStyles.badgeText, { color: isLate ? D.amber : D.green }]}>
-              {delivery.actualMin}m {isLate ? `(+${delta}m)` : early ? `(${delta}m)` : '(no prazo)'}
-            </Text>
+
+      {/* Mini bar chart */}
+      {chartRows.length > 0 && (
+        <View style={{ marginTop: 14 }}>
+          <View style={summaryStyles.chartRow}>
+            {chartRows.map((r) => {
+              const etaH  = r.etaMin    !== null ? Math.max(4, Math.round((r.etaMin    / maxVal) * CHART_H)) : 0;
+              const actH  = r.actualMin !== null ? Math.max(4, Math.round((r.actualMin / maxVal) * CHART_H)) : 0;
+              const barBg = r.status === 'late' ? 'rgba(242,179,56,0.55)' : actH < etaH ? 'rgba(52,211,154,0.55)' : 'rgba(250,245,238,0.18)';
+              return (
+                <View key={r.id} style={{ flex: 1, alignItems: 'center', gap: 4 }}>
+                  <View style={{ width: '100%', height: CHART_H, flexDirection: 'row', alignItems: 'flex-end', gap: 2 }}>
+                    {etaH > 0 && (
+                      <View style={{
+                        flex: 1, height: etaH, borderRadius: 3,
+                        backgroundColor: 'transparent',
+                        borderTopWidth: 1, borderLeftWidth: 1, borderRightWidth: 1, borderBottomWidth: 0,
+                        borderColor: 'rgba(250,245,238,0.20)',
+                      }} />
+                    )}
+                    {actH > 0 && (
+                      <View style={{ flex: 1, height: actH, borderRadius: 3, backgroundColor: barBg }} />
+                    )}
+                  </View>
+                  <Text style={summaryStyles.chartLabel}>{r.at}</Text>
+                </View>
+              );
+            })}
+          </View>
+          {/* Legend */}
+          <View style={{ flexDirection: 'row', gap: 12, marginTop: 6 }}>
+            {[
+              { bg: 'transparent', bc: 'rgba(250,245,238,0.25)', label: 'ETA' },
+              { bg: 'rgba(52,211,154,0.55)',  bc: undefined, label: 'Antes do prazo' },
+              { bg: 'rgba(242,179,56,0.55)',  bc: undefined, label: 'Atrasado' },
+            ].map(({ bg, bc, label }) => (
+              <View key={label} style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+                <View style={{
+                  width: 8, height: 8, borderRadius: 2,
+                  backgroundColor: bg,
+                  borderWidth: bc ? 1 : 0, borderColor: bc,
+                }} />
+                <Text style={summaryStyles.legendText}>{label}</Text>
+              </View>
+            ))}
           </View>
         </View>
-        <View style={{ height: 4, borderRadius: 2, backgroundColor: 'rgba(250,245,238,0.06)', marginBottom: 5 }}>
-          <View style={{ position: 'absolute', top: -2, bottom: -2, left: `${etaPct}%` as any, width: 1.5, borderRadius: 1, backgroundColor: 'rgba(250,245,238,0.25)' }} />
-          <View style={{ height: '100%', borderRadius: 2, width: `${fillPct}%`, backgroundColor: isLate ? D.amber : early ? D.green : D.dim, opacity: 0.7 }} />
+      )}
+
+      {/* Empty state */}
+      {fetched && rows.length === 0 && (
+        <View style={{ alignItems: 'center', paddingVertical: 18, gap: 6 }}>
+          <Ionicons name="bag-outline" size={28} color={D.faint} />
+          <Text style={{ fontFamily: MONO, fontSize: 11, color: D.faint }}>Nenhuma entrega hoje</Text>
         </View>
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Text style={rowStyles.address} numberOfLines={1}>{delivery.address}</Text>
-          <Text style={rowStyles.time}>ETA {delivery.etaMin}m · {delivery.at}</Text>
-        </View>
-      </View>
-    </View>
-  );
-}
+      )}
 
-const rowStyles = StyleSheet.create({
-  row:        { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 12, paddingHorizontal: 16 },
-  icon:       { width: 36, height: 36, borderRadius: 10, flexShrink: 0, alignItems: 'center', justifyContent: 'center' },
-  iconGreen:  { backgroundColor: 'rgba(52,211,154,0.08)', borderWidth: 1, borderColor: 'rgba(52,211,154,0.16)' },
-  iconAmber:  { backgroundColor: 'rgba(242,179,56,0.10)', borderWidth: 1, borderColor: 'rgba(242,179,56,0.22)' },
-  customer:   { fontSize: 13, fontFamily: SANS_B, color: D.text, letterSpacing: -0.2, flex: 1, marginRight: 8 },
-  badge:      { borderRadius: 6, paddingVertical: 2, paddingHorizontal: 7, borderWidth: 1 },
-  badgeGreen: { backgroundColor: 'rgba(52,211,154,0.09)', borderColor: 'rgba(52,211,154,0.20)' },
-  badgeAmber: { backgroundColor: 'rgba(242,179,56,0.09)', borderColor: 'rgba(242,179,56,0.20)' },
-  badgeText:  { fontFamily: MONO_B, fontSize: 10 },
-  address:    { fontSize: 11, fontFamily: SANS, color: D.faint, flex: 1, marginRight: 8 },
-  time:       { fontFamily: MONO, fontSize: 9.5, color: D.vfaint },
-});
-
-// ─── PastDeliveriesScreen ─────────────────────────────────────────────────────
-function PastDeliveriesScreen({ onBack }: { onBack: () => void }) {
-  const insets     = useSafeAreaInsets();
-  const [filter, setFilter] = useState<'today' | 'week' | 'month'>('today');
-  const FILTERS = [{ id: 'today', label: 'Hoje' }, { id: 'week', label: 'Semana' }, { id: 'month', label: 'Mês' }] as const;
-
-  const avgActual = Math.round(PAST.reduce((s, d) => s + d.actualMin, 0) / PAST.length);
-  const avgEta    = Math.round(PAST.reduce((s, d) => s + d.etaMin, 0) / PAST.length);
-  const onTimePct = Math.round((PAST.filter(d => d.status !== 'late').length / PAST.length) * 100);
-  const fastest   = Math.min(...PAST.map(d => d.actualMin));
-
-  return (
-    <View style={[StyleSheet.absoluteFillObject, { backgroundColor: D.bg }]}>
-      <View style={[pastStyles.header, { paddingTop: insets.top + 8 }]}>
-        <TouchableOpacity style={pastStyles.backBtn} onPress={onBack} activeOpacity={0.75}>
-          <Ionicons name="arrow-back" size={16} color={D.dim} />
-        </TouchableOpacity>
-        <Text style={pastStyles.headerTitle}>Entregas</Text>
-        <Text style={pastStyles.headerCount}>{PAST.length} registros</Text>
-      </View>
-
-      <View style={[pastStyles.summaryCard, { marginHorizontal: 18, marginBottom: 14 }]}>
-        {[
-          { label: 'Tempo médio', value: `${avgActual}m`, sub: `ETA ${avgEta}m`, color: D.text },
-          { label: 'No prazo',    value: `${onTimePct}%`, sub: `${PAST.filter(d => d.status !== 'late').length}/${PAST.length}`, color: onTimePct >= 80 ? D.green : D.amber },
-          { label: 'Mais rápida', value: `${fastest}m`,   sub: 'hoje',           color: D.dim },
-        ].map(({ label, value, sub, color }, i) => (
-          <View key={label} style={[{ flex: 1, alignItems: 'center' }, i > 0 && { borderLeftWidth: 1, borderLeftColor: D.line }]}>
-            <Text style={[pastStyles.summaryValue, { color }]}>{value}</Text>
-            <Text style={pastStyles.summaryLabel}>{label}</Text>
-            <Text style={pastStyles.summarySub}>{sub}</Text>
-          </View>
-        ))}
-      </View>
-
-      <View style={{ flexDirection: 'row', paddingHorizontal: 18, gap: 6, marginBottom: 6 }}>
-        {FILTERS.map(f => (
-          <TouchableOpacity
-            key={f.id}
-            style={[pastStyles.filterTab, filter === f.id && pastStyles.filterTabActive]}
-            onPress={() => setFilter(f.id)}
-            activeOpacity={0.8}
-          >
-            <Text style={[pastStyles.filterTabText, { color: filter === f.id ? '#fff' : D.dim }]}>
-              {f.label}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-
-      <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
-        <View style={pastStyles.list}>
-          {PAST.map((d, i) => (
-            <View key={d.id} style={i < PAST.length - 1 ? { borderBottomWidth: 1, borderBottomColor: D.line } : undefined}>
-              <PastDeliveryRow delivery={d} />
+      {/* Bottom stat row */}
+      {rows.length > 0 && (
+        <View style={summaryStyles.statRow}>
+          {[
+            { label: 'No prazo',  value: onTimePct !== null ? `${onTimePct}%` : '—', color: onTimePct !== null ? (onTimePct >= 80 ? D.green : D.amber) : D.faint },
+            { label: 'Entregas',  value: `${rows.length}`, color: D.dim },
+          ].map(({ label, value, color }) => (
+            <View key={label} style={summaryStyles.statCell}>
+              <Text style={summaryStyles.statLabel}>{label}</Text>
+              <Text style={[summaryStyles.statValue, { color }]}>{value}</Text>
             </View>
           ))}
-          <View style={pastStyles.avgFooter}>
-            <Text style={pastStyles.avgLabel}>Tempo médio do dia</Text>
-            <Text style={pastStyles.avgValue}>{avgActual} min</Text>
-          </View>
         </View>
-        <View style={{ height: 32 }} />
-      </ScrollView>
-    </View>
+      )}
+    </TouchableOpacity>
   );
 }
 
-const pastStyles = StyleSheet.create({
-  header:       { flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 18, paddingBottom: 14 },
-  backBtn:      { width: 36, height: 36, borderRadius: 10, backgroundColor: D.surf, borderWidth: 1, borderColor: D.line, alignItems: 'center', justifyContent: 'center' },
-  headerTitle:  { flex: 1, fontSize: 18, fontFamily: SANS_EB, color: D.text, letterSpacing: -0.5 },
-  headerCount:  { fontFamily: MONO_B, fontSize: 9, letterSpacing: 1.4, textTransform: 'uppercase', color: D.faint },
-  summaryCard:  { backgroundColor: D.surf, borderWidth: 1, borderColor: D.line, borderRadius: 14, paddingVertical: 14, paddingHorizontal: 16, flexDirection: 'row' },
-  summaryValue: { fontSize: 20, fontFamily: SANS_EB, letterSpacing: -0.7, lineHeight: 22, marginBottom: 3 },
-  summaryLabel: { fontFamily: MONO_B, fontSize: 8.5, letterSpacing: 1.0, textTransform: 'uppercase', color: D.faint, marginBottom: 2 },
-  summarySub:   { fontSize: 10, fontFamily: SANS, color: D.vfaint },
-  filterTab:    { flex: 1, height: 34, borderRadius: 9, backgroundColor: D.surf, alignItems: 'center', justifyContent: 'center' },
-  filterTabActive: { backgroundColor: D.zippy },
-  filterTabText:{ fontSize: 12.5, fontFamily: SANS_B, letterSpacing: -0.1 },
-  list:         { backgroundColor: D.surf, borderWidth: 1, borderColor: D.line, borderRadius: 16, marginHorizontal: 18, marginTop: 8, overflow: 'hidden' },
-  avgFooter:    { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: 12, paddingHorizontal: 16, backgroundColor: D.surf2 },
-  avgLabel:     { fontFamily: MONO_B, fontSize: 9.5, letterSpacing: 1.0, textTransform: 'uppercase', color: D.faint },
-  avgValue:     { fontSize: 16, fontFamily: SANS_EB, color: D.text, letterSpacing: -0.4 },
+const summaryStyles = StyleSheet.create({
+  card: {
+    backgroundColor: D.surf,
+    borderWidth: 1.5, borderColor: D.line,
+    borderRadius: 18, padding: 16,
+  },
+  headerRow: { flexDirection: 'row', alignItems: 'flex-start', gap: 12 },
+  kicker: {
+    fontFamily: MONO_B, fontSize: 9, letterSpacing: 1.8,
+    textTransform: 'uppercase', color: D.faint, marginBottom: 5,
+  },
+  heroNum:  { fontFamily: SANS_EB, fontSize: 28, color: D.text, letterSpacing: -1.2 },
+  heroUnit: { fontFamily: SANS_B,  fontSize: 14, color: D.dim },
+  heroSub:  { fontSize: 11.5, fontFamily: SANS, color: D.faint, marginTop: 4 },
+  deltaBadge:     { borderRadius: 6, paddingHorizontal: 7, paddingVertical: 2, borderWidth: 1 },
+  deltaBadgeGood: { backgroundColor: 'rgba(52,211,154,0.10)', borderColor: 'rgba(52,211,154,0.20)' },
+  deltaBadgeLate: { backgroundColor: 'rgba(242,179,56,0.10)', borderColor: 'rgba(242,179,56,0.20)' },
+  deltaText:      { fontFamily: MONO_B, fontSize: 11 },
+  verTudoBtn:  {
+    flexDirection: 'row', alignItems: 'center', gap: 3,
+    backgroundColor: D.surf2, borderRadius: 9,
+    paddingVertical: 7, paddingHorizontal: 10,
+    borderWidth: 1, borderColor: D.line,
+  },
+  verTudoText: { fontFamily: MONO_B, fontSize: 10, color: D.faint, letterSpacing: 0.5 },
+  chartRow:    { flexDirection: 'row', alignItems: 'flex-end', gap: 4 },
+  chartLabel:  { fontFamily: MONO, fontSize: 8, color: 'rgba(250,245,238,0.12)', letterSpacing: 0.4, textAlign: 'center' },
+  legendText:  { fontFamily: MONO, fontSize: 8.5, color: D.faint, letterSpacing: 0.4 },
+  statRow:     { flexDirection: 'row', gap: 8, marginTop: 14 },
+  statCell:    { flex: 1, backgroundColor: D.surf2, borderRadius: 9, padding: 10 },
+  statLabel:   { fontFamily: MONO_B, fontSize: 8.5, letterSpacing: 1.0, textTransform: 'uppercase', color: D.faint, marginBottom: 3 },
+  statValue:   { fontSize: 13, fontFamily: SANS_B, letterSpacing: -0.2 },
 });
+
+// ─── HomeSkeletonCard ─────────────────────────────────────────────────────────
+function HomeSkeletonCard() {
+  const anim = useRef(new Animated.Value(0)).current;
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(anim, { toValue: 1, duration: 850, useNativeDriver: true }),
+        Animated.timing(anim, { toValue: 0, duration: 850, useNativeDriver: true }),
+      ])
+    ).start();
+  }, []);
+  const opacity = anim.interpolate({ inputRange: [0, 1], outputRange: [0.07, 0.18] });
+
+  const Block = ({ w, h, style }: { w: number | string; h: number; style?: object }) => (
+    <Animated.View style={[{ width: w, height: h, borderRadius: 8, backgroundColor: D.text, opacity }, style]} />
+  );
+
+  return (
+    <View style={{ backgroundColor: D.surf, borderWidth: 1, borderColor: D.line, borderRadius: 18, overflow: 'hidden' }}>
+      <View style={{ backgroundColor: D.surf2, borderBottomWidth: 1, borderBottomColor: D.line, paddingVertical: 10, paddingHorizontal: 16 }}>
+        <Block w="38%" h={9} />
+      </View>
+      <View style={{ padding: 16, gap: 14 }}>
+        <Block w="55%" h={22} />
+        <Block w="80%" h={14} />
+        <Block w="100%" h={44} style={{ borderRadius: 12 }} />
+      </View>
+    </View>
+  );
+}
 
 // ─── HomeScreen ───────────────────────────────────────────────────────────────
 function HomeScreen({
-  dispatch, active, activating, onActivate, onDeactivate,
+  dispatch, active, activating, loading, onActivate, onDeactivate, onShowHistory,
 }: {
   dispatch: DispatchEntity | null;
   active: boolean;
   activating: boolean;
+  loading: boolean;
   onActivate: () => void;
   onDeactivate: () => void;
+  onShowHistory: () => void;
 }) {
   const { driver } = useAuth();
   const router     = useRouter();
@@ -534,15 +628,9 @@ function HomeScreen({
           <Text style={homeStyles.driverName}>{firstName} 👋</Text>
         </View>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 9 }}>
-          <View style={homeStyles.bellBtn}>
-            <Ionicons name="notifications-outline" size={16} color={D.dim} />
-            {dispatch && active && (
-              <View style={homeStyles.bellDot} />
-            )}
-          </View>
-          <View style={homeStyles.avatar}>
+          <TouchableOpacity style={homeStyles.avatar} onPress={() => router.push('/settings')} activeOpacity={0.8}>
             <Text style={homeStyles.avatarText}>{initial}</Text>
-          </View>
+          </TouchableOpacity>
         </View>
       </View>
 
@@ -560,12 +648,19 @@ function HomeScreen({
 
         {/* Delivery / Activate section */}
         <View>
-          {!active
-            ? <ActivateCard onActivate={onActivate} loading={activating} />
-            : dispatch
-              ? <ActiveDeliveryCard dispatch={dispatch} onNavigate={() => router.push('/delivery')} />
-              : <WaitingCard />
+          {loading
+            ? <HomeSkeletonCard />
+            : !active
+              ? <ActivateCard onActivate={onActivate} loading={activating} />
+              : dispatch
+                ? <ActiveDeliveryCard dispatch={dispatch} onNavigate={() => router.push('/delivery')} />
+                : <WaitingCard />
           }
+        </View>
+
+        <View style={{ gap: 6 }}>
+          <Text style={homeStyles.sectionKicker}>Histórico de Entregas</Text>
+          <PastSummaryCard onPress={onShowHistory} />
         </View>
 
       </ScrollView>
@@ -577,20 +672,20 @@ const homeStyles = StyleSheet.create({
   topNav:      { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 18, paddingBottom: 12 },
   greeting:    { fontFamily: MONO_B, fontSize: 9.5, letterSpacing: 1.8, textTransform: 'uppercase', color: D.faint, marginBottom: 3 },
   driverName:  { fontSize: 20, fontFamily: SANS_EB, color: D.text, letterSpacing: -0.6 },
-  bellBtn:     { width: 36, height: 36, borderRadius: 10, backgroundColor: D.surf, borderWidth: 1, borderColor: D.line, alignItems: 'center', justifyContent: 'center' },
-  bellDot:     { position: 'absolute', top: 6, right: 6, width: 7, height: 7, borderRadius: 2, backgroundColor: D.zippy, borderWidth: 1.5, borderColor: D.bg },
-  avatar:      { width: 36, height: 36, borderRadius: 10, backgroundColor: 'rgba(255,61,20,0.12)', borderWidth: 1.5, borderColor: 'rgba(255,61,20,0.24)', alignItems: 'center', justifyContent: 'center' },
+avatar:      { width: 36, height: 36, borderRadius: 10, backgroundColor: 'rgba(255,61,20,0.12)', borderWidth: 1.5, borderColor: 'rgba(255,61,20,0.24)', alignItems: 'center', justifyContent: 'center' },
   avatarText:  { fontFamily: SANS_EB, fontSize: 14, color: D.zippy, letterSpacing: -0.3 },
-  sectionKicker: { fontFamily: MONO_B, fontSize: 9.5, letterSpacing: 1.8, textTransform: 'uppercase', color: D.faint, marginBottom: 9 },
+  sectionKicker:   { fontFamily: MONO_B, fontSize: 9.5, letterSpacing: 1.8, textTransform: 'uppercase', color: D.faint },
 });
 
 // ─── Root export ──────────────────────────────────────────────────────────────
 export default function DriverHome() {
   const { token, driver } = useAuth();
-  const [dispatch,  setDispatch]  = useState<DispatchEntity | null>(null);
-  const [active,    setActive]    = useState(driver?.active ?? false);
-  const [activating, setActivating] = useState(false);
-  const [screen,     setScreen]     = useState<'home' | 'past'>('home');
+  const router = useRouter();
+  const [dispatch,      setDispatch]      = useState<DispatchEntity | null>(null);
+  const [active,        setActive]        = useState(driver?.active ?? false);
+  const [activating,    setActivating]    = useState(false);
+  const [loadingInitial, setLoadingInitial] = useState(driver?.active ?? false);
+  const didInitialFetch = useRef(false);
 
   const fetchDispatch = useCallback(async () => {
     if (!token || !active) return;
@@ -599,6 +694,11 @@ export default function DriverHome() {
       setDispatch(data);
     } catch {
       // keep previous on error
+    } finally {
+      if (!didInitialFetch.current) {
+        didInitialFetch.current = true;
+        setLoadingInitial(false);
+      }
     }
   }, [token, active]);
 
@@ -632,6 +732,14 @@ export default function DriverHome() {
 
   const handleDeactivate = useCallback(async () => {
     if (!token) return;
+    if (dispatch) {
+      Alert.alert(
+        'Entrega em andamento',
+        'Conclua a entrega atual antes de se desativar.',
+        [{ text: 'OK' }],
+      );
+      return;
+    }
     setActivating(true);
     try {
       await deactivateDriver(token);
@@ -645,17 +753,15 @@ export default function DriverHome() {
     }
   }, [token]);
 
-  if (screen === 'past') {
-    return <PastDeliveriesScreen onBack={() => setScreen('home')} />;
-  }
-
   return (
     <HomeScreen
       dispatch={dispatch}
       active={active}
       activating={activating}
+      loading={loadingInitial}
       onActivate={handleActivate}
       onDeactivate={handleDeactivate}
+      onShowHistory={() => router.push('/entregas')}
     />
   );
 }
