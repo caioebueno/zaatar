@@ -45,7 +45,7 @@ import {
 } from "./shared/http/json.js";
 import type { HttpController } from "./shared/http/types.js";
 
-ensureEnvLoaded();
+ensureEnvLoaded()
 
 const MANAGER_ACCESS_TOKEN_COOKIE_NAME = "manager_access_token";
 const MANAGER_BUSINESS_ID_COOKIE_NAME = "manager_business_id";
