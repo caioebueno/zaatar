@@ -111,6 +111,11 @@ export type MoveDispatchOrderResult = {
 
 export type DispatchRepository = {
   driverExists(driverId: string): Promise<boolean>;
+  findByDriverDateRange(
+    driverId: string,
+    start: Date,
+    end: Date,
+  ): Promise<DispatchEntity[]>;
   list(filters?: DispatchListFilters): Promise<DispatchEntity[]>;
   findNextForDriver(driverId: string): Promise<DispatchEntity | null>;
   findDriverIdByDispatchId(dispatchId: string): Promise<string | null>;

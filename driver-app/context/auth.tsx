@@ -1,5 +1,21 @@
 import * as SecureStore from 'expo-secure-store';
+import { Platform } from 'react-native';
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
+
+const store = {
+  get: (key: string) =>
+    Platform.OS === 'web'
+      ? Promise.resolve(localStorage.getItem(key))
+      : SecureStore.getItemAsync(key),
+  set: (key: string, value: string) =>
+    Platform.OS === 'web'
+      ? Promise.resolve(localStorage.setItem(key, value))
+      : SecureStore.setItemAsync(key, value),
+  delete: (key: string) =>
+    Platform.OS === 'web'
+      ? Promise.resolve(localStorage.removeItem(key))
+      : SecureStore.deleteItemAsync(key),
+};
 
 export type Driver = {
   id: string;
@@ -31,8 +47,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     (async () => {
       try {
         const [storedToken, storedDriver] = await Promise.all([
-          SecureStore.getItemAsync(TOKEN_KEY),
-          SecureStore.getItemAsync(DRIVER_KEY),
+          store.get(TOKEN_KEY),
+          store.get(DRIVER_KEY),
         ]);
         if (storedToken) setToken(storedToken);
         if (storedDriver) setDriver(JSON.parse(storedDriver) as Driver);
@@ -46,8 +62,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (t: string, d: Driver) => {
     await Promise.all([
-      SecureStore.setItemAsync(TOKEN_KEY,  t),
-      SecureStore.setItemAsync(DRIVER_KEY, JSON.stringify(d)),
+      store.set(TOKEN_KEY,  t),
+      store.set(DRIVER_KEY, JSON.stringify(d)),
     ]);
     setToken(t);
     setDriver(d);
@@ -55,8 +71,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = async () => {
     await Promise.all([
-      SecureStore.deleteItemAsync(TOKEN_KEY),
-      SecureStore.deleteItemAsync(DRIVER_KEY),
+      store.delete(TOKEN_KEY),
+      store.delete(DRIVER_KEY),
     ]);
     setToken(null);
     setDriver(null);

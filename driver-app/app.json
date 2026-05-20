@@ -11,14 +11,17 @@
     "ios": {
       "supportsTablet": false,
       "backgroundModes": [
+        "location",
         "location"
       ],
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "O Zippy usa sua localização para distribuir rotas de entrega.",
         "NSLocationAlwaysAndWhenInUseUsageDescription": "O Zippy usa sua localização em segundo plano para monitorar e distribuir rotas mesmo quando o app não está aberto.",
-        "NSLocationAlwaysUsageDescription": "O Zippy usa sua localização em segundo plano para monitorar e distribuir rotas mesmo quando o app não está aberto."
+        "NSLocationAlwaysUsageDescription": "O Zippy usa sua localização em segundo plano para monitorar e distribuir rotas mesmo quando o app não está aberto.",
+        "ITSAppUsesNonExemptEncryption": false
       },
-      "bundleIdentifier": "com.caioebueno.driver-app"
+      "bundleIdentifier": "com.caioebueno.driver-app",
+      "buildNumber": "1"
     },
     "android": {
       "permissions": [
@@ -72,6 +75,12 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "872f8e43-ff33-42fb-8397-f8f5bb75a98e"
+      }
     }
   }
 }

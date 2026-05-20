@@ -125,6 +125,22 @@ export async function startDelivery(token: string, dispatchId: string): Promise<
   return r.json();
 }
 
+export async function listDriverDispatches(
+  token: string,
+  startDate: string,
+  endDate: string,
+): Promise<DispatchEntity[]> {
+  const r = await fetch(
+    `${BASE}/drivers/dispatches?startDate=${startDate}&endDate=${endDate}`,
+    { headers: { Authorization: `Bearer ${token}` } },
+  );
+  if (!r.ok) {
+    const e = await r.json().catch(() => ({}));
+    throw Object.assign(new Error('list_dispatches_failed'), { data: e, status: r.status });
+  }
+  return r.json() as Promise<DispatchEntity[]>;
+}
+
 export async function getNextDispatch(token: string): Promise<DispatchEntity | null> {
   const r = await fetch(`${BASE}/dispatches/next`, {
     headers: { Authorization: `Bearer ${token}` },

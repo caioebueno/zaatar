@@ -351,6 +351,61 @@ Server error (`500`):
 }
 ```
 
+## List Driver Dispatches By Date Range
+
+Endpoint:
+
+`GET /drivers/dispatches?startDate=:startDate&endDate=:endDate`
+
+Description:
+
+- Returns dispatch history for the authenticated driver in the supplied date range.
+- Date filtering is applied using `Dispatch.createdAt`.
+- Supports aliases: `start` for `startDate` and `end` for `endDate`.
+
+Authentication:
+
+- Requires driver access token in header:
+  - `Authorization: Bearer <driver-access-token>`
+
+Query params:
+
+- `startDate` (required): date or datetime string.
+- `endDate` (required): date or datetime string.
+
+Date input behavior:
+
+- If `YYYY-MM-DD` is supplied:
+  - `startDate` is interpreted as `00:00:00.000Z`
+  - `endDate` is interpreted as `23:59:59.999Z`
+
+Success (`200`):
+
+- Returns `DispatchEntity[]` (same payload shape described in "Get Next Dispatch For Driver").
+
+Validation errors (`400`):
+
+```json
+{
+  "error": "Invalid payload",
+  "field": "startDate"
+}
+```
+
+```json
+{
+  "error": "Invalid payload",
+  "field": "endDate"
+}
+```
+
+```json
+{
+  "error": "Invalid payload",
+  "field": "dateRange"
+}
+```
+
 ## Set Dispatch Started Delivery At (Driver)
 
 Endpoint:

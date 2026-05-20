@@ -8,6 +8,7 @@
         "manager",
         "web",
         "queue-worker",
+        "docs-portal",
         "packages/*"
     ],
     "scripts": {

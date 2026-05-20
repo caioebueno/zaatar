@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import '@/lib/route-tracking';
+import { ActivityIndicator, View } from 'react-native';
 import { Stack, useRouter, useSegments } from 'expo-router';
 import { useFonts } from 'expo-font';
 import {
@@ -28,9 +29,8 @@ function RootLayoutNav() {
 
   useEffect(() => {
     if (loading) return;
-    const inTabs  = segments[0] === '(tabs)';
     const onLogin = segments[0] === 'login';
-    if (!token && inTabs) {
+    if (!token && !onLogin) {
       const t = setTimeout(() => router.replace('/login'), 0);
       return () => clearTimeout(t);
     }
@@ -40,11 +40,23 @@ function RootLayoutNav() {
     }
   }, [token, loading, segments]);
 
+  const isNavigationReady = !loading && (token ? segments[0] !== 'login' : segments[0] === 'login');
+
+  if (!isNavigationReady) {
+    return (
+      <View style={{ flex: 1, backgroundColor: '#0a0807', alignItems: 'center', justifyContent: 'center' }}>
+        <ActivityIndicator size="large" color="#ff3d14" />
+      </View>
+    );
+  }
+
   return (
     <Stack>
       <Stack.Screen name="login" options={{ headerShown: false }} />
       <Stack.Screen name="location-permission" options={{ headerShown: false }} />
       <Stack.Screen name="delivery" options={{ headerShown: false }} />
+      <Stack.Screen name="settings" options={{ headerShown: false }} />
+      <Stack.Screen name="entregas" options={{ headerShown: false }} />
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
     </Stack>
