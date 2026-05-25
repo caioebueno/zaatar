@@ -622,6 +622,13 @@ const routes: Route[] = [
     bodyMode: "json",
   },
   {
+    method: "POST",
+    matcher: /^\/customers\/[^/]+\/addresses$/,
+    controller: nativeCatalogController,
+    requiresAuth: true,
+    bodyMode: "json",
+  },
+  {
     method: "GET",
     matcher: /^\/address-search$/,
     controller: nativeCatalogController,

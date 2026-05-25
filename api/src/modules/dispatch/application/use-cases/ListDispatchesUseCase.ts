@@ -7,6 +7,8 @@ import type {
 
 export type ListDispatchesInput = {
   filters?: {
+    endAt?: unknown;
+    startAt?: unknown;
     status?: unknown;
   };
 };
@@ -24,6 +26,22 @@ export class ListDispatchesUseCase {
       );
     }
 
+    if (input.filters?.startAt !== undefined) {
+      filters.startAt = normalizeDate(input.filters.startAt, "startAt");
+    }
+
+    if (input.filters?.endAt !== undefined) {
+      filters.endAt = normalizeDate(input.filters.endAt, "endAt");
+    }
+
+    if (
+      filters.startAt &&
+      filters.endAt &&
+      filters.startAt.getTime() > filters.endAt.getTime()
+    ) {
+      throw new InvalidDispatchListPayloadError("dateRange");
+    }
+
     return this.dispatchRepository.list(filters);
   }
 }
@@ -35,4 +53,31 @@ function normalizeStatus(value: unknown, field: string): "active" {
   }
 
   throw new InvalidDispatchListPayloadError(field);
+}
+
+function normalizeDate(value: unknown, field: "startAt" | "endAt"): Date {
+  if (typeof value !== "string") {
+    throw new InvalidDispatchListPayloadError(field);
+  }
+
+  const normalized = value.trim();
+  if (!normalized) {
+    throw new InvalidDispatchListPayloadError(field);
+  }
+
+  const dateOnlyMatch = /^(\d{4})-(\d{2})-(\d{2})$/.exec(normalized);
+  if (dateOnlyMatch) {
+    if (field === "startAt") {
+      return new Date(`${normalized}T00:00:00.000Z`);
+    }
+
+    return new Date(`${normalized}T23:59:59.999Z`);
+  }
+
+  const parsed = new Date(normalized);
+  if (Number.isNaN(parsed.getTime())) {
+    throw new InvalidDispatchListPayloadError(field);
+  }
+
+  return parsed;
 }

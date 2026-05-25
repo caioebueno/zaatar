@@ -106,6 +106,9 @@ export class DispatchRouteController implements HttpController {
             sessionId: result.sessionId,
             insertedCount: result.insertedCount,
             lastSequence: result.lastSequence,
+            leftPizzeriaTracked: result.leftPizzeriaTracked,
+            leftAtDropOffTracked: result.leftAtDropOffTracked,
+            arrivedAtRestaurantTracked: result.arrivedAtRestaurantTracked,
           },
         };
       }

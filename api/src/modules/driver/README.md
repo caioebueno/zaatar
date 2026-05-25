@@ -36,6 +36,20 @@ Success (`200`):
 }
 ```
 
+### Apple Review Fixed OTP (Optional)
+
+For App Store review, you can enable a fixed OTP flow for one driver phone:
+
+- `DRIVER_REVIEW_FIXED_OTP_ENABLED=1`
+- `DRIVER_REVIEW_FIXED_OTP_PHONE=9297669288` (optional, defaults to this value)
+- `DRIVER_REVIEW_FIXED_OTP_CODE=123456` (optional, defaults to this value)
+
+When enabled and the phone matches:
+
+- Send OTP still returns success and creates a valid OTP challenge.
+- OTP message sending is skipped for this review phone.
+- Verify OTP accepts the fixed code and returns access token.
+
 ### Verify OTP
 
 `POST /drivers/auth/otp/verify`

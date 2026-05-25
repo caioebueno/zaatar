@@ -17,7 +17,6 @@ import { useRouter } from 'expo-router';
 
 import { useAuth } from '@/context/auth';
 import { getNextDispatch, startDelivery, markOrderDelivered, DispatchEntity, DispatchOrder } from '@/lib/dispatch-api';
-import { startRouteTracking, stopRouteTracking } from '@/lib/route-tracking';
 import { startDeliveryActivity, endDeliveryActivity } from '@/lib/live-activity';
 import { calculateOrderTotal } from '@/utils/orderTotal';
 
@@ -884,7 +883,6 @@ export default function DeliveryScreen() {
     );
     setDispatch(prev => prev ? { ...prev, orders: updatedOrders } : prev);
     if (updatedOrders.every(o => !!o.deliveredAt)) {
-      stopRouteTracking().catch(() => {});
       endDeliveryActivity();
       setDispatch(null);
       fetchDispatch();
@@ -897,8 +895,6 @@ export default function DeliveryScreen() {
     try {
       const { startedDeliveryAt } = await startDelivery(token, dispatch.id);
       setDispatch(prev => prev ? { ...prev, startedDeliveryAt } : prev);
-      startRouteTracking(token, dispatch.id).catch((e) => console.log('[delivery] startRouteTracking error', e));
-
       const sorted = [...dispatch.orders].sort((a, b) => a.dispatchOrderIndex - b.dispatchOrderIndex);
       const first  = sorted[0];
       const eta    = dispatch.estimatedDeliveryDurationMinutes ?? first?.estimatedDeliveryDurationMinutes ?? 0;
@@ -914,16 +910,6 @@ export default function DeliveryScreen() {
       console.log('[delivery] startDelivery error', e);
     }
   }, [token, dispatch]);
-
-  // Resume tracking if dispatch already started (e.g. app reloaded mid-delivery)
-  useEffect(() => {
-    if (token && dispatch?.startedDeliveryAt && dispatch.id) {
-      console.log('[delivery] dispatch already started, resuming route tracking', dispatch.id);
-      startRouteTracking(token, dispatch.id).catch((e) => console.log('[delivery] resume tracking error', e));
-    }
-  }, [token, dispatch?.id, dispatch?.startedDeliveryAt]);
-
-  useEffect(() => () => { stopRouteTracking().catch(() => {}); }, []);
 
   const driverInitial = driver?.name?.[0]?.toUpperCase() ?? '?';
   const driverFirst   = driver?.name?.split(' ')[0] ?? '';

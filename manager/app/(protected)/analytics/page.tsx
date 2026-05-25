@@ -28,7 +28,6 @@ type AnalyticsResponse = {
     totalOrders: number;
     totalSales: number;
   };
-  timezone: string;
   to: string;
 };
 
@@ -136,10 +135,11 @@ async function fetchAnalytics(
   businessId: string | null,
   from: string,
   to: string,
-  timezone: string,
 ): Promise<AnalyticsResponse> {
   const apiBaseUrl = getApiBaseUrl();
-  const endpoint = `${apiBaseUrl}/analytics/orders/sales?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}&timezone=${encodeURIComponent(timezone)}`;
+  const fromDateTime = `${from}T00:00:00.000Z`;
+  const toDateTime = `${to}T23:59:59.999Z`;
+  const endpoint = `${apiBaseUrl}/analytics/orders/sales?from=${encodeURIComponent(fromDateTime)}&to=${encodeURIComponent(toDateTime)}`;
   const response = await fetch(endpoint, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
@@ -159,7 +159,6 @@ async function fetchAnalytics(
   return {
     from: String(payload.from ?? from),
     to: String(payload.to ?? to),
-    timezone: String(payload.timezone ?? timezone),
     summary: {
       totalSales: Number(payload.summary?.totalSales ?? 0),
       totalOrders: Number(payload.summary?.totalOrders ?? 0),
@@ -189,13 +188,12 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
   const defaults = getDefaultDates();
   const from = resolvedSearchParams.from?.trim() || defaults.from;
   const to = resolvedSearchParams.to?.trim() || defaults.to;
-  const timezone = "America/New_York";
 
   let data: AnalyticsResponse | null = null;
   let errorMessage: string | null = null;
 
   try {
-    data = await fetchAnalytics(accessToken, businessId, from, to, timezone);
+    data = await fetchAnalytics(accessToken, businessId, from, to);
   } catch (error) {
     errorMessage = error instanceof Error ? error.message : "Could not load analytics";
   }

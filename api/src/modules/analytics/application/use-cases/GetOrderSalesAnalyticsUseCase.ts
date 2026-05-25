@@ -11,7 +11,6 @@ export type GetOrderSalesAnalyticsInput = {
   startDate?: string;
   start?: string;
   end?: string;
-  timezone?: string;
   to?: string;
 };
 
@@ -41,7 +40,6 @@ export type GetOrderSalesAnalyticsOutput = {
     totalOrders: number;
     totalSales: number;
   };
-  timezone: string;
   to: string;
 };
 
@@ -60,26 +58,28 @@ export class GetOrderSalesAnalyticsUseCase {
     const from =
       (input.startDate ?? input.start ?? input.from ?? "").trim() || defaults.from;
     const to = (input.endDate ?? input.end ?? input.to ?? "").trim() || defaults.to;
-    const timezone = (input.timezone ?? "").trim() || "America/New_York";
 
-    if (!isValidDateOnly(from)) {
+    if (!isValidDateTime(from)) {
       throw new InvalidAnalyticsRangeError(
         "from",
-        "from must be YYYY-MM-DD",
+        "from must be full datetime (ISO-8601)",
       );
     }
-    if (!isValidDateOnly(to)) {
-      throw new InvalidAnalyticsRangeError("to", "to must be YYYY-MM-DD");
+    if (!isValidDateTime(to)) {
+      throw new InvalidAnalyticsRangeError(
+        "to",
+        "to must be full datetime (ISO-8601)",
+      );
     }
-    if (from > to) {
+    const fromDate = new Date(from);
+    const toDate = new Date(to);
+    if (fromDate.getTime() > toDate.getTime()) {
       throw new InvalidAnalyticsRangeError(
         "dateRange",
         "from must be less than or equal to to",
       );
     }
 
-    const fromDate = new Date(`${from}T00:00:00.000Z`);
-    const toDate = new Date(`${to}T00:00:00.000Z`);
     const diffDays = Math.floor(
       (toDate.getTime() - fromDate.getTime()) / (24 * 60 * 60 * 1000),
     );
@@ -94,7 +94,6 @@ export class GetOrderSalesAnalyticsUseCase {
       businessId,
       from,
       to,
-      timezone,
     });
 
     const daily = rows.map((row: OrderSalesDailyPoint) => ({
@@ -113,7 +112,6 @@ export class GetOrderSalesAnalyticsUseCase {
       endDate: to,
       from,
       to,
-      timezone,
       summary: {
         totalSales,
         totalOrders,
@@ -135,21 +133,26 @@ export class GetOrderSalesAnalyticsUseCase {
   }
 }
 
-function isValidDateOnly(value: string): boolean {
-  return /^\d{4}-\d{2}-\d{2}$/.test(value);
-}
-
-function toDateOnly(value: Date): string {
-  return value.toISOString().slice(0, 10);
+function isValidDateTime(value: string): boolean {
+  if (!value.includes("T")) {
+    return false;
+  }
+  if (!/[zZ]|[+\-]\d{2}:\d{2}$/.test(value)) {
+    return false;
+  }
+  const parsed = new Date(value);
+  return !Number.isNaN(parsed.getTime());
 }
 
 function getDefaultDateRange(): { from: string; to: string } {
   const now = new Date();
   const to = new Date(now);
+  to.setUTCHours(23, 59, 59, 999);
   const from = new Date(now);
   from.setDate(from.getDate() - 6);
+  from.setUTCHours(0, 0, 0, 0);
   return {
-    from: toDateOnly(from),
-    to: toDateOnly(to),
+    from: from.toISOString(),
+    to: to.toISOString(),
   };
 }

@@ -60,6 +60,8 @@ Returns all products for the active business.
 
 `DELETE /categories/:categoryId`
 
+Detailed schemas: see [categories.md](./categories.md).
+
 ---
 
 ## Modifier Groups
@@ -104,21 +106,18 @@ Returns all products for the active business.
 
 `GET /progressive-discount`
 
+Detailed schema and examples: see [progressive-discount.md](./progressive-discount.md).
+
 ---
 
 ## Customers
+Customer routes:
 
-### Search Customers
+- `GET /customers/search`
+- `POST /customers`
+- `POST /customers/:customerId/addresses`
 
-`GET /customers/search`
-
-Query params:
-
-- `q`: search query string
-
-### Create Customer
-
-`POST /customers`
+Detailed schemas and examples: see [customers.md](./customers.md).
 
 ---
 
@@ -129,6 +128,8 @@ Query params:
 Query params:
 
 - `q`: search query string
+
+Detailed schemas: see [address-search.md](./address-search.md).
 
 ---
 

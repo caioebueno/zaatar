@@ -7,6 +7,7 @@ import {
   buildPhoneCandidates,
   calculateOtpExpiryDate,
   generateOtpCode,
+  getFixedReviewOtpCode,
   normalizeLanguage,
   normalizePhone,
   parseOtpTtlMinutes,
@@ -45,7 +46,8 @@ export class SendDriverOtpUseCase {
       await this.driverAuthRepository.updateDriverPhone(driver.id, normalizedPhone);
     }
 
-    const code = generateOtpCode();
+    const reviewFixedCode = getFixedReviewOtpCode(normalizedPhone);
+    const code = reviewFixedCode ?? generateOtpCode();
     const expiresAt = calculateOtpExpiryDate();
     const channel = normalizeDriverOtpChannel(input.channel);
 
@@ -56,14 +58,16 @@ export class SendDriverOtpUseCase {
       expiresAt,
     });
 
-    await this.driverOtpSender.send({
-      phone: normalizedPhone,
-      code,
-      channel,
-      language: normalizeLanguage(input.language),
-      sendAlsoSms: normalizeOptionalBoolean(input.sendAlsoSms),
-      sendAlsoWhatsApp: normalizeOptionalBoolean(input.sendAlsoWhatsApp),
-    });
+    if (!reviewFixedCode) {
+      await this.driverOtpSender.send({
+        phone: normalizedPhone,
+        code,
+        channel,
+        language: normalizeLanguage(input.language),
+        sendAlsoSms: normalizeOptionalBoolean(input.sendAlsoSms),
+        sendAlsoWhatsApp: normalizeOptionalBoolean(input.sendAlsoWhatsApp),
+      });
+    }
 
     return {
       ok: true,

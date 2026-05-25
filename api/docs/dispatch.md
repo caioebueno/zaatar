@@ -34,6 +34,12 @@ type DispatchEntity = {
   dispatched: boolean;
   estimatedDeliveryDurationMinutes?: number;
   estimatedRoundTripDurationMinutes?: number;
+  currentEstimatedDeliveryDurationMinutes?: number;
+  currentEstimatedRoundTripDurationMinutes?: number;
+  leftRestaurantAt?: string;
+  arrivedAtRestaurantAt?: string;
+  arrivedAtRestaurantLat?: number;
+  arrivedAtRestaurantLng?: number;
   driverId?: string;
   driver?: {
     id: string;
@@ -48,6 +54,9 @@ type DispatchEntity = {
     scheduleFor: string | null;
     language: string | null;
     paidAt: string | null;
+    leftAtDropOffAt?: string; // per order
+    leftAtDropOffLat?: number;
+    leftAtDropOffLng?: number;
     delivered: boolean;
     type: string;
     paymentMethod: string;
@@ -56,6 +65,7 @@ type DispatchEntity = {
     dispatchId?: string;
     dispatchOrderIndex: number;
     estimatedDeliveryDurationMinutes: number | null;
+    currentEstimatedDeliveryDurationMinutes?: number | null;
     number?: string;
     externalId: string | null;
     customer?: { id: string; name: string | null; phone: string | null };
@@ -158,6 +168,11 @@ type DispatchEntity = {
   }>;
 };
 ```
+
+Notes:
+
+- `estimated*` fields are baseline/planned ETA values.
+- `currentEstimated*` fields are live ETA values recalculated from latest driver location.
 
 ### Dispatch Status Logic
 

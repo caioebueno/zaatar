@@ -29,15 +29,26 @@ Query filters:
     - `startedDeliveryAt` is set
     - dispatch still has undelivered orders
     - driver has not started a newer active dispatch
+- `startAt=<date-or-datetime>`
+  - Optional lower bound (inclusive) for `Dispatch.createdAt`.
+  - Accepts `YYYY-MM-DD` or ISO datetime.
+- `endAt=<date-or-datetime>`
+  - Optional upper bound (inclusive) for `Dispatch.createdAt`.
+  - Accepts `YYYY-MM-DD` or ISO datetime.
 
 Examples:
 
 - `GET /dispatches`
 - `GET /dispatches?status=active`
+- `GET /dispatches?startAt=2026-05-14&endAt=2026-05-21`
+- `GET /dispatches?status=active&startAt=2026-05-14T00:00:00.000Z&endAt=2026-05-21T23:59:59.999Z`
 
 Success (`200`):
 
 - Returns `DispatchEntity[]` (same shape documented below in "Get Next Dispatch For Driver").
+- Includes both:
+  - `latestRoutePoint` (single latest point)
+  - `routePoints` (all collected points for each dispatch)
 
 Validation error (`400`):
 
@@ -45,6 +56,27 @@ Validation error (`400`):
 {
   "error": "Invalid payload",
   "field": "status"
+}
+```
+
+```json
+{
+  "error": "Invalid payload",
+  "field": "startAt"
+}
+```
+
+```json
+{
+  "error": "Invalid payload",
+  "field": "endAt"
+}
+```
+
+```json
+{
+  "error": "Invalid payload",
+  "field": "dateRange"
 }
 ```
 
@@ -136,9 +168,30 @@ type DispatchEntity = {
     source: string;
     isMocked: boolean | null;
   };
+  routePoints?: Array<{
+    id: string;
+    sessionId: string;
+    sequence: number;
+    createdAt: string; // ISO datetime
+    recordedAt: string; // ISO datetime
+    lat: number;
+    lng: number;
+    accuracyMeters: number | null;
+    speedMps: number | null;
+    headingDegrees: number | null;
+    altitudeMeters: number | null;
+    source: string;
+    isMocked: boolean | null;
+  }>;
   dispatched: boolean;
   estimatedDeliveryDurationMinutes?: number;
   estimatedRoundTripDurationMinutes?: number;
+  currentEstimatedDeliveryDurationMinutes?: number;
+  currentEstimatedRoundTripDurationMinutes?: number;
+  leftRestaurantAt?: string; // ISO datetime (from LEFT_PIZZERIA milestone)
+  arrivedAtRestaurantAt?: string; // ISO datetime
+  arrivedAtRestaurantLat?: number;
+  arrivedAtRestaurantLng?: number;
   driverId?: string;
   driver?: {
     id: string;
@@ -155,7 +208,11 @@ type DispatchEntity = {
     paidAt: string | null; // ISO datetime
     progressiveDiscountSnapshot?: unknown;
     deliveredAt?: string; // ISO datetime
+    leftAtDropOffAt?: string; // ISO datetime (per order)
+    leftAtDropOffLat?: number;
+    leftAtDropOffLng?: number;
     estimatedDeliveryDurationMinutes: number | null;
+    currentEstimatedDeliveryDurationMinutes?: number | null;
     dispatchOrderIndex: number;
     number?: string;
     externalId: string | null;
@@ -283,6 +340,8 @@ Notes:
 - `startedDeliveryAt` is the canonical public delivery start timestamp.
 - Route tracking APIs do not expose route session `startedAt`.
 - `dispatchAt` is legacy and should not be used for new dispatch status logic.
+- `estimated*` fields are baseline/planned ETA values.
+- `currentEstimated*` fields are live ETA values recalculated from latest driver location.
 - Dispatch status logic:
   - `DELIVERED`: all dispatch orders are delivered
   - `OUT_FOR_DELIVERY`: `startedDeliveryAt` is set and not all orders are delivered
@@ -381,7 +440,28 @@ Date input behavior:
 
 Success (`200`):
 
-- Returns `DispatchEntity[]` (same payload shape described in "Get Next Dispatch For Driver").
+- Returns `DispatchEntity[]` (same payload shape described in "Get Next Dispatch For Driver"),
+  plus `routePoints` with all collected route points for each dispatch.
+
+Additional field returned by this endpoint:
+
+```ts
+routePoints?: Array<{
+  id: string;
+  sessionId: string;
+  sequence: number;
+  createdAt: string; // ISO datetime
+  recordedAt: string; // ISO datetime
+  lat: number;
+  lng: number;
+  accuracyMeters: number | null;
+  speedMps: number | null;
+  headingDegrees: number | null;
+  altitudeMeters: number | null;
+  source: string;
+  isMocked: boolean | null;
+}>;
+```
 
 Validation errors (`400`):
 

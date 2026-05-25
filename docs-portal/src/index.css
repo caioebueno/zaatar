@@ -5,16 +5,16 @@
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
 
-  --color-bg: #070911;
-  --color-surface: #0c0f1c;
-  --color-elevated: #111525;
-  --color-border: #1c2440;
-  --color-border-subtle: #141a30;
-  --color-foreground: #dde4f5;
-  --color-muted: #566280;
-  --color-faint: #2d3a5e;
-  --color-accent: #4f8ef7;
-  --color-accent-dim: #1e3a70;
+  --color-bg: #0f0f0f;
+  --color-surface: #161616;
+  --color-elevated: #1f1f1f;
+  --color-border: #2a2a2a;
+  --color-border-subtle: #232323;
+  --color-foreground: #ece9e3;
+  --color-muted: #aaa39a;
+  --color-faint: #6f675c;
+  --color-accent: #d1a24a;
+  --color-accent-dim: #3e3120;
 }
 
 * {
@@ -97,8 +97,8 @@ body {
 
 /* Sidebar active glow */
 .nav-active {
-  background: linear-gradient(90deg, rgba(79, 142, 247, 0.12) 0%, transparent 100%);
-  border-left: 2px solid #4f8ef7;
+  background: linear-gradient(90deg, rgba(209, 162, 74, 0.14) 0%, transparent 100%);
+  border-left: 2px solid var(--color-accent);
 }
 
 /* Prose table striping */

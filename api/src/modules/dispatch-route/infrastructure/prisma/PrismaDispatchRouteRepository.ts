@@ -3,7 +3,9 @@ import { Prisma } from "../../../../../../web/src/generated/prisma/index.js";
 import prisma from "../../../../prisma.js";
 import type {
   CompleteDispatchRouteSessionInput,
+  CreateDispatchRouteMilestoneInput,
   CreateDispatchRouteSessionInput,
+  DispatchRouteMilestoneType,
   DispatchRoutePointRecord,
   DispatchRoutePointSource,
   DispatchRouteRepository,
@@ -45,6 +47,21 @@ type PointRow = {
 
 type MaxSequenceRow = {
   maxSequence: number | null;
+};
+
+type DispatchOriginRow = {
+  lat: string | null;
+  lng: string | null;
+};
+
+type DispatchDropOffRow = {
+  orderId: string;
+  lat: string | null;
+  lng: string | null;
+};
+
+type MilestoneExistsRow = {
+  ok: number;
 };
 
 const SESSION_STATUS: DispatchRouteSessionStatus[] = [
@@ -150,6 +167,12 @@ export class PrismaDispatchRouteRepository implements DispatchRouteRepository {
       FROM "Dispatch" dispatch
       WHERE dispatch."driverId" = ${driverId}
         AND dispatch."startedDeliveryAt" IS NOT NULL
+        AND NOT EXISTS (
+          SELECT 1
+          FROM "DispatchRouteMilestone" milestone
+          WHERE milestone."dispatchId" = dispatch."id"
+            AND milestone."type" = 'ARRIVED_RESTAURANT'::"DispatchRouteMilestoneType"
+        )
       ORDER BY
         dispatch."startedDeliveryAt" DESC,
         dispatch."createdAt" DESC
@@ -332,6 +355,36 @@ export class PrismaDispatchRouteRepository implements DispatchRouteRepository {
     return rows.map(mapPoint);
   }
 
+  async listRecentPointsBySessionId(
+    sessionId: string,
+    limit: number,
+  ): Promise<DispatchRoutePointRecord[]> {
+    const safeLimit = Number.isInteger(limit) ? Math.max(1, Math.min(limit, 100)) : 20;
+
+    const rows = await prisma.$queryRaw<PointRow[]>`
+      SELECT
+        "id",
+        "createdAt",
+        "sessionId",
+        "sequence",
+        "recordedAt",
+        "lat",
+        "lng",
+        "accuracyMeters",
+        "speedMps",
+        "headingDegrees",
+        "altitudeMeters",
+        "source"::text AS "source",
+        "isMocked"
+      FROM "DispatchRoutePoint"
+      WHERE "sessionId" = ${sessionId}
+      ORDER BY "sequence" DESC, "recordedAt" DESC
+      LIMIT ${safeLimit}
+    `;
+
+    return rows.map(mapPoint).reverse();
+  }
+
   async listSessionsByDispatchId(
     dispatchId: string,
   ): Promise<DispatchRouteSessionWithPoints[]> {
@@ -392,6 +445,173 @@ export class PrismaDispatchRouteRepository implements DispatchRouteRepository {
       ...session,
       points: pointsBySessionId.get(session.id) ?? [],
     }));
+  }
+
+  async findDispatchOriginCoordinates(
+    dispatchId: string,
+  ): Promise<{ lat: number; lng: number } | null> {
+    const rows = await prisma.$queryRaw<DispatchOriginRow[]>`
+      SELECT
+        address."lat" AS "lat",
+        address."lng" AS "lng"
+      FROM "Order" ord
+      INNER JOIN "Branch" branch
+        ON branch."id" = ord."branchId"
+      INNER JOIN "Address" address
+        ON address."id" = branch."addressId"
+      WHERE ord."dispatchId" = ${dispatchId}
+        AND address."lat" IS NOT NULL
+        AND address."lng" IS NOT NULL
+      ORDER BY ord."createdAt" ASC
+      LIMIT 1
+    `;
+
+    const row = rows[0];
+    if (!row) {
+      return null;
+    }
+
+    const lat = Number.parseFloat(row.lat ?? "");
+    const lng = Number.parseFloat(row.lng ?? "");
+    if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
+      return null;
+    }
+
+    return { lat, lng };
+  }
+
+  async findNextDropOffOrderTarget(
+    dispatchId: string,
+  ): Promise<{ lat: number; lng: number; orderId: string } | null> {
+    const rows = await prisma.$queryRaw<DispatchDropOffRow[]>`
+      SELECT
+        ord."id" AS "orderId",
+        delivery_address."lat" AS "lat",
+        delivery_address."lng" AS "lng"
+      FROM "Order" ord
+      INNER JOIN "DeliveryAddress" delivery_address
+        ON delivery_address."id" = ord."deliveryAddressId"
+      WHERE ord."dispatchId" = ${dispatchId}
+        AND ord."canceled" = false
+        AND ord."deliveredAt" IS NULL
+        AND ord."leftAtDropOffAt" IS NULL
+        AND delivery_address."lat" IS NOT NULL
+        AND delivery_address."lng" IS NOT NULL
+      ORDER BY
+        ord."dispatchOrderIndex" ASC NULLS LAST,
+        ord."createdAt" ASC
+      LIMIT 1
+    `;
+
+    const row = rows[0];
+    if (!row) {
+      return null;
+    }
+
+    const lat = Number.parseFloat(row.lat ?? "");
+    const lng = Number.parseFloat(row.lng ?? "");
+    if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
+      return null;
+    }
+
+    return { orderId: row.orderId, lat, lng };
+  }
+
+  async createMilestoneIfMissing(input: CreateDispatchRouteMilestoneInput): Promise<boolean> {
+    const now = new Date();
+    const result = await prisma.$queryRaw<Array<{ id: string }>>`
+        INSERT INTO "DispatchRouteMilestone" (
+          "id",
+          "createdAt",
+          "updatedAt",
+          "dispatchId",
+          "driverId",
+          "sessionId",
+          "type",
+          "recordedAt",
+          "lat",
+          "lng"
+        )
+        VALUES (
+          ${randomUUID()},
+          ${now},
+          ${now},
+          ${input.dispatchId},
+          ${input.driverId},
+          ${input.sessionId},
+          ${input.type}::"DispatchRouteMilestoneType",
+          ${input.recordedAt},
+          ${input.lat},
+          ${input.lng}
+        )
+        ON CONFLICT ("dispatchId", "type")
+        DO NOTHING
+        RETURNING "id"
+      `;
+
+    return result.length > 0;
+  }
+
+  async markOrderLeftDropOffIfMissing(input: {
+    lat: number;
+    lng: number;
+    orderId: string;
+    recordedAt: Date;
+  }): Promise<boolean> {
+    const rows = await prisma.$queryRaw<Array<{ id: string }>>`
+      UPDATE "Order"
+      SET
+        "leftAtDropOffAt" = ${input.recordedAt},
+        "leftAtDropOffLat" = ${input.lat},
+        "leftAtDropOffLng" = ${input.lng}
+      WHERE "id" = ${input.orderId}
+        AND "leftAtDropOffAt" IS NULL
+      RETURNING "id"
+    `;
+
+    return rows.length > 0;
+  }
+
+  async markDispatchArrivedAtRestaurantIfMissing(input: {
+    dispatchId: string;
+    lat: number;
+    lng: number;
+    recordedAt: Date;
+  }): Promise<boolean> {
+    const rows = await prisma.$queryRaw<Array<{ id: string }>>`
+      UPDATE "Dispatch"
+      SET
+        "arrivedAtRestaurantAt" = ${input.recordedAt},
+        "arrivedAtRestaurantLat" = ${input.lat},
+        "arrivedAtRestaurantLng" = ${input.lng}
+      WHERE "id" = ${input.dispatchId}
+        AND "arrivedAtRestaurantAt" IS NULL
+        AND EXISTS (
+          SELECT 1
+          FROM "Order" ord
+          WHERE ord."dispatchId" = ${input.dispatchId}
+            AND ord."canceled" = false
+            AND ord."leftAtDropOffAt" IS NOT NULL
+        )
+      RETURNING "id"
+    `;
+
+    return rows.length > 0;
+  }
+
+  async hasMilestone(
+    dispatchId: string,
+    type: DispatchRouteMilestoneType,
+  ): Promise<boolean> {
+    const rows = await prisma.$queryRaw<MilestoneExistsRow[]>`
+      SELECT 1::int AS "ok"
+      FROM "DispatchRouteMilestone"
+      WHERE "dispatchId" = ${dispatchId}
+        AND "type" = ${type}::"DispatchRouteMilestoneType"
+      LIMIT 1
+    `;
+
+    return rows.length > 0;
   }
 }
 

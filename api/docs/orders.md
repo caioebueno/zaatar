@@ -36,6 +36,189 @@ Errors:
 
 Auth: manager access token required.
 
+Creates an order for POS/manager flows and returns the created order with products, modifiers, customer, address, and dispatch relation when present.
+
+### Request Body (schema)
+
+```ts
+type CreateOrderBody = {
+  cart: {
+    items: Array<{
+      cartId: string;
+      productId: string;
+      quantity: number; // integer > 0
+      description?: string;
+      modifiers: Array<{
+        modifierId: string;
+        modifierItemId: string;
+      }>;
+      comboSelections?: Array<{
+        slotId: string;
+        optionProductId: string;
+        quantity: number; // integer > 0
+      }>;
+    }>;
+  };
+  customerId?: string | null;
+  orderType: "DELIVERY" | "TAKEAWAY";
+  paymentMethod: "CARD" | "CASH" | "ZELLE";
+  paymentProvider?: "STRIPE" | null;
+  language?: string;
+  scheduleFor?: string | null; // ISO datetime
+  addressId?: string | null; // required when orderType=DELIVERY
+  tipAmount?: number; // integer > 0
+  branchId?: string | null;
+};
+```
+
+### Important Validation Rules
+
+- `cart.items` is required and must contain at least 1 item.
+- `modifiers` must be an array of objects (`{ modifierId, modifierItemId }`), not an array of strings.
+- If provided, every `comboSelections` item must match a valid `slotId + optionProductId` for that product.
+- `orderType="DELIVERY"` requires `addressId`.
+- `customerId` and `addressId` are validated against existing records when provided.
+- `paymentProvider` currently accepts only `"STRIPE"`.
+
+### Branch Assignment Rule
+
+- If `branchId` is provided, it is used.
+- If `branchId` is omitted and the authenticated business has exactly 1 branch, that branch is auto-attached.
+- If multiple branches exist and `branchId` is omitted, order is created without forced branch assignment.
+
+### Pricing Behavior
+
+For each cart item:
+
+- `amount = product.price + selected modifier items + combo extra prices`
+- `fullAmount = (product.comparedAtPrice ?? product.price) + selected modifier items + combo extra prices`
+
+Order amount:
+
+- `order.amount = Σ(item.amount * item.quantity)`
+
+### Example Request (simple product)
+
+```json
+{
+  "cart": {
+    "items": [
+      {
+        "cartId": "2d1e1b1d-8e27-4f4c-9bb2-a2f57d4d4d01",
+        "productId": "7c0da998-05a1-4392-a13e-a98e51213749",
+        "quantity": 1,
+        "modifiers": [
+          {
+            "modifierId": "f4f44520-0f9f-4e5d-a20f-5127ea9e44ae",
+            "modifierItemId": "95a2f9a7-8b2f-49e1-b5d5-17f61aa2ab11"
+          }
+        ]
+      }
+    ]
+  },
+  "customerId": "b406d9b6-eedb-4d7a-8dd2-580b656df3ec",
+  "orderType": "TAKEAWAY",
+  "paymentMethod": "CASH",
+  "language": "en"
+}
+```
+
+### Example Request (combo with slot selections)
+
+```json
+{
+  "cart": {
+    "items": [
+      {
+        "cartId": "a4ab2670-8089-44ea-8c8f-7dfb86617e17",
+        "productId": "7c0da998-05a1-4392-a13e-a98e51213749",
+        "quantity": 1,
+        "modifiers": [],
+        "comboSelections": [
+          {
+            "slotId": "0d41b12f-1dea-4336-91a0-7b42df0a8f52",
+            "optionProductId": "9fdef81a-e487-4ba1-99bb-918b1b75ac95",
+            "quantity": 1
+          }
+        ]
+      }
+    ]
+  },
+  "orderType": "DELIVERY",
+  "paymentMethod": "CARD",
+  "paymentProvider": "STRIPE",
+  "addressId": "9cb035e1-fb47-47d0-83e3-db45fcc7d0b2"
+}
+```
+
+### Success Response (`201`)
+
+Returns the created order object with:
+
+- order fields (`id`, `amount`, `type`, `status`, `paymentMethod`, `paymentProvider`, timestamps)
+- `customer`
+- `deliveryAddress`
+- `orderProducts` including:
+  - `product`
+  - `modifierGroupItems`
+- `dispatch` (if already attached)
+
+Example (truncated):
+
+```json
+{
+  "id": "5d51b470-9b4d-4a89-b2c0-9b3651f4a212",
+  "amount": 1999,
+  "type": "DELIVERY",
+  "paymentMethod": "CARD",
+  "paymentProvider": "STRIPE",
+  "createdAt": "2026-05-24T13:10:25.144Z",
+  "orderProducts": [
+    {
+      "id": "6cc2d0db-78f2-4e6e-a2d3-1f5196ef7752",
+      "productId": "7c0da998-05a1-4392-a13e-a98e51213749",
+      "amount": 1999,
+      "fullAmount": 2299,
+      "quantity": 1,
+      "modifierGroupItems": []
+    }
+  ]
+}
+```
+
+### Error Response
+
+Validation errors return:
+
+```json
+{
+  "error": "Invalid payload",
+  "field": "cart.items.modifiers"
+}
+```
+
+Common `field` values:
+
+- `cart`
+- `cart.items`
+- `cart.items.cartId`
+- `cart.items.productId`
+- `cart.items.quantity`
+- `cart.items.modifiers`
+- `cart.items.modifiers.modifierId`
+- `cart.items.modifiers.modifierItemId`
+- `cart.items.comboSelections`
+- `cart.items.comboSelections.slotId`
+- `cart.items.comboSelections.optionProductId`
+- `cart.items.comboSelections.quantity`
+- `addressId`
+- `customerId`
+- `paymentMethod`
+- `paymentProvider`
+- `orderType`
+- `scheduleFor`
+- `tipAmount`
+
 ---
 
 ## Update Order
@@ -44,28 +227,103 @@ Auth: manager access token required.
 
 Auth: manager access token required.
 
-Used to update order fields such as `deliveredAt`.
+Updates an existing order. This endpoint supports changing:
 
-Request body:
+- Delivery address (`addressId`)
+- Payment method (`paymentMethod`)
+- Payment provider (`paymentProvider`)
+- Order type (`orderType` / `type`)
+- Customer (`customerId`)
+- Status-related dates (`paidAt`, `deliveredAt`)
+- Cancel state (`canceled`)
+- Line items (`orderProducts`: create/update/remove)
+
+At least one valid field must be present in the request body.
+
+### Request Body (All Optional)
+
+```ts
+type UpdateOrderRequest = {
+  paidAt?: string | null; // ISO datetime
+  deliveredAt?: string | null; // ISO datetime
+  paymentMethod?: "CASH" | "CARD" | "ZELLE";
+  paymentProvider?: "STRIPE" | null;
+  canceled?: boolean;
+  orderType?: "DELIVERY" | "TAKEAWAY"; // alias: type
+  type?: "DELIVERY" | "TAKEAWAY";
+  customerId?: string | null;
+  addressId?: string | null;
+  orderProducts?: OrderProductPatch[];
+};
+
+type OrderProductPatch =
+  | {
+      // Update existing line item
+      id: string;
+      quantity?: number;
+      comments?: string | null;
+      selectedModifierGroupItemIds?: string[];
+      remove?: false;
+    }
+  | {
+      // Remove existing line item
+      id: string;
+      remove: true;
+    }
+  | {
+      // Create new line item
+      productId: string;
+      quantity?: number; // default: 1
+      comments?: string | null;
+      selectedModifierGroupItemIds?: string[];
+    };
+```
+
+### Important Rules
+
+- If final order type is `DELIVERY`, order must have an `addressId`.
+- If order type is changed to `TAKEAWAY`, delivery address is cleared automatically.
+- `customerId` and `addressId` are validated to ensure records exist.
+- `orderProducts` updates will recalculate order subtotal (`amount`).
+
+### Example: Update Address + Payment Method + Products
 
 ```json
 {
-  "deliveredAt": "2026-05-15T14:30:00.000Z"
+  "addressId": "9cb035e1-fb47-47d0-83e3-db45fcc7d0b2",
+  "paymentMethod": "CARD",
+  "paymentProvider": "STRIPE",
+  "orderProducts": [
+    {
+      "id": "existing-order-product-id",
+      "quantity": 2
+    },
+    {
+      "id": "existing-order-product-id-2",
+      "remove": true
+    },
+    {
+      "productId": "9fdef8c9-7a55-428e-b3d6-950d1ad49ac0",
+      "quantity": 1,
+      "selectedModifierGroupItemIds": [
+        "3528e1a1-242c-4fa4-9b73-16ca4b94b40c"
+      ]
+    }
+  ]
 }
 ```
 
-- `deliveredAt` accepts an ISO datetime string to mark as delivered, or `null` to clear.
+### Success (`200`)
 
-Success (`200`):
+Returns the full updated order payload (same shape used by order listing/get endpoints), including:
 
-```json
-{
-  "id": "order-id",
-  "deliveredAt": "2026-05-15T14:30:00.000Z"
-}
-```
+- `address`
+- `customer`
+- `orderProducts`
+- `redeemedRewards`
+- other order fields
 
-Errors:
+### Errors
 
 - `400`: invalid payload
 - `404`: order not found

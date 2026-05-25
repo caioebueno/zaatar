@@ -12,7 +12,7 @@ Stores GPS route history for a driver during a dispatch. ETA recalculation is tr
 
 Auth: driver access token required.
 
-Ingests a single GPS point. The API resolves the active dispatch from the driver token. An active dispatch is one where `Dispatch.startedDeliveryAt IS NOT NULL`. If no route session exists for that dispatch+driver, one is created automatically.
+Ingests a single GPS point. The API resolves the active dispatch from the driver token. An active dispatch is one where `Dispatch.startedDeliveryAt IS NOT NULL` and no `ARRIVED_RESTAURANT` milestone exists. If no route session exists for that dispatch+driver, one is created automatically.
 
 Request body:
 
@@ -38,9 +38,24 @@ Success (`200`):
   "dispatchId": "dispatch-id",
   "sessionId": "route-session-id",
   "insertedCount": 1,
-  "lastSequence": 18
+  "lastSequence": 18,
+  "leftPizzeriaTracked": false,
+  "leftAtDropOffTracked": false,
+  "arrivedAtRestaurantTracked": false
 }
 ```
+
+Milestone booleans:
+
+- `leftPizzeriaTracked`: this call created milestone `LEFT_PIZZERIA`
+- `leftAtDropOffTracked`: this call created milestone `LEFT_DROPOFF` for one specific order in the dispatch
+- `arrivedAtRestaurantTracked`: this call created milestone `ARRIVED_RESTAURANT` for this dispatch
+
+Persistence:
+
+- `LEFT_DROPOFF` is saved on the target order (`Order.leftAtDropOffAt/Lat/Lng`).
+- `ARRIVED_RESTAURANT` is saved on dispatch (`Dispatch.arrivedAtRestaurantAt/Lat/Lng`).
+- When `ARRIVED_RESTAURANT` is tracked, the active route session is completed automatically and future location ingests for that dispatch are ignored.
 
 ---
 
@@ -139,9 +154,14 @@ Ignored (no active session) (`200`):
 
 Each successful batch enqueues a `DispatchEtaRecalculationJob` which updates:
 
-- `Dispatch.estimatedDeliveryDurationMinutes`
-- `Dispatch.estimatedRoundTripDurationMinutes`
-- `Order.estimatedDeliveryDurationMinutes` for each pending order in the dispatch
+- `Dispatch.currentEstimatedDeliveryDurationMinutes`
+- `Dispatch.currentEstimatedRoundTripDurationMinutes`
+- `Order.currentEstimatedDeliveryDurationMinutes` for each pending order in the dispatch
+
+Notes:
+
+- `estimatedDeliveryDurationMinutes` / `estimatedRoundTripDurationMinutes` remain planned baseline ETA values.
+- `currentEstimated*` fields represent live ETA recalculated from the latest driver location.
 
 ---
 

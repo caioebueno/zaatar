@@ -50,11 +50,11 @@ export function CodeBlock({ code, language }: Props) {
   }
 
   return (
-    <div className="my-5 rounded-lg overflow-hidden border border-border" style={{ background: '#0d1117' }}>
+    <div className="my-5 rounded-lg overflow-hidden border border-border" style={{ background: 'var(--color-surface)' }}>
       {/* Header bar */}
       <div
         className="flex items-center justify-between px-4 py-2 border-b border-border"
-        style={{ background: '#0a0e1a' }}
+        style={{ background: 'var(--color-elevated)' }}
       >
         <span className="text-xs font-mono text-faint tracking-wider uppercase">
           {displayLang}
@@ -62,7 +62,7 @@ export function CodeBlock({ code, language }: Props) {
         <button
           onClick={copy}
           className="flex items-center gap-1.5 text-xs text-muted hover:text-foreground transition-colors px-2 py-0.5 rounded"
-          style={{ background: copied ? 'rgba(79,142,247,0.1)' : undefined }}
+          style={{ background: copied ? 'rgba(209,162,74,0.12)' : undefined }}
         >
           {copied ? (
             <>

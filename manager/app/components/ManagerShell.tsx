@@ -75,6 +75,7 @@ import {
   BiCog,
   BiReceipt,
   BiUser,
+  BiUserCircle,
   BiChevronDown,
   BiCheck,
   BiPlus,
@@ -92,6 +93,7 @@ const IOnboarding   = () => <BiFlag         {...biProps} />;
 const ISettings     = () => <BiCog          {...biProps} />;
 const IOrders       = () => <BiReceipt      {...biProps} />;
 const IDrivers      = () => <BiUser         {...biProps} />;
+const ICustomers    = () => <BiUserCircle   {...biProps} />;
 const IStations     = () => <BiStation      {...biProps} />;
 
 const IChevDown = ({ open }: { open?: boolean }) => (
@@ -144,6 +146,7 @@ const NAV_GROUPS: NavGroup[] = [
     items: [
       { type: "link", href: "/orders", label: "Orders", icon: <IOrders /> },
       { type: "link", href: "/drivers", label: "Drivers", icon: <IDrivers /> },
+      { type: "link", href: "/customers", label: "Customers", icon: <ICustomers /> },
     ],
   },
 ];

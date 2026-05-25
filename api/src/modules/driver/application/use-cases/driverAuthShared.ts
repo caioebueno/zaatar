@@ -3,6 +3,8 @@ import { InvalidDriverAuthPayloadError } from "../errors/InvalidDriverAuthPayloa
 
 const OTP_LENGTH = 6;
 const DEFAULT_OTP_TTL_MINUTES = 10;
+const DEFAULT_REVIEW_DRIVER_PHONE = "9297669288";
+const DEFAULT_REVIEW_DRIVER_CODE = "123456";
 
 export function normalizePhoneDigits(value: string): string {
   return value.replace(/\D/g, "");
@@ -73,4 +75,29 @@ export function hashValue(raw: string): string {
 
 export function buildOtpHash(phone: string, code: string): string {
   return hashValue(`driver-otp:${phone}:${code}`);
+}
+
+export function getFixedReviewOtpCode(phone: string): string | null {
+  const isEnabled = process.env.DRIVER_REVIEW_FIXED_OTP_ENABLED === "1";
+  if (!isEnabled) {
+    return null;
+  }
+
+  const expectedPhone = normalizePhoneDigits(
+    process.env.DRIVER_REVIEW_FIXED_OTP_PHONE?.trim() ||
+      DEFAULT_REVIEW_DRIVER_PHONE,
+  );
+  const expectedCode =
+    process.env.DRIVER_REVIEW_FIXED_OTP_CODE?.trim() || DEFAULT_REVIEW_DRIVER_CODE;
+
+  if (!expectedPhone || !/^\d{4,8}$/.test(expectedCode)) {
+    return null;
+  }
+
+  const normalizedInputPhone = normalizePhoneDigits(phone);
+  if (normalizedInputPhone !== expectedPhone) {
+    return null;
+  }
+
+  return expectedCode;
 }

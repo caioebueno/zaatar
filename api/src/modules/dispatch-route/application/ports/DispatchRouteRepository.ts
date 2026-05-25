@@ -1,5 +1,9 @@
 export type DispatchRouteSessionStatus = "ACTIVE" | "COMPLETED" | "CANCELED";
 export type DispatchRoutePointSource = "GPS" | "NETWORK" | "MANUAL";
+export type DispatchRouteMilestoneType =
+  | "LEFT_PIZZERIA"
+  | "LEFT_DROPOFF"
+  | "ARRIVED_RESTAURANT";
 
 export type DispatchRouteSessionRecord = {
   createdAt: Date;
@@ -60,6 +64,30 @@ export type DispatchRouteSessionWithPoints = DispatchRouteSessionRecord & {
   points: DispatchRoutePointRecord[];
 };
 
+export type CreateDispatchRouteMilestoneInput = {
+  dispatchId: string;
+  driverId: string;
+  lat: number;
+  lng: number;
+  recordedAt: Date;
+  sessionId: string;
+  type: DispatchRouteMilestoneType;
+};
+
+export type MarkOrderDropOffMilestoneInput = {
+  lat: number;
+  lng: number;
+  orderId: string;
+  recordedAt: Date;
+};
+
+export type MarkDispatchArrivalMilestoneInput = {
+  dispatchId: string;
+  lat: number;
+  lng: number;
+  recordedAt: Date;
+};
+
 export type DispatchRouteRepository = {
   completeSession(
     input: CompleteDispatchRouteSessionInput,
@@ -83,6 +111,22 @@ export type DispatchRouteRepository = {
     sessionId: string,
     points: InsertDispatchRoutePointInput[],
   ): Promise<{ insertedCount: number; lastSequence: number }>;
+  listRecentPointsBySessionId(
+    sessionId: string,
+    limit: number,
+  ): Promise<DispatchRoutePointRecord[]>;
   listPointsBySessionId(sessionId: string): Promise<DispatchRoutePointRecord[]>;
   listSessionsByDispatchId(dispatchId: string): Promise<DispatchRouteSessionWithPoints[]>;
+  findDispatchOriginCoordinates(
+    dispatchId: string,
+  ): Promise<{ lat: number; lng: number } | null>;
+  findNextDropOffOrderTarget(
+    dispatchId: string,
+  ): Promise<{ lat: number; lng: number; orderId: string } | null>;
+  markOrderLeftDropOffIfMissing(input: MarkOrderDropOffMilestoneInput): Promise<boolean>;
+  markDispatchArrivedAtRestaurantIfMissing(
+    input: MarkDispatchArrivalMilestoneInput,
+  ): Promise<boolean>;
+  createMilestoneIfMissing(input: CreateDispatchRouteMilestoneInput): Promise<boolean>;
+  hasMilestone(dispatchId: string, type: DispatchRouteMilestoneType): Promise<boolean>;
 };

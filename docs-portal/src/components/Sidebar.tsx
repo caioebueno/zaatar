@@ -40,13 +40,13 @@ export function Sidebar({ activeId, onSelect, onSearchOpen }: Props) {
   return (
     <aside
       className="flex flex-col h-full border-r border-border overflow-y-auto flex-shrink-0"
-      style={{ width: 256, background: '#09091a' }}
+      style={{ width: 256, background: 'var(--color-surface)' }}
     >
       {/* Logo */}
       <div className="flex items-center gap-3 px-5 py-5 border-b border-border-subtle">
         <div
           className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 text-white text-sm font-bold"
-          style={{ background: 'linear-gradient(135deg, #4f8ef7 0%, #7c5bf7 100%)' }}
+          style={{ background: 'linear-gradient(135deg, #8e6a2b 0%, #d1a24a 100%)' }}
         >
           F
         </div>
@@ -68,7 +68,7 @@ export function Sidebar({ activeId, onSelect, onSearchOpen }: Props) {
         >
           <SearchIcon />
           <span className="flex-1 text-left">Search docs…</span>
-          <kbd className="text-xs font-mono border border-border px-1.5 py-0.5 rounded" style={{ background: '#111525', color: '#3a5080' }}>
+          <kbd className="text-xs font-mono border border-border px-1.5 py-0.5 rounded" style={{ background: 'var(--color-elevated)', color: 'var(--color-faint)' }}>
             ⌘K
           </kbd>
         </button>
@@ -86,7 +86,7 @@ export function Sidebar({ activeId, onSelect, onSearchOpen }: Props) {
           <div key={group.name} className="mt-5 first:mt-2">
             <div className="flex items-center gap-2 px-3 py-1 mb-1">
               <span className="text-accent opacity-40 text-xs">{GROUP_ICONS[group.name]}</span>
-              <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: '#3a5080', letterSpacing: '0.08em' }}>
+              <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--color-faint)', letterSpacing: '0.08em' }}>
                 {group.name}
               </span>
             </div>

@@ -8,6 +8,7 @@ export type DispatchDriver = {
 
 export type DispatchOrder = {
   createdAt: string;
+  currentEstimatedDeliveryDurationMinutes?: number | null;
   customer?: {
     id: string;
     name: string | null;
@@ -22,6 +23,9 @@ export type DispatchOrder = {
   externalId: string | null;
   id: string;
   language: string | null;
+  leftAtDropOffAt?: string;
+  leftAtDropOffLat?: number;
+  leftAtDropOffLng?: number;
   number?: string;
   orderProducts: unknown[];
   paidAt: string | null;
@@ -52,7 +56,12 @@ export type DispatchOrder = {
 };
 
 export type DispatchEntity = {
+  arrivedAtRestaurantAt?: string;
+  arrivedAtRestaurantLat?: number;
+  arrivedAtRestaurantLng?: number;
   createdAt: string;
+  currentEstimatedDeliveryDurationMinutes?: number;
+  currentEstimatedRoundTripDurationMinutes?: number;
   dispatchAt?: string; // legacy
   startedDeliveryAt?: string;
   latestRoutePoint?: {
@@ -70,6 +79,21 @@ export type DispatchEntity = {
     source: string;
     speedMps: number | null;
   };
+  routePoints?: Array<{
+    accuracyMeters: number | null;
+    altitudeMeters: number | null;
+    createdAt: string;
+    headingDegrees: number | null;
+    id: string;
+    isMocked: boolean | null;
+    lat: number;
+    lng: number;
+    recordedAt: string;
+    sequence: number;
+    sessionId: string;
+    source: string;
+    speedMps: number | null;
+  }>;
   dispatched: boolean;
   status: "PREPARING" | "READY_FOR_DELIVERY" | "OUT_FOR_DELIVERY" | "DELIVERED";
   driver?: DispatchDriver;
@@ -77,11 +101,14 @@ export type DispatchEntity = {
   estimatedDeliveryDurationMinutes?: number;
   estimatedRoundTripDurationMinutes?: number;
   id: string;
+  leftRestaurantAt?: string;
   orders: DispatchOrder[];
   queueIndex?: number;
 };
 
 export type DispatchListFilters = {
+  endAt?: Date;
+  startAt?: Date;
   status?: "active";
 };
 

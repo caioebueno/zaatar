@@ -15,6 +15,7 @@ import * as progressiveDiscountRoute from "../../infrastructure/native/progressi
 import * as posExclusivePromotionsRoute from "../../infrastructure/native/pos-exclusive-promotions/route.js";
 import * as customerSearchRoute from "../../infrastructure/native/customers/searchRoute.js";
 import * as customersRoute from "../../infrastructure/native/customers/route.js";
+import * as customerAddressesRoute from "../../infrastructure/native/customers/customerAddressesRoute.js";
 import * as addressSearchRoute from "../../infrastructure/native/address-search/route.js";
 
 export class NativeCatalogController implements HttpController {
@@ -141,6 +142,18 @@ export class NativeCatalogController implements HttpController {
 
     if (request.method === "POST" && pathname === "/customers") {
       return customersRoute.POST(nextRequest);
+    }
+
+    if (
+      request.method === "POST" &&
+      /^\/customers\/[^/]+\/addresses$/.test(pathname)
+    ) {
+      const customerId = decodeURIComponent(
+        pathname.slice("/customers/".length, pathname.length - "/addresses".length),
+      );
+      return customerAddressesRoute.POST(nextRequest, {
+        params: Promise.resolve({ customerId }),
+      });
     }
 
     if (request.method === "GET" && pathname === "/address-search") {

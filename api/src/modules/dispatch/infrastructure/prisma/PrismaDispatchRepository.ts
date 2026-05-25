@@ -16,7 +16,12 @@ import { DriverNotFoundError } from "../../application/errors/DriverNotFoundErro
 import { OrderNotFoundError } from "../../application/errors/OrderNotFoundError.js";
 
 type DispatchRow = {
+  arrivedAtRestaurantAt: Date | null;
+  arrivedAtRestaurantLat: number | null;
+  arrivedAtRestaurantLng: number | null;
   createdAt: Date;
+  currentEstimatedDeliveryDurationMinutes: number | null;
+  currentEstimatedRoundTripDurationMinutes: number | null;
   dispatchAt: Date | null;
   startedDeliveryAt: Date | null;
   dispatched: boolean;
@@ -33,6 +38,7 @@ type DispatchRow = {
 
 type DispatchOrderRow = {
   createdAt: Date;
+  currentEstimatedDeliveryDurationMinutes: number | null;
   customerId: string | null;
   customerName: string | null;
   customerPhone: string | null;
@@ -59,6 +65,9 @@ type DispatchOrderRow = {
   externalId: string | null;
   id: string;
   language: string | null;
+  leftAtDropOffAt: Date | null;
+  leftAtDropOffLat: number | null;
+  leftAtDropOffLng: number | null;
   number: string | null;
   paidAt: Date | null;
   paymentMethod: string;
@@ -116,6 +125,13 @@ type DispatchLatestRoutePointRow = {
   speedMps: number | null;
 };
 
+type DispatchRoutePointRow = DispatchLatestRoutePointRow;
+
+type DispatchLeftRestaurantRow = {
+  dispatchId: string;
+  recordedAt: Date;
+};
+
 type RedeemedRewardOutput = {
   couponCode?: string | null;
   customerId: string;
@@ -168,6 +184,7 @@ function mapDispatch(
   redeemedRewardsByOrderId: Map<string, RedeemedRewardOutput[]>,
   preparationStepCategoriesByOrderId: Map<string, unknown[]>,
   orderReadinessByOrderId: Map<string, boolean>,
+  leftRestaurantAtByDispatchId: Map<string, string>,
   latestRoutePointByDispatchId: Map<
     string,
     {
@@ -186,8 +203,27 @@ function mapDispatch(
       speedMps: number | null;
     }
   >,
+  routePointsByDispatchId?: Map<
+    string,
+    Array<{
+      accuracyMeters: number | null;
+      altitudeMeters: number | null;
+      createdAt: string;
+      headingDegrees: number | null;
+      id: string;
+      isMocked: boolean | null;
+      lat: number;
+      lng: number;
+      recordedAt: string;
+      sequence: number;
+      sessionId: string;
+      source: string;
+      speedMps: number | null;
+    }>
+  >,
 ): DispatchEntity {
   const dispatchOrderRows = orderRows.filter((orderRow) => orderRow.dispatchId === row.id);
+  const leftRestaurantAt = leftRestaurantAtByDispatchId.get(row.id);
 
   const orders: DispatchOrder[] = dispatchOrderRows.map((orderRow, index) => ({
     id: orderRow.id,
@@ -200,7 +236,18 @@ function mapDispatch(
       ? { progressiveDiscountSnapshot: orderRow.progressiveDiscountSnapshot }
       : {}),
     ...(orderRow.deliveredAt ? { deliveredAt: orderRow.deliveredAt.toISOString() } : {}),
+    ...(orderRow.leftAtDropOffAt
+      ? { leftAtDropOffAt: orderRow.leftAtDropOffAt.toISOString() }
+      : {}),
+    ...(orderRow.leftAtDropOffLat !== null
+      ? { leftAtDropOffLat: orderRow.leftAtDropOffLat }
+      : {}),
+    ...(orderRow.leftAtDropOffLng !== null
+      ? { leftAtDropOffLng: orderRow.leftAtDropOffLng }
+      : {}),
     estimatedDeliveryDurationMinutes: orderRow.estimatedDeliveryDurationMinutes,
+    currentEstimatedDeliveryDurationMinutes:
+      orderRow.currentEstimatedDeliveryDurationMinutes,
     dispatchOrderIndex: orderRow.dispatchOrderIndex ?? index + 1,
     number: orderRow.number || undefined,
     externalId: orderRow.externalId,
@@ -248,6 +295,7 @@ function mapDispatch(
 
   const driver = mapDriver(row);
   const latestRoutePoint = latestRoutePointByDispatchId.get(row.id);
+  const routePoints = routePointsByDispatchId?.get(row.id);
   const allOrdersDelivered = orders.length > 0 && orders.every((order) => order.delivered);
   const allOrdersReadyForDelivery =
     orders.length > 0 &&
@@ -264,6 +312,7 @@ function mapDispatch(
   return {
     id: row.id,
     createdAt: row.createdAt.toISOString(),
+    ...(leftRestaurantAt ? { leftRestaurantAt } : {}),
     ...(row.queueIndex !== null ? { queueIndex: row.queueIndex } : {}),
     ...(row.dispatchAt ? { dispatchAt: row.dispatchAt.toISOString() } : {}),
     ...(row.startedDeliveryAt
@@ -283,9 +332,31 @@ function mapDispatch(
             row.estimatedRoundTripDurationMinutes,
         }
       : {}),
+    ...(row.currentEstimatedDeliveryDurationMinutes !== null
+      ? {
+          currentEstimatedDeliveryDurationMinutes:
+            row.currentEstimatedDeliveryDurationMinutes,
+        }
+      : {}),
+    ...(row.currentEstimatedRoundTripDurationMinutes !== null
+      ? {
+          currentEstimatedRoundTripDurationMinutes:
+            row.currentEstimatedRoundTripDurationMinutes,
+        }
+      : {}),
+    ...(row.arrivedAtRestaurantAt
+      ? { arrivedAtRestaurantAt: row.arrivedAtRestaurantAt.toISOString() }
+      : {}),
+    ...(row.arrivedAtRestaurantLat !== null
+      ? { arrivedAtRestaurantLat: row.arrivedAtRestaurantLat }
+      : {}),
+    ...(row.arrivedAtRestaurantLng !== null
+      ? { arrivedAtRestaurantLng: row.arrivedAtRestaurantLng }
+      : {}),
     ...(row.driverId ? { driverId: row.driverId } : {}),
     ...(driver ? { driver } : {}),
     ...(latestRoutePoint ? { latestRoutePoint } : {}),
+    ...(routePoints ? { routePoints } : {}),
     orders,
   };
 }
@@ -304,7 +375,11 @@ async function getDispatchOrders(dispatchIds: string[]): Promise<DispatchOrderRo
       orders."language",
       orders."paidAt",
       orders."deliveredAt",
+      orders."leftAtDropOffAt",
+      orders."leftAtDropOffLat",
+      orders."leftAtDropOffLng",
       orders."estimatedDeliveryDurationMinutes",
+      orders."currentEstimatedDeliveryDurationMinutes",
       orders."progressiveDiscountSnapshot",
       orders."dispatchOrderIndex",
       orders."number",
@@ -748,6 +823,123 @@ async function getLatestRoutePointByDispatchIds(
   return map;
 }
 
+async function getRoutePointsByDispatchIds(
+  dispatchIds: string[],
+): Promise<
+  Map<
+    string,
+    Array<{
+      accuracyMeters: number | null;
+      altitudeMeters: number | null;
+      createdAt: string;
+      headingDegrees: number | null;
+      id: string;
+      isMocked: boolean | null;
+      lat: number;
+      lng: number;
+      recordedAt: string;
+      sequence: number;
+      sessionId: string;
+      source: string;
+      speedMps: number | null;
+    }>
+  >
+> {
+  if (dispatchIds.length === 0) {
+    return new Map();
+  }
+
+  const rows = await prisma.$queryRaw<DispatchRoutePointRow[]>`
+    SELECT
+      session."dispatchId",
+      point."id",
+      point."sessionId",
+      point."sequence",
+      point."createdAt",
+      point."recordedAt",
+      point."lat",
+      point."lng",
+      point."accuracyMeters",
+      point."speedMps",
+      point."headingDegrees",
+      point."altitudeMeters",
+      point."source"::text AS "source",
+      point."isMocked"
+    FROM "DispatchRoutePoint" point
+    INNER JOIN "DispatchRouteSession" session
+      ON session."id" = point."sessionId"
+    WHERE session."dispatchId" IN (${Prisma.join(dispatchIds)})
+    ORDER BY
+      session."dispatchId" ASC,
+      point."recordedAt" ASC,
+      point."createdAt" ASC,
+      point."sequence" ASC
+  `;
+
+  const pointsByDispatchId = new Map<
+    string,
+    Array<{
+      accuracyMeters: number | null;
+      altitudeMeters: number | null;
+      createdAt: string;
+      headingDegrees: number | null;
+      id: string;
+      isMocked: boolean | null;
+      lat: number;
+      lng: number;
+      recordedAt: string;
+      sequence: number;
+      sessionId: string;
+      source: string;
+      speedMps: number | null;
+    }>
+  >();
+
+  for (const row of rows) {
+    const points = pointsByDispatchId.get(row.dispatchId) ?? [];
+    points.push({
+      id: row.id,
+      sessionId: row.sessionId,
+      sequence: row.sequence,
+      createdAt: row.createdAt.toISOString(),
+      recordedAt: row.recordedAt.toISOString(),
+      lat: row.lat,
+      lng: row.lng,
+      accuracyMeters: row.accuracyMeters,
+      speedMps: row.speedMps,
+      headingDegrees: row.headingDegrees,
+      altitudeMeters: row.altitudeMeters,
+      source: row.source,
+      isMocked: row.isMocked,
+    });
+    pointsByDispatchId.set(row.dispatchId, points);
+  }
+
+  return pointsByDispatchId;
+}
+
+async function getLeftRestaurantAtByDispatchIds(
+  dispatchIds: string[],
+): Promise<Map<string, string>> {
+  if (dispatchIds.length === 0) {
+    return new Map();
+  }
+
+  const rows = await prisma.$queryRaw<DispatchLeftRestaurantRow[]>`
+    SELECT
+      milestone."dispatchId",
+      MIN(milestone."recordedAt") AS "recordedAt"
+    FROM "DispatchRouteMilestone" milestone
+    WHERE milestone."dispatchId" IN (${Prisma.join(dispatchIds)})
+      AND milestone."type" = 'LEFT_PIZZERIA'::"DispatchRouteMilestoneType"
+    GROUP BY milestone."dispatchId"
+  `;
+
+  return new Map(
+    rows.map((row) => [row.dispatchId, row.recordedAt.toISOString()]),
+  );
+}
+
 async function assertDriverCanBeAssigned(
   tx: Prisma.TransactionClient,
   driverId: string,
@@ -876,6 +1068,11 @@ export class PrismaDispatchRepository implements DispatchRepository {
         dispatch."dispatched",
         dispatch."estimatedDeliveryDurationMinutes",
         dispatch."estimatedRoundTripDurationMinutes",
+        dispatch."currentEstimatedDeliveryDurationMinutes",
+        dispatch."currentEstimatedRoundTripDurationMinutes",
+        dispatch."arrivedAtRestaurantAt",
+        dispatch."arrivedAtRestaurantLat",
+        dispatch."arrivedAtRestaurantLng",
         dispatch."driverId",
         driver."createdAt" AS "driverCreatedAt",
         driver."name" AS "driverName",
@@ -899,8 +1096,11 @@ export class PrismaDispatchRepository implements DispatchRepository {
     const preparationStepCategoriesByOrderId =
       await getDispatchPreparationStepCategories(orderIds);
     const orderReadinessByOrderId = await getOrderReadinessByOrderIds(orderIds);
+    const leftRestaurantAtByDispatchId =
+      await getLeftRestaurantAtByDispatchIds(dispatchIds);
     const latestRoutePointByDispatchId =
       await getLatestRoutePointByDispatchIds(dispatchIds);
+    const routePointsByDispatchId = await getRoutePointsByDispatchIds(dispatchIds);
 
     return dispatchRows.map((dispatch) =>
       mapDispatch(
@@ -910,7 +1110,9 @@ export class PrismaDispatchRepository implements DispatchRepository {
         redeemedRewardsByOrderId,
         preparationStepCategoriesByOrderId,
         orderReadinessByOrderId,
+        leftRestaurantAtByDispatchId,
         latestRoutePointByDispatchId,
+        routePointsByDispatchId,
       ),
     );
   }
@@ -940,6 +1142,11 @@ export class PrismaDispatchRepository implements DispatchRepository {
         dispatch."dispatched",
         dispatch."estimatedDeliveryDurationMinutes",
         dispatch."estimatedRoundTripDurationMinutes",
+        dispatch."currentEstimatedDeliveryDurationMinutes",
+        dispatch."currentEstimatedRoundTripDurationMinutes",
+        dispatch."arrivedAtRestaurantAt",
+        dispatch."arrivedAtRestaurantLat",
+        dispatch."arrivedAtRestaurantLng",
         dispatch."driverId",
         driver."createdAt" AS "driverCreatedAt",
         driver."name" AS "driverName",
@@ -962,6 +1169,9 @@ export class PrismaDispatchRepository implements DispatchRepository {
     const preparationStepCategoriesByOrderId =
       await getDispatchPreparationStepCategories(orderIds);
     const orderReadinessByOrderId = await getOrderReadinessByOrderIds(orderIds);
+    const leftRestaurantAtByDispatchId = await getLeftRestaurantAtByDispatchIds([
+      dispatchRow.id,
+    ]);
     const latestRoutePointByDispatchId = await getLatestRoutePointByDispatchIds([
       dispatchRow.id,
     ]);
@@ -973,6 +1183,7 @@ export class PrismaDispatchRepository implements DispatchRepository {
       redeemedRewardsByOrderId,
       preparationStepCategoriesByOrderId,
       orderReadinessByOrderId,
+      leftRestaurantAtByDispatchId,
       latestRoutePointByDispatchId,
     );
   }
@@ -1264,6 +1475,14 @@ export class PrismaDispatchRepository implements DispatchRepository {
       );
     }
 
+    if (filters.startAt) {
+      whereClauses.push(Prisma.sql`dispatch."createdAt" >= ${filters.startAt}`);
+    }
+
+    if (filters.endAt) {
+      whereClauses.push(Prisma.sql`dispatch."createdAt" <= ${filters.endAt}`);
+    }
+
     const dispatchRows = await prisma.$queryRaw<DispatchRow[]>`
       SELECT
         dispatch."id",
@@ -1274,6 +1493,11 @@ export class PrismaDispatchRepository implements DispatchRepository {
         dispatch."dispatched",
         dispatch."estimatedDeliveryDurationMinutes",
         dispatch."estimatedRoundTripDurationMinutes",
+        dispatch."currentEstimatedDeliveryDurationMinutes",
+        dispatch."currentEstimatedRoundTripDurationMinutes",
+        dispatch."arrivedAtRestaurantAt",
+        dispatch."arrivedAtRestaurantLat",
+        dispatch."arrivedAtRestaurantLng",
         dispatch."driverId",
         driver."createdAt" AS "driverCreatedAt",
         driver."name" AS "driverName",
@@ -1297,8 +1521,11 @@ export class PrismaDispatchRepository implements DispatchRepository {
     const preparationStepCategoriesByOrderId =
       await getDispatchPreparationStepCategories(orderIds);
     const orderReadinessByOrderId = await getOrderReadinessByOrderIds(orderIds);
+    const leftRestaurantAtByDispatchId =
+      await getLeftRestaurantAtByDispatchIds(dispatchIds);
     const latestRoutePointByDispatchId =
       await getLatestRoutePointByDispatchIds(dispatchIds);
+    const routePointsByDispatchId = await getRoutePointsByDispatchIds(dispatchIds);
 
     return dispatchRows.map((dispatch) =>
       mapDispatch(
@@ -1308,7 +1535,9 @@ export class PrismaDispatchRepository implements DispatchRepository {
         redeemedRewardsByOrderId,
         preparationStepCategoriesByOrderId,
         orderReadinessByOrderId,
+        leftRestaurantAtByDispatchId,
         latestRoutePointByDispatchId,
+        routePointsByDispatchId,
       ),
     );
   }
@@ -1335,6 +1564,11 @@ export class PrismaDispatchRepository implements DispatchRepository {
         dispatch."dispatched",
         dispatch."estimatedDeliveryDurationMinutes",
         dispatch."estimatedRoundTripDurationMinutes",
+        dispatch."currentEstimatedDeliveryDurationMinutes",
+        dispatch."currentEstimatedRoundTripDurationMinutes",
+        dispatch."arrivedAtRestaurantAt",
+        dispatch."arrivedAtRestaurantLat",
+        dispatch."arrivedAtRestaurantLng",
         dispatch."driverId",
         driver."createdAt" AS "driverCreatedAt",
         driver."name" AS "driverName",
@@ -1368,6 +1602,9 @@ export class PrismaDispatchRepository implements DispatchRepository {
     const preparationStepCategoriesByOrderId =
       await getDispatchPreparationStepCategories(orderIds);
     const orderReadinessByOrderId = await getOrderReadinessByOrderIds(orderIds);
+    const leftRestaurantAtByDispatchId = await getLeftRestaurantAtByDispatchIds([
+      dispatchRow.id,
+    ]);
     const latestRoutePointByDispatchId = await getLatestRoutePointByDispatchIds([
       dispatchRow.id,
     ]);
@@ -1379,6 +1616,7 @@ export class PrismaDispatchRepository implements DispatchRepository {
       redeemedRewardsByOrderId,
       preparationStepCategoriesByOrderId,
       orderReadinessByOrderId,
+      leftRestaurantAtByDispatchId,
       latestRoutePointByDispatchId,
     );
   }
@@ -1420,6 +1658,11 @@ export class PrismaDispatchRepository implements DispatchRepository {
         dispatch."dispatched",
         dispatch."estimatedDeliveryDurationMinutes",
         dispatch."estimatedRoundTripDurationMinutes",
+        dispatch."currentEstimatedDeliveryDurationMinutes",
+        dispatch."currentEstimatedRoundTripDurationMinutes",
+        dispatch."arrivedAtRestaurantAt",
+        dispatch."arrivedAtRestaurantLat",
+        dispatch."arrivedAtRestaurantLng",
         dispatch."driverId",
         driver."createdAt" AS "driverCreatedAt",
         driver."name" AS "driverName",
@@ -1442,6 +1685,9 @@ export class PrismaDispatchRepository implements DispatchRepository {
     const preparationStepCategoriesByOrderId =
       await getDispatchPreparationStepCategories(orderIds);
     const orderReadinessByOrderId = await getOrderReadinessByOrderIds(orderIds);
+    const leftRestaurantAtByDispatchId = await getLeftRestaurantAtByDispatchIds([
+      dispatchRow.id,
+    ]);
     const latestRoutePointByDispatchId = await getLatestRoutePointByDispatchIds([
       dispatchRow.id,
     ]);
@@ -1453,6 +1699,7 @@ export class PrismaDispatchRepository implements DispatchRepository {
       redeemedRewardsByOrderId,
       preparationStepCategoriesByOrderId,
       orderReadinessByOrderId,
+      leftRestaurantAtByDispatchId,
       latestRoutePointByDispatchId,
     );
   }
