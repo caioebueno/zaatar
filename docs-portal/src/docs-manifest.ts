@@ -3,6 +3,10 @@ import authMd from '../../api/docs/authentication.md?raw'
 import ownerMd from '../../api/docs/owner.md?raw'
 import businessMd from '../../api/docs/business.md?raw'
 import catalogMd from '../../api/docs/catalog.md?raw'
+import categoriesMd from '../../api/docs/categories.md?raw'
+import customersMd from '../../api/docs/customers.md?raw'
+import progressiveDiscountMd from '../../api/docs/progressive-discount.md?raw'
+import addressSearchMd from '../../api/docs/address-search.md?raw'
 import ordersMd from '../../api/docs/orders.md?raw'
 import dispatchMd from '../../api/docs/dispatch.md?raw'
 import dispatchRouteMd from '../../api/docs/dispatch-route.md?raw'
@@ -25,6 +29,10 @@ export const docs: DocEntry[] = [
   { id: 'owner',          title: 'Owner',             group: 'Auth & Identity',       content: ownerMd },
   { id: 'business',       title: 'Business',          group: 'Business',              content: businessMd },
   { id: 'catalog',        title: 'Catalog',           group: 'Catalog',               content: catalogMd },
+  { id: 'categories',     title: 'Categories',        group: 'Catalog',               content: categoriesMd },
+  { id: 'customers',      title: 'Customers',         group: 'Catalog',               content: customersMd },
+  { id: 'progressive-discount', title: 'Progressive Discount', group: 'Catalog',      content: progressiveDiscountMd },
+  { id: 'address-search', title: 'Address Search',    group: 'Catalog',               content: addressSearchMd },
   { id: 'orders',         title: 'Orders',            group: 'Operations',            content: ordersMd },
   { id: 'dispatch',       title: 'Dispatch',          group: 'Operations',            content: dispatchMd },
   { id: 'dispatch-route', title: 'Route Tracking',    group: 'Operations',            content: dispatchRouteMd },

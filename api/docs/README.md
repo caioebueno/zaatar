@@ -20,6 +20,10 @@ All responses are JSON. All protected routes require an `Authorization: Bearer <
 | [owner.md](./owner.md) | Owner registration, email/password login, OTP auth |
 | [business.md](./business.md) | Businesses, branches, onboarding, business settings |
 | [catalog.md](./catalog.md) | Products, menus, categories, modifier groups, media upload, customers, address search |
+| [categories.md](./categories.md) | Full `/categories` request/response schemas (list/create/update/detach) |
+| [customers.md](./customers.md) | Full customer APIs (`/customers`, `/customers/search`, `/customers/:customerId/addresses`) |
+| [progressive-discount.md](./progressive-discount.md) | Full `/progressive-discount` schema, selection behavior, and examples |
+| [address-search.md](./address-search.md) | Full `/address-search` schema, behavior, and examples |
 | [orders.md](./orders.md) | List/get/create/update orders, orders by station |
 | [dispatch.md](./dispatch.md) | Dispatch management (manager), driver dispatch flow |
 | [dispatch-route.md](./dispatch-route.md) | GPS route tracking, route sessions, route history |

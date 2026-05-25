@@ -2982,11 +2982,11 @@ const FindAddressModal: React.FC<TFindAddressModal> = ({
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Overlay className="fixed inset-0 z-[79] bg-black/45 backdrop-blur-[2px] duration-300 ease-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0" />
-      <Dialog.Content className="w-dvw h-dvh bg-background fixed top-0 left-0 z-[80] duration-300 ease-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0 data-[state=open]:slide-in-from-bottom-3 data-[state=closed]:slide-out-to-bottom-3">
+      <Dialog.Content className="w-dvw h-dvh bg-background fixed top-0 left-0 z-[80] flex flex-col duration-300 ease-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0 data-[state=open]:slide-in-from-bottom-3 data-[state=closed]:slide-out-to-bottom-3">
         <Dialog.Title className="sr-only">
           {content["addAddress"]}
         </Dialog.Title>
-        <div className="flex flex-row justify-between items-center px-4 py-3 bg-foreground border-brandBackground/15 border-b">
+        <div className="flex flex-row justify-between items-center px-4 py-3 bg-foreground border-brandBackground/15 border-b shrink-0">
           <Button className="p-2! bg-transparent text-text! opacity-0">
             <FiX />
           </Button>
@@ -2998,7 +2998,7 @@ const FindAddressModal: React.FC<TFindAddressModal> = ({
             <FiX size={18} />
           </Button>
         </div>
-        <div className="py-4 px-4 flex flex-col gap-3">
+        <div className="py-4 px-4 flex flex-col gap-3 flex-1 overflow-y-auto min-h-0">
           <AddressAutocompleteInput
             onSelect={(value) => {
               setSelectedAddress(value);
@@ -3028,7 +3028,7 @@ const FindAddressModal: React.FC<TFindAddressModal> = ({
           )}
           {error && <span className="text-red-600 text-sm">{error}</span>}
         </div>
-        <div className="bottom-0 bg-foreground pt-4 px-4 pb-8 w-full fixed border-t border-brandBackground/15">
+        <div className="bg-foreground pt-4 px-4 pb-8 w-full shrink-0 border-t border-brandBackground/15">
           <Button
             disabled={selectedAddress === null || loading}
             onClick={() => handleConfirm()}

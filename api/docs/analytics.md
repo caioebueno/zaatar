@@ -17,9 +17,8 @@ Both endpoints return the same payload. Data is scoped to the authenticated mana
 
 | Param | Aliases | Required | Description |
 |---|---|---|---|
-| `startDate` | `start`, `from` | Yes | Start date (`YYYY-MM-DD`) |
-| `endDate` | `end`, `to` | Yes | End date (`YYYY-MM-DD`) |
-| `timezone` | — | No | IANA timezone (default `America/New_York`) |
+| `startDate` | `start`, `from` | Yes | Start datetime (`ISO-8601`, e.g. `2026-05-01T00:00:00.000Z`) |
+| `endDate` | `end`, `to` | Yes | End datetime (`ISO-8601`, e.g. `2026-05-18T23:59:59.999Z`) |
 
 Rules:
 
@@ -29,7 +28,7 @@ Rules:
 Example request:
 
 ```http
-GET /analytics/orders/sales?startDate=2026-05-01&endDate=2026-05-18&timezone=America/New_York
+GET /analytics/orders/sales?startDate=2026-05-01T00:00:00.000Z&endDate=2026-05-18T23:59:59.999Z
 Authorization: Bearer <manager-access-token>
 ```
 
@@ -38,8 +37,8 @@ Authorization: Bearer <manager-access-token>
 ```ts
 type AnalyticsSalesResponse = {
   // Primary fields
-  startDate: string; // YYYY-MM-DD
-  endDate: string; // YYYY-MM-DD
+  startDate: string; // ISO-8601 datetime
+  endDate: string; // ISO-8601 datetime
   receitaTotal: number; // cents — total revenue
   ticketMedio: number; // cents — average ticket
   totalPedidos: number; // total order count
@@ -47,9 +46,8 @@ type AnalyticsSalesResponse = {
   volumePedidos: Array<{ date: string; pedidos: number }>; // daily order count bar chart
 
   // Compatibility fields
-  from: string; // YYYY-MM-DD
-  to: string; // YYYY-MM-DD
-  timezone: string;
+  from: string; // ISO-8601 datetime
+  to: string; // ISO-8601 datetime
   summary: {
     totalSales: number; // cents
     averageTicket: number; // cents
@@ -68,8 +66,8 @@ Sample response:
 
 ```json
 {
-  "startDate": "2026-05-01",
-  "endDate": "2026-05-18",
+  "startDate": "2026-05-01T00:00:00.000Z",
+  "endDate": "2026-05-18T23:59:59.999Z",
   "receitaTotal": 123456,
   "ticketMedio": 2345,
   "totalPedidos": 52,
@@ -81,9 +79,8 @@ Sample response:
     { "date": "2026-05-01", "pedidos": 5 },
     { "date": "2026-05-02", "pedidos": 4 }
   ],
-  "from": "2026-05-01",
-  "to": "2026-05-18",
-  "timezone": "America/New_York",
+  "from": "2026-05-01T00:00:00.000Z",
+  "to": "2026-05-18T23:59:59.999Z",
   "summary": {
     "totalSales": 123456,
     "averageTicket": 2345,

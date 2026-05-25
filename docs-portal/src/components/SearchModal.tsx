@@ -69,12 +69,12 @@ export function SearchModal({ onClose, onSelect }: Props) {
   return (
     <div
       className="search-backdrop fixed inset-0 z-50 flex items-start justify-center pt-[15vh]"
-      style={{ background: 'rgba(7,9,17,0.7)' }}
+      style={{ background: 'rgba(8,8,8,0.72)' }}
       onClick={onClose}
     >
       <div
         className="w-full max-w-xl rounded-xl border border-border overflow-hidden shadow-2xl"
-        style={{ background: '#0d1020' }}
+        style={{ background: 'var(--color-surface)' }}
         onClick={(e) => e.stopPropagation()}
         onKeyDown={handleKey}
       >
@@ -90,7 +90,7 @@ export function SearchModal({ onClose, onSelect }: Props) {
           />
           <kbd
             className="text-xs font-mono text-faint border border-border px-1.5 py-0.5 rounded"
-            style={{ background: '#0a0e1a' }}
+            style={{ background: 'var(--color-elevated)' }}
           >
             ESC
           </kbd>
@@ -107,13 +107,13 @@ export function SearchModal({ onClose, onSelect }: Props) {
               <button
                 key={doc.id}
                 className="w-full flex items-start gap-3 px-4 py-3 text-left transition-colors"
-                style={{ background: i === activeIdx ? 'rgba(79,142,247,0.08)' : undefined }}
+                style={{ background: i === activeIdx ? 'rgba(209,162,74,0.10)' : undefined }}
                 onMouseEnter={() => setActiveIdx(i)}
                 onClick={() => { onSelect(doc.id); onClose() }}
               >
                 <div
                   className="mt-0.5 w-6 h-6 rounded flex items-center justify-center flex-shrink-0 text-xs font-mono"
-                  style={{ background: '#111525', color: '#4f8ef7', border: '1px solid #1c2440' }}
+                  style={{ background: 'var(--color-elevated)', color: 'var(--color-accent)', border: '1px solid var(--color-border)' }}
                 >
                   {doc.title[0]}
                 </div>

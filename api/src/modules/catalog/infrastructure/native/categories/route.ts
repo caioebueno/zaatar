@@ -36,6 +36,11 @@ type ProductVisibleRow = {
   visible: boolean;
 };
 
+type ModifierGroupTranslationsRow = {
+  id: string;
+  translations: Prisma.JsonValue | null;
+};
+
 type ExclusivePromotionProductRow = {
   productId: string;
 };
@@ -264,6 +269,7 @@ export async function GET(request: NextRequestLike) {
     const [
       prismaProducts,
       productVisibilityRows,
+      modifierGroupTranslationsRows,
       exclusivePromotionProductRows,
       comboProductRows,
       requestedPromotion,
@@ -282,6 +288,12 @@ export async function GET(request: NextRequestLike) {
       prisma.$queryRaw<ProductVisibleRow[]>`
         SELECT "id", "visible"
         FROM "Product"
+      `,
+      prisma.$queryRaw<ModifierGroupTranslationsRow[]>`
+        SELECT
+          modifierGroup."id",
+          to_jsonb(modifierGroup) -> 'translations' AS "translations"
+        FROM "ModifierGroup" modifierGroup
       `,
       productIds.length === 0
         ? Promise.resolve([])
@@ -315,6 +327,27 @@ export async function GET(request: NextRequestLike) {
 
     const visibleByProductId = new Map(
       productVisibilityRows.map((row) => [row.id, row.visible]),
+    );
+    const modifierGroupTranslationsById = new Map<
+      string,
+      {
+        [key: string]: {
+          [key: string]: string;
+        };
+      } | undefined
+    >(
+      modifierGroupTranslationsRows.map((row) => [
+        row.id,
+        row.translations &&
+        typeof row.translations === "object" &&
+        !Array.isArray(row.translations)
+          ? (row.translations as {
+              [key: string]: {
+                [key: string]: string;
+              };
+            })
+          : undefined,
+      ]),
     );
     const productsById = new Map(prismaProducts.map((product) => [product.id, product]));
     const productCategoryRowsByCategoryId = new Map<string, ProductCategoryRow[]>();
@@ -463,48 +496,48 @@ export async function GET(request: NextRequestLike) {
             price: product.price || undefined,
             categoryIndex: productCategoryRow.categoryIndex ?? undefined,
             comparedAtPrice: product.comparedAtPrice || undefined,
-            modifierGroups: product.modifierGroups.map((item) => ({
-              translations:
-                item.translations &&
-                typeof item.translations === "object" &&
-                !Array.isArray(item.translations)
-                  ? (item.translations as {
-                      [key: string]: {
-                        [key: string]: string;
-                      };
-                    })
-                  : undefined,
-              id: item.id,
-              required: item.required,
-              title: item.title,
-              type: item.type,
-              minSelection: item.minSelection,
-              maxSelection: item.maxSelection,
-              items: item.items.map((modifierItem) => ({
-                id: modifierItem.id,
-                name: modifierItem.name,
-                description: modifierItem.description || undefined,
-                price: modifierItem.price,
-                ...(modifierItem.photo
+            modifierGroups: product.modifierGroups.map((item) => {
+              const modifierGroupTranslations =
+                modifierGroupTranslationsById.get(item.id);
+
+              return {
+                ...(modifierGroupTranslations
                   ? {
-                      photo: {
-                        id: modifierItem.photo.id,
-                        url: modifierItem.photo.url,
-                      },
+                      translations: modifierGroupTranslations,
                     }
                   : {}),
-                translations:
-                  modifierItem.translations &&
-                  typeof modifierItem.translations === "object" &&
-                  !Array.isArray(modifierItem.translations)
-                    ? (modifierItem.translations as {
-                        [key: string]: {
-                          [key: string]: string;
-                        };
-                      })
-                    : undefined,
-              })),
-            })),
+                id: item.id,
+                required: item.required,
+                title: item.title,
+                type: item.type,
+                minSelection: item.minSelection,
+                maxSelection: item.maxSelection,
+                items: item.items.map((modifierItem) => ({
+                  id: modifierItem.id,
+                  name: modifierItem.name,
+                  description: modifierItem.description || undefined,
+                  price: modifierItem.price,
+                  ...(modifierItem.photo
+                    ? {
+                        photo: {
+                          id: modifierItem.photo.id,
+                          url: modifierItem.photo.url,
+                        },
+                      }
+                    : {}),
+                  translations:
+                    modifierItem.translations &&
+                    typeof modifierItem.translations === "object" &&
+                    !Array.isArray(modifierItem.translations)
+                      ? (modifierItem.translations as {
+                          [key: string]: {
+                            [key: string]: string;
+                          };
+                        })
+                      : undefined,
+                })),
+              };
+            }),
             photos: product.photos?.map((photo) => ({
               id: photo.id,
               url: photo.url,

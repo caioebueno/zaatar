@@ -15,7 +15,7 @@ import { useRouter } from 'expo-router';
 import { useAuth } from '@/context/auth';
 import { getNextDispatch, listDriverDispatches, activateDriver, deactivateDriver, DispatchEntity } from '@/lib/dispatch-api';
 import { calculateOrderTotal } from '@/utils/orderTotal';
-import { startDriverTracking, stopDriverTracking } from '@/lib/route-tracking';
+import { startDriverTracking, stopDriverTracking, startRouteTracking, stopRouteTracking } from '@/lib/route-tracking';
 
 // ─── Design tokens ────────────────────────────────────────────────────────────
 const D = {
@@ -208,9 +208,9 @@ function DeactivateBanner({ onDeactivate, loading }: { onDeactivate: () => void;
 
 const deactivateStyles = StyleSheet.create({
   bar:     { flexDirection: 'row', alignItems: 'center', gap: 10, backgroundColor: D.surf2, borderWidth: 1, borderColor: D.line, borderRadius: 12, paddingVertical: 9, paddingLeft: 14, paddingRight: 10 },
-  label:   { flex: 1, fontFamily: MONO_B, fontSize: 10, color: D.dim, letterSpacing: 0.6 },
-  btn:     { height: 28, borderRadius: 8, borderWidth: 1, borderColor: D.line, paddingHorizontal: 10, alignItems: 'center', justifyContent: 'center' },
-  btnText: { fontFamily: SANS_B, fontSize: 11, color: D.faint, letterSpacing: -0.1 },
+  label:   { flex: 1, fontFamily: MONO_B, fontSize: 13, color: D.dim, letterSpacing: 0.4 },
+  btn:     { height: 30, borderRadius: 8, borderWidth: 1, borderColor: D.line, paddingHorizontal: 12, alignItems: 'center', justifyContent: 'center' },
+  btnText: { fontFamily: SANS_B, fontSize: 13, color: D.faint, letterSpacing: -0.1 },
 });
 
 // ─── OfflineStatusStrip ───────────────────────────────────────────────────────
@@ -275,7 +275,6 @@ function WaitingCard() {
 
       <View style={{ alignItems: 'center', gap: 4 }}>
         <Text style={waitStyles.title}>Aguardando entregas</Text>
-        <Text style={waitStyles.sub}>Você será notificado assim que uma rota for atribuída.</Text>
       </View>
 
       <View style={waitStyles.statusChip}>
@@ -542,7 +541,7 @@ const summaryStyles = StyleSheet.create({
   },
   headerRow: { flexDirection: 'row', alignItems: 'flex-start', gap: 12 },
   kicker: {
-    fontFamily: MONO_B, fontSize: 9, letterSpacing: 1.8,
+    fontFamily: MONO_B, fontSize: 11, letterSpacing: 1.4,
     textTransform: 'uppercase', color: D.faint, marginBottom: 5,
   },
   heroNum:  { fontFamily: SANS_EB, fontSize: 28, color: D.text, letterSpacing: -1.2 },
@@ -558,7 +557,7 @@ const summaryStyles = StyleSheet.create({
     paddingVertical: 7, paddingHorizontal: 10,
     borderWidth: 1, borderColor: D.line,
   },
-  verTudoText: { fontFamily: MONO_B, fontSize: 10, color: D.faint, letterSpacing: 0.5 },
+  verTudoText: { fontFamily: MONO_B, fontSize: 12, color: D.faint, letterSpacing: 0.4 },
   chartRow:    { flexDirection: 'row', alignItems: 'flex-end', gap: 4 },
   chartLabel:  { fontFamily: MONO, fontSize: 8, color: 'rgba(250,245,238,0.12)', letterSpacing: 0.4, textAlign: 'center' },
   legendText:  { fontFamily: MONO, fontSize: 8.5, color: D.faint, letterSpacing: 0.4 },
@@ -659,7 +658,6 @@ function HomeScreen({
         </View>
 
         <View style={{ gap: 6 }}>
-          <Text style={homeStyles.sectionKicker}>Histórico de Entregas</Text>
           <PastSummaryCard onPress={onShowHistory} />
         </View>
 
@@ -674,7 +672,7 @@ const homeStyles = StyleSheet.create({
   driverName:  { fontSize: 20, fontFamily: SANS_EB, color: D.text, letterSpacing: -0.6 },
 avatar:      { width: 36, height: 36, borderRadius: 10, backgroundColor: 'rgba(255,61,20,0.12)', borderWidth: 1.5, borderColor: 'rgba(255,61,20,0.24)', alignItems: 'center', justifyContent: 'center' },
   avatarText:  { fontFamily: SANS_EB, fontSize: 14, color: D.zippy, letterSpacing: -0.3 },
-  sectionKicker:   { fontFamily: MONO_B, fontSize: 9.5, letterSpacing: 1.8, textTransform: 'uppercase', color: D.faint },
+  sectionKicker:   { fontFamily: MONO_B, fontSize: 11.5, letterSpacing: 1.5, textTransform: 'uppercase', color: D.faint },
 });
 
 // ─── Root export ──────────────────────────────────────────────────────────────
@@ -708,13 +706,29 @@ export default function DriverHome() {
     return () => clearInterval(interval);
   }, [fetchDispatch]);
 
-  // Resume tracking on mount if driver is already active (e.g. app restarted)
+  // Resume driver-level tracking on mount if already active (e.g. app restarted)
   const didResume = useRef(false);
   useEffect(() => {
     if (didResume.current || !token || !active) return;
     didResume.current = true;
     startDriverTracking(token).catch((e) => console.log('[home] resume tracking error', e));
   }, [token, active]);
+
+  // Manage route tracking lifecycle from the dispatch polling state
+  const prevRouteRef = useRef<{ id: string; started: boolean } | null>(null);
+  useEffect(() => {
+    if (!token || !active) return;
+    const cur = dispatch ? { id: dispatch.id, started: !!dispatch.startedDeliveryAt } : null;
+    const prev = prevRouteRef.current;
+
+    if (cur?.started && (prev?.id !== cur.id || !prev?.started)) {
+      startRouteTracking(token, cur.id).catch((e) => console.log('[home] startRouteTracking error', e));
+    } else if (!cur?.started && prev?.started) {
+      stopRouteTracking().catch((e) => console.log('[home] stopRouteTracking error', e));
+    }
+
+    prevRouteRef.current = cur;
+  }, [dispatch?.id, dispatch?.startedDeliveryAt, token, active]);
 
   const handleActivate = useCallback(async () => {
     if (!token) return;

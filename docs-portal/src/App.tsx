@@ -56,12 +56,12 @@ export default function App() {
       <main
         ref={contentRef}
         className="flex-1 overflow-y-auto h-full"
-        style={{ background: '#07090f' }}
+        style={{ background: 'var(--color-bg)' }}
       >
         {/* Top bar */}
         <div
           className="sticky top-0 z-10 flex items-center gap-2 px-10 py-3.5 border-b border-border-subtle text-xs text-muted"
-          style={{ background: 'rgba(7,9,17,0.85)', backdropFilter: 'blur(12px)' }}
+          style={{ background: 'rgba(15,15,15,0.86)', backdropFilter: 'blur(12px)' }}
         >
           <span className="text-faint">Foody API</span>
           <ChevronIcon />

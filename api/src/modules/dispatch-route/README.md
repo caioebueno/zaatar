@@ -34,9 +34,10 @@ Request body (single location point):
 Behavior:
 
 - API resolves the active dispatch from token driver id.
-- Active dispatch is defined as `Dispatch.startedDeliveryAt IS NOT NULL`.
+- Active dispatch is defined as `Dispatch.startedDeliveryAt IS NOT NULL` and not yet marked with `ARRIVED_RESTAURANT`.
 - If no active route session exists for that dispatch+driver, API creates one automatically.
 - Inserts this location as one route point and enqueues ETA recalculation.
+- Tracks route milestone `LEFT_PIZZERIA` once per dispatch when geofence exit is detected.
 
 Success (`200`):
 
@@ -46,9 +47,52 @@ Success (`200`):
   "dispatchId": "dispatch-id",
   "sessionId": "route-session-id",
   "insertedCount": 1,
-  "lastSequence": 18
+  "lastSequence": 18,
+  "leftPizzeriaTracked": false,
+  "leftAtDropOffTracked": false,
+  "arrivedAtRestaurantTracked": false
 }
 ```
+
+`leftPizzeriaTracked`:
+
+- `true`: this call recorded the `LEFT_PIZZERIA` milestone.
+- `false`: not tracked in this call (already tracked, not enough signal, or no branch coordinates available).
+
+`leftAtDropOffTracked`:
+
+- `true`: this call recorded the `LEFT_DROPOFF` milestone for one specific order in the dispatch.
+- `false`: not tracked in this call.
+
+`arrivedAtRestaurantTracked`:
+
+- `true`: this call recorded the `ARRIVED_RESTAURANT` milestone for this dispatch.
+- `false`: not tracked in this call.
+
+Order-level persistence:
+
+- `LEFT_DROPOFF` updates that order's `Order.leftAtDropOffAt/Lat/Lng`.
+- `ARRIVED_RESTAURANT` updates `Dispatch.arrivedAtRestaurantAt/Lat/Lng`.
+- When `ARRIVED_RESTAURANT` is tracked, the active route session is completed automatically and subsequent location ingests for that dispatch are ignored.
+
+Geofence detection rules:
+
+- Origin: first branch address (`Branch -> Address.lat/lng`) found for orders in the dispatch.
+- Ignores mocked points (`isMocked = true`) and very inaccurate points (`accuracyMeters > 100`, configurable).
+- Requires inside evidence (`<= 80m`) plus outside streak (`> 120m`) on recent points.
+- Outside streak defaults to 3 consecutive points with movement (`speedMps >= 1.5` when speed exists).
+
+Optional environment flags:
+
+- `DISPATCH_LEFT_PIZZERIA_INSIDE_RADIUS_METERS` (default `80`)
+- `DISPATCH_LEFT_PIZZERIA_OUTSIDE_RADIUS_METERS` (default `120`)
+- `DISPATCH_LEFT_PIZZERIA_STREAK_POINTS` (default `3`)
+- `DISPATCH_LEFT_PIZZERIA_MIN_SPEED_MPS` (default `1.5`)
+- `DISPATCH_LEFT_DROPOFF_INSIDE_RADIUS_METERS` (default `60`)
+- `DISPATCH_LEFT_DROPOFF_OUTSIDE_RADIUS_METERS` (default `100`)
+- `DISPATCH_LEFT_DROPOFF_STREAK_POINTS` (default `3`)
+- `DISPATCH_ARRIVED_RESTAURANT_RADIUS_METERS` (default `70`)
+- `DISPATCH_LOCATION_MAX_ACCURACY_METERS` (default `100`)
 
 ## 1) Start Route Session (Driver Auth)
 
@@ -159,9 +203,14 @@ Ignored success (`200`):
 
 Each ETA recalculation job updates:
 
-- `Dispatch.estimatedDeliveryDurationMinutes`
-- `Dispatch.estimatedRoundTripDurationMinutes`
-- `Order.estimatedDeliveryDurationMinutes` for pending (not delivered/canceled) orders in the dispatch
+- `Dispatch.currentEstimatedDeliveryDurationMinutes`
+- `Dispatch.currentEstimatedRoundTripDurationMinutes`
+- `Order.currentEstimatedDeliveryDurationMinutes` for pending (not delivered/canceled) orders in the dispatch
+
+Notes:
+
+- `estimatedDeliveryDurationMinutes` / `estimatedRoundTripDurationMinutes` remain the planned baseline ETA.
+- `currentEstimated*` fields represent live ETA recalculated from latest driver location.
 
 ## 3) Stop Route Session (Driver Auth)
 

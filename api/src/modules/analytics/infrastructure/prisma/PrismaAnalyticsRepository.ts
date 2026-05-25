@@ -18,15 +18,15 @@ export class PrismaAnalyticsRepository implements AnalyticsRepository {
     const rows = await prisma.$queryRaw<DailyRow[]>`
       WITH days AS (
         SELECT generate_series(
-          ${query.from}::date,
-          ${query.to}::date,
+          date_trunc('day', ${query.from}::timestamptz)::date,
+          date_trunc('day', ${query.to}::timestamptz)::date,
           interval '1 day'
         )::date AS day
       ),
       order_totals AS (
         SELECT
           orders."id" AS "orderId",
-          timezone(${query.timezone}, orders."createdAt")::date AS day,
+          date_trunc('day', orders."createdAt" AT TIME ZONE 'UTC')::date AS day,
           COALESCE(orders."tipAmount", 0)::numeric AS tip_percentage,
           CASE
             WHEN orders."type"::text = 'DELIVERY'
@@ -51,10 +51,11 @@ export class PrismaAnalyticsRepository implements AnalyticsRepository {
           ON op."orderId" = orders."id"
         WHERE orders."canceled" = false
           AND branch."businessId" = ${query.businessId}
-          AND timezone(${query.timezone}, orders."createdAt")::date BETWEEN ${query.from}::date AND ${query.to}::date
+          AND orders."createdAt" >= ${query.from}::timestamptz
+          AND orders."createdAt" <= ${query.to}::timestamptz
         GROUP BY
           orders."id",
-          timezone(${query.timezone}, orders."createdAt")::date,
+          date_trunc('day', orders."createdAt" AT TIME ZONE 'UTC')::date,
           orders."tipAmount",
           orders."progressiveDiscountSnapshot"
       ),

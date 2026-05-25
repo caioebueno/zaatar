@@ -21,7 +21,6 @@ export class GetOrderSalesAnalyticsController implements HttpController {
         end: url.searchParams.get("end") ?? undefined,
         from: url.searchParams.get("from") ?? undefined,
         to: url.searchParams.get("to") ?? undefined,
-        timezone: url.searchParams.get("timezone") ?? undefined,
       });
 
       return {

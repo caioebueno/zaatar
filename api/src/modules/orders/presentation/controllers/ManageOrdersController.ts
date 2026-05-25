@@ -10,6 +10,7 @@ import type {
 type PaymentMethod = "CARD" | "CASH" | "ZELLE";
 type PaymentProvider = "STRIPE";
 type OrderType = "DELIVERY" | "TAKEAWAY";
+type ProductItemType = "PRODUCT" | "COMBO";
 
 type ParsedOrderProductUpdate = {
   kind: "update";
@@ -204,10 +205,12 @@ export class ManageOrdersController implements HttpController {
       }
 
       const orderId = randomUUID();
+      const orderNumber = buildReadableOrderNumber();
       await prisma.$transaction(async (tx) => {
-        await tx.order.create({
+        const createdOrder = await tx.order.create({
           data: {
             id: orderId,
+            number: orderNumber,
             amount: orderAmount,
             type: orderType,
             paymentMethod,
@@ -249,7 +252,74 @@ export class ManageOrdersController implements HttpController {
             },
           });
         }
+
+        await createPreparationStepCategoriesForOrderTx(tx, {
+          orderId,
+          orderCreatedAt: createdOrder.createdAt,
+          orderProducts: createdOrderProducts.map((item) => ({
+            productId: item.productId,
+            quantity: item.quantity,
+            comments: item.comments,
+            selectedModifierGroupItemIds: item.modifierGroupItemIds,
+          })),
+          cartItems: cart.items,
+          productById: new Map(
+            Array.from(productById.entries()).map(([id, product]) => [
+              id,
+              {
+                id: product.id,
+                itemType: product.itemType as ProductItemType,
+              },
+            ]),
+          ),
+        });
+
+        if (orderType === "TAKEAWAY") {
+          const dispatchId = randomUUID();
+          const [nextQueueIndexResult] = await tx.$queryRaw<
+            { nextQueueIndex: number }[]
+          >`
+            SELECT COALESCE(MAX(dispatch."queueIndex"), 0)::INTEGER + 1 AS "nextQueueIndex"
+            FROM "Dispatch" dispatch
+          `;
+          const nextQueueIndex = nextQueueIndexResult?.nextQueueIndex ?? 1;
+
+          await tx.$executeRaw`
+            INSERT INTO "Dispatch" (
+              "id",
+              "queueIndex",
+              "dispatched",
+              "dispatchAt",
+              "driverId"
+            )
+            VALUES (
+              ${dispatchId},
+              ${nextQueueIndex},
+              false,
+              NULL,
+              NULL
+            )
+          `;
+
+          await tx.order.update({
+            where: {
+              id: orderId,
+            },
+            data: {
+              dispatchId,
+              dispatchOrderIndex: 1,
+            },
+          });
+        }
       });
+
+      if (orderType === "DELIVERY" && deliveryAddressId) {
+        await ensureDeliveryOrderHasDispatch({
+          orderId,
+          deliveryAddressId,
+          isScheduledOrder: Boolean(scheduleFor),
+        });
+      }
 
       const order = await loadOrderWithRelations(orderId);
       return { statusCode: 201, body: order };
@@ -419,6 +489,46 @@ type ParsedCart = {
     productId: string;
     quantity: number;
   }>;
+};
+
+type PreparationTrackModifier = {
+  completed: boolean;
+  id: string;
+  modifierGroupItem: string;
+};
+
+type PreparationTrack = {
+  comments?: string;
+  completed: boolean;
+  completedAt?: string;
+  completedComments: boolean;
+  expectedAt?: string;
+  goalMinutes: number;
+  id: string;
+  name: string;
+  preparationStepCategoryId: string;
+  preparationStepId: string;
+  preparationStepModifiers?: PreparationTrackModifier[];
+  quantity: number;
+};
+
+type PreparationTaskStation = {
+  completed: boolean;
+  id: string;
+  orderId: string;
+  snoozes: unknown[];
+  stationId?: string | null;
+  steps: PreparationTrack[];
+};
+
+type PreparationStepDefinition = {
+  goalMinutes: number;
+  id: string;
+  includeComments: boolean;
+  includeModifiers: boolean;
+  name: string;
+  productIds: string[];
+  stationId: string;
 };
 
 function parseCart(value: unknown): ParsedCart {
@@ -862,6 +972,412 @@ async function loadOrderWithRelations(orderId: string): Promise<unknown> {
       })),
     })),
   };
+}
+
+async function ensureDeliveryOrderHasDispatch(input: {
+  deliveryAddressId: string;
+  isScheduledOrder: boolean;
+  orderId: string;
+}): Promise<void> {
+  await prisma.$transaction(async (tx) => {
+    const [orderRow] = await tx.$queryRaw<
+      Array<{
+        dispatchId: string | null;
+      }>
+    >`
+      SELECT "dispatchId"
+      FROM "Order"
+      WHERE "id" = ${input.orderId}
+      LIMIT 1
+    `;
+
+    if (orderRow?.dispatchId) {
+      return;
+    }
+
+    let targetDispatchId: string | null = null;
+
+    if (!input.isScheduledOrder) {
+      const [candidateDispatch] = await tx.$queryRaw<
+        Array<{
+          id: string;
+        }>
+      >`
+        SELECT dispatch."id"
+        FROM "Dispatch" dispatch
+        INNER JOIN "Order" orders
+          ON orders."dispatchId" = dispatch."id"
+        WHERE dispatch."dispatched" = false
+          AND dispatch."startedDeliveryAt" IS NULL
+          AND orders."deliveryAddressId" = ${input.deliveryAddressId}
+          AND orders."type" = 'DELIVERY'
+          AND orders."canceled" = false
+          AND orders."deliveredAt" IS NULL
+        GROUP BY dispatch."id", dispatch."queueIndex", dispatch."createdAt"
+        HAVING COUNT(orders."id") < 3
+        ORDER BY
+          COALESCE(dispatch."queueIndex", 2147483647) ASC,
+          dispatch."createdAt" ASC
+        LIMIT 1
+      `;
+
+      targetDispatchId = candidateDispatch?.id ?? null;
+    }
+
+    if (!targetDispatchId) {
+      targetDispatchId = randomUUID();
+      const [nextQueueIndexResult] = await tx.$queryRaw<
+        Array<{
+          nextQueueIndex: number;
+        }>
+      >`
+        SELECT COALESCE(MAX(dispatch."queueIndex"), 0)::INTEGER + 1 AS "nextQueueIndex"
+        FROM "Dispatch" dispatch
+      `;
+      const nextQueueIndex = nextQueueIndexResult?.nextQueueIndex ?? 1;
+
+      await tx.$executeRaw`
+        INSERT INTO "Dispatch" (
+          "id",
+          "queueIndex",
+          "dispatched",
+          "dispatchAt",
+          "driverId"
+        )
+        VALUES (
+          ${targetDispatchId},
+          ${nextQueueIndex},
+          false,
+          NULL,
+          NULL
+        )
+      `;
+    }
+
+    const [targetCountResult] = await tx.$queryRaw<Array<{ count: bigint }>>`
+      SELECT COUNT(*)::BIGINT AS "count"
+      FROM "Order"
+      WHERE "dispatchId" = ${targetDispatchId}
+    `;
+    const targetOrderCount = Number(targetCountResult?.count ?? 0);
+
+    await tx.$executeRaw`
+      UPDATE "Order"
+      SET
+        "dispatchId" = ${targetDispatchId},
+        "dispatchOrderIndex" = ${targetOrderCount + 1}
+      WHERE "id" = ${input.orderId}
+    `;
+  });
+}
+
+async function createPreparationStepCategoriesForOrderTx(
+  tx: Prisma.TransactionClient,
+  input: {
+    cartItems: ParsedCart["items"];
+    orderCreatedAt: Date;
+    orderId: string;
+    orderProducts: Array<{
+      comments: string | null;
+      productId: string;
+      quantity: number;
+      selectedModifierGroupItemIds: string[];
+    }>;
+    productById: Map<
+      string,
+      {
+        id: string;
+        itemType: ProductItemType;
+      }
+    >;
+  },
+): Promise<void> {
+  const preparationOrderProducts: Array<{
+    comments?: string;
+    productId: string;
+    quantity: number;
+    selectedModifierGroupItemIds: string[];
+  }> = input.orderProducts.map((item) => ({
+    comments: item.comments ?? undefined,
+    productId: item.productId,
+    quantity: item.quantity,
+    selectedModifierGroupItemIds: item.selectedModifierGroupItemIds ?? [],
+  }));
+
+  const comboIdsWithoutSelections = Array.from(
+    new Set(
+      input.cartItems
+        .filter((cartItem) => {
+          const product = input.productById.get(cartItem.productId);
+          return (
+            product?.itemType === "COMBO" &&
+            (!Array.isArray(cartItem.comboSelections) ||
+              cartItem.comboSelections.length === 0)
+          );
+        })
+        .map((item) => item.productId),
+    ),
+  );
+
+  const directComboRows =
+    comboIdsWithoutSelections.length > 0
+      ? await tx.comboProductItem.findMany({
+          where: {
+            comboId: {
+              in: comboIdsWithoutSelections,
+            },
+          },
+          select: {
+            comboId: true,
+            productId: true,
+            quantity: true,
+          },
+        })
+      : [];
+
+  const directComboProductsByComboId = new Map<
+    string,
+    Array<{
+      productId: string;
+      quantity: number;
+    }>
+  >();
+
+  for (const row of directComboRows) {
+    const current = directComboProductsByComboId.get(row.comboId) ?? [];
+    current.push({
+      productId: row.productId,
+      quantity: row.quantity,
+    });
+    directComboProductsByComboId.set(row.comboId, current);
+  }
+
+  for (const cartItem of input.cartItems) {
+    const comboProduct = input.productById.get(cartItem.productId);
+    if (comboProduct?.itemType !== "COMBO") {
+      continue;
+    }
+
+    const parentQuantity = cartItem.quantity;
+
+    if (Array.isArray(cartItem.comboSelections) && cartItem.comboSelections.length > 0) {
+      for (const selection of cartItem.comboSelections) {
+        if (selection.quantity <= 0) continue;
+
+        preparationOrderProducts.push({
+          productId: selection.optionProductId,
+          quantity: parentQuantity * selection.quantity,
+          selectedModifierGroupItemIds: [],
+        });
+      }
+      continue;
+    }
+
+    const fixedComboProducts =
+      directComboProductsByComboId.get(cartItem.productId) ?? [];
+
+    for (const fixedProduct of fixedComboProducts) {
+      if (fixedProduct.quantity <= 0) continue;
+
+      preparationOrderProducts.push({
+        productId: fixedProduct.productId,
+        quantity: parentQuantity * fixedProduct.quantity,
+        selectedModifierGroupItemIds: [],
+      });
+    }
+  }
+
+  const preparationSteps = await tx.preparationStep.findMany({
+    include: {
+      products: {
+        select: {
+          id: true,
+        },
+      },
+    },
+  });
+
+  const categories = buildPreparationTaskStations(
+    {
+      id: input.orderId,
+      createdAt: input.orderCreatedAt.toISOString(),
+      orderProducts: preparationOrderProducts,
+    },
+    preparationSteps.map((step) => ({
+      id: step.id,
+      name: step.name,
+      stationId: step.stationId,
+      goalMinutes:
+        typeof (step as { goalMinutes?: unknown }).goalMinutes === "number"
+          ? Math.max(
+              0,
+              Math.floor((step as { goalMinutes?: number }).goalMinutes ?? 0),
+            )
+          : 0,
+      includeComments: step.includeComments,
+      includeModifiers: step.includeModifiers,
+      productIds: step.products.map((product) => product.id),
+    })),
+  );
+
+  for (const category of categories) {
+    await tx.preparationStepCategory.create({
+      data: {
+        id: category.id,
+        stationId: category.stationId ?? null,
+        orderId: category.orderId,
+        completed: category.completed,
+        preparationStepTracks: {
+          create: category.steps.map((track) => ({
+            id: track.id,
+            preparationStepId: track.preparationStepId,
+            quantity: track.quantity,
+            goalMinutes: track.goalMinutes,
+            expectedAt: track.expectedAt ? new Date(track.expectedAt) : null,
+            completedAt: track.completedAt ? new Date(track.completedAt) : null,
+            comments: track.comments,
+            completedComments: track.completedComments,
+            preparationStepModifierTracks: track.preparationStepModifiers
+              ? {
+                  createMany: {
+                    data: track.preparationStepModifiers.map((item) => ({
+                      id: item.id,
+                      completed: item.completed,
+                      modifierGroupItemId: item.modifierGroupItem,
+                    })),
+                  },
+                }
+              : undefined,
+          })),
+        },
+      },
+    });
+  }
+}
+
+function buildPreparationTaskStations(
+  order: {
+    createdAt: string;
+    id: string;
+    orderProducts: Array<{
+      comments?: string;
+      productId: string;
+      quantity: number;
+      selectedModifierGroupItemIds: string[];
+    }>;
+  },
+  preparationSteps: PreparationStepDefinition[],
+): PreparationTaskStation[] {
+  const orderCreatedAt = new Date(order.createdAt);
+  const baseCreatedAt = Number.isNaN(orderCreatedAt.getTime())
+    ? new Date()
+    : orderCreatedAt;
+  const stationGoalMinutesMap = new Map<string, number>();
+
+  for (const step of preparationSteps) {
+    const goalMinutes =
+      typeof step.goalMinutes === "number" && step.goalMinutes > 0
+        ? Math.floor(step.goalMinutes)
+        : 0;
+    const currentGoal = stationGoalMinutesMap.get(step.stationId) ?? 0;
+    if (goalMinutes > currentGoal) {
+      stationGoalMinutesMap.set(step.stationId, goalMinutes);
+    } else if (!stationGoalMinutesMap.has(step.stationId)) {
+      stationGoalMinutesMap.set(step.stationId, currentGoal);
+    }
+  }
+
+  const categoriesMap = new Map<string, PreparationTaskStation>();
+
+  for (const orderProduct of order.orderProducts) {
+    const productSteps = preparationSteps.filter((step) =>
+      step.productIds.includes(orderProduct.productId),
+    );
+
+    for (const step of productSteps) {
+      let category = categoriesMap.get(step.stationId);
+
+      if (!category) {
+        category = {
+          id: randomUUID(),
+          stationId: step.stationId,
+          completed: false,
+          orderId: order.id,
+          steps: [],
+          snoozes: [],
+        };
+        categoriesMap.set(step.stationId, category);
+      }
+
+      const comments =
+        step.includeComments && orderProduct.comments?.trim()
+          ? orderProduct.comments.trim()
+          : undefined;
+
+      const selectedModifierIds = orderProduct.selectedModifierGroupItemIds ?? [];
+      const resolvedModifiers =
+        step.includeModifiers && selectedModifierIds.length > 0
+          ? selectedModifierIds.map(
+              (item): PreparationTrackModifier => ({
+                id: randomUUID(),
+                completed: false,
+                modifierGroupItem: item,
+              }),
+            )
+          : undefined;
+
+      const hasComments = !!comments;
+      const hasModifiers = !!resolvedModifiers?.length;
+      const canGroup = !hasComments && !hasModifiers;
+
+      const existingTrack = canGroup
+        ? category.steps.find(
+            (track) =>
+              track.preparationStepId === step.id &&
+              !track.comments &&
+              (!track.preparationStepModifiers ||
+                track.preparationStepModifiers.length === 0),
+          )
+        : undefined;
+
+      if (existingTrack) {
+        existingTrack.quantity += orderProduct.quantity;
+        continue;
+      }
+
+      const stationGoalMinutes = stationGoalMinutesMap.get(step.stationId) ?? 0;
+
+      category.steps.push({
+        id: randomUUID(),
+        name: step.name,
+        quantity: orderProduct.quantity,
+        completed: false,
+        goalMinutes: stationGoalMinutes,
+        expectedAt:
+          stationGoalMinutes > 0
+            ? new Date(
+                baseCreatedAt.getTime() + stationGoalMinutes * 60_000,
+              ).toISOString()
+            : undefined,
+        comments,
+        completedComments: false,
+        preparationStepModifiers: resolvedModifiers,
+        preparationStepId: step.id,
+        preparationStepCategoryId: category.id,
+      });
+    }
+  }
+
+  return Array.from(categoriesMap.values())
+    .filter((category) => category.steps.length > 0)
+    .map((category) => ({
+      ...category,
+      completed: category.steps.every((step) => step.completed),
+    }));
+}
+
+function buildReadableOrderNumber(): string {
+  return `${Math.floor(Math.random() * 900) + 100}`;
 }
 
 function parseRequiredString(value: unknown, field: string): string {

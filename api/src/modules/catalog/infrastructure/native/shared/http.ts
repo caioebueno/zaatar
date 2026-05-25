@@ -9,6 +9,7 @@ export type NativeRouteRequest = {
 };
 
 export type NextRequestLike = {
+  headers?: Record<string, string | undefined>;
   json: () => Promise<unknown>;
   formData: () => Promise<FormData>;
   nextUrl: URL;
@@ -16,6 +17,7 @@ export type NextRequestLike = {
 
 export function createNextRequestLike(input: NativeRouteRequest): NextRequestLike {
   return {
+    headers: input.headers,
     nextUrl: input.nextUrl,
     async json() {
       return input.body ?? {};

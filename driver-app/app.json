@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "driver-app",
+    "name": "Zappy Driver",
     "slug": "driver-app",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -11,14 +11,14 @@
     "ios": {
       "supportsTablet": false,
       "backgroundModes": [
-        "location",
         "location"
       ],
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "O Zippy usa sua localização para distribuir rotas de entrega.",
         "NSLocationAlwaysAndWhenInUseUsageDescription": "O Zippy usa sua localização em segundo plano para monitorar e distribuir rotas mesmo quando o app não está aberto.",
         "NSLocationAlwaysUsageDescription": "O Zippy usa sua localização em segundo plano para monitorar e distribuir rotas mesmo quando o app não está aberto.",
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "CFBundleDisplayName": "Zappy Driver"
       },
       "bundleIdentifier": "com.caioebueno.driver-app",
       "buildNumber": "1"

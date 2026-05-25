@@ -4,23 +4,25 @@ import type { NextRequestLike } from "../shared/http.js";
 const PRIORITY_LAT = 28.34865140234854;
 const PRIORITY_LON = -81.65148804725864;
 
-type MapboxFeature = {
+type TMapboxFeature = {
   id: string;
   place_name: string;
-  center: [number, number];
+  center: [number, number]; // [lng, lat]
   address?: string;
   text?: string;
-  context?: Array<{
+  context?: {
     id: string;
     text: string;
     short_code?: string;
-  }>;
+  }[];
 };
 
-function getDistanceScore(lat: number, lon: number): number {
+function getDistanceScore(lat: number, lon: number) {
+  // Fast equirectangular approximation is enough for nearby ranking.
   const x =
     (lon - PRIORITY_LON) * Math.cos(((lat + PRIORITY_LAT) / 2) * (Math.PI / 180));
   const y = lat - PRIORITY_LAT;
+
   return x * x + y * y;
 }
 
@@ -53,13 +55,14 @@ export async function GET(request: NextRequestLike) {
     return NextResponse.json([], { status: 200 });
   }
 
-  const data = (await response.json()) as { features?: MapboxFeature[] };
-  const features = data.features ?? [];
+  const data = await response.json();
+  const features = (data.features ?? []) as TMapboxFeature[];
 
   const results = features
     .filter((item) => item.address !== undefined)
     .map((item) => {
       const context = item.context || [];
+
       const getContext = (type: string) =>
         context.find((c) => c.id.startsWith(type))?.text;
 

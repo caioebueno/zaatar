@@ -8,11 +8,11 @@ type Props = {
 }
 
 const METHOD_COLORS: Record<string, { bg: string; text: string; border: string; dot: string }> = {
-  GET:    { bg: 'rgba(34,211,238,0.07)',  text: '#22d3ee', border: 'rgba(34,211,238,0.2)',  dot: '#22d3ee' },
-  POST:   { bg: 'rgba(52,211,153,0.07)',  text: '#34d399', border: 'rgba(52,211,153,0.2)',  dot: '#34d399' },
-  PATCH:  { bg: 'rgba(251,191,36,0.07)',  text: '#fbbf24', border: 'rgba(251,191,36,0.2)',  dot: '#fbbf24' },
-  DELETE: { bg: 'rgba(248,113,113,0.07)', text: '#f87171', border: 'rgba(248,113,113,0.2)', dot: '#f87171' },
-  PUT:    { bg: 'rgba(167,139,250,0.07)', text: '#a78bfa', border: 'rgba(167,139,250,0.2)', dot: '#a78bfa' },
+  GET:    { bg: 'rgba(160,160,160,0.08)', text: '#d9d4cc', border: 'rgba(160,160,160,0.22)', dot: '#d9d4cc' },
+  POST:   { bg: 'rgba(82,180,128,0.10)', text: '#86d6a7', border: 'rgba(82,180,128,0.25)', dot: '#86d6a7' },
+  PATCH:  { bg: 'rgba(209,162,74,0.12)', text: '#d1a24a', border: 'rgba(209,162,74,0.28)', dot: '#d1a24a' },
+  DELETE: { bg: 'rgba(220,95,95,0.12)', text: '#e08a8a', border: 'rgba(220,95,95,0.26)', dot: '#e08a8a' },
+  PUT:    { bg: 'rgba(196,130,83,0.12)', text: '#d7a26e', border: 'rgba(196,130,83,0.26)', dot: '#d7a26e' },
 }
 
 function slugify(text: string) {
@@ -114,9 +114,9 @@ const components: Components = {
       <code
         className="font-mono text-sm px-1.5 py-0.5 rounded"
         style={{
-          background: 'rgba(79,142,247,0.08)',
-          color: '#93c5fd',
-          border: '1px solid rgba(79,142,247,0.15)',
+          background: 'rgba(209,162,74,0.10)',
+          color: '#e8c27a',
+          border: '1px solid rgba(209,162,74,0.22)',
         }}
       >
         {children}
@@ -171,7 +171,7 @@ const components: Components = {
 
   blockquote({ children }) {
     return (
-      <blockquote className="pl-4 my-4 text-muted italic text-sm" style={{ borderLeft: '2px solid #4f8ef7' }}>
+      <blockquote className="pl-4 my-4 text-muted italic text-sm" style={{ borderLeft: '2px solid var(--color-accent)' }}>
         {children}
       </blockquote>
     )
@@ -186,7 +186,7 @@ const components: Components = {
   },
 
   thead({ children }) {
-    return <thead style={{ background: '#0a0e1a' }}>{children}</thead>
+    return <thead style={{ background: 'var(--color-elevated)' }}>{children}</thead>
   },
 
   th({ children }) {

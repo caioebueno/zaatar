@@ -8,6 +8,7 @@ import type { DriverAccessTokenSigner } from "../ports/DriverAccessTokenSigner.j
 import {
   buildOtpHash,
   buildPhoneCandidates,
+  getFixedReviewOtpCode,
   normalizeOtpCode,
   normalizePhone,
 } from "./driverAuthShared.js";
@@ -51,6 +52,30 @@ export class VerifyDriverOtpUseCase {
 
     if (driver.phone !== normalizedPhone) {
       await this.driverAuthRepository.updateDriverPhone(driver.id, normalizedPhone);
+    }
+
+    const fixedReviewCode = getFixedReviewOtpCode(normalizedPhone);
+    if (fixedReviewCode && code === fixedReviewCode) {
+      const signedToken = this.accessTokenSigner.sign({
+        driverId: driver.id,
+        name: driver.name,
+        phone: normalizedPhone,
+      });
+
+      return {
+        ok: true,
+        accessToken: signedToken.accessToken,
+        expiresAt: signedToken.expiresAt.toISOString(),
+        driver: {
+          id: driver.id,
+          name: driver.name,
+          phone: normalizedPhone,
+          active: driver.active,
+          activatedAt: driver.activatedAt ? driver.activatedAt.toISOString() : null,
+          deactivatedAt: driver.deactivatedAt ? driver.deactivatedAt.toISOString() : null,
+          priorityLevel: driver.priorityLevel,
+        },
+      };
     }
 
     const challenge = await this.driverAuthRepository.findLatestValidOtpChallenge(

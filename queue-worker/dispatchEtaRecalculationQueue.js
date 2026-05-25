@@ -249,8 +249,8 @@ async function calculateDurationsFromDriverPosition(dispatchId) {
   if (!driverCoordinates || orders.length === 0) {
     return {
       durationToOrderId: new Map(),
-      estimatedDeliveryDurationMinutes: 0,
-      estimatedRoundTripDurationMinutes: 0,
+      currentEstimatedDeliveryDurationMinutes: 0,
+      currentEstimatedRoundTripDurationMinutes: 0,
     };
   }
 
@@ -291,8 +291,10 @@ async function calculateDurationsFromDriverPosition(dispatchId) {
 
   return {
     durationToOrderId,
-    estimatedDeliveryDurationMinutes: Math.ceil(accumulatedDurationInMinutes),
-    estimatedRoundTripDurationMinutes: Math.ceil(
+    currentEstimatedDeliveryDurationMinutes: Math.ceil(
+      accumulatedDurationInMinutes,
+    ),
+    currentEstimatedRoundTripDurationMinutes: Math.ceil(
       accumulatedDurationInMinutes + returnDuration,
     ),
   };
@@ -301,16 +303,25 @@ async function calculateDurationsFromDriverPosition(dispatchId) {
 async function refreshDispatchEtaMetrics(dispatchId) {
   const {
     durationToOrderId,
-    estimatedDeliveryDurationMinutes,
-    estimatedRoundTripDurationMinutes,
+    currentEstimatedDeliveryDurationMinutes,
+    currentEstimatedRoundTripDurationMinutes,
   } = await calculateDurationsFromDriverPosition(dispatchId);
 
   await withTransaction(async (client) => {
+    await client.query(
+      `
+        UPDATE "Order"
+        SET "currentEstimatedDeliveryDurationMinutes" = NULL
+        WHERE "dispatchId" = $1
+      `,
+      [dispatchId],
+    );
+
     for (const [orderId, duration] of durationToOrderId.entries()) {
       await client.query(
         `
           UPDATE "Order"
-          SET "estimatedDeliveryDurationMinutes" = $2
+          SET "currentEstimatedDeliveryDurationMinutes" = $2
           WHERE "id" = $1
         `,
         [orderId, duration],
@@ -321,21 +332,21 @@ async function refreshDispatchEtaMetrics(dispatchId) {
       `
         UPDATE "Dispatch"
         SET
-          "estimatedDeliveryDurationMinutes" = $2,
-          "estimatedRoundTripDurationMinutes" = $3
+          "currentEstimatedDeliveryDurationMinutes" = $2,
+          "currentEstimatedRoundTripDurationMinutes" = $3
         WHERE "id" = $1
       `,
       [
         dispatchId,
-        estimatedDeliveryDurationMinutes,
-        estimatedRoundTripDurationMinutes,
+        currentEstimatedDeliveryDurationMinutes,
+        currentEstimatedRoundTripDurationMinutes,
       ],
     );
   });
 
   return {
-    estimatedDeliveryDurationMinutes,
-    estimatedRoundTripDurationMinutes,
+    currentEstimatedDeliveryDurationMinutes,
+    currentEstimatedRoundTripDurationMinutes,
     ordersUpdated: durationToOrderId.size,
   };
 }
@@ -375,4 +386,3 @@ export async function processDispatchEtaRecalculationJobs(
 
   return { processed, failed };
 }
-

@@ -351,6 +351,7 @@ model Driver {
   priorityLevel Int
   dispatches    Dispatch[]
   routeSessions DispatchRouteSession[]
+  routeMilestones DispatchRouteMilestone[]
   activationEvents DriverActivationEvent[]
 }
 
@@ -378,10 +379,16 @@ model Dispatch {
   startedDeliveryAt                 DateTime?
   estimatedDeliveryDurationMinutes  Int?
   estimatedRoundTripDurationMinutes Int?
+  currentEstimatedDeliveryDurationMinutes  Int?
+  currentEstimatedRoundTripDurationMinutes Int?
+  arrivedAtRestaurantAt             DateTime?
+  arrivedAtRestaurantLat            Float?
+  arrivedAtRestaurantLng            Float?
   driver                            Driver?   @relation(fields: [driverId], references: [id])
   driverId                          String?
   orders                            Order[]
   routeSessions                     DispatchRouteSession[]
+  routeMilestones                   DispatchRouteMilestone[]
   etaRecalculationJobs              DispatchEtaRecalculationJob[]
 
   @@index([queueIndex])
@@ -399,6 +406,12 @@ enum DispatchRoutePointSource {
   MANUAL
 }
 
+enum DispatchRouteMilestoneType {
+  LEFT_PIZZERIA
+  LEFT_DROPOFF
+  ARRIVED_RESTAURANT
+}
+
 model DispatchRouteSession {
   id                  String                     @id
   createdAt           DateTime                   @default(now())
@@ -414,6 +427,7 @@ model DispatchRouteSession {
   durationSeconds     Int?
   polyline            String?
   points              DispatchRoutePoint[]
+  milestones          DispatchRouteMilestone[]
 
   @@index([dispatchId, status])
   @@index([driverId, status])
@@ -439,6 +453,27 @@ model DispatchRoutePoint {
   @@unique([sessionId, sequence])
   @@index([sessionId, recordedAt])
   @@index([sessionId, createdAt])
+}
+
+model DispatchRouteMilestone {
+  id         String                     @id
+  createdAt  DateTime                   @default(now())
+  updatedAt  DateTime                   @updatedAt
+  dispatch   Dispatch                   @relation(fields: [dispatchId], references: [id], onDelete: Cascade)
+  dispatchId String
+  driver     Driver                     @relation(fields: [driverId], references: [id], onDelete: Cascade)
+  driverId   String
+  session    DispatchRouteSession       @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  sessionId  String
+  type       DispatchRouteMilestoneType
+  recordedAt DateTime
+  lat        Float
+  lng        Float
+
+  @@unique([dispatchId, type])
+  @@index([dispatchId, recordedAt])
+  @@index([driverId, recordedAt])
+  @@index([sessionId, recordedAt])
 }
 
 enum DispatchAssignmentJobStatus {
@@ -866,7 +901,11 @@ model Order {
   language                         String?
   paidAt                           DateTime?
   deliveredAt                      DateTime?
+  leftAtDropOffAt                  DateTime?
+  leftAtDropOffLat                 Float?
+  leftAtDropOffLng                 Float?
   estimatedDeliveryDurationMinutes Int?
+  currentEstimatedDeliveryDurationMinutes Int?
   dispatchOrderIndex               Int?
   amount                           Int
   canceled                         Boolean                   @default(false)
