@@ -30,12 +30,6 @@ export class SendOwnerOtpUseCase {
   async execute(input: SendOwnerOtpInput): Promise<SendOwnerOtpOutput> {
     const phone = normalizePhone(input.phone);
     const phoneCandidates = buildPhoneCandidates(phone);
-    if (process.env.DEV === "1") {
-      console.log("[owner-auth] phones searched", {
-        phone,
-        phoneCandidates,
-      });
-    }
 
     const owner = await this.ownerRepository.findByPhoneForAuth(phoneCandidates);
 

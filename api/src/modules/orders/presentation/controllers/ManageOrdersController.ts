@@ -38,6 +38,13 @@ type ParsedOrderProductChange =
   | ParsedOrderProductDelete
   | ParsedOrderProductCreate;
 
+type AddedOrderProductForPreparation = {
+  comments: string | null;
+  productId: string;
+  quantity: number;
+  selectedModifierGroupItemIds: string[];
+};
+
 export class ManageOrdersController implements HttpController {
   async handle(request: HttpRequest): Promise<HttpResponse> {
     const url = new URL(request.path, "http://localhost");
@@ -344,6 +351,7 @@ export class ManageOrdersController implements HttpController {
         where: { id: orderId },
         select: {
           id: true,
+          createdAt: true,
           type: true,
           deliveryAddressId: true,
         },
@@ -465,7 +473,52 @@ export class ManageOrdersController implements HttpController {
           `;
         }
 
-        await applyOrderProductChanges(tx, orderId, orderProductChanges);
+        const addedOrderProducts = await applyOrderProductChanges(
+          tx,
+          orderId,
+          orderProductChanges,
+        );
+
+        if (addedOrderProducts.length > 0) {
+          const productIds = Array.from(
+            new Set(addedOrderProducts.map((item) => item.productId)),
+          );
+          const products = await tx.product.findMany({
+            where: {
+              id: {
+                in: productIds,
+              },
+            },
+            select: {
+              id: true,
+              itemType: true,
+            },
+          });
+
+          const productById = new Map(
+            products.map((product) => [
+              product.id,
+              {
+                id: product.id,
+                itemType: product.itemType as ProductItemType,
+              },
+            ]),
+          );
+
+          await createPreparationStepCategoriesForOrderTx(tx, {
+            orderId,
+            orderCreatedAt: existingOrder.createdAt,
+            cartItems: addedOrderProducts.map((item) => ({
+              cartId: randomUUID(),
+              productId: item.productId,
+              quantity: item.quantity,
+              modifiers: [],
+              comboSelections: [],
+            })),
+            orderProducts: addedOrderProducts,
+            productById,
+          });
+        }
       });
 
       const order = await loadOrderWithRelations(orderId);
@@ -707,8 +760,8 @@ async function applyOrderProductChanges(
   tx: Prisma.TransactionClient,
   orderId: string,
   changes: ParsedOrderProductChange[],
-): Promise<void> {
-  if (changes.length === 0) return;
+): Promise<AddedOrderProductForPreparation[]> {
+  if (changes.length === 0) return [];
 
   const deleteIds = changes
     .filter((item): item is ParsedOrderProductDelete => item.kind === "delete")
@@ -753,6 +806,8 @@ async function applyOrderProductChanges(
   if (createProducts.length !== createProductIds.length) {
     throw invalidField("orderProducts.productId");
   }
+
+  const addedOrderProducts: AddedOrderProductForPreparation[] = [];
 
   const modifierIds = Array.from(
     new Set(
@@ -835,6 +890,13 @@ async function applyOrderProductChanges(
           : {}),
       },
     });
+
+    addedOrderProducts.push({
+      productId: change.productId,
+      quantity: change.quantity,
+      comments: change.comments ?? null,
+      selectedModifierGroupItemIds: change.selectedModifierGroupItemIds,
+    });
   }
 
   const subtotal = await tx.orderProducts.aggregate({
@@ -850,6 +912,8 @@ async function applyOrderProductChanges(
       amount: subtotal._sum.amount ?? 0,
     },
   });
+
+  return addedOrderProducts;
 }
 
 async function normalizeDispatchOrderIndexes(

@@ -15,6 +15,9 @@ import analyticsMd from '../../api/docs/analytics.md?raw'
 import feedbackMd from '../../api/docs/feedback.md?raw'
 import stationsMd from '../../api/docs/stations.md?raw'
 import integrationsMd from '../../api/docs/integrations.md?raw'
+import chatwootMd from '../../api/docs/chatwoot.md?raw'
+import chatwootWebhookMd from '../../api/docs/chatwoot-webhook.md?raw'
+import chatwootWebsocketMd from '../../api/docs/chatwoot-websocket.md?raw'
 
 export type DocEntry = {
   id: string
@@ -41,4 +44,7 @@ export const docs: DocEntry[] = [
   { id: 'analytics',      title: 'Analytics',         group: 'Analytics & Feedback',  content: analyticsMd },
   { id: 'feedback',       title: 'Feedback',          group: 'Analytics & Feedback',  content: feedbackMd },
   { id: 'integrations',   title: 'Integrations',      group: 'Integrations',          content: integrationsMd },
+  { id: 'chatwoot',       title: 'Chatwoot',          group: 'Integrations',          content: chatwootMd },
+  { id: 'chatwoot-webhook', title: 'Chatwoot Webhook', group: 'Integrations',         content: chatwootWebhookMd },
+  { id: 'chatwoot-websocket', title: 'Chatwoot WebSocket', group: 'Integrations',     content: chatwootWebsocketMd },
 ]

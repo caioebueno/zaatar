@@ -20,6 +20,8 @@ export type CreateBranchInput = {
   mapboxLatitude?: unknown;
   mapboxLongitude?: unknown;
   mapboxPlaceId?: unknown;
+  chatwootAccountId?: unknown;
+  chatwootSourceId?: unknown;
   businessId?: string | null;
   name?: unknown;
   operationHours?: unknown;
@@ -38,6 +40,8 @@ export type CreateBranchOutput = {
   addressState: string | null;
   addressStreet: string | null;
   addressZipCode: string | null;
+  chatwootAccountId: string | null;
+  chatwootSourceId: string | null;
   createdAt: string;
   id: string;
   name: string;
@@ -73,6 +77,8 @@ export class CreateBranchUseCase {
       addressComplement: input.addressComplement,
       addressNumberComplement: input.addressNumberComplement,
       operationHours: input.operationHours,
+      chatwootAccountId: input.chatwootAccountId,
+      chatwootSourceId: input.chatwootSourceId,
     });
 
     const branch = await this.repository.createBranch(businessId, parsedBranchInput);
@@ -93,6 +99,8 @@ function parseBranchInput(input: {
   addressZipCode?: unknown;
   addressComplement?: unknown;
   addressNumberComplement?: unknown;
+  chatwootAccountId?: unknown;
+  chatwootSourceId?: unknown;
   name?: unknown;
   operationHours?: unknown;
 }): UpsertBranchOnboardingInput {
@@ -118,6 +126,16 @@ function parseBranchInput(input: {
     32,
   );
   const operationHours = parseOperationHours(input.operationHours);
+  const chatwootAccountId = parseOptionalText(
+    input.chatwootAccountId,
+    "chatwootAccountId",
+    120,
+  );
+  const chatwootSourceId = parseOptionalText(
+    input.chatwootSourceId,
+    "chatwootSourceId",
+    120,
+  );
 
   return {
     name,
@@ -134,6 +152,8 @@ function parseBranchInput(input: {
     addressComplement,
     addressNumberComplement,
     operationHours,
+    chatwootAccountId,
+    chatwootSourceId,
   };
 }
 
@@ -207,6 +227,8 @@ function mapBranch(
     id: branch.id,
     name: branch.name,
     createdAt: branch.createdAt.toISOString(),
+    chatwootAccountId: branch.chatwootAccountId ?? null,
+    chatwootSourceId: branch.chatwootSourceId ?? null,
     operationHours: branch.operationHours,
     addressDescription: branch.address?.description ?? "",
     addressGoogleMapsUrl: branch.address?.googleMapsUrl ?? "",

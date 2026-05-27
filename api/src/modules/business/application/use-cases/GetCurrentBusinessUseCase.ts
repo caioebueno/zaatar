@@ -24,6 +24,8 @@ export type GetCurrentBusinessOutput = {
       street: string | null;
       zipCode: string | null;
     } | null;
+    chatwootAccountId: string | null;
+    chatwootSourceId: string | null;
     createdAt: string;
     id: string;
     name: string;
@@ -70,6 +72,8 @@ export class GetCurrentBusinessUseCase {
           id: branch.id,
           createdAt: branch.createdAt.toISOString(),
           name: branch.name,
+          chatwootAccountId: branch.chatwootAccountId ?? null,
+          chatwootSourceId: branch.chatwootSourceId ?? null,
           operationHours: branch.operationHours,
           address: branch.address
             ? {
@@ -92,4 +96,3 @@ export class GetCurrentBusinessUseCase {
     };
   }
 }
-

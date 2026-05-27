@@ -31,6 +31,9 @@ All responses are JSON. All protected routes require an `Authorization: Bearer <
 | [analytics.md](./analytics.md) | Sales analytics (revenue, ticket, orders, daily charts) |
 | [stations.md](./stations.md) | Stations, preparation steps, preparation tasks |
 | [integrations.md](./integrations.md) | Stripe Connect onboarding, Uber Eats OAuth and menu sync |
+| [chatwoot.md](./chatwoot.md) | Owner-authenticated Chatwoot proxy routes |
+| [chatwoot-webhook.md](./chatwoot-webhook.md) | Chatwoot webhook ingest and iOS push notification delivery |
+| [chatwoot-websocket.md](./chatwoot-websocket.md) | Realtime architecture and event contract for chat list/messages |
 | [feedback.md](./feedback.md) | Customer feedback listing |
 
 ## Auth Summary

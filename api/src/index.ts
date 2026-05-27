@@ -12,6 +12,7 @@ import { makeGetCurrentBusinessSettingsController } from "./modules/business-set
 import { makeGetPublicBusinessSettingsController } from "./modules/business-settings/main/makeGetPublicBusinessSettingsController.js";
 import { makeUpdateCurrentBusinessSettingsController } from "./modules/business-settings/main/makeUpdateCurrentBusinessSettingsController.js";
 import { makeUberEatsOAuthController } from "./modules/integrations/main/makeUberEatsOAuthController.js";
+import { makeChatwootProxyController } from "./modules/integrations/main/makeChatwootProxyController.js";
 import { makeGetOrderSalesAnalyticsController } from "./modules/analytics/main/makeGetOrderSalesAnalyticsController.js";
 import { makeListOrdersController } from "./modules/orders/main/makeListOrdersController.js";
 import { makeGetOrderByIdController } from "./modules/orders/main/makeGetOrderByIdController.js";
@@ -33,8 +34,10 @@ import { makeListDriverDispatchesByDateRangeController } from "./modules/dispatc
 import { makeDispatchRouteController } from "./modules/dispatch-route/main/makeDispatchRouteController.js";
 import { makeStationController } from "./modules/station/main/makeStationController.js";
 import { makePreparationTaskController } from "./modules/preparation-task/main/makePreparationTaskController.js";
+import { makeChatwootWebhookController } from "./modules/chatwoot-webhook/main/makeChatwootWebhookController.js";
 import { HmacDriverAccessTokenVerifier } from "./modules/driver/infrastructure/security/HmacDriverAccessTokenVerifier.js";
 import { HmacAccessTokenVerifier } from "./modules/owner/infrastructure/security/HmacAccessTokenVerifier.js";
+import { chatwootRealtimeHub } from "./shared/realtime/chatwootRealtimeHub.js";
 import prisma from "./prisma.js";
 import { setCorsHeaders } from "./shared/http/cors.js";
 import {
@@ -51,7 +54,6 @@ const MANAGER_ACCESS_TOKEN_COOKIE_NAME = "manager_access_token";
 const MANAGER_BUSINESS_ID_COOKIE_NAME = "manager_business_id";
 const BUSINESS_ID_HEADER_NAME = "x-business-id";
 const port = Number(process.env.PORT ?? 4000);
-const isDevLoggingEnabled = process.env.DEV === "1";
 
 const registerOwnerController = makeRegisterOwnerController();
 const loginOwnerController = makeLoginOwnerController();
@@ -65,6 +67,7 @@ const updateCurrentBusinessSettingsController =
   makeUpdateCurrentBusinessSettingsController();
 const nativeCatalogController = makeNativeCatalogController();
 const uberEatsOAuthController = makeUberEatsOAuthController();
+const chatwootProxyController = makeChatwootProxyController();
 const getOrderSalesAnalyticsController = makeGetOrderSalesAnalyticsController();
 const listOrdersController = makeListOrdersController();
 const getOrderByIdController = makeGetOrderByIdController();
@@ -88,6 +91,7 @@ const listDriverDispatchesByDateRangeController =
 const setDispatchStartedDeliveryAtController =
   makeSetDispatchStartedDeliveryAtController();
 const dispatchRouteController = makeDispatchRouteController();
+const chatwootWebhookController = makeChatwootWebhookController();
 const accessTokenVerifier = new HmacAccessTokenVerifier();
 const driverAccessTokenVerifier = new HmacDriverAccessTokenVerifier();
 
@@ -149,6 +153,13 @@ const routes: Route[] = [
     controller: driverAuthController,
     requiresAuth: false,
     bodyMode: "json",
+  },
+  {
+    method: "POST",
+    matcher: /^\/webhooks\/chatwoot$/,
+    controller: chatwootWebhookController,
+    requiresAuth: false,
+    bodyMode: "raw",
   },
   {
     method: "GET",
@@ -727,6 +738,53 @@ const routes: Route[] = [
 
   {
     method: "GET",
+    matcher: /^\/conversation$/,
+    controller: chatwootProxyController,
+    requiresAuth: true,
+  },
+  {
+    method: "POST",
+    matcher: /^\/owners\/me\/push-devices\/ios$/,
+    controller: chatwootWebhookController,
+    requiresAuth: true,
+    bodyMode: "json",
+  },
+  {
+    method: "GET",
+    matcher: /^\/conversation\/[^/]+\/messages$/,
+    controller: chatwootProxyController,
+    requiresAuth: true,
+  },
+  {
+    method: "POST",
+    matcher: /^\/conversation\/[^/]+\/messages$/,
+    controller: chatwootProxyController,
+    requiresAuth: true,
+    bodyMode: "json",
+  },
+  {
+    method: "POST",
+    matcher: /^\/conversation\/[^/]+\/take-care$/,
+    controller: chatwootProxyController,
+    requiresAuth: true,
+    bodyMode: "json",
+  },
+  {
+    method: "POST",
+    matcher: /^\/conversation\/[^/]+\/resolve$/,
+    controller: chatwootProxyController,
+    requiresAuth: true,
+    bodyMode: "json",
+  },
+  {
+    method: "POST",
+    matcher: /^\/conversation\/[^/]+\/read$/,
+    controller: chatwootProxyController,
+    requiresAuth: true,
+    bodyMode: "json",
+  },
+  {
+    method: "GET",
     matcher: /^\/integrations\/uber-eats\/connection$/,
     controller: uberEatsOAuthController,
     requiresAuth: true,
@@ -781,18 +839,8 @@ const server = createServer(async (request, response) => {
   const method = request.method;
   const url = request.url;
   const requestId = randomUUID();
-  const startedAt = Date.now();
 
   const sendJsonWithLog = (statusCode: number, payload: unknown) => {
-    const durationMs = Date.now() - startedAt;
-    console.log("[api] response sent", {
-      requestId,
-      method: method ?? "UNKNOWN",
-      url: url ?? "UNKNOWN",
-      statusCode,
-      durationMs,
-      body: formatPayloadForLog(payload),
-    });
     sendJson(response, statusCode, payload);
   };
 
@@ -800,12 +848,6 @@ const server = createServer(async (request, response) => {
     sendJsonWithLog(400, { error: "Invalid request" });
     return;
   }
-
-  console.log("[api] call received", {
-    requestId,
-    method,
-    url,
-  });
 
   if (method === "OPTIONS") {
     setCorsHeaders(response);
@@ -823,6 +865,139 @@ const server = createServer(async (request, response) => {
       status: "ok",
       timestamp: new Date().toISOString(),
     });
+    return;
+  }
+
+  if (method === "GET" && path === "/conversation/events") {
+    const managerAuth = await resolveManagerAuthContext({
+      parsedUrl,
+      request,
+      sendJsonWithLog,
+      accessTokenVerifier,
+    });
+    if (!managerAuth.ok) {
+      return;
+    }
+    if (!managerAuth.auth.businessId) {
+      sendJsonWithLog(400, { error: "Invalid payload", field: "businessId" });
+      return;
+    }
+
+    const branchId = parsedUrl.searchParams.get("branchId")?.trim() ?? "";
+    if (!branchId) {
+      sendJsonWithLog(400, { error: "Invalid payload", field: "branchId" });
+      return;
+    }
+
+    const branch = await prisma.branch.findFirst({
+      where: {
+        id: branchId,
+        businessId: managerAuth.auth.businessId ?? null,
+      },
+      select: { id: true },
+    });
+    if (!branch) {
+      sendJsonWithLog(404, { error: "Branch not found", field: "branchId" });
+      return;
+    }
+
+    const conversationId =
+      parsedUrl.searchParams.get("conversationId")?.trim() || null;
+    const afterEventId =
+      parsedUrl.searchParams.get("afterEventId")?.trim() ||
+      readHeaderValue(request.headers["last-event-id"]);
+    const limitRaw = parsedUrl.searchParams.get("limit")?.trim() ?? "";
+    const limit = limitRaw ? Number.parseInt(limitRaw, 10) : 100;
+
+    const events = chatwootRealtimeHub.getBufferedEvents({
+      businessId: managerAuth.auth.businessId,
+      branchId,
+      conversationId,
+      afterEventId,
+      limit,
+    });
+    sendJsonWithLog(200, { events });
+    return;
+  }
+
+  if (method === "GET" && path === "/conversation/stream") {
+    const managerAuth = await resolveManagerAuthContext({
+      parsedUrl,
+      request,
+      sendJsonWithLog,
+      accessTokenVerifier,
+    });
+    if (!managerAuth.ok) {
+      return;
+    }
+    if (!managerAuth.auth.businessId) {
+      sendJsonWithLog(400, { error: "Invalid payload", field: "businessId" });
+      return;
+    }
+
+    const branchId = parsedUrl.searchParams.get("branchId")?.trim() ?? "";
+    if (!branchId) {
+      sendJsonWithLog(400, { error: "Invalid payload", field: "branchId" });
+      return;
+    }
+
+    const branch = await prisma.branch.findFirst({
+      where: {
+        id: branchId,
+        businessId: managerAuth.auth.businessId ?? null,
+      },
+      select: { id: true },
+    });
+    if (!branch) {
+      sendJsonWithLog(404, { error: "Branch not found", field: "branchId" });
+      return;
+    }
+
+    const conversationId =
+      parsedUrl.searchParams.get("conversationId")?.trim() || null;
+    const afterEventId =
+      parsedUrl.searchParams.get("afterEventId")?.trim() ||
+      readHeaderValue(request.headers["last-event-id"]);
+    setCorsHeaders(response);
+    response.writeHead(200, {
+      "content-type": "text/event-stream; charset=utf-8",
+      "cache-control": "no-cache, no-transform",
+      connection: "keep-alive",
+      "x-accel-buffering": "no",
+    });
+
+    response.write(`event: ready\n`);
+    response.write(`data: ${JSON.stringify({ ok: true })}\n\n`);
+
+    const backlog = chatwootRealtimeHub.getBufferedEvents({
+      businessId: managerAuth.auth.businessId,
+      branchId,
+      conversationId,
+      afterEventId,
+      limit: 200,
+    });
+    for (const event of backlog) {
+      response.write(`id: ${event.id}\n`);
+      response.write(`event: chatwoot_event\n`);
+      response.write(`data: ${JSON.stringify(event)}\n\n`);
+    }
+
+    const unsubscribe = chatwootRealtimeHub.subscribe({
+      businessId: managerAuth.auth.businessId,
+      branchId,
+      conversationId,
+      response,
+    });
+
+    let closed = false;
+    const handleClose = () => {
+      if (closed) return;
+      closed = true;
+      unsubscribe();
+    };
+
+    request.on("close", handleClose);
+    response.on("close", handleClose);
     return;
   }
 
@@ -910,21 +1085,14 @@ const server = createServer(async (request, response) => {
       }
     }
 
-    if (isDevLoggingEnabled) {
-      console.log("[api] body sent to request", {
-        requestId,
-        method,
-        url,
-        body: formatRequestBodyForLog({
-          body,
-          formData,
-          rawBody,
-        }),
-      });
-    }
-
     const incomingBusinessIdHeader = readHeaderValue(
       request.headers[BUSINESS_ID_HEADER_NAME],
+    );
+    const incomingChatwootSignatureHeader = readHeaderValue(
+      request.headers["x-chatwoot-signature"],
+    );
+    const incomingChatwootTokenHeader = readHeaderValue(
+      request.headers["x-chatwoot-token"],
     );
     const result = await route.controller.handle({
       method,
@@ -938,6 +1106,8 @@ const server = createServer(async (request, response) => {
         "content-type": request.headers["content-type"],
         [BUSINESS_ID_HEADER_NAME]:
           auth?.businessId ?? incomingBusinessIdHeader ?? undefined,
+        "x-chatwoot-signature": incomingChatwootSignatureHeader ?? undefined,
+        "x-chatwoot-token": incomingChatwootTokenHeader ?? undefined,
       },
     });
 
@@ -968,9 +1138,7 @@ const server = createServer(async (request, response) => {
   }
 });
 
-server.listen(port, () => {
-  console.log(`[api] listening on port ${port}`);
-});
+server.listen(port);
 
 function extractAccessToken(request: IncomingMessage): string | null {
   const authorization = request.headers.authorization;
@@ -1079,59 +1247,6 @@ async function resolveBusinessIdForUser(
   return owned[0]?.businessId ?? null;
 }
 
-function formatPayloadForLog(payload: unknown): unknown {
-  if (typeof payload === "string") {
-    return payload.length > 1000 ? `${payload.slice(0, 1000)}...[truncated]` : payload;
-  }
-
-  try {
-    const serialized = JSON.stringify(payload);
-    if (!serialized) {
-      return payload;
-    }
-
-    return serialized.length > 2000
-      ? `${serialized.slice(0, 2000)}...[truncated]`
-      : payload;
-  } catch {
-    return "[unserializable payload]";
-  }
-}
-
-function formatRequestBodyForLog(input: {
-  body: unknown;
-  formData?: FormData;
-  rawBody?: Buffer;
-}): unknown {
-  const { body, formData, rawBody } = input;
-
-  if (formData) {
-    const data: Record<string, unknown> = {};
-    for (const [key, value] of formData.entries()) {
-      if (value instanceof File) {
-        data[key] = {
-          fileName: value.name,
-          fileSize: value.size,
-          fileType: value.type || "application/octet-stream",
-        };
-      } else {
-        data[key] = value;
-      }
-    }
-    return { type: "form-data", data };
-  }
-
-  if (rawBody) {
-    return {
-      type: "raw",
-      size: rawBody.length,
-      preview: rawBody.toString("utf8", 0, Math.min(300, rawBody.length)),
-    };
-  }
-
-  return body ?? {};
-}
-
 function normalizeApiPath(pathname: string): string {
   if (pathname === "/api") {
     return "/";
@@ -1143,4 +1258,53 @@ function normalizeApiPath(pathname: string): string {
   }
 
   return pathname;
+}
+
+async function resolveManagerAuthContext(input: {
+  parsedUrl: URL;
+  request: IncomingMessage;
+  sendJsonWithLog: (statusCode: number, payload: unknown) => void;
+  accessTokenVerifier: HmacAccessTokenVerifier;
+}): Promise<
+  | {
+      ok: true;
+      auth: {
+        businessId?: string | null;
+        email: string;
+        name: string;
+        userId: string;
+      };
+    }
+  | { ok: false }
+> {
+  const accessToken = extractAccessToken(input.request);
+  const tokenPayload = accessToken
+    ? input.accessTokenVerifier.verify(accessToken)
+    : null;
+  if (!tokenPayload) {
+    input.sendJsonWithLog(401, { error: "Unauthorized" });
+    return { ok: false };
+  }
+
+  const requestedBusinessId = extractBusinessId(input.request, input.parsedUrl);
+  const businessContext = await resolveBusinessIdForUser(
+    tokenPayload.userId,
+    requestedBusinessId,
+  );
+
+  if (businessContext === "__forbidden__") {
+    input.sendJsonWithLog(403, {
+      error: "Forbidden",
+      reason: "BUSINESS_ACCESS_DENIED",
+    });
+    return { ok: false };
+  }
+
+  return {
+    ok: true,
+    auth: {
+      ...tokenPayload,
+      businessId: businessContext,
+    },
+  };
 }
