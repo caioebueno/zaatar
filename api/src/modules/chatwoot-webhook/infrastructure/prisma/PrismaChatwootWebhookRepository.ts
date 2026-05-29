@@ -106,6 +106,18 @@ export class PrismaChatwootWebhookRepository implements ChatwootWebhookRepositor
 
     const now = new Date();
 
+    // Revoke all other tokens for this user+business so old tokens (e.g. from
+    // Expo Go) don't keep receiving notifications after switching to a native build.
+    await prisma.$executeRaw`
+      UPDATE "UserPushDevice"
+      SET "revokedAt" = ${now}, "updatedAt" = ${now}
+      WHERE "userId" = ${input.userId}
+        AND "businessId" = ${input.businessId}
+        AND "platform" = 'IOS'::"UserPushDevicePlatform"
+        AND "pushToken" != ${input.pushToken}
+        AND "revokedAt" IS NULL
+    `;
+
     await prisma.$executeRaw`
       INSERT INTO "UserPushDevice" (
         "id",

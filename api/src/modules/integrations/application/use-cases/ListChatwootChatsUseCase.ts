@@ -1,6 +1,11 @@
 import { BranchChatwootConfigMissingError } from "../errors/BranchChatwootConfigMissingError.js";
 import { BranchNotFoundForConversationError } from "../errors/BranchNotFoundForConversationError.js";
 import { InvalidChatwootChatsQueryError } from "../errors/InvalidChatwootChatsQueryError.js";
+import type {
+  ChatConversationOrder,
+  ChatConversationOrderIntent,
+  ChatConversationOrderRepository,
+} from "../ports/ChatConversationOrderRepository.js";
 import type { BranchChatwootConfigRepository } from "../ports/BranchChatwootConfigRepository.js";
 import type { ChatwootProxyGateway } from "../ports/ChatwootProxyGateway.js";
 
@@ -13,6 +18,7 @@ export class ListChatwootChatsUseCase {
   constructor(
     private readonly gateway: ChatwootProxyGateway,
     private readonly branchRepository: BranchChatwootConfigRepository,
+    private readonly orderRepository: ChatConversationOrderRepository,
   ) {}
 
   async execute(input: ListChatwootChatsInput): Promise<unknown> {
@@ -51,7 +57,8 @@ export class ListChatwootChatsUseCase {
       query,
     });
 
-    return applyConversationStatusAbstraction(response);
+    const normalized = applyConversationStatusAbstraction(response);
+    return enrichChatsWithOrder(normalized, this.orderRepository);
   }
 }
 
@@ -179,4 +186,127 @@ function hasValueAssigneeId(value: unknown): boolean {
   }
 
   return false;
+}
+
+async function enrichChatsWithOrder(
+  value: unknown,
+  repository: ChatConversationOrderRepository,
+): Promise<unknown> {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    return value;
+  }
+
+  const root = value as Record<string, unknown>;
+  const data = asRecord(root.data);
+  if (!data) {
+    return value;
+  }
+
+  const payload = data.payload;
+  if (!Array.isArray(payload)) {
+    return value;
+  }
+
+  const orderByPhone = new Map<string, ChatConversationOrder | null>();
+  const orderIntentByPhone = new Map<string, ChatConversationOrderIntent | null>();
+  const enrichedPayload = await Promise.all(
+    payload.map(async (item) => {
+      const row = asRecord(item);
+      if (!row) {
+        return item;
+      }
+
+      const rawPhone = extractConversationPhone(row);
+      const normalizedPhone = normalizePhone(rawPhone);
+      if (!normalizedPhone) {
+        return {
+          ...row,
+          order: null,
+        };
+      }
+
+      let order = orderByPhone.get(normalizedPhone);
+      if (order === undefined) {
+        const phoneCandidates = buildPhoneCandidates(normalizedPhone);
+        order = await repository.findLatestOrderByPhoneCandidates(phoneCandidates);
+        orderByPhone.set(normalizedPhone, order);
+      }
+      let orderIntent = orderIntentByPhone.get(normalizedPhone);
+      if (orderIntent === undefined) {
+        const phoneCandidates = buildPhoneCandidates(normalizedPhone);
+        orderIntent = await repository.findActiveOrderIntentByPhoneCandidates(
+          phoneCandidates,
+        );
+        orderIntentByPhone.set(normalizedPhone, orderIntent);
+      }
+
+      return {
+        ...row,
+        order: order ?? null,
+        orderIntent: orderIntent?.active ? orderIntent : null,
+      };
+    }),
+  );
+
+  return {
+    ...root,
+    data: {
+      ...data,
+      payload: enrichedPayload,
+    },
+  };
+}
+
+function asRecord(value: unknown): Record<string, unknown> | null {
+  if (value && typeof value === "object" && !Array.isArray(value)) {
+    return value as Record<string, unknown>;
+  }
+  return null;
+}
+
+function extractConversationPhone(row: Record<string, unknown>): string | null {
+  const meta = asRecord(row.meta);
+  const senderFromMeta = asRecord(meta?.sender);
+  const contactFromMeta = asRecord(meta?.contact);
+  const sender = asRecord(row.sender);
+  const contact = asRecord(row.contact);
+
+  return (
+    getString(senderFromMeta?.phone_number) ??
+    getString(senderFromMeta?.phoneNumber) ??
+    getString(contactFromMeta?.phone_number) ??
+    getString(contactFromMeta?.phoneNumber) ??
+    getString(sender?.phone_number) ??
+    getString(sender?.phoneNumber) ??
+    getString(contact?.phone_number) ??
+    getString(contact?.phoneNumber) ??
+    getString(row.phone_number) ??
+    getString(row.phoneNumber) ??
+    null
+  );
+}
+
+function getString(value: unknown): string | null {
+  if (typeof value !== "string") return null;
+  const normalized = value.trim();
+  return normalized.length > 0 ? normalized : null;
+}
+
+function normalizePhone(value: string | null): string {
+  if (!value) return "";
+  return value.replace(/\D/g, "");
+}
+
+function buildPhoneCandidates(rawPhone: string): string[] {
+  const normalized = normalizePhone(rawPhone);
+  if (!normalized) return [];
+
+  const candidates = new Set<string>([normalized]);
+  if (normalized.length === 10) {
+    candidates.add(`1${normalized}`);
+  } else if (normalized.length === 11 && normalized.startsWith("1")) {
+    candidates.add(normalized.slice(1));
+  }
+
+  return Array.from(candidates);
 }

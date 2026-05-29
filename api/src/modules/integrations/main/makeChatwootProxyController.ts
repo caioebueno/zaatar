@@ -5,13 +5,19 @@ import { TakeCareChatwootConversationUseCase } from "../application/use-cases/Ta
 import { ResolveChatwootConversationUseCase } from "../application/use-cases/ResolveChatwootConversationUseCase.js";
 import { MarkChatwootConversationReadUseCase } from "../application/use-cases/MarkChatwootConversationReadUseCase.js";
 import { HttpChatwootProxyGateway } from "../infrastructure/http/HttpChatwootProxyGateway.js";
+import { PrismaChatConversationOrderRepository } from "../infrastructure/prisma/PrismaChatConversationOrderRepository.js";
 import { PrismaBranchChatwootConfigRepository } from "../infrastructure/prisma/PrismaBranchChatwootConfigRepository.js";
 import { ChatwootProxyController } from "../presentation/controllers/ChatwootProxyController.js";
 
 export function makeChatwootProxyController() {
   const gateway = new HttpChatwootProxyGateway();
   const branchRepository = new PrismaBranchChatwootConfigRepository();
-  const listChatsUseCase = new ListChatwootChatsUseCase(gateway, branchRepository);
+  const orderRepository = new PrismaChatConversationOrderRepository();
+  const listChatsUseCase = new ListChatwootChatsUseCase(
+    gateway,
+    branchRepository,
+    orderRepository,
+  );
   const listConversationMessagesUseCase =
     new ListChatwootConversationMessagesUseCase(gateway, branchRepository);
   const sendConversationMessageUseCase =

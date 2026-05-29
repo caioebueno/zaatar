@@ -21,6 +21,7 @@ type HandleChatwootWebhookUseCaseOutput = {
 type ParsedWebhookPayload = {
   accountId: string | null;
   assignedToAgent: boolean;
+  assigneeChanged: boolean;
   assigneeId: string | null;
   audioAttachments: Array<{
     durationSeconds: number | null;
@@ -44,6 +45,7 @@ type ParsedWebhookPayload = {
   isCustomerMessage: boolean;
   messageSentAt: string | null;
   source: "customer" | "agent" | "ai" | "unknown";
+  statusChanged: boolean;
   status: string | null;
   senderName: string | null;
   sourceId: string | null;
@@ -99,6 +101,8 @@ export class HandleChatwootWebhookUseCase {
     const isChatStatusEvent =
       payload.event === "conversation_status_changed" ||
       payload.event === "conversation_updated";
+    const shouldEmitChatStatusEvent =
+      isChatStatusEvent && (payload.statusChanged || payload.assigneeChanged);
 
     if (!isMessageCreatedEvent && !isChatStatusEvent) {
       return {
@@ -109,11 +113,20 @@ export class HandleChatwootWebhookUseCase {
       };
     }
 
+    if (isChatStatusEvent && !shouldEmitChatStatusEvent) {
+      return {
+        event: payload.event,
+        matched: true,
+        notificationsSent: 0,
+        skippedReason: "STATUS_OR_ASSIGNEE_NOT_CHANGED",
+      };
+    }
+
     chatwootRealtimeHub.publish({
       businessId: businessMatch.businessId,
       branchId: businessMatch.branchId,
       conversationId: payload.conversationId,
-      type: isChatStatusEvent ? "chat_status_changed" : "message_created",
+      type: shouldEmitChatStatusEvent ? "chat_status_changed" : "message_created",
       data: {
         event: payload.event,
         conversationId: payload.conversationId,
@@ -123,12 +136,14 @@ export class HandleChatwootWebhookUseCase {
         isCustomerMessage: payload.isCustomerMessage,
         messageSentAt: payload.messageSentAt,
         assignedToAgent: payload.assignedToAgent,
+        assigneeChanged: payload.assigneeChanged,
         assigneeId: payload.assigneeId,
         hasAudio: payload.audioAttachments.length > 0,
         audioAttachments: payload.audioAttachments,
         hasImage: payload.imageAttachments.length > 0,
         imageAttachments: payload.imageAttachments,
         status: payload.status,
+        statusChanged: payload.statusChanged,
         senderName: payload.senderName,
       },
     });
@@ -244,6 +259,36 @@ function parseWebhookPayload(rawBody: Buffer): ParsedWebhookPayload {
   const messageSender = asRecord(message?.sender);
   const messageContentAttributes = asRecord(message?.content_attributes);
   const event = parseRequiredString(body.event, "event");
+  const statusChanged = hasConversationFieldChanged({
+    event,
+    body,
+    fieldCandidates: [
+      "status",
+      "conversation.status",
+    ],
+    explicitPreviousValueCandidates: [
+      body.previous_status,
+      body.previousStatus,
+      conversation?.previous_status,
+      conversation?.previousStatus,
+    ],
+  });
+  const assigneeChanged = hasConversationFieldChanged({
+    event,
+    body,
+    fieldCandidates: [
+      "assignee_id",
+      "assignee",
+      "conversation.assignee_id",
+      "conversation.meta.assignee.id",
+    ],
+    explicitPreviousValueCandidates: [
+      body.previous_assignee_id,
+      body.previousAssigneeId,
+      conversation?.previous_assignee_id,
+      conversation?.previousAssigneeId,
+    ],
+  });
   const accountId = parseOptionalNumericLikeString(
     account?.id ??
       conversationAccount?.id ??
@@ -347,6 +392,7 @@ function parseWebhookPayload(rawBody: Buffer): ParsedWebhookPayload {
     event,
     accountId,
     assignedToAgent,
+    assigneeChanged,
     assigneeId,
     audioAttachments,
     imageAttachments,
@@ -357,6 +403,7 @@ function parseWebhookPayload(rawBody: Buffer): ParsedWebhookPayload {
     source,
     isCustomerMessage,
     messageSentAt,
+    statusChanged,
     status,
     senderName,
     incomingMessage,
@@ -414,6 +461,99 @@ function parseOptionalString(value: unknown): string | null {
   if (typeof value !== "string") return null;
   const normalized = value.trim();
   return normalized || null;
+}
+
+function hasConversationFieldChanged(input: {
+  event: string;
+  body: Record<string, unknown>;
+  fieldCandidates: string[];
+  explicitPreviousValueCandidates: unknown[];
+}): boolean {
+  const normalizedEvent = input.event.trim().toLowerCase();
+  if (normalizedEvent === "conversation_status_changed") {
+    if (
+      input.fieldCandidates.some((candidate) =>
+        candidate === "status" || candidate === "conversation.status",
+      )
+    ) {
+      return true;
+    }
+  }
+
+  if (input.explicitPreviousValueCandidates.some((value) => value !== undefined && value !== null)) {
+    return true;
+  }
+
+  const changedAttributesCandidates: unknown[] = [
+    input.body.changed_attributes,
+    input.body.changedAttributes,
+    asRecord(input.body.conversation)?.changed_attributes,
+    asRecord(input.body.conversation)?.changedAttributes,
+    asRecord(input.body.meta)?.changed_attributes,
+    asRecord(input.body.meta)?.changedAttributes,
+    input.body.previous_changes,
+    input.body.previousChanges,
+    asRecord(input.body.conversation)?.previous_changes,
+    asRecord(input.body.conversation)?.previousChanges,
+    asRecord(input.body.meta)?.previous_changes,
+    asRecord(input.body.meta)?.previousChanges,
+  ];
+
+  const keys = new Set<string>();
+  for (const candidate of input.fieldCandidates) {
+    const normalized = normalizeChangedAttributeKey(candidate);
+    if (normalized) {
+      keys.add(normalized);
+    }
+  }
+
+  for (const candidate of changedAttributesCandidates) {
+    if (changedAttributesContainsAnyKey(candidate, keys)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+function normalizeChangedAttributeKey(value: string): string {
+  const normalized = value.trim().toLowerCase();
+  if (!normalized) return "";
+  return normalized.replace(/[^a-z0-9]/g, "");
+}
+
+function changedAttributesContainsAnyKey(
+  value: unknown,
+  keys: Set<string>,
+): boolean {
+  if (Array.isArray(value)) {
+    return value.some((item) => {
+      if (typeof item === "string") {
+        return keys.has(normalizeChangedAttributeKey(item));
+      }
+      if (item && typeof item === "object" && !Array.isArray(item)) {
+        return changedAttributesContainsAnyKey(item, keys);
+      }
+      return false;
+    });
+  }
+
+  if (!value || typeof value !== "object") {
+    return false;
+  }
+
+  const record = value as Record<string, unknown>;
+  for (const [rawKey, nestedValue] of Object.entries(record)) {
+    if (keys.has(normalizeChangedAttributeKey(rawKey))) {
+      return true;
+    }
+
+    if (changedAttributesContainsAnyKey(nestedValue, keys)) {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 function normalizeOptionalString(value: string | null): string | null {

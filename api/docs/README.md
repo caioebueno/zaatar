@@ -16,6 +16,7 @@ All responses are JSON. All protected routes require an `Authorization: Bearer <
 
 | File | Topics |
 |---|---|
+| [entities.md](./entities.md) | Entity-first map: compact schema + route list for each entity |
 | [authentication.md](./authentication.md) | How manager and driver tokens work, business context resolution |
 | [owner.md](./owner.md) | Owner registration, email/password login, OTP auth |
 | [business.md](./business.md) | Businesses, branches, onboarding, business settings |
@@ -25,6 +26,7 @@ All responses are JSON. All protected routes require an `Authorization: Bearer <
 | [progressive-discount.md](./progressive-discount.md) | Full `/progressive-discount` schema, selection behavior, and examples |
 | [address-search.md](./address-search.md) | Full `/address-search` schema, behavior, and examples |
 | [orders.md](./orders.md) | List/get/create/update orders, orders by station |
+| [order-intents.md](./order-intents.md) | Create/edit customer draft order intents (`/order-intents/upsert`) |
 | [dispatch.md](./dispatch.md) | Dispatch management (manager), driver dispatch flow |
 | [dispatch-route.md](./dispatch-route.md) | GPS route tracking, route sessions, route history |
 | [driver.md](./driver.md) | Driver CRUD, OTP auth, driver self-management |

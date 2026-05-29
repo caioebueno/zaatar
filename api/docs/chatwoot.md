@@ -304,7 +304,7 @@ Payload shape matches each item in `/conversation/events`.
 
 ### Response Schema (Detailed)
 
-The API returns **exactly** the Chatwoot conversations payload.  
+The API returns Chatwoot conversations payload with API enrichments (`status` abstraction and `order`).  
 Top-level schema (current expected shape):
 
 ```ts
@@ -327,9 +327,11 @@ type ConversationSummary = {
   id: number;
   account_id?: number;
   inbox_id?: number;
-  status?: "ai_handling" | "take_care";
+  status?: "ai_is_handling" | "take_care";
   chatwootStatus?: string; // original Chatwoot status
   assignee_id?: number | null;
+  order?: OrderDetail | null; // latest order found by customer phone
+  orderIntent?: OrderIntentDetail | null; // active order intent found by customer phone
   contact_inbox?: unknown;
   last_activity_at?: number | string | null;
   timestamp?: number | string | null;
@@ -342,6 +344,74 @@ type ConversationSummary = {
     [key: string]: unknown;
   };
   [key: string]: unknown;
+};
+
+type OrderDetail = {
+  id: string;
+  number: string | null;
+  createdAt: string; // ISO-8601
+  orderType: string;
+  paymentMethod: string;
+  status: string;
+  canceled: boolean;
+  customer: {
+    name: string | null;
+    phone: string | null;
+  };
+  items: Array<{
+    productId: string;
+    productName: string;
+    quantity: number;
+    unitAmountCents: number;
+    lineTotalCents: number;
+  }>;
+  subtotalCents: number;
+  discountedSubtotalCents: number;
+  tipPercent: number;
+  tipAmountCents: number;
+  deliveryFeeCents: number;
+  totalCents: number;
+};
+
+type OrderIntentDetail = {
+  id: string;
+  customerId: string;
+  active: boolean;
+  createdAt: string;
+  updatedAt: string;
+  language: string | null;
+  status: string;
+  type: string;
+  paymentMethod: string;
+  paymentProvider: string | null;
+  tipAmount: number | null;
+  tags: string[];
+  progressiveDiscountSnapshot: unknown;
+  amount: number | null;
+  deliveryAddress: DeliveryAddress | null;
+  deliveryAddressId: string | null;
+  orderProducts: Array<{
+    id: string;
+    productId: string;
+    quantity: number;
+    comments: string | null;
+    fullAmount: number | null;
+    amount: number | null;
+    modifierGroupItemIds: string[];
+  }>;
+};
+
+type DeliveryAddress = {
+  id: string;
+  description: string;
+  street: string;
+  number: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  lat: string;
+  lng: string;
+  deliveryFee: number;
 };
 ```
 
@@ -356,11 +426,19 @@ type ConversationSummary = {
 | `data.payload` | `array` | Conversation list for requested page |
 | `data.payload[].id` | `number` | Conversation ID |
 | `data.payload[].inbox_id` | `number` | Chatwoot inbox/source identifier |
-| `data.payload[].status` | `string` | Conversation status (Chatwoot-defined values) |
+| `data.payload[].status` | `"ai_is_handling" \| "take_care"` | Status abstraction used by app |
+| `data.payload[].chatwootStatus` | `string` | Original Chatwoot status value |
 | `data.payload[].assignee_id` | `number \| null` | Assigned agent ID |
+| `data.payload[].order` | `OrderDetail \| null` | Latest order matched by customer phone |
+| `data.payload[].orderIntent` | `OrderIntentDetail \| null` | Active order intent matched by customer phone |
+| `data.payload[].orderIntent.deliveryAddress` | `DeliveryAddress \| null` | Delivery address object when order intent has linked address |
 | `data.payload[].meta` | `object` | Contact/assignee metadata |
 
-> Compatibility note: because this endpoint is a proxy, Chatwoot can add/remove fields over time. Your client should treat unknown fields as optional and avoid strict exhaustive parsing.
+> `order` enrichment uses phone matching against customer records. If no phone/no match, `order` is `null`.
+>
+> `orderIntent` enrichment uses phone matching against customer records. If no phone/no match, `orderIntent` is `null`.
+>
+> Compatibility note: Chatwoot can add/remove fields over time. Your client should treat unknown fields as optional and avoid strict exhaustive parsing.
 
 ### Conversation Messages Success Schema (`200`)
 

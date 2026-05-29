@@ -158,6 +158,7 @@ model ModifierGroupItem {
   fileId                        String?
   preparationStepModifierTracks PreparationStepModifierTrack[]
   orderProducts                 OrderProducts[]
+  orderIntentProducts           OrderIntentProduct[]
 }
 
 enum ModifierGroupType {
@@ -608,6 +609,7 @@ model Product {
   comboUsedInItems  ComboProductItem[]                @relation("ComboProductItemProduct")
   exclusivePromotionProducts ExclusivePromotionProduct[]
   OrderProducts     OrderProducts[]
+  orderIntentProducts OrderIntentProduct[]
   prizeProducts     ProgressiveDiscountPrizeProduct[]
   customerRewards   CustomerReward[]
   translations      Json?
@@ -802,6 +804,7 @@ model Customer {
   otpChallenges       CustomerOtpChallenge[]
   accessTokens        CustomerAccessToken[]
   cards               CustomerCard[]
+  orderIntents        OrderIntent[]
 
   @@index([stripeCustomerId])
 }
@@ -886,6 +889,7 @@ model DeliveryAddress {
   customer         Customer? @relation(fields: [customerId], references: [id])
   customerId       String?
   orders           Order[]
+  orderIntents     OrderIntent[]
 }
 
 model ExternalAddress {
@@ -965,6 +969,30 @@ model Order {
 
   @@index([dispatchId, dispatchOrderIndex])
   @@index([branchId])
+}
+
+model OrderIntent {
+  id                          String               @id
+  createdAt                   DateTime             @default(now())
+  updatedAt                   DateTime             @updatedAt
+  active                      Boolean              @default(true)
+  language                    String?
+  status                      OrderStatus           @default(ACCEPTED)
+  type                        OrderType?
+  paymentMethod               PaymentType           @default(CARD)
+  paymentProvider             PaymentProvider?
+  tipAmount                   Int?
+  tags                        String[]              @default([])
+  progressiveDiscountSnapshot Json?
+  amount                      Int?
+  customer                    Customer?             @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  customerId                  String?
+  deliveryAddress             DeliveryAddress?      @relation(fields: [deliveryAddressId], references: [id], onDelete: SetNull)
+  deliveryAddressId           String?
+  orderProducts               OrderIntentProduct[]
+
+  @@index([customerId, createdAt])
+  @@index([deliveryAddressId, createdAt])
 }
 
 enum CustomerFeedbackSentiment {
@@ -1080,6 +1108,23 @@ model OrderProducts {
   amount             Int
   order              Order?              @relation(fields: [orderId], references: [id], onDelete: Cascade)
   orderId            String?
+}
+
+model OrderIntentProduct {
+  id                 String              @id
+  createdAt          DateTime            @default(now())
+  orderIntent        OrderIntent         @relation(fields: [orderIntentId], references: [id], onDelete: Cascade)
+  orderIntentId      String
+  product            Product             @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId          String
+  quantity           Int
+  comments           String?
+  modifierGroupItems ModifierGroupItem[]
+  fullAmount         Int?
+  amount             Int?
+
+  @@index([orderIntentId, createdAt])
+  @@index([productId])
 }
 
 enum InventoryPlaceType {

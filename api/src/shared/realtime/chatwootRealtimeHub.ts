@@ -45,6 +45,7 @@ export class ChatwootRealtimeHub {
       createdAt: new Date().toISOString(),
     };
 
+    console.log(`[sse] ${normalized.type}`);
     this.deliver(normalized);
 
     return normalized;

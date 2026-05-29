@@ -4,6 +4,7 @@ import type {
   DispatchRepository,
   UpdateDispatchStatusInput,
 } from "../ports/DispatchRepository.js";
+import type { OutForDeliveryNotifier } from "../ports/OutForDeliveryNotifier.js";
 
 export type UpdateDispatchInput = {
   dispatchAt?: unknown;
@@ -14,7 +15,10 @@ export type UpdateDispatchInput = {
 };
 
 export class UpdateDispatchUseCase {
-  constructor(private readonly dispatchRepository: DispatchRepository) {}
+  constructor(
+    private readonly dispatchRepository: DispatchRepository,
+    private readonly outForDeliveryNotifier?: OutForDeliveryNotifier,
+  ) {}
 
   async execute(input: UpdateDispatchInput): Promise<DispatchEntity> {
     const dispatchId = normalizeRequiredString(input.dispatchId, "dispatchId");
@@ -35,13 +39,30 @@ export class UpdateDispatchUseCase {
       throw new InvalidDispatchUpdatePayloadError("dispatched");
     }
 
-    return this.dispatchRepository.updateStatus({
+    const updatedDispatch = await this.dispatchRepository.updateStatus({
       dispatchId,
       dispatched,
       dispatchAt,
       driverId,
       queueIndex,
     } satisfies UpdateDispatchStatusInput);
+
+    if (
+      dispatched === true &&
+      updatedDispatch.dispatchAt &&
+      this.outForDeliveryNotifier
+    ) {
+      void this.outForDeliveryNotifier
+        .sendForDispatch(updatedDispatch)
+        .catch((error: unknown) => {
+          console.error(
+            "Failed to send out_for_delivery WhatsApp notifications:",
+            error,
+          );
+        });
+    }
+
+    return updatedDispatch;
   }
 }
 

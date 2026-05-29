@@ -32,6 +32,7 @@ export class ExpoPushNotificationSender implements PushNotificationSender {
     }));
 
     const endpoint = resolveExpoPushEndpoint();
+
     const headers: Record<string, string> = {
       Accept: "application/json",
       "Content-Type": "application/json",
@@ -64,18 +65,17 @@ export class ExpoPushNotificationSender implements PushNotificationSender {
 
     const globalErrors = parsed?.errors ?? [];
     if (globalErrors.length > 0) {
-      throw new Error(
-        `EXPO_PUSH_REQUEST_FAILED: ${globalErrors
-          .map((item) => item.message || "unknown")
-          .join(", ")}`,
-      );
+      const msg = globalErrors.map((item) => item.message || "unknown").join(", ");
+      throw new Error(`EXPO_PUSH_REQUEST_FAILED: ${msg}`);
     }
 
-    const ticketError = parsed?.data?.find((item) => item.status === "error");
-    if (ticketError) {
-      throw new Error(
-        `EXPO_PUSH_TICKET_ERROR: ${ticketError.details?.error ?? "UNKNOWN"}`,
-      );
+    const ticketErrors = parsed?.data?.filter((item) => item.status === "error") ?? [];
+    for (const ticketError of ticketErrors) {
+      const code = ticketError.details?.error ?? "UNKNOWN";
+      if (code === "DeviceNotRegistered") {
+        continue;
+      }
+      throw new Error(`EXPO_PUSH_TICKET_ERROR: ${code}`);
     }
   }
 }

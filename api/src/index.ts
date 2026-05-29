@@ -35,6 +35,7 @@ import { makeDispatchRouteController } from "./modules/dispatch-route/main/makeD
 import { makeStationController } from "./modules/station/main/makeStationController.js";
 import { makePreparationTaskController } from "./modules/preparation-task/main/makePreparationTaskController.js";
 import { makeChatwootWebhookController } from "./modules/chatwoot-webhook/main/makeChatwootWebhookController.js";
+import { makeOrderIntentController } from "./modules/order-intent/main/makeOrderIntentController.js";
 import { HmacDriverAccessTokenVerifier } from "./modules/driver/infrastructure/security/HmacDriverAccessTokenVerifier.js";
 import { HmacAccessTokenVerifier } from "./modules/owner/infrastructure/security/HmacAccessTokenVerifier.js";
 import { chatwootRealtimeHub } from "./shared/realtime/chatwootRealtimeHub.js";
@@ -92,6 +93,7 @@ const setDispatchStartedDeliveryAtController =
   makeSetDispatchStartedDeliveryAtController();
 const dispatchRouteController = makeDispatchRouteController();
 const chatwootWebhookController = makeChatwootWebhookController();
+const orderIntentController = makeOrderIntentController();
 const accessTokenVerifier = new HmacAccessTokenVerifier();
 const driverAccessTokenVerifier = new HmacDriverAccessTokenVerifier();
 
@@ -165,6 +167,12 @@ const routes: Route[] = [
     method: "GET",
     matcher: /^\/public\/order-link\/settings$/,
     controller: getPublicBusinessSettingsController,
+    requiresAuth: false,
+  },
+  {
+    method: "GET",
+    matcher: /^\/public\/customers\/addresses$/,
+    controller: nativeCatalogController,
     requiresAuth: false,
   },
   {
@@ -637,6 +645,13 @@ const routes: Route[] = [
     matcher: /^\/customers\/[^/]+\/addresses$/,
     controller: nativeCatalogController,
     requiresAuth: true,
+    bodyMode: "json",
+  },
+  {
+    method: "POST",
+    matcher: /^\/order-intents\/upsert$/,
+    controller: orderIntentController,
+    requiresAuth: false,
     bodyMode: "json",
   },
   {

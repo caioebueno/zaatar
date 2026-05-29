@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { Prisma } from "../../../../../../web/src/generated/prisma/index.js";
 import prisma from "../../../../prisma.js";
+import { sendOrderConfirmationChatwootMessage } from "../../infrastructure/messaging/sendOrderConfirmationChatwootMessage.js";
 import type {
   HttpController,
   HttpRequest,
@@ -75,6 +76,7 @@ export class ManageOrdersController implements HttpController {
       const language = parseOptionalString(body.language, "language");
       const scheduleFor = parseOptionalDate(body.scheduleFor, "scheduleFor");
       const deliveryAddressId = parseOptionalNullableId(body.addressId, "addressId");
+      const orderIntentId = parseOptionalNullableId(body.orderIntentId, "orderIntentId");
       const tipAmount = parseOptionalInt(body.tipAmount, "tipAmount");
       const branchId = await resolveBranchId({
         explicitBranchId: parseOptionalNullableId(body.branchId, "branchId"),
@@ -318,6 +320,16 @@ export class ManageOrdersController implements HttpController {
             },
           });
         }
+
+        if (orderIntentId) {
+          await tx.$executeRaw`
+            UPDATE "OrderIntent"
+            SET
+              "active" = false,
+              "updatedAt" = NOW()
+            WHERE "id" = ${orderIntentId}
+          `;
+        }
       });
 
       if (orderType === "DELIVERY" && deliveryAddressId) {
@@ -325,6 +337,37 @@ export class ManageOrdersController implements HttpController {
           orderId,
           deliveryAddressId,
           isScheduledOrder: Boolean(scheduleFor),
+        });
+      }
+
+      let customerContact: { name: string | null; phone: string | null } | null =
+        null;
+      if (customerId !== null && customerId !== undefined) {
+        customerContact = await prisma.customer.findUnique({
+          where: { id: customerId },
+          select: {
+            name: true,
+            phone: true,
+          },
+        });
+      }
+
+      const customerPhone = customerContact?.phone?.trim() || null;
+      if (customerPhone) {
+        void sendOrderConfirmationChatwootMessage({
+          branchId: branchId ?? null,
+          customerName: customerContact?.name ?? null,
+          customerPhone,
+          language: language ?? null,
+          orderId,
+          orderNumber,
+          orderType,
+          totalAmountInCents: orderAmount,
+        }).catch((error: unknown) => {
+          console.error(
+            "Failed to send order confirmation WhatsApp message:",
+            error,
+          );
         });
       }
 

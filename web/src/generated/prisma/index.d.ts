@@ -84,6 +84,11 @@ export type Business = $Result.DefaultSelection<Prisma.$BusinessPayload>
  */
 export type User = $Result.DefaultSelection<Prisma.$UserPayload>
 /**
+ * Model UserPushDevice
+ * 
+ */
+export type UserPushDevice = $Result.DefaultSelection<Prisma.$UserPushDevicePayload>
+/**
  * Model OwnerOtpChallenge
  * 
  */
@@ -138,6 +143,11 @@ export type DispatchRouteSession = $Result.DefaultSelection<Prisma.$DispatchRout
  * 
  */
 export type DispatchRoutePoint = $Result.DefaultSelection<Prisma.$DispatchRoutePointPayload>
+/**
+ * Model DispatchRouteMilestone
+ * 
+ */
+export type DispatchRouteMilestone = $Result.DefaultSelection<Prisma.$DispatchRouteMilestonePayload>
 /**
  * Model DispatchAssignmentJob
  * 
@@ -264,6 +274,11 @@ export type PromotialMessage = $Result.DefaultSelection<Prisma.$PromotialMessage
  */
 export type Order = $Result.DefaultSelection<Prisma.$OrderPayload>
 /**
+ * Model OrderIntent
+ * 
+ */
+export type OrderIntent = $Result.DefaultSelection<Prisma.$OrderIntentPayload>
+/**
  * Model CustomerFeedback
  * 
  */
@@ -278,6 +293,11 @@ export type CustomerReward = $Result.DefaultSelection<Prisma.$CustomerRewardPayl
  * 
  */
 export type OrderProducts = $Result.DefaultSelection<Prisma.$OrderProductsPayload>
+/**
+ * Model OrderIntentProduct
+ * 
+ */
+export type OrderIntentProduct = $Result.DefaultSelection<Prisma.$OrderIntentProductPayload>
 /**
  * Model InventoryPlace
  * 
@@ -337,6 +357,13 @@ export const ModifierGroupType: {
 };
 
 export type ModifierGroupType = (typeof ModifierGroupType)[keyof typeof ModifierGroupType]
+
+
+export const UserPushDevicePlatform: {
+  IOS: 'IOS'
+};
+
+export type UserPushDevicePlatform = (typeof UserPushDevicePlatform)[keyof typeof UserPushDevicePlatform]
 
 
 export const ExternalIntegrationProvider: {
@@ -399,6 +426,15 @@ export const DispatchRoutePointSource: {
 };
 
 export type DispatchRoutePointSource = (typeof DispatchRoutePointSource)[keyof typeof DispatchRoutePointSource]
+
+
+export const DispatchRouteMilestoneType: {
+  LEFT_PIZZERIA: 'LEFT_PIZZERIA',
+  LEFT_DROPOFF: 'LEFT_DROPOFF',
+  ARRIVED_RESTAURANT: 'ARRIVED_RESTAURANT'
+};
+
+export type DispatchRouteMilestoneType = (typeof DispatchRouteMilestoneType)[keyof typeof DispatchRouteMilestoneType]
 
 
 export const DispatchAssignmentJobStatus: {
@@ -591,6 +627,10 @@ export type ModifierGroupType = $Enums.ModifierGroupType
 
 export const ModifierGroupType: typeof $Enums.ModifierGroupType
 
+export type UserPushDevicePlatform = $Enums.UserPushDevicePlatform
+
+export const UserPushDevicePlatform: typeof $Enums.UserPushDevicePlatform
+
 export type ExternalIntegrationProvider = $Enums.ExternalIntegrationProvider
 
 export const ExternalIntegrationProvider: typeof $Enums.ExternalIntegrationProvider
@@ -618,6 +658,10 @@ export const DispatchRouteSessionStatus: typeof $Enums.DispatchRouteSessionStatu
 export type DispatchRoutePointSource = $Enums.DispatchRoutePointSource
 
 export const DispatchRoutePointSource: typeof $Enums.DispatchRoutePointSource
+
+export type DispatchRouteMilestoneType = $Enums.DispatchRouteMilestoneType
+
+export const DispatchRouteMilestoneType: typeof $Enums.DispatchRouteMilestoneType
 
 export type DispatchAssignmentJobStatus = $Enums.DispatchAssignmentJobStatus
 
@@ -957,6 +1001,16 @@ export class PrismaClient<
   get user(): Prisma.UserDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.userPushDevice`: Exposes CRUD operations for the **UserPushDevice** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more UserPushDevices
+    * const userPushDevices = await prisma.userPushDevice.findMany()
+    * ```
+    */
+  get userPushDevice(): Prisma.UserPushDeviceDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.ownerOtpChallenge`: Exposes CRUD operations for the **OwnerOtpChallenge** model.
     * Example usage:
     * ```ts
@@ -1065,6 +1119,16 @@ export class PrismaClient<
     * ```
     */
   get dispatchRoutePoint(): Prisma.DispatchRoutePointDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.dispatchRouteMilestone`: Exposes CRUD operations for the **DispatchRouteMilestone** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more DispatchRouteMilestones
+    * const dispatchRouteMilestones = await prisma.dispatchRouteMilestone.findMany()
+    * ```
+    */
+  get dispatchRouteMilestone(): Prisma.DispatchRouteMilestoneDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.dispatchAssignmentJob`: Exposes CRUD operations for the **DispatchAssignmentJob** model.
@@ -1317,6 +1381,16 @@ export class PrismaClient<
   get order(): Prisma.OrderDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.orderIntent`: Exposes CRUD operations for the **OrderIntent** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more OrderIntents
+    * const orderIntents = await prisma.orderIntent.findMany()
+    * ```
+    */
+  get orderIntent(): Prisma.OrderIntentDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.customerFeedback`: Exposes CRUD operations for the **CustomerFeedback** model.
     * Example usage:
     * ```ts
@@ -1345,6 +1419,16 @@ export class PrismaClient<
     * ```
     */
   get orderProducts(): Prisma.OrderProductsDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.orderIntentProduct`: Exposes CRUD operations for the **OrderIntentProduct** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more OrderIntentProducts
+    * const orderIntentProducts = await prisma.orderIntentProduct.findMany()
+    * ```
+    */
+  get orderIntentProduct(): Prisma.OrderIntentProductDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.inventoryPlace`: Exposes CRUD operations for the **InventoryPlace** model.
@@ -1873,6 +1957,7 @@ export namespace Prisma {
     ModifierGroupItem: 'ModifierGroupItem',
     Business: 'Business',
     User: 'User',
+    UserPushDevice: 'UserPushDevice',
     OwnerOtpChallenge: 'OwnerOtpChallenge',
     ExternalIntegrationConnection: 'ExternalIntegrationConnection',
     ExternalMenuEntityMap: 'ExternalMenuEntityMap',
@@ -1884,6 +1969,7 @@ export namespace Prisma {
     Dispatch: 'Dispatch',
     DispatchRouteSession: 'DispatchRouteSession',
     DispatchRoutePoint: 'DispatchRoutePoint',
+    DispatchRouteMilestone: 'DispatchRouteMilestone',
     DispatchAssignmentJob: 'DispatchAssignmentJob',
     DispatchEtaRecalculationJob: 'DispatchEtaRecalculationJob',
     FeedbackWhatsAppJob: 'FeedbackWhatsAppJob',
@@ -1909,9 +1995,11 @@ export namespace Prisma {
     Message: 'Message',
     PromotialMessage: 'PromotialMessage',
     Order: 'Order',
+    OrderIntent: 'OrderIntent',
     CustomerFeedback: 'CustomerFeedback',
     CustomerReward: 'CustomerReward',
     OrderProducts: 'OrderProducts',
+    OrderIntentProduct: 'OrderIntentProduct',
     InventoryPlace: 'InventoryPlace',
     InventoryProduct: 'InventoryProduct',
     InventoryStock: 'InventoryStock',
@@ -1935,7 +2023,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "station" | "preparationStep" | "preparationStepCategory" | "preparationStepTrack" | "preparationStepModifierTrack" | "progressiveDiscount" | "progressiveDiscountStep" | "progressiveDiscountPrize" | "progressiveDiscountPrizeProduct" | "file" | "modifierGroup" | "modifierGroupItem" | "business" | "user" | "ownerOtpChallenge" | "externalIntegrationConnection" | "externalMenuEntityMap" | "externalMenuSyncRun" | "businessOwner" | "branch" | "driver" | "driverActivationEvent" | "dispatch" | "dispatchRouteSession" | "dispatchRoutePoint" | "dispatchAssignmentJob" | "dispatchEtaRecalculationJob" | "feedbackWhatsAppJob" | "address" | "product" | "comboProductItem" | "exclusivePromotion" | "exclusivePromotionProduct" | "menu" | "menuVisit" | "category" | "menuCategory" | "productCategory" | "comboSlot" | "comboSlotOption" | "campaign" | "customer" | "customerCard" | "customerOtpChallenge" | "customerAccessToken" | "deliveryAddress" | "externalAddress" | "message" | "promotialMessage" | "order" | "customerFeedback" | "customerReward" | "orderProducts" | "inventoryPlace" | "inventoryProduct" | "inventoryStock" | "inventoryChecklist" | "inventoryChecklistItem" | "inventoryAlert" | "inventoryStockEvent" | "feedbackSettings"
+      modelProps: "station" | "preparationStep" | "preparationStepCategory" | "preparationStepTrack" | "preparationStepModifierTrack" | "progressiveDiscount" | "progressiveDiscountStep" | "progressiveDiscountPrize" | "progressiveDiscountPrizeProduct" | "file" | "modifierGroup" | "modifierGroupItem" | "business" | "user" | "userPushDevice" | "ownerOtpChallenge" | "externalIntegrationConnection" | "externalMenuEntityMap" | "externalMenuSyncRun" | "businessOwner" | "branch" | "driver" | "driverActivationEvent" | "dispatch" | "dispatchRouteSession" | "dispatchRoutePoint" | "dispatchRouteMilestone" | "dispatchAssignmentJob" | "dispatchEtaRecalculationJob" | "feedbackWhatsAppJob" | "address" | "product" | "comboProductItem" | "exclusivePromotion" | "exclusivePromotionProduct" | "menu" | "menuVisit" | "category" | "menuCategory" | "productCategory" | "comboSlot" | "comboSlotOption" | "campaign" | "customer" | "customerCard" | "customerOtpChallenge" | "customerAccessToken" | "deliveryAddress" | "externalAddress" | "message" | "promotialMessage" | "order" | "orderIntent" | "customerFeedback" | "customerReward" | "orderProducts" | "orderIntentProduct" | "inventoryPlace" | "inventoryProduct" | "inventoryStock" | "inventoryChecklist" | "inventoryChecklistItem" | "inventoryAlert" | "inventoryStockEvent" | "feedbackSettings"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2975,6 +3063,80 @@ export namespace Prisma {
           }
         }
       }
+      UserPushDevice: {
+        payload: Prisma.$UserPushDevicePayload<ExtArgs>
+        fields: Prisma.UserPushDeviceFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.UserPushDeviceFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPushDevicePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.UserPushDeviceFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPushDevicePayload>
+          }
+          findFirst: {
+            args: Prisma.UserPushDeviceFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPushDevicePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.UserPushDeviceFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPushDevicePayload>
+          }
+          findMany: {
+            args: Prisma.UserPushDeviceFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPushDevicePayload>[]
+          }
+          create: {
+            args: Prisma.UserPushDeviceCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPushDevicePayload>
+          }
+          createMany: {
+            args: Prisma.UserPushDeviceCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.UserPushDeviceCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPushDevicePayload>[]
+          }
+          delete: {
+            args: Prisma.UserPushDeviceDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPushDevicePayload>
+          }
+          update: {
+            args: Prisma.UserPushDeviceUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPushDevicePayload>
+          }
+          deleteMany: {
+            args: Prisma.UserPushDeviceDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.UserPushDeviceUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.UserPushDeviceUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPushDevicePayload>[]
+          }
+          upsert: {
+            args: Prisma.UserPushDeviceUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPushDevicePayload>
+          }
+          aggregate: {
+            args: Prisma.UserPushDeviceAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateUserPushDevice>
+          }
+          groupBy: {
+            args: Prisma.UserPushDeviceGroupByArgs<ExtArgs>
+            result: $Utils.Optional<UserPushDeviceGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.UserPushDeviceCountArgs<ExtArgs>
+            result: $Utils.Optional<UserPushDeviceCountAggregateOutputType> | number
+          }
+        }
+      }
       OwnerOtpChallenge: {
         payload: Prisma.$OwnerOtpChallengePayload<ExtArgs>
         fields: Prisma.OwnerOtpChallengeFieldRefs
@@ -3786,6 +3948,80 @@ export namespace Prisma {
           count: {
             args: Prisma.DispatchRoutePointCountArgs<ExtArgs>
             result: $Utils.Optional<DispatchRoutePointCountAggregateOutputType> | number
+          }
+        }
+      }
+      DispatchRouteMilestone: {
+        payload: Prisma.$DispatchRouteMilestonePayload<ExtArgs>
+        fields: Prisma.DispatchRouteMilestoneFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.DispatchRouteMilestoneFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DispatchRouteMilestonePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DispatchRouteMilestoneFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DispatchRouteMilestonePayload>
+          }
+          findFirst: {
+            args: Prisma.DispatchRouteMilestoneFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DispatchRouteMilestonePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.DispatchRouteMilestoneFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DispatchRouteMilestonePayload>
+          }
+          findMany: {
+            args: Prisma.DispatchRouteMilestoneFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DispatchRouteMilestonePayload>[]
+          }
+          create: {
+            args: Prisma.DispatchRouteMilestoneCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DispatchRouteMilestonePayload>
+          }
+          createMany: {
+            args: Prisma.DispatchRouteMilestoneCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.DispatchRouteMilestoneCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DispatchRouteMilestonePayload>[]
+          }
+          delete: {
+            args: Prisma.DispatchRouteMilestoneDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DispatchRouteMilestonePayload>
+          }
+          update: {
+            args: Prisma.DispatchRouteMilestoneUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DispatchRouteMilestonePayload>
+          }
+          deleteMany: {
+            args: Prisma.DispatchRouteMilestoneDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.DispatchRouteMilestoneUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.DispatchRouteMilestoneUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DispatchRouteMilestonePayload>[]
+          }
+          upsert: {
+            args: Prisma.DispatchRouteMilestoneUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DispatchRouteMilestonePayload>
+          }
+          aggregate: {
+            args: Prisma.DispatchRouteMilestoneAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDispatchRouteMilestone>
+          }
+          groupBy: {
+            args: Prisma.DispatchRouteMilestoneGroupByArgs<ExtArgs>
+            result: $Utils.Optional<DispatchRouteMilestoneGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.DispatchRouteMilestoneCountArgs<ExtArgs>
+            result: $Utils.Optional<DispatchRouteMilestoneCountAggregateOutputType> | number
           }
         }
       }
@@ -5639,6 +5875,80 @@ export namespace Prisma {
           }
         }
       }
+      OrderIntent: {
+        payload: Prisma.$OrderIntentPayload<ExtArgs>
+        fields: Prisma.OrderIntentFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.OrderIntentFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderIntentPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.OrderIntentFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderIntentPayload>
+          }
+          findFirst: {
+            args: Prisma.OrderIntentFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderIntentPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.OrderIntentFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderIntentPayload>
+          }
+          findMany: {
+            args: Prisma.OrderIntentFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderIntentPayload>[]
+          }
+          create: {
+            args: Prisma.OrderIntentCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderIntentPayload>
+          }
+          createMany: {
+            args: Prisma.OrderIntentCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.OrderIntentCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderIntentPayload>[]
+          }
+          delete: {
+            args: Prisma.OrderIntentDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderIntentPayload>
+          }
+          update: {
+            args: Prisma.OrderIntentUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderIntentPayload>
+          }
+          deleteMany: {
+            args: Prisma.OrderIntentDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.OrderIntentUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.OrderIntentUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderIntentPayload>[]
+          }
+          upsert: {
+            args: Prisma.OrderIntentUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderIntentPayload>
+          }
+          aggregate: {
+            args: Prisma.OrderIntentAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateOrderIntent>
+          }
+          groupBy: {
+            args: Prisma.OrderIntentGroupByArgs<ExtArgs>
+            result: $Utils.Optional<OrderIntentGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.OrderIntentCountArgs<ExtArgs>
+            result: $Utils.Optional<OrderIntentCountAggregateOutputType> | number
+          }
+        }
+      }
       CustomerFeedback: {
         payload: Prisma.$CustomerFeedbackPayload<ExtArgs>
         fields: Prisma.CustomerFeedbackFieldRefs
@@ -5858,6 +6168,80 @@ export namespace Prisma {
           count: {
             args: Prisma.OrderProductsCountArgs<ExtArgs>
             result: $Utils.Optional<OrderProductsCountAggregateOutputType> | number
+          }
+        }
+      }
+      OrderIntentProduct: {
+        payload: Prisma.$OrderIntentProductPayload<ExtArgs>
+        fields: Prisma.OrderIntentProductFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.OrderIntentProductFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderIntentProductPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.OrderIntentProductFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderIntentProductPayload>
+          }
+          findFirst: {
+            args: Prisma.OrderIntentProductFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderIntentProductPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.OrderIntentProductFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderIntentProductPayload>
+          }
+          findMany: {
+            args: Prisma.OrderIntentProductFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderIntentProductPayload>[]
+          }
+          create: {
+            args: Prisma.OrderIntentProductCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderIntentProductPayload>
+          }
+          createMany: {
+            args: Prisma.OrderIntentProductCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.OrderIntentProductCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderIntentProductPayload>[]
+          }
+          delete: {
+            args: Prisma.OrderIntentProductDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderIntentProductPayload>
+          }
+          update: {
+            args: Prisma.OrderIntentProductUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderIntentProductPayload>
+          }
+          deleteMany: {
+            args: Prisma.OrderIntentProductDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.OrderIntentProductUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.OrderIntentProductUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderIntentProductPayload>[]
+          }
+          upsert: {
+            args: Prisma.OrderIntentProductUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderIntentProductPayload>
+          }
+          aggregate: {
+            args: Prisma.OrderIntentProductAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateOrderIntentProduct>
+          }
+          groupBy: {
+            args: Prisma.OrderIntentProductGroupByArgs<ExtArgs>
+            result: $Utils.Optional<OrderIntentProductGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.OrderIntentProductCountArgs<ExtArgs>
+            result: $Utils.Optional<OrderIntentProductCountAggregateOutputType> | number
           }
         }
       }
@@ -6575,6 +6959,7 @@ export namespace Prisma {
     modifierGroupItem?: ModifierGroupItemOmit
     business?: BusinessOmit
     user?: UserOmit
+    userPushDevice?: UserPushDeviceOmit
     ownerOtpChallenge?: OwnerOtpChallengeOmit
     externalIntegrationConnection?: ExternalIntegrationConnectionOmit
     externalMenuEntityMap?: ExternalMenuEntityMapOmit
@@ -6586,6 +6971,7 @@ export namespace Prisma {
     dispatch?: DispatchOmit
     dispatchRouteSession?: DispatchRouteSessionOmit
     dispatchRoutePoint?: DispatchRoutePointOmit
+    dispatchRouteMilestone?: DispatchRouteMilestoneOmit
     dispatchAssignmentJob?: DispatchAssignmentJobOmit
     dispatchEtaRecalculationJob?: DispatchEtaRecalculationJobOmit
     feedbackWhatsAppJob?: FeedbackWhatsAppJobOmit
@@ -6611,9 +6997,11 @@ export namespace Prisma {
     message?: MessageOmit
     promotialMessage?: PromotialMessageOmit
     order?: OrderOmit
+    orderIntent?: OrderIntentOmit
     customerFeedback?: CustomerFeedbackOmit
     customerReward?: CustomerRewardOmit
     orderProducts?: OrderProductsOmit
+    orderIntentProduct?: OrderIntentProductOmit
     inventoryPlace?: InventoryPlaceOmit
     inventoryProduct?: InventoryProductOmit
     inventoryStock?: InventoryStockOmit
@@ -7010,11 +7398,13 @@ export namespace Prisma {
   export type ModifierGroupItemCountOutputType = {
     preparationStepModifierTracks: number
     orderProducts: number
+    orderIntentProducts: number
   }
 
   export type ModifierGroupItemCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     preparationStepModifierTracks?: boolean | ModifierGroupItemCountOutputTypeCountPreparationStepModifierTracksArgs
     orderProducts?: boolean | ModifierGroupItemCountOutputTypeCountOrderProductsArgs
+    orderIntentProducts?: boolean | ModifierGroupItemCountOutputTypeCountOrderIntentProductsArgs
   }
 
   // Custom InputTypes
@@ -7042,6 +7432,13 @@ export namespace Prisma {
     where?: OrderProductsWhereInput
   }
 
+  /**
+   * ModifierGroupItemCountOutputType without action
+   */
+  export type ModifierGroupItemCountOutputTypeCountOrderIntentProductsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OrderIntentProductWhereInput
+  }
+
 
   /**
    * Count Type BusinessCountOutputType
@@ -7050,11 +7447,13 @@ export namespace Prisma {
   export type BusinessCountOutputType = {
     branches: number
     integrations: number
+    pushDevices: number
   }
 
   export type BusinessCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     branches?: boolean | BusinessCountOutputTypeCountBranchesArgs
     integrations?: boolean | BusinessCountOutputTypeCountIntegrationsArgs
+    pushDevices?: boolean | BusinessCountOutputTypeCountPushDevicesArgs
   }
 
   // Custom InputTypes
@@ -7082,6 +7481,13 @@ export namespace Prisma {
     where?: ExternalIntegrationConnectionWhereInput
   }
 
+  /**
+   * BusinessCountOutputType without action
+   */
+  export type BusinessCountOutputTypeCountPushDevicesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserPushDeviceWhereInput
+  }
+
 
   /**
    * Count Type UserCountOutputType
@@ -7091,12 +7497,14 @@ export namespace Prisma {
     ownedBusinesses: number
     integrations: number
     otpChallenges: number
+    pushDevices: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     ownedBusinesses?: boolean | UserCountOutputTypeCountOwnedBusinessesArgs
     integrations?: boolean | UserCountOutputTypeCountIntegrationsArgs
     otpChallenges?: boolean | UserCountOutputTypeCountOtpChallengesArgs
+    pushDevices?: boolean | UserCountOutputTypeCountPushDevicesArgs
   }
 
   // Custom InputTypes
@@ -7129,6 +7537,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountOtpChallengesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: OwnerOtpChallengeWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountPushDevicesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserPushDeviceWhereInput
   }
 
 
@@ -7173,18 +7588,51 @@ export namespace Prisma {
 
 
   /**
+   * Count Type BranchCountOutputType
+   */
+
+  export type BranchCountOutputType = {
+    orders: number
+  }
+
+  export type BranchCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    orders?: boolean | BranchCountOutputTypeCountOrdersArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * BranchCountOutputType without action
+   */
+  export type BranchCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BranchCountOutputType
+     */
+    select?: BranchCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * BranchCountOutputType without action
+   */
+  export type BranchCountOutputTypeCountOrdersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OrderWhereInput
+  }
+
+
+  /**
    * Count Type DriverCountOutputType
    */
 
   export type DriverCountOutputType = {
     dispatches: number
     routeSessions: number
+    routeMilestones: number
     activationEvents: number
   }
 
   export type DriverCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     dispatches?: boolean | DriverCountOutputTypeCountDispatchesArgs
     routeSessions?: boolean | DriverCountOutputTypeCountRouteSessionsArgs
+    routeMilestones?: boolean | DriverCountOutputTypeCountRouteMilestonesArgs
     activationEvents?: boolean | DriverCountOutputTypeCountActivationEventsArgs
   }
 
@@ -7216,6 +7664,13 @@ export namespace Prisma {
   /**
    * DriverCountOutputType without action
    */
+  export type DriverCountOutputTypeCountRouteMilestonesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DispatchRouteMilestoneWhereInput
+  }
+
+  /**
+   * DriverCountOutputType without action
+   */
   export type DriverCountOutputTypeCountActivationEventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: DriverActivationEventWhereInput
   }
@@ -7228,12 +7683,14 @@ export namespace Prisma {
   export type DispatchCountOutputType = {
     orders: number
     routeSessions: number
+    routeMilestones: number
     etaRecalculationJobs: number
   }
 
   export type DispatchCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     orders?: boolean | DispatchCountOutputTypeCountOrdersArgs
     routeSessions?: boolean | DispatchCountOutputTypeCountRouteSessionsArgs
+    routeMilestones?: boolean | DispatchCountOutputTypeCountRouteMilestonesArgs
     etaRecalculationJobs?: boolean | DispatchCountOutputTypeCountEtaRecalculationJobsArgs
   }
 
@@ -7265,6 +7722,13 @@ export namespace Prisma {
   /**
    * DispatchCountOutputType without action
    */
+  export type DispatchCountOutputTypeCountRouteMilestonesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DispatchRouteMilestoneWhereInput
+  }
+
+  /**
+   * DispatchCountOutputType without action
+   */
   export type DispatchCountOutputTypeCountEtaRecalculationJobsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: DispatchEtaRecalculationJobWhereInput
   }
@@ -7276,10 +7740,12 @@ export namespace Prisma {
 
   export type DispatchRouteSessionCountOutputType = {
     points: number
+    milestones: number
   }
 
   export type DispatchRouteSessionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     points?: boolean | DispatchRouteSessionCountOutputTypeCountPointsArgs
+    milestones?: boolean | DispatchRouteSessionCountOutputTypeCountMilestonesArgs
   }
 
   // Custom InputTypes
@@ -7298,6 +7764,13 @@ export namespace Prisma {
    */
   export type DispatchRouteSessionCountOutputTypeCountPointsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: DispatchRoutePointWhereInput
+  }
+
+  /**
+   * DispatchRouteSessionCountOutputType without action
+   */
+  export type DispatchRouteSessionCountOutputTypeCountMilestonesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DispatchRouteMilestoneWhereInput
   }
 
 
@@ -7346,6 +7819,7 @@ export namespace Prisma {
     comboUsedInItems: number
     exclusivePromotionProducts: number
     OrderProducts: number
+    orderIntentProducts: number
     prizeProducts: number
     customerRewards: number
     preparationSteps: number
@@ -7361,6 +7835,7 @@ export namespace Prisma {
     comboUsedInItems?: boolean | ProductCountOutputTypeCountComboUsedInItemsArgs
     exclusivePromotionProducts?: boolean | ProductCountOutputTypeCountExclusivePromotionProductsArgs
     OrderProducts?: boolean | ProductCountOutputTypeCountOrderProductsArgs
+    orderIntentProducts?: boolean | ProductCountOutputTypeCountOrderIntentProductsArgs
     prizeProducts?: boolean | ProductCountOutputTypeCountPrizeProductsArgs
     customerRewards?: boolean | ProductCountOutputTypeCountCustomerRewardsArgs
     preparationSteps?: boolean | ProductCountOutputTypeCountPreparationStepsArgs
@@ -7438,6 +7913,13 @@ export namespace Prisma {
    */
   export type ProductCountOutputTypeCountOrderProductsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: OrderProductsWhereInput
+  }
+
+  /**
+   * ProductCountOutputType without action
+   */
+  export type ProductCountOutputTypeCountOrderIntentProductsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OrderIntentProductWhereInput
   }
 
   /**
@@ -7685,6 +8167,7 @@ export namespace Prisma {
     otpChallenges: number
     accessTokens: number
     cards: number
+    orderIntents: number
   }
 
   export type CustomerCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -7697,6 +8180,7 @@ export namespace Prisma {
     otpChallenges?: boolean | CustomerCountOutputTypeCountOtpChallengesArgs
     accessTokens?: boolean | CustomerCountOutputTypeCountAccessTokensArgs
     cards?: boolean | CustomerCountOutputTypeCountCardsArgs
+    orderIntents?: boolean | CustomerCountOutputTypeCountOrderIntentsArgs
   }
 
   // Custom InputTypes
@@ -7773,6 +8257,13 @@ export namespace Prisma {
     where?: CustomerCardWhereInput
   }
 
+  /**
+   * CustomerCountOutputType without action
+   */
+  export type CustomerCountOutputTypeCountOrderIntentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OrderIntentWhereInput
+  }
+
 
   /**
    * Count Type DeliveryAddressCountOutputType
@@ -7780,10 +8271,12 @@ export namespace Prisma {
 
   export type DeliveryAddressCountOutputType = {
     orders: number
+    orderIntents: number
   }
 
   export type DeliveryAddressCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     orders?: boolean | DeliveryAddressCountOutputTypeCountOrdersArgs
+    orderIntents?: boolean | DeliveryAddressCountOutputTypeCountOrderIntentsArgs
   }
 
   // Custom InputTypes
@@ -7802,6 +8295,13 @@ export namespace Prisma {
    */
   export type DeliveryAddressCountOutputTypeCountOrdersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: OrderWhereInput
+  }
+
+  /**
+   * DeliveryAddressCountOutputType without action
+   */
+  export type DeliveryAddressCountOutputTypeCountOrderIntentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OrderIntentWhereInput
   }
 
 
@@ -7926,6 +8426,37 @@ export namespace Prisma {
 
 
   /**
+   * Count Type OrderIntentCountOutputType
+   */
+
+  export type OrderIntentCountOutputType = {
+    orderProducts: number
+  }
+
+  export type OrderIntentCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    orderProducts?: boolean | OrderIntentCountOutputTypeCountOrderProductsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * OrderIntentCountOutputType without action
+   */
+  export type OrderIntentCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderIntentCountOutputType
+     */
+    select?: OrderIntentCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * OrderIntentCountOutputType without action
+   */
+  export type OrderIntentCountOutputTypeCountOrderProductsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OrderIntentProductWhereInput
+  }
+
+
+  /**
    * Count Type OrderProductsCountOutputType
    */
 
@@ -7952,6 +8483,37 @@ export namespace Prisma {
    * OrderProductsCountOutputType without action
    */
   export type OrderProductsCountOutputTypeCountModifierGroupItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ModifierGroupItemWhereInput
+  }
+
+
+  /**
+   * Count Type OrderIntentProductCountOutputType
+   */
+
+  export type OrderIntentProductCountOutputType = {
+    modifierGroupItems: number
+  }
+
+  export type OrderIntentProductCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    modifierGroupItems?: boolean | OrderIntentProductCountOutputTypeCountModifierGroupItemsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * OrderIntentProductCountOutputType without action
+   */
+  export type OrderIntentProductCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderIntentProductCountOutputType
+     */
+    select?: OrderIntentProductCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * OrderIntentProductCountOutputType without action
+   */
+  export type OrderIntentProductCountOutputTypeCountModifierGroupItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ModifierGroupItemWhereInput
   }
 
@@ -20797,6 +21359,7 @@ export namespace Prisma {
     modifierGroup?: boolean | ModifierGroupItem$modifierGroupArgs<ExtArgs>
     preparationStepModifierTracks?: boolean | ModifierGroupItem$preparationStepModifierTracksArgs<ExtArgs>
     orderProducts?: boolean | ModifierGroupItem$orderProductsArgs<ExtArgs>
+    orderIntentProducts?: boolean | ModifierGroupItem$orderIntentProductsArgs<ExtArgs>
     _count?: boolean | ModifierGroupItemCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["modifierGroupItem"]>
 
@@ -20843,6 +21406,7 @@ export namespace Prisma {
     modifierGroup?: boolean | ModifierGroupItem$modifierGroupArgs<ExtArgs>
     preparationStepModifierTracks?: boolean | ModifierGroupItem$preparationStepModifierTracksArgs<ExtArgs>
     orderProducts?: boolean | ModifierGroupItem$orderProductsArgs<ExtArgs>
+    orderIntentProducts?: boolean | ModifierGroupItem$orderIntentProductsArgs<ExtArgs>
     _count?: boolean | ModifierGroupItemCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ModifierGroupItemIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -20861,6 +21425,7 @@ export namespace Prisma {
       modifierGroup: Prisma.$ModifierGroupPayload<ExtArgs> | null
       preparationStepModifierTracks: Prisma.$PreparationStepModifierTrackPayload<ExtArgs>[]
       orderProducts: Prisma.$OrderProductsPayload<ExtArgs>[]
+      orderIntentProducts: Prisma.$OrderIntentProductPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -21269,6 +21834,7 @@ export namespace Prisma {
     modifierGroup<T extends ModifierGroupItem$modifierGroupArgs<ExtArgs> = {}>(args?: Subset<T, ModifierGroupItem$modifierGroupArgs<ExtArgs>>): Prisma__ModifierGroupClient<$Result.GetResult<Prisma.$ModifierGroupPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     preparationStepModifierTracks<T extends ModifierGroupItem$preparationStepModifierTracksArgs<ExtArgs> = {}>(args?: Subset<T, ModifierGroupItem$preparationStepModifierTracksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PreparationStepModifierTrackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     orderProducts<T extends ModifierGroupItem$orderProductsArgs<ExtArgs> = {}>(args?: Subset<T, ModifierGroupItem$orderProductsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderProductsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    orderIntentProducts<T extends ModifierGroupItem$orderIntentProductsArgs<ExtArgs> = {}>(args?: Subset<T, ModifierGroupItem$orderIntentProductsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderIntentProductPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -21793,6 +22359,30 @@ export namespace Prisma {
   }
 
   /**
+   * ModifierGroupItem.orderIntentProducts
+   */
+  export type ModifierGroupItem$orderIntentProductsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderIntentProduct
+     */
+    select?: OrderIntentProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderIntentProduct
+     */
+    omit?: OrderIntentProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderIntentProductInclude<ExtArgs> | null
+    where?: OrderIntentProductWhereInput
+    orderBy?: OrderIntentProductOrderByWithRelationInput | OrderIntentProductOrderByWithRelationInput[]
+    cursor?: OrderIntentProductWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: OrderIntentProductScalarFieldEnum | OrderIntentProductScalarFieldEnum[]
+  }
+
+  /**
    * ModifierGroupItem without action
    */
   export type ModifierGroupItemDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -22042,6 +22632,7 @@ export namespace Prisma {
     branches?: boolean | Business$branchesArgs<ExtArgs>
     owner?: boolean | Business$ownerArgs<ExtArgs>
     integrations?: boolean | Business$integrationsArgs<ExtArgs>
+    pushDevices?: boolean | Business$pushDevicesArgs<ExtArgs>
     _count?: boolean | BusinessCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["business"]>
 
@@ -22098,6 +22689,7 @@ export namespace Prisma {
     branches?: boolean | Business$branchesArgs<ExtArgs>
     owner?: boolean | Business$ownerArgs<ExtArgs>
     integrations?: boolean | Business$integrationsArgs<ExtArgs>
+    pushDevices?: boolean | Business$pushDevicesArgs<ExtArgs>
     _count?: boolean | BusinessCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type BusinessIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -22109,6 +22701,7 @@ export namespace Prisma {
       branches: Prisma.$BranchPayload<ExtArgs>[]
       owner: Prisma.$BusinessOwnerPayload<ExtArgs> | null
       integrations: Prisma.$ExternalIntegrationConnectionPayload<ExtArgs>[]
+      pushDevices: Prisma.$UserPushDevicePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -22521,6 +23114,7 @@ export namespace Prisma {
     branches<T extends Business$branchesArgs<ExtArgs> = {}>(args?: Subset<T, Business$branchesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     owner<T extends Business$ownerArgs<ExtArgs> = {}>(args?: Subset<T, Business$ownerArgs<ExtArgs>>): Prisma__BusinessOwnerClient<$Result.GetResult<Prisma.$BusinessOwnerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     integrations<T extends Business$integrationsArgs<ExtArgs> = {}>(args?: Subset<T, Business$integrationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExternalIntegrationConnectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    pushDevices<T extends Business$pushDevicesArgs<ExtArgs> = {}>(args?: Subset<T, Business$pushDevicesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPushDevicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -23023,6 +23617,30 @@ export namespace Prisma {
   }
 
   /**
+   * Business.pushDevices
+   */
+  export type Business$pushDevicesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPushDevice
+     */
+    select?: UserPushDeviceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPushDevice
+     */
+    omit?: UserPushDeviceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPushDeviceInclude<ExtArgs> | null
+    where?: UserPushDeviceWhereInput
+    orderBy?: UserPushDeviceOrderByWithRelationInput | UserPushDeviceOrderByWithRelationInput[]
+    cursor?: UserPushDeviceWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: UserPushDeviceScalarFieldEnum | UserPushDeviceScalarFieldEnum[]
+  }
+
+  /**
    * Business without action
    */
   export type BusinessDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -23240,6 +23858,7 @@ export namespace Prisma {
     ownedBusinesses?: boolean | User$ownedBusinessesArgs<ExtArgs>
     integrations?: boolean | User$integrationsArgs<ExtArgs>
     otpChallenges?: boolean | User$otpChallengesArgs<ExtArgs>
+    pushDevices?: boolean | User$pushDevicesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -23284,6 +23903,7 @@ export namespace Prisma {
     ownedBusinesses?: boolean | User$ownedBusinessesArgs<ExtArgs>
     integrations?: boolean | User$integrationsArgs<ExtArgs>
     otpChallenges?: boolean | User$otpChallengesArgs<ExtArgs>
+    pushDevices?: boolean | User$pushDevicesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -23295,6 +23915,7 @@ export namespace Prisma {
       ownedBusinesses: Prisma.$BusinessOwnerPayload<ExtArgs>[]
       integrations: Prisma.$ExternalIntegrationConnectionPayload<ExtArgs>[]
       otpChallenges: Prisma.$OwnerOtpChallengePayload<ExtArgs>[]
+      pushDevices: Prisma.$UserPushDevicePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -23703,6 +24324,7 @@ export namespace Prisma {
     ownedBusinesses<T extends User$ownedBusinessesArgs<ExtArgs> = {}>(args?: Subset<T, User$ownedBusinessesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BusinessOwnerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     integrations<T extends User$integrationsArgs<ExtArgs> = {}>(args?: Subset<T, User$integrationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExternalIntegrationConnectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     otpChallenges<T extends User$otpChallengesArgs<ExtArgs> = {}>(args?: Subset<T, User$otpChallengesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OwnerOtpChallengePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    pushDevices<T extends User$pushDevicesArgs<ExtArgs> = {}>(args?: Subset<T, User$pushDevicesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPushDevicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -24206,6 +24828,30 @@ export namespace Prisma {
   }
 
   /**
+   * User.pushDevices
+   */
+  export type User$pushDevicesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPushDevice
+     */
+    select?: UserPushDeviceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPushDevice
+     */
+    omit?: UserPushDeviceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPushDeviceInclude<ExtArgs> | null
+    where?: UserPushDeviceWhereInput
+    orderBy?: UserPushDeviceOrderByWithRelationInput | UserPushDeviceOrderByWithRelationInput[]
+    cursor?: UserPushDeviceWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: UserPushDeviceScalarFieldEnum | UserPushDeviceScalarFieldEnum[]
+  }
+
+  /**
    * User without action
    */
   export type UserDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -24221,6 +24867,1208 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: UserInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model UserPushDevice
+   */
+
+  export type AggregateUserPushDevice = {
+    _count: UserPushDeviceCountAggregateOutputType | null
+    _avg: UserPushDeviceAvgAggregateOutputType | null
+    _sum: UserPushDeviceSumAggregateOutputType | null
+    _min: UserPushDeviceMinAggregateOutputType | null
+    _max: UserPushDeviceMaxAggregateOutputType | null
+  }
+
+  export type UserPushDeviceAvgAggregateOutputType = {
+    notificationFailures: number | null
+  }
+
+  export type UserPushDeviceSumAggregateOutputType = {
+    notificationFailures: number | null
+  }
+
+  export type UserPushDeviceMinAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    userId: string | null
+    businessId: string | null
+    platform: $Enums.UserPushDevicePlatform | null
+    pushToken: string | null
+    lastSeenAt: Date | null
+    lastNotifiedAt: Date | null
+    notificationFailures: number | null
+    revokedAt: Date | null
+  }
+
+  export type UserPushDeviceMaxAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    userId: string | null
+    businessId: string | null
+    platform: $Enums.UserPushDevicePlatform | null
+    pushToken: string | null
+    lastSeenAt: Date | null
+    lastNotifiedAt: Date | null
+    notificationFailures: number | null
+    revokedAt: Date | null
+  }
+
+  export type UserPushDeviceCountAggregateOutputType = {
+    id: number
+    createdAt: number
+    updatedAt: number
+    userId: number
+    businessId: number
+    platform: number
+    pushToken: number
+    lastSeenAt: number
+    lastNotifiedAt: number
+    notificationFailures: number
+    revokedAt: number
+    _all: number
+  }
+
+
+  export type UserPushDeviceAvgAggregateInputType = {
+    notificationFailures?: true
+  }
+
+  export type UserPushDeviceSumAggregateInputType = {
+    notificationFailures?: true
+  }
+
+  export type UserPushDeviceMinAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    userId?: true
+    businessId?: true
+    platform?: true
+    pushToken?: true
+    lastSeenAt?: true
+    lastNotifiedAt?: true
+    notificationFailures?: true
+    revokedAt?: true
+  }
+
+  export type UserPushDeviceMaxAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    userId?: true
+    businessId?: true
+    platform?: true
+    pushToken?: true
+    lastSeenAt?: true
+    lastNotifiedAt?: true
+    notificationFailures?: true
+    revokedAt?: true
+  }
+
+  export type UserPushDeviceCountAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    userId?: true
+    businessId?: true
+    platform?: true
+    pushToken?: true
+    lastSeenAt?: true
+    lastNotifiedAt?: true
+    notificationFailures?: true
+    revokedAt?: true
+    _all?: true
+  }
+
+  export type UserPushDeviceAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserPushDevice to aggregate.
+     */
+    where?: UserPushDeviceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserPushDevices to fetch.
+     */
+    orderBy?: UserPushDeviceOrderByWithRelationInput | UserPushDeviceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: UserPushDeviceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserPushDevices from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserPushDevices.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned UserPushDevices
+    **/
+    _count?: true | UserPushDeviceCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: UserPushDeviceAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: UserPushDeviceSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: UserPushDeviceMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: UserPushDeviceMaxAggregateInputType
+  }
+
+  export type GetUserPushDeviceAggregateType<T extends UserPushDeviceAggregateArgs> = {
+        [P in keyof T & keyof AggregateUserPushDevice]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateUserPushDevice[P]>
+      : GetScalarType<T[P], AggregateUserPushDevice[P]>
+  }
+
+
+
+
+  export type UserPushDeviceGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserPushDeviceWhereInput
+    orderBy?: UserPushDeviceOrderByWithAggregationInput | UserPushDeviceOrderByWithAggregationInput[]
+    by: UserPushDeviceScalarFieldEnum[] | UserPushDeviceScalarFieldEnum
+    having?: UserPushDeviceScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: UserPushDeviceCountAggregateInputType | true
+    _avg?: UserPushDeviceAvgAggregateInputType
+    _sum?: UserPushDeviceSumAggregateInputType
+    _min?: UserPushDeviceMinAggregateInputType
+    _max?: UserPushDeviceMaxAggregateInputType
+  }
+
+  export type UserPushDeviceGroupByOutputType = {
+    id: string
+    createdAt: Date
+    updatedAt: Date
+    userId: string
+    businessId: string | null
+    platform: $Enums.UserPushDevicePlatform
+    pushToken: string
+    lastSeenAt: Date
+    lastNotifiedAt: Date | null
+    notificationFailures: number
+    revokedAt: Date | null
+    _count: UserPushDeviceCountAggregateOutputType | null
+    _avg: UserPushDeviceAvgAggregateOutputType | null
+    _sum: UserPushDeviceSumAggregateOutputType | null
+    _min: UserPushDeviceMinAggregateOutputType | null
+    _max: UserPushDeviceMaxAggregateOutputType | null
+  }
+
+  type GetUserPushDeviceGroupByPayload<T extends UserPushDeviceGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<UserPushDeviceGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof UserPushDeviceGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], UserPushDeviceGroupByOutputType[P]>
+            : GetScalarType<T[P], UserPushDeviceGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type UserPushDeviceSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    userId?: boolean
+    businessId?: boolean
+    platform?: boolean
+    pushToken?: boolean
+    lastSeenAt?: boolean
+    lastNotifiedAt?: boolean
+    notificationFailures?: boolean
+    revokedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    business?: boolean | UserPushDevice$businessArgs<ExtArgs>
+  }, ExtArgs["result"]["userPushDevice"]>
+
+  export type UserPushDeviceSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    userId?: boolean
+    businessId?: boolean
+    platform?: boolean
+    pushToken?: boolean
+    lastSeenAt?: boolean
+    lastNotifiedAt?: boolean
+    notificationFailures?: boolean
+    revokedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    business?: boolean | UserPushDevice$businessArgs<ExtArgs>
+  }, ExtArgs["result"]["userPushDevice"]>
+
+  export type UserPushDeviceSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    userId?: boolean
+    businessId?: boolean
+    platform?: boolean
+    pushToken?: boolean
+    lastSeenAt?: boolean
+    lastNotifiedAt?: boolean
+    notificationFailures?: boolean
+    revokedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    business?: boolean | UserPushDevice$businessArgs<ExtArgs>
+  }, ExtArgs["result"]["userPushDevice"]>
+
+  export type UserPushDeviceSelectScalar = {
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    userId?: boolean
+    businessId?: boolean
+    platform?: boolean
+    pushToken?: boolean
+    lastSeenAt?: boolean
+    lastNotifiedAt?: boolean
+    notificationFailures?: boolean
+    revokedAt?: boolean
+  }
+
+  export type UserPushDeviceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "userId" | "businessId" | "platform" | "pushToken" | "lastSeenAt" | "lastNotifiedAt" | "notificationFailures" | "revokedAt", ExtArgs["result"]["userPushDevice"]>
+  export type UserPushDeviceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    business?: boolean | UserPushDevice$businessArgs<ExtArgs>
+  }
+  export type UserPushDeviceIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    business?: boolean | UserPushDevice$businessArgs<ExtArgs>
+  }
+  export type UserPushDeviceIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    business?: boolean | UserPushDevice$businessArgs<ExtArgs>
+  }
+
+  export type $UserPushDevicePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "UserPushDevice"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      business: Prisma.$BusinessPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      createdAt: Date
+      updatedAt: Date
+      userId: string
+      businessId: string | null
+      platform: $Enums.UserPushDevicePlatform
+      pushToken: string
+      lastSeenAt: Date
+      lastNotifiedAt: Date | null
+      notificationFailures: number
+      revokedAt: Date | null
+    }, ExtArgs["result"]["userPushDevice"]>
+    composites: {}
+  }
+
+  type UserPushDeviceGetPayload<S extends boolean | null | undefined | UserPushDeviceDefaultArgs> = $Result.GetResult<Prisma.$UserPushDevicePayload, S>
+
+  type UserPushDeviceCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<UserPushDeviceFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: UserPushDeviceCountAggregateInputType | true
+    }
+
+  export interface UserPushDeviceDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['UserPushDevice'], meta: { name: 'UserPushDevice' } }
+    /**
+     * Find zero or one UserPushDevice that matches the filter.
+     * @param {UserPushDeviceFindUniqueArgs} args - Arguments to find a UserPushDevice
+     * @example
+     * // Get one UserPushDevice
+     * const userPushDevice = await prisma.userPushDevice.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends UserPushDeviceFindUniqueArgs>(args: SelectSubset<T, UserPushDeviceFindUniqueArgs<ExtArgs>>): Prisma__UserPushDeviceClient<$Result.GetResult<Prisma.$UserPushDevicePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one UserPushDevice that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {UserPushDeviceFindUniqueOrThrowArgs} args - Arguments to find a UserPushDevice
+     * @example
+     * // Get one UserPushDevice
+     * const userPushDevice = await prisma.userPushDevice.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends UserPushDeviceFindUniqueOrThrowArgs>(args: SelectSubset<T, UserPushDeviceFindUniqueOrThrowArgs<ExtArgs>>): Prisma__UserPushDeviceClient<$Result.GetResult<Prisma.$UserPushDevicePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UserPushDevice that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserPushDeviceFindFirstArgs} args - Arguments to find a UserPushDevice
+     * @example
+     * // Get one UserPushDevice
+     * const userPushDevice = await prisma.userPushDevice.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends UserPushDeviceFindFirstArgs>(args?: SelectSubset<T, UserPushDeviceFindFirstArgs<ExtArgs>>): Prisma__UserPushDeviceClient<$Result.GetResult<Prisma.$UserPushDevicePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UserPushDevice that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserPushDeviceFindFirstOrThrowArgs} args - Arguments to find a UserPushDevice
+     * @example
+     * // Get one UserPushDevice
+     * const userPushDevice = await prisma.userPushDevice.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends UserPushDeviceFindFirstOrThrowArgs>(args?: SelectSubset<T, UserPushDeviceFindFirstOrThrowArgs<ExtArgs>>): Prisma__UserPushDeviceClient<$Result.GetResult<Prisma.$UserPushDevicePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more UserPushDevices that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserPushDeviceFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all UserPushDevices
+     * const userPushDevices = await prisma.userPushDevice.findMany()
+     * 
+     * // Get first 10 UserPushDevices
+     * const userPushDevices = await prisma.userPushDevice.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const userPushDeviceWithIdOnly = await prisma.userPushDevice.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends UserPushDeviceFindManyArgs>(args?: SelectSubset<T, UserPushDeviceFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPushDevicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a UserPushDevice.
+     * @param {UserPushDeviceCreateArgs} args - Arguments to create a UserPushDevice.
+     * @example
+     * // Create one UserPushDevice
+     * const UserPushDevice = await prisma.userPushDevice.create({
+     *   data: {
+     *     // ... data to create a UserPushDevice
+     *   }
+     * })
+     * 
+     */
+    create<T extends UserPushDeviceCreateArgs>(args: SelectSubset<T, UserPushDeviceCreateArgs<ExtArgs>>): Prisma__UserPushDeviceClient<$Result.GetResult<Prisma.$UserPushDevicePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many UserPushDevices.
+     * @param {UserPushDeviceCreateManyArgs} args - Arguments to create many UserPushDevices.
+     * @example
+     * // Create many UserPushDevices
+     * const userPushDevice = await prisma.userPushDevice.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends UserPushDeviceCreateManyArgs>(args?: SelectSubset<T, UserPushDeviceCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many UserPushDevices and returns the data saved in the database.
+     * @param {UserPushDeviceCreateManyAndReturnArgs} args - Arguments to create many UserPushDevices.
+     * @example
+     * // Create many UserPushDevices
+     * const userPushDevice = await prisma.userPushDevice.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many UserPushDevices and only return the `id`
+     * const userPushDeviceWithIdOnly = await prisma.userPushDevice.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends UserPushDeviceCreateManyAndReturnArgs>(args?: SelectSubset<T, UserPushDeviceCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPushDevicePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a UserPushDevice.
+     * @param {UserPushDeviceDeleteArgs} args - Arguments to delete one UserPushDevice.
+     * @example
+     * // Delete one UserPushDevice
+     * const UserPushDevice = await prisma.userPushDevice.delete({
+     *   where: {
+     *     // ... filter to delete one UserPushDevice
+     *   }
+     * })
+     * 
+     */
+    delete<T extends UserPushDeviceDeleteArgs>(args: SelectSubset<T, UserPushDeviceDeleteArgs<ExtArgs>>): Prisma__UserPushDeviceClient<$Result.GetResult<Prisma.$UserPushDevicePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one UserPushDevice.
+     * @param {UserPushDeviceUpdateArgs} args - Arguments to update one UserPushDevice.
+     * @example
+     * // Update one UserPushDevice
+     * const userPushDevice = await prisma.userPushDevice.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends UserPushDeviceUpdateArgs>(args: SelectSubset<T, UserPushDeviceUpdateArgs<ExtArgs>>): Prisma__UserPushDeviceClient<$Result.GetResult<Prisma.$UserPushDevicePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more UserPushDevices.
+     * @param {UserPushDeviceDeleteManyArgs} args - Arguments to filter UserPushDevices to delete.
+     * @example
+     * // Delete a few UserPushDevices
+     * const { count } = await prisma.userPushDevice.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends UserPushDeviceDeleteManyArgs>(args?: SelectSubset<T, UserPushDeviceDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UserPushDevices.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserPushDeviceUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many UserPushDevices
+     * const userPushDevice = await prisma.userPushDevice.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends UserPushDeviceUpdateManyArgs>(args: SelectSubset<T, UserPushDeviceUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UserPushDevices and returns the data updated in the database.
+     * @param {UserPushDeviceUpdateManyAndReturnArgs} args - Arguments to update many UserPushDevices.
+     * @example
+     * // Update many UserPushDevices
+     * const userPushDevice = await prisma.userPushDevice.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more UserPushDevices and only return the `id`
+     * const userPushDeviceWithIdOnly = await prisma.userPushDevice.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends UserPushDeviceUpdateManyAndReturnArgs>(args: SelectSubset<T, UserPushDeviceUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPushDevicePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one UserPushDevice.
+     * @param {UserPushDeviceUpsertArgs} args - Arguments to update or create a UserPushDevice.
+     * @example
+     * // Update or create a UserPushDevice
+     * const userPushDevice = await prisma.userPushDevice.upsert({
+     *   create: {
+     *     // ... data to create a UserPushDevice
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the UserPushDevice we want to update
+     *   }
+     * })
+     */
+    upsert<T extends UserPushDeviceUpsertArgs>(args: SelectSubset<T, UserPushDeviceUpsertArgs<ExtArgs>>): Prisma__UserPushDeviceClient<$Result.GetResult<Prisma.$UserPushDevicePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of UserPushDevices.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserPushDeviceCountArgs} args - Arguments to filter UserPushDevices to count.
+     * @example
+     * // Count the number of UserPushDevices
+     * const count = await prisma.userPushDevice.count({
+     *   where: {
+     *     // ... the filter for the UserPushDevices we want to count
+     *   }
+     * })
+    **/
+    count<T extends UserPushDeviceCountArgs>(
+      args?: Subset<T, UserPushDeviceCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], UserPushDeviceCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a UserPushDevice.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserPushDeviceAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends UserPushDeviceAggregateArgs>(args: Subset<T, UserPushDeviceAggregateArgs>): Prisma.PrismaPromise<GetUserPushDeviceAggregateType<T>>
+
+    /**
+     * Group by UserPushDevice.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserPushDeviceGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends UserPushDeviceGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: UserPushDeviceGroupByArgs['orderBy'] }
+        : { orderBy?: UserPushDeviceGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, UserPushDeviceGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUserPushDeviceGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the UserPushDevice model
+   */
+  readonly fields: UserPushDeviceFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for UserPushDevice.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__UserPushDeviceClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    business<T extends UserPushDevice$businessArgs<ExtArgs> = {}>(args?: Subset<T, UserPushDevice$businessArgs<ExtArgs>>): Prisma__BusinessClient<$Result.GetResult<Prisma.$BusinessPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the UserPushDevice model
+   */
+  interface UserPushDeviceFieldRefs {
+    readonly id: FieldRef<"UserPushDevice", 'String'>
+    readonly createdAt: FieldRef<"UserPushDevice", 'DateTime'>
+    readonly updatedAt: FieldRef<"UserPushDevice", 'DateTime'>
+    readonly userId: FieldRef<"UserPushDevice", 'String'>
+    readonly businessId: FieldRef<"UserPushDevice", 'String'>
+    readonly platform: FieldRef<"UserPushDevice", 'UserPushDevicePlatform'>
+    readonly pushToken: FieldRef<"UserPushDevice", 'String'>
+    readonly lastSeenAt: FieldRef<"UserPushDevice", 'DateTime'>
+    readonly lastNotifiedAt: FieldRef<"UserPushDevice", 'DateTime'>
+    readonly notificationFailures: FieldRef<"UserPushDevice", 'Int'>
+    readonly revokedAt: FieldRef<"UserPushDevice", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * UserPushDevice findUnique
+   */
+  export type UserPushDeviceFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPushDevice
+     */
+    select?: UserPushDeviceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPushDevice
+     */
+    omit?: UserPushDeviceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPushDeviceInclude<ExtArgs> | null
+    /**
+     * Filter, which UserPushDevice to fetch.
+     */
+    where: UserPushDeviceWhereUniqueInput
+  }
+
+  /**
+   * UserPushDevice findUniqueOrThrow
+   */
+  export type UserPushDeviceFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPushDevice
+     */
+    select?: UserPushDeviceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPushDevice
+     */
+    omit?: UserPushDeviceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPushDeviceInclude<ExtArgs> | null
+    /**
+     * Filter, which UserPushDevice to fetch.
+     */
+    where: UserPushDeviceWhereUniqueInput
+  }
+
+  /**
+   * UserPushDevice findFirst
+   */
+  export type UserPushDeviceFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPushDevice
+     */
+    select?: UserPushDeviceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPushDevice
+     */
+    omit?: UserPushDeviceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPushDeviceInclude<ExtArgs> | null
+    /**
+     * Filter, which UserPushDevice to fetch.
+     */
+    where?: UserPushDeviceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserPushDevices to fetch.
+     */
+    orderBy?: UserPushDeviceOrderByWithRelationInput | UserPushDeviceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserPushDevices.
+     */
+    cursor?: UserPushDeviceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserPushDevices from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserPushDevices.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserPushDevices.
+     */
+    distinct?: UserPushDeviceScalarFieldEnum | UserPushDeviceScalarFieldEnum[]
+  }
+
+  /**
+   * UserPushDevice findFirstOrThrow
+   */
+  export type UserPushDeviceFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPushDevice
+     */
+    select?: UserPushDeviceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPushDevice
+     */
+    omit?: UserPushDeviceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPushDeviceInclude<ExtArgs> | null
+    /**
+     * Filter, which UserPushDevice to fetch.
+     */
+    where?: UserPushDeviceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserPushDevices to fetch.
+     */
+    orderBy?: UserPushDeviceOrderByWithRelationInput | UserPushDeviceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserPushDevices.
+     */
+    cursor?: UserPushDeviceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserPushDevices from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserPushDevices.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserPushDevices.
+     */
+    distinct?: UserPushDeviceScalarFieldEnum | UserPushDeviceScalarFieldEnum[]
+  }
+
+  /**
+   * UserPushDevice findMany
+   */
+  export type UserPushDeviceFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPushDevice
+     */
+    select?: UserPushDeviceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPushDevice
+     */
+    omit?: UserPushDeviceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPushDeviceInclude<ExtArgs> | null
+    /**
+     * Filter, which UserPushDevices to fetch.
+     */
+    where?: UserPushDeviceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserPushDevices to fetch.
+     */
+    orderBy?: UserPushDeviceOrderByWithRelationInput | UserPushDeviceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing UserPushDevices.
+     */
+    cursor?: UserPushDeviceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserPushDevices from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserPushDevices.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserPushDevices.
+     */
+    distinct?: UserPushDeviceScalarFieldEnum | UserPushDeviceScalarFieldEnum[]
+  }
+
+  /**
+   * UserPushDevice create
+   */
+  export type UserPushDeviceCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPushDevice
+     */
+    select?: UserPushDeviceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPushDevice
+     */
+    omit?: UserPushDeviceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPushDeviceInclude<ExtArgs> | null
+    /**
+     * The data needed to create a UserPushDevice.
+     */
+    data: XOR<UserPushDeviceCreateInput, UserPushDeviceUncheckedCreateInput>
+  }
+
+  /**
+   * UserPushDevice createMany
+   */
+  export type UserPushDeviceCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many UserPushDevices.
+     */
+    data: UserPushDeviceCreateManyInput | UserPushDeviceCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * UserPushDevice createManyAndReturn
+   */
+  export type UserPushDeviceCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPushDevice
+     */
+    select?: UserPushDeviceSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPushDevice
+     */
+    omit?: UserPushDeviceOmit<ExtArgs> | null
+    /**
+     * The data used to create many UserPushDevices.
+     */
+    data: UserPushDeviceCreateManyInput | UserPushDeviceCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPushDeviceIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * UserPushDevice update
+   */
+  export type UserPushDeviceUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPushDevice
+     */
+    select?: UserPushDeviceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPushDevice
+     */
+    omit?: UserPushDeviceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPushDeviceInclude<ExtArgs> | null
+    /**
+     * The data needed to update a UserPushDevice.
+     */
+    data: XOR<UserPushDeviceUpdateInput, UserPushDeviceUncheckedUpdateInput>
+    /**
+     * Choose, which UserPushDevice to update.
+     */
+    where: UserPushDeviceWhereUniqueInput
+  }
+
+  /**
+   * UserPushDevice updateMany
+   */
+  export type UserPushDeviceUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update UserPushDevices.
+     */
+    data: XOR<UserPushDeviceUpdateManyMutationInput, UserPushDeviceUncheckedUpdateManyInput>
+    /**
+     * Filter which UserPushDevices to update
+     */
+    where?: UserPushDeviceWhereInput
+    /**
+     * Limit how many UserPushDevices to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * UserPushDevice updateManyAndReturn
+   */
+  export type UserPushDeviceUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPushDevice
+     */
+    select?: UserPushDeviceSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPushDevice
+     */
+    omit?: UserPushDeviceOmit<ExtArgs> | null
+    /**
+     * The data used to update UserPushDevices.
+     */
+    data: XOR<UserPushDeviceUpdateManyMutationInput, UserPushDeviceUncheckedUpdateManyInput>
+    /**
+     * Filter which UserPushDevices to update
+     */
+    where?: UserPushDeviceWhereInput
+    /**
+     * Limit how many UserPushDevices to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPushDeviceIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * UserPushDevice upsert
+   */
+  export type UserPushDeviceUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPushDevice
+     */
+    select?: UserPushDeviceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPushDevice
+     */
+    omit?: UserPushDeviceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPushDeviceInclude<ExtArgs> | null
+    /**
+     * The filter to search for the UserPushDevice to update in case it exists.
+     */
+    where: UserPushDeviceWhereUniqueInput
+    /**
+     * In case the UserPushDevice found by the `where` argument doesn't exist, create a new UserPushDevice with this data.
+     */
+    create: XOR<UserPushDeviceCreateInput, UserPushDeviceUncheckedCreateInput>
+    /**
+     * In case the UserPushDevice was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<UserPushDeviceUpdateInput, UserPushDeviceUncheckedUpdateInput>
+  }
+
+  /**
+   * UserPushDevice delete
+   */
+  export type UserPushDeviceDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPushDevice
+     */
+    select?: UserPushDeviceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPushDevice
+     */
+    omit?: UserPushDeviceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPushDeviceInclude<ExtArgs> | null
+    /**
+     * Filter which UserPushDevice to delete.
+     */
+    where: UserPushDeviceWhereUniqueInput
+  }
+
+  /**
+   * UserPushDevice deleteMany
+   */
+  export type UserPushDeviceDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserPushDevices to delete
+     */
+    where?: UserPushDeviceWhereInput
+    /**
+     * Limit how many UserPushDevices to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * UserPushDevice.business
+   */
+  export type UserPushDevice$businessArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Business
+     */
+    select?: BusinessSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Business
+     */
+    omit?: BusinessOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BusinessInclude<ExtArgs> | null
+    where?: BusinessWhereInput
+  }
+
+  /**
+   * UserPushDevice without action
+   */
+  export type UserPushDeviceDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPushDevice
+     */
+    select?: UserPushDeviceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPushDevice
+     */
+    omit?: UserPushDeviceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPushDeviceInclude<ExtArgs> | null
   }
 
 
@@ -30233,6 +32081,9 @@ export namespace Prisma {
     id: string | null
     createdAt: Date | null
     name: string | null
+    chatwootAccountId: string | null
+    chatwootSourceId: string | null
+    chatwootAgentId: string | null
     addressId: string | null
     businessId: string | null
   }
@@ -30241,6 +32092,9 @@ export namespace Prisma {
     id: string | null
     createdAt: Date | null
     name: string | null
+    chatwootAccountId: string | null
+    chatwootSourceId: string | null
+    chatwootAgentId: string | null
     addressId: string | null
     businessId: string | null
   }
@@ -30250,6 +32104,9 @@ export namespace Prisma {
     createdAt: number
     name: number
     operationHours: number
+    chatwootAccountId: number
+    chatwootSourceId: number
+    chatwootAgentId: number
     addressId: number
     businessId: number
     _all: number
@@ -30260,6 +32117,9 @@ export namespace Prisma {
     id?: true
     createdAt?: true
     name?: true
+    chatwootAccountId?: true
+    chatwootSourceId?: true
+    chatwootAgentId?: true
     addressId?: true
     businessId?: true
   }
@@ -30268,6 +32128,9 @@ export namespace Prisma {
     id?: true
     createdAt?: true
     name?: true
+    chatwootAccountId?: true
+    chatwootSourceId?: true
+    chatwootAgentId?: true
     addressId?: true
     businessId?: true
   }
@@ -30277,6 +32140,9 @@ export namespace Prisma {
     createdAt?: true
     name?: true
     operationHours?: true
+    chatwootAccountId?: true
+    chatwootSourceId?: true
+    chatwootAgentId?: true
     addressId?: true
     businessId?: true
     _all?: true
@@ -30359,6 +32225,9 @@ export namespace Prisma {
     createdAt: Date
     name: string
     operationHours: JsonValue | null
+    chatwootAccountId: string | null
+    chatwootSourceId: string | null
+    chatwootAgentId: string | null
     addressId: string | null
     businessId: string | null
     _count: BranchCountAggregateOutputType | null
@@ -30385,10 +32254,15 @@ export namespace Prisma {
     createdAt?: boolean
     name?: boolean
     operationHours?: boolean
+    chatwootAccountId?: boolean
+    chatwootSourceId?: boolean
+    chatwootAgentId?: boolean
     addressId?: boolean
     businessId?: boolean
     address?: boolean | Branch$addressArgs<ExtArgs>
     business?: boolean | Branch$businessArgs<ExtArgs>
+    orders?: boolean | Branch$ordersArgs<ExtArgs>
+    _count?: boolean | BranchCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["branch"]>
 
   export type BranchSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -30396,6 +32270,9 @@ export namespace Prisma {
     createdAt?: boolean
     name?: boolean
     operationHours?: boolean
+    chatwootAccountId?: boolean
+    chatwootSourceId?: boolean
+    chatwootAgentId?: boolean
     addressId?: boolean
     businessId?: boolean
     address?: boolean | Branch$addressArgs<ExtArgs>
@@ -30407,6 +32284,9 @@ export namespace Prisma {
     createdAt?: boolean
     name?: boolean
     operationHours?: boolean
+    chatwootAccountId?: boolean
+    chatwootSourceId?: boolean
+    chatwootAgentId?: boolean
     addressId?: boolean
     businessId?: boolean
     address?: boolean | Branch$addressArgs<ExtArgs>
@@ -30418,14 +32298,19 @@ export namespace Prisma {
     createdAt?: boolean
     name?: boolean
     operationHours?: boolean
+    chatwootAccountId?: boolean
+    chatwootSourceId?: boolean
+    chatwootAgentId?: boolean
     addressId?: boolean
     businessId?: boolean
   }
 
-  export type BranchOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "name" | "operationHours" | "addressId" | "businessId", ExtArgs["result"]["branch"]>
+  export type BranchOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "name" | "operationHours" | "chatwootAccountId" | "chatwootSourceId" | "chatwootAgentId" | "addressId" | "businessId", ExtArgs["result"]["branch"]>
   export type BranchInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     address?: boolean | Branch$addressArgs<ExtArgs>
     business?: boolean | Branch$businessArgs<ExtArgs>
+    orders?: boolean | Branch$ordersArgs<ExtArgs>
+    _count?: boolean | BranchCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type BranchIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     address?: boolean | Branch$addressArgs<ExtArgs>
@@ -30441,12 +32326,16 @@ export namespace Prisma {
     objects: {
       address: Prisma.$AddressPayload<ExtArgs> | null
       business: Prisma.$BusinessPayload<ExtArgs> | null
+      orders: Prisma.$OrderPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       createdAt: Date
       name: string
       operationHours: Prisma.JsonValue | null
+      chatwootAccountId: string | null
+      chatwootSourceId: string | null
+      chatwootAgentId: string | null
       addressId: string | null
       businessId: string | null
     }, ExtArgs["result"]["branch"]>
@@ -30845,6 +32734,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     address<T extends Branch$addressArgs<ExtArgs> = {}>(args?: Subset<T, Branch$addressArgs<ExtArgs>>): Prisma__AddressClient<$Result.GetResult<Prisma.$AddressPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     business<T extends Branch$businessArgs<ExtArgs> = {}>(args?: Subset<T, Branch$businessArgs<ExtArgs>>): Prisma__BusinessClient<$Result.GetResult<Prisma.$BusinessPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    orders<T extends Branch$ordersArgs<ExtArgs> = {}>(args?: Subset<T, Branch$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -30878,6 +32768,9 @@ export namespace Prisma {
     readonly createdAt: FieldRef<"Branch", 'DateTime'>
     readonly name: FieldRef<"Branch", 'String'>
     readonly operationHours: FieldRef<"Branch", 'Json'>
+    readonly chatwootAccountId: FieldRef<"Branch", 'String'>
+    readonly chatwootSourceId: FieldRef<"Branch", 'String'>
+    readonly chatwootAgentId: FieldRef<"Branch", 'String'>
     readonly addressId: FieldRef<"Branch", 'String'>
     readonly businessId: FieldRef<"Branch", 'String'>
   }
@@ -31319,6 +33212,30 @@ export namespace Prisma {
   }
 
   /**
+   * Branch.orders
+   */
+  export type Branch$ordersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Order
+     */
+    select?: OrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Order
+     */
+    omit?: OrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderInclude<ExtArgs> | null
+    where?: OrderWhereInput
+    orderBy?: OrderOrderByWithRelationInput | OrderOrderByWithRelationInput[]
+    cursor?: OrderWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: OrderScalarFieldEnum | OrderScalarFieldEnum[]
+  }
+
+  /**
    * Branch without action
    */
   export type BranchDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -31561,6 +33478,7 @@ export namespace Prisma {
     priorityLevel?: boolean
     dispatches?: boolean | Driver$dispatchesArgs<ExtArgs>
     routeSessions?: boolean | Driver$routeSessionsArgs<ExtArgs>
+    routeMilestones?: boolean | Driver$routeMilestonesArgs<ExtArgs>
     activationEvents?: boolean | Driver$activationEventsArgs<ExtArgs>
     _count?: boolean | DriverCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["driver"]>
@@ -31602,6 +33520,7 @@ export namespace Prisma {
   export type DriverInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     dispatches?: boolean | Driver$dispatchesArgs<ExtArgs>
     routeSessions?: boolean | Driver$routeSessionsArgs<ExtArgs>
+    routeMilestones?: boolean | Driver$routeMilestonesArgs<ExtArgs>
     activationEvents?: boolean | Driver$activationEventsArgs<ExtArgs>
     _count?: boolean | DriverCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -31613,6 +33532,7 @@ export namespace Prisma {
     objects: {
       dispatches: Prisma.$DispatchPayload<ExtArgs>[]
       routeSessions: Prisma.$DispatchRouteSessionPayload<ExtArgs>[]
+      routeMilestones: Prisma.$DispatchRouteMilestonePayload<ExtArgs>[]
       activationEvents: Prisma.$DriverActivationEventPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -32020,6 +33940,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     dispatches<T extends Driver$dispatchesArgs<ExtArgs> = {}>(args?: Subset<T, Driver$dispatchesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DispatchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     routeSessions<T extends Driver$routeSessionsArgs<ExtArgs> = {}>(args?: Subset<T, Driver$routeSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DispatchRouteSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    routeMilestones<T extends Driver$routeMilestonesArgs<ExtArgs> = {}>(args?: Subset<T, Driver$routeMilestonesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DispatchRouteMilestonePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     activationEvents<T extends Driver$activationEventsArgs<ExtArgs> = {}>(args?: Subset<T, Driver$activationEventsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DriverActivationEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -32496,6 +34417,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: DispatchRouteSessionScalarFieldEnum | DispatchRouteSessionScalarFieldEnum[]
+  }
+
+  /**
+   * Driver.routeMilestones
+   */
+  export type Driver$routeMilestonesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DispatchRouteMilestone
+     */
+    select?: DispatchRouteMilestoneSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DispatchRouteMilestone
+     */
+    omit?: DispatchRouteMilestoneOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DispatchRouteMilestoneInclude<ExtArgs> | null
+    where?: DispatchRouteMilestoneWhereInput
+    orderBy?: DispatchRouteMilestoneOrderByWithRelationInput | DispatchRouteMilestoneOrderByWithRelationInput[]
+    cursor?: DispatchRouteMilestoneWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DispatchRouteMilestoneScalarFieldEnum | DispatchRouteMilestoneScalarFieldEnum[]
   }
 
   /**
@@ -33607,12 +35552,20 @@ export namespace Prisma {
     queueIndex: number | null
     estimatedDeliveryDurationMinutes: number | null
     estimatedRoundTripDurationMinutes: number | null
+    currentEstimatedDeliveryDurationMinutes: number | null
+    currentEstimatedRoundTripDurationMinutes: number | null
+    arrivedAtRestaurantLat: number | null
+    arrivedAtRestaurantLng: number | null
   }
 
   export type DispatchSumAggregateOutputType = {
     queueIndex: number | null
     estimatedDeliveryDurationMinutes: number | null
     estimatedRoundTripDurationMinutes: number | null
+    currentEstimatedDeliveryDurationMinutes: number | null
+    currentEstimatedRoundTripDurationMinutes: number | null
+    arrivedAtRestaurantLat: number | null
+    arrivedAtRestaurantLng: number | null
   }
 
   export type DispatchMinAggregateOutputType = {
@@ -33624,6 +35577,11 @@ export namespace Prisma {
     startedDeliveryAt: Date | null
     estimatedDeliveryDurationMinutes: number | null
     estimatedRoundTripDurationMinutes: number | null
+    currentEstimatedDeliveryDurationMinutes: number | null
+    currentEstimatedRoundTripDurationMinutes: number | null
+    arrivedAtRestaurantAt: Date | null
+    arrivedAtRestaurantLat: number | null
+    arrivedAtRestaurantLng: number | null
     driverId: string | null
   }
 
@@ -33636,6 +35594,11 @@ export namespace Prisma {
     startedDeliveryAt: Date | null
     estimatedDeliveryDurationMinutes: number | null
     estimatedRoundTripDurationMinutes: number | null
+    currentEstimatedDeliveryDurationMinutes: number | null
+    currentEstimatedRoundTripDurationMinutes: number | null
+    arrivedAtRestaurantAt: Date | null
+    arrivedAtRestaurantLat: number | null
+    arrivedAtRestaurantLng: number | null
     driverId: string | null
   }
 
@@ -33648,6 +35611,11 @@ export namespace Prisma {
     startedDeliveryAt: number
     estimatedDeliveryDurationMinutes: number
     estimatedRoundTripDurationMinutes: number
+    currentEstimatedDeliveryDurationMinutes: number
+    currentEstimatedRoundTripDurationMinutes: number
+    arrivedAtRestaurantAt: number
+    arrivedAtRestaurantLat: number
+    arrivedAtRestaurantLng: number
     driverId: number
     _all: number
   }
@@ -33657,12 +35625,20 @@ export namespace Prisma {
     queueIndex?: true
     estimatedDeliveryDurationMinutes?: true
     estimatedRoundTripDurationMinutes?: true
+    currentEstimatedDeliveryDurationMinutes?: true
+    currentEstimatedRoundTripDurationMinutes?: true
+    arrivedAtRestaurantLat?: true
+    arrivedAtRestaurantLng?: true
   }
 
   export type DispatchSumAggregateInputType = {
     queueIndex?: true
     estimatedDeliveryDurationMinutes?: true
     estimatedRoundTripDurationMinutes?: true
+    currentEstimatedDeliveryDurationMinutes?: true
+    currentEstimatedRoundTripDurationMinutes?: true
+    arrivedAtRestaurantLat?: true
+    arrivedAtRestaurantLng?: true
   }
 
   export type DispatchMinAggregateInputType = {
@@ -33674,6 +35650,11 @@ export namespace Prisma {
     startedDeliveryAt?: true
     estimatedDeliveryDurationMinutes?: true
     estimatedRoundTripDurationMinutes?: true
+    currentEstimatedDeliveryDurationMinutes?: true
+    currentEstimatedRoundTripDurationMinutes?: true
+    arrivedAtRestaurantAt?: true
+    arrivedAtRestaurantLat?: true
+    arrivedAtRestaurantLng?: true
     driverId?: true
   }
 
@@ -33686,6 +35667,11 @@ export namespace Prisma {
     startedDeliveryAt?: true
     estimatedDeliveryDurationMinutes?: true
     estimatedRoundTripDurationMinutes?: true
+    currentEstimatedDeliveryDurationMinutes?: true
+    currentEstimatedRoundTripDurationMinutes?: true
+    arrivedAtRestaurantAt?: true
+    arrivedAtRestaurantLat?: true
+    arrivedAtRestaurantLng?: true
     driverId?: true
   }
 
@@ -33698,6 +35684,11 @@ export namespace Prisma {
     startedDeliveryAt?: true
     estimatedDeliveryDurationMinutes?: true
     estimatedRoundTripDurationMinutes?: true
+    currentEstimatedDeliveryDurationMinutes?: true
+    currentEstimatedRoundTripDurationMinutes?: true
+    arrivedAtRestaurantAt?: true
+    arrivedAtRestaurantLat?: true
+    arrivedAtRestaurantLng?: true
     driverId?: true
     _all?: true
   }
@@ -33797,6 +35788,11 @@ export namespace Prisma {
     startedDeliveryAt: Date | null
     estimatedDeliveryDurationMinutes: number | null
     estimatedRoundTripDurationMinutes: number | null
+    currentEstimatedDeliveryDurationMinutes: number | null
+    currentEstimatedRoundTripDurationMinutes: number | null
+    arrivedAtRestaurantAt: Date | null
+    arrivedAtRestaurantLat: number | null
+    arrivedAtRestaurantLng: number | null
     driverId: string | null
     _count: DispatchCountAggregateOutputType | null
     _avg: DispatchAvgAggregateOutputType | null
@@ -33828,10 +35824,16 @@ export namespace Prisma {
     startedDeliveryAt?: boolean
     estimatedDeliveryDurationMinutes?: boolean
     estimatedRoundTripDurationMinutes?: boolean
+    currentEstimatedDeliveryDurationMinutes?: boolean
+    currentEstimatedRoundTripDurationMinutes?: boolean
+    arrivedAtRestaurantAt?: boolean
+    arrivedAtRestaurantLat?: boolean
+    arrivedAtRestaurantLng?: boolean
     driverId?: boolean
     driver?: boolean | Dispatch$driverArgs<ExtArgs>
     orders?: boolean | Dispatch$ordersArgs<ExtArgs>
     routeSessions?: boolean | Dispatch$routeSessionsArgs<ExtArgs>
+    routeMilestones?: boolean | Dispatch$routeMilestonesArgs<ExtArgs>
     etaRecalculationJobs?: boolean | Dispatch$etaRecalculationJobsArgs<ExtArgs>
     _count?: boolean | DispatchCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["dispatch"]>
@@ -33845,6 +35847,11 @@ export namespace Prisma {
     startedDeliveryAt?: boolean
     estimatedDeliveryDurationMinutes?: boolean
     estimatedRoundTripDurationMinutes?: boolean
+    currentEstimatedDeliveryDurationMinutes?: boolean
+    currentEstimatedRoundTripDurationMinutes?: boolean
+    arrivedAtRestaurantAt?: boolean
+    arrivedAtRestaurantLat?: boolean
+    arrivedAtRestaurantLng?: boolean
     driverId?: boolean
     driver?: boolean | Dispatch$driverArgs<ExtArgs>
   }, ExtArgs["result"]["dispatch"]>
@@ -33858,6 +35865,11 @@ export namespace Prisma {
     startedDeliveryAt?: boolean
     estimatedDeliveryDurationMinutes?: boolean
     estimatedRoundTripDurationMinutes?: boolean
+    currentEstimatedDeliveryDurationMinutes?: boolean
+    currentEstimatedRoundTripDurationMinutes?: boolean
+    arrivedAtRestaurantAt?: boolean
+    arrivedAtRestaurantLat?: boolean
+    arrivedAtRestaurantLng?: boolean
     driverId?: boolean
     driver?: boolean | Dispatch$driverArgs<ExtArgs>
   }, ExtArgs["result"]["dispatch"]>
@@ -33871,14 +35883,20 @@ export namespace Prisma {
     startedDeliveryAt?: boolean
     estimatedDeliveryDurationMinutes?: boolean
     estimatedRoundTripDurationMinutes?: boolean
+    currentEstimatedDeliveryDurationMinutes?: boolean
+    currentEstimatedRoundTripDurationMinutes?: boolean
+    arrivedAtRestaurantAt?: boolean
+    arrivedAtRestaurantLat?: boolean
+    arrivedAtRestaurantLng?: boolean
     driverId?: boolean
   }
 
-  export type DispatchOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "queueIndex" | "dispatched" | "dispatchAt" | "startedDeliveryAt" | "estimatedDeliveryDurationMinutes" | "estimatedRoundTripDurationMinutes" | "driverId", ExtArgs["result"]["dispatch"]>
+  export type DispatchOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "queueIndex" | "dispatched" | "dispatchAt" | "startedDeliveryAt" | "estimatedDeliveryDurationMinutes" | "estimatedRoundTripDurationMinutes" | "currentEstimatedDeliveryDurationMinutes" | "currentEstimatedRoundTripDurationMinutes" | "arrivedAtRestaurantAt" | "arrivedAtRestaurantLat" | "arrivedAtRestaurantLng" | "driverId", ExtArgs["result"]["dispatch"]>
   export type DispatchInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     driver?: boolean | Dispatch$driverArgs<ExtArgs>
     orders?: boolean | Dispatch$ordersArgs<ExtArgs>
     routeSessions?: boolean | Dispatch$routeSessionsArgs<ExtArgs>
+    routeMilestones?: boolean | Dispatch$routeMilestonesArgs<ExtArgs>
     etaRecalculationJobs?: boolean | Dispatch$etaRecalculationJobsArgs<ExtArgs>
     _count?: boolean | DispatchCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -33895,6 +35913,7 @@ export namespace Prisma {
       driver: Prisma.$DriverPayload<ExtArgs> | null
       orders: Prisma.$OrderPayload<ExtArgs>[]
       routeSessions: Prisma.$DispatchRouteSessionPayload<ExtArgs>[]
+      routeMilestones: Prisma.$DispatchRouteMilestonePayload<ExtArgs>[]
       etaRecalculationJobs: Prisma.$DispatchEtaRecalculationJobPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -33906,6 +35925,11 @@ export namespace Prisma {
       startedDeliveryAt: Date | null
       estimatedDeliveryDurationMinutes: number | null
       estimatedRoundTripDurationMinutes: number | null
+      currentEstimatedDeliveryDurationMinutes: number | null
+      currentEstimatedRoundTripDurationMinutes: number | null
+      arrivedAtRestaurantAt: Date | null
+      arrivedAtRestaurantLat: number | null
+      arrivedAtRestaurantLng: number | null
       driverId: string | null
     }, ExtArgs["result"]["dispatch"]>
     composites: {}
@@ -34304,6 +36328,7 @@ export namespace Prisma {
     driver<T extends Dispatch$driverArgs<ExtArgs> = {}>(args?: Subset<T, Dispatch$driverArgs<ExtArgs>>): Prisma__DriverClient<$Result.GetResult<Prisma.$DriverPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     orders<T extends Dispatch$ordersArgs<ExtArgs> = {}>(args?: Subset<T, Dispatch$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     routeSessions<T extends Dispatch$routeSessionsArgs<ExtArgs> = {}>(args?: Subset<T, Dispatch$routeSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DispatchRouteSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    routeMilestones<T extends Dispatch$routeMilestonesArgs<ExtArgs> = {}>(args?: Subset<T, Dispatch$routeMilestonesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DispatchRouteMilestonePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     etaRecalculationJobs<T extends Dispatch$etaRecalculationJobsArgs<ExtArgs> = {}>(args?: Subset<T, Dispatch$etaRecalculationJobsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DispatchEtaRecalculationJobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -34342,6 +36367,11 @@ export namespace Prisma {
     readonly startedDeliveryAt: FieldRef<"Dispatch", 'DateTime'>
     readonly estimatedDeliveryDurationMinutes: FieldRef<"Dispatch", 'Int'>
     readonly estimatedRoundTripDurationMinutes: FieldRef<"Dispatch", 'Int'>
+    readonly currentEstimatedDeliveryDurationMinutes: FieldRef<"Dispatch", 'Int'>
+    readonly currentEstimatedRoundTripDurationMinutes: FieldRef<"Dispatch", 'Int'>
+    readonly arrivedAtRestaurantAt: FieldRef<"Dispatch", 'DateTime'>
+    readonly arrivedAtRestaurantLat: FieldRef<"Dispatch", 'Float'>
+    readonly arrivedAtRestaurantLng: FieldRef<"Dispatch", 'Float'>
     readonly driverId: FieldRef<"Dispatch", 'String'>
   }
     
@@ -34811,6 +36841,30 @@ export namespace Prisma {
   }
 
   /**
+   * Dispatch.routeMilestones
+   */
+  export type Dispatch$routeMilestonesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DispatchRouteMilestone
+     */
+    select?: DispatchRouteMilestoneSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DispatchRouteMilestone
+     */
+    omit?: DispatchRouteMilestoneOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DispatchRouteMilestoneInclude<ExtArgs> | null
+    where?: DispatchRouteMilestoneWhereInput
+    orderBy?: DispatchRouteMilestoneOrderByWithRelationInput | DispatchRouteMilestoneOrderByWithRelationInput[]
+    cursor?: DispatchRouteMilestoneWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DispatchRouteMilestoneScalarFieldEnum | DispatchRouteMilestoneScalarFieldEnum[]
+  }
+
+  /**
    * Dispatch.etaRecalculationJobs
    */
   export type Dispatch$etaRecalculationJobsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -35106,6 +37160,7 @@ export namespace Prisma {
     dispatch?: boolean | DispatchDefaultArgs<ExtArgs>
     driver?: boolean | DriverDefaultArgs<ExtArgs>
     points?: boolean | DispatchRouteSession$pointsArgs<ExtArgs>
+    milestones?: boolean | DispatchRouteSession$milestonesArgs<ExtArgs>
     _count?: boolean | DispatchRouteSessionCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["dispatchRouteSession"]>
 
@@ -35160,6 +37215,7 @@ export namespace Prisma {
     dispatch?: boolean | DispatchDefaultArgs<ExtArgs>
     driver?: boolean | DriverDefaultArgs<ExtArgs>
     points?: boolean | DispatchRouteSession$pointsArgs<ExtArgs>
+    milestones?: boolean | DispatchRouteSession$milestonesArgs<ExtArgs>
     _count?: boolean | DispatchRouteSessionCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type DispatchRouteSessionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -35177,6 +37233,7 @@ export namespace Prisma {
       dispatch: Prisma.$DispatchPayload<ExtArgs>
       driver: Prisma.$DriverPayload<ExtArgs>
       points: Prisma.$DispatchRoutePointPayload<ExtArgs>[]
+      milestones: Prisma.$DispatchRouteMilestonePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -35587,6 +37644,7 @@ export namespace Prisma {
     dispatch<T extends DispatchDefaultArgs<ExtArgs> = {}>(args?: Subset<T, DispatchDefaultArgs<ExtArgs>>): Prisma__DispatchClient<$Result.GetResult<Prisma.$DispatchPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     driver<T extends DriverDefaultArgs<ExtArgs> = {}>(args?: Subset<T, DriverDefaultArgs<ExtArgs>>): Prisma__DriverClient<$Result.GetResult<Prisma.$DriverPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     points<T extends DispatchRouteSession$pointsArgs<ExtArgs> = {}>(args?: Subset<T, DispatchRouteSession$pointsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DispatchRoutePointPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    milestones<T extends DispatchRouteSession$milestonesArgs<ExtArgs> = {}>(args?: Subset<T, DispatchRouteSession$milestonesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DispatchRouteMilestonePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -36049,6 +38107,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: DispatchRoutePointScalarFieldEnum | DispatchRoutePointScalarFieldEnum[]
+  }
+
+  /**
+   * DispatchRouteSession.milestones
+   */
+  export type DispatchRouteSession$milestonesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DispatchRouteMilestone
+     */
+    select?: DispatchRouteMilestoneSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DispatchRouteMilestone
+     */
+    omit?: DispatchRouteMilestoneOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DispatchRouteMilestoneInclude<ExtArgs> | null
+    where?: DispatchRouteMilestoneWhereInput
+    orderBy?: DispatchRouteMilestoneOrderByWithRelationInput | DispatchRouteMilestoneOrderByWithRelationInput[]
+    cursor?: DispatchRouteMilestoneWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DispatchRouteMilestoneScalarFieldEnum | DispatchRouteMilestoneScalarFieldEnum[]
   }
 
   /**
@@ -37292,6 +39374,1188 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: DispatchRoutePointInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model DispatchRouteMilestone
+   */
+
+  export type AggregateDispatchRouteMilestone = {
+    _count: DispatchRouteMilestoneCountAggregateOutputType | null
+    _avg: DispatchRouteMilestoneAvgAggregateOutputType | null
+    _sum: DispatchRouteMilestoneSumAggregateOutputType | null
+    _min: DispatchRouteMilestoneMinAggregateOutputType | null
+    _max: DispatchRouteMilestoneMaxAggregateOutputType | null
+  }
+
+  export type DispatchRouteMilestoneAvgAggregateOutputType = {
+    lat: number | null
+    lng: number | null
+  }
+
+  export type DispatchRouteMilestoneSumAggregateOutputType = {
+    lat: number | null
+    lng: number | null
+  }
+
+  export type DispatchRouteMilestoneMinAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    dispatchId: string | null
+    driverId: string | null
+    sessionId: string | null
+    type: $Enums.DispatchRouteMilestoneType | null
+    recordedAt: Date | null
+    lat: number | null
+    lng: number | null
+  }
+
+  export type DispatchRouteMilestoneMaxAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    dispatchId: string | null
+    driverId: string | null
+    sessionId: string | null
+    type: $Enums.DispatchRouteMilestoneType | null
+    recordedAt: Date | null
+    lat: number | null
+    lng: number | null
+  }
+
+  export type DispatchRouteMilestoneCountAggregateOutputType = {
+    id: number
+    createdAt: number
+    updatedAt: number
+    dispatchId: number
+    driverId: number
+    sessionId: number
+    type: number
+    recordedAt: number
+    lat: number
+    lng: number
+    _all: number
+  }
+
+
+  export type DispatchRouteMilestoneAvgAggregateInputType = {
+    lat?: true
+    lng?: true
+  }
+
+  export type DispatchRouteMilestoneSumAggregateInputType = {
+    lat?: true
+    lng?: true
+  }
+
+  export type DispatchRouteMilestoneMinAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    dispatchId?: true
+    driverId?: true
+    sessionId?: true
+    type?: true
+    recordedAt?: true
+    lat?: true
+    lng?: true
+  }
+
+  export type DispatchRouteMilestoneMaxAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    dispatchId?: true
+    driverId?: true
+    sessionId?: true
+    type?: true
+    recordedAt?: true
+    lat?: true
+    lng?: true
+  }
+
+  export type DispatchRouteMilestoneCountAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    dispatchId?: true
+    driverId?: true
+    sessionId?: true
+    type?: true
+    recordedAt?: true
+    lat?: true
+    lng?: true
+    _all?: true
+  }
+
+  export type DispatchRouteMilestoneAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DispatchRouteMilestone to aggregate.
+     */
+    where?: DispatchRouteMilestoneWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DispatchRouteMilestones to fetch.
+     */
+    orderBy?: DispatchRouteMilestoneOrderByWithRelationInput | DispatchRouteMilestoneOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: DispatchRouteMilestoneWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DispatchRouteMilestones from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DispatchRouteMilestones.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned DispatchRouteMilestones
+    **/
+    _count?: true | DispatchRouteMilestoneCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: DispatchRouteMilestoneAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: DispatchRouteMilestoneSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: DispatchRouteMilestoneMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: DispatchRouteMilestoneMaxAggregateInputType
+  }
+
+  export type GetDispatchRouteMilestoneAggregateType<T extends DispatchRouteMilestoneAggregateArgs> = {
+        [P in keyof T & keyof AggregateDispatchRouteMilestone]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDispatchRouteMilestone[P]>
+      : GetScalarType<T[P], AggregateDispatchRouteMilestone[P]>
+  }
+
+
+
+
+  export type DispatchRouteMilestoneGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DispatchRouteMilestoneWhereInput
+    orderBy?: DispatchRouteMilestoneOrderByWithAggregationInput | DispatchRouteMilestoneOrderByWithAggregationInput[]
+    by: DispatchRouteMilestoneScalarFieldEnum[] | DispatchRouteMilestoneScalarFieldEnum
+    having?: DispatchRouteMilestoneScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DispatchRouteMilestoneCountAggregateInputType | true
+    _avg?: DispatchRouteMilestoneAvgAggregateInputType
+    _sum?: DispatchRouteMilestoneSumAggregateInputType
+    _min?: DispatchRouteMilestoneMinAggregateInputType
+    _max?: DispatchRouteMilestoneMaxAggregateInputType
+  }
+
+  export type DispatchRouteMilestoneGroupByOutputType = {
+    id: string
+    createdAt: Date
+    updatedAt: Date
+    dispatchId: string
+    driverId: string
+    sessionId: string
+    type: $Enums.DispatchRouteMilestoneType
+    recordedAt: Date
+    lat: number
+    lng: number
+    _count: DispatchRouteMilestoneCountAggregateOutputType | null
+    _avg: DispatchRouteMilestoneAvgAggregateOutputType | null
+    _sum: DispatchRouteMilestoneSumAggregateOutputType | null
+    _min: DispatchRouteMilestoneMinAggregateOutputType | null
+    _max: DispatchRouteMilestoneMaxAggregateOutputType | null
+  }
+
+  type GetDispatchRouteMilestoneGroupByPayload<T extends DispatchRouteMilestoneGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<DispatchRouteMilestoneGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DispatchRouteMilestoneGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DispatchRouteMilestoneGroupByOutputType[P]>
+            : GetScalarType<T[P], DispatchRouteMilestoneGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DispatchRouteMilestoneSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    dispatchId?: boolean
+    driverId?: boolean
+    sessionId?: boolean
+    type?: boolean
+    recordedAt?: boolean
+    lat?: boolean
+    lng?: boolean
+    dispatch?: boolean | DispatchDefaultArgs<ExtArgs>
+    driver?: boolean | DriverDefaultArgs<ExtArgs>
+    session?: boolean | DispatchRouteSessionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["dispatchRouteMilestone"]>
+
+  export type DispatchRouteMilestoneSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    dispatchId?: boolean
+    driverId?: boolean
+    sessionId?: boolean
+    type?: boolean
+    recordedAt?: boolean
+    lat?: boolean
+    lng?: boolean
+    dispatch?: boolean | DispatchDefaultArgs<ExtArgs>
+    driver?: boolean | DriverDefaultArgs<ExtArgs>
+    session?: boolean | DispatchRouteSessionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["dispatchRouteMilestone"]>
+
+  export type DispatchRouteMilestoneSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    dispatchId?: boolean
+    driverId?: boolean
+    sessionId?: boolean
+    type?: boolean
+    recordedAt?: boolean
+    lat?: boolean
+    lng?: boolean
+    dispatch?: boolean | DispatchDefaultArgs<ExtArgs>
+    driver?: boolean | DriverDefaultArgs<ExtArgs>
+    session?: boolean | DispatchRouteSessionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["dispatchRouteMilestone"]>
+
+  export type DispatchRouteMilestoneSelectScalar = {
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    dispatchId?: boolean
+    driverId?: boolean
+    sessionId?: boolean
+    type?: boolean
+    recordedAt?: boolean
+    lat?: boolean
+    lng?: boolean
+  }
+
+  export type DispatchRouteMilestoneOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "dispatchId" | "driverId" | "sessionId" | "type" | "recordedAt" | "lat" | "lng", ExtArgs["result"]["dispatchRouteMilestone"]>
+  export type DispatchRouteMilestoneInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    dispatch?: boolean | DispatchDefaultArgs<ExtArgs>
+    driver?: boolean | DriverDefaultArgs<ExtArgs>
+    session?: boolean | DispatchRouteSessionDefaultArgs<ExtArgs>
+  }
+  export type DispatchRouteMilestoneIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    dispatch?: boolean | DispatchDefaultArgs<ExtArgs>
+    driver?: boolean | DriverDefaultArgs<ExtArgs>
+    session?: boolean | DispatchRouteSessionDefaultArgs<ExtArgs>
+  }
+  export type DispatchRouteMilestoneIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    dispatch?: boolean | DispatchDefaultArgs<ExtArgs>
+    driver?: boolean | DriverDefaultArgs<ExtArgs>
+    session?: boolean | DispatchRouteSessionDefaultArgs<ExtArgs>
+  }
+
+  export type $DispatchRouteMilestonePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "DispatchRouteMilestone"
+    objects: {
+      dispatch: Prisma.$DispatchPayload<ExtArgs>
+      driver: Prisma.$DriverPayload<ExtArgs>
+      session: Prisma.$DispatchRouteSessionPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      createdAt: Date
+      updatedAt: Date
+      dispatchId: string
+      driverId: string
+      sessionId: string
+      type: $Enums.DispatchRouteMilestoneType
+      recordedAt: Date
+      lat: number
+      lng: number
+    }, ExtArgs["result"]["dispatchRouteMilestone"]>
+    composites: {}
+  }
+
+  type DispatchRouteMilestoneGetPayload<S extends boolean | null | undefined | DispatchRouteMilestoneDefaultArgs> = $Result.GetResult<Prisma.$DispatchRouteMilestonePayload, S>
+
+  type DispatchRouteMilestoneCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<DispatchRouteMilestoneFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: DispatchRouteMilestoneCountAggregateInputType | true
+    }
+
+  export interface DispatchRouteMilestoneDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['DispatchRouteMilestone'], meta: { name: 'DispatchRouteMilestone' } }
+    /**
+     * Find zero or one DispatchRouteMilestone that matches the filter.
+     * @param {DispatchRouteMilestoneFindUniqueArgs} args - Arguments to find a DispatchRouteMilestone
+     * @example
+     * // Get one DispatchRouteMilestone
+     * const dispatchRouteMilestone = await prisma.dispatchRouteMilestone.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends DispatchRouteMilestoneFindUniqueArgs>(args: SelectSubset<T, DispatchRouteMilestoneFindUniqueArgs<ExtArgs>>): Prisma__DispatchRouteMilestoneClient<$Result.GetResult<Prisma.$DispatchRouteMilestonePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one DispatchRouteMilestone that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {DispatchRouteMilestoneFindUniqueOrThrowArgs} args - Arguments to find a DispatchRouteMilestone
+     * @example
+     * // Get one DispatchRouteMilestone
+     * const dispatchRouteMilestone = await prisma.dispatchRouteMilestone.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends DispatchRouteMilestoneFindUniqueOrThrowArgs>(args: SelectSubset<T, DispatchRouteMilestoneFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DispatchRouteMilestoneClient<$Result.GetResult<Prisma.$DispatchRouteMilestonePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DispatchRouteMilestone that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DispatchRouteMilestoneFindFirstArgs} args - Arguments to find a DispatchRouteMilestone
+     * @example
+     * // Get one DispatchRouteMilestone
+     * const dispatchRouteMilestone = await prisma.dispatchRouteMilestone.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends DispatchRouteMilestoneFindFirstArgs>(args?: SelectSubset<T, DispatchRouteMilestoneFindFirstArgs<ExtArgs>>): Prisma__DispatchRouteMilestoneClient<$Result.GetResult<Prisma.$DispatchRouteMilestonePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DispatchRouteMilestone that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DispatchRouteMilestoneFindFirstOrThrowArgs} args - Arguments to find a DispatchRouteMilestone
+     * @example
+     * // Get one DispatchRouteMilestone
+     * const dispatchRouteMilestone = await prisma.dispatchRouteMilestone.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends DispatchRouteMilestoneFindFirstOrThrowArgs>(args?: SelectSubset<T, DispatchRouteMilestoneFindFirstOrThrowArgs<ExtArgs>>): Prisma__DispatchRouteMilestoneClient<$Result.GetResult<Prisma.$DispatchRouteMilestonePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more DispatchRouteMilestones that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DispatchRouteMilestoneFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all DispatchRouteMilestones
+     * const dispatchRouteMilestones = await prisma.dispatchRouteMilestone.findMany()
+     * 
+     * // Get first 10 DispatchRouteMilestones
+     * const dispatchRouteMilestones = await prisma.dispatchRouteMilestone.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const dispatchRouteMilestoneWithIdOnly = await prisma.dispatchRouteMilestone.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends DispatchRouteMilestoneFindManyArgs>(args?: SelectSubset<T, DispatchRouteMilestoneFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DispatchRouteMilestonePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a DispatchRouteMilestone.
+     * @param {DispatchRouteMilestoneCreateArgs} args - Arguments to create a DispatchRouteMilestone.
+     * @example
+     * // Create one DispatchRouteMilestone
+     * const DispatchRouteMilestone = await prisma.dispatchRouteMilestone.create({
+     *   data: {
+     *     // ... data to create a DispatchRouteMilestone
+     *   }
+     * })
+     * 
+     */
+    create<T extends DispatchRouteMilestoneCreateArgs>(args: SelectSubset<T, DispatchRouteMilestoneCreateArgs<ExtArgs>>): Prisma__DispatchRouteMilestoneClient<$Result.GetResult<Prisma.$DispatchRouteMilestonePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many DispatchRouteMilestones.
+     * @param {DispatchRouteMilestoneCreateManyArgs} args - Arguments to create many DispatchRouteMilestones.
+     * @example
+     * // Create many DispatchRouteMilestones
+     * const dispatchRouteMilestone = await prisma.dispatchRouteMilestone.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends DispatchRouteMilestoneCreateManyArgs>(args?: SelectSubset<T, DispatchRouteMilestoneCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many DispatchRouteMilestones and returns the data saved in the database.
+     * @param {DispatchRouteMilestoneCreateManyAndReturnArgs} args - Arguments to create many DispatchRouteMilestones.
+     * @example
+     * // Create many DispatchRouteMilestones
+     * const dispatchRouteMilestone = await prisma.dispatchRouteMilestone.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many DispatchRouteMilestones and only return the `id`
+     * const dispatchRouteMilestoneWithIdOnly = await prisma.dispatchRouteMilestone.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends DispatchRouteMilestoneCreateManyAndReturnArgs>(args?: SelectSubset<T, DispatchRouteMilestoneCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DispatchRouteMilestonePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a DispatchRouteMilestone.
+     * @param {DispatchRouteMilestoneDeleteArgs} args - Arguments to delete one DispatchRouteMilestone.
+     * @example
+     * // Delete one DispatchRouteMilestone
+     * const DispatchRouteMilestone = await prisma.dispatchRouteMilestone.delete({
+     *   where: {
+     *     // ... filter to delete one DispatchRouteMilestone
+     *   }
+     * })
+     * 
+     */
+    delete<T extends DispatchRouteMilestoneDeleteArgs>(args: SelectSubset<T, DispatchRouteMilestoneDeleteArgs<ExtArgs>>): Prisma__DispatchRouteMilestoneClient<$Result.GetResult<Prisma.$DispatchRouteMilestonePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one DispatchRouteMilestone.
+     * @param {DispatchRouteMilestoneUpdateArgs} args - Arguments to update one DispatchRouteMilestone.
+     * @example
+     * // Update one DispatchRouteMilestone
+     * const dispatchRouteMilestone = await prisma.dispatchRouteMilestone.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends DispatchRouteMilestoneUpdateArgs>(args: SelectSubset<T, DispatchRouteMilestoneUpdateArgs<ExtArgs>>): Prisma__DispatchRouteMilestoneClient<$Result.GetResult<Prisma.$DispatchRouteMilestonePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more DispatchRouteMilestones.
+     * @param {DispatchRouteMilestoneDeleteManyArgs} args - Arguments to filter DispatchRouteMilestones to delete.
+     * @example
+     * // Delete a few DispatchRouteMilestones
+     * const { count } = await prisma.dispatchRouteMilestone.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends DispatchRouteMilestoneDeleteManyArgs>(args?: SelectSubset<T, DispatchRouteMilestoneDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DispatchRouteMilestones.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DispatchRouteMilestoneUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many DispatchRouteMilestones
+     * const dispatchRouteMilestone = await prisma.dispatchRouteMilestone.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends DispatchRouteMilestoneUpdateManyArgs>(args: SelectSubset<T, DispatchRouteMilestoneUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DispatchRouteMilestones and returns the data updated in the database.
+     * @param {DispatchRouteMilestoneUpdateManyAndReturnArgs} args - Arguments to update many DispatchRouteMilestones.
+     * @example
+     * // Update many DispatchRouteMilestones
+     * const dispatchRouteMilestone = await prisma.dispatchRouteMilestone.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more DispatchRouteMilestones and only return the `id`
+     * const dispatchRouteMilestoneWithIdOnly = await prisma.dispatchRouteMilestone.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends DispatchRouteMilestoneUpdateManyAndReturnArgs>(args: SelectSubset<T, DispatchRouteMilestoneUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DispatchRouteMilestonePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one DispatchRouteMilestone.
+     * @param {DispatchRouteMilestoneUpsertArgs} args - Arguments to update or create a DispatchRouteMilestone.
+     * @example
+     * // Update or create a DispatchRouteMilestone
+     * const dispatchRouteMilestone = await prisma.dispatchRouteMilestone.upsert({
+     *   create: {
+     *     // ... data to create a DispatchRouteMilestone
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the DispatchRouteMilestone we want to update
+     *   }
+     * })
+     */
+    upsert<T extends DispatchRouteMilestoneUpsertArgs>(args: SelectSubset<T, DispatchRouteMilestoneUpsertArgs<ExtArgs>>): Prisma__DispatchRouteMilestoneClient<$Result.GetResult<Prisma.$DispatchRouteMilestonePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of DispatchRouteMilestones.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DispatchRouteMilestoneCountArgs} args - Arguments to filter DispatchRouteMilestones to count.
+     * @example
+     * // Count the number of DispatchRouteMilestones
+     * const count = await prisma.dispatchRouteMilestone.count({
+     *   where: {
+     *     // ... the filter for the DispatchRouteMilestones we want to count
+     *   }
+     * })
+    **/
+    count<T extends DispatchRouteMilestoneCountArgs>(
+      args?: Subset<T, DispatchRouteMilestoneCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DispatchRouteMilestoneCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a DispatchRouteMilestone.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DispatchRouteMilestoneAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DispatchRouteMilestoneAggregateArgs>(args: Subset<T, DispatchRouteMilestoneAggregateArgs>): Prisma.PrismaPromise<GetDispatchRouteMilestoneAggregateType<T>>
+
+    /**
+     * Group by DispatchRouteMilestone.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DispatchRouteMilestoneGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends DispatchRouteMilestoneGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DispatchRouteMilestoneGroupByArgs['orderBy'] }
+        : { orderBy?: DispatchRouteMilestoneGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DispatchRouteMilestoneGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDispatchRouteMilestoneGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the DispatchRouteMilestone model
+   */
+  readonly fields: DispatchRouteMilestoneFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for DispatchRouteMilestone.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__DispatchRouteMilestoneClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    dispatch<T extends DispatchDefaultArgs<ExtArgs> = {}>(args?: Subset<T, DispatchDefaultArgs<ExtArgs>>): Prisma__DispatchClient<$Result.GetResult<Prisma.$DispatchPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    driver<T extends DriverDefaultArgs<ExtArgs> = {}>(args?: Subset<T, DriverDefaultArgs<ExtArgs>>): Prisma__DriverClient<$Result.GetResult<Prisma.$DriverPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    session<T extends DispatchRouteSessionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, DispatchRouteSessionDefaultArgs<ExtArgs>>): Prisma__DispatchRouteSessionClient<$Result.GetResult<Prisma.$DispatchRouteSessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the DispatchRouteMilestone model
+   */
+  interface DispatchRouteMilestoneFieldRefs {
+    readonly id: FieldRef<"DispatchRouteMilestone", 'String'>
+    readonly createdAt: FieldRef<"DispatchRouteMilestone", 'DateTime'>
+    readonly updatedAt: FieldRef<"DispatchRouteMilestone", 'DateTime'>
+    readonly dispatchId: FieldRef<"DispatchRouteMilestone", 'String'>
+    readonly driverId: FieldRef<"DispatchRouteMilestone", 'String'>
+    readonly sessionId: FieldRef<"DispatchRouteMilestone", 'String'>
+    readonly type: FieldRef<"DispatchRouteMilestone", 'DispatchRouteMilestoneType'>
+    readonly recordedAt: FieldRef<"DispatchRouteMilestone", 'DateTime'>
+    readonly lat: FieldRef<"DispatchRouteMilestone", 'Float'>
+    readonly lng: FieldRef<"DispatchRouteMilestone", 'Float'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * DispatchRouteMilestone findUnique
+   */
+  export type DispatchRouteMilestoneFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DispatchRouteMilestone
+     */
+    select?: DispatchRouteMilestoneSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DispatchRouteMilestone
+     */
+    omit?: DispatchRouteMilestoneOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DispatchRouteMilestoneInclude<ExtArgs> | null
+    /**
+     * Filter, which DispatchRouteMilestone to fetch.
+     */
+    where: DispatchRouteMilestoneWhereUniqueInput
+  }
+
+  /**
+   * DispatchRouteMilestone findUniqueOrThrow
+   */
+  export type DispatchRouteMilestoneFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DispatchRouteMilestone
+     */
+    select?: DispatchRouteMilestoneSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DispatchRouteMilestone
+     */
+    omit?: DispatchRouteMilestoneOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DispatchRouteMilestoneInclude<ExtArgs> | null
+    /**
+     * Filter, which DispatchRouteMilestone to fetch.
+     */
+    where: DispatchRouteMilestoneWhereUniqueInput
+  }
+
+  /**
+   * DispatchRouteMilestone findFirst
+   */
+  export type DispatchRouteMilestoneFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DispatchRouteMilestone
+     */
+    select?: DispatchRouteMilestoneSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DispatchRouteMilestone
+     */
+    omit?: DispatchRouteMilestoneOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DispatchRouteMilestoneInclude<ExtArgs> | null
+    /**
+     * Filter, which DispatchRouteMilestone to fetch.
+     */
+    where?: DispatchRouteMilestoneWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DispatchRouteMilestones to fetch.
+     */
+    orderBy?: DispatchRouteMilestoneOrderByWithRelationInput | DispatchRouteMilestoneOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DispatchRouteMilestones.
+     */
+    cursor?: DispatchRouteMilestoneWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DispatchRouteMilestones from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DispatchRouteMilestones.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DispatchRouteMilestones.
+     */
+    distinct?: DispatchRouteMilestoneScalarFieldEnum | DispatchRouteMilestoneScalarFieldEnum[]
+  }
+
+  /**
+   * DispatchRouteMilestone findFirstOrThrow
+   */
+  export type DispatchRouteMilestoneFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DispatchRouteMilestone
+     */
+    select?: DispatchRouteMilestoneSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DispatchRouteMilestone
+     */
+    omit?: DispatchRouteMilestoneOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DispatchRouteMilestoneInclude<ExtArgs> | null
+    /**
+     * Filter, which DispatchRouteMilestone to fetch.
+     */
+    where?: DispatchRouteMilestoneWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DispatchRouteMilestones to fetch.
+     */
+    orderBy?: DispatchRouteMilestoneOrderByWithRelationInput | DispatchRouteMilestoneOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DispatchRouteMilestones.
+     */
+    cursor?: DispatchRouteMilestoneWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DispatchRouteMilestones from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DispatchRouteMilestones.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DispatchRouteMilestones.
+     */
+    distinct?: DispatchRouteMilestoneScalarFieldEnum | DispatchRouteMilestoneScalarFieldEnum[]
+  }
+
+  /**
+   * DispatchRouteMilestone findMany
+   */
+  export type DispatchRouteMilestoneFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DispatchRouteMilestone
+     */
+    select?: DispatchRouteMilestoneSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DispatchRouteMilestone
+     */
+    omit?: DispatchRouteMilestoneOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DispatchRouteMilestoneInclude<ExtArgs> | null
+    /**
+     * Filter, which DispatchRouteMilestones to fetch.
+     */
+    where?: DispatchRouteMilestoneWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DispatchRouteMilestones to fetch.
+     */
+    orderBy?: DispatchRouteMilestoneOrderByWithRelationInput | DispatchRouteMilestoneOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing DispatchRouteMilestones.
+     */
+    cursor?: DispatchRouteMilestoneWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DispatchRouteMilestones from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DispatchRouteMilestones.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DispatchRouteMilestones.
+     */
+    distinct?: DispatchRouteMilestoneScalarFieldEnum | DispatchRouteMilestoneScalarFieldEnum[]
+  }
+
+  /**
+   * DispatchRouteMilestone create
+   */
+  export type DispatchRouteMilestoneCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DispatchRouteMilestone
+     */
+    select?: DispatchRouteMilestoneSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DispatchRouteMilestone
+     */
+    omit?: DispatchRouteMilestoneOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DispatchRouteMilestoneInclude<ExtArgs> | null
+    /**
+     * The data needed to create a DispatchRouteMilestone.
+     */
+    data: XOR<DispatchRouteMilestoneCreateInput, DispatchRouteMilestoneUncheckedCreateInput>
+  }
+
+  /**
+   * DispatchRouteMilestone createMany
+   */
+  export type DispatchRouteMilestoneCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many DispatchRouteMilestones.
+     */
+    data: DispatchRouteMilestoneCreateManyInput | DispatchRouteMilestoneCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * DispatchRouteMilestone createManyAndReturn
+   */
+  export type DispatchRouteMilestoneCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DispatchRouteMilestone
+     */
+    select?: DispatchRouteMilestoneSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DispatchRouteMilestone
+     */
+    omit?: DispatchRouteMilestoneOmit<ExtArgs> | null
+    /**
+     * The data used to create many DispatchRouteMilestones.
+     */
+    data: DispatchRouteMilestoneCreateManyInput | DispatchRouteMilestoneCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DispatchRouteMilestoneIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * DispatchRouteMilestone update
+   */
+  export type DispatchRouteMilestoneUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DispatchRouteMilestone
+     */
+    select?: DispatchRouteMilestoneSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DispatchRouteMilestone
+     */
+    omit?: DispatchRouteMilestoneOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DispatchRouteMilestoneInclude<ExtArgs> | null
+    /**
+     * The data needed to update a DispatchRouteMilestone.
+     */
+    data: XOR<DispatchRouteMilestoneUpdateInput, DispatchRouteMilestoneUncheckedUpdateInput>
+    /**
+     * Choose, which DispatchRouteMilestone to update.
+     */
+    where: DispatchRouteMilestoneWhereUniqueInput
+  }
+
+  /**
+   * DispatchRouteMilestone updateMany
+   */
+  export type DispatchRouteMilestoneUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update DispatchRouteMilestones.
+     */
+    data: XOR<DispatchRouteMilestoneUpdateManyMutationInput, DispatchRouteMilestoneUncheckedUpdateManyInput>
+    /**
+     * Filter which DispatchRouteMilestones to update
+     */
+    where?: DispatchRouteMilestoneWhereInput
+    /**
+     * Limit how many DispatchRouteMilestones to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * DispatchRouteMilestone updateManyAndReturn
+   */
+  export type DispatchRouteMilestoneUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DispatchRouteMilestone
+     */
+    select?: DispatchRouteMilestoneSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DispatchRouteMilestone
+     */
+    omit?: DispatchRouteMilestoneOmit<ExtArgs> | null
+    /**
+     * The data used to update DispatchRouteMilestones.
+     */
+    data: XOR<DispatchRouteMilestoneUpdateManyMutationInput, DispatchRouteMilestoneUncheckedUpdateManyInput>
+    /**
+     * Filter which DispatchRouteMilestones to update
+     */
+    where?: DispatchRouteMilestoneWhereInput
+    /**
+     * Limit how many DispatchRouteMilestones to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DispatchRouteMilestoneIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * DispatchRouteMilestone upsert
+   */
+  export type DispatchRouteMilestoneUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DispatchRouteMilestone
+     */
+    select?: DispatchRouteMilestoneSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DispatchRouteMilestone
+     */
+    omit?: DispatchRouteMilestoneOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DispatchRouteMilestoneInclude<ExtArgs> | null
+    /**
+     * The filter to search for the DispatchRouteMilestone to update in case it exists.
+     */
+    where: DispatchRouteMilestoneWhereUniqueInput
+    /**
+     * In case the DispatchRouteMilestone found by the `where` argument doesn't exist, create a new DispatchRouteMilestone with this data.
+     */
+    create: XOR<DispatchRouteMilestoneCreateInput, DispatchRouteMilestoneUncheckedCreateInput>
+    /**
+     * In case the DispatchRouteMilestone was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DispatchRouteMilestoneUpdateInput, DispatchRouteMilestoneUncheckedUpdateInput>
+  }
+
+  /**
+   * DispatchRouteMilestone delete
+   */
+  export type DispatchRouteMilestoneDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DispatchRouteMilestone
+     */
+    select?: DispatchRouteMilestoneSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DispatchRouteMilestone
+     */
+    omit?: DispatchRouteMilestoneOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DispatchRouteMilestoneInclude<ExtArgs> | null
+    /**
+     * Filter which DispatchRouteMilestone to delete.
+     */
+    where: DispatchRouteMilestoneWhereUniqueInput
+  }
+
+  /**
+   * DispatchRouteMilestone deleteMany
+   */
+  export type DispatchRouteMilestoneDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DispatchRouteMilestones to delete
+     */
+    where?: DispatchRouteMilestoneWhereInput
+    /**
+     * Limit how many DispatchRouteMilestones to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * DispatchRouteMilestone without action
+   */
+  export type DispatchRouteMilestoneDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DispatchRouteMilestone
+     */
+    select?: DispatchRouteMilestoneSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DispatchRouteMilestone
+     */
+    omit?: DispatchRouteMilestoneOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DispatchRouteMilestoneInclude<ExtArgs> | null
   }
 
 
@@ -42143,6 +45407,7 @@ export namespace Prisma {
     comboUsedInItems?: boolean | Product$comboUsedInItemsArgs<ExtArgs>
     exclusivePromotionProducts?: boolean | Product$exclusivePromotionProductsArgs<ExtArgs>
     OrderProducts?: boolean | Product$OrderProductsArgs<ExtArgs>
+    orderIntentProducts?: boolean | Product$orderIntentProductsArgs<ExtArgs>
     prizeProducts?: boolean | Product$prizeProductsArgs<ExtArgs>
     customerRewards?: boolean | Product$customerRewardsArgs<ExtArgs>
     preparationSteps?: boolean | Product$preparationStepsArgs<ExtArgs>
@@ -42205,6 +45470,7 @@ export namespace Prisma {
     comboUsedInItems?: boolean | Product$comboUsedInItemsArgs<ExtArgs>
     exclusivePromotionProducts?: boolean | Product$exclusivePromotionProductsArgs<ExtArgs>
     OrderProducts?: boolean | Product$OrderProductsArgs<ExtArgs>
+    orderIntentProducts?: boolean | Product$orderIntentProductsArgs<ExtArgs>
     prizeProducts?: boolean | Product$prizeProductsArgs<ExtArgs>
     customerRewards?: boolean | Product$customerRewardsArgs<ExtArgs>
     preparationSteps?: boolean | Product$preparationStepsArgs<ExtArgs>
@@ -42230,6 +45496,7 @@ export namespace Prisma {
       comboUsedInItems: Prisma.$ComboProductItemPayload<ExtArgs>[]
       exclusivePromotionProducts: Prisma.$ExclusivePromotionProductPayload<ExtArgs>[]
       OrderProducts: Prisma.$OrderProductsPayload<ExtArgs>[]
+      orderIntentProducts: Prisma.$OrderIntentProductPayload<ExtArgs>[]
       prizeProducts: Prisma.$ProgressiveDiscountPrizeProductPayload<ExtArgs>[]
       customerRewards: Prisma.$CustomerRewardPayload<ExtArgs>[]
       preparationSteps: Prisma.$PreparationStepPayload<ExtArgs>[]
@@ -42650,6 +45917,7 @@ export namespace Prisma {
     comboUsedInItems<T extends Product$comboUsedInItemsArgs<ExtArgs> = {}>(args?: Subset<T, Product$comboUsedInItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ComboProductItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     exclusivePromotionProducts<T extends Product$exclusivePromotionProductsArgs<ExtArgs> = {}>(args?: Subset<T, Product$exclusivePromotionProductsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExclusivePromotionProductPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     OrderProducts<T extends Product$OrderProductsArgs<ExtArgs> = {}>(args?: Subset<T, Product$OrderProductsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderProductsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    orderIntentProducts<T extends Product$orderIntentProductsArgs<ExtArgs> = {}>(args?: Subset<T, Product$orderIntentProductsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderIntentProductPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     prizeProducts<T extends Product$prizeProductsArgs<ExtArgs> = {}>(args?: Subset<T, Product$prizeProductsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProgressiveDiscountPrizeProductPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     customerRewards<T extends Product$customerRewardsArgs<ExtArgs> = {}>(args?: Subset<T, Product$customerRewardsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomerRewardPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     preparationSteps<T extends Product$preparationStepsArgs<ExtArgs> = {}>(args?: Subset<T, Product$preparationStepsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PreparationStepPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -43326,6 +46594,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: OrderProductsScalarFieldEnum | OrderProductsScalarFieldEnum[]
+  }
+
+  /**
+   * Product.orderIntentProducts
+   */
+  export type Product$orderIntentProductsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderIntentProduct
+     */
+    select?: OrderIntentProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderIntentProduct
+     */
+    omit?: OrderIntentProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderIntentProductInclude<ExtArgs> | null
+    where?: OrderIntentProductWhereInput
+    orderBy?: OrderIntentProductOrderByWithRelationInput | OrderIntentProductOrderByWithRelationInput[]
+    cursor?: OrderIntentProductWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: OrderIntentProductScalarFieldEnum | OrderIntentProductScalarFieldEnum[]
   }
 
   /**
@@ -55997,6 +59289,7 @@ export namespace Prisma {
     otpChallenges?: boolean | Customer$otpChallengesArgs<ExtArgs>
     accessTokens?: boolean | Customer$accessTokensArgs<ExtArgs>
     cards?: boolean | Customer$cardsArgs<ExtArgs>
+    orderIntents?: boolean | Customer$orderIntentsArgs<ExtArgs>
     _count?: boolean | CustomerCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["customer"]>
 
@@ -56044,6 +59337,7 @@ export namespace Prisma {
     otpChallenges?: boolean | Customer$otpChallengesArgs<ExtArgs>
     accessTokens?: boolean | Customer$accessTokensArgs<ExtArgs>
     cards?: boolean | Customer$cardsArgs<ExtArgs>
+    orderIntents?: boolean | Customer$orderIntentsArgs<ExtArgs>
     _count?: boolean | CustomerCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type CustomerIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -56061,6 +59355,7 @@ export namespace Prisma {
       otpChallenges: Prisma.$CustomerOtpChallengePayload<ExtArgs>[]
       accessTokens: Prisma.$CustomerAccessTokenPayload<ExtArgs>[]
       cards: Prisma.$CustomerCardPayload<ExtArgs>[]
+      orderIntents: Prisma.$OrderIntentPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -56474,6 +59769,7 @@ export namespace Prisma {
     otpChallenges<T extends Customer$otpChallengesArgs<ExtArgs> = {}>(args?: Subset<T, Customer$otpChallengesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomerOtpChallengePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     accessTokens<T extends Customer$accessTokensArgs<ExtArgs> = {}>(args?: Subset<T, Customer$accessTokensArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomerAccessTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     cards<T extends Customer$cardsArgs<ExtArgs> = {}>(args?: Subset<T, Customer$cardsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomerCardPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    orderIntents<T extends Customer$orderIntentsArgs<ExtArgs> = {}>(args?: Subset<T, Customer$orderIntentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderIntentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -57117,6 +60413,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: CustomerCardScalarFieldEnum | CustomerCardScalarFieldEnum[]
+  }
+
+  /**
+   * Customer.orderIntents
+   */
+  export type Customer$orderIntentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderIntent
+     */
+    select?: OrderIntentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderIntent
+     */
+    omit?: OrderIntentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderIntentInclude<ExtArgs> | null
+    where?: OrderIntentWhereInput
+    orderBy?: OrderIntentOrderByWithRelationInput | OrderIntentOrderByWithRelationInput[]
+    cursor?: OrderIntentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: OrderIntentScalarFieldEnum | OrderIntentScalarFieldEnum[]
   }
 
   /**
@@ -60967,6 +64287,7 @@ export namespace Prisma {
     customerId?: boolean
     customer?: boolean | DeliveryAddress$customerArgs<ExtArgs>
     orders?: boolean | DeliveryAddress$ordersArgs<ExtArgs>
+    orderIntents?: boolean | DeliveryAddress$orderIntentsArgs<ExtArgs>
     _count?: boolean | DeliveryAddressCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["deliveryAddress"]>
 
@@ -61027,6 +64348,7 @@ export namespace Prisma {
   export type DeliveryAddressInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     customer?: boolean | DeliveryAddress$customerArgs<ExtArgs>
     orders?: boolean | DeliveryAddress$ordersArgs<ExtArgs>
+    orderIntents?: boolean | DeliveryAddress$orderIntentsArgs<ExtArgs>
     _count?: boolean | DeliveryAddressCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type DeliveryAddressIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -61041,6 +64363,7 @@ export namespace Prisma {
     objects: {
       customer: Prisma.$CustomerPayload<ExtArgs> | null
       orders: Prisma.$OrderPayload<ExtArgs>[]
+      orderIntents: Prisma.$OrderIntentPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -61453,6 +64776,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     customer<T extends DeliveryAddress$customerArgs<ExtArgs> = {}>(args?: Subset<T, DeliveryAddress$customerArgs<ExtArgs>>): Prisma__CustomerClient<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     orders<T extends DeliveryAddress$ordersArgs<ExtArgs> = {}>(args?: Subset<T, DeliveryAddress$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    orderIntents<T extends DeliveryAddress$orderIntentsArgs<ExtArgs> = {}>(args?: Subset<T, DeliveryAddress$orderIntentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderIntentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -61937,6 +65261,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: OrderScalarFieldEnum | OrderScalarFieldEnum[]
+  }
+
+  /**
+   * DeliveryAddress.orderIntents
+   */
+  export type DeliveryAddress$orderIntentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderIntent
+     */
+    select?: OrderIntentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderIntent
+     */
+    omit?: OrderIntentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderIntentInclude<ExtArgs> | null
+    where?: OrderIntentWhereInput
+    orderBy?: OrderIntentOrderByWithRelationInput | OrderIntentOrderByWithRelationInput[]
+    cursor?: OrderIntentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: OrderIntentScalarFieldEnum | OrderIntentScalarFieldEnum[]
   }
 
   /**
@@ -65269,14 +68617,20 @@ export namespace Prisma {
   }
 
   export type OrderAvgAggregateOutputType = {
+    leftAtDropOffLat: number | null
+    leftAtDropOffLng: number | null
     estimatedDeliveryDurationMinutes: number | null
+    currentEstimatedDeliveryDurationMinutes: number | null
     dispatchOrderIndex: number | null
     amount: number | null
     tipAmount: number | null
   }
 
   export type OrderSumAggregateOutputType = {
+    leftAtDropOffLat: number | null
+    leftAtDropOffLng: number | null
     estimatedDeliveryDurationMinutes: number | null
+    currentEstimatedDeliveryDurationMinutes: number | null
     dispatchOrderIndex: number | null
     amount: number | null
     tipAmount: number | null
@@ -65290,7 +68644,11 @@ export namespace Prisma {
     language: string | null
     paidAt: Date | null
     deliveredAt: Date | null
+    leftAtDropOffAt: Date | null
+    leftAtDropOffLat: number | null
+    leftAtDropOffLng: number | null
     estimatedDeliveryDurationMinutes: number | null
+    currentEstimatedDeliveryDurationMinutes: number | null
     dispatchOrderIndex: number | null
     amount: number | null
     canceled: boolean | null
@@ -65305,6 +68663,7 @@ export namespace Prisma {
     addressId: string | null
     deliveryAddressId: string | null
     externalAddressId: string | null
+    branchId: string | null
   }
 
   export type OrderMaxAggregateOutputType = {
@@ -65315,7 +68674,11 @@ export namespace Prisma {
     language: string | null
     paidAt: Date | null
     deliveredAt: Date | null
+    leftAtDropOffAt: Date | null
+    leftAtDropOffLat: number | null
+    leftAtDropOffLng: number | null
     estimatedDeliveryDurationMinutes: number | null
+    currentEstimatedDeliveryDurationMinutes: number | null
     dispatchOrderIndex: number | null
     amount: number | null
     canceled: boolean | null
@@ -65330,6 +68693,7 @@ export namespace Prisma {
     addressId: string | null
     deliveryAddressId: string | null
     externalAddressId: string | null
+    branchId: string | null
   }
 
   export type OrderCountAggregateOutputType = {
@@ -65340,7 +68704,11 @@ export namespace Prisma {
     language: number
     paidAt: number
     deliveredAt: number
+    leftAtDropOffAt: number
+    leftAtDropOffLat: number
+    leftAtDropOffLng: number
     estimatedDeliveryDurationMinutes: number
+    currentEstimatedDeliveryDurationMinutes: number
     dispatchOrderIndex: number
     amount: number
     canceled: number
@@ -65357,19 +68725,26 @@ export namespace Prisma {
     addressId: number
     deliveryAddressId: number
     externalAddressId: number
+    branchId: number
     _all: number
   }
 
 
   export type OrderAvgAggregateInputType = {
+    leftAtDropOffLat?: true
+    leftAtDropOffLng?: true
     estimatedDeliveryDurationMinutes?: true
+    currentEstimatedDeliveryDurationMinutes?: true
     dispatchOrderIndex?: true
     amount?: true
     tipAmount?: true
   }
 
   export type OrderSumAggregateInputType = {
+    leftAtDropOffLat?: true
+    leftAtDropOffLng?: true
     estimatedDeliveryDurationMinutes?: true
+    currentEstimatedDeliveryDurationMinutes?: true
     dispatchOrderIndex?: true
     amount?: true
     tipAmount?: true
@@ -65383,7 +68758,11 @@ export namespace Prisma {
     language?: true
     paidAt?: true
     deliveredAt?: true
+    leftAtDropOffAt?: true
+    leftAtDropOffLat?: true
+    leftAtDropOffLng?: true
     estimatedDeliveryDurationMinutes?: true
+    currentEstimatedDeliveryDurationMinutes?: true
     dispatchOrderIndex?: true
     amount?: true
     canceled?: true
@@ -65398,6 +68777,7 @@ export namespace Prisma {
     addressId?: true
     deliveryAddressId?: true
     externalAddressId?: true
+    branchId?: true
   }
 
   export type OrderMaxAggregateInputType = {
@@ -65408,7 +68788,11 @@ export namespace Prisma {
     language?: true
     paidAt?: true
     deliveredAt?: true
+    leftAtDropOffAt?: true
+    leftAtDropOffLat?: true
+    leftAtDropOffLng?: true
     estimatedDeliveryDurationMinutes?: true
+    currentEstimatedDeliveryDurationMinutes?: true
     dispatchOrderIndex?: true
     amount?: true
     canceled?: true
@@ -65423,6 +68807,7 @@ export namespace Prisma {
     addressId?: true
     deliveryAddressId?: true
     externalAddressId?: true
+    branchId?: true
   }
 
   export type OrderCountAggregateInputType = {
@@ -65433,7 +68818,11 @@ export namespace Prisma {
     language?: true
     paidAt?: true
     deliveredAt?: true
+    leftAtDropOffAt?: true
+    leftAtDropOffLat?: true
+    leftAtDropOffLng?: true
     estimatedDeliveryDurationMinutes?: true
+    currentEstimatedDeliveryDurationMinutes?: true
     dispatchOrderIndex?: true
     amount?: true
     canceled?: true
@@ -65450,6 +68839,7 @@ export namespace Prisma {
     addressId?: true
     deliveryAddressId?: true
     externalAddressId?: true
+    branchId?: true
     _all?: true
   }
 
@@ -65547,7 +68937,11 @@ export namespace Prisma {
     language: string | null
     paidAt: Date | null
     deliveredAt: Date | null
+    leftAtDropOffAt: Date | null
+    leftAtDropOffLat: number | null
+    leftAtDropOffLng: number | null
     estimatedDeliveryDurationMinutes: number | null
+    currentEstimatedDeliveryDurationMinutes: number | null
     dispatchOrderIndex: number | null
     amount: number
     canceled: boolean
@@ -65564,6 +68958,7 @@ export namespace Prisma {
     addressId: string | null
     deliveryAddressId: string | null
     externalAddressId: string | null
+    branchId: string | null
     _count: OrderCountAggregateOutputType | null
     _avg: OrderAvgAggregateOutputType | null
     _sum: OrderSumAggregateOutputType | null
@@ -65593,7 +68988,11 @@ export namespace Prisma {
     language?: boolean
     paidAt?: boolean
     deliveredAt?: boolean
+    leftAtDropOffAt?: boolean
+    leftAtDropOffLat?: boolean
+    leftAtDropOffLng?: boolean
     estimatedDeliveryDurationMinutes?: boolean
+    currentEstimatedDeliveryDurationMinutes?: boolean
     dispatchOrderIndex?: boolean
     amount?: boolean
     canceled?: boolean
@@ -65610,11 +69009,13 @@ export namespace Prisma {
     addressId?: boolean
     deliveryAddressId?: boolean
     externalAddressId?: boolean
+    branchId?: boolean
     customer?: boolean | Order$customerArgs<ExtArgs>
     dispatch?: boolean | Order$dispatchArgs<ExtArgs>
     address?: boolean | Order$addressArgs<ExtArgs>
     deliveryAddress?: boolean | Order$deliveryAddressArgs<ExtArgs>
     externalAddress?: boolean | Order$externalAddressArgs<ExtArgs>
+    branch?: boolean | Order$branchArgs<ExtArgs>
     orderProducts?: boolean | Order$orderProductsArgs<ExtArgs>
     preparationStepCategories?: boolean | Order$preparationStepCategoriesArgs<ExtArgs>
     feedback?: boolean | Order$feedbackArgs<ExtArgs>
@@ -65631,7 +69032,11 @@ export namespace Prisma {
     language?: boolean
     paidAt?: boolean
     deliveredAt?: boolean
+    leftAtDropOffAt?: boolean
+    leftAtDropOffLat?: boolean
+    leftAtDropOffLng?: boolean
     estimatedDeliveryDurationMinutes?: boolean
+    currentEstimatedDeliveryDurationMinutes?: boolean
     dispatchOrderIndex?: boolean
     amount?: boolean
     canceled?: boolean
@@ -65648,11 +69053,13 @@ export namespace Prisma {
     addressId?: boolean
     deliveryAddressId?: boolean
     externalAddressId?: boolean
+    branchId?: boolean
     customer?: boolean | Order$customerArgs<ExtArgs>
     dispatch?: boolean | Order$dispatchArgs<ExtArgs>
     address?: boolean | Order$addressArgs<ExtArgs>
     deliveryAddress?: boolean | Order$deliveryAddressArgs<ExtArgs>
     externalAddress?: boolean | Order$externalAddressArgs<ExtArgs>
+    branch?: boolean | Order$branchArgs<ExtArgs>
   }, ExtArgs["result"]["order"]>
 
   export type OrderSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -65663,7 +69070,11 @@ export namespace Prisma {
     language?: boolean
     paidAt?: boolean
     deliveredAt?: boolean
+    leftAtDropOffAt?: boolean
+    leftAtDropOffLat?: boolean
+    leftAtDropOffLng?: boolean
     estimatedDeliveryDurationMinutes?: boolean
+    currentEstimatedDeliveryDurationMinutes?: boolean
     dispatchOrderIndex?: boolean
     amount?: boolean
     canceled?: boolean
@@ -65680,11 +69091,13 @@ export namespace Prisma {
     addressId?: boolean
     deliveryAddressId?: boolean
     externalAddressId?: boolean
+    branchId?: boolean
     customer?: boolean | Order$customerArgs<ExtArgs>
     dispatch?: boolean | Order$dispatchArgs<ExtArgs>
     address?: boolean | Order$addressArgs<ExtArgs>
     deliveryAddress?: boolean | Order$deliveryAddressArgs<ExtArgs>
     externalAddress?: boolean | Order$externalAddressArgs<ExtArgs>
+    branch?: boolean | Order$branchArgs<ExtArgs>
   }, ExtArgs["result"]["order"]>
 
   export type OrderSelectScalar = {
@@ -65695,7 +69108,11 @@ export namespace Prisma {
     language?: boolean
     paidAt?: boolean
     deliveredAt?: boolean
+    leftAtDropOffAt?: boolean
+    leftAtDropOffLat?: boolean
+    leftAtDropOffLng?: boolean
     estimatedDeliveryDurationMinutes?: boolean
+    currentEstimatedDeliveryDurationMinutes?: boolean
     dispatchOrderIndex?: boolean
     amount?: boolean
     canceled?: boolean
@@ -65712,15 +69129,17 @@ export namespace Prisma {
     addressId?: boolean
     deliveryAddressId?: boolean
     externalAddressId?: boolean
+    branchId?: boolean
   }
 
-  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "number" | "createdAt" | "scheduleFor" | "language" | "paidAt" | "deliveredAt" | "estimatedDeliveryDurationMinutes" | "dispatchOrderIndex" | "amount" | "canceled" | "status" | "type" | "paymentMethod" | "paymentProvider" | "tipAmount" | "tags" | "progressiveDiscountSnapshot" | "customerId" | "externalId" | "dispatchId" | "addressId" | "deliveryAddressId" | "externalAddressId", ExtArgs["result"]["order"]>
+  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "number" | "createdAt" | "scheduleFor" | "language" | "paidAt" | "deliveredAt" | "leftAtDropOffAt" | "leftAtDropOffLat" | "leftAtDropOffLng" | "estimatedDeliveryDurationMinutes" | "currentEstimatedDeliveryDurationMinutes" | "dispatchOrderIndex" | "amount" | "canceled" | "status" | "type" | "paymentMethod" | "paymentProvider" | "tipAmount" | "tags" | "progressiveDiscountSnapshot" | "customerId" | "externalId" | "dispatchId" | "addressId" | "deliveryAddressId" | "externalAddressId" | "branchId", ExtArgs["result"]["order"]>
   export type OrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     customer?: boolean | Order$customerArgs<ExtArgs>
     dispatch?: boolean | Order$dispatchArgs<ExtArgs>
     address?: boolean | Order$addressArgs<ExtArgs>
     deliveryAddress?: boolean | Order$deliveryAddressArgs<ExtArgs>
     externalAddress?: boolean | Order$externalAddressArgs<ExtArgs>
+    branch?: boolean | Order$branchArgs<ExtArgs>
     orderProducts?: boolean | Order$orderProductsArgs<ExtArgs>
     preparationStepCategories?: boolean | Order$preparationStepCategoriesArgs<ExtArgs>
     feedback?: boolean | Order$feedbackArgs<ExtArgs>
@@ -65734,6 +69153,7 @@ export namespace Prisma {
     address?: boolean | Order$addressArgs<ExtArgs>
     deliveryAddress?: boolean | Order$deliveryAddressArgs<ExtArgs>
     externalAddress?: boolean | Order$externalAddressArgs<ExtArgs>
+    branch?: boolean | Order$branchArgs<ExtArgs>
   }
   export type OrderIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     customer?: boolean | Order$customerArgs<ExtArgs>
@@ -65741,6 +69161,7 @@ export namespace Prisma {
     address?: boolean | Order$addressArgs<ExtArgs>
     deliveryAddress?: boolean | Order$deliveryAddressArgs<ExtArgs>
     externalAddress?: boolean | Order$externalAddressArgs<ExtArgs>
+    branch?: boolean | Order$branchArgs<ExtArgs>
   }
 
   export type $OrderPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -65751,6 +69172,7 @@ export namespace Prisma {
       address: Prisma.$AddressPayload<ExtArgs> | null
       deliveryAddress: Prisma.$DeliveryAddressPayload<ExtArgs> | null
       externalAddress: Prisma.$ExternalAddressPayload<ExtArgs> | null
+      branch: Prisma.$BranchPayload<ExtArgs> | null
       orderProducts: Prisma.$OrderProductsPayload<ExtArgs>[]
       preparationStepCategories: Prisma.$PreparationStepCategoryPayload<ExtArgs>[]
       feedback: Prisma.$CustomerFeedbackPayload<ExtArgs> | null
@@ -65765,7 +69187,11 @@ export namespace Prisma {
       language: string | null
       paidAt: Date | null
       deliveredAt: Date | null
+      leftAtDropOffAt: Date | null
+      leftAtDropOffLat: number | null
+      leftAtDropOffLng: number | null
       estimatedDeliveryDurationMinutes: number | null
+      currentEstimatedDeliveryDurationMinutes: number | null
       dispatchOrderIndex: number | null
       amount: number
       canceled: boolean
@@ -65782,6 +69208,7 @@ export namespace Prisma {
       addressId: string | null
       deliveryAddressId: string | null
       externalAddressId: string | null
+      branchId: string | null
     }, ExtArgs["result"]["order"]>
     composites: {}
   }
@@ -66181,6 +69608,7 @@ export namespace Prisma {
     address<T extends Order$addressArgs<ExtArgs> = {}>(args?: Subset<T, Order$addressArgs<ExtArgs>>): Prisma__AddressClient<$Result.GetResult<Prisma.$AddressPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     deliveryAddress<T extends Order$deliveryAddressArgs<ExtArgs> = {}>(args?: Subset<T, Order$deliveryAddressArgs<ExtArgs>>): Prisma__DeliveryAddressClient<$Result.GetResult<Prisma.$DeliveryAddressPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     externalAddress<T extends Order$externalAddressArgs<ExtArgs> = {}>(args?: Subset<T, Order$externalAddressArgs<ExtArgs>>): Prisma__ExternalAddressClient<$Result.GetResult<Prisma.$ExternalAddressPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    branch<T extends Order$branchArgs<ExtArgs> = {}>(args?: Subset<T, Order$branchArgs<ExtArgs>>): Prisma__BranchClient<$Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     orderProducts<T extends Order$orderProductsArgs<ExtArgs> = {}>(args?: Subset<T, Order$orderProductsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderProductsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     preparationStepCategories<T extends Order$preparationStepCategoriesArgs<ExtArgs> = {}>(args?: Subset<T, Order$preparationStepCategoriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PreparationStepCategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     feedback<T extends Order$feedbackArgs<ExtArgs> = {}>(args?: Subset<T, Order$feedbackArgs<ExtArgs>>): Prisma__CustomerFeedbackClient<$Result.GetResult<Prisma.$CustomerFeedbackPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
@@ -66222,7 +69650,11 @@ export namespace Prisma {
     readonly language: FieldRef<"Order", 'String'>
     readonly paidAt: FieldRef<"Order", 'DateTime'>
     readonly deliveredAt: FieldRef<"Order", 'DateTime'>
+    readonly leftAtDropOffAt: FieldRef<"Order", 'DateTime'>
+    readonly leftAtDropOffLat: FieldRef<"Order", 'Float'>
+    readonly leftAtDropOffLng: FieldRef<"Order", 'Float'>
     readonly estimatedDeliveryDurationMinutes: FieldRef<"Order", 'Int'>
+    readonly currentEstimatedDeliveryDurationMinutes: FieldRef<"Order", 'Int'>
     readonly dispatchOrderIndex: FieldRef<"Order", 'Int'>
     readonly amount: FieldRef<"Order", 'Int'>
     readonly canceled: FieldRef<"Order", 'Boolean'>
@@ -66239,6 +69671,7 @@ export namespace Prisma {
     readonly addressId: FieldRef<"Order", 'String'>
     readonly deliveryAddressId: FieldRef<"Order", 'String'>
     readonly externalAddressId: FieldRef<"Order", 'String'>
+    readonly branchId: FieldRef<"Order", 'String'>
   }
     
 
@@ -66735,6 +70168,25 @@ export namespace Prisma {
   }
 
   /**
+   * Order.branch
+   */
+  export type Order$branchArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Branch
+     */
+    select?: BranchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Branch
+     */
+    omit?: BranchOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BranchInclude<ExtArgs> | null
+    where?: BranchWhereInput
+  }
+
+  /**
    * Order.orderProducts
    */
   export type Order$orderProductsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -66865,6 +70317,1305 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: OrderInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model OrderIntent
+   */
+
+  export type AggregateOrderIntent = {
+    _count: OrderIntentCountAggregateOutputType | null
+    _avg: OrderIntentAvgAggregateOutputType | null
+    _sum: OrderIntentSumAggregateOutputType | null
+    _min: OrderIntentMinAggregateOutputType | null
+    _max: OrderIntentMaxAggregateOutputType | null
+  }
+
+  export type OrderIntentAvgAggregateOutputType = {
+    tipAmount: number | null
+    amount: number | null
+  }
+
+  export type OrderIntentSumAggregateOutputType = {
+    tipAmount: number | null
+    amount: number | null
+  }
+
+  export type OrderIntentMinAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    active: boolean | null
+    language: string | null
+    status: $Enums.OrderStatus | null
+    type: $Enums.OrderType | null
+    paymentMethod: $Enums.PaymentType | null
+    paymentProvider: $Enums.PaymentProvider | null
+    tipAmount: number | null
+    amount: number | null
+    customerId: string | null
+    deliveryAddressId: string | null
+  }
+
+  export type OrderIntentMaxAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    active: boolean | null
+    language: string | null
+    status: $Enums.OrderStatus | null
+    type: $Enums.OrderType | null
+    paymentMethod: $Enums.PaymentType | null
+    paymentProvider: $Enums.PaymentProvider | null
+    tipAmount: number | null
+    amount: number | null
+    customerId: string | null
+    deliveryAddressId: string | null
+  }
+
+  export type OrderIntentCountAggregateOutputType = {
+    id: number
+    createdAt: number
+    updatedAt: number
+    active: number
+    language: number
+    status: number
+    type: number
+    paymentMethod: number
+    paymentProvider: number
+    tipAmount: number
+    tags: number
+    progressiveDiscountSnapshot: number
+    amount: number
+    customerId: number
+    deliveryAddressId: number
+    _all: number
+  }
+
+
+  export type OrderIntentAvgAggregateInputType = {
+    tipAmount?: true
+    amount?: true
+  }
+
+  export type OrderIntentSumAggregateInputType = {
+    tipAmount?: true
+    amount?: true
+  }
+
+  export type OrderIntentMinAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    active?: true
+    language?: true
+    status?: true
+    type?: true
+    paymentMethod?: true
+    paymentProvider?: true
+    tipAmount?: true
+    amount?: true
+    customerId?: true
+    deliveryAddressId?: true
+  }
+
+  export type OrderIntentMaxAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    active?: true
+    language?: true
+    status?: true
+    type?: true
+    paymentMethod?: true
+    paymentProvider?: true
+    tipAmount?: true
+    amount?: true
+    customerId?: true
+    deliveryAddressId?: true
+  }
+
+  export type OrderIntentCountAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    active?: true
+    language?: true
+    status?: true
+    type?: true
+    paymentMethod?: true
+    paymentProvider?: true
+    tipAmount?: true
+    tags?: true
+    progressiveDiscountSnapshot?: true
+    amount?: true
+    customerId?: true
+    deliveryAddressId?: true
+    _all?: true
+  }
+
+  export type OrderIntentAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which OrderIntent to aggregate.
+     */
+    where?: OrderIntentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OrderIntents to fetch.
+     */
+    orderBy?: OrderIntentOrderByWithRelationInput | OrderIntentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: OrderIntentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OrderIntents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OrderIntents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned OrderIntents
+    **/
+    _count?: true | OrderIntentCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: OrderIntentAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: OrderIntentSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: OrderIntentMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: OrderIntentMaxAggregateInputType
+  }
+
+  export type GetOrderIntentAggregateType<T extends OrderIntentAggregateArgs> = {
+        [P in keyof T & keyof AggregateOrderIntent]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateOrderIntent[P]>
+      : GetScalarType<T[P], AggregateOrderIntent[P]>
+  }
+
+
+
+
+  export type OrderIntentGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OrderIntentWhereInput
+    orderBy?: OrderIntentOrderByWithAggregationInput | OrderIntentOrderByWithAggregationInput[]
+    by: OrderIntentScalarFieldEnum[] | OrderIntentScalarFieldEnum
+    having?: OrderIntentScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: OrderIntentCountAggregateInputType | true
+    _avg?: OrderIntentAvgAggregateInputType
+    _sum?: OrderIntentSumAggregateInputType
+    _min?: OrderIntentMinAggregateInputType
+    _max?: OrderIntentMaxAggregateInputType
+  }
+
+  export type OrderIntentGroupByOutputType = {
+    id: string
+    createdAt: Date
+    updatedAt: Date
+    active: boolean
+    language: string | null
+    status: $Enums.OrderStatus
+    type: $Enums.OrderType | null
+    paymentMethod: $Enums.PaymentType
+    paymentProvider: $Enums.PaymentProvider | null
+    tipAmount: number | null
+    tags: string[]
+    progressiveDiscountSnapshot: JsonValue | null
+    amount: number | null
+    customerId: string | null
+    deliveryAddressId: string | null
+    _count: OrderIntentCountAggregateOutputType | null
+    _avg: OrderIntentAvgAggregateOutputType | null
+    _sum: OrderIntentSumAggregateOutputType | null
+    _min: OrderIntentMinAggregateOutputType | null
+    _max: OrderIntentMaxAggregateOutputType | null
+  }
+
+  type GetOrderIntentGroupByPayload<T extends OrderIntentGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<OrderIntentGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof OrderIntentGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], OrderIntentGroupByOutputType[P]>
+            : GetScalarType<T[P], OrderIntentGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type OrderIntentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    active?: boolean
+    language?: boolean
+    status?: boolean
+    type?: boolean
+    paymentMethod?: boolean
+    paymentProvider?: boolean
+    tipAmount?: boolean
+    tags?: boolean
+    progressiveDiscountSnapshot?: boolean
+    amount?: boolean
+    customerId?: boolean
+    deliveryAddressId?: boolean
+    customer?: boolean | OrderIntent$customerArgs<ExtArgs>
+    deliveryAddress?: boolean | OrderIntent$deliveryAddressArgs<ExtArgs>
+    orderProducts?: boolean | OrderIntent$orderProductsArgs<ExtArgs>
+    _count?: boolean | OrderIntentCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["orderIntent"]>
+
+  export type OrderIntentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    active?: boolean
+    language?: boolean
+    status?: boolean
+    type?: boolean
+    paymentMethod?: boolean
+    paymentProvider?: boolean
+    tipAmount?: boolean
+    tags?: boolean
+    progressiveDiscountSnapshot?: boolean
+    amount?: boolean
+    customerId?: boolean
+    deliveryAddressId?: boolean
+    customer?: boolean | OrderIntent$customerArgs<ExtArgs>
+    deliveryAddress?: boolean | OrderIntent$deliveryAddressArgs<ExtArgs>
+  }, ExtArgs["result"]["orderIntent"]>
+
+  export type OrderIntentSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    active?: boolean
+    language?: boolean
+    status?: boolean
+    type?: boolean
+    paymentMethod?: boolean
+    paymentProvider?: boolean
+    tipAmount?: boolean
+    tags?: boolean
+    progressiveDiscountSnapshot?: boolean
+    amount?: boolean
+    customerId?: boolean
+    deliveryAddressId?: boolean
+    customer?: boolean | OrderIntent$customerArgs<ExtArgs>
+    deliveryAddress?: boolean | OrderIntent$deliveryAddressArgs<ExtArgs>
+  }, ExtArgs["result"]["orderIntent"]>
+
+  export type OrderIntentSelectScalar = {
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    active?: boolean
+    language?: boolean
+    status?: boolean
+    type?: boolean
+    paymentMethod?: boolean
+    paymentProvider?: boolean
+    tipAmount?: boolean
+    tags?: boolean
+    progressiveDiscountSnapshot?: boolean
+    amount?: boolean
+    customerId?: boolean
+    deliveryAddressId?: boolean
+  }
+
+  export type OrderIntentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "active" | "language" | "status" | "type" | "paymentMethod" | "paymentProvider" | "tipAmount" | "tags" | "progressiveDiscountSnapshot" | "amount" | "customerId" | "deliveryAddressId", ExtArgs["result"]["orderIntent"]>
+  export type OrderIntentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    customer?: boolean | OrderIntent$customerArgs<ExtArgs>
+    deliveryAddress?: boolean | OrderIntent$deliveryAddressArgs<ExtArgs>
+    orderProducts?: boolean | OrderIntent$orderProductsArgs<ExtArgs>
+    _count?: boolean | OrderIntentCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type OrderIntentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    customer?: boolean | OrderIntent$customerArgs<ExtArgs>
+    deliveryAddress?: boolean | OrderIntent$deliveryAddressArgs<ExtArgs>
+  }
+  export type OrderIntentIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    customer?: boolean | OrderIntent$customerArgs<ExtArgs>
+    deliveryAddress?: boolean | OrderIntent$deliveryAddressArgs<ExtArgs>
+  }
+
+  export type $OrderIntentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "OrderIntent"
+    objects: {
+      customer: Prisma.$CustomerPayload<ExtArgs> | null
+      deliveryAddress: Prisma.$DeliveryAddressPayload<ExtArgs> | null
+      orderProducts: Prisma.$OrderIntentProductPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      createdAt: Date
+      updatedAt: Date
+      active: boolean
+      language: string | null
+      status: $Enums.OrderStatus
+      type: $Enums.OrderType | null
+      paymentMethod: $Enums.PaymentType
+      paymentProvider: $Enums.PaymentProvider | null
+      tipAmount: number | null
+      tags: string[]
+      progressiveDiscountSnapshot: Prisma.JsonValue | null
+      amount: number | null
+      customerId: string | null
+      deliveryAddressId: string | null
+    }, ExtArgs["result"]["orderIntent"]>
+    composites: {}
+  }
+
+  type OrderIntentGetPayload<S extends boolean | null | undefined | OrderIntentDefaultArgs> = $Result.GetResult<Prisma.$OrderIntentPayload, S>
+
+  type OrderIntentCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<OrderIntentFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: OrderIntentCountAggregateInputType | true
+    }
+
+  export interface OrderIntentDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['OrderIntent'], meta: { name: 'OrderIntent' } }
+    /**
+     * Find zero or one OrderIntent that matches the filter.
+     * @param {OrderIntentFindUniqueArgs} args - Arguments to find a OrderIntent
+     * @example
+     * // Get one OrderIntent
+     * const orderIntent = await prisma.orderIntent.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends OrderIntentFindUniqueArgs>(args: SelectSubset<T, OrderIntentFindUniqueArgs<ExtArgs>>): Prisma__OrderIntentClient<$Result.GetResult<Prisma.$OrderIntentPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one OrderIntent that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {OrderIntentFindUniqueOrThrowArgs} args - Arguments to find a OrderIntent
+     * @example
+     * // Get one OrderIntent
+     * const orderIntent = await prisma.orderIntent.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends OrderIntentFindUniqueOrThrowArgs>(args: SelectSubset<T, OrderIntentFindUniqueOrThrowArgs<ExtArgs>>): Prisma__OrderIntentClient<$Result.GetResult<Prisma.$OrderIntentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first OrderIntent that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrderIntentFindFirstArgs} args - Arguments to find a OrderIntent
+     * @example
+     * // Get one OrderIntent
+     * const orderIntent = await prisma.orderIntent.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends OrderIntentFindFirstArgs>(args?: SelectSubset<T, OrderIntentFindFirstArgs<ExtArgs>>): Prisma__OrderIntentClient<$Result.GetResult<Prisma.$OrderIntentPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first OrderIntent that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrderIntentFindFirstOrThrowArgs} args - Arguments to find a OrderIntent
+     * @example
+     * // Get one OrderIntent
+     * const orderIntent = await prisma.orderIntent.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends OrderIntentFindFirstOrThrowArgs>(args?: SelectSubset<T, OrderIntentFindFirstOrThrowArgs<ExtArgs>>): Prisma__OrderIntentClient<$Result.GetResult<Prisma.$OrderIntentPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more OrderIntents that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrderIntentFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all OrderIntents
+     * const orderIntents = await prisma.orderIntent.findMany()
+     * 
+     * // Get first 10 OrderIntents
+     * const orderIntents = await prisma.orderIntent.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const orderIntentWithIdOnly = await prisma.orderIntent.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends OrderIntentFindManyArgs>(args?: SelectSubset<T, OrderIntentFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderIntentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a OrderIntent.
+     * @param {OrderIntentCreateArgs} args - Arguments to create a OrderIntent.
+     * @example
+     * // Create one OrderIntent
+     * const OrderIntent = await prisma.orderIntent.create({
+     *   data: {
+     *     // ... data to create a OrderIntent
+     *   }
+     * })
+     * 
+     */
+    create<T extends OrderIntentCreateArgs>(args: SelectSubset<T, OrderIntentCreateArgs<ExtArgs>>): Prisma__OrderIntentClient<$Result.GetResult<Prisma.$OrderIntentPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many OrderIntents.
+     * @param {OrderIntentCreateManyArgs} args - Arguments to create many OrderIntents.
+     * @example
+     * // Create many OrderIntents
+     * const orderIntent = await prisma.orderIntent.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends OrderIntentCreateManyArgs>(args?: SelectSubset<T, OrderIntentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many OrderIntents and returns the data saved in the database.
+     * @param {OrderIntentCreateManyAndReturnArgs} args - Arguments to create many OrderIntents.
+     * @example
+     * // Create many OrderIntents
+     * const orderIntent = await prisma.orderIntent.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many OrderIntents and only return the `id`
+     * const orderIntentWithIdOnly = await prisma.orderIntent.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends OrderIntentCreateManyAndReturnArgs>(args?: SelectSubset<T, OrderIntentCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderIntentPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a OrderIntent.
+     * @param {OrderIntentDeleteArgs} args - Arguments to delete one OrderIntent.
+     * @example
+     * // Delete one OrderIntent
+     * const OrderIntent = await prisma.orderIntent.delete({
+     *   where: {
+     *     // ... filter to delete one OrderIntent
+     *   }
+     * })
+     * 
+     */
+    delete<T extends OrderIntentDeleteArgs>(args: SelectSubset<T, OrderIntentDeleteArgs<ExtArgs>>): Prisma__OrderIntentClient<$Result.GetResult<Prisma.$OrderIntentPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one OrderIntent.
+     * @param {OrderIntentUpdateArgs} args - Arguments to update one OrderIntent.
+     * @example
+     * // Update one OrderIntent
+     * const orderIntent = await prisma.orderIntent.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends OrderIntentUpdateArgs>(args: SelectSubset<T, OrderIntentUpdateArgs<ExtArgs>>): Prisma__OrderIntentClient<$Result.GetResult<Prisma.$OrderIntentPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more OrderIntents.
+     * @param {OrderIntentDeleteManyArgs} args - Arguments to filter OrderIntents to delete.
+     * @example
+     * // Delete a few OrderIntents
+     * const { count } = await prisma.orderIntent.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends OrderIntentDeleteManyArgs>(args?: SelectSubset<T, OrderIntentDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more OrderIntents.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrderIntentUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many OrderIntents
+     * const orderIntent = await prisma.orderIntent.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends OrderIntentUpdateManyArgs>(args: SelectSubset<T, OrderIntentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more OrderIntents and returns the data updated in the database.
+     * @param {OrderIntentUpdateManyAndReturnArgs} args - Arguments to update many OrderIntents.
+     * @example
+     * // Update many OrderIntents
+     * const orderIntent = await prisma.orderIntent.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more OrderIntents and only return the `id`
+     * const orderIntentWithIdOnly = await prisma.orderIntent.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends OrderIntentUpdateManyAndReturnArgs>(args: SelectSubset<T, OrderIntentUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderIntentPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one OrderIntent.
+     * @param {OrderIntentUpsertArgs} args - Arguments to update or create a OrderIntent.
+     * @example
+     * // Update or create a OrderIntent
+     * const orderIntent = await prisma.orderIntent.upsert({
+     *   create: {
+     *     // ... data to create a OrderIntent
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the OrderIntent we want to update
+     *   }
+     * })
+     */
+    upsert<T extends OrderIntentUpsertArgs>(args: SelectSubset<T, OrderIntentUpsertArgs<ExtArgs>>): Prisma__OrderIntentClient<$Result.GetResult<Prisma.$OrderIntentPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of OrderIntents.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrderIntentCountArgs} args - Arguments to filter OrderIntents to count.
+     * @example
+     * // Count the number of OrderIntents
+     * const count = await prisma.orderIntent.count({
+     *   where: {
+     *     // ... the filter for the OrderIntents we want to count
+     *   }
+     * })
+    **/
+    count<T extends OrderIntentCountArgs>(
+      args?: Subset<T, OrderIntentCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], OrderIntentCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a OrderIntent.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrderIntentAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends OrderIntentAggregateArgs>(args: Subset<T, OrderIntentAggregateArgs>): Prisma.PrismaPromise<GetOrderIntentAggregateType<T>>
+
+    /**
+     * Group by OrderIntent.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrderIntentGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends OrderIntentGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: OrderIntentGroupByArgs['orderBy'] }
+        : { orderBy?: OrderIntentGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, OrderIntentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetOrderIntentGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the OrderIntent model
+   */
+  readonly fields: OrderIntentFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for OrderIntent.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__OrderIntentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    customer<T extends OrderIntent$customerArgs<ExtArgs> = {}>(args?: Subset<T, OrderIntent$customerArgs<ExtArgs>>): Prisma__CustomerClient<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    deliveryAddress<T extends OrderIntent$deliveryAddressArgs<ExtArgs> = {}>(args?: Subset<T, OrderIntent$deliveryAddressArgs<ExtArgs>>): Prisma__DeliveryAddressClient<$Result.GetResult<Prisma.$DeliveryAddressPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    orderProducts<T extends OrderIntent$orderProductsArgs<ExtArgs> = {}>(args?: Subset<T, OrderIntent$orderProductsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderIntentProductPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the OrderIntent model
+   */
+  interface OrderIntentFieldRefs {
+    readonly id: FieldRef<"OrderIntent", 'String'>
+    readonly createdAt: FieldRef<"OrderIntent", 'DateTime'>
+    readonly updatedAt: FieldRef<"OrderIntent", 'DateTime'>
+    readonly active: FieldRef<"OrderIntent", 'Boolean'>
+    readonly language: FieldRef<"OrderIntent", 'String'>
+    readonly status: FieldRef<"OrderIntent", 'OrderStatus'>
+    readonly type: FieldRef<"OrderIntent", 'OrderType'>
+    readonly paymentMethod: FieldRef<"OrderIntent", 'PaymentType'>
+    readonly paymentProvider: FieldRef<"OrderIntent", 'PaymentProvider'>
+    readonly tipAmount: FieldRef<"OrderIntent", 'Int'>
+    readonly tags: FieldRef<"OrderIntent", 'String[]'>
+    readonly progressiveDiscountSnapshot: FieldRef<"OrderIntent", 'Json'>
+    readonly amount: FieldRef<"OrderIntent", 'Int'>
+    readonly customerId: FieldRef<"OrderIntent", 'String'>
+    readonly deliveryAddressId: FieldRef<"OrderIntent", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * OrderIntent findUnique
+   */
+  export type OrderIntentFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderIntent
+     */
+    select?: OrderIntentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderIntent
+     */
+    omit?: OrderIntentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderIntentInclude<ExtArgs> | null
+    /**
+     * Filter, which OrderIntent to fetch.
+     */
+    where: OrderIntentWhereUniqueInput
+  }
+
+  /**
+   * OrderIntent findUniqueOrThrow
+   */
+  export type OrderIntentFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderIntent
+     */
+    select?: OrderIntentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderIntent
+     */
+    omit?: OrderIntentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderIntentInclude<ExtArgs> | null
+    /**
+     * Filter, which OrderIntent to fetch.
+     */
+    where: OrderIntentWhereUniqueInput
+  }
+
+  /**
+   * OrderIntent findFirst
+   */
+  export type OrderIntentFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderIntent
+     */
+    select?: OrderIntentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderIntent
+     */
+    omit?: OrderIntentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderIntentInclude<ExtArgs> | null
+    /**
+     * Filter, which OrderIntent to fetch.
+     */
+    where?: OrderIntentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OrderIntents to fetch.
+     */
+    orderBy?: OrderIntentOrderByWithRelationInput | OrderIntentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for OrderIntents.
+     */
+    cursor?: OrderIntentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OrderIntents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OrderIntents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of OrderIntents.
+     */
+    distinct?: OrderIntentScalarFieldEnum | OrderIntentScalarFieldEnum[]
+  }
+
+  /**
+   * OrderIntent findFirstOrThrow
+   */
+  export type OrderIntentFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderIntent
+     */
+    select?: OrderIntentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderIntent
+     */
+    omit?: OrderIntentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderIntentInclude<ExtArgs> | null
+    /**
+     * Filter, which OrderIntent to fetch.
+     */
+    where?: OrderIntentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OrderIntents to fetch.
+     */
+    orderBy?: OrderIntentOrderByWithRelationInput | OrderIntentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for OrderIntents.
+     */
+    cursor?: OrderIntentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OrderIntents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OrderIntents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of OrderIntents.
+     */
+    distinct?: OrderIntentScalarFieldEnum | OrderIntentScalarFieldEnum[]
+  }
+
+  /**
+   * OrderIntent findMany
+   */
+  export type OrderIntentFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderIntent
+     */
+    select?: OrderIntentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderIntent
+     */
+    omit?: OrderIntentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderIntentInclude<ExtArgs> | null
+    /**
+     * Filter, which OrderIntents to fetch.
+     */
+    where?: OrderIntentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OrderIntents to fetch.
+     */
+    orderBy?: OrderIntentOrderByWithRelationInput | OrderIntentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing OrderIntents.
+     */
+    cursor?: OrderIntentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OrderIntents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OrderIntents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of OrderIntents.
+     */
+    distinct?: OrderIntentScalarFieldEnum | OrderIntentScalarFieldEnum[]
+  }
+
+  /**
+   * OrderIntent create
+   */
+  export type OrderIntentCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderIntent
+     */
+    select?: OrderIntentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderIntent
+     */
+    omit?: OrderIntentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderIntentInclude<ExtArgs> | null
+    /**
+     * The data needed to create a OrderIntent.
+     */
+    data: XOR<OrderIntentCreateInput, OrderIntentUncheckedCreateInput>
+  }
+
+  /**
+   * OrderIntent createMany
+   */
+  export type OrderIntentCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many OrderIntents.
+     */
+    data: OrderIntentCreateManyInput | OrderIntentCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * OrderIntent createManyAndReturn
+   */
+  export type OrderIntentCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderIntent
+     */
+    select?: OrderIntentSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderIntent
+     */
+    omit?: OrderIntentOmit<ExtArgs> | null
+    /**
+     * The data used to create many OrderIntents.
+     */
+    data: OrderIntentCreateManyInput | OrderIntentCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderIntentIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * OrderIntent update
+   */
+  export type OrderIntentUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderIntent
+     */
+    select?: OrderIntentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderIntent
+     */
+    omit?: OrderIntentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderIntentInclude<ExtArgs> | null
+    /**
+     * The data needed to update a OrderIntent.
+     */
+    data: XOR<OrderIntentUpdateInput, OrderIntentUncheckedUpdateInput>
+    /**
+     * Choose, which OrderIntent to update.
+     */
+    where: OrderIntentWhereUniqueInput
+  }
+
+  /**
+   * OrderIntent updateMany
+   */
+  export type OrderIntentUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update OrderIntents.
+     */
+    data: XOR<OrderIntentUpdateManyMutationInput, OrderIntentUncheckedUpdateManyInput>
+    /**
+     * Filter which OrderIntents to update
+     */
+    where?: OrderIntentWhereInput
+    /**
+     * Limit how many OrderIntents to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * OrderIntent updateManyAndReturn
+   */
+  export type OrderIntentUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderIntent
+     */
+    select?: OrderIntentSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderIntent
+     */
+    omit?: OrderIntentOmit<ExtArgs> | null
+    /**
+     * The data used to update OrderIntents.
+     */
+    data: XOR<OrderIntentUpdateManyMutationInput, OrderIntentUncheckedUpdateManyInput>
+    /**
+     * Filter which OrderIntents to update
+     */
+    where?: OrderIntentWhereInput
+    /**
+     * Limit how many OrderIntents to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderIntentIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * OrderIntent upsert
+   */
+  export type OrderIntentUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderIntent
+     */
+    select?: OrderIntentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderIntent
+     */
+    omit?: OrderIntentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderIntentInclude<ExtArgs> | null
+    /**
+     * The filter to search for the OrderIntent to update in case it exists.
+     */
+    where: OrderIntentWhereUniqueInput
+    /**
+     * In case the OrderIntent found by the `where` argument doesn't exist, create a new OrderIntent with this data.
+     */
+    create: XOR<OrderIntentCreateInput, OrderIntentUncheckedCreateInput>
+    /**
+     * In case the OrderIntent was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<OrderIntentUpdateInput, OrderIntentUncheckedUpdateInput>
+  }
+
+  /**
+   * OrderIntent delete
+   */
+  export type OrderIntentDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderIntent
+     */
+    select?: OrderIntentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderIntent
+     */
+    omit?: OrderIntentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderIntentInclude<ExtArgs> | null
+    /**
+     * Filter which OrderIntent to delete.
+     */
+    where: OrderIntentWhereUniqueInput
+  }
+
+  /**
+   * OrderIntent deleteMany
+   */
+  export type OrderIntentDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which OrderIntents to delete
+     */
+    where?: OrderIntentWhereInput
+    /**
+     * Limit how many OrderIntents to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * OrderIntent.customer
+   */
+  export type OrderIntent$customerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Customer
+     */
+    select?: CustomerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Customer
+     */
+    omit?: CustomerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerInclude<ExtArgs> | null
+    where?: CustomerWhereInput
+  }
+
+  /**
+   * OrderIntent.deliveryAddress
+   */
+  export type OrderIntent$deliveryAddressArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DeliveryAddress
+     */
+    select?: DeliveryAddressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DeliveryAddress
+     */
+    omit?: DeliveryAddressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DeliveryAddressInclude<ExtArgs> | null
+    where?: DeliveryAddressWhereInput
+  }
+
+  /**
+   * OrderIntent.orderProducts
+   */
+  export type OrderIntent$orderProductsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderIntentProduct
+     */
+    select?: OrderIntentProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderIntentProduct
+     */
+    omit?: OrderIntentProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderIntentProductInclude<ExtArgs> | null
+    where?: OrderIntentProductWhereInput
+    orderBy?: OrderIntentProductOrderByWithRelationInput | OrderIntentProductOrderByWithRelationInput[]
+    cursor?: OrderIntentProductWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: OrderIntentProductScalarFieldEnum | OrderIntentProductScalarFieldEnum[]
+  }
+
+  /**
+   * OrderIntent without action
+   */
+  export type OrderIntentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderIntent
+     */
+    select?: OrderIntentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderIntent
+     */
+    omit?: OrderIntentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderIntentInclude<ExtArgs> | null
   }
 
 
@@ -70714,6 +75465,1188 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: OrderProductsInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model OrderIntentProduct
+   */
+
+  export type AggregateOrderIntentProduct = {
+    _count: OrderIntentProductCountAggregateOutputType | null
+    _avg: OrderIntentProductAvgAggregateOutputType | null
+    _sum: OrderIntentProductSumAggregateOutputType | null
+    _min: OrderIntentProductMinAggregateOutputType | null
+    _max: OrderIntentProductMaxAggregateOutputType | null
+  }
+
+  export type OrderIntentProductAvgAggregateOutputType = {
+    quantity: number | null
+    fullAmount: number | null
+    amount: number | null
+  }
+
+  export type OrderIntentProductSumAggregateOutputType = {
+    quantity: number | null
+    fullAmount: number | null
+    amount: number | null
+  }
+
+  export type OrderIntentProductMinAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    orderIntentId: string | null
+    productId: string | null
+    quantity: number | null
+    comments: string | null
+    fullAmount: number | null
+    amount: number | null
+  }
+
+  export type OrderIntentProductMaxAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    orderIntentId: string | null
+    productId: string | null
+    quantity: number | null
+    comments: string | null
+    fullAmount: number | null
+    amount: number | null
+  }
+
+  export type OrderIntentProductCountAggregateOutputType = {
+    id: number
+    createdAt: number
+    orderIntentId: number
+    productId: number
+    quantity: number
+    comments: number
+    fullAmount: number
+    amount: number
+    _all: number
+  }
+
+
+  export type OrderIntentProductAvgAggregateInputType = {
+    quantity?: true
+    fullAmount?: true
+    amount?: true
+  }
+
+  export type OrderIntentProductSumAggregateInputType = {
+    quantity?: true
+    fullAmount?: true
+    amount?: true
+  }
+
+  export type OrderIntentProductMinAggregateInputType = {
+    id?: true
+    createdAt?: true
+    orderIntentId?: true
+    productId?: true
+    quantity?: true
+    comments?: true
+    fullAmount?: true
+    amount?: true
+  }
+
+  export type OrderIntentProductMaxAggregateInputType = {
+    id?: true
+    createdAt?: true
+    orderIntentId?: true
+    productId?: true
+    quantity?: true
+    comments?: true
+    fullAmount?: true
+    amount?: true
+  }
+
+  export type OrderIntentProductCountAggregateInputType = {
+    id?: true
+    createdAt?: true
+    orderIntentId?: true
+    productId?: true
+    quantity?: true
+    comments?: true
+    fullAmount?: true
+    amount?: true
+    _all?: true
+  }
+
+  export type OrderIntentProductAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which OrderIntentProduct to aggregate.
+     */
+    where?: OrderIntentProductWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OrderIntentProducts to fetch.
+     */
+    orderBy?: OrderIntentProductOrderByWithRelationInput | OrderIntentProductOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: OrderIntentProductWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OrderIntentProducts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OrderIntentProducts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned OrderIntentProducts
+    **/
+    _count?: true | OrderIntentProductCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: OrderIntentProductAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: OrderIntentProductSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: OrderIntentProductMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: OrderIntentProductMaxAggregateInputType
+  }
+
+  export type GetOrderIntentProductAggregateType<T extends OrderIntentProductAggregateArgs> = {
+        [P in keyof T & keyof AggregateOrderIntentProduct]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateOrderIntentProduct[P]>
+      : GetScalarType<T[P], AggregateOrderIntentProduct[P]>
+  }
+
+
+
+
+  export type OrderIntentProductGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OrderIntentProductWhereInput
+    orderBy?: OrderIntentProductOrderByWithAggregationInput | OrderIntentProductOrderByWithAggregationInput[]
+    by: OrderIntentProductScalarFieldEnum[] | OrderIntentProductScalarFieldEnum
+    having?: OrderIntentProductScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: OrderIntentProductCountAggregateInputType | true
+    _avg?: OrderIntentProductAvgAggregateInputType
+    _sum?: OrderIntentProductSumAggregateInputType
+    _min?: OrderIntentProductMinAggregateInputType
+    _max?: OrderIntentProductMaxAggregateInputType
+  }
+
+  export type OrderIntentProductGroupByOutputType = {
+    id: string
+    createdAt: Date
+    orderIntentId: string
+    productId: string
+    quantity: number
+    comments: string | null
+    fullAmount: number | null
+    amount: number | null
+    _count: OrderIntentProductCountAggregateOutputType | null
+    _avg: OrderIntentProductAvgAggregateOutputType | null
+    _sum: OrderIntentProductSumAggregateOutputType | null
+    _min: OrderIntentProductMinAggregateOutputType | null
+    _max: OrderIntentProductMaxAggregateOutputType | null
+  }
+
+  type GetOrderIntentProductGroupByPayload<T extends OrderIntentProductGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<OrderIntentProductGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof OrderIntentProductGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], OrderIntentProductGroupByOutputType[P]>
+            : GetScalarType<T[P], OrderIntentProductGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type OrderIntentProductSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    orderIntentId?: boolean
+    productId?: boolean
+    quantity?: boolean
+    comments?: boolean
+    fullAmount?: boolean
+    amount?: boolean
+    orderIntent?: boolean | OrderIntentDefaultArgs<ExtArgs>
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+    modifierGroupItems?: boolean | OrderIntentProduct$modifierGroupItemsArgs<ExtArgs>
+    _count?: boolean | OrderIntentProductCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["orderIntentProduct"]>
+
+  export type OrderIntentProductSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    orderIntentId?: boolean
+    productId?: boolean
+    quantity?: boolean
+    comments?: boolean
+    fullAmount?: boolean
+    amount?: boolean
+    orderIntent?: boolean | OrderIntentDefaultArgs<ExtArgs>
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["orderIntentProduct"]>
+
+  export type OrderIntentProductSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    orderIntentId?: boolean
+    productId?: boolean
+    quantity?: boolean
+    comments?: boolean
+    fullAmount?: boolean
+    amount?: boolean
+    orderIntent?: boolean | OrderIntentDefaultArgs<ExtArgs>
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["orderIntentProduct"]>
+
+  export type OrderIntentProductSelectScalar = {
+    id?: boolean
+    createdAt?: boolean
+    orderIntentId?: boolean
+    productId?: boolean
+    quantity?: boolean
+    comments?: boolean
+    fullAmount?: boolean
+    amount?: boolean
+  }
+
+  export type OrderIntentProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "orderIntentId" | "productId" | "quantity" | "comments" | "fullAmount" | "amount", ExtArgs["result"]["orderIntentProduct"]>
+  export type OrderIntentProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    orderIntent?: boolean | OrderIntentDefaultArgs<ExtArgs>
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+    modifierGroupItems?: boolean | OrderIntentProduct$modifierGroupItemsArgs<ExtArgs>
+    _count?: boolean | OrderIntentProductCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type OrderIntentProductIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    orderIntent?: boolean | OrderIntentDefaultArgs<ExtArgs>
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }
+  export type OrderIntentProductIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    orderIntent?: boolean | OrderIntentDefaultArgs<ExtArgs>
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }
+
+  export type $OrderIntentProductPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "OrderIntentProduct"
+    objects: {
+      orderIntent: Prisma.$OrderIntentPayload<ExtArgs>
+      product: Prisma.$ProductPayload<ExtArgs>
+      modifierGroupItems: Prisma.$ModifierGroupItemPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      createdAt: Date
+      orderIntentId: string
+      productId: string
+      quantity: number
+      comments: string | null
+      fullAmount: number | null
+      amount: number | null
+    }, ExtArgs["result"]["orderIntentProduct"]>
+    composites: {}
+  }
+
+  type OrderIntentProductGetPayload<S extends boolean | null | undefined | OrderIntentProductDefaultArgs> = $Result.GetResult<Prisma.$OrderIntentProductPayload, S>
+
+  type OrderIntentProductCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<OrderIntentProductFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: OrderIntentProductCountAggregateInputType | true
+    }
+
+  export interface OrderIntentProductDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['OrderIntentProduct'], meta: { name: 'OrderIntentProduct' } }
+    /**
+     * Find zero or one OrderIntentProduct that matches the filter.
+     * @param {OrderIntentProductFindUniqueArgs} args - Arguments to find a OrderIntentProduct
+     * @example
+     * // Get one OrderIntentProduct
+     * const orderIntentProduct = await prisma.orderIntentProduct.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends OrderIntentProductFindUniqueArgs>(args: SelectSubset<T, OrderIntentProductFindUniqueArgs<ExtArgs>>): Prisma__OrderIntentProductClient<$Result.GetResult<Prisma.$OrderIntentProductPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one OrderIntentProduct that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {OrderIntentProductFindUniqueOrThrowArgs} args - Arguments to find a OrderIntentProduct
+     * @example
+     * // Get one OrderIntentProduct
+     * const orderIntentProduct = await prisma.orderIntentProduct.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends OrderIntentProductFindUniqueOrThrowArgs>(args: SelectSubset<T, OrderIntentProductFindUniqueOrThrowArgs<ExtArgs>>): Prisma__OrderIntentProductClient<$Result.GetResult<Prisma.$OrderIntentProductPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first OrderIntentProduct that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrderIntentProductFindFirstArgs} args - Arguments to find a OrderIntentProduct
+     * @example
+     * // Get one OrderIntentProduct
+     * const orderIntentProduct = await prisma.orderIntentProduct.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends OrderIntentProductFindFirstArgs>(args?: SelectSubset<T, OrderIntentProductFindFirstArgs<ExtArgs>>): Prisma__OrderIntentProductClient<$Result.GetResult<Prisma.$OrderIntentProductPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first OrderIntentProduct that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrderIntentProductFindFirstOrThrowArgs} args - Arguments to find a OrderIntentProduct
+     * @example
+     * // Get one OrderIntentProduct
+     * const orderIntentProduct = await prisma.orderIntentProduct.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends OrderIntentProductFindFirstOrThrowArgs>(args?: SelectSubset<T, OrderIntentProductFindFirstOrThrowArgs<ExtArgs>>): Prisma__OrderIntentProductClient<$Result.GetResult<Prisma.$OrderIntentProductPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more OrderIntentProducts that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrderIntentProductFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all OrderIntentProducts
+     * const orderIntentProducts = await prisma.orderIntentProduct.findMany()
+     * 
+     * // Get first 10 OrderIntentProducts
+     * const orderIntentProducts = await prisma.orderIntentProduct.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const orderIntentProductWithIdOnly = await prisma.orderIntentProduct.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends OrderIntentProductFindManyArgs>(args?: SelectSubset<T, OrderIntentProductFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderIntentProductPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a OrderIntentProduct.
+     * @param {OrderIntentProductCreateArgs} args - Arguments to create a OrderIntentProduct.
+     * @example
+     * // Create one OrderIntentProduct
+     * const OrderIntentProduct = await prisma.orderIntentProduct.create({
+     *   data: {
+     *     // ... data to create a OrderIntentProduct
+     *   }
+     * })
+     * 
+     */
+    create<T extends OrderIntentProductCreateArgs>(args: SelectSubset<T, OrderIntentProductCreateArgs<ExtArgs>>): Prisma__OrderIntentProductClient<$Result.GetResult<Prisma.$OrderIntentProductPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many OrderIntentProducts.
+     * @param {OrderIntentProductCreateManyArgs} args - Arguments to create many OrderIntentProducts.
+     * @example
+     * // Create many OrderIntentProducts
+     * const orderIntentProduct = await prisma.orderIntentProduct.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends OrderIntentProductCreateManyArgs>(args?: SelectSubset<T, OrderIntentProductCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many OrderIntentProducts and returns the data saved in the database.
+     * @param {OrderIntentProductCreateManyAndReturnArgs} args - Arguments to create many OrderIntentProducts.
+     * @example
+     * // Create many OrderIntentProducts
+     * const orderIntentProduct = await prisma.orderIntentProduct.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many OrderIntentProducts and only return the `id`
+     * const orderIntentProductWithIdOnly = await prisma.orderIntentProduct.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends OrderIntentProductCreateManyAndReturnArgs>(args?: SelectSubset<T, OrderIntentProductCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderIntentProductPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a OrderIntentProduct.
+     * @param {OrderIntentProductDeleteArgs} args - Arguments to delete one OrderIntentProduct.
+     * @example
+     * // Delete one OrderIntentProduct
+     * const OrderIntentProduct = await prisma.orderIntentProduct.delete({
+     *   where: {
+     *     // ... filter to delete one OrderIntentProduct
+     *   }
+     * })
+     * 
+     */
+    delete<T extends OrderIntentProductDeleteArgs>(args: SelectSubset<T, OrderIntentProductDeleteArgs<ExtArgs>>): Prisma__OrderIntentProductClient<$Result.GetResult<Prisma.$OrderIntentProductPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one OrderIntentProduct.
+     * @param {OrderIntentProductUpdateArgs} args - Arguments to update one OrderIntentProduct.
+     * @example
+     * // Update one OrderIntentProduct
+     * const orderIntentProduct = await prisma.orderIntentProduct.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends OrderIntentProductUpdateArgs>(args: SelectSubset<T, OrderIntentProductUpdateArgs<ExtArgs>>): Prisma__OrderIntentProductClient<$Result.GetResult<Prisma.$OrderIntentProductPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more OrderIntentProducts.
+     * @param {OrderIntentProductDeleteManyArgs} args - Arguments to filter OrderIntentProducts to delete.
+     * @example
+     * // Delete a few OrderIntentProducts
+     * const { count } = await prisma.orderIntentProduct.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends OrderIntentProductDeleteManyArgs>(args?: SelectSubset<T, OrderIntentProductDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more OrderIntentProducts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrderIntentProductUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many OrderIntentProducts
+     * const orderIntentProduct = await prisma.orderIntentProduct.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends OrderIntentProductUpdateManyArgs>(args: SelectSubset<T, OrderIntentProductUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more OrderIntentProducts and returns the data updated in the database.
+     * @param {OrderIntentProductUpdateManyAndReturnArgs} args - Arguments to update many OrderIntentProducts.
+     * @example
+     * // Update many OrderIntentProducts
+     * const orderIntentProduct = await prisma.orderIntentProduct.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more OrderIntentProducts and only return the `id`
+     * const orderIntentProductWithIdOnly = await prisma.orderIntentProduct.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends OrderIntentProductUpdateManyAndReturnArgs>(args: SelectSubset<T, OrderIntentProductUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderIntentProductPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one OrderIntentProduct.
+     * @param {OrderIntentProductUpsertArgs} args - Arguments to update or create a OrderIntentProduct.
+     * @example
+     * // Update or create a OrderIntentProduct
+     * const orderIntentProduct = await prisma.orderIntentProduct.upsert({
+     *   create: {
+     *     // ... data to create a OrderIntentProduct
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the OrderIntentProduct we want to update
+     *   }
+     * })
+     */
+    upsert<T extends OrderIntentProductUpsertArgs>(args: SelectSubset<T, OrderIntentProductUpsertArgs<ExtArgs>>): Prisma__OrderIntentProductClient<$Result.GetResult<Prisma.$OrderIntentProductPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of OrderIntentProducts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrderIntentProductCountArgs} args - Arguments to filter OrderIntentProducts to count.
+     * @example
+     * // Count the number of OrderIntentProducts
+     * const count = await prisma.orderIntentProduct.count({
+     *   where: {
+     *     // ... the filter for the OrderIntentProducts we want to count
+     *   }
+     * })
+    **/
+    count<T extends OrderIntentProductCountArgs>(
+      args?: Subset<T, OrderIntentProductCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], OrderIntentProductCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a OrderIntentProduct.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrderIntentProductAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends OrderIntentProductAggregateArgs>(args: Subset<T, OrderIntentProductAggregateArgs>): Prisma.PrismaPromise<GetOrderIntentProductAggregateType<T>>
+
+    /**
+     * Group by OrderIntentProduct.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrderIntentProductGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends OrderIntentProductGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: OrderIntentProductGroupByArgs['orderBy'] }
+        : { orderBy?: OrderIntentProductGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, OrderIntentProductGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetOrderIntentProductGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the OrderIntentProduct model
+   */
+  readonly fields: OrderIntentProductFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for OrderIntentProduct.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__OrderIntentProductClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    orderIntent<T extends OrderIntentDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrderIntentDefaultArgs<ExtArgs>>): Prisma__OrderIntentClient<$Result.GetResult<Prisma.$OrderIntentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    product<T extends ProductDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProductDefaultArgs<ExtArgs>>): Prisma__ProductClient<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    modifierGroupItems<T extends OrderIntentProduct$modifierGroupItemsArgs<ExtArgs> = {}>(args?: Subset<T, OrderIntentProduct$modifierGroupItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ModifierGroupItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the OrderIntentProduct model
+   */
+  interface OrderIntentProductFieldRefs {
+    readonly id: FieldRef<"OrderIntentProduct", 'String'>
+    readonly createdAt: FieldRef<"OrderIntentProduct", 'DateTime'>
+    readonly orderIntentId: FieldRef<"OrderIntentProduct", 'String'>
+    readonly productId: FieldRef<"OrderIntentProduct", 'String'>
+    readonly quantity: FieldRef<"OrderIntentProduct", 'Int'>
+    readonly comments: FieldRef<"OrderIntentProduct", 'String'>
+    readonly fullAmount: FieldRef<"OrderIntentProduct", 'Int'>
+    readonly amount: FieldRef<"OrderIntentProduct", 'Int'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * OrderIntentProduct findUnique
+   */
+  export type OrderIntentProductFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderIntentProduct
+     */
+    select?: OrderIntentProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderIntentProduct
+     */
+    omit?: OrderIntentProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderIntentProductInclude<ExtArgs> | null
+    /**
+     * Filter, which OrderIntentProduct to fetch.
+     */
+    where: OrderIntentProductWhereUniqueInput
+  }
+
+  /**
+   * OrderIntentProduct findUniqueOrThrow
+   */
+  export type OrderIntentProductFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderIntentProduct
+     */
+    select?: OrderIntentProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderIntentProduct
+     */
+    omit?: OrderIntentProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderIntentProductInclude<ExtArgs> | null
+    /**
+     * Filter, which OrderIntentProduct to fetch.
+     */
+    where: OrderIntentProductWhereUniqueInput
+  }
+
+  /**
+   * OrderIntentProduct findFirst
+   */
+  export type OrderIntentProductFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderIntentProduct
+     */
+    select?: OrderIntentProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderIntentProduct
+     */
+    omit?: OrderIntentProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderIntentProductInclude<ExtArgs> | null
+    /**
+     * Filter, which OrderIntentProduct to fetch.
+     */
+    where?: OrderIntentProductWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OrderIntentProducts to fetch.
+     */
+    orderBy?: OrderIntentProductOrderByWithRelationInput | OrderIntentProductOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for OrderIntentProducts.
+     */
+    cursor?: OrderIntentProductWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OrderIntentProducts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OrderIntentProducts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of OrderIntentProducts.
+     */
+    distinct?: OrderIntentProductScalarFieldEnum | OrderIntentProductScalarFieldEnum[]
+  }
+
+  /**
+   * OrderIntentProduct findFirstOrThrow
+   */
+  export type OrderIntentProductFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderIntentProduct
+     */
+    select?: OrderIntentProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderIntentProduct
+     */
+    omit?: OrderIntentProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderIntentProductInclude<ExtArgs> | null
+    /**
+     * Filter, which OrderIntentProduct to fetch.
+     */
+    where?: OrderIntentProductWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OrderIntentProducts to fetch.
+     */
+    orderBy?: OrderIntentProductOrderByWithRelationInput | OrderIntentProductOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for OrderIntentProducts.
+     */
+    cursor?: OrderIntentProductWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OrderIntentProducts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OrderIntentProducts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of OrderIntentProducts.
+     */
+    distinct?: OrderIntentProductScalarFieldEnum | OrderIntentProductScalarFieldEnum[]
+  }
+
+  /**
+   * OrderIntentProduct findMany
+   */
+  export type OrderIntentProductFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderIntentProduct
+     */
+    select?: OrderIntentProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderIntentProduct
+     */
+    omit?: OrderIntentProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderIntentProductInclude<ExtArgs> | null
+    /**
+     * Filter, which OrderIntentProducts to fetch.
+     */
+    where?: OrderIntentProductWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OrderIntentProducts to fetch.
+     */
+    orderBy?: OrderIntentProductOrderByWithRelationInput | OrderIntentProductOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing OrderIntentProducts.
+     */
+    cursor?: OrderIntentProductWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OrderIntentProducts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OrderIntentProducts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of OrderIntentProducts.
+     */
+    distinct?: OrderIntentProductScalarFieldEnum | OrderIntentProductScalarFieldEnum[]
+  }
+
+  /**
+   * OrderIntentProduct create
+   */
+  export type OrderIntentProductCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderIntentProduct
+     */
+    select?: OrderIntentProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderIntentProduct
+     */
+    omit?: OrderIntentProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderIntentProductInclude<ExtArgs> | null
+    /**
+     * The data needed to create a OrderIntentProduct.
+     */
+    data: XOR<OrderIntentProductCreateInput, OrderIntentProductUncheckedCreateInput>
+  }
+
+  /**
+   * OrderIntentProduct createMany
+   */
+  export type OrderIntentProductCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many OrderIntentProducts.
+     */
+    data: OrderIntentProductCreateManyInput | OrderIntentProductCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * OrderIntentProduct createManyAndReturn
+   */
+  export type OrderIntentProductCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderIntentProduct
+     */
+    select?: OrderIntentProductSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderIntentProduct
+     */
+    omit?: OrderIntentProductOmit<ExtArgs> | null
+    /**
+     * The data used to create many OrderIntentProducts.
+     */
+    data: OrderIntentProductCreateManyInput | OrderIntentProductCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderIntentProductIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * OrderIntentProduct update
+   */
+  export type OrderIntentProductUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderIntentProduct
+     */
+    select?: OrderIntentProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderIntentProduct
+     */
+    omit?: OrderIntentProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderIntentProductInclude<ExtArgs> | null
+    /**
+     * The data needed to update a OrderIntentProduct.
+     */
+    data: XOR<OrderIntentProductUpdateInput, OrderIntentProductUncheckedUpdateInput>
+    /**
+     * Choose, which OrderIntentProduct to update.
+     */
+    where: OrderIntentProductWhereUniqueInput
+  }
+
+  /**
+   * OrderIntentProduct updateMany
+   */
+  export type OrderIntentProductUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update OrderIntentProducts.
+     */
+    data: XOR<OrderIntentProductUpdateManyMutationInput, OrderIntentProductUncheckedUpdateManyInput>
+    /**
+     * Filter which OrderIntentProducts to update
+     */
+    where?: OrderIntentProductWhereInput
+    /**
+     * Limit how many OrderIntentProducts to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * OrderIntentProduct updateManyAndReturn
+   */
+  export type OrderIntentProductUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderIntentProduct
+     */
+    select?: OrderIntentProductSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderIntentProduct
+     */
+    omit?: OrderIntentProductOmit<ExtArgs> | null
+    /**
+     * The data used to update OrderIntentProducts.
+     */
+    data: XOR<OrderIntentProductUpdateManyMutationInput, OrderIntentProductUncheckedUpdateManyInput>
+    /**
+     * Filter which OrderIntentProducts to update
+     */
+    where?: OrderIntentProductWhereInput
+    /**
+     * Limit how many OrderIntentProducts to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderIntentProductIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * OrderIntentProduct upsert
+   */
+  export type OrderIntentProductUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderIntentProduct
+     */
+    select?: OrderIntentProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderIntentProduct
+     */
+    omit?: OrderIntentProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderIntentProductInclude<ExtArgs> | null
+    /**
+     * The filter to search for the OrderIntentProduct to update in case it exists.
+     */
+    where: OrderIntentProductWhereUniqueInput
+    /**
+     * In case the OrderIntentProduct found by the `where` argument doesn't exist, create a new OrderIntentProduct with this data.
+     */
+    create: XOR<OrderIntentProductCreateInput, OrderIntentProductUncheckedCreateInput>
+    /**
+     * In case the OrderIntentProduct was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<OrderIntentProductUpdateInput, OrderIntentProductUncheckedUpdateInput>
+  }
+
+  /**
+   * OrderIntentProduct delete
+   */
+  export type OrderIntentProductDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderIntentProduct
+     */
+    select?: OrderIntentProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderIntentProduct
+     */
+    omit?: OrderIntentProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderIntentProductInclude<ExtArgs> | null
+    /**
+     * Filter which OrderIntentProduct to delete.
+     */
+    where: OrderIntentProductWhereUniqueInput
+  }
+
+  /**
+   * OrderIntentProduct deleteMany
+   */
+  export type OrderIntentProductDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which OrderIntentProducts to delete
+     */
+    where?: OrderIntentProductWhereInput
+    /**
+     * Limit how many OrderIntentProducts to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * OrderIntentProduct.modifierGroupItems
+   */
+  export type OrderIntentProduct$modifierGroupItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ModifierGroupItem
+     */
+    select?: ModifierGroupItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ModifierGroupItem
+     */
+    omit?: ModifierGroupItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ModifierGroupItemInclude<ExtArgs> | null
+    where?: ModifierGroupItemWhereInput
+    orderBy?: ModifierGroupItemOrderByWithRelationInput | ModifierGroupItemOrderByWithRelationInput[]
+    cursor?: ModifierGroupItemWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ModifierGroupItemScalarFieldEnum | ModifierGroupItemScalarFieldEnum[]
+  }
+
+  /**
+   * OrderIntentProduct without action
+   */
+  export type OrderIntentProductDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderIntentProduct
+     */
+    select?: OrderIntentProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderIntentProduct
+     */
+    omit?: OrderIntentProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderIntentProductInclude<ExtArgs> | null
   }
 
 
@@ -80469,6 +86402,23 @@ export namespace Prisma {
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
+  export const UserPushDeviceScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    userId: 'userId',
+    businessId: 'businessId',
+    platform: 'platform',
+    pushToken: 'pushToken',
+    lastSeenAt: 'lastSeenAt',
+    lastNotifiedAt: 'lastNotifiedAt',
+    notificationFailures: 'notificationFailures',
+    revokedAt: 'revokedAt'
+  };
+
+  export type UserPushDeviceScalarFieldEnum = (typeof UserPushDeviceScalarFieldEnum)[keyof typeof UserPushDeviceScalarFieldEnum]
+
+
   export const OwnerOtpChallengeScalarFieldEnum: {
     id: 'id',
     createdAt: 'createdAt',
@@ -80566,6 +86516,9 @@ export namespace Prisma {
     createdAt: 'createdAt',
     name: 'name',
     operationHours: 'operationHours',
+    chatwootAccountId: 'chatwootAccountId',
+    chatwootSourceId: 'chatwootSourceId',
+    chatwootAgentId: 'chatwootAgentId',
     addressId: 'addressId',
     businessId: 'businessId'
   };
@@ -80606,6 +86559,11 @@ export namespace Prisma {
     startedDeliveryAt: 'startedDeliveryAt',
     estimatedDeliveryDurationMinutes: 'estimatedDeliveryDurationMinutes',
     estimatedRoundTripDurationMinutes: 'estimatedRoundTripDurationMinutes',
+    currentEstimatedDeliveryDurationMinutes: 'currentEstimatedDeliveryDurationMinutes',
+    currentEstimatedRoundTripDurationMinutes: 'currentEstimatedRoundTripDurationMinutes',
+    arrivedAtRestaurantAt: 'arrivedAtRestaurantAt',
+    arrivedAtRestaurantLat: 'arrivedAtRestaurantLat',
+    arrivedAtRestaurantLng: 'arrivedAtRestaurantLng',
     driverId: 'driverId'
   };
 
@@ -80646,6 +86604,22 @@ export namespace Prisma {
   };
 
   export type DispatchRoutePointScalarFieldEnum = (typeof DispatchRoutePointScalarFieldEnum)[keyof typeof DispatchRoutePointScalarFieldEnum]
+
+
+  export const DispatchRouteMilestoneScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    dispatchId: 'dispatchId',
+    driverId: 'driverId',
+    sessionId: 'sessionId',
+    type: 'type',
+    recordedAt: 'recordedAt',
+    lat: 'lat',
+    lng: 'lng'
+  };
+
+  export type DispatchRouteMilestoneScalarFieldEnum = (typeof DispatchRouteMilestoneScalarFieldEnum)[keyof typeof DispatchRouteMilestoneScalarFieldEnum]
 
 
   export const DispatchAssignmentJobScalarFieldEnum: {
@@ -80995,7 +86969,11 @@ export namespace Prisma {
     language: 'language',
     paidAt: 'paidAt',
     deliveredAt: 'deliveredAt',
+    leftAtDropOffAt: 'leftAtDropOffAt',
+    leftAtDropOffLat: 'leftAtDropOffLat',
+    leftAtDropOffLng: 'leftAtDropOffLng',
     estimatedDeliveryDurationMinutes: 'estimatedDeliveryDurationMinutes',
+    currentEstimatedDeliveryDurationMinutes: 'currentEstimatedDeliveryDurationMinutes',
     dispatchOrderIndex: 'dispatchOrderIndex',
     amount: 'amount',
     canceled: 'canceled',
@@ -81011,10 +86989,32 @@ export namespace Prisma {
     dispatchId: 'dispatchId',
     addressId: 'addressId',
     deliveryAddressId: 'deliveryAddressId',
-    externalAddressId: 'externalAddressId'
+    externalAddressId: 'externalAddressId',
+    branchId: 'branchId'
   };
 
   export type OrderScalarFieldEnum = (typeof OrderScalarFieldEnum)[keyof typeof OrderScalarFieldEnum]
+
+
+  export const OrderIntentScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    active: 'active',
+    language: 'language',
+    status: 'status',
+    type: 'type',
+    paymentMethod: 'paymentMethod',
+    paymentProvider: 'paymentProvider',
+    tipAmount: 'tipAmount',
+    tags: 'tags',
+    progressiveDiscountSnapshot: 'progressiveDiscountSnapshot',
+    amount: 'amount',
+    customerId: 'customerId',
+    deliveryAddressId: 'deliveryAddressId'
+  };
+
+  export type OrderIntentScalarFieldEnum = (typeof OrderIntentScalarFieldEnum)[keyof typeof OrderIntentScalarFieldEnum]
 
 
   export const CustomerFeedbackScalarFieldEnum: {
@@ -81074,6 +87074,20 @@ export namespace Prisma {
   };
 
   export type OrderProductsScalarFieldEnum = (typeof OrderProductsScalarFieldEnum)[keyof typeof OrderProductsScalarFieldEnum]
+
+
+  export const OrderIntentProductScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    orderIntentId: 'orderIntentId',
+    productId: 'productId',
+    quantity: 'quantity',
+    comments: 'comments',
+    fullAmount: 'fullAmount',
+    amount: 'amount'
+  };
+
+  export type OrderIntentProductScalarFieldEnum = (typeof OrderIntentProductScalarFieldEnum)[keyof typeof OrderIntentProductScalarFieldEnum]
 
 
   export const InventoryPlaceScalarFieldEnum: {
@@ -81344,6 +87358,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'UserPushDevicePlatform'
+   */
+  export type EnumUserPushDevicePlatformFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserPushDevicePlatform'>
+    
+
+
+  /**
+   * Reference to a field of type 'UserPushDevicePlatform[]'
+   */
+  export type ListEnumUserPushDevicePlatformFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserPushDevicePlatform[]'>
+    
+
+
+  /**
    * Reference to a field of type 'ExternalIntegrationProvider'
    */
   export type EnumExternalIntegrationProviderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ExternalIntegrationProvider'>
@@ -81414,20 +87442,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'DispatchRouteSessionStatus'
-   */
-  export type EnumDispatchRouteSessionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DispatchRouteSessionStatus'>
-    
-
-
-  /**
-   * Reference to a field of type 'DispatchRouteSessionStatus[]'
-   */
-  export type ListEnumDispatchRouteSessionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DispatchRouteSessionStatus[]'>
-    
-
-
-  /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -81442,6 +87456,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'DispatchRouteSessionStatus'
+   */
+  export type EnumDispatchRouteSessionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DispatchRouteSessionStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'DispatchRouteSessionStatus[]'
+   */
+  export type ListEnumDispatchRouteSessionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DispatchRouteSessionStatus[]'>
+    
+
+
+  /**
    * Reference to a field of type 'DispatchRoutePointSource'
    */
   export type EnumDispatchRoutePointSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DispatchRoutePointSource'>
@@ -81452,6 +87480,20 @@ export namespace Prisma {
    * Reference to a field of type 'DispatchRoutePointSource[]'
    */
   export type ListEnumDispatchRoutePointSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DispatchRoutePointSource[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'DispatchRouteMilestoneType'
+   */
+  export type EnumDispatchRouteMilestoneTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DispatchRouteMilestoneType'>
+    
+
+
+  /**
+   * Reference to a field of type 'DispatchRouteMilestoneType[]'
+   */
+  export type ListEnumDispatchRouteMilestoneTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DispatchRouteMilestoneType[]'>
     
 
 
@@ -82366,6 +88408,7 @@ export namespace Prisma {
     modifierGroup?: XOR<ModifierGroupNullableScalarRelationFilter, ModifierGroupWhereInput> | null
     preparationStepModifierTracks?: PreparationStepModifierTrackListRelationFilter
     orderProducts?: OrderProductsListRelationFilter
+    orderIntentProducts?: OrderIntentProductListRelationFilter
   }
 
   export type ModifierGroupItemOrderByWithRelationInput = {
@@ -82381,6 +88424,7 @@ export namespace Prisma {
     modifierGroup?: ModifierGroupOrderByWithRelationInput
     preparationStepModifierTracks?: PreparationStepModifierTrackOrderByRelationAggregateInput
     orderProducts?: OrderProductsOrderByRelationAggregateInput
+    orderIntentProducts?: OrderIntentProductOrderByRelationAggregateInput
   }
 
   export type ModifierGroupItemWhereUniqueInput = Prisma.AtLeast<{
@@ -82399,6 +88443,7 @@ export namespace Prisma {
     modifierGroup?: XOR<ModifierGroupNullableScalarRelationFilter, ModifierGroupWhereInput> | null
     preparationStepModifierTracks?: PreparationStepModifierTrackListRelationFilter
     orderProducts?: OrderProductsListRelationFilter
+    orderIntentProducts?: OrderIntentProductListRelationFilter
   }, "id">
 
   export type ModifierGroupItemOrderByWithAggregationInput = {
@@ -82451,6 +88496,7 @@ export namespace Prisma {
     branches?: BranchListRelationFilter
     owner?: XOR<BusinessOwnerNullableScalarRelationFilter, BusinessOwnerWhereInput> | null
     integrations?: ExternalIntegrationConnectionListRelationFilter
+    pushDevices?: UserPushDeviceListRelationFilter
   }
 
   export type BusinessOrderByWithRelationInput = {
@@ -82470,6 +88516,7 @@ export namespace Prisma {
     branches?: BranchOrderByRelationAggregateInput
     owner?: BusinessOwnerOrderByWithRelationInput
     integrations?: ExternalIntegrationConnectionOrderByRelationAggregateInput
+    pushDevices?: UserPushDeviceOrderByRelationAggregateInput
   }
 
   export type BusinessWhereUniqueInput = Prisma.AtLeast<{
@@ -82492,6 +88539,7 @@ export namespace Prisma {
     branches?: BranchListRelationFilter
     owner?: XOR<BusinessOwnerNullableScalarRelationFilter, BusinessOwnerWhereInput> | null
     integrations?: ExternalIntegrationConnectionListRelationFilter
+    pushDevices?: UserPushDeviceListRelationFilter
   }, "id" | "stripeAccountId">
 
   export type BusinessOrderByWithAggregationInput = {
@@ -82548,6 +88596,7 @@ export namespace Prisma {
     ownedBusinesses?: BusinessOwnerListRelationFilter
     integrations?: ExternalIntegrationConnectionListRelationFilter
     otpChallenges?: OwnerOtpChallengeListRelationFilter
+    pushDevices?: UserPushDeviceListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -82563,6 +88612,7 @@ export namespace Prisma {
     ownedBusinesses?: BusinessOwnerOrderByRelationAggregateInput
     integrations?: ExternalIntegrationConnectionOrderByRelationAggregateInput
     otpChallenges?: OwnerOtpChallengeOrderByRelationAggregateInput
+    pushDevices?: UserPushDeviceOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -82581,6 +88631,7 @@ export namespace Prisma {
     ownedBusinesses?: BusinessOwnerListRelationFilter
     integrations?: ExternalIntegrationConnectionListRelationFilter
     otpChallenges?: OwnerOtpChallengeListRelationFilter
+    pushDevices?: UserPushDeviceListRelationFilter
   }, "id" | "email" | "phone">
 
   export type UserOrderByWithAggregationInput = {
@@ -82611,6 +88662,96 @@ export namespace Prisma {
     passwordHash?: StringWithAggregatesFilter<"User"> | string
     emailVerifiedAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     lastLoginAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  }
+
+  export type UserPushDeviceWhereInput = {
+    AND?: UserPushDeviceWhereInput | UserPushDeviceWhereInput[]
+    OR?: UserPushDeviceWhereInput[]
+    NOT?: UserPushDeviceWhereInput | UserPushDeviceWhereInput[]
+    id?: StringFilter<"UserPushDevice"> | string
+    createdAt?: DateTimeFilter<"UserPushDevice"> | Date | string
+    updatedAt?: DateTimeFilter<"UserPushDevice"> | Date | string
+    userId?: StringFilter<"UserPushDevice"> | string
+    businessId?: StringNullableFilter<"UserPushDevice"> | string | null
+    platform?: EnumUserPushDevicePlatformFilter<"UserPushDevice"> | $Enums.UserPushDevicePlatform
+    pushToken?: StringFilter<"UserPushDevice"> | string
+    lastSeenAt?: DateTimeFilter<"UserPushDevice"> | Date | string
+    lastNotifiedAt?: DateTimeNullableFilter<"UserPushDevice"> | Date | string | null
+    notificationFailures?: IntFilter<"UserPushDevice"> | number
+    revokedAt?: DateTimeNullableFilter<"UserPushDevice"> | Date | string | null
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    business?: XOR<BusinessNullableScalarRelationFilter, BusinessWhereInput> | null
+  }
+
+  export type UserPushDeviceOrderByWithRelationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    userId?: SortOrder
+    businessId?: SortOrderInput | SortOrder
+    platform?: SortOrder
+    pushToken?: SortOrder
+    lastSeenAt?: SortOrder
+    lastNotifiedAt?: SortOrderInput | SortOrder
+    notificationFailures?: SortOrder
+    revokedAt?: SortOrderInput | SortOrder
+    user?: UserOrderByWithRelationInput
+    business?: BusinessOrderByWithRelationInput
+  }
+
+  export type UserPushDeviceWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    pushToken?: string
+    AND?: UserPushDeviceWhereInput | UserPushDeviceWhereInput[]
+    OR?: UserPushDeviceWhereInput[]
+    NOT?: UserPushDeviceWhereInput | UserPushDeviceWhereInput[]
+    createdAt?: DateTimeFilter<"UserPushDevice"> | Date | string
+    updatedAt?: DateTimeFilter<"UserPushDevice"> | Date | string
+    userId?: StringFilter<"UserPushDevice"> | string
+    businessId?: StringNullableFilter<"UserPushDevice"> | string | null
+    platform?: EnumUserPushDevicePlatformFilter<"UserPushDevice"> | $Enums.UserPushDevicePlatform
+    lastSeenAt?: DateTimeFilter<"UserPushDevice"> | Date | string
+    lastNotifiedAt?: DateTimeNullableFilter<"UserPushDevice"> | Date | string | null
+    notificationFailures?: IntFilter<"UserPushDevice"> | number
+    revokedAt?: DateTimeNullableFilter<"UserPushDevice"> | Date | string | null
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    business?: XOR<BusinessNullableScalarRelationFilter, BusinessWhereInput> | null
+  }, "id" | "pushToken">
+
+  export type UserPushDeviceOrderByWithAggregationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    userId?: SortOrder
+    businessId?: SortOrderInput | SortOrder
+    platform?: SortOrder
+    pushToken?: SortOrder
+    lastSeenAt?: SortOrder
+    lastNotifiedAt?: SortOrderInput | SortOrder
+    notificationFailures?: SortOrder
+    revokedAt?: SortOrderInput | SortOrder
+    _count?: UserPushDeviceCountOrderByAggregateInput
+    _avg?: UserPushDeviceAvgOrderByAggregateInput
+    _max?: UserPushDeviceMaxOrderByAggregateInput
+    _min?: UserPushDeviceMinOrderByAggregateInput
+    _sum?: UserPushDeviceSumOrderByAggregateInput
+  }
+
+  export type UserPushDeviceScalarWhereWithAggregatesInput = {
+    AND?: UserPushDeviceScalarWhereWithAggregatesInput | UserPushDeviceScalarWhereWithAggregatesInput[]
+    OR?: UserPushDeviceScalarWhereWithAggregatesInput[]
+    NOT?: UserPushDeviceScalarWhereWithAggregatesInput | UserPushDeviceScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"UserPushDevice"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"UserPushDevice"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"UserPushDevice"> | Date | string
+    userId?: StringWithAggregatesFilter<"UserPushDevice"> | string
+    businessId?: StringNullableWithAggregatesFilter<"UserPushDevice"> | string | null
+    platform?: EnumUserPushDevicePlatformWithAggregatesFilter<"UserPushDevice"> | $Enums.UserPushDevicePlatform
+    pushToken?: StringWithAggregatesFilter<"UserPushDevice"> | string
+    lastSeenAt?: DateTimeWithAggregatesFilter<"UserPushDevice"> | Date | string
+    lastNotifiedAt?: DateTimeNullableWithAggregatesFilter<"UserPushDevice"> | Date | string | null
+    notificationFailures?: IntWithAggregatesFilter<"UserPushDevice"> | number
+    revokedAt?: DateTimeNullableWithAggregatesFilter<"UserPushDevice"> | Date | string | null
   }
 
   export type OwnerOtpChallengeWhereInput = {
@@ -83099,10 +89240,14 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Branch"> | Date | string
     name?: StringFilter<"Branch"> | string
     operationHours?: JsonNullableFilter<"Branch">
+    chatwootAccountId?: StringNullableFilter<"Branch"> | string | null
+    chatwootSourceId?: StringNullableFilter<"Branch"> | string | null
+    chatwootAgentId?: StringNullableFilter<"Branch"> | string | null
     addressId?: StringNullableFilter<"Branch"> | string | null
     businessId?: StringNullableFilter<"Branch"> | string | null
     address?: XOR<AddressNullableScalarRelationFilter, AddressWhereInput> | null
     business?: XOR<BusinessNullableScalarRelationFilter, BusinessWhereInput> | null
+    orders?: OrderListRelationFilter
   }
 
   export type BranchOrderByWithRelationInput = {
@@ -83110,10 +89255,14 @@ export namespace Prisma {
     createdAt?: SortOrder
     name?: SortOrder
     operationHours?: SortOrderInput | SortOrder
+    chatwootAccountId?: SortOrderInput | SortOrder
+    chatwootSourceId?: SortOrderInput | SortOrder
+    chatwootAgentId?: SortOrderInput | SortOrder
     addressId?: SortOrderInput | SortOrder
     businessId?: SortOrderInput | SortOrder
     address?: AddressOrderByWithRelationInput
     business?: BusinessOrderByWithRelationInput
+    orders?: OrderOrderByRelationAggregateInput
   }
 
   export type BranchWhereUniqueInput = Prisma.AtLeast<{
@@ -83125,9 +89274,13 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Branch"> | Date | string
     name?: StringFilter<"Branch"> | string
     operationHours?: JsonNullableFilter<"Branch">
+    chatwootAccountId?: StringNullableFilter<"Branch"> | string | null
+    chatwootSourceId?: StringNullableFilter<"Branch"> | string | null
+    chatwootAgentId?: StringNullableFilter<"Branch"> | string | null
     businessId?: StringNullableFilter<"Branch"> | string | null
     address?: XOR<AddressNullableScalarRelationFilter, AddressWhereInput> | null
     business?: XOR<BusinessNullableScalarRelationFilter, BusinessWhereInput> | null
+    orders?: OrderListRelationFilter
   }, "id" | "addressId">
 
   export type BranchOrderByWithAggregationInput = {
@@ -83135,6 +89288,9 @@ export namespace Prisma {
     createdAt?: SortOrder
     name?: SortOrder
     operationHours?: SortOrderInput | SortOrder
+    chatwootAccountId?: SortOrderInput | SortOrder
+    chatwootSourceId?: SortOrderInput | SortOrder
+    chatwootAgentId?: SortOrderInput | SortOrder
     addressId?: SortOrderInput | SortOrder
     businessId?: SortOrderInput | SortOrder
     _count?: BranchCountOrderByAggregateInput
@@ -83150,6 +89306,9 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"Branch"> | Date | string
     name?: StringWithAggregatesFilter<"Branch"> | string
     operationHours?: JsonNullableWithAggregatesFilter<"Branch">
+    chatwootAccountId?: StringNullableWithAggregatesFilter<"Branch"> | string | null
+    chatwootSourceId?: StringNullableWithAggregatesFilter<"Branch"> | string | null
+    chatwootAgentId?: StringNullableWithAggregatesFilter<"Branch"> | string | null
     addressId?: StringNullableWithAggregatesFilter<"Branch"> | string | null
     businessId?: StringNullableWithAggregatesFilter<"Branch"> | string | null
   }
@@ -83168,6 +89327,7 @@ export namespace Prisma {
     priorityLevel?: IntFilter<"Driver"> | number
     dispatches?: DispatchListRelationFilter
     routeSessions?: DispatchRouteSessionListRelationFilter
+    routeMilestones?: DispatchRouteMilestoneListRelationFilter
     activationEvents?: DriverActivationEventListRelationFilter
   }
 
@@ -83182,6 +89342,7 @@ export namespace Prisma {
     priorityLevel?: SortOrder
     dispatches?: DispatchOrderByRelationAggregateInput
     routeSessions?: DispatchRouteSessionOrderByRelationAggregateInput
+    routeMilestones?: DispatchRouteMilestoneOrderByRelationAggregateInput
     activationEvents?: DriverActivationEventOrderByRelationAggregateInput
   }
 
@@ -83199,6 +89360,7 @@ export namespace Prisma {
     priorityLevel?: IntFilter<"Driver"> | number
     dispatches?: DispatchListRelationFilter
     routeSessions?: DispatchRouteSessionListRelationFilter
+    routeMilestones?: DispatchRouteMilestoneListRelationFilter
     activationEvents?: DriverActivationEventListRelationFilter
   }, "id" | "phone">
 
@@ -83294,10 +89456,16 @@ export namespace Prisma {
     startedDeliveryAt?: DateTimeNullableFilter<"Dispatch"> | Date | string | null
     estimatedDeliveryDurationMinutes?: IntNullableFilter<"Dispatch"> | number | null
     estimatedRoundTripDurationMinutes?: IntNullableFilter<"Dispatch"> | number | null
+    currentEstimatedDeliveryDurationMinutes?: IntNullableFilter<"Dispatch"> | number | null
+    currentEstimatedRoundTripDurationMinutes?: IntNullableFilter<"Dispatch"> | number | null
+    arrivedAtRestaurantAt?: DateTimeNullableFilter<"Dispatch"> | Date | string | null
+    arrivedAtRestaurantLat?: FloatNullableFilter<"Dispatch"> | number | null
+    arrivedAtRestaurantLng?: FloatNullableFilter<"Dispatch"> | number | null
     driverId?: StringNullableFilter<"Dispatch"> | string | null
     driver?: XOR<DriverNullableScalarRelationFilter, DriverWhereInput> | null
     orders?: OrderListRelationFilter
     routeSessions?: DispatchRouteSessionListRelationFilter
+    routeMilestones?: DispatchRouteMilestoneListRelationFilter
     etaRecalculationJobs?: DispatchEtaRecalculationJobListRelationFilter
   }
 
@@ -83310,10 +89478,16 @@ export namespace Prisma {
     startedDeliveryAt?: SortOrderInput | SortOrder
     estimatedDeliveryDurationMinutes?: SortOrderInput | SortOrder
     estimatedRoundTripDurationMinutes?: SortOrderInput | SortOrder
+    currentEstimatedDeliveryDurationMinutes?: SortOrderInput | SortOrder
+    currentEstimatedRoundTripDurationMinutes?: SortOrderInput | SortOrder
+    arrivedAtRestaurantAt?: SortOrderInput | SortOrder
+    arrivedAtRestaurantLat?: SortOrderInput | SortOrder
+    arrivedAtRestaurantLng?: SortOrderInput | SortOrder
     driverId?: SortOrderInput | SortOrder
     driver?: DriverOrderByWithRelationInput
     orders?: OrderOrderByRelationAggregateInput
     routeSessions?: DispatchRouteSessionOrderByRelationAggregateInput
+    routeMilestones?: DispatchRouteMilestoneOrderByRelationAggregateInput
     etaRecalculationJobs?: DispatchEtaRecalculationJobOrderByRelationAggregateInput
   }
 
@@ -83329,10 +89503,16 @@ export namespace Prisma {
     startedDeliveryAt?: DateTimeNullableFilter<"Dispatch"> | Date | string | null
     estimatedDeliveryDurationMinutes?: IntNullableFilter<"Dispatch"> | number | null
     estimatedRoundTripDurationMinutes?: IntNullableFilter<"Dispatch"> | number | null
+    currentEstimatedDeliveryDurationMinutes?: IntNullableFilter<"Dispatch"> | number | null
+    currentEstimatedRoundTripDurationMinutes?: IntNullableFilter<"Dispatch"> | number | null
+    arrivedAtRestaurantAt?: DateTimeNullableFilter<"Dispatch"> | Date | string | null
+    arrivedAtRestaurantLat?: FloatNullableFilter<"Dispatch"> | number | null
+    arrivedAtRestaurantLng?: FloatNullableFilter<"Dispatch"> | number | null
     driverId?: StringNullableFilter<"Dispatch"> | string | null
     driver?: XOR<DriverNullableScalarRelationFilter, DriverWhereInput> | null
     orders?: OrderListRelationFilter
     routeSessions?: DispatchRouteSessionListRelationFilter
+    routeMilestones?: DispatchRouteMilestoneListRelationFilter
     etaRecalculationJobs?: DispatchEtaRecalculationJobListRelationFilter
   }, "id">
 
@@ -83345,6 +89525,11 @@ export namespace Prisma {
     startedDeliveryAt?: SortOrderInput | SortOrder
     estimatedDeliveryDurationMinutes?: SortOrderInput | SortOrder
     estimatedRoundTripDurationMinutes?: SortOrderInput | SortOrder
+    currentEstimatedDeliveryDurationMinutes?: SortOrderInput | SortOrder
+    currentEstimatedRoundTripDurationMinutes?: SortOrderInput | SortOrder
+    arrivedAtRestaurantAt?: SortOrderInput | SortOrder
+    arrivedAtRestaurantLat?: SortOrderInput | SortOrder
+    arrivedAtRestaurantLng?: SortOrderInput | SortOrder
     driverId?: SortOrderInput | SortOrder
     _count?: DispatchCountOrderByAggregateInput
     _avg?: DispatchAvgOrderByAggregateInput
@@ -83365,6 +89550,11 @@ export namespace Prisma {
     startedDeliveryAt?: DateTimeNullableWithAggregatesFilter<"Dispatch"> | Date | string | null
     estimatedDeliveryDurationMinutes?: IntNullableWithAggregatesFilter<"Dispatch"> | number | null
     estimatedRoundTripDurationMinutes?: IntNullableWithAggregatesFilter<"Dispatch"> | number | null
+    currentEstimatedDeliveryDurationMinutes?: IntNullableWithAggregatesFilter<"Dispatch"> | number | null
+    currentEstimatedRoundTripDurationMinutes?: IntNullableWithAggregatesFilter<"Dispatch"> | number | null
+    arrivedAtRestaurantAt?: DateTimeNullableWithAggregatesFilter<"Dispatch"> | Date | string | null
+    arrivedAtRestaurantLat?: FloatNullableWithAggregatesFilter<"Dispatch"> | number | null
+    arrivedAtRestaurantLng?: FloatNullableWithAggregatesFilter<"Dispatch"> | number | null
     driverId?: StringNullableWithAggregatesFilter<"Dispatch"> | string | null
   }
 
@@ -83386,6 +89576,7 @@ export namespace Prisma {
     dispatch?: XOR<DispatchScalarRelationFilter, DispatchWhereInput>
     driver?: XOR<DriverScalarRelationFilter, DriverWhereInput>
     points?: DispatchRoutePointListRelationFilter
+    milestones?: DispatchRouteMilestoneListRelationFilter
   }
 
   export type DispatchRouteSessionOrderByWithRelationInput = {
@@ -83403,6 +89594,7 @@ export namespace Prisma {
     dispatch?: DispatchOrderByWithRelationInput
     driver?: DriverOrderByWithRelationInput
     points?: DispatchRoutePointOrderByRelationAggregateInput
+    milestones?: DispatchRouteMilestoneOrderByRelationAggregateInput
   }
 
   export type DispatchRouteSessionWhereUniqueInput = Prisma.AtLeast<{
@@ -83423,6 +89615,7 @@ export namespace Prisma {
     dispatch?: XOR<DispatchScalarRelationFilter, DispatchWhereInput>
     driver?: XOR<DriverScalarRelationFilter, DriverWhereInput>
     points?: DispatchRoutePointListRelationFilter
+    milestones?: DispatchRouteMilestoneListRelationFilter
   }, "id">
 
   export type DispatchRouteSessionOrderByWithAggregationInput = {
@@ -83557,6 +89750,95 @@ export namespace Prisma {
     altitudeMeters?: FloatNullableWithAggregatesFilter<"DispatchRoutePoint"> | number | null
     source?: EnumDispatchRoutePointSourceWithAggregatesFilter<"DispatchRoutePoint"> | $Enums.DispatchRoutePointSource
     isMocked?: BoolNullableWithAggregatesFilter<"DispatchRoutePoint"> | boolean | null
+  }
+
+  export type DispatchRouteMilestoneWhereInput = {
+    AND?: DispatchRouteMilestoneWhereInput | DispatchRouteMilestoneWhereInput[]
+    OR?: DispatchRouteMilestoneWhereInput[]
+    NOT?: DispatchRouteMilestoneWhereInput | DispatchRouteMilestoneWhereInput[]
+    id?: StringFilter<"DispatchRouteMilestone"> | string
+    createdAt?: DateTimeFilter<"DispatchRouteMilestone"> | Date | string
+    updatedAt?: DateTimeFilter<"DispatchRouteMilestone"> | Date | string
+    dispatchId?: StringFilter<"DispatchRouteMilestone"> | string
+    driverId?: StringFilter<"DispatchRouteMilestone"> | string
+    sessionId?: StringFilter<"DispatchRouteMilestone"> | string
+    type?: EnumDispatchRouteMilestoneTypeFilter<"DispatchRouteMilestone"> | $Enums.DispatchRouteMilestoneType
+    recordedAt?: DateTimeFilter<"DispatchRouteMilestone"> | Date | string
+    lat?: FloatFilter<"DispatchRouteMilestone"> | number
+    lng?: FloatFilter<"DispatchRouteMilestone"> | number
+    dispatch?: XOR<DispatchScalarRelationFilter, DispatchWhereInput>
+    driver?: XOR<DriverScalarRelationFilter, DriverWhereInput>
+    session?: XOR<DispatchRouteSessionScalarRelationFilter, DispatchRouteSessionWhereInput>
+  }
+
+  export type DispatchRouteMilestoneOrderByWithRelationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    dispatchId?: SortOrder
+    driverId?: SortOrder
+    sessionId?: SortOrder
+    type?: SortOrder
+    recordedAt?: SortOrder
+    lat?: SortOrder
+    lng?: SortOrder
+    dispatch?: DispatchOrderByWithRelationInput
+    driver?: DriverOrderByWithRelationInput
+    session?: DispatchRouteSessionOrderByWithRelationInput
+  }
+
+  export type DispatchRouteMilestoneWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    dispatchId_type?: DispatchRouteMilestoneDispatchIdTypeCompoundUniqueInput
+    AND?: DispatchRouteMilestoneWhereInput | DispatchRouteMilestoneWhereInput[]
+    OR?: DispatchRouteMilestoneWhereInput[]
+    NOT?: DispatchRouteMilestoneWhereInput | DispatchRouteMilestoneWhereInput[]
+    createdAt?: DateTimeFilter<"DispatchRouteMilestone"> | Date | string
+    updatedAt?: DateTimeFilter<"DispatchRouteMilestone"> | Date | string
+    dispatchId?: StringFilter<"DispatchRouteMilestone"> | string
+    driverId?: StringFilter<"DispatchRouteMilestone"> | string
+    sessionId?: StringFilter<"DispatchRouteMilestone"> | string
+    type?: EnumDispatchRouteMilestoneTypeFilter<"DispatchRouteMilestone"> | $Enums.DispatchRouteMilestoneType
+    recordedAt?: DateTimeFilter<"DispatchRouteMilestone"> | Date | string
+    lat?: FloatFilter<"DispatchRouteMilestone"> | number
+    lng?: FloatFilter<"DispatchRouteMilestone"> | number
+    dispatch?: XOR<DispatchScalarRelationFilter, DispatchWhereInput>
+    driver?: XOR<DriverScalarRelationFilter, DriverWhereInput>
+    session?: XOR<DispatchRouteSessionScalarRelationFilter, DispatchRouteSessionWhereInput>
+  }, "id" | "dispatchId_type">
+
+  export type DispatchRouteMilestoneOrderByWithAggregationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    dispatchId?: SortOrder
+    driverId?: SortOrder
+    sessionId?: SortOrder
+    type?: SortOrder
+    recordedAt?: SortOrder
+    lat?: SortOrder
+    lng?: SortOrder
+    _count?: DispatchRouteMilestoneCountOrderByAggregateInput
+    _avg?: DispatchRouteMilestoneAvgOrderByAggregateInput
+    _max?: DispatchRouteMilestoneMaxOrderByAggregateInput
+    _min?: DispatchRouteMilestoneMinOrderByAggregateInput
+    _sum?: DispatchRouteMilestoneSumOrderByAggregateInput
+  }
+
+  export type DispatchRouteMilestoneScalarWhereWithAggregatesInput = {
+    AND?: DispatchRouteMilestoneScalarWhereWithAggregatesInput | DispatchRouteMilestoneScalarWhereWithAggregatesInput[]
+    OR?: DispatchRouteMilestoneScalarWhereWithAggregatesInput[]
+    NOT?: DispatchRouteMilestoneScalarWhereWithAggregatesInput | DispatchRouteMilestoneScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"DispatchRouteMilestone"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"DispatchRouteMilestone"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"DispatchRouteMilestone"> | Date | string
+    dispatchId?: StringWithAggregatesFilter<"DispatchRouteMilestone"> | string
+    driverId?: StringWithAggregatesFilter<"DispatchRouteMilestone"> | string
+    sessionId?: StringWithAggregatesFilter<"DispatchRouteMilestone"> | string
+    type?: EnumDispatchRouteMilestoneTypeWithAggregatesFilter<"DispatchRouteMilestone"> | $Enums.DispatchRouteMilestoneType
+    recordedAt?: DateTimeWithAggregatesFilter<"DispatchRouteMilestone"> | Date | string
+    lat?: FloatWithAggregatesFilter<"DispatchRouteMilestone"> | number
+    lng?: FloatWithAggregatesFilter<"DispatchRouteMilestone"> | number
   }
 
   export type DispatchAssignmentJobWhereInput = {
@@ -83932,6 +90214,7 @@ export namespace Prisma {
     comboUsedInItems?: ComboProductItemListRelationFilter
     exclusivePromotionProducts?: ExclusivePromotionProductListRelationFilter
     OrderProducts?: OrderProductsListRelationFilter
+    orderIntentProducts?: OrderIntentProductListRelationFilter
     prizeProducts?: ProgressiveDiscountPrizeProductListRelationFilter
     customerRewards?: CustomerRewardListRelationFilter
     preparationSteps?: PreparationStepListRelationFilter
@@ -83959,6 +90242,7 @@ export namespace Prisma {
     comboUsedInItems?: ComboProductItemOrderByRelationAggregateInput
     exclusivePromotionProducts?: ExclusivePromotionProductOrderByRelationAggregateInput
     OrderProducts?: OrderProductsOrderByRelationAggregateInput
+    orderIntentProducts?: OrderIntentProductOrderByRelationAggregateInput
     prizeProducts?: ProgressiveDiscountPrizeProductOrderByRelationAggregateInput
     customerRewards?: CustomerRewardOrderByRelationAggregateInput
     preparationSteps?: PreparationStepOrderByRelationAggregateInput
@@ -83989,6 +90273,7 @@ export namespace Prisma {
     comboUsedInItems?: ComboProductItemListRelationFilter
     exclusivePromotionProducts?: ExclusivePromotionProductListRelationFilter
     OrderProducts?: OrderProductsListRelationFilter
+    orderIntentProducts?: OrderIntentProductListRelationFilter
     prizeProducts?: ProgressiveDiscountPrizeProductListRelationFilter
     customerRewards?: CustomerRewardListRelationFilter
     preparationSteps?: PreparationStepListRelationFilter
@@ -84766,6 +91051,7 @@ export namespace Prisma {
     otpChallenges?: CustomerOtpChallengeListRelationFilter
     accessTokens?: CustomerAccessTokenListRelationFilter
     cards?: CustomerCardListRelationFilter
+    orderIntents?: OrderIntentListRelationFilter
   }
 
   export type CustomerOrderByWithRelationInput = {
@@ -84786,6 +91072,7 @@ export namespace Prisma {
     otpChallenges?: CustomerOtpChallengeOrderByRelationAggregateInput
     accessTokens?: CustomerAccessTokenOrderByRelationAggregateInput
     cards?: CustomerCardOrderByRelationAggregateInput
+    orderIntents?: OrderIntentOrderByRelationAggregateInput
   }
 
   export type CustomerWhereUniqueInput = Prisma.AtLeast<{
@@ -84809,6 +91096,7 @@ export namespace Prisma {
     otpChallenges?: CustomerOtpChallengeListRelationFilter
     accessTokens?: CustomerAccessTokenListRelationFilter
     cards?: CustomerCardListRelationFilter
+    orderIntents?: OrderIntentListRelationFilter
   }, "id">
 
   export type CustomerOrderByWithAggregationInput = {
@@ -85133,6 +91421,7 @@ export namespace Prisma {
     customerId?: StringNullableFilter<"DeliveryAddress"> | string | null
     customer?: XOR<CustomerNullableScalarRelationFilter, CustomerWhereInput> | null
     orders?: OrderListRelationFilter
+    orderIntents?: OrderIntentListRelationFilter
   }
 
   export type DeliveryAddressOrderByWithRelationInput = {
@@ -85152,6 +91441,7 @@ export namespace Prisma {
     customerId?: SortOrderInput | SortOrder
     customer?: CustomerOrderByWithRelationInput
     orders?: OrderOrderByRelationAggregateInput
+    orderIntents?: OrderIntentOrderByRelationAggregateInput
   }
 
   export type DeliveryAddressWhereUniqueInput = Prisma.AtLeast<{
@@ -85174,6 +91464,7 @@ export namespace Prisma {
     customerId?: StringNullableFilter<"DeliveryAddress"> | string | null
     customer?: XOR<CustomerNullableScalarRelationFilter, CustomerWhereInput> | null
     orders?: OrderListRelationFilter
+    orderIntents?: OrderIntentListRelationFilter
   }, "id">
 
   export type DeliveryAddressOrderByWithAggregationInput = {
@@ -85408,7 +91699,11 @@ export namespace Prisma {
     language?: StringNullableFilter<"Order"> | string | null
     paidAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     deliveredAt?: DateTimeNullableFilter<"Order"> | Date | string | null
+    leftAtDropOffAt?: DateTimeNullableFilter<"Order"> | Date | string | null
+    leftAtDropOffLat?: FloatNullableFilter<"Order"> | number | null
+    leftAtDropOffLng?: FloatNullableFilter<"Order"> | number | null
     estimatedDeliveryDurationMinutes?: IntNullableFilter<"Order"> | number | null
+    currentEstimatedDeliveryDurationMinutes?: IntNullableFilter<"Order"> | number | null
     dispatchOrderIndex?: IntNullableFilter<"Order"> | number | null
     amount?: IntFilter<"Order"> | number
     canceled?: BoolFilter<"Order"> | boolean
@@ -85425,11 +91720,13 @@ export namespace Prisma {
     addressId?: StringNullableFilter<"Order"> | string | null
     deliveryAddressId?: StringNullableFilter<"Order"> | string | null
     externalAddressId?: StringNullableFilter<"Order"> | string | null
+    branchId?: StringNullableFilter<"Order"> | string | null
     customer?: XOR<CustomerNullableScalarRelationFilter, CustomerWhereInput> | null
     dispatch?: XOR<DispatchNullableScalarRelationFilter, DispatchWhereInput> | null
     address?: XOR<AddressNullableScalarRelationFilter, AddressWhereInput> | null
     deliveryAddress?: XOR<DeliveryAddressNullableScalarRelationFilter, DeliveryAddressWhereInput> | null
     externalAddress?: XOR<ExternalAddressNullableScalarRelationFilter, ExternalAddressWhereInput> | null
+    branch?: XOR<BranchNullableScalarRelationFilter, BranchWhereInput> | null
     orderProducts?: OrderProductsListRelationFilter
     preparationStepCategories?: PreparationStepCategoryListRelationFilter
     feedback?: XOR<CustomerFeedbackNullableScalarRelationFilter, CustomerFeedbackWhereInput> | null
@@ -85445,7 +91742,11 @@ export namespace Prisma {
     language?: SortOrderInput | SortOrder
     paidAt?: SortOrderInput | SortOrder
     deliveredAt?: SortOrderInput | SortOrder
+    leftAtDropOffAt?: SortOrderInput | SortOrder
+    leftAtDropOffLat?: SortOrderInput | SortOrder
+    leftAtDropOffLng?: SortOrderInput | SortOrder
     estimatedDeliveryDurationMinutes?: SortOrderInput | SortOrder
+    currentEstimatedDeliveryDurationMinutes?: SortOrderInput | SortOrder
     dispatchOrderIndex?: SortOrderInput | SortOrder
     amount?: SortOrder
     canceled?: SortOrder
@@ -85462,11 +91763,13 @@ export namespace Prisma {
     addressId?: SortOrderInput | SortOrder
     deliveryAddressId?: SortOrderInput | SortOrder
     externalAddressId?: SortOrderInput | SortOrder
+    branchId?: SortOrderInput | SortOrder
     customer?: CustomerOrderByWithRelationInput
     dispatch?: DispatchOrderByWithRelationInput
     address?: AddressOrderByWithRelationInput
     deliveryAddress?: DeliveryAddressOrderByWithRelationInput
     externalAddress?: ExternalAddressOrderByWithRelationInput
+    branch?: BranchOrderByWithRelationInput
     orderProducts?: OrderProductsOrderByRelationAggregateInput
     preparationStepCategories?: PreparationStepCategoryOrderByRelationAggregateInput
     feedback?: CustomerFeedbackOrderByWithRelationInput
@@ -85486,7 +91789,11 @@ export namespace Prisma {
     language?: StringNullableFilter<"Order"> | string | null
     paidAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     deliveredAt?: DateTimeNullableFilter<"Order"> | Date | string | null
+    leftAtDropOffAt?: DateTimeNullableFilter<"Order"> | Date | string | null
+    leftAtDropOffLat?: FloatNullableFilter<"Order"> | number | null
+    leftAtDropOffLng?: FloatNullableFilter<"Order"> | number | null
     estimatedDeliveryDurationMinutes?: IntNullableFilter<"Order"> | number | null
+    currentEstimatedDeliveryDurationMinutes?: IntNullableFilter<"Order"> | number | null
     dispatchOrderIndex?: IntNullableFilter<"Order"> | number | null
     amount?: IntFilter<"Order"> | number
     canceled?: BoolFilter<"Order"> | boolean
@@ -85502,11 +91809,13 @@ export namespace Prisma {
     addressId?: StringNullableFilter<"Order"> | string | null
     deliveryAddressId?: StringNullableFilter<"Order"> | string | null
     externalAddressId?: StringNullableFilter<"Order"> | string | null
+    branchId?: StringNullableFilter<"Order"> | string | null
     customer?: XOR<CustomerNullableScalarRelationFilter, CustomerWhereInput> | null
     dispatch?: XOR<DispatchNullableScalarRelationFilter, DispatchWhereInput> | null
     address?: XOR<AddressNullableScalarRelationFilter, AddressWhereInput> | null
     deliveryAddress?: XOR<DeliveryAddressNullableScalarRelationFilter, DeliveryAddressWhereInput> | null
     externalAddress?: XOR<ExternalAddressNullableScalarRelationFilter, ExternalAddressWhereInput> | null
+    branch?: XOR<BranchNullableScalarRelationFilter, BranchWhereInput> | null
     orderProducts?: OrderProductsListRelationFilter
     preparationStepCategories?: PreparationStepCategoryListRelationFilter
     feedback?: XOR<CustomerFeedbackNullableScalarRelationFilter, CustomerFeedbackWhereInput> | null
@@ -85522,7 +91831,11 @@ export namespace Prisma {
     language?: SortOrderInput | SortOrder
     paidAt?: SortOrderInput | SortOrder
     deliveredAt?: SortOrderInput | SortOrder
+    leftAtDropOffAt?: SortOrderInput | SortOrder
+    leftAtDropOffLat?: SortOrderInput | SortOrder
+    leftAtDropOffLng?: SortOrderInput | SortOrder
     estimatedDeliveryDurationMinutes?: SortOrderInput | SortOrder
+    currentEstimatedDeliveryDurationMinutes?: SortOrderInput | SortOrder
     dispatchOrderIndex?: SortOrderInput | SortOrder
     amount?: SortOrder
     canceled?: SortOrder
@@ -85539,6 +91852,7 @@ export namespace Prisma {
     addressId?: SortOrderInput | SortOrder
     deliveryAddressId?: SortOrderInput | SortOrder
     externalAddressId?: SortOrderInput | SortOrder
+    branchId?: SortOrderInput | SortOrder
     _count?: OrderCountOrderByAggregateInput
     _avg?: OrderAvgOrderByAggregateInput
     _max?: OrderMaxOrderByAggregateInput
@@ -85557,7 +91871,11 @@ export namespace Prisma {
     language?: StringNullableWithAggregatesFilter<"Order"> | string | null
     paidAt?: DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
     deliveredAt?: DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
+    leftAtDropOffAt?: DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
+    leftAtDropOffLat?: FloatNullableWithAggregatesFilter<"Order"> | number | null
+    leftAtDropOffLng?: FloatNullableWithAggregatesFilter<"Order"> | number | null
     estimatedDeliveryDurationMinutes?: IntNullableWithAggregatesFilter<"Order"> | number | null
+    currentEstimatedDeliveryDurationMinutes?: IntNullableWithAggregatesFilter<"Order"> | number | null
     dispatchOrderIndex?: IntNullableWithAggregatesFilter<"Order"> | number | null
     amount?: IntWithAggregatesFilter<"Order"> | number
     canceled?: BoolWithAggregatesFilter<"Order"> | boolean
@@ -85574,6 +91892,120 @@ export namespace Prisma {
     addressId?: StringNullableWithAggregatesFilter<"Order"> | string | null
     deliveryAddressId?: StringNullableWithAggregatesFilter<"Order"> | string | null
     externalAddressId?: StringNullableWithAggregatesFilter<"Order"> | string | null
+    branchId?: StringNullableWithAggregatesFilter<"Order"> | string | null
+  }
+
+  export type OrderIntentWhereInput = {
+    AND?: OrderIntentWhereInput | OrderIntentWhereInput[]
+    OR?: OrderIntentWhereInput[]
+    NOT?: OrderIntentWhereInput | OrderIntentWhereInput[]
+    id?: StringFilter<"OrderIntent"> | string
+    createdAt?: DateTimeFilter<"OrderIntent"> | Date | string
+    updatedAt?: DateTimeFilter<"OrderIntent"> | Date | string
+    active?: BoolFilter<"OrderIntent"> | boolean
+    language?: StringNullableFilter<"OrderIntent"> | string | null
+    status?: EnumOrderStatusFilter<"OrderIntent"> | $Enums.OrderStatus
+    type?: EnumOrderTypeNullableFilter<"OrderIntent"> | $Enums.OrderType | null
+    paymentMethod?: EnumPaymentTypeFilter<"OrderIntent"> | $Enums.PaymentType
+    paymentProvider?: EnumPaymentProviderNullableFilter<"OrderIntent"> | $Enums.PaymentProvider | null
+    tipAmount?: IntNullableFilter<"OrderIntent"> | number | null
+    tags?: StringNullableListFilter<"OrderIntent">
+    progressiveDiscountSnapshot?: JsonNullableFilter<"OrderIntent">
+    amount?: IntNullableFilter<"OrderIntent"> | number | null
+    customerId?: StringNullableFilter<"OrderIntent"> | string | null
+    deliveryAddressId?: StringNullableFilter<"OrderIntent"> | string | null
+    customer?: XOR<CustomerNullableScalarRelationFilter, CustomerWhereInput> | null
+    deliveryAddress?: XOR<DeliveryAddressNullableScalarRelationFilter, DeliveryAddressWhereInput> | null
+    orderProducts?: OrderIntentProductListRelationFilter
+  }
+
+  export type OrderIntentOrderByWithRelationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    active?: SortOrder
+    language?: SortOrderInput | SortOrder
+    status?: SortOrder
+    type?: SortOrderInput | SortOrder
+    paymentMethod?: SortOrder
+    paymentProvider?: SortOrderInput | SortOrder
+    tipAmount?: SortOrderInput | SortOrder
+    tags?: SortOrder
+    progressiveDiscountSnapshot?: SortOrderInput | SortOrder
+    amount?: SortOrderInput | SortOrder
+    customerId?: SortOrderInput | SortOrder
+    deliveryAddressId?: SortOrderInput | SortOrder
+    customer?: CustomerOrderByWithRelationInput
+    deliveryAddress?: DeliveryAddressOrderByWithRelationInput
+    orderProducts?: OrderIntentProductOrderByRelationAggregateInput
+  }
+
+  export type OrderIntentWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: OrderIntentWhereInput | OrderIntentWhereInput[]
+    OR?: OrderIntentWhereInput[]
+    NOT?: OrderIntentWhereInput | OrderIntentWhereInput[]
+    createdAt?: DateTimeFilter<"OrderIntent"> | Date | string
+    updatedAt?: DateTimeFilter<"OrderIntent"> | Date | string
+    active?: BoolFilter<"OrderIntent"> | boolean
+    language?: StringNullableFilter<"OrderIntent"> | string | null
+    status?: EnumOrderStatusFilter<"OrderIntent"> | $Enums.OrderStatus
+    type?: EnumOrderTypeNullableFilter<"OrderIntent"> | $Enums.OrderType | null
+    paymentMethod?: EnumPaymentTypeFilter<"OrderIntent"> | $Enums.PaymentType
+    paymentProvider?: EnumPaymentProviderNullableFilter<"OrderIntent"> | $Enums.PaymentProvider | null
+    tipAmount?: IntNullableFilter<"OrderIntent"> | number | null
+    tags?: StringNullableListFilter<"OrderIntent">
+    progressiveDiscountSnapshot?: JsonNullableFilter<"OrderIntent">
+    amount?: IntNullableFilter<"OrderIntent"> | number | null
+    customerId?: StringNullableFilter<"OrderIntent"> | string | null
+    deliveryAddressId?: StringNullableFilter<"OrderIntent"> | string | null
+    customer?: XOR<CustomerNullableScalarRelationFilter, CustomerWhereInput> | null
+    deliveryAddress?: XOR<DeliveryAddressNullableScalarRelationFilter, DeliveryAddressWhereInput> | null
+    orderProducts?: OrderIntentProductListRelationFilter
+  }, "id">
+
+  export type OrderIntentOrderByWithAggregationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    active?: SortOrder
+    language?: SortOrderInput | SortOrder
+    status?: SortOrder
+    type?: SortOrderInput | SortOrder
+    paymentMethod?: SortOrder
+    paymentProvider?: SortOrderInput | SortOrder
+    tipAmount?: SortOrderInput | SortOrder
+    tags?: SortOrder
+    progressiveDiscountSnapshot?: SortOrderInput | SortOrder
+    amount?: SortOrderInput | SortOrder
+    customerId?: SortOrderInput | SortOrder
+    deliveryAddressId?: SortOrderInput | SortOrder
+    _count?: OrderIntentCountOrderByAggregateInput
+    _avg?: OrderIntentAvgOrderByAggregateInput
+    _max?: OrderIntentMaxOrderByAggregateInput
+    _min?: OrderIntentMinOrderByAggregateInput
+    _sum?: OrderIntentSumOrderByAggregateInput
+  }
+
+  export type OrderIntentScalarWhereWithAggregatesInput = {
+    AND?: OrderIntentScalarWhereWithAggregatesInput | OrderIntentScalarWhereWithAggregatesInput[]
+    OR?: OrderIntentScalarWhereWithAggregatesInput[]
+    NOT?: OrderIntentScalarWhereWithAggregatesInput | OrderIntentScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"OrderIntent"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"OrderIntent"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"OrderIntent"> | Date | string
+    active?: BoolWithAggregatesFilter<"OrderIntent"> | boolean
+    language?: StringNullableWithAggregatesFilter<"OrderIntent"> | string | null
+    status?: EnumOrderStatusWithAggregatesFilter<"OrderIntent"> | $Enums.OrderStatus
+    type?: EnumOrderTypeNullableWithAggregatesFilter<"OrderIntent"> | $Enums.OrderType | null
+    paymentMethod?: EnumPaymentTypeWithAggregatesFilter<"OrderIntent"> | $Enums.PaymentType
+    paymentProvider?: EnumPaymentProviderNullableWithAggregatesFilter<"OrderIntent"> | $Enums.PaymentProvider | null
+    tipAmount?: IntNullableWithAggregatesFilter<"OrderIntent"> | number | null
+    tags?: StringNullableListFilter<"OrderIntent">
+    progressiveDiscountSnapshot?: JsonNullableWithAggregatesFilter<"OrderIntent">
+    amount?: IntNullableWithAggregatesFilter<"OrderIntent"> | number | null
+    customerId?: StringNullableWithAggregatesFilter<"OrderIntent"> | string | null
+    deliveryAddressId?: StringNullableWithAggregatesFilter<"OrderIntent"> | string | null
   }
 
   export type CustomerFeedbackWhereInput = {
@@ -85899,6 +92331,84 @@ export namespace Prisma {
     fullAmount?: IntWithAggregatesFilter<"OrderProducts"> | number
     amount?: IntWithAggregatesFilter<"OrderProducts"> | number
     orderId?: StringNullableWithAggregatesFilter<"OrderProducts"> | string | null
+  }
+
+  export type OrderIntentProductWhereInput = {
+    AND?: OrderIntentProductWhereInput | OrderIntentProductWhereInput[]
+    OR?: OrderIntentProductWhereInput[]
+    NOT?: OrderIntentProductWhereInput | OrderIntentProductWhereInput[]
+    id?: StringFilter<"OrderIntentProduct"> | string
+    createdAt?: DateTimeFilter<"OrderIntentProduct"> | Date | string
+    orderIntentId?: StringFilter<"OrderIntentProduct"> | string
+    productId?: StringFilter<"OrderIntentProduct"> | string
+    quantity?: IntFilter<"OrderIntentProduct"> | number
+    comments?: StringNullableFilter<"OrderIntentProduct"> | string | null
+    fullAmount?: IntNullableFilter<"OrderIntentProduct"> | number | null
+    amount?: IntNullableFilter<"OrderIntentProduct"> | number | null
+    orderIntent?: XOR<OrderIntentScalarRelationFilter, OrderIntentWhereInput>
+    product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
+    modifierGroupItems?: ModifierGroupItemListRelationFilter
+  }
+
+  export type OrderIntentProductOrderByWithRelationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    orderIntentId?: SortOrder
+    productId?: SortOrder
+    quantity?: SortOrder
+    comments?: SortOrderInput | SortOrder
+    fullAmount?: SortOrderInput | SortOrder
+    amount?: SortOrderInput | SortOrder
+    orderIntent?: OrderIntentOrderByWithRelationInput
+    product?: ProductOrderByWithRelationInput
+    modifierGroupItems?: ModifierGroupItemOrderByRelationAggregateInput
+  }
+
+  export type OrderIntentProductWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: OrderIntentProductWhereInput | OrderIntentProductWhereInput[]
+    OR?: OrderIntentProductWhereInput[]
+    NOT?: OrderIntentProductWhereInput | OrderIntentProductWhereInput[]
+    createdAt?: DateTimeFilter<"OrderIntentProduct"> | Date | string
+    orderIntentId?: StringFilter<"OrderIntentProduct"> | string
+    productId?: StringFilter<"OrderIntentProduct"> | string
+    quantity?: IntFilter<"OrderIntentProduct"> | number
+    comments?: StringNullableFilter<"OrderIntentProduct"> | string | null
+    fullAmount?: IntNullableFilter<"OrderIntentProduct"> | number | null
+    amount?: IntNullableFilter<"OrderIntentProduct"> | number | null
+    orderIntent?: XOR<OrderIntentScalarRelationFilter, OrderIntentWhereInput>
+    product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
+    modifierGroupItems?: ModifierGroupItemListRelationFilter
+  }, "id">
+
+  export type OrderIntentProductOrderByWithAggregationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    orderIntentId?: SortOrder
+    productId?: SortOrder
+    quantity?: SortOrder
+    comments?: SortOrderInput | SortOrder
+    fullAmount?: SortOrderInput | SortOrder
+    amount?: SortOrderInput | SortOrder
+    _count?: OrderIntentProductCountOrderByAggregateInput
+    _avg?: OrderIntentProductAvgOrderByAggregateInput
+    _max?: OrderIntentProductMaxOrderByAggregateInput
+    _min?: OrderIntentProductMinOrderByAggregateInput
+    _sum?: OrderIntentProductSumOrderByAggregateInput
+  }
+
+  export type OrderIntentProductScalarWhereWithAggregatesInput = {
+    AND?: OrderIntentProductScalarWhereWithAggregatesInput | OrderIntentProductScalarWhereWithAggregatesInput[]
+    OR?: OrderIntentProductScalarWhereWithAggregatesInput[]
+    NOT?: OrderIntentProductScalarWhereWithAggregatesInput | OrderIntentProductScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"OrderIntentProduct"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"OrderIntentProduct"> | Date | string
+    orderIntentId?: StringWithAggregatesFilter<"OrderIntentProduct"> | string
+    productId?: StringWithAggregatesFilter<"OrderIntentProduct"> | string
+    quantity?: IntWithAggregatesFilter<"OrderIntentProduct"> | number
+    comments?: StringNullableWithAggregatesFilter<"OrderIntentProduct"> | string | null
+    fullAmount?: IntNullableWithAggregatesFilter<"OrderIntentProduct"> | number | null
+    amount?: IntNullableWithAggregatesFilter<"OrderIntentProduct"> | number | null
   }
 
   export type InventoryPlaceWhereInput = {
@@ -87339,6 +93849,7 @@ export namespace Prisma {
     modifierGroup?: ModifierGroupCreateNestedOneWithoutItemsInput
     preparationStepModifierTracks?: PreparationStepModifierTrackCreateNestedManyWithoutModifierGroupItemInput
     orderProducts?: OrderProductsCreateNestedManyWithoutModifierGroupItemsInput
+    orderIntentProducts?: OrderIntentProductCreateNestedManyWithoutModifierGroupItemsInput
   }
 
   export type ModifierGroupItemUncheckedCreateInput = {
@@ -87352,6 +93863,7 @@ export namespace Prisma {
     fileId?: string | null
     preparationStepModifierTracks?: PreparationStepModifierTrackUncheckedCreateNestedManyWithoutModifierGroupItemInput
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutModifierGroupItemsInput
+    orderIntentProducts?: OrderIntentProductUncheckedCreateNestedManyWithoutModifierGroupItemsInput
   }
 
   export type ModifierGroupItemUpdateInput = {
@@ -87365,6 +93877,7 @@ export namespace Prisma {
     modifierGroup?: ModifierGroupUpdateOneWithoutItemsNestedInput
     preparationStepModifierTracks?: PreparationStepModifierTrackUpdateManyWithoutModifierGroupItemNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutModifierGroupItemsNestedInput
+    orderIntentProducts?: OrderIntentProductUpdateManyWithoutModifierGroupItemsNestedInput
   }
 
   export type ModifierGroupItemUncheckedUpdateInput = {
@@ -87378,6 +93891,7 @@ export namespace Prisma {
     fileId?: NullableStringFieldUpdateOperationsInput | string | null
     preparationStepModifierTracks?: PreparationStepModifierTrackUncheckedUpdateManyWithoutModifierGroupItemNestedInput
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutModifierGroupItemsNestedInput
+    orderIntentProducts?: OrderIntentProductUncheckedUpdateManyWithoutModifierGroupItemsNestedInput
   }
 
   export type ModifierGroupItemCreateManyInput = {
@@ -87428,6 +93942,7 @@ export namespace Prisma {
     branches?: BranchCreateNestedManyWithoutBusinessInput
     owner?: BusinessOwnerCreateNestedOneWithoutBusinessInput
     integrations?: ExternalIntegrationConnectionCreateNestedManyWithoutBusinessInput
+    pushDevices?: UserPushDeviceCreateNestedManyWithoutBusinessInput
   }
 
   export type BusinessUncheckedCreateInput = {
@@ -87447,6 +93962,7 @@ export namespace Prisma {
     branches?: BranchUncheckedCreateNestedManyWithoutBusinessInput
     owner?: BusinessOwnerUncheckedCreateNestedOneWithoutBusinessInput
     integrations?: ExternalIntegrationConnectionUncheckedCreateNestedManyWithoutBusinessInput
+    pushDevices?: UserPushDeviceUncheckedCreateNestedManyWithoutBusinessInput
   }
 
   export type BusinessUpdateInput = {
@@ -87466,6 +93982,7 @@ export namespace Prisma {
     branches?: BranchUpdateManyWithoutBusinessNestedInput
     owner?: BusinessOwnerUpdateOneWithoutBusinessNestedInput
     integrations?: ExternalIntegrationConnectionUpdateManyWithoutBusinessNestedInput
+    pushDevices?: UserPushDeviceUpdateManyWithoutBusinessNestedInput
   }
 
   export type BusinessUncheckedUpdateInput = {
@@ -87485,6 +94002,7 @@ export namespace Prisma {
     branches?: BranchUncheckedUpdateManyWithoutBusinessNestedInput
     owner?: BusinessOwnerUncheckedUpdateOneWithoutBusinessNestedInput
     integrations?: ExternalIntegrationConnectionUncheckedUpdateManyWithoutBusinessNestedInput
+    pushDevices?: UserPushDeviceUncheckedUpdateManyWithoutBusinessNestedInput
   }
 
   export type BusinessCreateManyInput = {
@@ -87548,6 +94066,7 @@ export namespace Prisma {
     ownedBusinesses?: BusinessOwnerCreateNestedManyWithoutUserInput
     integrations?: ExternalIntegrationConnectionCreateNestedManyWithoutUserInput
     otpChallenges?: OwnerOtpChallengeCreateNestedManyWithoutOwnerInput
+    pushDevices?: UserPushDeviceCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -87563,6 +94082,7 @@ export namespace Prisma {
     ownedBusinesses?: BusinessOwnerUncheckedCreateNestedManyWithoutUserInput
     integrations?: ExternalIntegrationConnectionUncheckedCreateNestedManyWithoutUserInput
     otpChallenges?: OwnerOtpChallengeUncheckedCreateNestedManyWithoutOwnerInput
+    pushDevices?: UserPushDeviceUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -87578,6 +94098,7 @@ export namespace Prisma {
     ownedBusinesses?: BusinessOwnerUpdateManyWithoutUserNestedInput
     integrations?: ExternalIntegrationConnectionUpdateManyWithoutUserNestedInput
     otpChallenges?: OwnerOtpChallengeUpdateManyWithoutOwnerNestedInput
+    pushDevices?: UserPushDeviceUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -87593,6 +94114,7 @@ export namespace Prisma {
     ownedBusinesses?: BusinessOwnerUncheckedUpdateManyWithoutUserNestedInput
     integrations?: ExternalIntegrationConnectionUncheckedUpdateManyWithoutUserNestedInput
     otpChallenges?: OwnerOtpChallengeUncheckedUpdateManyWithoutOwnerNestedInput
+    pushDevices?: UserPushDeviceUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -87629,6 +94151,102 @@ export namespace Prisma {
     passwordHash?: StringFieldUpdateOperationsInput | string
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type UserPushDeviceCreateInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    platform?: $Enums.UserPushDevicePlatform
+    pushToken: string
+    lastSeenAt?: Date | string
+    lastNotifiedAt?: Date | string | null
+    notificationFailures?: number
+    revokedAt?: Date | string | null
+    user: UserCreateNestedOneWithoutPushDevicesInput
+    business?: BusinessCreateNestedOneWithoutPushDevicesInput
+  }
+
+  export type UserPushDeviceUncheckedCreateInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    userId: string
+    businessId?: string | null
+    platform?: $Enums.UserPushDevicePlatform
+    pushToken: string
+    lastSeenAt?: Date | string
+    lastNotifiedAt?: Date | string | null
+    notificationFailures?: number
+    revokedAt?: Date | string | null
+  }
+
+  export type UserPushDeviceUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    platform?: EnumUserPushDevicePlatformFieldUpdateOperationsInput | $Enums.UserPushDevicePlatform
+    pushToken?: StringFieldUpdateOperationsInput | string
+    lastSeenAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastNotifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notificationFailures?: IntFieldUpdateOperationsInput | number
+    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    user?: UserUpdateOneRequiredWithoutPushDevicesNestedInput
+    business?: BusinessUpdateOneWithoutPushDevicesNestedInput
+  }
+
+  export type UserPushDeviceUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: StringFieldUpdateOperationsInput | string
+    businessId?: NullableStringFieldUpdateOperationsInput | string | null
+    platform?: EnumUserPushDevicePlatformFieldUpdateOperationsInput | $Enums.UserPushDevicePlatform
+    pushToken?: StringFieldUpdateOperationsInput | string
+    lastSeenAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastNotifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notificationFailures?: IntFieldUpdateOperationsInput | number
+    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type UserPushDeviceCreateManyInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    userId: string
+    businessId?: string | null
+    platform?: $Enums.UserPushDevicePlatform
+    pushToken: string
+    lastSeenAt?: Date | string
+    lastNotifiedAt?: Date | string | null
+    notificationFailures?: number
+    revokedAt?: Date | string | null
+  }
+
+  export type UserPushDeviceUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    platform?: EnumUserPushDevicePlatformFieldUpdateOperationsInput | $Enums.UserPushDevicePlatform
+    pushToken?: StringFieldUpdateOperationsInput | string
+    lastSeenAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastNotifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notificationFailures?: IntFieldUpdateOperationsInput | number
+    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type UserPushDeviceUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: StringFieldUpdateOperationsInput | string
+    businessId?: NullableStringFieldUpdateOperationsInput | string | null
+    platform?: EnumUserPushDevicePlatformFieldUpdateOperationsInput | $Enums.UserPushDevicePlatform
+    pushToken?: StringFieldUpdateOperationsInput | string
+    lastSeenAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastNotifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notificationFailures?: IntFieldUpdateOperationsInput | number
+    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type OwnerOtpChallengeCreateInput = {
@@ -88176,8 +94794,12 @@ export namespace Prisma {
     createdAt?: Date | string
     name: string
     operationHours?: NullableJsonNullValueInput | InputJsonValue
+    chatwootAccountId?: string | null
+    chatwootSourceId?: string | null
+    chatwootAgentId?: string | null
     address?: AddressCreateNestedOneWithoutBranchInput
     business?: BusinessCreateNestedOneWithoutBranchesInput
+    orders?: OrderCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateInput = {
@@ -88185,8 +94807,12 @@ export namespace Prisma {
     createdAt?: Date | string
     name: string
     operationHours?: NullableJsonNullValueInput | InputJsonValue
+    chatwootAccountId?: string | null
+    chatwootSourceId?: string | null
+    chatwootAgentId?: string | null
     addressId?: string | null
     businessId?: string | null
+    orders?: OrderUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUpdateInput = {
@@ -88194,8 +94820,12 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
     operationHours?: NullableJsonNullValueInput | InputJsonValue
+    chatwootAccountId?: NullableStringFieldUpdateOperationsInput | string | null
+    chatwootSourceId?: NullableStringFieldUpdateOperationsInput | string | null
+    chatwootAgentId?: NullableStringFieldUpdateOperationsInput | string | null
     address?: AddressUpdateOneWithoutBranchNestedInput
     business?: BusinessUpdateOneWithoutBranchesNestedInput
+    orders?: OrderUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateInput = {
@@ -88203,8 +94833,12 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
     operationHours?: NullableJsonNullValueInput | InputJsonValue
+    chatwootAccountId?: NullableStringFieldUpdateOperationsInput | string | null
+    chatwootSourceId?: NullableStringFieldUpdateOperationsInput | string | null
+    chatwootAgentId?: NullableStringFieldUpdateOperationsInput | string | null
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     businessId?: NullableStringFieldUpdateOperationsInput | string | null
+    orders?: OrderUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchCreateManyInput = {
@@ -88212,6 +94846,9 @@ export namespace Prisma {
     createdAt?: Date | string
     name: string
     operationHours?: NullableJsonNullValueInput | InputJsonValue
+    chatwootAccountId?: string | null
+    chatwootSourceId?: string | null
+    chatwootAgentId?: string | null
     addressId?: string | null
     businessId?: string | null
   }
@@ -88221,6 +94858,9 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
     operationHours?: NullableJsonNullValueInput | InputJsonValue
+    chatwootAccountId?: NullableStringFieldUpdateOperationsInput | string | null
+    chatwootSourceId?: NullableStringFieldUpdateOperationsInput | string | null
+    chatwootAgentId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type BranchUncheckedUpdateManyInput = {
@@ -88228,6 +94868,9 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
     operationHours?: NullableJsonNullValueInput | InputJsonValue
+    chatwootAccountId?: NullableStringFieldUpdateOperationsInput | string | null
+    chatwootSourceId?: NullableStringFieldUpdateOperationsInput | string | null
+    chatwootAgentId?: NullableStringFieldUpdateOperationsInput | string | null
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     businessId?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -88243,6 +94886,7 @@ export namespace Prisma {
     priorityLevel: number
     dispatches?: DispatchCreateNestedManyWithoutDriverInput
     routeSessions?: DispatchRouteSessionCreateNestedManyWithoutDriverInput
+    routeMilestones?: DispatchRouteMilestoneCreateNestedManyWithoutDriverInput
     activationEvents?: DriverActivationEventCreateNestedManyWithoutDriverInput
   }
 
@@ -88257,6 +94901,7 @@ export namespace Prisma {
     priorityLevel: number
     dispatches?: DispatchUncheckedCreateNestedManyWithoutDriverInput
     routeSessions?: DispatchRouteSessionUncheckedCreateNestedManyWithoutDriverInput
+    routeMilestones?: DispatchRouteMilestoneUncheckedCreateNestedManyWithoutDriverInput
     activationEvents?: DriverActivationEventUncheckedCreateNestedManyWithoutDriverInput
   }
 
@@ -88271,6 +94916,7 @@ export namespace Prisma {
     priorityLevel?: IntFieldUpdateOperationsInput | number
     dispatches?: DispatchUpdateManyWithoutDriverNestedInput
     routeSessions?: DispatchRouteSessionUpdateManyWithoutDriverNestedInput
+    routeMilestones?: DispatchRouteMilestoneUpdateManyWithoutDriverNestedInput
     activationEvents?: DriverActivationEventUpdateManyWithoutDriverNestedInput
   }
 
@@ -88285,6 +94931,7 @@ export namespace Prisma {
     priorityLevel?: IntFieldUpdateOperationsInput | number
     dispatches?: DispatchUncheckedUpdateManyWithoutDriverNestedInput
     routeSessions?: DispatchRouteSessionUncheckedUpdateManyWithoutDriverNestedInput
+    routeMilestones?: DispatchRouteMilestoneUncheckedUpdateManyWithoutDriverNestedInput
     activationEvents?: DriverActivationEventUncheckedUpdateManyWithoutDriverNestedInput
   }
 
@@ -88378,9 +95025,15 @@ export namespace Prisma {
     startedDeliveryAt?: Date | string | null
     estimatedDeliveryDurationMinutes?: number | null
     estimatedRoundTripDurationMinutes?: number | null
+    currentEstimatedDeliveryDurationMinutes?: number | null
+    currentEstimatedRoundTripDurationMinutes?: number | null
+    arrivedAtRestaurantAt?: Date | string | null
+    arrivedAtRestaurantLat?: number | null
+    arrivedAtRestaurantLng?: number | null
     driver?: DriverCreateNestedOneWithoutDispatchesInput
     orders?: OrderCreateNestedManyWithoutDispatchInput
     routeSessions?: DispatchRouteSessionCreateNestedManyWithoutDispatchInput
+    routeMilestones?: DispatchRouteMilestoneCreateNestedManyWithoutDispatchInput
     etaRecalculationJobs?: DispatchEtaRecalculationJobCreateNestedManyWithoutDispatchInput
   }
 
@@ -88393,9 +95046,15 @@ export namespace Prisma {
     startedDeliveryAt?: Date | string | null
     estimatedDeliveryDurationMinutes?: number | null
     estimatedRoundTripDurationMinutes?: number | null
+    currentEstimatedDeliveryDurationMinutes?: number | null
+    currentEstimatedRoundTripDurationMinutes?: number | null
+    arrivedAtRestaurantAt?: Date | string | null
+    arrivedAtRestaurantLat?: number | null
+    arrivedAtRestaurantLng?: number | null
     driverId?: string | null
     orders?: OrderUncheckedCreateNestedManyWithoutDispatchInput
     routeSessions?: DispatchRouteSessionUncheckedCreateNestedManyWithoutDispatchInput
+    routeMilestones?: DispatchRouteMilestoneUncheckedCreateNestedManyWithoutDispatchInput
     etaRecalculationJobs?: DispatchEtaRecalculationJobUncheckedCreateNestedManyWithoutDispatchInput
   }
 
@@ -88408,9 +95067,15 @@ export namespace Prisma {
     startedDeliveryAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     estimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    arrivedAtRestaurantAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    arrivedAtRestaurantLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    arrivedAtRestaurantLng?: NullableFloatFieldUpdateOperationsInput | number | null
     driver?: DriverUpdateOneWithoutDispatchesNestedInput
     orders?: OrderUpdateManyWithoutDispatchNestedInput
     routeSessions?: DispatchRouteSessionUpdateManyWithoutDispatchNestedInput
+    routeMilestones?: DispatchRouteMilestoneUpdateManyWithoutDispatchNestedInput
     etaRecalculationJobs?: DispatchEtaRecalculationJobUpdateManyWithoutDispatchNestedInput
   }
 
@@ -88423,9 +95088,15 @@ export namespace Prisma {
     startedDeliveryAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     estimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    arrivedAtRestaurantAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    arrivedAtRestaurantLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    arrivedAtRestaurantLng?: NullableFloatFieldUpdateOperationsInput | number | null
     driverId?: NullableStringFieldUpdateOperationsInput | string | null
     orders?: OrderUncheckedUpdateManyWithoutDispatchNestedInput
     routeSessions?: DispatchRouteSessionUncheckedUpdateManyWithoutDispatchNestedInput
+    routeMilestones?: DispatchRouteMilestoneUncheckedUpdateManyWithoutDispatchNestedInput
     etaRecalculationJobs?: DispatchEtaRecalculationJobUncheckedUpdateManyWithoutDispatchNestedInput
   }
 
@@ -88438,6 +95109,11 @@ export namespace Prisma {
     startedDeliveryAt?: Date | string | null
     estimatedDeliveryDurationMinutes?: number | null
     estimatedRoundTripDurationMinutes?: number | null
+    currentEstimatedDeliveryDurationMinutes?: number | null
+    currentEstimatedRoundTripDurationMinutes?: number | null
+    arrivedAtRestaurantAt?: Date | string | null
+    arrivedAtRestaurantLat?: number | null
+    arrivedAtRestaurantLng?: number | null
     driverId?: string | null
   }
 
@@ -88450,6 +95126,11 @@ export namespace Prisma {
     startedDeliveryAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     estimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    arrivedAtRestaurantAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    arrivedAtRestaurantLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    arrivedAtRestaurantLng?: NullableFloatFieldUpdateOperationsInput | number | null
   }
 
   export type DispatchUncheckedUpdateManyInput = {
@@ -88461,6 +95142,11 @@ export namespace Prisma {
     startedDeliveryAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     estimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    arrivedAtRestaurantAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    arrivedAtRestaurantLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    arrivedAtRestaurantLng?: NullableFloatFieldUpdateOperationsInput | number | null
     driverId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -88477,6 +95163,7 @@ export namespace Prisma {
     dispatch: DispatchCreateNestedOneWithoutRouteSessionsInput
     driver: DriverCreateNestedOneWithoutRouteSessionsInput
     points?: DispatchRoutePointCreateNestedManyWithoutSessionInput
+    milestones?: DispatchRouteMilestoneCreateNestedManyWithoutSessionInput
   }
 
   export type DispatchRouteSessionUncheckedCreateInput = {
@@ -88492,6 +95179,7 @@ export namespace Prisma {
     durationSeconds?: number | null
     polyline?: string | null
     points?: DispatchRoutePointUncheckedCreateNestedManyWithoutSessionInput
+    milestones?: DispatchRouteMilestoneUncheckedCreateNestedManyWithoutSessionInput
   }
 
   export type DispatchRouteSessionUpdateInput = {
@@ -88507,6 +95195,7 @@ export namespace Prisma {
     dispatch?: DispatchUpdateOneRequiredWithoutRouteSessionsNestedInput
     driver?: DriverUpdateOneRequiredWithoutRouteSessionsNestedInput
     points?: DispatchRoutePointUpdateManyWithoutSessionNestedInput
+    milestones?: DispatchRouteMilestoneUpdateManyWithoutSessionNestedInput
   }
 
   export type DispatchRouteSessionUncheckedUpdateInput = {
@@ -88522,6 +95211,7 @@ export namespace Prisma {
     durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     polyline?: NullableStringFieldUpdateOperationsInput | string | null
     points?: DispatchRoutePointUncheckedUpdateManyWithoutSessionNestedInput
+    milestones?: DispatchRouteMilestoneUncheckedUpdateManyWithoutSessionNestedInput
   }
 
   export type DispatchRouteSessionCreateManyInput = {
@@ -88673,6 +95363,94 @@ export namespace Prisma {
     altitudeMeters?: NullableFloatFieldUpdateOperationsInput | number | null
     source?: EnumDispatchRoutePointSourceFieldUpdateOperationsInput | $Enums.DispatchRoutePointSource
     isMocked?: NullableBoolFieldUpdateOperationsInput | boolean | null
+  }
+
+  export type DispatchRouteMilestoneCreateInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    type: $Enums.DispatchRouteMilestoneType
+    recordedAt: Date | string
+    lat: number
+    lng: number
+    dispatch: DispatchCreateNestedOneWithoutRouteMilestonesInput
+    driver: DriverCreateNestedOneWithoutRouteMilestonesInput
+    session: DispatchRouteSessionCreateNestedOneWithoutMilestonesInput
+  }
+
+  export type DispatchRouteMilestoneUncheckedCreateInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    dispatchId: string
+    driverId: string
+    sessionId: string
+    type: $Enums.DispatchRouteMilestoneType
+    recordedAt: Date | string
+    lat: number
+    lng: number
+  }
+
+  export type DispatchRouteMilestoneUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumDispatchRouteMilestoneTypeFieldUpdateOperationsInput | $Enums.DispatchRouteMilestoneType
+    recordedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lat?: FloatFieldUpdateOperationsInput | number
+    lng?: FloatFieldUpdateOperationsInput | number
+    dispatch?: DispatchUpdateOneRequiredWithoutRouteMilestonesNestedInput
+    driver?: DriverUpdateOneRequiredWithoutRouteMilestonesNestedInput
+    session?: DispatchRouteSessionUpdateOneRequiredWithoutMilestonesNestedInput
+  }
+
+  export type DispatchRouteMilestoneUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dispatchId?: StringFieldUpdateOperationsInput | string
+    driverId?: StringFieldUpdateOperationsInput | string
+    sessionId?: StringFieldUpdateOperationsInput | string
+    type?: EnumDispatchRouteMilestoneTypeFieldUpdateOperationsInput | $Enums.DispatchRouteMilestoneType
+    recordedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lat?: FloatFieldUpdateOperationsInput | number
+    lng?: FloatFieldUpdateOperationsInput | number
+  }
+
+  export type DispatchRouteMilestoneCreateManyInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    dispatchId: string
+    driverId: string
+    sessionId: string
+    type: $Enums.DispatchRouteMilestoneType
+    recordedAt: Date | string
+    lat: number
+    lng: number
+  }
+
+  export type DispatchRouteMilestoneUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumDispatchRouteMilestoneTypeFieldUpdateOperationsInput | $Enums.DispatchRouteMilestoneType
+    recordedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lat?: FloatFieldUpdateOperationsInput | number
+    lng?: FloatFieldUpdateOperationsInput | number
+  }
+
+  export type DispatchRouteMilestoneUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dispatchId?: StringFieldUpdateOperationsInput | string
+    driverId?: StringFieldUpdateOperationsInput | string
+    sessionId?: StringFieldUpdateOperationsInput | string
+    type?: EnumDispatchRouteMilestoneTypeFieldUpdateOperationsInput | $Enums.DispatchRouteMilestoneType
+    recordedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lat?: FloatFieldUpdateOperationsInput | number
+    lng?: FloatFieldUpdateOperationsInput | number
   }
 
   export type DispatchAssignmentJobCreateInput = {
@@ -89102,6 +95880,7 @@ export namespace Prisma {
     comboUsedInItems?: ComboProductItemCreateNestedManyWithoutProductInput
     exclusivePromotionProducts?: ExclusivePromotionProductCreateNestedManyWithoutProductInput
     OrderProducts?: OrderProductsCreateNestedManyWithoutProductInput
+    orderIntentProducts?: OrderIntentProductCreateNestedManyWithoutProductInput
     prizeProducts?: ProgressiveDiscountPrizeProductCreateNestedManyWithoutProductInput
     customerRewards?: CustomerRewardCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepCreateNestedManyWithoutProductsInput
@@ -89128,6 +95907,7 @@ export namespace Prisma {
     comboUsedInItems?: ComboProductItemUncheckedCreateNestedManyWithoutProductInput
     exclusivePromotionProducts?: ExclusivePromotionProductUncheckedCreateNestedManyWithoutProductInput
     OrderProducts?: OrderProductsUncheckedCreateNestedManyWithoutProductInput
+    orderIntentProducts?: OrderIntentProductUncheckedCreateNestedManyWithoutProductInput
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedCreateNestedManyWithoutProductInput
     customerRewards?: CustomerRewardUncheckedCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepUncheckedCreateNestedManyWithoutProductsInput
@@ -89154,6 +95934,7 @@ export namespace Prisma {
     comboUsedInItems?: ComboProductItemUpdateManyWithoutProductNestedInput
     exclusivePromotionProducts?: ExclusivePromotionProductUpdateManyWithoutProductNestedInput
     OrderProducts?: OrderProductsUpdateManyWithoutProductNestedInput
+    orderIntentProducts?: OrderIntentProductUpdateManyWithoutProductNestedInput
     prizeProducts?: ProgressiveDiscountPrizeProductUpdateManyWithoutProductNestedInput
     customerRewards?: CustomerRewardUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUpdateManyWithoutProductsNestedInput
@@ -89180,6 +95961,7 @@ export namespace Prisma {
     comboUsedInItems?: ComboProductItemUncheckedUpdateManyWithoutProductNestedInput
     exclusivePromotionProducts?: ExclusivePromotionProductUncheckedUpdateManyWithoutProductNestedInput
     OrderProducts?: OrderProductsUncheckedUpdateManyWithoutProductNestedInput
+    orderIntentProducts?: OrderIntentProductUncheckedUpdateManyWithoutProductNestedInput
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutProductNestedInput
     customerRewards?: CustomerRewardUncheckedUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUncheckedUpdateManyWithoutProductsNestedInput
@@ -89960,6 +96742,7 @@ export namespace Prisma {
     otpChallenges?: CustomerOtpChallengeCreateNestedManyWithoutCustomerInput
     accessTokens?: CustomerAccessTokenCreateNestedManyWithoutCustomerInput
     cards?: CustomerCardCreateNestedManyWithoutCustomerInput
+    orderIntents?: OrderIntentCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUncheckedCreateInput = {
@@ -89980,6 +96763,7 @@ export namespace Prisma {
     otpChallenges?: CustomerOtpChallengeUncheckedCreateNestedManyWithoutCustomerInput
     accessTokens?: CustomerAccessTokenUncheckedCreateNestedManyWithoutCustomerInput
     cards?: CustomerCardUncheckedCreateNestedManyWithoutCustomerInput
+    orderIntents?: OrderIntentUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUpdateInput = {
@@ -90000,6 +96784,7 @@ export namespace Prisma {
     otpChallenges?: CustomerOtpChallengeUpdateManyWithoutCustomerNestedInput
     accessTokens?: CustomerAccessTokenUpdateManyWithoutCustomerNestedInput
     cards?: CustomerCardUpdateManyWithoutCustomerNestedInput
+    orderIntents?: OrderIntentUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateInput = {
@@ -90020,6 +96805,7 @@ export namespace Prisma {
     otpChallenges?: CustomerOtpChallengeUncheckedUpdateManyWithoutCustomerNestedInput
     accessTokens?: CustomerAccessTokenUncheckedUpdateManyWithoutCustomerNestedInput
     cards?: CustomerCardUncheckedUpdateManyWithoutCustomerNestedInput
+    orderIntents?: OrderIntentUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerCreateManyInput = {
@@ -90383,6 +97169,7 @@ export namespace Prisma {
     numberComplement?: string | null
     customer?: CustomerCreateNestedOneWithoutAddressesInput
     orders?: OrderCreateNestedManyWithoutDeliveryAddressInput
+    orderIntents?: OrderIntentCreateNestedManyWithoutDeliveryAddressInput
   }
 
   export type DeliveryAddressUncheckedCreateInput = {
@@ -90401,6 +97188,7 @@ export namespace Prisma {
     numberComplement?: string | null
     customerId?: string | null
     orders?: OrderUncheckedCreateNestedManyWithoutDeliveryAddressInput
+    orderIntents?: OrderIntentUncheckedCreateNestedManyWithoutDeliveryAddressInput
   }
 
   export type DeliveryAddressUpdateInput = {
@@ -90419,6 +97207,7 @@ export namespace Prisma {
     numberComplement?: NullableStringFieldUpdateOperationsInput | string | null
     customer?: CustomerUpdateOneWithoutAddressesNestedInput
     orders?: OrderUpdateManyWithoutDeliveryAddressNestedInput
+    orderIntents?: OrderIntentUpdateManyWithoutDeliveryAddressNestedInput
   }
 
   export type DeliveryAddressUncheckedUpdateInput = {
@@ -90437,6 +97226,7 @@ export namespace Prisma {
     numberComplement?: NullableStringFieldUpdateOperationsInput | string | null
     customerId?: NullableStringFieldUpdateOperationsInput | string | null
     orders?: OrderUncheckedUpdateManyWithoutDeliveryAddressNestedInput
+    orderIntents?: OrderIntentUncheckedUpdateManyWithoutDeliveryAddressNestedInput
   }
 
   export type DeliveryAddressCreateManyInput = {
@@ -90676,7 +97466,11 @@ export namespace Prisma {
     language?: string | null
     paidAt?: Date | string | null
     deliveredAt?: Date | string | null
+    leftAtDropOffAt?: Date | string | null
+    leftAtDropOffLat?: number | null
+    leftAtDropOffLng?: number | null
     estimatedDeliveryDurationMinutes?: number | null
+    currentEstimatedDeliveryDurationMinutes?: number | null
     dispatchOrderIndex?: number | null
     amount: number
     canceled?: boolean
@@ -90693,6 +97487,7 @@ export namespace Prisma {
     address?: AddressCreateNestedOneWithoutOrdersInput
     deliveryAddress?: DeliveryAddressCreateNestedOneWithoutOrdersInput
     externalAddress?: ExternalAddressCreateNestedOneWithoutOrdersInput
+    branch?: BranchCreateNestedOneWithoutOrdersInput
     orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryCreateNestedManyWithoutOrderInput
     feedback?: CustomerFeedbackCreateNestedOneWithoutOrderInput
@@ -90708,7 +97503,11 @@ export namespace Prisma {
     language?: string | null
     paidAt?: Date | string | null
     deliveredAt?: Date | string | null
+    leftAtDropOffAt?: Date | string | null
+    leftAtDropOffLat?: number | null
+    leftAtDropOffLng?: number | null
     estimatedDeliveryDurationMinutes?: number | null
+    currentEstimatedDeliveryDurationMinutes?: number | null
     dispatchOrderIndex?: number | null
     amount: number
     canceled?: boolean
@@ -90725,6 +97524,7 @@ export namespace Prisma {
     addressId?: string | null
     deliveryAddressId?: string | null
     externalAddressId?: string | null
+    branchId?: string | null
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryUncheckedCreateNestedManyWithoutOrderInput
     feedback?: CustomerFeedbackUncheckedCreateNestedOneWithoutOrderInput
@@ -90740,7 +97540,11 @@ export namespace Prisma {
     language?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    leftAtDropOffLng?: NullableFloatFieldUpdateOperationsInput | number | null
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
     canceled?: BoolFieldUpdateOperationsInput | boolean
@@ -90757,6 +97561,7 @@ export namespace Prisma {
     address?: AddressUpdateOneWithoutOrdersNestedInput
     deliveryAddress?: DeliveryAddressUpdateOneWithoutOrdersNestedInput
     externalAddress?: ExternalAddressUpdateOneWithoutOrdersNestedInput
+    branch?: BranchUpdateOneWithoutOrdersNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUpdateManyWithoutOrderNestedInput
     feedback?: CustomerFeedbackUpdateOneWithoutOrderNestedInput
@@ -90772,7 +97577,11 @@ export namespace Prisma {
     language?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    leftAtDropOffLng?: NullableFloatFieldUpdateOperationsInput | number | null
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
     canceled?: BoolFieldUpdateOperationsInput | boolean
@@ -90789,6 +97598,7 @@ export namespace Prisma {
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
     externalAddressId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUncheckedUpdateManyWithoutOrderNestedInput
     feedback?: CustomerFeedbackUncheckedUpdateOneWithoutOrderNestedInput
@@ -90804,7 +97614,11 @@ export namespace Prisma {
     language?: string | null
     paidAt?: Date | string | null
     deliveredAt?: Date | string | null
+    leftAtDropOffAt?: Date | string | null
+    leftAtDropOffLat?: number | null
+    leftAtDropOffLng?: number | null
     estimatedDeliveryDurationMinutes?: number | null
+    currentEstimatedDeliveryDurationMinutes?: number | null
     dispatchOrderIndex?: number | null
     amount: number
     canceled?: boolean
@@ -90821,6 +97635,7 @@ export namespace Prisma {
     addressId?: string | null
     deliveryAddressId?: string | null
     externalAddressId?: string | null
+    branchId?: string | null
   }
 
   export type OrderUpdateManyMutationInput = {
@@ -90831,7 +97646,11 @@ export namespace Prisma {
     language?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    leftAtDropOffLng?: NullableFloatFieldUpdateOperationsInput | number | null
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
     canceled?: BoolFieldUpdateOperationsInput | boolean
@@ -90853,7 +97672,11 @@ export namespace Prisma {
     language?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    leftAtDropOffLng?: NullableFloatFieldUpdateOperationsInput | number | null
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
     canceled?: BoolFieldUpdateOperationsInput | boolean
@@ -90870,6 +97693,135 @@ export namespace Prisma {
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
     externalAddressId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type OrderIntentCreateInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    active?: boolean
+    language?: string | null
+    status?: $Enums.OrderStatus
+    type?: $Enums.OrderType | null
+    paymentMethod?: $Enums.PaymentType
+    paymentProvider?: $Enums.PaymentProvider | null
+    tipAmount?: number | null
+    tags?: OrderIntentCreatetagsInput | string[]
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    amount?: number | null
+    customer?: CustomerCreateNestedOneWithoutOrderIntentsInput
+    deliveryAddress?: DeliveryAddressCreateNestedOneWithoutOrderIntentsInput
+    orderProducts?: OrderIntentProductCreateNestedManyWithoutOrderIntentInput
+  }
+
+  export type OrderIntentUncheckedCreateInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    active?: boolean
+    language?: string | null
+    status?: $Enums.OrderStatus
+    type?: $Enums.OrderType | null
+    paymentMethod?: $Enums.PaymentType
+    paymentProvider?: $Enums.PaymentProvider | null
+    tipAmount?: number | null
+    tags?: OrderIntentCreatetagsInput | string[]
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    amount?: number | null
+    customerId?: string | null
+    deliveryAddressId?: string | null
+    orderProducts?: OrderIntentProductUncheckedCreateNestedManyWithoutOrderIntentInput
+  }
+
+  export type OrderIntentUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    type?: NullableEnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType | null
+    paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
+    paymentProvider?: NullableEnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider | null
+    tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    tags?: OrderIntentUpdatetagsInput | string[]
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    amount?: NullableIntFieldUpdateOperationsInput | number | null
+    customer?: CustomerUpdateOneWithoutOrderIntentsNestedInput
+    deliveryAddress?: DeliveryAddressUpdateOneWithoutOrderIntentsNestedInput
+    orderProducts?: OrderIntentProductUpdateManyWithoutOrderIntentNestedInput
+  }
+
+  export type OrderIntentUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    type?: NullableEnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType | null
+    paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
+    paymentProvider?: NullableEnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider | null
+    tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    tags?: OrderIntentUpdatetagsInput | string[]
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    amount?: NullableIntFieldUpdateOperationsInput | number | null
+    customerId?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
+    orderProducts?: OrderIntentProductUncheckedUpdateManyWithoutOrderIntentNestedInput
+  }
+
+  export type OrderIntentCreateManyInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    active?: boolean
+    language?: string | null
+    status?: $Enums.OrderStatus
+    type?: $Enums.OrderType | null
+    paymentMethod?: $Enums.PaymentType
+    paymentProvider?: $Enums.PaymentProvider | null
+    tipAmount?: number | null
+    tags?: OrderIntentCreatetagsInput | string[]
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    amount?: number | null
+    customerId?: string | null
+    deliveryAddressId?: string | null
+  }
+
+  export type OrderIntentUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    type?: NullableEnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType | null
+    paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
+    paymentProvider?: NullableEnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider | null
+    tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    tags?: OrderIntentUpdatetagsInput | string[]
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    amount?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type OrderIntentUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    type?: NullableEnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType | null
+    paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
+    paymentProvider?: NullableEnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider | null
+    tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    tags?: OrderIntentUpdatetagsInput | string[]
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    amount?: NullableIntFieldUpdateOperationsInput | number | null
+    customerId?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type CustomerFeedbackCreateInput = {
@@ -91219,6 +98171,85 @@ export namespace Prisma {
     fullAmount?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
     orderId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type OrderIntentProductCreateInput = {
+    id: string
+    createdAt?: Date | string
+    quantity: number
+    comments?: string | null
+    fullAmount?: number | null
+    amount?: number | null
+    orderIntent: OrderIntentCreateNestedOneWithoutOrderProductsInput
+    product: ProductCreateNestedOneWithoutOrderIntentProductsInput
+    modifierGroupItems?: ModifierGroupItemCreateNestedManyWithoutOrderIntentProductsInput
+  }
+
+  export type OrderIntentProductUncheckedCreateInput = {
+    id: string
+    createdAt?: Date | string
+    orderIntentId: string
+    productId: string
+    quantity: number
+    comments?: string | null
+    fullAmount?: number | null
+    amount?: number | null
+    modifierGroupItems?: ModifierGroupItemUncheckedCreateNestedManyWithoutOrderIntentProductsInput
+  }
+
+  export type OrderIntentProductUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    comments?: NullableStringFieldUpdateOperationsInput | string | null
+    fullAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    amount?: NullableIntFieldUpdateOperationsInput | number | null
+    orderIntent?: OrderIntentUpdateOneRequiredWithoutOrderProductsNestedInput
+    product?: ProductUpdateOneRequiredWithoutOrderIntentProductsNestedInput
+    modifierGroupItems?: ModifierGroupItemUpdateManyWithoutOrderIntentProductsNestedInput
+  }
+
+  export type OrderIntentProductUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    orderIntentId?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    comments?: NullableStringFieldUpdateOperationsInput | string | null
+    fullAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    amount?: NullableIntFieldUpdateOperationsInput | number | null
+    modifierGroupItems?: ModifierGroupItemUncheckedUpdateManyWithoutOrderIntentProductsNestedInput
+  }
+
+  export type OrderIntentProductCreateManyInput = {
+    id: string
+    createdAt?: Date | string
+    orderIntentId: string
+    productId: string
+    quantity: number
+    comments?: string | null
+    fullAmount?: number | null
+    amount?: number | null
+  }
+
+  export type OrderIntentProductUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    comments?: NullableStringFieldUpdateOperationsInput | string | null
+    fullAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    amount?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type OrderIntentProductUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    orderIntentId?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    comments?: NullableStringFieldUpdateOperationsInput | string | null
+    fullAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    amount?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type InventoryPlaceCreateInput = {
@@ -92787,7 +99818,17 @@ export namespace Prisma {
     none?: OrderProductsWhereInput
   }
 
+  export type OrderIntentProductListRelationFilter = {
+    every?: OrderIntentProductWhereInput
+    some?: OrderIntentProductWhereInput
+    none?: OrderIntentProductWhereInput
+  }
+
   export type OrderProductsOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type OrderIntentProductOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -92847,11 +99888,21 @@ export namespace Prisma {
     none?: ExternalIntegrationConnectionWhereInput
   }
 
+  export type UserPushDeviceListRelationFilter = {
+    every?: UserPushDeviceWhereInput
+    some?: UserPushDeviceWhereInput
+    none?: UserPushDeviceWhereInput
+  }
+
   export type BranchOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
   export type ExternalIntegrationConnectionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type UserPushDeviceOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -92959,9 +100010,81 @@ export namespace Prisma {
     lastLoginAt?: SortOrder
   }
 
+  export type EnumUserPushDevicePlatformFilter<$PrismaModel = never> = {
+    equals?: $Enums.UserPushDevicePlatform | EnumUserPushDevicePlatformFieldRefInput<$PrismaModel>
+    in?: $Enums.UserPushDevicePlatform[] | ListEnumUserPushDevicePlatformFieldRefInput<$PrismaModel>
+    notIn?: $Enums.UserPushDevicePlatform[] | ListEnumUserPushDevicePlatformFieldRefInput<$PrismaModel>
+    not?: NestedEnumUserPushDevicePlatformFilter<$PrismaModel> | $Enums.UserPushDevicePlatform
+  }
+
   export type UserScalarRelationFilter = {
     is?: UserWhereInput
     isNot?: UserWhereInput
+  }
+
+  export type BusinessNullableScalarRelationFilter = {
+    is?: BusinessWhereInput | null
+    isNot?: BusinessWhereInput | null
+  }
+
+  export type UserPushDeviceCountOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    userId?: SortOrder
+    businessId?: SortOrder
+    platform?: SortOrder
+    pushToken?: SortOrder
+    lastSeenAt?: SortOrder
+    lastNotifiedAt?: SortOrder
+    notificationFailures?: SortOrder
+    revokedAt?: SortOrder
+  }
+
+  export type UserPushDeviceAvgOrderByAggregateInput = {
+    notificationFailures?: SortOrder
+  }
+
+  export type UserPushDeviceMaxOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    userId?: SortOrder
+    businessId?: SortOrder
+    platform?: SortOrder
+    pushToken?: SortOrder
+    lastSeenAt?: SortOrder
+    lastNotifiedAt?: SortOrder
+    notificationFailures?: SortOrder
+    revokedAt?: SortOrder
+  }
+
+  export type UserPushDeviceMinOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    userId?: SortOrder
+    businessId?: SortOrder
+    platform?: SortOrder
+    pushToken?: SortOrder
+    lastSeenAt?: SortOrder
+    lastNotifiedAt?: SortOrder
+    notificationFailures?: SortOrder
+    revokedAt?: SortOrder
+  }
+
+  export type UserPushDeviceSumOrderByAggregateInput = {
+    notificationFailures?: SortOrder
+  }
+
+  export type EnumUserPushDevicePlatformWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.UserPushDevicePlatform | EnumUserPushDevicePlatformFieldRefInput<$PrismaModel>
+    in?: $Enums.UserPushDevicePlatform[] | ListEnumUserPushDevicePlatformFieldRefInput<$PrismaModel>
+    notIn?: $Enums.UserPushDevicePlatform[] | ListEnumUserPushDevicePlatformFieldRefInput<$PrismaModel>
+    not?: NestedEnumUserPushDevicePlatformWithAggregatesFilter<$PrismaModel> | $Enums.UserPushDevicePlatform
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumUserPushDevicePlatformFilter<$PrismaModel>
+    _max?: NestedEnumUserPushDevicePlatformFilter<$PrismaModel>
   }
 
   export type OwnerOtpChallengeCountOrderByAggregateInput = {
@@ -93028,11 +100151,6 @@ export namespace Prisma {
     in?: $Enums.ExternalIntegrationEnvironment[] | ListEnumExternalIntegrationEnvironmentFieldRefInput<$PrismaModel>
     notIn?: $Enums.ExternalIntegrationEnvironment[] | ListEnumExternalIntegrationEnvironmentFieldRefInput<$PrismaModel>
     not?: NestedEnumExternalIntegrationEnvironmentFilter<$PrismaModel> | $Enums.ExternalIntegrationEnvironment
-  }
-
-  export type BusinessNullableScalarRelationFilter = {
-    is?: BusinessWhereInput | null
-    isNot?: BusinessWhereInput | null
   }
 
   export type ExternalMenuEntityMapListRelationFilter = {
@@ -93331,11 +100449,24 @@ export namespace Prisma {
     isNot?: AddressWhereInput | null
   }
 
+  export type OrderListRelationFilter = {
+    every?: OrderWhereInput
+    some?: OrderWhereInput
+    none?: OrderWhereInput
+  }
+
+  export type OrderOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type BranchCountOrderByAggregateInput = {
     id?: SortOrder
     createdAt?: SortOrder
     name?: SortOrder
     operationHours?: SortOrder
+    chatwootAccountId?: SortOrder
+    chatwootSourceId?: SortOrder
+    chatwootAgentId?: SortOrder
     addressId?: SortOrder
     businessId?: SortOrder
   }
@@ -93344,6 +100475,9 @@ export namespace Prisma {
     id?: SortOrder
     createdAt?: SortOrder
     name?: SortOrder
+    chatwootAccountId?: SortOrder
+    chatwootSourceId?: SortOrder
+    chatwootAgentId?: SortOrder
     addressId?: SortOrder
     businessId?: SortOrder
   }
@@ -93352,6 +100486,9 @@ export namespace Prisma {
     id?: SortOrder
     createdAt?: SortOrder
     name?: SortOrder
+    chatwootAccountId?: SortOrder
+    chatwootSourceId?: SortOrder
+    chatwootAgentId?: SortOrder
     addressId?: SortOrder
     businessId?: SortOrder
   }
@@ -93368,6 +100505,12 @@ export namespace Prisma {
     none?: DispatchRouteSessionWhereInput
   }
 
+  export type DispatchRouteMilestoneListRelationFilter = {
+    every?: DispatchRouteMilestoneWhereInput
+    some?: DispatchRouteMilestoneWhereInput
+    none?: DispatchRouteMilestoneWhereInput
+  }
+
   export type DriverActivationEventListRelationFilter = {
     every?: DriverActivationEventWhereInput
     some?: DriverActivationEventWhereInput
@@ -93379,6 +100522,10 @@ export namespace Prisma {
   }
 
   export type DispatchRouteSessionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type DispatchRouteMilestoneOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -93470,25 +100617,26 @@ export namespace Prisma {
     _max?: NestedEnumDriverActivationStatusFilter<$PrismaModel>
   }
 
+  export type FloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
   export type DriverNullableScalarRelationFilter = {
     is?: DriverWhereInput | null
     isNot?: DriverWhereInput | null
-  }
-
-  export type OrderListRelationFilter = {
-    every?: OrderWhereInput
-    some?: OrderWhereInput
-    none?: OrderWhereInput
   }
 
   export type DispatchEtaRecalculationJobListRelationFilter = {
     every?: DispatchEtaRecalculationJobWhereInput
     some?: DispatchEtaRecalculationJobWhereInput
     none?: DispatchEtaRecalculationJobWhereInput
-  }
-
-  export type OrderOrderByRelationAggregateInput = {
-    _count?: SortOrder
   }
 
   export type DispatchEtaRecalculationJobOrderByRelationAggregateInput = {
@@ -93504,6 +100652,11 @@ export namespace Prisma {
     startedDeliveryAt?: SortOrder
     estimatedDeliveryDurationMinutes?: SortOrder
     estimatedRoundTripDurationMinutes?: SortOrder
+    currentEstimatedDeliveryDurationMinutes?: SortOrder
+    currentEstimatedRoundTripDurationMinutes?: SortOrder
+    arrivedAtRestaurantAt?: SortOrder
+    arrivedAtRestaurantLat?: SortOrder
+    arrivedAtRestaurantLng?: SortOrder
     driverId?: SortOrder
   }
 
@@ -93511,6 +100664,10 @@ export namespace Prisma {
     queueIndex?: SortOrder
     estimatedDeliveryDurationMinutes?: SortOrder
     estimatedRoundTripDurationMinutes?: SortOrder
+    currentEstimatedDeliveryDurationMinutes?: SortOrder
+    currentEstimatedRoundTripDurationMinutes?: SortOrder
+    arrivedAtRestaurantLat?: SortOrder
+    arrivedAtRestaurantLng?: SortOrder
   }
 
   export type DispatchMaxOrderByAggregateInput = {
@@ -93522,6 +100679,11 @@ export namespace Prisma {
     startedDeliveryAt?: SortOrder
     estimatedDeliveryDurationMinutes?: SortOrder
     estimatedRoundTripDurationMinutes?: SortOrder
+    currentEstimatedDeliveryDurationMinutes?: SortOrder
+    currentEstimatedRoundTripDurationMinutes?: SortOrder
+    arrivedAtRestaurantAt?: SortOrder
+    arrivedAtRestaurantLat?: SortOrder
+    arrivedAtRestaurantLng?: SortOrder
     driverId?: SortOrder
   }
 
@@ -93534,6 +100696,11 @@ export namespace Prisma {
     startedDeliveryAt?: SortOrder
     estimatedDeliveryDurationMinutes?: SortOrder
     estimatedRoundTripDurationMinutes?: SortOrder
+    currentEstimatedDeliveryDurationMinutes?: SortOrder
+    currentEstimatedRoundTripDurationMinutes?: SortOrder
+    arrivedAtRestaurantAt?: SortOrder
+    arrivedAtRestaurantLat?: SortOrder
+    arrivedAtRestaurantLng?: SortOrder
     driverId?: SortOrder
   }
 
@@ -93541,6 +100708,26 @@ export namespace Prisma {
     queueIndex?: SortOrder
     estimatedDeliveryDurationMinutes?: SortOrder
     estimatedRoundTripDurationMinutes?: SortOrder
+    currentEstimatedDeliveryDurationMinutes?: SortOrder
+    currentEstimatedRoundTripDurationMinutes?: SortOrder
+    arrivedAtRestaurantLat?: SortOrder
+    arrivedAtRestaurantLng?: SortOrder
+  }
+
+  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type EnumDispatchRouteSessionStatusFilter<$PrismaModel = never> = {
@@ -93636,17 +100823,6 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatFilter<$PrismaModel> | number
-  }
-
-  export type FloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
   export type EnumDispatchRoutePointSourceFilter<$PrismaModel = never> = {
@@ -93755,22 +100931,6 @@ export namespace Prisma {
     _max?: NestedFloatFilter<$PrismaModel>
   }
 
-  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedFloatNullableFilter<$PrismaModel>
-    _min?: NestedFloatNullableFilter<$PrismaModel>
-    _max?: NestedFloatNullableFilter<$PrismaModel>
-  }
-
   export type EnumDispatchRoutePointSourceWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.DispatchRoutePointSource | EnumDispatchRoutePointSourceFieldRefInput<$PrismaModel>
     in?: $Enums.DispatchRoutePointSource[] | ListEnumDispatchRoutePointSourceFieldRefInput<$PrismaModel>
@@ -93787,6 +100947,77 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedBoolNullableFilter<$PrismaModel>
     _max?: NestedBoolNullableFilter<$PrismaModel>
+  }
+
+  export type EnumDispatchRouteMilestoneTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.DispatchRouteMilestoneType | EnumDispatchRouteMilestoneTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.DispatchRouteMilestoneType[] | ListEnumDispatchRouteMilestoneTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DispatchRouteMilestoneType[] | ListEnumDispatchRouteMilestoneTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumDispatchRouteMilestoneTypeFilter<$PrismaModel> | $Enums.DispatchRouteMilestoneType
+  }
+
+  export type DispatchRouteMilestoneDispatchIdTypeCompoundUniqueInput = {
+    dispatchId: string
+    type: $Enums.DispatchRouteMilestoneType
+  }
+
+  export type DispatchRouteMilestoneCountOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    dispatchId?: SortOrder
+    driverId?: SortOrder
+    sessionId?: SortOrder
+    type?: SortOrder
+    recordedAt?: SortOrder
+    lat?: SortOrder
+    lng?: SortOrder
+  }
+
+  export type DispatchRouteMilestoneAvgOrderByAggregateInput = {
+    lat?: SortOrder
+    lng?: SortOrder
+  }
+
+  export type DispatchRouteMilestoneMaxOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    dispatchId?: SortOrder
+    driverId?: SortOrder
+    sessionId?: SortOrder
+    type?: SortOrder
+    recordedAt?: SortOrder
+    lat?: SortOrder
+    lng?: SortOrder
+  }
+
+  export type DispatchRouteMilestoneMinOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    dispatchId?: SortOrder
+    driverId?: SortOrder
+    sessionId?: SortOrder
+    type?: SortOrder
+    recordedAt?: SortOrder
+    lat?: SortOrder
+    lng?: SortOrder
+  }
+
+  export type DispatchRouteMilestoneSumOrderByAggregateInput = {
+    lat?: SortOrder
+    lng?: SortOrder
+  }
+
+  export type EnumDispatchRouteMilestoneTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.DispatchRouteMilestoneType | EnumDispatchRouteMilestoneTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.DispatchRouteMilestoneType[] | ListEnumDispatchRouteMilestoneTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DispatchRouteMilestoneType[] | ListEnumDispatchRouteMilestoneTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumDispatchRouteMilestoneTypeWithAggregatesFilter<$PrismaModel> | $Enums.DispatchRouteMilestoneType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumDispatchRouteMilestoneTypeFilter<$PrismaModel>
+    _max?: NestedEnumDispatchRouteMilestoneTypeFilter<$PrismaModel>
   }
 
   export type EnumDispatchAssignmentJobStatusFilter<$PrismaModel = never> = {
@@ -94677,6 +101908,12 @@ export namespace Prisma {
     none?: CustomerCardWhereInput
   }
 
+  export type OrderIntentListRelationFilter = {
+    every?: OrderIntentWhereInput
+    some?: OrderIntentWhereInput
+    none?: OrderIntentWhereInput
+  }
+
   export type DeliveryAddressOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -94698,6 +101935,10 @@ export namespace Prisma {
   }
 
   export type CustomerCardOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type OrderIntentOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -95124,7 +102365,11 @@ export namespace Prisma {
     language?: SortOrder
     paidAt?: SortOrder
     deliveredAt?: SortOrder
+    leftAtDropOffAt?: SortOrder
+    leftAtDropOffLat?: SortOrder
+    leftAtDropOffLng?: SortOrder
     estimatedDeliveryDurationMinutes?: SortOrder
+    currentEstimatedDeliveryDurationMinutes?: SortOrder
     dispatchOrderIndex?: SortOrder
     amount?: SortOrder
     canceled?: SortOrder
@@ -95141,10 +102386,14 @@ export namespace Prisma {
     addressId?: SortOrder
     deliveryAddressId?: SortOrder
     externalAddressId?: SortOrder
+    branchId?: SortOrder
   }
 
   export type OrderAvgOrderByAggregateInput = {
+    leftAtDropOffLat?: SortOrder
+    leftAtDropOffLng?: SortOrder
     estimatedDeliveryDurationMinutes?: SortOrder
+    currentEstimatedDeliveryDurationMinutes?: SortOrder
     dispatchOrderIndex?: SortOrder
     amount?: SortOrder
     tipAmount?: SortOrder
@@ -95158,7 +102407,11 @@ export namespace Prisma {
     language?: SortOrder
     paidAt?: SortOrder
     deliveredAt?: SortOrder
+    leftAtDropOffAt?: SortOrder
+    leftAtDropOffLat?: SortOrder
+    leftAtDropOffLng?: SortOrder
     estimatedDeliveryDurationMinutes?: SortOrder
+    currentEstimatedDeliveryDurationMinutes?: SortOrder
     dispatchOrderIndex?: SortOrder
     amount?: SortOrder
     canceled?: SortOrder
@@ -95173,6 +102426,7 @@ export namespace Prisma {
     addressId?: SortOrder
     deliveryAddressId?: SortOrder
     externalAddressId?: SortOrder
+    branchId?: SortOrder
   }
 
   export type OrderMinOrderByAggregateInput = {
@@ -95183,7 +102437,11 @@ export namespace Prisma {
     language?: SortOrder
     paidAt?: SortOrder
     deliveredAt?: SortOrder
+    leftAtDropOffAt?: SortOrder
+    leftAtDropOffLat?: SortOrder
+    leftAtDropOffLng?: SortOrder
     estimatedDeliveryDurationMinutes?: SortOrder
+    currentEstimatedDeliveryDurationMinutes?: SortOrder
     dispatchOrderIndex?: SortOrder
     amount?: SortOrder
     canceled?: SortOrder
@@ -95198,10 +102456,14 @@ export namespace Prisma {
     addressId?: SortOrder
     deliveryAddressId?: SortOrder
     externalAddressId?: SortOrder
+    branchId?: SortOrder
   }
 
   export type OrderSumOrderByAggregateInput = {
+    leftAtDropOffLat?: SortOrder
+    leftAtDropOffLng?: SortOrder
     estimatedDeliveryDurationMinutes?: SortOrder
+    currentEstimatedDeliveryDurationMinutes?: SortOrder
     dispatchOrderIndex?: SortOrder
     amount?: SortOrder
     tipAmount?: SortOrder
@@ -95245,6 +102507,83 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedEnumPaymentProviderNullableFilter<$PrismaModel>
     _max?: NestedEnumPaymentProviderNullableFilter<$PrismaModel>
+  }
+
+  export type EnumOrderTypeNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.OrderType | EnumOrderTypeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.OrderType[] | ListEnumOrderTypeFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.OrderType[] | ListEnumOrderTypeFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumOrderTypeNullableFilter<$PrismaModel> | $Enums.OrderType | null
+  }
+
+  export type OrderIntentCountOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    active?: SortOrder
+    language?: SortOrder
+    status?: SortOrder
+    type?: SortOrder
+    paymentMethod?: SortOrder
+    paymentProvider?: SortOrder
+    tipAmount?: SortOrder
+    tags?: SortOrder
+    progressiveDiscountSnapshot?: SortOrder
+    amount?: SortOrder
+    customerId?: SortOrder
+    deliveryAddressId?: SortOrder
+  }
+
+  export type OrderIntentAvgOrderByAggregateInput = {
+    tipAmount?: SortOrder
+    amount?: SortOrder
+  }
+
+  export type OrderIntentMaxOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    active?: SortOrder
+    language?: SortOrder
+    status?: SortOrder
+    type?: SortOrder
+    paymentMethod?: SortOrder
+    paymentProvider?: SortOrder
+    tipAmount?: SortOrder
+    amount?: SortOrder
+    customerId?: SortOrder
+    deliveryAddressId?: SortOrder
+  }
+
+  export type OrderIntentMinOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    active?: SortOrder
+    language?: SortOrder
+    status?: SortOrder
+    type?: SortOrder
+    paymentMethod?: SortOrder
+    paymentProvider?: SortOrder
+    tipAmount?: SortOrder
+    amount?: SortOrder
+    customerId?: SortOrder
+    deliveryAddressId?: SortOrder
+  }
+
+  export type OrderIntentSumOrderByAggregateInput = {
+    tipAmount?: SortOrder
+    amount?: SortOrder
+  }
+
+  export type EnumOrderTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.OrderType | EnumOrderTypeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.OrderType[] | ListEnumOrderTypeFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.OrderType[] | ListEnumOrderTypeFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumOrderTypeNullableWithAggregatesFilter<$PrismaModel> | $Enums.OrderType | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumOrderTypeNullableFilter<$PrismaModel>
+    _max?: NestedEnumOrderTypeNullableFilter<$PrismaModel>
   }
 
   export type EnumCustomerFeedbackSentimentFilter<$PrismaModel = never> = {
@@ -95489,6 +102828,56 @@ export namespace Prisma {
   }
 
   export type OrderProductsSumOrderByAggregateInput = {
+    quantity?: SortOrder
+    fullAmount?: SortOrder
+    amount?: SortOrder
+  }
+
+  export type OrderIntentScalarRelationFilter = {
+    is?: OrderIntentWhereInput
+    isNot?: OrderIntentWhereInput
+  }
+
+  export type OrderIntentProductCountOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    orderIntentId?: SortOrder
+    productId?: SortOrder
+    quantity?: SortOrder
+    comments?: SortOrder
+    fullAmount?: SortOrder
+    amount?: SortOrder
+  }
+
+  export type OrderIntentProductAvgOrderByAggregateInput = {
+    quantity?: SortOrder
+    fullAmount?: SortOrder
+    amount?: SortOrder
+  }
+
+  export type OrderIntentProductMaxOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    orderIntentId?: SortOrder
+    productId?: SortOrder
+    quantity?: SortOrder
+    comments?: SortOrder
+    fullAmount?: SortOrder
+    amount?: SortOrder
+  }
+
+  export type OrderIntentProductMinOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    orderIntentId?: SortOrder
+    productId?: SortOrder
+    quantity?: SortOrder
+    comments?: SortOrder
+    fullAmount?: SortOrder
+    amount?: SortOrder
+  }
+
+  export type OrderIntentProductSumOrderByAggregateInput = {
     quantity?: SortOrder
     fullAmount?: SortOrder
     amount?: SortOrder
@@ -96695,6 +104084,12 @@ export namespace Prisma {
     connect?: OrderProductsWhereUniqueInput | OrderProductsWhereUniqueInput[]
   }
 
+  export type OrderIntentProductCreateNestedManyWithoutModifierGroupItemsInput = {
+    create?: XOR<OrderIntentProductCreateWithoutModifierGroupItemsInput, OrderIntentProductUncheckedCreateWithoutModifierGroupItemsInput> | OrderIntentProductCreateWithoutModifierGroupItemsInput[] | OrderIntentProductUncheckedCreateWithoutModifierGroupItemsInput[]
+    connectOrCreate?: OrderIntentProductCreateOrConnectWithoutModifierGroupItemsInput | OrderIntentProductCreateOrConnectWithoutModifierGroupItemsInput[]
+    connect?: OrderIntentProductWhereUniqueInput | OrderIntentProductWhereUniqueInput[]
+  }
+
   export type PreparationStepModifierTrackUncheckedCreateNestedManyWithoutModifierGroupItemInput = {
     create?: XOR<PreparationStepModifierTrackCreateWithoutModifierGroupItemInput, PreparationStepModifierTrackUncheckedCreateWithoutModifierGroupItemInput> | PreparationStepModifierTrackCreateWithoutModifierGroupItemInput[] | PreparationStepModifierTrackUncheckedCreateWithoutModifierGroupItemInput[]
     connectOrCreate?: PreparationStepModifierTrackCreateOrConnectWithoutModifierGroupItemInput | PreparationStepModifierTrackCreateOrConnectWithoutModifierGroupItemInput[]
@@ -96706,6 +104101,12 @@ export namespace Prisma {
     create?: XOR<OrderProductsCreateWithoutModifierGroupItemsInput, OrderProductsUncheckedCreateWithoutModifierGroupItemsInput> | OrderProductsCreateWithoutModifierGroupItemsInput[] | OrderProductsUncheckedCreateWithoutModifierGroupItemsInput[]
     connectOrCreate?: OrderProductsCreateOrConnectWithoutModifierGroupItemsInput | OrderProductsCreateOrConnectWithoutModifierGroupItemsInput[]
     connect?: OrderProductsWhereUniqueInput | OrderProductsWhereUniqueInput[]
+  }
+
+  export type OrderIntentProductUncheckedCreateNestedManyWithoutModifierGroupItemsInput = {
+    create?: XOR<OrderIntentProductCreateWithoutModifierGroupItemsInput, OrderIntentProductUncheckedCreateWithoutModifierGroupItemsInput> | OrderIntentProductCreateWithoutModifierGroupItemsInput[] | OrderIntentProductUncheckedCreateWithoutModifierGroupItemsInput[]
+    connectOrCreate?: OrderIntentProductCreateOrConnectWithoutModifierGroupItemsInput | OrderIntentProductCreateOrConnectWithoutModifierGroupItemsInput[]
+    connect?: OrderIntentProductWhereUniqueInput | OrderIntentProductWhereUniqueInput[]
   }
 
   export type FileUpdateOneWithoutModifierGroupItemsNestedInput = {
@@ -96755,6 +104156,19 @@ export namespace Prisma {
     deleteMany?: OrderProductsScalarWhereInput | OrderProductsScalarWhereInput[]
   }
 
+  export type OrderIntentProductUpdateManyWithoutModifierGroupItemsNestedInput = {
+    create?: XOR<OrderIntentProductCreateWithoutModifierGroupItemsInput, OrderIntentProductUncheckedCreateWithoutModifierGroupItemsInput> | OrderIntentProductCreateWithoutModifierGroupItemsInput[] | OrderIntentProductUncheckedCreateWithoutModifierGroupItemsInput[]
+    connectOrCreate?: OrderIntentProductCreateOrConnectWithoutModifierGroupItemsInput | OrderIntentProductCreateOrConnectWithoutModifierGroupItemsInput[]
+    upsert?: OrderIntentProductUpsertWithWhereUniqueWithoutModifierGroupItemsInput | OrderIntentProductUpsertWithWhereUniqueWithoutModifierGroupItemsInput[]
+    set?: OrderIntentProductWhereUniqueInput | OrderIntentProductWhereUniqueInput[]
+    disconnect?: OrderIntentProductWhereUniqueInput | OrderIntentProductWhereUniqueInput[]
+    delete?: OrderIntentProductWhereUniqueInput | OrderIntentProductWhereUniqueInput[]
+    connect?: OrderIntentProductWhereUniqueInput | OrderIntentProductWhereUniqueInput[]
+    update?: OrderIntentProductUpdateWithWhereUniqueWithoutModifierGroupItemsInput | OrderIntentProductUpdateWithWhereUniqueWithoutModifierGroupItemsInput[]
+    updateMany?: OrderIntentProductUpdateManyWithWhereWithoutModifierGroupItemsInput | OrderIntentProductUpdateManyWithWhereWithoutModifierGroupItemsInput[]
+    deleteMany?: OrderIntentProductScalarWhereInput | OrderIntentProductScalarWhereInput[]
+  }
+
   export type PreparationStepModifierTrackUncheckedUpdateManyWithoutModifierGroupItemNestedInput = {
     create?: XOR<PreparationStepModifierTrackCreateWithoutModifierGroupItemInput, PreparationStepModifierTrackUncheckedCreateWithoutModifierGroupItemInput> | PreparationStepModifierTrackCreateWithoutModifierGroupItemInput[] | PreparationStepModifierTrackUncheckedCreateWithoutModifierGroupItemInput[]
     connectOrCreate?: PreparationStepModifierTrackCreateOrConnectWithoutModifierGroupItemInput | PreparationStepModifierTrackCreateOrConnectWithoutModifierGroupItemInput[]
@@ -96782,6 +104196,19 @@ export namespace Prisma {
     deleteMany?: OrderProductsScalarWhereInput | OrderProductsScalarWhereInput[]
   }
 
+  export type OrderIntentProductUncheckedUpdateManyWithoutModifierGroupItemsNestedInput = {
+    create?: XOR<OrderIntentProductCreateWithoutModifierGroupItemsInput, OrderIntentProductUncheckedCreateWithoutModifierGroupItemsInput> | OrderIntentProductCreateWithoutModifierGroupItemsInput[] | OrderIntentProductUncheckedCreateWithoutModifierGroupItemsInput[]
+    connectOrCreate?: OrderIntentProductCreateOrConnectWithoutModifierGroupItemsInput | OrderIntentProductCreateOrConnectWithoutModifierGroupItemsInput[]
+    upsert?: OrderIntentProductUpsertWithWhereUniqueWithoutModifierGroupItemsInput | OrderIntentProductUpsertWithWhereUniqueWithoutModifierGroupItemsInput[]
+    set?: OrderIntentProductWhereUniqueInput | OrderIntentProductWhereUniqueInput[]
+    disconnect?: OrderIntentProductWhereUniqueInput | OrderIntentProductWhereUniqueInput[]
+    delete?: OrderIntentProductWhereUniqueInput | OrderIntentProductWhereUniqueInput[]
+    connect?: OrderIntentProductWhereUniqueInput | OrderIntentProductWhereUniqueInput[]
+    update?: OrderIntentProductUpdateWithWhereUniqueWithoutModifierGroupItemsInput | OrderIntentProductUpdateWithWhereUniqueWithoutModifierGroupItemsInput[]
+    updateMany?: OrderIntentProductUpdateManyWithWhereWithoutModifierGroupItemsInput | OrderIntentProductUpdateManyWithWhereWithoutModifierGroupItemsInput[]
+    deleteMany?: OrderIntentProductScalarWhereInput | OrderIntentProductScalarWhereInput[]
+  }
+
   export type BranchCreateNestedManyWithoutBusinessInput = {
     create?: XOR<BranchCreateWithoutBusinessInput, BranchUncheckedCreateWithoutBusinessInput> | BranchCreateWithoutBusinessInput[] | BranchUncheckedCreateWithoutBusinessInput[]
     connectOrCreate?: BranchCreateOrConnectWithoutBusinessInput | BranchCreateOrConnectWithoutBusinessInput[]
@@ -96802,6 +104229,13 @@ export namespace Prisma {
     connect?: ExternalIntegrationConnectionWhereUniqueInput | ExternalIntegrationConnectionWhereUniqueInput[]
   }
 
+  export type UserPushDeviceCreateNestedManyWithoutBusinessInput = {
+    create?: XOR<UserPushDeviceCreateWithoutBusinessInput, UserPushDeviceUncheckedCreateWithoutBusinessInput> | UserPushDeviceCreateWithoutBusinessInput[] | UserPushDeviceUncheckedCreateWithoutBusinessInput[]
+    connectOrCreate?: UserPushDeviceCreateOrConnectWithoutBusinessInput | UserPushDeviceCreateOrConnectWithoutBusinessInput[]
+    createMany?: UserPushDeviceCreateManyBusinessInputEnvelope
+    connect?: UserPushDeviceWhereUniqueInput | UserPushDeviceWhereUniqueInput[]
+  }
+
   export type BranchUncheckedCreateNestedManyWithoutBusinessInput = {
     create?: XOR<BranchCreateWithoutBusinessInput, BranchUncheckedCreateWithoutBusinessInput> | BranchCreateWithoutBusinessInput[] | BranchUncheckedCreateWithoutBusinessInput[]
     connectOrCreate?: BranchCreateOrConnectWithoutBusinessInput | BranchCreateOrConnectWithoutBusinessInput[]
@@ -96820,6 +104254,13 @@ export namespace Prisma {
     connectOrCreate?: ExternalIntegrationConnectionCreateOrConnectWithoutBusinessInput | ExternalIntegrationConnectionCreateOrConnectWithoutBusinessInput[]
     createMany?: ExternalIntegrationConnectionCreateManyBusinessInputEnvelope
     connect?: ExternalIntegrationConnectionWhereUniqueInput | ExternalIntegrationConnectionWhereUniqueInput[]
+  }
+
+  export type UserPushDeviceUncheckedCreateNestedManyWithoutBusinessInput = {
+    create?: XOR<UserPushDeviceCreateWithoutBusinessInput, UserPushDeviceUncheckedCreateWithoutBusinessInput> | UserPushDeviceCreateWithoutBusinessInput[] | UserPushDeviceUncheckedCreateWithoutBusinessInput[]
+    connectOrCreate?: UserPushDeviceCreateOrConnectWithoutBusinessInput | UserPushDeviceCreateOrConnectWithoutBusinessInput[]
+    createMany?: UserPushDeviceCreateManyBusinessInputEnvelope
+    connect?: UserPushDeviceWhereUniqueInput | UserPushDeviceWhereUniqueInput[]
   }
 
   export type BranchUpdateManyWithoutBusinessNestedInput = {
@@ -96860,6 +104301,20 @@ export namespace Prisma {
     deleteMany?: ExternalIntegrationConnectionScalarWhereInput | ExternalIntegrationConnectionScalarWhereInput[]
   }
 
+  export type UserPushDeviceUpdateManyWithoutBusinessNestedInput = {
+    create?: XOR<UserPushDeviceCreateWithoutBusinessInput, UserPushDeviceUncheckedCreateWithoutBusinessInput> | UserPushDeviceCreateWithoutBusinessInput[] | UserPushDeviceUncheckedCreateWithoutBusinessInput[]
+    connectOrCreate?: UserPushDeviceCreateOrConnectWithoutBusinessInput | UserPushDeviceCreateOrConnectWithoutBusinessInput[]
+    upsert?: UserPushDeviceUpsertWithWhereUniqueWithoutBusinessInput | UserPushDeviceUpsertWithWhereUniqueWithoutBusinessInput[]
+    createMany?: UserPushDeviceCreateManyBusinessInputEnvelope
+    set?: UserPushDeviceWhereUniqueInput | UserPushDeviceWhereUniqueInput[]
+    disconnect?: UserPushDeviceWhereUniqueInput | UserPushDeviceWhereUniqueInput[]
+    delete?: UserPushDeviceWhereUniqueInput | UserPushDeviceWhereUniqueInput[]
+    connect?: UserPushDeviceWhereUniqueInput | UserPushDeviceWhereUniqueInput[]
+    update?: UserPushDeviceUpdateWithWhereUniqueWithoutBusinessInput | UserPushDeviceUpdateWithWhereUniqueWithoutBusinessInput[]
+    updateMany?: UserPushDeviceUpdateManyWithWhereWithoutBusinessInput | UserPushDeviceUpdateManyWithWhereWithoutBusinessInput[]
+    deleteMany?: UserPushDeviceScalarWhereInput | UserPushDeviceScalarWhereInput[]
+  }
+
   export type BranchUncheckedUpdateManyWithoutBusinessNestedInput = {
     create?: XOR<BranchCreateWithoutBusinessInput, BranchUncheckedCreateWithoutBusinessInput> | BranchCreateWithoutBusinessInput[] | BranchUncheckedCreateWithoutBusinessInput[]
     connectOrCreate?: BranchCreateOrConnectWithoutBusinessInput | BranchCreateOrConnectWithoutBusinessInput[]
@@ -96898,6 +104353,20 @@ export namespace Prisma {
     deleteMany?: ExternalIntegrationConnectionScalarWhereInput | ExternalIntegrationConnectionScalarWhereInput[]
   }
 
+  export type UserPushDeviceUncheckedUpdateManyWithoutBusinessNestedInput = {
+    create?: XOR<UserPushDeviceCreateWithoutBusinessInput, UserPushDeviceUncheckedCreateWithoutBusinessInput> | UserPushDeviceCreateWithoutBusinessInput[] | UserPushDeviceUncheckedCreateWithoutBusinessInput[]
+    connectOrCreate?: UserPushDeviceCreateOrConnectWithoutBusinessInput | UserPushDeviceCreateOrConnectWithoutBusinessInput[]
+    upsert?: UserPushDeviceUpsertWithWhereUniqueWithoutBusinessInput | UserPushDeviceUpsertWithWhereUniqueWithoutBusinessInput[]
+    createMany?: UserPushDeviceCreateManyBusinessInputEnvelope
+    set?: UserPushDeviceWhereUniqueInput | UserPushDeviceWhereUniqueInput[]
+    disconnect?: UserPushDeviceWhereUniqueInput | UserPushDeviceWhereUniqueInput[]
+    delete?: UserPushDeviceWhereUniqueInput | UserPushDeviceWhereUniqueInput[]
+    connect?: UserPushDeviceWhereUniqueInput | UserPushDeviceWhereUniqueInput[]
+    update?: UserPushDeviceUpdateWithWhereUniqueWithoutBusinessInput | UserPushDeviceUpdateWithWhereUniqueWithoutBusinessInput[]
+    updateMany?: UserPushDeviceUpdateManyWithWhereWithoutBusinessInput | UserPushDeviceUpdateManyWithWhereWithoutBusinessInput[]
+    deleteMany?: UserPushDeviceScalarWhereInput | UserPushDeviceScalarWhereInput[]
+  }
+
   export type BusinessOwnerCreateNestedManyWithoutUserInput = {
     create?: XOR<BusinessOwnerCreateWithoutUserInput, BusinessOwnerUncheckedCreateWithoutUserInput> | BusinessOwnerCreateWithoutUserInput[] | BusinessOwnerUncheckedCreateWithoutUserInput[]
     connectOrCreate?: BusinessOwnerCreateOrConnectWithoutUserInput | BusinessOwnerCreateOrConnectWithoutUserInput[]
@@ -96919,6 +104388,13 @@ export namespace Prisma {
     connect?: OwnerOtpChallengeWhereUniqueInput | OwnerOtpChallengeWhereUniqueInput[]
   }
 
+  export type UserPushDeviceCreateNestedManyWithoutUserInput = {
+    create?: XOR<UserPushDeviceCreateWithoutUserInput, UserPushDeviceUncheckedCreateWithoutUserInput> | UserPushDeviceCreateWithoutUserInput[] | UserPushDeviceUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserPushDeviceCreateOrConnectWithoutUserInput | UserPushDeviceCreateOrConnectWithoutUserInput[]
+    createMany?: UserPushDeviceCreateManyUserInputEnvelope
+    connect?: UserPushDeviceWhereUniqueInput | UserPushDeviceWhereUniqueInput[]
+  }
+
   export type BusinessOwnerUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<BusinessOwnerCreateWithoutUserInput, BusinessOwnerUncheckedCreateWithoutUserInput> | BusinessOwnerCreateWithoutUserInput[] | BusinessOwnerUncheckedCreateWithoutUserInput[]
     connectOrCreate?: BusinessOwnerCreateOrConnectWithoutUserInput | BusinessOwnerCreateOrConnectWithoutUserInput[]
@@ -96938,6 +104414,13 @@ export namespace Prisma {
     connectOrCreate?: OwnerOtpChallengeCreateOrConnectWithoutOwnerInput | OwnerOtpChallengeCreateOrConnectWithoutOwnerInput[]
     createMany?: OwnerOtpChallengeCreateManyOwnerInputEnvelope
     connect?: OwnerOtpChallengeWhereUniqueInput | OwnerOtpChallengeWhereUniqueInput[]
+  }
+
+  export type UserPushDeviceUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<UserPushDeviceCreateWithoutUserInput, UserPushDeviceUncheckedCreateWithoutUserInput> | UserPushDeviceCreateWithoutUserInput[] | UserPushDeviceUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserPushDeviceCreateOrConnectWithoutUserInput | UserPushDeviceCreateOrConnectWithoutUserInput[]
+    createMany?: UserPushDeviceCreateManyUserInputEnvelope
+    connect?: UserPushDeviceWhereUniqueInput | UserPushDeviceWhereUniqueInput[]
   }
 
   export type BusinessOwnerUpdateManyWithoutUserNestedInput = {
@@ -96982,6 +104465,20 @@ export namespace Prisma {
     deleteMany?: OwnerOtpChallengeScalarWhereInput | OwnerOtpChallengeScalarWhereInput[]
   }
 
+  export type UserPushDeviceUpdateManyWithoutUserNestedInput = {
+    create?: XOR<UserPushDeviceCreateWithoutUserInput, UserPushDeviceUncheckedCreateWithoutUserInput> | UserPushDeviceCreateWithoutUserInput[] | UserPushDeviceUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserPushDeviceCreateOrConnectWithoutUserInput | UserPushDeviceCreateOrConnectWithoutUserInput[]
+    upsert?: UserPushDeviceUpsertWithWhereUniqueWithoutUserInput | UserPushDeviceUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: UserPushDeviceCreateManyUserInputEnvelope
+    set?: UserPushDeviceWhereUniqueInput | UserPushDeviceWhereUniqueInput[]
+    disconnect?: UserPushDeviceWhereUniqueInput | UserPushDeviceWhereUniqueInput[]
+    delete?: UserPushDeviceWhereUniqueInput | UserPushDeviceWhereUniqueInput[]
+    connect?: UserPushDeviceWhereUniqueInput | UserPushDeviceWhereUniqueInput[]
+    update?: UserPushDeviceUpdateWithWhereUniqueWithoutUserInput | UserPushDeviceUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: UserPushDeviceUpdateManyWithWhereWithoutUserInput | UserPushDeviceUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: UserPushDeviceScalarWhereInput | UserPushDeviceScalarWhereInput[]
+  }
+
   export type BusinessOwnerUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<BusinessOwnerCreateWithoutUserInput, BusinessOwnerUncheckedCreateWithoutUserInput> | BusinessOwnerCreateWithoutUserInput[] | BusinessOwnerUncheckedCreateWithoutUserInput[]
     connectOrCreate?: BusinessOwnerCreateOrConnectWithoutUserInput | BusinessOwnerCreateOrConnectWithoutUserInput[]
@@ -97022,6 +104519,54 @@ export namespace Prisma {
     update?: OwnerOtpChallengeUpdateWithWhereUniqueWithoutOwnerInput | OwnerOtpChallengeUpdateWithWhereUniqueWithoutOwnerInput[]
     updateMany?: OwnerOtpChallengeUpdateManyWithWhereWithoutOwnerInput | OwnerOtpChallengeUpdateManyWithWhereWithoutOwnerInput[]
     deleteMany?: OwnerOtpChallengeScalarWhereInput | OwnerOtpChallengeScalarWhereInput[]
+  }
+
+  export type UserPushDeviceUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<UserPushDeviceCreateWithoutUserInput, UserPushDeviceUncheckedCreateWithoutUserInput> | UserPushDeviceCreateWithoutUserInput[] | UserPushDeviceUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserPushDeviceCreateOrConnectWithoutUserInput | UserPushDeviceCreateOrConnectWithoutUserInput[]
+    upsert?: UserPushDeviceUpsertWithWhereUniqueWithoutUserInput | UserPushDeviceUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: UserPushDeviceCreateManyUserInputEnvelope
+    set?: UserPushDeviceWhereUniqueInput | UserPushDeviceWhereUniqueInput[]
+    disconnect?: UserPushDeviceWhereUniqueInput | UserPushDeviceWhereUniqueInput[]
+    delete?: UserPushDeviceWhereUniqueInput | UserPushDeviceWhereUniqueInput[]
+    connect?: UserPushDeviceWhereUniqueInput | UserPushDeviceWhereUniqueInput[]
+    update?: UserPushDeviceUpdateWithWhereUniqueWithoutUserInput | UserPushDeviceUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: UserPushDeviceUpdateManyWithWhereWithoutUserInput | UserPushDeviceUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: UserPushDeviceScalarWhereInput | UserPushDeviceScalarWhereInput[]
+  }
+
+  export type UserCreateNestedOneWithoutPushDevicesInput = {
+    create?: XOR<UserCreateWithoutPushDevicesInput, UserUncheckedCreateWithoutPushDevicesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutPushDevicesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type BusinessCreateNestedOneWithoutPushDevicesInput = {
+    create?: XOR<BusinessCreateWithoutPushDevicesInput, BusinessUncheckedCreateWithoutPushDevicesInput>
+    connectOrCreate?: BusinessCreateOrConnectWithoutPushDevicesInput
+    connect?: BusinessWhereUniqueInput
+  }
+
+  export type EnumUserPushDevicePlatformFieldUpdateOperationsInput = {
+    set?: $Enums.UserPushDevicePlatform
+  }
+
+  export type UserUpdateOneRequiredWithoutPushDevicesNestedInput = {
+    create?: XOR<UserCreateWithoutPushDevicesInput, UserUncheckedCreateWithoutPushDevicesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutPushDevicesInput
+    upsert?: UserUpsertWithoutPushDevicesInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutPushDevicesInput, UserUpdateWithoutPushDevicesInput>, UserUncheckedUpdateWithoutPushDevicesInput>
+  }
+
+  export type BusinessUpdateOneWithoutPushDevicesNestedInput = {
+    create?: XOR<BusinessCreateWithoutPushDevicesInput, BusinessUncheckedCreateWithoutPushDevicesInput>
+    connectOrCreate?: BusinessCreateOrConnectWithoutPushDevicesInput
+    upsert?: BusinessUpsertWithoutPushDevicesInput
+    disconnect?: BusinessWhereInput | boolean
+    delete?: BusinessWhereInput | boolean
+    connect?: BusinessWhereUniqueInput
+    update?: XOR<XOR<BusinessUpdateToOneWithWhereWithoutPushDevicesInput, BusinessUpdateWithoutPushDevicesInput>, BusinessUncheckedUpdateWithoutPushDevicesInput>
   }
 
   export type UserCreateNestedOneWithoutOtpChallengesInput = {
@@ -97240,6 +104785,20 @@ export namespace Prisma {
     connect?: BusinessWhereUniqueInput
   }
 
+  export type OrderCreateNestedManyWithoutBranchInput = {
+    create?: XOR<OrderCreateWithoutBranchInput, OrderUncheckedCreateWithoutBranchInput> | OrderCreateWithoutBranchInput[] | OrderUncheckedCreateWithoutBranchInput[]
+    connectOrCreate?: OrderCreateOrConnectWithoutBranchInput | OrderCreateOrConnectWithoutBranchInput[]
+    createMany?: OrderCreateManyBranchInputEnvelope
+    connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+  }
+
+  export type OrderUncheckedCreateNestedManyWithoutBranchInput = {
+    create?: XOR<OrderCreateWithoutBranchInput, OrderUncheckedCreateWithoutBranchInput> | OrderCreateWithoutBranchInput[] | OrderUncheckedCreateWithoutBranchInput[]
+    connectOrCreate?: OrderCreateOrConnectWithoutBranchInput | OrderCreateOrConnectWithoutBranchInput[]
+    createMany?: OrderCreateManyBranchInputEnvelope
+    connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+  }
+
   export type AddressUpdateOneWithoutBranchNestedInput = {
     create?: XOR<AddressCreateWithoutBranchInput, AddressUncheckedCreateWithoutBranchInput>
     connectOrCreate?: AddressCreateOrConnectWithoutBranchInput
@@ -97260,6 +104819,34 @@ export namespace Prisma {
     update?: XOR<XOR<BusinessUpdateToOneWithWhereWithoutBranchesInput, BusinessUpdateWithoutBranchesInput>, BusinessUncheckedUpdateWithoutBranchesInput>
   }
 
+  export type OrderUpdateManyWithoutBranchNestedInput = {
+    create?: XOR<OrderCreateWithoutBranchInput, OrderUncheckedCreateWithoutBranchInput> | OrderCreateWithoutBranchInput[] | OrderUncheckedCreateWithoutBranchInput[]
+    connectOrCreate?: OrderCreateOrConnectWithoutBranchInput | OrderCreateOrConnectWithoutBranchInput[]
+    upsert?: OrderUpsertWithWhereUniqueWithoutBranchInput | OrderUpsertWithWhereUniqueWithoutBranchInput[]
+    createMany?: OrderCreateManyBranchInputEnvelope
+    set?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    disconnect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    delete?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    update?: OrderUpdateWithWhereUniqueWithoutBranchInput | OrderUpdateWithWhereUniqueWithoutBranchInput[]
+    updateMany?: OrderUpdateManyWithWhereWithoutBranchInput | OrderUpdateManyWithWhereWithoutBranchInput[]
+    deleteMany?: OrderScalarWhereInput | OrderScalarWhereInput[]
+  }
+
+  export type OrderUncheckedUpdateManyWithoutBranchNestedInput = {
+    create?: XOR<OrderCreateWithoutBranchInput, OrderUncheckedCreateWithoutBranchInput> | OrderCreateWithoutBranchInput[] | OrderUncheckedCreateWithoutBranchInput[]
+    connectOrCreate?: OrderCreateOrConnectWithoutBranchInput | OrderCreateOrConnectWithoutBranchInput[]
+    upsert?: OrderUpsertWithWhereUniqueWithoutBranchInput | OrderUpsertWithWhereUniqueWithoutBranchInput[]
+    createMany?: OrderCreateManyBranchInputEnvelope
+    set?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    disconnect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    delete?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    update?: OrderUpdateWithWhereUniqueWithoutBranchInput | OrderUpdateWithWhereUniqueWithoutBranchInput[]
+    updateMany?: OrderUpdateManyWithWhereWithoutBranchInput | OrderUpdateManyWithWhereWithoutBranchInput[]
+    deleteMany?: OrderScalarWhereInput | OrderScalarWhereInput[]
+  }
+
   export type DispatchCreateNestedManyWithoutDriverInput = {
     create?: XOR<DispatchCreateWithoutDriverInput, DispatchUncheckedCreateWithoutDriverInput> | DispatchCreateWithoutDriverInput[] | DispatchUncheckedCreateWithoutDriverInput[]
     connectOrCreate?: DispatchCreateOrConnectWithoutDriverInput | DispatchCreateOrConnectWithoutDriverInput[]
@@ -97272,6 +104859,13 @@ export namespace Prisma {
     connectOrCreate?: DispatchRouteSessionCreateOrConnectWithoutDriverInput | DispatchRouteSessionCreateOrConnectWithoutDriverInput[]
     createMany?: DispatchRouteSessionCreateManyDriverInputEnvelope
     connect?: DispatchRouteSessionWhereUniqueInput | DispatchRouteSessionWhereUniqueInput[]
+  }
+
+  export type DispatchRouteMilestoneCreateNestedManyWithoutDriverInput = {
+    create?: XOR<DispatchRouteMilestoneCreateWithoutDriverInput, DispatchRouteMilestoneUncheckedCreateWithoutDriverInput> | DispatchRouteMilestoneCreateWithoutDriverInput[] | DispatchRouteMilestoneUncheckedCreateWithoutDriverInput[]
+    connectOrCreate?: DispatchRouteMilestoneCreateOrConnectWithoutDriverInput | DispatchRouteMilestoneCreateOrConnectWithoutDriverInput[]
+    createMany?: DispatchRouteMilestoneCreateManyDriverInputEnvelope
+    connect?: DispatchRouteMilestoneWhereUniqueInput | DispatchRouteMilestoneWhereUniqueInput[]
   }
 
   export type DriverActivationEventCreateNestedManyWithoutDriverInput = {
@@ -97293,6 +104887,13 @@ export namespace Prisma {
     connectOrCreate?: DispatchRouteSessionCreateOrConnectWithoutDriverInput | DispatchRouteSessionCreateOrConnectWithoutDriverInput[]
     createMany?: DispatchRouteSessionCreateManyDriverInputEnvelope
     connect?: DispatchRouteSessionWhereUniqueInput | DispatchRouteSessionWhereUniqueInput[]
+  }
+
+  export type DispatchRouteMilestoneUncheckedCreateNestedManyWithoutDriverInput = {
+    create?: XOR<DispatchRouteMilestoneCreateWithoutDriverInput, DispatchRouteMilestoneUncheckedCreateWithoutDriverInput> | DispatchRouteMilestoneCreateWithoutDriverInput[] | DispatchRouteMilestoneUncheckedCreateWithoutDriverInput[]
+    connectOrCreate?: DispatchRouteMilestoneCreateOrConnectWithoutDriverInput | DispatchRouteMilestoneCreateOrConnectWithoutDriverInput[]
+    createMany?: DispatchRouteMilestoneCreateManyDriverInputEnvelope
+    connect?: DispatchRouteMilestoneWhereUniqueInput | DispatchRouteMilestoneWhereUniqueInput[]
   }
 
   export type DriverActivationEventUncheckedCreateNestedManyWithoutDriverInput = {
@@ -97328,6 +104929,20 @@ export namespace Prisma {
     update?: DispatchRouteSessionUpdateWithWhereUniqueWithoutDriverInput | DispatchRouteSessionUpdateWithWhereUniqueWithoutDriverInput[]
     updateMany?: DispatchRouteSessionUpdateManyWithWhereWithoutDriverInput | DispatchRouteSessionUpdateManyWithWhereWithoutDriverInput[]
     deleteMany?: DispatchRouteSessionScalarWhereInput | DispatchRouteSessionScalarWhereInput[]
+  }
+
+  export type DispatchRouteMilestoneUpdateManyWithoutDriverNestedInput = {
+    create?: XOR<DispatchRouteMilestoneCreateWithoutDriverInput, DispatchRouteMilestoneUncheckedCreateWithoutDriverInput> | DispatchRouteMilestoneCreateWithoutDriverInput[] | DispatchRouteMilestoneUncheckedCreateWithoutDriverInput[]
+    connectOrCreate?: DispatchRouteMilestoneCreateOrConnectWithoutDriverInput | DispatchRouteMilestoneCreateOrConnectWithoutDriverInput[]
+    upsert?: DispatchRouteMilestoneUpsertWithWhereUniqueWithoutDriverInput | DispatchRouteMilestoneUpsertWithWhereUniqueWithoutDriverInput[]
+    createMany?: DispatchRouteMilestoneCreateManyDriverInputEnvelope
+    set?: DispatchRouteMilestoneWhereUniqueInput | DispatchRouteMilestoneWhereUniqueInput[]
+    disconnect?: DispatchRouteMilestoneWhereUniqueInput | DispatchRouteMilestoneWhereUniqueInput[]
+    delete?: DispatchRouteMilestoneWhereUniqueInput | DispatchRouteMilestoneWhereUniqueInput[]
+    connect?: DispatchRouteMilestoneWhereUniqueInput | DispatchRouteMilestoneWhereUniqueInput[]
+    update?: DispatchRouteMilestoneUpdateWithWhereUniqueWithoutDriverInput | DispatchRouteMilestoneUpdateWithWhereUniqueWithoutDriverInput[]
+    updateMany?: DispatchRouteMilestoneUpdateManyWithWhereWithoutDriverInput | DispatchRouteMilestoneUpdateManyWithWhereWithoutDriverInput[]
+    deleteMany?: DispatchRouteMilestoneScalarWhereInput | DispatchRouteMilestoneScalarWhereInput[]
   }
 
   export type DriverActivationEventUpdateManyWithoutDriverNestedInput = {
@@ -97370,6 +104985,20 @@ export namespace Prisma {
     update?: DispatchRouteSessionUpdateWithWhereUniqueWithoutDriverInput | DispatchRouteSessionUpdateWithWhereUniqueWithoutDriverInput[]
     updateMany?: DispatchRouteSessionUpdateManyWithWhereWithoutDriverInput | DispatchRouteSessionUpdateManyWithWhereWithoutDriverInput[]
     deleteMany?: DispatchRouteSessionScalarWhereInput | DispatchRouteSessionScalarWhereInput[]
+  }
+
+  export type DispatchRouteMilestoneUncheckedUpdateManyWithoutDriverNestedInput = {
+    create?: XOR<DispatchRouteMilestoneCreateWithoutDriverInput, DispatchRouteMilestoneUncheckedCreateWithoutDriverInput> | DispatchRouteMilestoneCreateWithoutDriverInput[] | DispatchRouteMilestoneUncheckedCreateWithoutDriverInput[]
+    connectOrCreate?: DispatchRouteMilestoneCreateOrConnectWithoutDriverInput | DispatchRouteMilestoneCreateOrConnectWithoutDriverInput[]
+    upsert?: DispatchRouteMilestoneUpsertWithWhereUniqueWithoutDriverInput | DispatchRouteMilestoneUpsertWithWhereUniqueWithoutDriverInput[]
+    createMany?: DispatchRouteMilestoneCreateManyDriverInputEnvelope
+    set?: DispatchRouteMilestoneWhereUniqueInput | DispatchRouteMilestoneWhereUniqueInput[]
+    disconnect?: DispatchRouteMilestoneWhereUniqueInput | DispatchRouteMilestoneWhereUniqueInput[]
+    delete?: DispatchRouteMilestoneWhereUniqueInput | DispatchRouteMilestoneWhereUniqueInput[]
+    connect?: DispatchRouteMilestoneWhereUniqueInput | DispatchRouteMilestoneWhereUniqueInput[]
+    update?: DispatchRouteMilestoneUpdateWithWhereUniqueWithoutDriverInput | DispatchRouteMilestoneUpdateWithWhereUniqueWithoutDriverInput[]
+    updateMany?: DispatchRouteMilestoneUpdateManyWithWhereWithoutDriverInput | DispatchRouteMilestoneUpdateManyWithWhereWithoutDriverInput[]
+    deleteMany?: DispatchRouteMilestoneScalarWhereInput | DispatchRouteMilestoneScalarWhereInput[]
   }
 
   export type DriverActivationEventUncheckedUpdateManyWithoutDriverNestedInput = {
@@ -97424,6 +105053,13 @@ export namespace Prisma {
     connect?: DispatchRouteSessionWhereUniqueInput | DispatchRouteSessionWhereUniqueInput[]
   }
 
+  export type DispatchRouteMilestoneCreateNestedManyWithoutDispatchInput = {
+    create?: XOR<DispatchRouteMilestoneCreateWithoutDispatchInput, DispatchRouteMilestoneUncheckedCreateWithoutDispatchInput> | DispatchRouteMilestoneCreateWithoutDispatchInput[] | DispatchRouteMilestoneUncheckedCreateWithoutDispatchInput[]
+    connectOrCreate?: DispatchRouteMilestoneCreateOrConnectWithoutDispatchInput | DispatchRouteMilestoneCreateOrConnectWithoutDispatchInput[]
+    createMany?: DispatchRouteMilestoneCreateManyDispatchInputEnvelope
+    connect?: DispatchRouteMilestoneWhereUniqueInput | DispatchRouteMilestoneWhereUniqueInput[]
+  }
+
   export type DispatchEtaRecalculationJobCreateNestedManyWithoutDispatchInput = {
     create?: XOR<DispatchEtaRecalculationJobCreateWithoutDispatchInput, DispatchEtaRecalculationJobUncheckedCreateWithoutDispatchInput> | DispatchEtaRecalculationJobCreateWithoutDispatchInput[] | DispatchEtaRecalculationJobUncheckedCreateWithoutDispatchInput[]
     connectOrCreate?: DispatchEtaRecalculationJobCreateOrConnectWithoutDispatchInput | DispatchEtaRecalculationJobCreateOrConnectWithoutDispatchInput[]
@@ -97445,11 +105081,26 @@ export namespace Prisma {
     connect?: DispatchRouteSessionWhereUniqueInput | DispatchRouteSessionWhereUniqueInput[]
   }
 
+  export type DispatchRouteMilestoneUncheckedCreateNestedManyWithoutDispatchInput = {
+    create?: XOR<DispatchRouteMilestoneCreateWithoutDispatchInput, DispatchRouteMilestoneUncheckedCreateWithoutDispatchInput> | DispatchRouteMilestoneCreateWithoutDispatchInput[] | DispatchRouteMilestoneUncheckedCreateWithoutDispatchInput[]
+    connectOrCreate?: DispatchRouteMilestoneCreateOrConnectWithoutDispatchInput | DispatchRouteMilestoneCreateOrConnectWithoutDispatchInput[]
+    createMany?: DispatchRouteMilestoneCreateManyDispatchInputEnvelope
+    connect?: DispatchRouteMilestoneWhereUniqueInput | DispatchRouteMilestoneWhereUniqueInput[]
+  }
+
   export type DispatchEtaRecalculationJobUncheckedCreateNestedManyWithoutDispatchInput = {
     create?: XOR<DispatchEtaRecalculationJobCreateWithoutDispatchInput, DispatchEtaRecalculationJobUncheckedCreateWithoutDispatchInput> | DispatchEtaRecalculationJobCreateWithoutDispatchInput[] | DispatchEtaRecalculationJobUncheckedCreateWithoutDispatchInput[]
     connectOrCreate?: DispatchEtaRecalculationJobCreateOrConnectWithoutDispatchInput | DispatchEtaRecalculationJobCreateOrConnectWithoutDispatchInput[]
     createMany?: DispatchEtaRecalculationJobCreateManyDispatchInputEnvelope
     connect?: DispatchEtaRecalculationJobWhereUniqueInput | DispatchEtaRecalculationJobWhereUniqueInput[]
+  }
+
+  export type NullableFloatFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type DriverUpdateOneWithoutDispatchesNestedInput = {
@@ -97488,6 +105139,20 @@ export namespace Prisma {
     update?: DispatchRouteSessionUpdateWithWhereUniqueWithoutDispatchInput | DispatchRouteSessionUpdateWithWhereUniqueWithoutDispatchInput[]
     updateMany?: DispatchRouteSessionUpdateManyWithWhereWithoutDispatchInput | DispatchRouteSessionUpdateManyWithWhereWithoutDispatchInput[]
     deleteMany?: DispatchRouteSessionScalarWhereInput | DispatchRouteSessionScalarWhereInput[]
+  }
+
+  export type DispatchRouteMilestoneUpdateManyWithoutDispatchNestedInput = {
+    create?: XOR<DispatchRouteMilestoneCreateWithoutDispatchInput, DispatchRouteMilestoneUncheckedCreateWithoutDispatchInput> | DispatchRouteMilestoneCreateWithoutDispatchInput[] | DispatchRouteMilestoneUncheckedCreateWithoutDispatchInput[]
+    connectOrCreate?: DispatchRouteMilestoneCreateOrConnectWithoutDispatchInput | DispatchRouteMilestoneCreateOrConnectWithoutDispatchInput[]
+    upsert?: DispatchRouteMilestoneUpsertWithWhereUniqueWithoutDispatchInput | DispatchRouteMilestoneUpsertWithWhereUniqueWithoutDispatchInput[]
+    createMany?: DispatchRouteMilestoneCreateManyDispatchInputEnvelope
+    set?: DispatchRouteMilestoneWhereUniqueInput | DispatchRouteMilestoneWhereUniqueInput[]
+    disconnect?: DispatchRouteMilestoneWhereUniqueInput | DispatchRouteMilestoneWhereUniqueInput[]
+    delete?: DispatchRouteMilestoneWhereUniqueInput | DispatchRouteMilestoneWhereUniqueInput[]
+    connect?: DispatchRouteMilestoneWhereUniqueInput | DispatchRouteMilestoneWhereUniqueInput[]
+    update?: DispatchRouteMilestoneUpdateWithWhereUniqueWithoutDispatchInput | DispatchRouteMilestoneUpdateWithWhereUniqueWithoutDispatchInput[]
+    updateMany?: DispatchRouteMilestoneUpdateManyWithWhereWithoutDispatchInput | DispatchRouteMilestoneUpdateManyWithWhereWithoutDispatchInput[]
+    deleteMany?: DispatchRouteMilestoneScalarWhereInput | DispatchRouteMilestoneScalarWhereInput[]
   }
 
   export type DispatchEtaRecalculationJobUpdateManyWithoutDispatchNestedInput = {
@@ -97532,6 +105197,20 @@ export namespace Prisma {
     deleteMany?: DispatchRouteSessionScalarWhereInput | DispatchRouteSessionScalarWhereInput[]
   }
 
+  export type DispatchRouteMilestoneUncheckedUpdateManyWithoutDispatchNestedInput = {
+    create?: XOR<DispatchRouteMilestoneCreateWithoutDispatchInput, DispatchRouteMilestoneUncheckedCreateWithoutDispatchInput> | DispatchRouteMilestoneCreateWithoutDispatchInput[] | DispatchRouteMilestoneUncheckedCreateWithoutDispatchInput[]
+    connectOrCreate?: DispatchRouteMilestoneCreateOrConnectWithoutDispatchInput | DispatchRouteMilestoneCreateOrConnectWithoutDispatchInput[]
+    upsert?: DispatchRouteMilestoneUpsertWithWhereUniqueWithoutDispatchInput | DispatchRouteMilestoneUpsertWithWhereUniqueWithoutDispatchInput[]
+    createMany?: DispatchRouteMilestoneCreateManyDispatchInputEnvelope
+    set?: DispatchRouteMilestoneWhereUniqueInput | DispatchRouteMilestoneWhereUniqueInput[]
+    disconnect?: DispatchRouteMilestoneWhereUniqueInput | DispatchRouteMilestoneWhereUniqueInput[]
+    delete?: DispatchRouteMilestoneWhereUniqueInput | DispatchRouteMilestoneWhereUniqueInput[]
+    connect?: DispatchRouteMilestoneWhereUniqueInput | DispatchRouteMilestoneWhereUniqueInput[]
+    update?: DispatchRouteMilestoneUpdateWithWhereUniqueWithoutDispatchInput | DispatchRouteMilestoneUpdateWithWhereUniqueWithoutDispatchInput[]
+    updateMany?: DispatchRouteMilestoneUpdateManyWithWhereWithoutDispatchInput | DispatchRouteMilestoneUpdateManyWithWhereWithoutDispatchInput[]
+    deleteMany?: DispatchRouteMilestoneScalarWhereInput | DispatchRouteMilestoneScalarWhereInput[]
+  }
+
   export type DispatchEtaRecalculationJobUncheckedUpdateManyWithoutDispatchNestedInput = {
     create?: XOR<DispatchEtaRecalculationJobCreateWithoutDispatchInput, DispatchEtaRecalculationJobUncheckedCreateWithoutDispatchInput> | DispatchEtaRecalculationJobCreateWithoutDispatchInput[] | DispatchEtaRecalculationJobUncheckedCreateWithoutDispatchInput[]
     connectOrCreate?: DispatchEtaRecalculationJobCreateOrConnectWithoutDispatchInput | DispatchEtaRecalculationJobCreateOrConnectWithoutDispatchInput[]
@@ -97565,11 +105244,25 @@ export namespace Prisma {
     connect?: DispatchRoutePointWhereUniqueInput | DispatchRoutePointWhereUniqueInput[]
   }
 
+  export type DispatchRouteMilestoneCreateNestedManyWithoutSessionInput = {
+    create?: XOR<DispatchRouteMilestoneCreateWithoutSessionInput, DispatchRouteMilestoneUncheckedCreateWithoutSessionInput> | DispatchRouteMilestoneCreateWithoutSessionInput[] | DispatchRouteMilestoneUncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: DispatchRouteMilestoneCreateOrConnectWithoutSessionInput | DispatchRouteMilestoneCreateOrConnectWithoutSessionInput[]
+    createMany?: DispatchRouteMilestoneCreateManySessionInputEnvelope
+    connect?: DispatchRouteMilestoneWhereUniqueInput | DispatchRouteMilestoneWhereUniqueInput[]
+  }
+
   export type DispatchRoutePointUncheckedCreateNestedManyWithoutSessionInput = {
     create?: XOR<DispatchRoutePointCreateWithoutSessionInput, DispatchRoutePointUncheckedCreateWithoutSessionInput> | DispatchRoutePointCreateWithoutSessionInput[] | DispatchRoutePointUncheckedCreateWithoutSessionInput[]
     connectOrCreate?: DispatchRoutePointCreateOrConnectWithoutSessionInput | DispatchRoutePointCreateOrConnectWithoutSessionInput[]
     createMany?: DispatchRoutePointCreateManySessionInputEnvelope
     connect?: DispatchRoutePointWhereUniqueInput | DispatchRoutePointWhereUniqueInput[]
+  }
+
+  export type DispatchRouteMilestoneUncheckedCreateNestedManyWithoutSessionInput = {
+    create?: XOR<DispatchRouteMilestoneCreateWithoutSessionInput, DispatchRouteMilestoneUncheckedCreateWithoutSessionInput> | DispatchRouteMilestoneCreateWithoutSessionInput[] | DispatchRouteMilestoneUncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: DispatchRouteMilestoneCreateOrConnectWithoutSessionInput | DispatchRouteMilestoneCreateOrConnectWithoutSessionInput[]
+    createMany?: DispatchRouteMilestoneCreateManySessionInputEnvelope
+    connect?: DispatchRouteMilestoneWhereUniqueInput | DispatchRouteMilestoneWhereUniqueInput[]
   }
 
   export type EnumDispatchRouteSessionStatusFieldUpdateOperationsInput = {
@@ -97606,6 +105299,20 @@ export namespace Prisma {
     deleteMany?: DispatchRoutePointScalarWhereInput | DispatchRoutePointScalarWhereInput[]
   }
 
+  export type DispatchRouteMilestoneUpdateManyWithoutSessionNestedInput = {
+    create?: XOR<DispatchRouteMilestoneCreateWithoutSessionInput, DispatchRouteMilestoneUncheckedCreateWithoutSessionInput> | DispatchRouteMilestoneCreateWithoutSessionInput[] | DispatchRouteMilestoneUncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: DispatchRouteMilestoneCreateOrConnectWithoutSessionInput | DispatchRouteMilestoneCreateOrConnectWithoutSessionInput[]
+    upsert?: DispatchRouteMilestoneUpsertWithWhereUniqueWithoutSessionInput | DispatchRouteMilestoneUpsertWithWhereUniqueWithoutSessionInput[]
+    createMany?: DispatchRouteMilestoneCreateManySessionInputEnvelope
+    set?: DispatchRouteMilestoneWhereUniqueInput | DispatchRouteMilestoneWhereUniqueInput[]
+    disconnect?: DispatchRouteMilestoneWhereUniqueInput | DispatchRouteMilestoneWhereUniqueInput[]
+    delete?: DispatchRouteMilestoneWhereUniqueInput | DispatchRouteMilestoneWhereUniqueInput[]
+    connect?: DispatchRouteMilestoneWhereUniqueInput | DispatchRouteMilestoneWhereUniqueInput[]
+    update?: DispatchRouteMilestoneUpdateWithWhereUniqueWithoutSessionInput | DispatchRouteMilestoneUpdateWithWhereUniqueWithoutSessionInput[]
+    updateMany?: DispatchRouteMilestoneUpdateManyWithWhereWithoutSessionInput | DispatchRouteMilestoneUpdateManyWithWhereWithoutSessionInput[]
+    deleteMany?: DispatchRouteMilestoneScalarWhereInput | DispatchRouteMilestoneScalarWhereInput[]
+  }
+
   export type DispatchRoutePointUncheckedUpdateManyWithoutSessionNestedInput = {
     create?: XOR<DispatchRoutePointCreateWithoutSessionInput, DispatchRoutePointUncheckedCreateWithoutSessionInput> | DispatchRoutePointCreateWithoutSessionInput[] | DispatchRoutePointUncheckedCreateWithoutSessionInput[]
     connectOrCreate?: DispatchRoutePointCreateOrConnectWithoutSessionInput | DispatchRoutePointCreateOrConnectWithoutSessionInput[]
@@ -97620,6 +105327,20 @@ export namespace Prisma {
     deleteMany?: DispatchRoutePointScalarWhereInput | DispatchRoutePointScalarWhereInput[]
   }
 
+  export type DispatchRouteMilestoneUncheckedUpdateManyWithoutSessionNestedInput = {
+    create?: XOR<DispatchRouteMilestoneCreateWithoutSessionInput, DispatchRouteMilestoneUncheckedCreateWithoutSessionInput> | DispatchRouteMilestoneCreateWithoutSessionInput[] | DispatchRouteMilestoneUncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: DispatchRouteMilestoneCreateOrConnectWithoutSessionInput | DispatchRouteMilestoneCreateOrConnectWithoutSessionInput[]
+    upsert?: DispatchRouteMilestoneUpsertWithWhereUniqueWithoutSessionInput | DispatchRouteMilestoneUpsertWithWhereUniqueWithoutSessionInput[]
+    createMany?: DispatchRouteMilestoneCreateManySessionInputEnvelope
+    set?: DispatchRouteMilestoneWhereUniqueInput | DispatchRouteMilestoneWhereUniqueInput[]
+    disconnect?: DispatchRouteMilestoneWhereUniqueInput | DispatchRouteMilestoneWhereUniqueInput[]
+    delete?: DispatchRouteMilestoneWhereUniqueInput | DispatchRouteMilestoneWhereUniqueInput[]
+    connect?: DispatchRouteMilestoneWhereUniqueInput | DispatchRouteMilestoneWhereUniqueInput[]
+    update?: DispatchRouteMilestoneUpdateWithWhereUniqueWithoutSessionInput | DispatchRouteMilestoneUpdateWithWhereUniqueWithoutSessionInput[]
+    updateMany?: DispatchRouteMilestoneUpdateManyWithWhereWithoutSessionInput | DispatchRouteMilestoneUpdateManyWithWhereWithoutSessionInput[]
+    deleteMany?: DispatchRouteMilestoneScalarWhereInput | DispatchRouteMilestoneScalarWhereInput[]
+  }
+
   export type DispatchRouteSessionCreateNestedOneWithoutPointsInput = {
     create?: XOR<DispatchRouteSessionCreateWithoutPointsInput, DispatchRouteSessionUncheckedCreateWithoutPointsInput>
     connectOrCreate?: DispatchRouteSessionCreateOrConnectWithoutPointsInput
@@ -97628,14 +105349,6 @@ export namespace Prisma {
 
   export type FloatFieldUpdateOperationsInput = {
     set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
-  }
-
-  export type NullableFloatFieldUpdateOperationsInput = {
-    set?: number | null
     increment?: number
     decrement?: number
     multiply?: number
@@ -97656,6 +105369,52 @@ export namespace Prisma {
     upsert?: DispatchRouteSessionUpsertWithoutPointsInput
     connect?: DispatchRouteSessionWhereUniqueInput
     update?: XOR<XOR<DispatchRouteSessionUpdateToOneWithWhereWithoutPointsInput, DispatchRouteSessionUpdateWithoutPointsInput>, DispatchRouteSessionUncheckedUpdateWithoutPointsInput>
+  }
+
+  export type DispatchCreateNestedOneWithoutRouteMilestonesInput = {
+    create?: XOR<DispatchCreateWithoutRouteMilestonesInput, DispatchUncheckedCreateWithoutRouteMilestonesInput>
+    connectOrCreate?: DispatchCreateOrConnectWithoutRouteMilestonesInput
+    connect?: DispatchWhereUniqueInput
+  }
+
+  export type DriverCreateNestedOneWithoutRouteMilestonesInput = {
+    create?: XOR<DriverCreateWithoutRouteMilestonesInput, DriverUncheckedCreateWithoutRouteMilestonesInput>
+    connectOrCreate?: DriverCreateOrConnectWithoutRouteMilestonesInput
+    connect?: DriverWhereUniqueInput
+  }
+
+  export type DispatchRouteSessionCreateNestedOneWithoutMilestonesInput = {
+    create?: XOR<DispatchRouteSessionCreateWithoutMilestonesInput, DispatchRouteSessionUncheckedCreateWithoutMilestonesInput>
+    connectOrCreate?: DispatchRouteSessionCreateOrConnectWithoutMilestonesInput
+    connect?: DispatchRouteSessionWhereUniqueInput
+  }
+
+  export type EnumDispatchRouteMilestoneTypeFieldUpdateOperationsInput = {
+    set?: $Enums.DispatchRouteMilestoneType
+  }
+
+  export type DispatchUpdateOneRequiredWithoutRouteMilestonesNestedInput = {
+    create?: XOR<DispatchCreateWithoutRouteMilestonesInput, DispatchUncheckedCreateWithoutRouteMilestonesInput>
+    connectOrCreate?: DispatchCreateOrConnectWithoutRouteMilestonesInput
+    upsert?: DispatchUpsertWithoutRouteMilestonesInput
+    connect?: DispatchWhereUniqueInput
+    update?: XOR<XOR<DispatchUpdateToOneWithWhereWithoutRouteMilestonesInput, DispatchUpdateWithoutRouteMilestonesInput>, DispatchUncheckedUpdateWithoutRouteMilestonesInput>
+  }
+
+  export type DriverUpdateOneRequiredWithoutRouteMilestonesNestedInput = {
+    create?: XOR<DriverCreateWithoutRouteMilestonesInput, DriverUncheckedCreateWithoutRouteMilestonesInput>
+    connectOrCreate?: DriverCreateOrConnectWithoutRouteMilestonesInput
+    upsert?: DriverUpsertWithoutRouteMilestonesInput
+    connect?: DriverWhereUniqueInput
+    update?: XOR<XOR<DriverUpdateToOneWithWhereWithoutRouteMilestonesInput, DriverUpdateWithoutRouteMilestonesInput>, DriverUncheckedUpdateWithoutRouteMilestonesInput>
+  }
+
+  export type DispatchRouteSessionUpdateOneRequiredWithoutMilestonesNestedInput = {
+    create?: XOR<DispatchRouteSessionCreateWithoutMilestonesInput, DispatchRouteSessionUncheckedCreateWithoutMilestonesInput>
+    connectOrCreate?: DispatchRouteSessionCreateOrConnectWithoutMilestonesInput
+    upsert?: DispatchRouteSessionUpsertWithoutMilestonesInput
+    connect?: DispatchRouteSessionWhereUniqueInput
+    update?: XOR<XOR<DispatchRouteSessionUpdateToOneWithWhereWithoutMilestonesInput, DispatchRouteSessionUpdateWithoutMilestonesInput>, DispatchRouteSessionUncheckedUpdateWithoutMilestonesInput>
   }
 
   export type EnumDispatchAssignmentJobStatusFieldUpdateOperationsInput = {
@@ -97826,6 +105585,13 @@ export namespace Prisma {
     connect?: OrderProductsWhereUniqueInput | OrderProductsWhereUniqueInput[]
   }
 
+  export type OrderIntentProductCreateNestedManyWithoutProductInput = {
+    create?: XOR<OrderIntentProductCreateWithoutProductInput, OrderIntentProductUncheckedCreateWithoutProductInput> | OrderIntentProductCreateWithoutProductInput[] | OrderIntentProductUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: OrderIntentProductCreateOrConnectWithoutProductInput | OrderIntentProductCreateOrConnectWithoutProductInput[]
+    createMany?: OrderIntentProductCreateManyProductInputEnvelope
+    connect?: OrderIntentProductWhereUniqueInput | OrderIntentProductWhereUniqueInput[]
+  }
+
   export type ProgressiveDiscountPrizeProductCreateNestedManyWithoutProductInput = {
     create?: XOR<ProgressiveDiscountPrizeProductCreateWithoutProductInput, ProgressiveDiscountPrizeProductUncheckedCreateWithoutProductInput> | ProgressiveDiscountPrizeProductCreateWithoutProductInput[] | ProgressiveDiscountPrizeProductUncheckedCreateWithoutProductInput[]
     connectOrCreate?: ProgressiveDiscountPrizeProductCreateOrConnectWithoutProductInput | ProgressiveDiscountPrizeProductCreateOrConnectWithoutProductInput[]
@@ -97906,6 +105672,13 @@ export namespace Prisma {
     connectOrCreate?: OrderProductsCreateOrConnectWithoutProductInput | OrderProductsCreateOrConnectWithoutProductInput[]
     createMany?: OrderProductsCreateManyProductInputEnvelope
     connect?: OrderProductsWhereUniqueInput | OrderProductsWhereUniqueInput[]
+  }
+
+  export type OrderIntentProductUncheckedCreateNestedManyWithoutProductInput = {
+    create?: XOR<OrderIntentProductCreateWithoutProductInput, OrderIntentProductUncheckedCreateWithoutProductInput> | OrderIntentProductCreateWithoutProductInput[] | OrderIntentProductUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: OrderIntentProductCreateOrConnectWithoutProductInput | OrderIntentProductCreateOrConnectWithoutProductInput[]
+    createMany?: OrderIntentProductCreateManyProductInputEnvelope
+    connect?: OrderIntentProductWhereUniqueInput | OrderIntentProductWhereUniqueInput[]
   }
 
   export type ProgressiveDiscountPrizeProductUncheckedCreateNestedManyWithoutProductInput = {
@@ -98065,6 +105838,20 @@ export namespace Prisma {
     update?: OrderProductsUpdateWithWhereUniqueWithoutProductInput | OrderProductsUpdateWithWhereUniqueWithoutProductInput[]
     updateMany?: OrderProductsUpdateManyWithWhereWithoutProductInput | OrderProductsUpdateManyWithWhereWithoutProductInput[]
     deleteMany?: OrderProductsScalarWhereInput | OrderProductsScalarWhereInput[]
+  }
+
+  export type OrderIntentProductUpdateManyWithoutProductNestedInput = {
+    create?: XOR<OrderIntentProductCreateWithoutProductInput, OrderIntentProductUncheckedCreateWithoutProductInput> | OrderIntentProductCreateWithoutProductInput[] | OrderIntentProductUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: OrderIntentProductCreateOrConnectWithoutProductInput | OrderIntentProductCreateOrConnectWithoutProductInput[]
+    upsert?: OrderIntentProductUpsertWithWhereUniqueWithoutProductInput | OrderIntentProductUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: OrderIntentProductCreateManyProductInputEnvelope
+    set?: OrderIntentProductWhereUniqueInput | OrderIntentProductWhereUniqueInput[]
+    disconnect?: OrderIntentProductWhereUniqueInput | OrderIntentProductWhereUniqueInput[]
+    delete?: OrderIntentProductWhereUniqueInput | OrderIntentProductWhereUniqueInput[]
+    connect?: OrderIntentProductWhereUniqueInput | OrderIntentProductWhereUniqueInput[]
+    update?: OrderIntentProductUpdateWithWhereUniqueWithoutProductInput | OrderIntentProductUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: OrderIntentProductUpdateManyWithWhereWithoutProductInput | OrderIntentProductUpdateManyWithWhereWithoutProductInput[]
+    deleteMany?: OrderIntentProductScalarWhereInput | OrderIntentProductScalarWhereInput[]
   }
 
   export type ProgressiveDiscountPrizeProductUpdateManyWithoutProductNestedInput = {
@@ -98231,6 +106018,20 @@ export namespace Prisma {
     update?: OrderProductsUpdateWithWhereUniqueWithoutProductInput | OrderProductsUpdateWithWhereUniqueWithoutProductInput[]
     updateMany?: OrderProductsUpdateManyWithWhereWithoutProductInput | OrderProductsUpdateManyWithWhereWithoutProductInput[]
     deleteMany?: OrderProductsScalarWhereInput | OrderProductsScalarWhereInput[]
+  }
+
+  export type OrderIntentProductUncheckedUpdateManyWithoutProductNestedInput = {
+    create?: XOR<OrderIntentProductCreateWithoutProductInput, OrderIntentProductUncheckedCreateWithoutProductInput> | OrderIntentProductCreateWithoutProductInput[] | OrderIntentProductUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: OrderIntentProductCreateOrConnectWithoutProductInput | OrderIntentProductCreateOrConnectWithoutProductInput[]
+    upsert?: OrderIntentProductUpsertWithWhereUniqueWithoutProductInput | OrderIntentProductUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: OrderIntentProductCreateManyProductInputEnvelope
+    set?: OrderIntentProductWhereUniqueInput | OrderIntentProductWhereUniqueInput[]
+    disconnect?: OrderIntentProductWhereUniqueInput | OrderIntentProductWhereUniqueInput[]
+    delete?: OrderIntentProductWhereUniqueInput | OrderIntentProductWhereUniqueInput[]
+    connect?: OrderIntentProductWhereUniqueInput | OrderIntentProductWhereUniqueInput[]
+    update?: OrderIntentProductUpdateWithWhereUniqueWithoutProductInput | OrderIntentProductUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: OrderIntentProductUpdateManyWithWhereWithoutProductInput | OrderIntentProductUpdateManyWithWhereWithoutProductInput[]
+    deleteMany?: OrderIntentProductScalarWhereInput | OrderIntentProductScalarWhereInput[]
   }
 
   export type ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutProductNestedInput = {
@@ -99008,6 +106809,13 @@ export namespace Prisma {
     connect?: CustomerCardWhereUniqueInput | CustomerCardWhereUniqueInput[]
   }
 
+  export type OrderIntentCreateNestedManyWithoutCustomerInput = {
+    create?: XOR<OrderIntentCreateWithoutCustomerInput, OrderIntentUncheckedCreateWithoutCustomerInput> | OrderIntentCreateWithoutCustomerInput[] | OrderIntentUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: OrderIntentCreateOrConnectWithoutCustomerInput | OrderIntentCreateOrConnectWithoutCustomerInput[]
+    createMany?: OrderIntentCreateManyCustomerInputEnvelope
+    connect?: OrderIntentWhereUniqueInput | OrderIntentWhereUniqueInput[]
+  }
+
   export type OrderUncheckedCreateNestedManyWithoutCustomerInput = {
     create?: XOR<OrderCreateWithoutCustomerInput, OrderUncheckedCreateWithoutCustomerInput> | OrderCreateWithoutCustomerInput[] | OrderUncheckedCreateWithoutCustomerInput[]
     connectOrCreate?: OrderCreateOrConnectWithoutCustomerInput | OrderCreateOrConnectWithoutCustomerInput[]
@@ -99069,6 +106877,13 @@ export namespace Prisma {
     connectOrCreate?: CustomerCardCreateOrConnectWithoutCustomerInput | CustomerCardCreateOrConnectWithoutCustomerInput[]
     createMany?: CustomerCardCreateManyCustomerInputEnvelope
     connect?: CustomerCardWhereUniqueInput | CustomerCardWhereUniqueInput[]
+  }
+
+  export type OrderIntentUncheckedCreateNestedManyWithoutCustomerInput = {
+    create?: XOR<OrderIntentCreateWithoutCustomerInput, OrderIntentUncheckedCreateWithoutCustomerInput> | OrderIntentCreateWithoutCustomerInput[] | OrderIntentUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: OrderIntentCreateOrConnectWithoutCustomerInput | OrderIntentCreateOrConnectWithoutCustomerInput[]
+    createMany?: OrderIntentCreateManyCustomerInputEnvelope
+    connect?: OrderIntentWhereUniqueInput | OrderIntentWhereUniqueInput[]
   }
 
   export type OrderUpdateManyWithoutCustomerNestedInput = {
@@ -99197,6 +107012,20 @@ export namespace Prisma {
     deleteMany?: CustomerCardScalarWhereInput | CustomerCardScalarWhereInput[]
   }
 
+  export type OrderIntentUpdateManyWithoutCustomerNestedInput = {
+    create?: XOR<OrderIntentCreateWithoutCustomerInput, OrderIntentUncheckedCreateWithoutCustomerInput> | OrderIntentCreateWithoutCustomerInput[] | OrderIntentUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: OrderIntentCreateOrConnectWithoutCustomerInput | OrderIntentCreateOrConnectWithoutCustomerInput[]
+    upsert?: OrderIntentUpsertWithWhereUniqueWithoutCustomerInput | OrderIntentUpsertWithWhereUniqueWithoutCustomerInput[]
+    createMany?: OrderIntentCreateManyCustomerInputEnvelope
+    set?: OrderIntentWhereUniqueInput | OrderIntentWhereUniqueInput[]
+    disconnect?: OrderIntentWhereUniqueInput | OrderIntentWhereUniqueInput[]
+    delete?: OrderIntentWhereUniqueInput | OrderIntentWhereUniqueInput[]
+    connect?: OrderIntentWhereUniqueInput | OrderIntentWhereUniqueInput[]
+    update?: OrderIntentUpdateWithWhereUniqueWithoutCustomerInput | OrderIntentUpdateWithWhereUniqueWithoutCustomerInput[]
+    updateMany?: OrderIntentUpdateManyWithWhereWithoutCustomerInput | OrderIntentUpdateManyWithWhereWithoutCustomerInput[]
+    deleteMany?: OrderIntentScalarWhereInput | OrderIntentScalarWhereInput[]
+  }
+
   export type OrderUncheckedUpdateManyWithoutCustomerNestedInput = {
     create?: XOR<OrderCreateWithoutCustomerInput, OrderUncheckedCreateWithoutCustomerInput> | OrderCreateWithoutCustomerInput[] | OrderUncheckedCreateWithoutCustomerInput[]
     connectOrCreate?: OrderCreateOrConnectWithoutCustomerInput | OrderCreateOrConnectWithoutCustomerInput[]
@@ -99323,6 +107152,20 @@ export namespace Prisma {
     deleteMany?: CustomerCardScalarWhereInput | CustomerCardScalarWhereInput[]
   }
 
+  export type OrderIntentUncheckedUpdateManyWithoutCustomerNestedInput = {
+    create?: XOR<OrderIntentCreateWithoutCustomerInput, OrderIntentUncheckedCreateWithoutCustomerInput> | OrderIntentCreateWithoutCustomerInput[] | OrderIntentUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: OrderIntentCreateOrConnectWithoutCustomerInput | OrderIntentCreateOrConnectWithoutCustomerInput[]
+    upsert?: OrderIntentUpsertWithWhereUniqueWithoutCustomerInput | OrderIntentUpsertWithWhereUniqueWithoutCustomerInput[]
+    createMany?: OrderIntentCreateManyCustomerInputEnvelope
+    set?: OrderIntentWhereUniqueInput | OrderIntentWhereUniqueInput[]
+    disconnect?: OrderIntentWhereUniqueInput | OrderIntentWhereUniqueInput[]
+    delete?: OrderIntentWhereUniqueInput | OrderIntentWhereUniqueInput[]
+    connect?: OrderIntentWhereUniqueInput | OrderIntentWhereUniqueInput[]
+    update?: OrderIntentUpdateWithWhereUniqueWithoutCustomerInput | OrderIntentUpdateWithWhereUniqueWithoutCustomerInput[]
+    updateMany?: OrderIntentUpdateManyWithWhereWithoutCustomerInput | OrderIntentUpdateManyWithWhereWithoutCustomerInput[]
+    deleteMany?: OrderIntentScalarWhereInput | OrderIntentScalarWhereInput[]
+  }
+
   export type CustomerCreateNestedOneWithoutCardsInput = {
     create?: XOR<CustomerCreateWithoutCardsInput, CustomerUncheckedCreateWithoutCardsInput>
     connectOrCreate?: CustomerCreateOrConnectWithoutCardsInput
@@ -99384,11 +107227,25 @@ export namespace Prisma {
     connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
   }
 
+  export type OrderIntentCreateNestedManyWithoutDeliveryAddressInput = {
+    create?: XOR<OrderIntentCreateWithoutDeliveryAddressInput, OrderIntentUncheckedCreateWithoutDeliveryAddressInput> | OrderIntentCreateWithoutDeliveryAddressInput[] | OrderIntentUncheckedCreateWithoutDeliveryAddressInput[]
+    connectOrCreate?: OrderIntentCreateOrConnectWithoutDeliveryAddressInput | OrderIntentCreateOrConnectWithoutDeliveryAddressInput[]
+    createMany?: OrderIntentCreateManyDeliveryAddressInputEnvelope
+    connect?: OrderIntentWhereUniqueInput | OrderIntentWhereUniqueInput[]
+  }
+
   export type OrderUncheckedCreateNestedManyWithoutDeliveryAddressInput = {
     create?: XOR<OrderCreateWithoutDeliveryAddressInput, OrderUncheckedCreateWithoutDeliveryAddressInput> | OrderCreateWithoutDeliveryAddressInput[] | OrderUncheckedCreateWithoutDeliveryAddressInput[]
     connectOrCreate?: OrderCreateOrConnectWithoutDeliveryAddressInput | OrderCreateOrConnectWithoutDeliveryAddressInput[]
     createMany?: OrderCreateManyDeliveryAddressInputEnvelope
     connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+  }
+
+  export type OrderIntentUncheckedCreateNestedManyWithoutDeliveryAddressInput = {
+    create?: XOR<OrderIntentCreateWithoutDeliveryAddressInput, OrderIntentUncheckedCreateWithoutDeliveryAddressInput> | OrderIntentCreateWithoutDeliveryAddressInput[] | OrderIntentUncheckedCreateWithoutDeliveryAddressInput[]
+    connectOrCreate?: OrderIntentCreateOrConnectWithoutDeliveryAddressInput | OrderIntentCreateOrConnectWithoutDeliveryAddressInput[]
+    createMany?: OrderIntentCreateManyDeliveryAddressInputEnvelope
+    connect?: OrderIntentWhereUniqueInput | OrderIntentWhereUniqueInput[]
   }
 
   export type CustomerUpdateOneWithoutAddressesNestedInput = {
@@ -99415,6 +107272,20 @@ export namespace Prisma {
     deleteMany?: OrderScalarWhereInput | OrderScalarWhereInput[]
   }
 
+  export type OrderIntentUpdateManyWithoutDeliveryAddressNestedInput = {
+    create?: XOR<OrderIntentCreateWithoutDeliveryAddressInput, OrderIntentUncheckedCreateWithoutDeliveryAddressInput> | OrderIntentCreateWithoutDeliveryAddressInput[] | OrderIntentUncheckedCreateWithoutDeliveryAddressInput[]
+    connectOrCreate?: OrderIntentCreateOrConnectWithoutDeliveryAddressInput | OrderIntentCreateOrConnectWithoutDeliveryAddressInput[]
+    upsert?: OrderIntentUpsertWithWhereUniqueWithoutDeliveryAddressInput | OrderIntentUpsertWithWhereUniqueWithoutDeliveryAddressInput[]
+    createMany?: OrderIntentCreateManyDeliveryAddressInputEnvelope
+    set?: OrderIntentWhereUniqueInput | OrderIntentWhereUniqueInput[]
+    disconnect?: OrderIntentWhereUniqueInput | OrderIntentWhereUniqueInput[]
+    delete?: OrderIntentWhereUniqueInput | OrderIntentWhereUniqueInput[]
+    connect?: OrderIntentWhereUniqueInput | OrderIntentWhereUniqueInput[]
+    update?: OrderIntentUpdateWithWhereUniqueWithoutDeliveryAddressInput | OrderIntentUpdateWithWhereUniqueWithoutDeliveryAddressInput[]
+    updateMany?: OrderIntentUpdateManyWithWhereWithoutDeliveryAddressInput | OrderIntentUpdateManyWithWhereWithoutDeliveryAddressInput[]
+    deleteMany?: OrderIntentScalarWhereInput | OrderIntentScalarWhereInput[]
+  }
+
   export type OrderUncheckedUpdateManyWithoutDeliveryAddressNestedInput = {
     create?: XOR<OrderCreateWithoutDeliveryAddressInput, OrderUncheckedCreateWithoutDeliveryAddressInput> | OrderCreateWithoutDeliveryAddressInput[] | OrderUncheckedCreateWithoutDeliveryAddressInput[]
     connectOrCreate?: OrderCreateOrConnectWithoutDeliveryAddressInput | OrderCreateOrConnectWithoutDeliveryAddressInput[]
@@ -99427,6 +107298,20 @@ export namespace Prisma {
     update?: OrderUpdateWithWhereUniqueWithoutDeliveryAddressInput | OrderUpdateWithWhereUniqueWithoutDeliveryAddressInput[]
     updateMany?: OrderUpdateManyWithWhereWithoutDeliveryAddressInput | OrderUpdateManyWithWhereWithoutDeliveryAddressInput[]
     deleteMany?: OrderScalarWhereInput | OrderScalarWhereInput[]
+  }
+
+  export type OrderIntentUncheckedUpdateManyWithoutDeliveryAddressNestedInput = {
+    create?: XOR<OrderIntentCreateWithoutDeliveryAddressInput, OrderIntentUncheckedCreateWithoutDeliveryAddressInput> | OrderIntentCreateWithoutDeliveryAddressInput[] | OrderIntentUncheckedCreateWithoutDeliveryAddressInput[]
+    connectOrCreate?: OrderIntentCreateOrConnectWithoutDeliveryAddressInput | OrderIntentCreateOrConnectWithoutDeliveryAddressInput[]
+    upsert?: OrderIntentUpsertWithWhereUniqueWithoutDeliveryAddressInput | OrderIntentUpsertWithWhereUniqueWithoutDeliveryAddressInput[]
+    createMany?: OrderIntentCreateManyDeliveryAddressInputEnvelope
+    set?: OrderIntentWhereUniqueInput | OrderIntentWhereUniqueInput[]
+    disconnect?: OrderIntentWhereUniqueInput | OrderIntentWhereUniqueInput[]
+    delete?: OrderIntentWhereUniqueInput | OrderIntentWhereUniqueInput[]
+    connect?: OrderIntentWhereUniqueInput | OrderIntentWhereUniqueInput[]
+    update?: OrderIntentUpdateWithWhereUniqueWithoutDeliveryAddressInput | OrderIntentUpdateWithWhereUniqueWithoutDeliveryAddressInput[]
+    updateMany?: OrderIntentUpdateManyWithWhereWithoutDeliveryAddressInput | OrderIntentUpdateManyWithWhereWithoutDeliveryAddressInput[]
+    deleteMany?: OrderIntentScalarWhereInput | OrderIntentScalarWhereInput[]
   }
 
   export type CustomerCreateNestedOneWithoutExternalAddressesInput = {
@@ -99607,6 +107492,12 @@ export namespace Prisma {
     connect?: ExternalAddressWhereUniqueInput
   }
 
+  export type BranchCreateNestedOneWithoutOrdersInput = {
+    create?: XOR<BranchCreateWithoutOrdersInput, BranchUncheckedCreateWithoutOrdersInput>
+    connectOrCreate?: BranchCreateOrConnectWithoutOrdersInput
+    connect?: BranchWhereUniqueInput
+  }
+
   export type OrderProductsCreateNestedManyWithoutOrderInput = {
     create?: XOR<OrderProductsCreateWithoutOrderInput, OrderProductsUncheckedCreateWithoutOrderInput> | OrderProductsCreateWithoutOrderInput[] | OrderProductsUncheckedCreateWithoutOrderInput[]
     connectOrCreate?: OrderProductsCreateOrConnectWithoutOrderInput | OrderProductsCreateOrConnectWithoutOrderInput[]
@@ -99746,6 +107637,16 @@ export namespace Prisma {
     update?: XOR<XOR<ExternalAddressUpdateToOneWithWhereWithoutOrdersInput, ExternalAddressUpdateWithoutOrdersInput>, ExternalAddressUncheckedUpdateWithoutOrdersInput>
   }
 
+  export type BranchUpdateOneWithoutOrdersNestedInput = {
+    create?: XOR<BranchCreateWithoutOrdersInput, BranchUncheckedCreateWithoutOrdersInput>
+    connectOrCreate?: BranchCreateOrConnectWithoutOrdersInput
+    upsert?: BranchUpsertWithoutOrdersInput
+    disconnect?: BranchWhereInput | boolean
+    delete?: BranchWhereInput | boolean
+    connect?: BranchWhereUniqueInput
+    update?: XOR<XOR<BranchUpdateToOneWithWhereWithoutOrdersInput, BranchUpdateWithoutOrdersInput>, BranchUncheckedUpdateWithoutOrdersInput>
+  }
+
   export type OrderProductsUpdateManyWithoutOrderNestedInput = {
     create?: XOR<OrderProductsCreateWithoutOrderInput, OrderProductsUncheckedCreateWithoutOrderInput> | OrderProductsCreateWithoutOrderInput[] | OrderProductsUncheckedCreateWithoutOrderInput[]
     connectOrCreate?: OrderProductsCreateOrConnectWithoutOrderInput | OrderProductsCreateOrConnectWithoutOrderInput[]
@@ -99876,6 +107777,93 @@ export namespace Prisma {
     update?: CustomerRewardUpdateWithWhereUniqueWithoutRedeemedByOrderInput | CustomerRewardUpdateWithWhereUniqueWithoutRedeemedByOrderInput[]
     updateMany?: CustomerRewardUpdateManyWithWhereWithoutRedeemedByOrderInput | CustomerRewardUpdateManyWithWhereWithoutRedeemedByOrderInput[]
     deleteMany?: CustomerRewardScalarWhereInput | CustomerRewardScalarWhereInput[]
+  }
+
+  export type OrderIntentCreatetagsInput = {
+    set: string[]
+  }
+
+  export type CustomerCreateNestedOneWithoutOrderIntentsInput = {
+    create?: XOR<CustomerCreateWithoutOrderIntentsInput, CustomerUncheckedCreateWithoutOrderIntentsInput>
+    connectOrCreate?: CustomerCreateOrConnectWithoutOrderIntentsInput
+    connect?: CustomerWhereUniqueInput
+  }
+
+  export type DeliveryAddressCreateNestedOneWithoutOrderIntentsInput = {
+    create?: XOR<DeliveryAddressCreateWithoutOrderIntentsInput, DeliveryAddressUncheckedCreateWithoutOrderIntentsInput>
+    connectOrCreate?: DeliveryAddressCreateOrConnectWithoutOrderIntentsInput
+    connect?: DeliveryAddressWhereUniqueInput
+  }
+
+  export type OrderIntentProductCreateNestedManyWithoutOrderIntentInput = {
+    create?: XOR<OrderIntentProductCreateWithoutOrderIntentInput, OrderIntentProductUncheckedCreateWithoutOrderIntentInput> | OrderIntentProductCreateWithoutOrderIntentInput[] | OrderIntentProductUncheckedCreateWithoutOrderIntentInput[]
+    connectOrCreate?: OrderIntentProductCreateOrConnectWithoutOrderIntentInput | OrderIntentProductCreateOrConnectWithoutOrderIntentInput[]
+    createMany?: OrderIntentProductCreateManyOrderIntentInputEnvelope
+    connect?: OrderIntentProductWhereUniqueInput | OrderIntentProductWhereUniqueInput[]
+  }
+
+  export type OrderIntentProductUncheckedCreateNestedManyWithoutOrderIntentInput = {
+    create?: XOR<OrderIntentProductCreateWithoutOrderIntentInput, OrderIntentProductUncheckedCreateWithoutOrderIntentInput> | OrderIntentProductCreateWithoutOrderIntentInput[] | OrderIntentProductUncheckedCreateWithoutOrderIntentInput[]
+    connectOrCreate?: OrderIntentProductCreateOrConnectWithoutOrderIntentInput | OrderIntentProductCreateOrConnectWithoutOrderIntentInput[]
+    createMany?: OrderIntentProductCreateManyOrderIntentInputEnvelope
+    connect?: OrderIntentProductWhereUniqueInput | OrderIntentProductWhereUniqueInput[]
+  }
+
+  export type NullableEnumOrderTypeFieldUpdateOperationsInput = {
+    set?: $Enums.OrderType | null
+  }
+
+  export type OrderIntentUpdatetagsInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type CustomerUpdateOneWithoutOrderIntentsNestedInput = {
+    create?: XOR<CustomerCreateWithoutOrderIntentsInput, CustomerUncheckedCreateWithoutOrderIntentsInput>
+    connectOrCreate?: CustomerCreateOrConnectWithoutOrderIntentsInput
+    upsert?: CustomerUpsertWithoutOrderIntentsInput
+    disconnect?: CustomerWhereInput | boolean
+    delete?: CustomerWhereInput | boolean
+    connect?: CustomerWhereUniqueInput
+    update?: XOR<XOR<CustomerUpdateToOneWithWhereWithoutOrderIntentsInput, CustomerUpdateWithoutOrderIntentsInput>, CustomerUncheckedUpdateWithoutOrderIntentsInput>
+  }
+
+  export type DeliveryAddressUpdateOneWithoutOrderIntentsNestedInput = {
+    create?: XOR<DeliveryAddressCreateWithoutOrderIntentsInput, DeliveryAddressUncheckedCreateWithoutOrderIntentsInput>
+    connectOrCreate?: DeliveryAddressCreateOrConnectWithoutOrderIntentsInput
+    upsert?: DeliveryAddressUpsertWithoutOrderIntentsInput
+    disconnect?: DeliveryAddressWhereInput | boolean
+    delete?: DeliveryAddressWhereInput | boolean
+    connect?: DeliveryAddressWhereUniqueInput
+    update?: XOR<XOR<DeliveryAddressUpdateToOneWithWhereWithoutOrderIntentsInput, DeliveryAddressUpdateWithoutOrderIntentsInput>, DeliveryAddressUncheckedUpdateWithoutOrderIntentsInput>
+  }
+
+  export type OrderIntentProductUpdateManyWithoutOrderIntentNestedInput = {
+    create?: XOR<OrderIntentProductCreateWithoutOrderIntentInput, OrderIntentProductUncheckedCreateWithoutOrderIntentInput> | OrderIntentProductCreateWithoutOrderIntentInput[] | OrderIntentProductUncheckedCreateWithoutOrderIntentInput[]
+    connectOrCreate?: OrderIntentProductCreateOrConnectWithoutOrderIntentInput | OrderIntentProductCreateOrConnectWithoutOrderIntentInput[]
+    upsert?: OrderIntentProductUpsertWithWhereUniqueWithoutOrderIntentInput | OrderIntentProductUpsertWithWhereUniqueWithoutOrderIntentInput[]
+    createMany?: OrderIntentProductCreateManyOrderIntentInputEnvelope
+    set?: OrderIntentProductWhereUniqueInput | OrderIntentProductWhereUniqueInput[]
+    disconnect?: OrderIntentProductWhereUniqueInput | OrderIntentProductWhereUniqueInput[]
+    delete?: OrderIntentProductWhereUniqueInput | OrderIntentProductWhereUniqueInput[]
+    connect?: OrderIntentProductWhereUniqueInput | OrderIntentProductWhereUniqueInput[]
+    update?: OrderIntentProductUpdateWithWhereUniqueWithoutOrderIntentInput | OrderIntentProductUpdateWithWhereUniqueWithoutOrderIntentInput[]
+    updateMany?: OrderIntentProductUpdateManyWithWhereWithoutOrderIntentInput | OrderIntentProductUpdateManyWithWhereWithoutOrderIntentInput[]
+    deleteMany?: OrderIntentProductScalarWhereInput | OrderIntentProductScalarWhereInput[]
+  }
+
+  export type OrderIntentProductUncheckedUpdateManyWithoutOrderIntentNestedInput = {
+    create?: XOR<OrderIntentProductCreateWithoutOrderIntentInput, OrderIntentProductUncheckedCreateWithoutOrderIntentInput> | OrderIntentProductCreateWithoutOrderIntentInput[] | OrderIntentProductUncheckedCreateWithoutOrderIntentInput[]
+    connectOrCreate?: OrderIntentProductCreateOrConnectWithoutOrderIntentInput | OrderIntentProductCreateOrConnectWithoutOrderIntentInput[]
+    upsert?: OrderIntentProductUpsertWithWhereUniqueWithoutOrderIntentInput | OrderIntentProductUpsertWithWhereUniqueWithoutOrderIntentInput[]
+    createMany?: OrderIntentProductCreateManyOrderIntentInputEnvelope
+    set?: OrderIntentProductWhereUniqueInput | OrderIntentProductWhereUniqueInput[]
+    disconnect?: OrderIntentProductWhereUniqueInput | OrderIntentProductWhereUniqueInput[]
+    delete?: OrderIntentProductWhereUniqueInput | OrderIntentProductWhereUniqueInput[]
+    connect?: OrderIntentProductWhereUniqueInput | OrderIntentProductWhereUniqueInput[]
+    update?: OrderIntentProductUpdateWithWhereUniqueWithoutOrderIntentInput | OrderIntentProductUpdateWithWhereUniqueWithoutOrderIntentInput[]
+    updateMany?: OrderIntentProductUpdateManyWithWhereWithoutOrderIntentInput | OrderIntentProductUpdateManyWithWhereWithoutOrderIntentInput[]
+    deleteMany?: OrderIntentProductScalarWhereInput | OrderIntentProductScalarWhereInput[]
   }
 
   export type CustomerCreateNestedOneWithoutFeedbacksInput = {
@@ -100093,6 +108081,72 @@ export namespace Prisma {
     connect?: ModifierGroupItemWhereUniqueInput | ModifierGroupItemWhereUniqueInput[]
     update?: ModifierGroupItemUpdateWithWhereUniqueWithoutOrderProductsInput | ModifierGroupItemUpdateWithWhereUniqueWithoutOrderProductsInput[]
     updateMany?: ModifierGroupItemUpdateManyWithWhereWithoutOrderProductsInput | ModifierGroupItemUpdateManyWithWhereWithoutOrderProductsInput[]
+    deleteMany?: ModifierGroupItemScalarWhereInput | ModifierGroupItemScalarWhereInput[]
+  }
+
+  export type OrderIntentCreateNestedOneWithoutOrderProductsInput = {
+    create?: XOR<OrderIntentCreateWithoutOrderProductsInput, OrderIntentUncheckedCreateWithoutOrderProductsInput>
+    connectOrCreate?: OrderIntentCreateOrConnectWithoutOrderProductsInput
+    connect?: OrderIntentWhereUniqueInput
+  }
+
+  export type ProductCreateNestedOneWithoutOrderIntentProductsInput = {
+    create?: XOR<ProductCreateWithoutOrderIntentProductsInput, ProductUncheckedCreateWithoutOrderIntentProductsInput>
+    connectOrCreate?: ProductCreateOrConnectWithoutOrderIntentProductsInput
+    connect?: ProductWhereUniqueInput
+  }
+
+  export type ModifierGroupItemCreateNestedManyWithoutOrderIntentProductsInput = {
+    create?: XOR<ModifierGroupItemCreateWithoutOrderIntentProductsInput, ModifierGroupItemUncheckedCreateWithoutOrderIntentProductsInput> | ModifierGroupItemCreateWithoutOrderIntentProductsInput[] | ModifierGroupItemUncheckedCreateWithoutOrderIntentProductsInput[]
+    connectOrCreate?: ModifierGroupItemCreateOrConnectWithoutOrderIntentProductsInput | ModifierGroupItemCreateOrConnectWithoutOrderIntentProductsInput[]
+    connect?: ModifierGroupItemWhereUniqueInput | ModifierGroupItemWhereUniqueInput[]
+  }
+
+  export type ModifierGroupItemUncheckedCreateNestedManyWithoutOrderIntentProductsInput = {
+    create?: XOR<ModifierGroupItemCreateWithoutOrderIntentProductsInput, ModifierGroupItemUncheckedCreateWithoutOrderIntentProductsInput> | ModifierGroupItemCreateWithoutOrderIntentProductsInput[] | ModifierGroupItemUncheckedCreateWithoutOrderIntentProductsInput[]
+    connectOrCreate?: ModifierGroupItemCreateOrConnectWithoutOrderIntentProductsInput | ModifierGroupItemCreateOrConnectWithoutOrderIntentProductsInput[]
+    connect?: ModifierGroupItemWhereUniqueInput | ModifierGroupItemWhereUniqueInput[]
+  }
+
+  export type OrderIntentUpdateOneRequiredWithoutOrderProductsNestedInput = {
+    create?: XOR<OrderIntentCreateWithoutOrderProductsInput, OrderIntentUncheckedCreateWithoutOrderProductsInput>
+    connectOrCreate?: OrderIntentCreateOrConnectWithoutOrderProductsInput
+    upsert?: OrderIntentUpsertWithoutOrderProductsInput
+    connect?: OrderIntentWhereUniqueInput
+    update?: XOR<XOR<OrderIntentUpdateToOneWithWhereWithoutOrderProductsInput, OrderIntentUpdateWithoutOrderProductsInput>, OrderIntentUncheckedUpdateWithoutOrderProductsInput>
+  }
+
+  export type ProductUpdateOneRequiredWithoutOrderIntentProductsNestedInput = {
+    create?: XOR<ProductCreateWithoutOrderIntentProductsInput, ProductUncheckedCreateWithoutOrderIntentProductsInput>
+    connectOrCreate?: ProductCreateOrConnectWithoutOrderIntentProductsInput
+    upsert?: ProductUpsertWithoutOrderIntentProductsInput
+    connect?: ProductWhereUniqueInput
+    update?: XOR<XOR<ProductUpdateToOneWithWhereWithoutOrderIntentProductsInput, ProductUpdateWithoutOrderIntentProductsInput>, ProductUncheckedUpdateWithoutOrderIntentProductsInput>
+  }
+
+  export type ModifierGroupItemUpdateManyWithoutOrderIntentProductsNestedInput = {
+    create?: XOR<ModifierGroupItemCreateWithoutOrderIntentProductsInput, ModifierGroupItemUncheckedCreateWithoutOrderIntentProductsInput> | ModifierGroupItemCreateWithoutOrderIntentProductsInput[] | ModifierGroupItemUncheckedCreateWithoutOrderIntentProductsInput[]
+    connectOrCreate?: ModifierGroupItemCreateOrConnectWithoutOrderIntentProductsInput | ModifierGroupItemCreateOrConnectWithoutOrderIntentProductsInput[]
+    upsert?: ModifierGroupItemUpsertWithWhereUniqueWithoutOrderIntentProductsInput | ModifierGroupItemUpsertWithWhereUniqueWithoutOrderIntentProductsInput[]
+    set?: ModifierGroupItemWhereUniqueInput | ModifierGroupItemWhereUniqueInput[]
+    disconnect?: ModifierGroupItemWhereUniqueInput | ModifierGroupItemWhereUniqueInput[]
+    delete?: ModifierGroupItemWhereUniqueInput | ModifierGroupItemWhereUniqueInput[]
+    connect?: ModifierGroupItemWhereUniqueInput | ModifierGroupItemWhereUniqueInput[]
+    update?: ModifierGroupItemUpdateWithWhereUniqueWithoutOrderIntentProductsInput | ModifierGroupItemUpdateWithWhereUniqueWithoutOrderIntentProductsInput[]
+    updateMany?: ModifierGroupItemUpdateManyWithWhereWithoutOrderIntentProductsInput | ModifierGroupItemUpdateManyWithWhereWithoutOrderIntentProductsInput[]
+    deleteMany?: ModifierGroupItemScalarWhereInput | ModifierGroupItemScalarWhereInput[]
+  }
+
+  export type ModifierGroupItemUncheckedUpdateManyWithoutOrderIntentProductsNestedInput = {
+    create?: XOR<ModifierGroupItemCreateWithoutOrderIntentProductsInput, ModifierGroupItemUncheckedCreateWithoutOrderIntentProductsInput> | ModifierGroupItemCreateWithoutOrderIntentProductsInput[] | ModifierGroupItemUncheckedCreateWithoutOrderIntentProductsInput[]
+    connectOrCreate?: ModifierGroupItemCreateOrConnectWithoutOrderIntentProductsInput | ModifierGroupItemCreateOrConnectWithoutOrderIntentProductsInput[]
+    upsert?: ModifierGroupItemUpsertWithWhereUniqueWithoutOrderIntentProductsInput | ModifierGroupItemUpsertWithWhereUniqueWithoutOrderIntentProductsInput[]
+    set?: ModifierGroupItemWhereUniqueInput | ModifierGroupItemWhereUniqueInput[]
+    disconnect?: ModifierGroupItemWhereUniqueInput | ModifierGroupItemWhereUniqueInput[]
+    delete?: ModifierGroupItemWhereUniqueInput | ModifierGroupItemWhereUniqueInput[]
+    connect?: ModifierGroupItemWhereUniqueInput | ModifierGroupItemWhereUniqueInput[]
+    update?: ModifierGroupItemUpdateWithWhereUniqueWithoutOrderIntentProductsInput | ModifierGroupItemUpdateWithWhereUniqueWithoutOrderIntentProductsInput[]
+    updateMany?: ModifierGroupItemUpdateManyWithWhereWithoutOrderIntentProductsInput | ModifierGroupItemUpdateManyWithWhereWithoutOrderIntentProductsInput[]
     deleteMany?: ModifierGroupItemScalarWhereInput | ModifierGroupItemScalarWhereInput[]
   }
 
@@ -100974,6 +109028,23 @@ export namespace Prisma {
     _max?: NestedEnumModifierGroupTypeNullableFilter<$PrismaModel>
   }
 
+  export type NestedEnumUserPushDevicePlatformFilter<$PrismaModel = never> = {
+    equals?: $Enums.UserPushDevicePlatform | EnumUserPushDevicePlatformFieldRefInput<$PrismaModel>
+    in?: $Enums.UserPushDevicePlatform[] | ListEnumUserPushDevicePlatformFieldRefInput<$PrismaModel>
+    notIn?: $Enums.UserPushDevicePlatform[] | ListEnumUserPushDevicePlatformFieldRefInput<$PrismaModel>
+    not?: NestedEnumUserPushDevicePlatformFilter<$PrismaModel> | $Enums.UserPushDevicePlatform
+  }
+
+  export type NestedEnumUserPushDevicePlatformWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.UserPushDevicePlatform | EnumUserPushDevicePlatformFieldRefInput<$PrismaModel>
+    in?: $Enums.UserPushDevicePlatform[] | ListEnumUserPushDevicePlatformFieldRefInput<$PrismaModel>
+    notIn?: $Enums.UserPushDevicePlatform[] | ListEnumUserPushDevicePlatformFieldRefInput<$PrismaModel>
+    not?: NestedEnumUserPushDevicePlatformWithAggregatesFilter<$PrismaModel> | $Enums.UserPushDevicePlatform
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumUserPushDevicePlatformFilter<$PrismaModel>
+    _max?: NestedEnumUserPushDevicePlatformFilter<$PrismaModel>
+  }
+
   export type NestedEnumExternalIntegrationProviderFilter<$PrismaModel = never> = {
     equals?: $Enums.ExternalIntegrationProvider | EnumExternalIntegrationProviderFieldRefInput<$PrismaModel>
     in?: $Enums.ExternalIntegrationProvider[] | ListEnumExternalIntegrationProviderFieldRefInput<$PrismaModel>
@@ -101059,6 +109130,22 @@ export namespace Prisma {
     _max?: NestedEnumDriverActivationStatusFilter<$PrismaModel>
   }
 
+  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+
   export type NestedEnumDispatchRouteSessionStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.DispatchRouteSessionStatus | EnumDispatchRouteSessionStatusFieldRefInput<$PrismaModel>
     in?: $Enums.DispatchRouteSessionStatus[] | ListEnumDispatchRouteSessionStatusFieldRefInput<$PrismaModel>
@@ -101104,22 +109191,6 @@ export namespace Prisma {
     _max?: NestedFloatFilter<$PrismaModel>
   }
 
-  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedFloatNullableFilter<$PrismaModel>
-    _min?: NestedFloatNullableFilter<$PrismaModel>
-    _max?: NestedFloatNullableFilter<$PrismaModel>
-  }
-
   export type NestedEnumDispatchRoutePointSourceWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.DispatchRoutePointSource | EnumDispatchRoutePointSourceFieldRefInput<$PrismaModel>
     in?: $Enums.DispatchRoutePointSource[] | ListEnumDispatchRoutePointSourceFieldRefInput<$PrismaModel>
@@ -101136,6 +109207,23 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedBoolNullableFilter<$PrismaModel>
     _max?: NestedBoolNullableFilter<$PrismaModel>
+  }
+
+  export type NestedEnumDispatchRouteMilestoneTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.DispatchRouteMilestoneType | EnumDispatchRouteMilestoneTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.DispatchRouteMilestoneType[] | ListEnumDispatchRouteMilestoneTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DispatchRouteMilestoneType[] | ListEnumDispatchRouteMilestoneTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumDispatchRouteMilestoneTypeFilter<$PrismaModel> | $Enums.DispatchRouteMilestoneType
+  }
+
+  export type NestedEnumDispatchRouteMilestoneTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.DispatchRouteMilestoneType | EnumDispatchRouteMilestoneTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.DispatchRouteMilestoneType[] | ListEnumDispatchRouteMilestoneTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DispatchRouteMilestoneType[] | ListEnumDispatchRouteMilestoneTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumDispatchRouteMilestoneTypeWithAggregatesFilter<$PrismaModel> | $Enums.DispatchRouteMilestoneType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumDispatchRouteMilestoneTypeFilter<$PrismaModel>
+    _max?: NestedEnumDispatchRouteMilestoneTypeFilter<$PrismaModel>
   }
 
   export type NestedEnumDispatchAssignmentJobStatusFilter<$PrismaModel = never> = {
@@ -101289,6 +109377,23 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedEnumPaymentProviderNullableFilter<$PrismaModel>
     _max?: NestedEnumPaymentProviderNullableFilter<$PrismaModel>
+  }
+
+  export type NestedEnumOrderTypeNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.OrderType | EnumOrderTypeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.OrderType[] | ListEnumOrderTypeFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.OrderType[] | ListEnumOrderTypeFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumOrderTypeNullableFilter<$PrismaModel> | $Enums.OrderType | null
+  }
+
+  export type NestedEnumOrderTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.OrderType | EnumOrderTypeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.OrderType[] | ListEnumOrderTypeFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.OrderType[] | ListEnumOrderTypeFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumOrderTypeNullableWithAggregatesFilter<$PrismaModel> | $Enums.OrderType | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumOrderTypeNullableFilter<$PrismaModel>
+    _max?: NestedEnumOrderTypeNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumCustomerFeedbackSentimentFilter<$PrismaModel = never> = {
@@ -101480,6 +109585,7 @@ export namespace Prisma {
     comboUsedInItems?: ComboProductItemCreateNestedManyWithoutProductInput
     exclusivePromotionProducts?: ExclusivePromotionProductCreateNestedManyWithoutProductInput
     OrderProducts?: OrderProductsCreateNestedManyWithoutProductInput
+    orderIntentProducts?: OrderIntentProductCreateNestedManyWithoutProductInput
     prizeProducts?: ProgressiveDiscountPrizeProductCreateNestedManyWithoutProductInput
     customerRewards?: CustomerRewardCreateNestedManyWithoutProductInput
   }
@@ -101505,6 +109611,7 @@ export namespace Prisma {
     comboUsedInItems?: ComboProductItemUncheckedCreateNestedManyWithoutProductInput
     exclusivePromotionProducts?: ExclusivePromotionProductUncheckedCreateNestedManyWithoutProductInput
     OrderProducts?: OrderProductsUncheckedCreateNestedManyWithoutProductInput
+    orderIntentProducts?: OrderIntentProductUncheckedCreateNestedManyWithoutProductInput
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedCreateNestedManyWithoutProductInput
     customerRewards?: CustomerRewardUncheckedCreateNestedManyWithoutProductInput
   }
@@ -101712,7 +109819,11 @@ export namespace Prisma {
     language?: string | null
     paidAt?: Date | string | null
     deliveredAt?: Date | string | null
+    leftAtDropOffAt?: Date | string | null
+    leftAtDropOffLat?: number | null
+    leftAtDropOffLng?: number | null
     estimatedDeliveryDurationMinutes?: number | null
+    currentEstimatedDeliveryDurationMinutes?: number | null
     dispatchOrderIndex?: number | null
     amount: number
     canceled?: boolean
@@ -101729,6 +109840,7 @@ export namespace Prisma {
     address?: AddressCreateNestedOneWithoutOrdersInput
     deliveryAddress?: DeliveryAddressCreateNestedOneWithoutOrdersInput
     externalAddress?: ExternalAddressCreateNestedOneWithoutOrdersInput
+    branch?: BranchCreateNestedOneWithoutOrdersInput
     orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
     feedback?: CustomerFeedbackCreateNestedOneWithoutOrderInput
     issuedRewards?: CustomerRewardCreateNestedManyWithoutIssuedForOrderInput
@@ -101743,7 +109855,11 @@ export namespace Prisma {
     language?: string | null
     paidAt?: Date | string | null
     deliveredAt?: Date | string | null
+    leftAtDropOffAt?: Date | string | null
+    leftAtDropOffLat?: number | null
+    leftAtDropOffLng?: number | null
     estimatedDeliveryDurationMinutes?: number | null
+    currentEstimatedDeliveryDurationMinutes?: number | null
     dispatchOrderIndex?: number | null
     amount: number
     canceled?: boolean
@@ -101760,6 +109876,7 @@ export namespace Prisma {
     addressId?: string | null
     deliveryAddressId?: string | null
     externalAddressId?: string | null
+    branchId?: string | null
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
     feedback?: CustomerFeedbackUncheckedCreateNestedOneWithoutOrderInput
     issuedRewards?: CustomerRewardUncheckedCreateNestedManyWithoutIssuedForOrderInput
@@ -101886,7 +110003,11 @@ export namespace Prisma {
     language?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    leftAtDropOffLng?: NullableFloatFieldUpdateOperationsInput | number | null
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
     canceled?: BoolFieldUpdateOperationsInput | boolean
@@ -101903,6 +110024,7 @@ export namespace Prisma {
     address?: AddressUpdateOneWithoutOrdersNestedInput
     deliveryAddress?: DeliveryAddressUpdateOneWithoutOrdersNestedInput
     externalAddress?: ExternalAddressUpdateOneWithoutOrdersNestedInput
+    branch?: BranchUpdateOneWithoutOrdersNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
     feedback?: CustomerFeedbackUpdateOneWithoutOrderNestedInput
     issuedRewards?: CustomerRewardUpdateManyWithoutIssuedForOrderNestedInput
@@ -101917,7 +110039,11 @@ export namespace Prisma {
     language?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    leftAtDropOffLng?: NullableFloatFieldUpdateOperationsInput | number | null
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
     canceled?: BoolFieldUpdateOperationsInput | boolean
@@ -101934,6 +110060,7 @@ export namespace Prisma {
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
     externalAddressId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
     feedback?: CustomerFeedbackUncheckedUpdateOneWithoutOrderNestedInput
     issuedRewards?: CustomerRewardUncheckedUpdateManyWithoutIssuedForOrderNestedInput
@@ -102129,6 +110256,7 @@ export namespace Prisma {
     photo?: FileCreateNestedOneWithoutModifierGroupItemsInput
     modifierGroup?: ModifierGroupCreateNestedOneWithoutItemsInput
     orderProducts?: OrderProductsCreateNestedManyWithoutModifierGroupItemsInput
+    orderIntentProducts?: OrderIntentProductCreateNestedManyWithoutModifierGroupItemsInput
   }
 
   export type ModifierGroupItemUncheckedCreateWithoutPreparationStepModifierTracksInput = {
@@ -102141,6 +110269,7 @@ export namespace Prisma {
     modifierGroupId?: string | null
     fileId?: string | null
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutModifierGroupItemsInput
+    orderIntentProducts?: OrderIntentProductUncheckedCreateNestedManyWithoutModifierGroupItemsInput
   }
 
   export type ModifierGroupItemCreateOrConnectWithoutPreparationStepModifierTracksInput = {
@@ -102202,6 +110331,7 @@ export namespace Prisma {
     photo?: FileUpdateOneWithoutModifierGroupItemsNestedInput
     modifierGroup?: ModifierGroupUpdateOneWithoutItemsNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutModifierGroupItemsNestedInput
+    orderIntentProducts?: OrderIntentProductUpdateManyWithoutModifierGroupItemsNestedInput
   }
 
   export type ModifierGroupItemUncheckedUpdateWithoutPreparationStepModifierTracksInput = {
@@ -102214,6 +110344,7 @@ export namespace Prisma {
     modifierGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     fileId?: NullableStringFieldUpdateOperationsInput | string | null
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutModifierGroupItemsNestedInput
+    orderIntentProducts?: OrderIntentProductUncheckedUpdateManyWithoutModifierGroupItemsNestedInput
   }
 
   export type PreparationStepTrackUpsertWithoutPreparationStepModifierTracksInput = {
@@ -102556,6 +110687,7 @@ export namespace Prisma {
     comboUsedInItems?: ComboProductItemCreateNestedManyWithoutProductInput
     exclusivePromotionProducts?: ExclusivePromotionProductCreateNestedManyWithoutProductInput
     OrderProducts?: OrderProductsCreateNestedManyWithoutProductInput
+    orderIntentProducts?: OrderIntentProductCreateNestedManyWithoutProductInput
     customerRewards?: CustomerRewardCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepCreateNestedManyWithoutProductsInput
   }
@@ -102581,6 +110713,7 @@ export namespace Prisma {
     comboUsedInItems?: ComboProductItemUncheckedCreateNestedManyWithoutProductInput
     exclusivePromotionProducts?: ExclusivePromotionProductUncheckedCreateNestedManyWithoutProductInput
     OrderProducts?: OrderProductsUncheckedCreateNestedManyWithoutProductInput
+    orderIntentProducts?: OrderIntentProductUncheckedCreateNestedManyWithoutProductInput
     customerRewards?: CustomerRewardUncheckedCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepUncheckedCreateNestedManyWithoutProductsInput
   }
@@ -102653,6 +110786,7 @@ export namespace Prisma {
     comboUsedInItems?: ComboProductItemUpdateManyWithoutProductNestedInput
     exclusivePromotionProducts?: ExclusivePromotionProductUpdateManyWithoutProductNestedInput
     OrderProducts?: OrderProductsUpdateManyWithoutProductNestedInput
+    orderIntentProducts?: OrderIntentProductUpdateManyWithoutProductNestedInput
     customerRewards?: CustomerRewardUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUpdateManyWithoutProductsNestedInput
   }
@@ -102678,6 +110812,7 @@ export namespace Prisma {
     comboUsedInItems?: ComboProductItemUncheckedUpdateManyWithoutProductNestedInput
     exclusivePromotionProducts?: ExclusivePromotionProductUncheckedUpdateManyWithoutProductNestedInput
     OrderProducts?: OrderProductsUncheckedUpdateManyWithoutProductNestedInput
+    orderIntentProducts?: OrderIntentProductUncheckedUpdateManyWithoutProductNestedInput
     customerRewards?: CustomerRewardUncheckedUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUncheckedUpdateManyWithoutProductsNestedInput
   }
@@ -102702,6 +110837,7 @@ export namespace Prisma {
     comboUsedInItems?: ComboProductItemCreateNestedManyWithoutProductInput
     exclusivePromotionProducts?: ExclusivePromotionProductCreateNestedManyWithoutProductInput
     OrderProducts?: OrderProductsCreateNestedManyWithoutProductInput
+    orderIntentProducts?: OrderIntentProductCreateNestedManyWithoutProductInput
     prizeProducts?: ProgressiveDiscountPrizeProductCreateNestedManyWithoutProductInput
     customerRewards?: CustomerRewardCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepCreateNestedManyWithoutProductsInput
@@ -102727,6 +110863,7 @@ export namespace Prisma {
     comboUsedInItems?: ComboProductItemUncheckedCreateNestedManyWithoutProductInput
     exclusivePromotionProducts?: ExclusivePromotionProductUncheckedCreateNestedManyWithoutProductInput
     OrderProducts?: OrderProductsUncheckedCreateNestedManyWithoutProductInput
+    orderIntentProducts?: OrderIntentProductUncheckedCreateNestedManyWithoutProductInput
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedCreateNestedManyWithoutProductInput
     customerRewards?: CustomerRewardUncheckedCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepUncheckedCreateNestedManyWithoutProductsInput
@@ -102747,6 +110884,7 @@ export namespace Prisma {
     modifierGroup?: ModifierGroupCreateNestedOneWithoutItemsInput
     preparationStepModifierTracks?: PreparationStepModifierTrackCreateNestedManyWithoutModifierGroupItemInput
     orderProducts?: OrderProductsCreateNestedManyWithoutModifierGroupItemsInput
+    orderIntentProducts?: OrderIntentProductCreateNestedManyWithoutModifierGroupItemsInput
   }
 
   export type ModifierGroupItemUncheckedCreateWithoutPhotoInput = {
@@ -102759,6 +110897,7 @@ export namespace Prisma {
     modifierGroupId?: string | null
     preparationStepModifierTracks?: PreparationStepModifierTrackUncheckedCreateNestedManyWithoutModifierGroupItemInput
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutModifierGroupItemsInput
+    orderIntentProducts?: OrderIntentProductUncheckedCreateNestedManyWithoutModifierGroupItemsInput
   }
 
   export type ModifierGroupItemCreateOrConnectWithoutPhotoInput = {
@@ -102802,6 +110941,7 @@ export namespace Prisma {
     comboUsedInItems?: ComboProductItemUpdateManyWithoutProductNestedInput
     exclusivePromotionProducts?: ExclusivePromotionProductUpdateManyWithoutProductNestedInput
     OrderProducts?: OrderProductsUpdateManyWithoutProductNestedInput
+    orderIntentProducts?: OrderIntentProductUpdateManyWithoutProductNestedInput
     prizeProducts?: ProgressiveDiscountPrizeProductUpdateManyWithoutProductNestedInput
     customerRewards?: CustomerRewardUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUpdateManyWithoutProductsNestedInput
@@ -102827,6 +110967,7 @@ export namespace Prisma {
     comboUsedInItems?: ComboProductItemUncheckedUpdateManyWithoutProductNestedInput
     exclusivePromotionProducts?: ExclusivePromotionProductUncheckedUpdateManyWithoutProductNestedInput
     OrderProducts?: OrderProductsUncheckedUpdateManyWithoutProductNestedInput
+    orderIntentProducts?: OrderIntentProductUncheckedUpdateManyWithoutProductNestedInput
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutProductNestedInput
     customerRewards?: CustomerRewardUncheckedUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUncheckedUpdateManyWithoutProductsNestedInput
@@ -102882,6 +111023,7 @@ export namespace Prisma {
     comboUsedInItems?: ComboProductItemCreateNestedManyWithoutProductInput
     exclusivePromotionProducts?: ExclusivePromotionProductCreateNestedManyWithoutProductInput
     OrderProducts?: OrderProductsCreateNestedManyWithoutProductInput
+    orderIntentProducts?: OrderIntentProductCreateNestedManyWithoutProductInput
     prizeProducts?: ProgressiveDiscountPrizeProductCreateNestedManyWithoutProductInput
     customerRewards?: CustomerRewardCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepCreateNestedManyWithoutProductsInput
@@ -102907,6 +111049,7 @@ export namespace Prisma {
     comboUsedInItems?: ComboProductItemUncheckedCreateNestedManyWithoutProductInput
     exclusivePromotionProducts?: ExclusivePromotionProductUncheckedCreateNestedManyWithoutProductInput
     OrderProducts?: OrderProductsUncheckedCreateNestedManyWithoutProductInput
+    orderIntentProducts?: OrderIntentProductUncheckedCreateNestedManyWithoutProductInput
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedCreateNestedManyWithoutProductInput
     customerRewards?: CustomerRewardUncheckedCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepUncheckedCreateNestedManyWithoutProductsInput
@@ -102927,6 +111070,7 @@ export namespace Prisma {
     photo?: FileCreateNestedOneWithoutModifierGroupItemsInput
     preparationStepModifierTracks?: PreparationStepModifierTrackCreateNestedManyWithoutModifierGroupItemInput
     orderProducts?: OrderProductsCreateNestedManyWithoutModifierGroupItemsInput
+    orderIntentProducts?: OrderIntentProductCreateNestedManyWithoutModifierGroupItemsInput
   }
 
   export type ModifierGroupItemUncheckedCreateWithoutModifierGroupInput = {
@@ -102939,6 +111083,7 @@ export namespace Prisma {
     fileId?: string | null
     preparationStepModifierTracks?: PreparationStepModifierTrackUncheckedCreateNestedManyWithoutModifierGroupItemInput
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutModifierGroupItemsInput
+    orderIntentProducts?: OrderIntentProductUncheckedCreateNestedManyWithoutModifierGroupItemsInput
   }
 
   export type ModifierGroupItemCreateOrConnectWithoutModifierGroupInput = {
@@ -103086,6 +111231,33 @@ export namespace Prisma {
     create: XOR<OrderProductsCreateWithoutModifierGroupItemsInput, OrderProductsUncheckedCreateWithoutModifierGroupItemsInput>
   }
 
+  export type OrderIntentProductCreateWithoutModifierGroupItemsInput = {
+    id: string
+    createdAt?: Date | string
+    quantity: number
+    comments?: string | null
+    fullAmount?: number | null
+    amount?: number | null
+    orderIntent: OrderIntentCreateNestedOneWithoutOrderProductsInput
+    product: ProductCreateNestedOneWithoutOrderIntentProductsInput
+  }
+
+  export type OrderIntentProductUncheckedCreateWithoutModifierGroupItemsInput = {
+    id: string
+    createdAt?: Date | string
+    orderIntentId: string
+    productId: string
+    quantity: number
+    comments?: string | null
+    fullAmount?: number | null
+    amount?: number | null
+  }
+
+  export type OrderIntentProductCreateOrConnectWithoutModifierGroupItemsInput = {
+    where: OrderIntentProductWhereUniqueInput
+    create: XOR<OrderIntentProductCreateWithoutModifierGroupItemsInput, OrderIntentProductUncheckedCreateWithoutModifierGroupItemsInput>
+  }
+
   export type FileUpsertWithoutModifierGroupItemsInput = {
     update: XOR<FileUpdateWithoutModifierGroupItemsInput, FileUncheckedUpdateWithoutModifierGroupItemsInput>
     create: XOR<FileCreateWithoutModifierGroupItemsInput, FileUncheckedCreateWithoutModifierGroupItemsInput>
@@ -103196,12 +111368,46 @@ export namespace Prisma {
     orderId?: StringNullableFilter<"OrderProducts"> | string | null
   }
 
+  export type OrderIntentProductUpsertWithWhereUniqueWithoutModifierGroupItemsInput = {
+    where: OrderIntentProductWhereUniqueInput
+    update: XOR<OrderIntentProductUpdateWithoutModifierGroupItemsInput, OrderIntentProductUncheckedUpdateWithoutModifierGroupItemsInput>
+    create: XOR<OrderIntentProductCreateWithoutModifierGroupItemsInput, OrderIntentProductUncheckedCreateWithoutModifierGroupItemsInput>
+  }
+
+  export type OrderIntentProductUpdateWithWhereUniqueWithoutModifierGroupItemsInput = {
+    where: OrderIntentProductWhereUniqueInput
+    data: XOR<OrderIntentProductUpdateWithoutModifierGroupItemsInput, OrderIntentProductUncheckedUpdateWithoutModifierGroupItemsInput>
+  }
+
+  export type OrderIntentProductUpdateManyWithWhereWithoutModifierGroupItemsInput = {
+    where: OrderIntentProductScalarWhereInput
+    data: XOR<OrderIntentProductUpdateManyMutationInput, OrderIntentProductUncheckedUpdateManyWithoutModifierGroupItemsInput>
+  }
+
+  export type OrderIntentProductScalarWhereInput = {
+    AND?: OrderIntentProductScalarWhereInput | OrderIntentProductScalarWhereInput[]
+    OR?: OrderIntentProductScalarWhereInput[]
+    NOT?: OrderIntentProductScalarWhereInput | OrderIntentProductScalarWhereInput[]
+    id?: StringFilter<"OrderIntentProduct"> | string
+    createdAt?: DateTimeFilter<"OrderIntentProduct"> | Date | string
+    orderIntentId?: StringFilter<"OrderIntentProduct"> | string
+    productId?: StringFilter<"OrderIntentProduct"> | string
+    quantity?: IntFilter<"OrderIntentProduct"> | number
+    comments?: StringNullableFilter<"OrderIntentProduct"> | string | null
+    fullAmount?: IntNullableFilter<"OrderIntentProduct"> | number | null
+    amount?: IntNullableFilter<"OrderIntentProduct"> | number | null
+  }
+
   export type BranchCreateWithoutBusinessInput = {
     id: string
     createdAt?: Date | string
     name: string
     operationHours?: NullableJsonNullValueInput | InputJsonValue
+    chatwootAccountId?: string | null
+    chatwootSourceId?: string | null
+    chatwootAgentId?: string | null
     address?: AddressCreateNestedOneWithoutBranchInput
+    orders?: OrderCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutBusinessInput = {
@@ -103209,7 +111415,11 @@ export namespace Prisma {
     createdAt?: Date | string
     name: string
     operationHours?: NullableJsonNullValueInput | InputJsonValue
+    chatwootAccountId?: string | null
+    chatwootSourceId?: string | null
+    chatwootAgentId?: string | null
     addressId?: string | null
+    orders?: OrderUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutBusinessInput = {
@@ -103283,6 +111493,42 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type UserPushDeviceCreateWithoutBusinessInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    platform?: $Enums.UserPushDevicePlatform
+    pushToken: string
+    lastSeenAt?: Date | string
+    lastNotifiedAt?: Date | string | null
+    notificationFailures?: number
+    revokedAt?: Date | string | null
+    user: UserCreateNestedOneWithoutPushDevicesInput
+  }
+
+  export type UserPushDeviceUncheckedCreateWithoutBusinessInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    userId: string
+    platform?: $Enums.UserPushDevicePlatform
+    pushToken: string
+    lastSeenAt?: Date | string
+    lastNotifiedAt?: Date | string | null
+    notificationFailures?: number
+    revokedAt?: Date | string | null
+  }
+
+  export type UserPushDeviceCreateOrConnectWithoutBusinessInput = {
+    where: UserPushDeviceWhereUniqueInput
+    create: XOR<UserPushDeviceCreateWithoutBusinessInput, UserPushDeviceUncheckedCreateWithoutBusinessInput>
+  }
+
+  export type UserPushDeviceCreateManyBusinessInputEnvelope = {
+    data: UserPushDeviceCreateManyBusinessInput | UserPushDeviceCreateManyBusinessInput[]
+    skipDuplicates?: boolean
+  }
+
   export type BranchUpsertWithWhereUniqueWithoutBusinessInput = {
     where: BranchWhereUniqueInput
     update: XOR<BranchUpdateWithoutBusinessInput, BranchUncheckedUpdateWithoutBusinessInput>
@@ -103307,6 +111553,9 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Branch"> | Date | string
     name?: StringFilter<"Branch"> | string
     operationHours?: JsonNullableFilter<"Branch">
+    chatwootAccountId?: StringNullableFilter<"Branch"> | string | null
+    chatwootSourceId?: StringNullableFilter<"Branch"> | string | null
+    chatwootAgentId?: StringNullableFilter<"Branch"> | string | null
     addressId?: StringNullableFilter<"Branch"> | string | null
     businessId?: StringNullableFilter<"Branch"> | string | null
   }
@@ -103366,6 +111615,39 @@ export namespace Prisma {
     expiresAt?: DateTimeNullableFilter<"ExternalIntegrationConnection"> | Date | string | null
     connectedAt?: DateTimeFilter<"ExternalIntegrationConnection"> | Date | string
     rawPayload?: JsonNullableFilter<"ExternalIntegrationConnection">
+  }
+
+  export type UserPushDeviceUpsertWithWhereUniqueWithoutBusinessInput = {
+    where: UserPushDeviceWhereUniqueInput
+    update: XOR<UserPushDeviceUpdateWithoutBusinessInput, UserPushDeviceUncheckedUpdateWithoutBusinessInput>
+    create: XOR<UserPushDeviceCreateWithoutBusinessInput, UserPushDeviceUncheckedCreateWithoutBusinessInput>
+  }
+
+  export type UserPushDeviceUpdateWithWhereUniqueWithoutBusinessInput = {
+    where: UserPushDeviceWhereUniqueInput
+    data: XOR<UserPushDeviceUpdateWithoutBusinessInput, UserPushDeviceUncheckedUpdateWithoutBusinessInput>
+  }
+
+  export type UserPushDeviceUpdateManyWithWhereWithoutBusinessInput = {
+    where: UserPushDeviceScalarWhereInput
+    data: XOR<UserPushDeviceUpdateManyMutationInput, UserPushDeviceUncheckedUpdateManyWithoutBusinessInput>
+  }
+
+  export type UserPushDeviceScalarWhereInput = {
+    AND?: UserPushDeviceScalarWhereInput | UserPushDeviceScalarWhereInput[]
+    OR?: UserPushDeviceScalarWhereInput[]
+    NOT?: UserPushDeviceScalarWhereInput | UserPushDeviceScalarWhereInput[]
+    id?: StringFilter<"UserPushDevice"> | string
+    createdAt?: DateTimeFilter<"UserPushDevice"> | Date | string
+    updatedAt?: DateTimeFilter<"UserPushDevice"> | Date | string
+    userId?: StringFilter<"UserPushDevice"> | string
+    businessId?: StringNullableFilter<"UserPushDevice"> | string | null
+    platform?: EnumUserPushDevicePlatformFilter<"UserPushDevice"> | $Enums.UserPushDevicePlatform
+    pushToken?: StringFilter<"UserPushDevice"> | string
+    lastSeenAt?: DateTimeFilter<"UserPushDevice"> | Date | string
+    lastNotifiedAt?: DateTimeNullableFilter<"UserPushDevice"> | Date | string | null
+    notificationFailures?: IntFilter<"UserPushDevice"> | number
+    revokedAt?: DateTimeNullableFilter<"UserPushDevice"> | Date | string | null
   }
 
   export type BusinessOwnerCreateWithoutUserInput = {
@@ -103470,6 +111752,42 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type UserPushDeviceCreateWithoutUserInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    platform?: $Enums.UserPushDevicePlatform
+    pushToken: string
+    lastSeenAt?: Date | string
+    lastNotifiedAt?: Date | string | null
+    notificationFailures?: number
+    revokedAt?: Date | string | null
+    business?: BusinessCreateNestedOneWithoutPushDevicesInput
+  }
+
+  export type UserPushDeviceUncheckedCreateWithoutUserInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    businessId?: string | null
+    platform?: $Enums.UserPushDevicePlatform
+    pushToken: string
+    lastSeenAt?: Date | string
+    lastNotifiedAt?: Date | string | null
+    notificationFailures?: number
+    revokedAt?: Date | string | null
+  }
+
+  export type UserPushDeviceCreateOrConnectWithoutUserInput = {
+    where: UserPushDeviceWhereUniqueInput
+    create: XOR<UserPushDeviceCreateWithoutUserInput, UserPushDeviceUncheckedCreateWithoutUserInput>
+  }
+
+  export type UserPushDeviceCreateManyUserInputEnvelope = {
+    data: UserPushDeviceCreateManyUserInput | UserPushDeviceCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type BusinessOwnerUpsertWithWhereUniqueWithoutUserInput = {
     where: BusinessOwnerWhereUniqueInput
     update: XOR<BusinessOwnerUpdateWithoutUserInput, BusinessOwnerUncheckedUpdateWithoutUserInput>
@@ -103544,6 +111862,190 @@ export namespace Prisma {
     lastAttemptAt?: DateTimeNullableFilter<"OwnerOtpChallenge"> | Date | string | null
   }
 
+  export type UserPushDeviceUpsertWithWhereUniqueWithoutUserInput = {
+    where: UserPushDeviceWhereUniqueInput
+    update: XOR<UserPushDeviceUpdateWithoutUserInput, UserPushDeviceUncheckedUpdateWithoutUserInput>
+    create: XOR<UserPushDeviceCreateWithoutUserInput, UserPushDeviceUncheckedCreateWithoutUserInput>
+  }
+
+  export type UserPushDeviceUpdateWithWhereUniqueWithoutUserInput = {
+    where: UserPushDeviceWhereUniqueInput
+    data: XOR<UserPushDeviceUpdateWithoutUserInput, UserPushDeviceUncheckedUpdateWithoutUserInput>
+  }
+
+  export type UserPushDeviceUpdateManyWithWhereWithoutUserInput = {
+    where: UserPushDeviceScalarWhereInput
+    data: XOR<UserPushDeviceUpdateManyMutationInput, UserPushDeviceUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type UserCreateWithoutPushDevicesInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    email: string
+    phone?: string | null
+    name: string
+    passwordHash: string
+    emailVerifiedAt?: Date | string | null
+    lastLoginAt?: Date | string | null
+    ownedBusinesses?: BusinessOwnerCreateNestedManyWithoutUserInput
+    integrations?: ExternalIntegrationConnectionCreateNestedManyWithoutUserInput
+    otpChallenges?: OwnerOtpChallengeCreateNestedManyWithoutOwnerInput
+  }
+
+  export type UserUncheckedCreateWithoutPushDevicesInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    email: string
+    phone?: string | null
+    name: string
+    passwordHash: string
+    emailVerifiedAt?: Date | string | null
+    lastLoginAt?: Date | string | null
+    ownedBusinesses?: BusinessOwnerUncheckedCreateNestedManyWithoutUserInput
+    integrations?: ExternalIntegrationConnectionUncheckedCreateNestedManyWithoutUserInput
+    otpChallenges?: OwnerOtpChallengeUncheckedCreateNestedManyWithoutOwnerInput
+  }
+
+  export type UserCreateOrConnectWithoutPushDevicesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutPushDevicesInput, UserUncheckedCreateWithoutPushDevicesInput>
+  }
+
+  export type BusinessCreateWithoutPushDevicesInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    bannerPhotoUrl?: string | null
+    logoUrl?: string | null
+    brandColor?: string
+    stripeAccountId?: string | null
+    stripeDetailsSubmitted?: boolean
+    stripeChargesEnabled?: boolean
+    stripePayoutsEnabled?: boolean
+    stripeOnboardingCompletedAt?: Date | string | null
+    onboardingCompletedAt?: Date | string | null
+    branches?: BranchCreateNestedManyWithoutBusinessInput
+    owner?: BusinessOwnerCreateNestedOneWithoutBusinessInput
+    integrations?: ExternalIntegrationConnectionCreateNestedManyWithoutBusinessInput
+  }
+
+  export type BusinessUncheckedCreateWithoutPushDevicesInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    bannerPhotoUrl?: string | null
+    logoUrl?: string | null
+    brandColor?: string
+    stripeAccountId?: string | null
+    stripeDetailsSubmitted?: boolean
+    stripeChargesEnabled?: boolean
+    stripePayoutsEnabled?: boolean
+    stripeOnboardingCompletedAt?: Date | string | null
+    onboardingCompletedAt?: Date | string | null
+    branches?: BranchUncheckedCreateNestedManyWithoutBusinessInput
+    owner?: BusinessOwnerUncheckedCreateNestedOneWithoutBusinessInput
+    integrations?: ExternalIntegrationConnectionUncheckedCreateNestedManyWithoutBusinessInput
+  }
+
+  export type BusinessCreateOrConnectWithoutPushDevicesInput = {
+    where: BusinessWhereUniqueInput
+    create: XOR<BusinessCreateWithoutPushDevicesInput, BusinessUncheckedCreateWithoutPushDevicesInput>
+  }
+
+  export type UserUpsertWithoutPushDevicesInput = {
+    update: XOR<UserUpdateWithoutPushDevicesInput, UserUncheckedUpdateWithoutPushDevicesInput>
+    create: XOR<UserCreateWithoutPushDevicesInput, UserUncheckedCreateWithoutPushDevicesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutPushDevicesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutPushDevicesInput, UserUncheckedUpdateWithoutPushDevicesInput>
+  }
+
+  export type UserUpdateWithoutPushDevicesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    ownedBusinesses?: BusinessOwnerUpdateManyWithoutUserNestedInput
+    integrations?: ExternalIntegrationConnectionUpdateManyWithoutUserNestedInput
+    otpChallenges?: OwnerOtpChallengeUpdateManyWithoutOwnerNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutPushDevicesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    ownedBusinesses?: BusinessOwnerUncheckedUpdateManyWithoutUserNestedInput
+    integrations?: ExternalIntegrationConnectionUncheckedUpdateManyWithoutUserNestedInput
+    otpChallenges?: OwnerOtpChallengeUncheckedUpdateManyWithoutOwnerNestedInput
+  }
+
+  export type BusinessUpsertWithoutPushDevicesInput = {
+    update: XOR<BusinessUpdateWithoutPushDevicesInput, BusinessUncheckedUpdateWithoutPushDevicesInput>
+    create: XOR<BusinessCreateWithoutPushDevicesInput, BusinessUncheckedCreateWithoutPushDevicesInput>
+    where?: BusinessWhereInput
+  }
+
+  export type BusinessUpdateToOneWithWhereWithoutPushDevicesInput = {
+    where?: BusinessWhereInput
+    data: XOR<BusinessUpdateWithoutPushDevicesInput, BusinessUncheckedUpdateWithoutPushDevicesInput>
+  }
+
+  export type BusinessUpdateWithoutPushDevicesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    bannerPhotoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    brandColor?: StringFieldUpdateOperationsInput | string
+    stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeDetailsSubmitted?: BoolFieldUpdateOperationsInput | boolean
+    stripeChargesEnabled?: BoolFieldUpdateOperationsInput | boolean
+    stripePayoutsEnabled?: BoolFieldUpdateOperationsInput | boolean
+    stripeOnboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    branches?: BranchUpdateManyWithoutBusinessNestedInput
+    owner?: BusinessOwnerUpdateOneWithoutBusinessNestedInput
+    integrations?: ExternalIntegrationConnectionUpdateManyWithoutBusinessNestedInput
+  }
+
+  export type BusinessUncheckedUpdateWithoutPushDevicesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    bannerPhotoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    brandColor?: StringFieldUpdateOperationsInput | string
+    stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeDetailsSubmitted?: BoolFieldUpdateOperationsInput | boolean
+    stripeChargesEnabled?: BoolFieldUpdateOperationsInput | boolean
+    stripePayoutsEnabled?: BoolFieldUpdateOperationsInput | boolean
+    stripeOnboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    branches?: BranchUncheckedUpdateManyWithoutBusinessNestedInput
+    owner?: BusinessOwnerUncheckedUpdateOneWithoutBusinessNestedInput
+    integrations?: ExternalIntegrationConnectionUncheckedUpdateManyWithoutBusinessNestedInput
+  }
+
   export type UserCreateWithoutOtpChallengesInput = {
     id: string
     createdAt?: Date | string
@@ -103556,6 +112058,7 @@ export namespace Prisma {
     lastLoginAt?: Date | string | null
     ownedBusinesses?: BusinessOwnerCreateNestedManyWithoutUserInput
     integrations?: ExternalIntegrationConnectionCreateNestedManyWithoutUserInput
+    pushDevices?: UserPushDeviceCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOtpChallengesInput = {
@@ -103570,6 +112073,7 @@ export namespace Prisma {
     lastLoginAt?: Date | string | null
     ownedBusinesses?: BusinessOwnerUncheckedCreateNestedManyWithoutUserInput
     integrations?: ExternalIntegrationConnectionUncheckedCreateNestedManyWithoutUserInput
+    pushDevices?: UserPushDeviceUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOtpChallengesInput = {
@@ -103600,6 +112104,7 @@ export namespace Prisma {
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownedBusinesses?: BusinessOwnerUpdateManyWithoutUserNestedInput
     integrations?: ExternalIntegrationConnectionUpdateManyWithoutUserNestedInput
+    pushDevices?: UserPushDeviceUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOtpChallengesInput = {
@@ -103614,6 +112119,7 @@ export namespace Prisma {
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownedBusinesses?: BusinessOwnerUncheckedUpdateManyWithoutUserNestedInput
     integrations?: ExternalIntegrationConnectionUncheckedUpdateManyWithoutUserNestedInput
+    pushDevices?: UserPushDeviceUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutIntegrationsInput = {
@@ -103628,6 +112134,7 @@ export namespace Prisma {
     lastLoginAt?: Date | string | null
     ownedBusinesses?: BusinessOwnerCreateNestedManyWithoutUserInput
     otpChallenges?: OwnerOtpChallengeCreateNestedManyWithoutOwnerInput
+    pushDevices?: UserPushDeviceCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutIntegrationsInput = {
@@ -103642,6 +112149,7 @@ export namespace Prisma {
     lastLoginAt?: Date | string | null
     ownedBusinesses?: BusinessOwnerUncheckedCreateNestedManyWithoutUserInput
     otpChallenges?: OwnerOtpChallengeUncheckedCreateNestedManyWithoutOwnerInput
+    pushDevices?: UserPushDeviceUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutIntegrationsInput = {
@@ -103665,6 +112173,7 @@ export namespace Prisma {
     onboardingCompletedAt?: Date | string | null
     branches?: BranchCreateNestedManyWithoutBusinessInput
     owner?: BusinessOwnerCreateNestedOneWithoutBusinessInput
+    pushDevices?: UserPushDeviceCreateNestedManyWithoutBusinessInput
   }
 
   export type BusinessUncheckedCreateWithoutIntegrationsInput = {
@@ -103683,6 +112192,7 @@ export namespace Prisma {
     onboardingCompletedAt?: Date | string | null
     branches?: BranchUncheckedCreateNestedManyWithoutBusinessInput
     owner?: BusinessOwnerUncheckedCreateNestedOneWithoutBusinessInput
+    pushDevices?: UserPushDeviceUncheckedCreateNestedManyWithoutBusinessInput
   }
 
   export type BusinessCreateOrConnectWithoutIntegrationsInput = {
@@ -103809,6 +112319,7 @@ export namespace Prisma {
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownedBusinesses?: BusinessOwnerUpdateManyWithoutUserNestedInput
     otpChallenges?: OwnerOtpChallengeUpdateManyWithoutOwnerNestedInput
+    pushDevices?: UserPushDeviceUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutIntegrationsInput = {
@@ -103823,6 +112334,7 @@ export namespace Prisma {
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownedBusinesses?: BusinessOwnerUncheckedUpdateManyWithoutUserNestedInput
     otpChallenges?: OwnerOtpChallengeUncheckedUpdateManyWithoutOwnerNestedInput
+    pushDevices?: UserPushDeviceUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type BusinessUpsertWithoutIntegrationsInput = {
@@ -103852,6 +112364,7 @@ export namespace Prisma {
     onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     branches?: BranchUpdateManyWithoutBusinessNestedInput
     owner?: BusinessOwnerUpdateOneWithoutBusinessNestedInput
+    pushDevices?: UserPushDeviceUpdateManyWithoutBusinessNestedInput
   }
 
   export type BusinessUncheckedUpdateWithoutIntegrationsInput = {
@@ -103870,6 +112383,7 @@ export namespace Prisma {
     onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     branches?: BranchUncheckedUpdateManyWithoutBusinessNestedInput
     owner?: BusinessOwnerUncheckedUpdateOneWithoutBusinessNestedInput
+    pushDevices?: UserPushDeviceUncheckedUpdateManyWithoutBusinessNestedInput
   }
 
   export type ExternalMenuEntityMapUpsertWithWhereUniqueWithoutExternalIntegrationConnectionInput = {
@@ -104142,6 +112656,7 @@ export namespace Prisma {
     onboardingCompletedAt?: Date | string | null
     branches?: BranchCreateNestedManyWithoutBusinessInput
     integrations?: ExternalIntegrationConnectionCreateNestedManyWithoutBusinessInput
+    pushDevices?: UserPushDeviceCreateNestedManyWithoutBusinessInput
   }
 
   export type BusinessUncheckedCreateWithoutOwnerInput = {
@@ -104160,6 +112675,7 @@ export namespace Prisma {
     onboardingCompletedAt?: Date | string | null
     branches?: BranchUncheckedCreateNestedManyWithoutBusinessInput
     integrations?: ExternalIntegrationConnectionUncheckedCreateNestedManyWithoutBusinessInput
+    pushDevices?: UserPushDeviceUncheckedCreateNestedManyWithoutBusinessInput
   }
 
   export type BusinessCreateOrConnectWithoutOwnerInput = {
@@ -104179,6 +112695,7 @@ export namespace Prisma {
     lastLoginAt?: Date | string | null
     integrations?: ExternalIntegrationConnectionCreateNestedManyWithoutUserInput
     otpChallenges?: OwnerOtpChallengeCreateNestedManyWithoutOwnerInput
+    pushDevices?: UserPushDeviceCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOwnedBusinessesInput = {
@@ -104193,6 +112710,7 @@ export namespace Prisma {
     lastLoginAt?: Date | string | null
     integrations?: ExternalIntegrationConnectionUncheckedCreateNestedManyWithoutUserInput
     otpChallenges?: OwnerOtpChallengeUncheckedCreateNestedManyWithoutOwnerInput
+    pushDevices?: UserPushDeviceUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOwnedBusinessesInput = {
@@ -104227,6 +112745,7 @@ export namespace Prisma {
     onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     branches?: BranchUpdateManyWithoutBusinessNestedInput
     integrations?: ExternalIntegrationConnectionUpdateManyWithoutBusinessNestedInput
+    pushDevices?: UserPushDeviceUpdateManyWithoutBusinessNestedInput
   }
 
   export type BusinessUncheckedUpdateWithoutOwnerInput = {
@@ -104245,6 +112764,7 @@ export namespace Prisma {
     onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     branches?: BranchUncheckedUpdateManyWithoutBusinessNestedInput
     integrations?: ExternalIntegrationConnectionUncheckedUpdateManyWithoutBusinessNestedInput
+    pushDevices?: UserPushDeviceUncheckedUpdateManyWithoutBusinessNestedInput
   }
 
   export type UserUpsertWithoutOwnedBusinessesInput = {
@@ -104270,6 +112790,7 @@ export namespace Prisma {
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     integrations?: ExternalIntegrationConnectionUpdateManyWithoutUserNestedInput
     otpChallenges?: OwnerOtpChallengeUpdateManyWithoutOwnerNestedInput
+    pushDevices?: UserPushDeviceUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOwnedBusinessesInput = {
@@ -104284,6 +112805,7 @@ export namespace Prisma {
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     integrations?: ExternalIntegrationConnectionUncheckedUpdateManyWithoutUserNestedInput
     otpChallenges?: OwnerOtpChallengeUncheckedUpdateManyWithoutOwnerNestedInput
+    pushDevices?: UserPushDeviceUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type AddressCreateWithoutBranchInput = {
@@ -104343,6 +112865,7 @@ export namespace Prisma {
     onboardingCompletedAt?: Date | string | null
     owner?: BusinessOwnerCreateNestedOneWithoutBusinessInput
     integrations?: ExternalIntegrationConnectionCreateNestedManyWithoutBusinessInput
+    pushDevices?: UserPushDeviceCreateNestedManyWithoutBusinessInput
   }
 
   export type BusinessUncheckedCreateWithoutBranchesInput = {
@@ -104361,11 +112884,94 @@ export namespace Prisma {
     onboardingCompletedAt?: Date | string | null
     owner?: BusinessOwnerUncheckedCreateNestedOneWithoutBusinessInput
     integrations?: ExternalIntegrationConnectionUncheckedCreateNestedManyWithoutBusinessInput
+    pushDevices?: UserPushDeviceUncheckedCreateNestedManyWithoutBusinessInput
   }
 
   export type BusinessCreateOrConnectWithoutBranchesInput = {
     where: BusinessWhereUniqueInput
     create: XOR<BusinessCreateWithoutBranchesInput, BusinessUncheckedCreateWithoutBranchesInput>
+  }
+
+  export type OrderCreateWithoutBranchInput = {
+    id: string
+    number?: string | null
+    createdAt?: Date | string
+    scheduleFor?: Date | string | null
+    language?: string | null
+    paidAt?: Date | string | null
+    deliveredAt?: Date | string | null
+    leftAtDropOffAt?: Date | string | null
+    leftAtDropOffLat?: number | null
+    leftAtDropOffLng?: number | null
+    estimatedDeliveryDurationMinutes?: number | null
+    currentEstimatedDeliveryDurationMinutes?: number | null
+    dispatchOrderIndex?: number | null
+    amount: number
+    canceled?: boolean
+    status?: $Enums.OrderStatus
+    type?: $Enums.OrderType
+    paymentMethod?: $Enums.PaymentType
+    paymentProvider?: $Enums.PaymentProvider | null
+    tipAmount?: number | null
+    tags?: OrderCreatetagsInput | string[]
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    externalId?: string | null
+    customer?: CustomerCreateNestedOneWithoutOrdersInput
+    dispatch?: DispatchCreateNestedOneWithoutOrdersInput
+    address?: AddressCreateNestedOneWithoutOrdersInput
+    deliveryAddress?: DeliveryAddressCreateNestedOneWithoutOrdersInput
+    externalAddress?: ExternalAddressCreateNestedOneWithoutOrdersInput
+    orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
+    preparationStepCategories?: PreparationStepCategoryCreateNestedManyWithoutOrderInput
+    feedback?: CustomerFeedbackCreateNestedOneWithoutOrderInput
+    issuedRewards?: CustomerRewardCreateNestedManyWithoutIssuedForOrderInput
+    redeemedRewards?: CustomerRewardCreateNestedManyWithoutRedeemedByOrderInput
+  }
+
+  export type OrderUncheckedCreateWithoutBranchInput = {
+    id: string
+    number?: string | null
+    createdAt?: Date | string
+    scheduleFor?: Date | string | null
+    language?: string | null
+    paidAt?: Date | string | null
+    deliveredAt?: Date | string | null
+    leftAtDropOffAt?: Date | string | null
+    leftAtDropOffLat?: number | null
+    leftAtDropOffLng?: number | null
+    estimatedDeliveryDurationMinutes?: number | null
+    currentEstimatedDeliveryDurationMinutes?: number | null
+    dispatchOrderIndex?: number | null
+    amount: number
+    canceled?: boolean
+    status?: $Enums.OrderStatus
+    type?: $Enums.OrderType
+    paymentMethod?: $Enums.PaymentType
+    paymentProvider?: $Enums.PaymentProvider | null
+    tipAmount?: number | null
+    tags?: OrderCreatetagsInput | string[]
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    customerId?: string | null
+    externalId?: string | null
+    dispatchId?: string | null
+    addressId?: string | null
+    deliveryAddressId?: string | null
+    externalAddressId?: string | null
+    orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
+    preparationStepCategories?: PreparationStepCategoryUncheckedCreateNestedManyWithoutOrderInput
+    feedback?: CustomerFeedbackUncheckedCreateNestedOneWithoutOrderInput
+    issuedRewards?: CustomerRewardUncheckedCreateNestedManyWithoutIssuedForOrderInput
+    redeemedRewards?: CustomerRewardUncheckedCreateNestedManyWithoutRedeemedByOrderInput
+  }
+
+  export type OrderCreateOrConnectWithoutBranchInput = {
+    where: OrderWhereUniqueInput
+    create: XOR<OrderCreateWithoutBranchInput, OrderUncheckedCreateWithoutBranchInput>
+  }
+
+  export type OrderCreateManyBranchInputEnvelope = {
+    data: OrderCreateManyBranchInput | OrderCreateManyBranchInput[]
+    skipDuplicates?: boolean
   }
 
   export type AddressUpsertWithoutBranchInput = {
@@ -104442,6 +113048,7 @@ export namespace Prisma {
     onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     owner?: BusinessOwnerUpdateOneWithoutBusinessNestedInput
     integrations?: ExternalIntegrationConnectionUpdateManyWithoutBusinessNestedInput
+    pushDevices?: UserPushDeviceUpdateManyWithoutBusinessNestedInput
   }
 
   export type BusinessUncheckedUpdateWithoutBranchesInput = {
@@ -104460,6 +113067,58 @@ export namespace Prisma {
     onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     owner?: BusinessOwnerUncheckedUpdateOneWithoutBusinessNestedInput
     integrations?: ExternalIntegrationConnectionUncheckedUpdateManyWithoutBusinessNestedInput
+    pushDevices?: UserPushDeviceUncheckedUpdateManyWithoutBusinessNestedInput
+  }
+
+  export type OrderUpsertWithWhereUniqueWithoutBranchInput = {
+    where: OrderWhereUniqueInput
+    update: XOR<OrderUpdateWithoutBranchInput, OrderUncheckedUpdateWithoutBranchInput>
+    create: XOR<OrderCreateWithoutBranchInput, OrderUncheckedCreateWithoutBranchInput>
+  }
+
+  export type OrderUpdateWithWhereUniqueWithoutBranchInput = {
+    where: OrderWhereUniqueInput
+    data: XOR<OrderUpdateWithoutBranchInput, OrderUncheckedUpdateWithoutBranchInput>
+  }
+
+  export type OrderUpdateManyWithWhereWithoutBranchInput = {
+    where: OrderScalarWhereInput
+    data: XOR<OrderUpdateManyMutationInput, OrderUncheckedUpdateManyWithoutBranchInput>
+  }
+
+  export type OrderScalarWhereInput = {
+    AND?: OrderScalarWhereInput | OrderScalarWhereInput[]
+    OR?: OrderScalarWhereInput[]
+    NOT?: OrderScalarWhereInput | OrderScalarWhereInput[]
+    id?: StringFilter<"Order"> | string
+    number?: StringNullableFilter<"Order"> | string | null
+    createdAt?: DateTimeFilter<"Order"> | Date | string
+    scheduleFor?: DateTimeNullableFilter<"Order"> | Date | string | null
+    language?: StringNullableFilter<"Order"> | string | null
+    paidAt?: DateTimeNullableFilter<"Order"> | Date | string | null
+    deliveredAt?: DateTimeNullableFilter<"Order"> | Date | string | null
+    leftAtDropOffAt?: DateTimeNullableFilter<"Order"> | Date | string | null
+    leftAtDropOffLat?: FloatNullableFilter<"Order"> | number | null
+    leftAtDropOffLng?: FloatNullableFilter<"Order"> | number | null
+    estimatedDeliveryDurationMinutes?: IntNullableFilter<"Order"> | number | null
+    currentEstimatedDeliveryDurationMinutes?: IntNullableFilter<"Order"> | number | null
+    dispatchOrderIndex?: IntNullableFilter<"Order"> | number | null
+    amount?: IntFilter<"Order"> | number
+    canceled?: BoolFilter<"Order"> | boolean
+    status?: EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
+    type?: EnumOrderTypeFilter<"Order"> | $Enums.OrderType
+    paymentMethod?: EnumPaymentTypeFilter<"Order"> | $Enums.PaymentType
+    paymentProvider?: EnumPaymentProviderNullableFilter<"Order"> | $Enums.PaymentProvider | null
+    tipAmount?: IntNullableFilter<"Order"> | number | null
+    tags?: StringNullableListFilter<"Order">
+    progressiveDiscountSnapshot?: JsonNullableFilter<"Order">
+    customerId?: StringNullableFilter<"Order"> | string | null
+    externalId?: StringNullableFilter<"Order"> | string | null
+    dispatchId?: StringNullableFilter<"Order"> | string | null
+    addressId?: StringNullableFilter<"Order"> | string | null
+    deliveryAddressId?: StringNullableFilter<"Order"> | string | null
+    externalAddressId?: StringNullableFilter<"Order"> | string | null
+    branchId?: StringNullableFilter<"Order"> | string | null
   }
 
   export type DispatchCreateWithoutDriverInput = {
@@ -104471,8 +113130,14 @@ export namespace Prisma {
     startedDeliveryAt?: Date | string | null
     estimatedDeliveryDurationMinutes?: number | null
     estimatedRoundTripDurationMinutes?: number | null
+    currentEstimatedDeliveryDurationMinutes?: number | null
+    currentEstimatedRoundTripDurationMinutes?: number | null
+    arrivedAtRestaurantAt?: Date | string | null
+    arrivedAtRestaurantLat?: number | null
+    arrivedAtRestaurantLng?: number | null
     orders?: OrderCreateNestedManyWithoutDispatchInput
     routeSessions?: DispatchRouteSessionCreateNestedManyWithoutDispatchInput
+    routeMilestones?: DispatchRouteMilestoneCreateNestedManyWithoutDispatchInput
     etaRecalculationJobs?: DispatchEtaRecalculationJobCreateNestedManyWithoutDispatchInput
   }
 
@@ -104485,8 +113150,14 @@ export namespace Prisma {
     startedDeliveryAt?: Date | string | null
     estimatedDeliveryDurationMinutes?: number | null
     estimatedRoundTripDurationMinutes?: number | null
+    currentEstimatedDeliveryDurationMinutes?: number | null
+    currentEstimatedRoundTripDurationMinutes?: number | null
+    arrivedAtRestaurantAt?: Date | string | null
+    arrivedAtRestaurantLat?: number | null
+    arrivedAtRestaurantLng?: number | null
     orders?: OrderUncheckedCreateNestedManyWithoutDispatchInput
     routeSessions?: DispatchRouteSessionUncheckedCreateNestedManyWithoutDispatchInput
+    routeMilestones?: DispatchRouteMilestoneUncheckedCreateNestedManyWithoutDispatchInput
     etaRecalculationJobs?: DispatchEtaRecalculationJobUncheckedCreateNestedManyWithoutDispatchInput
   }
 
@@ -104512,6 +113183,7 @@ export namespace Prisma {
     polyline?: string | null
     dispatch: DispatchCreateNestedOneWithoutRouteSessionsInput
     points?: DispatchRoutePointCreateNestedManyWithoutSessionInput
+    milestones?: DispatchRouteMilestoneCreateNestedManyWithoutSessionInput
   }
 
   export type DispatchRouteSessionUncheckedCreateWithoutDriverInput = {
@@ -104526,6 +113198,7 @@ export namespace Prisma {
     durationSeconds?: number | null
     polyline?: string | null
     points?: DispatchRoutePointUncheckedCreateNestedManyWithoutSessionInput
+    milestones?: DispatchRouteMilestoneUncheckedCreateNestedManyWithoutSessionInput
   }
 
   export type DispatchRouteSessionCreateOrConnectWithoutDriverInput = {
@@ -104535,6 +113208,40 @@ export namespace Prisma {
 
   export type DispatchRouteSessionCreateManyDriverInputEnvelope = {
     data: DispatchRouteSessionCreateManyDriverInput | DispatchRouteSessionCreateManyDriverInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type DispatchRouteMilestoneCreateWithoutDriverInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    type: $Enums.DispatchRouteMilestoneType
+    recordedAt: Date | string
+    lat: number
+    lng: number
+    dispatch: DispatchCreateNestedOneWithoutRouteMilestonesInput
+    session: DispatchRouteSessionCreateNestedOneWithoutMilestonesInput
+  }
+
+  export type DispatchRouteMilestoneUncheckedCreateWithoutDriverInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    dispatchId: string
+    sessionId: string
+    type: $Enums.DispatchRouteMilestoneType
+    recordedAt: Date | string
+    lat: number
+    lng: number
+  }
+
+  export type DispatchRouteMilestoneCreateOrConnectWithoutDriverInput = {
+    where: DispatchRouteMilestoneWhereUniqueInput
+    create: XOR<DispatchRouteMilestoneCreateWithoutDriverInput, DispatchRouteMilestoneUncheckedCreateWithoutDriverInput>
+  }
+
+  export type DispatchRouteMilestoneCreateManyDriverInputEnvelope = {
+    data: DispatchRouteMilestoneCreateManyDriverInput | DispatchRouteMilestoneCreateManyDriverInput[]
     skipDuplicates?: boolean
   }
 
@@ -104588,6 +113295,11 @@ export namespace Prisma {
     startedDeliveryAt?: DateTimeNullableFilter<"Dispatch"> | Date | string | null
     estimatedDeliveryDurationMinutes?: IntNullableFilter<"Dispatch"> | number | null
     estimatedRoundTripDurationMinutes?: IntNullableFilter<"Dispatch"> | number | null
+    currentEstimatedDeliveryDurationMinutes?: IntNullableFilter<"Dispatch"> | number | null
+    currentEstimatedRoundTripDurationMinutes?: IntNullableFilter<"Dispatch"> | number | null
+    arrivedAtRestaurantAt?: DateTimeNullableFilter<"Dispatch"> | Date | string | null
+    arrivedAtRestaurantLat?: FloatNullableFilter<"Dispatch"> | number | null
+    arrivedAtRestaurantLng?: FloatNullableFilter<"Dispatch"> | number | null
     driverId?: StringNullableFilter<"Dispatch"> | string | null
   }
 
@@ -104622,6 +113334,38 @@ export namespace Prisma {
     totalDistanceMeters?: IntNullableFilter<"DispatchRouteSession"> | number | null
     durationSeconds?: IntNullableFilter<"DispatchRouteSession"> | number | null
     polyline?: StringNullableFilter<"DispatchRouteSession"> | string | null
+  }
+
+  export type DispatchRouteMilestoneUpsertWithWhereUniqueWithoutDriverInput = {
+    where: DispatchRouteMilestoneWhereUniqueInput
+    update: XOR<DispatchRouteMilestoneUpdateWithoutDriverInput, DispatchRouteMilestoneUncheckedUpdateWithoutDriverInput>
+    create: XOR<DispatchRouteMilestoneCreateWithoutDriverInput, DispatchRouteMilestoneUncheckedCreateWithoutDriverInput>
+  }
+
+  export type DispatchRouteMilestoneUpdateWithWhereUniqueWithoutDriverInput = {
+    where: DispatchRouteMilestoneWhereUniqueInput
+    data: XOR<DispatchRouteMilestoneUpdateWithoutDriverInput, DispatchRouteMilestoneUncheckedUpdateWithoutDriverInput>
+  }
+
+  export type DispatchRouteMilestoneUpdateManyWithWhereWithoutDriverInput = {
+    where: DispatchRouteMilestoneScalarWhereInput
+    data: XOR<DispatchRouteMilestoneUpdateManyMutationInput, DispatchRouteMilestoneUncheckedUpdateManyWithoutDriverInput>
+  }
+
+  export type DispatchRouteMilestoneScalarWhereInput = {
+    AND?: DispatchRouteMilestoneScalarWhereInput | DispatchRouteMilestoneScalarWhereInput[]
+    OR?: DispatchRouteMilestoneScalarWhereInput[]
+    NOT?: DispatchRouteMilestoneScalarWhereInput | DispatchRouteMilestoneScalarWhereInput[]
+    id?: StringFilter<"DispatchRouteMilestone"> | string
+    createdAt?: DateTimeFilter<"DispatchRouteMilestone"> | Date | string
+    updatedAt?: DateTimeFilter<"DispatchRouteMilestone"> | Date | string
+    dispatchId?: StringFilter<"DispatchRouteMilestone"> | string
+    driverId?: StringFilter<"DispatchRouteMilestone"> | string
+    sessionId?: StringFilter<"DispatchRouteMilestone"> | string
+    type?: EnumDispatchRouteMilestoneTypeFilter<"DispatchRouteMilestone"> | $Enums.DispatchRouteMilestoneType
+    recordedAt?: DateTimeFilter<"DispatchRouteMilestone"> | Date | string
+    lat?: FloatFilter<"DispatchRouteMilestone"> | number
+    lng?: FloatFilter<"DispatchRouteMilestone"> | number
   }
 
   export type DriverActivationEventUpsertWithWhereUniqueWithoutDriverInput = {
@@ -104661,6 +113405,7 @@ export namespace Prisma {
     priorityLevel: number
     dispatches?: DispatchCreateNestedManyWithoutDriverInput
     routeSessions?: DispatchRouteSessionCreateNestedManyWithoutDriverInput
+    routeMilestones?: DispatchRouteMilestoneCreateNestedManyWithoutDriverInput
   }
 
   export type DriverUncheckedCreateWithoutActivationEventsInput = {
@@ -104674,6 +113419,7 @@ export namespace Prisma {
     priorityLevel: number
     dispatches?: DispatchUncheckedCreateNestedManyWithoutDriverInput
     routeSessions?: DispatchRouteSessionUncheckedCreateNestedManyWithoutDriverInput
+    routeMilestones?: DispatchRouteMilestoneUncheckedCreateNestedManyWithoutDriverInput
   }
 
   export type DriverCreateOrConnectWithoutActivationEventsInput = {
@@ -104703,6 +113449,7 @@ export namespace Prisma {
     priorityLevel?: IntFieldUpdateOperationsInput | number
     dispatches?: DispatchUpdateManyWithoutDriverNestedInput
     routeSessions?: DispatchRouteSessionUpdateManyWithoutDriverNestedInput
+    routeMilestones?: DispatchRouteMilestoneUpdateManyWithoutDriverNestedInput
   }
 
   export type DriverUncheckedUpdateWithoutActivationEventsInput = {
@@ -104716,6 +113463,7 @@ export namespace Prisma {
     priorityLevel?: IntFieldUpdateOperationsInput | number
     dispatches?: DispatchUncheckedUpdateManyWithoutDriverNestedInput
     routeSessions?: DispatchRouteSessionUncheckedUpdateManyWithoutDriverNestedInput
+    routeMilestones?: DispatchRouteMilestoneUncheckedUpdateManyWithoutDriverNestedInput
   }
 
   export type DriverCreateWithoutDispatchesInput = {
@@ -104728,6 +113476,7 @@ export namespace Prisma {
     deactivatedAt?: Date | string | null
     priorityLevel: number
     routeSessions?: DispatchRouteSessionCreateNestedManyWithoutDriverInput
+    routeMilestones?: DispatchRouteMilestoneCreateNestedManyWithoutDriverInput
     activationEvents?: DriverActivationEventCreateNestedManyWithoutDriverInput
   }
 
@@ -104741,6 +113490,7 @@ export namespace Prisma {
     deactivatedAt?: Date | string | null
     priorityLevel: number
     routeSessions?: DispatchRouteSessionUncheckedCreateNestedManyWithoutDriverInput
+    routeMilestones?: DispatchRouteMilestoneUncheckedCreateNestedManyWithoutDriverInput
     activationEvents?: DriverActivationEventUncheckedCreateNestedManyWithoutDriverInput
   }
 
@@ -104757,7 +113507,11 @@ export namespace Prisma {
     language?: string | null
     paidAt?: Date | string | null
     deliveredAt?: Date | string | null
+    leftAtDropOffAt?: Date | string | null
+    leftAtDropOffLat?: number | null
+    leftAtDropOffLng?: number | null
     estimatedDeliveryDurationMinutes?: number | null
+    currentEstimatedDeliveryDurationMinutes?: number | null
     dispatchOrderIndex?: number | null
     amount: number
     canceled?: boolean
@@ -104773,6 +113527,7 @@ export namespace Prisma {
     address?: AddressCreateNestedOneWithoutOrdersInput
     deliveryAddress?: DeliveryAddressCreateNestedOneWithoutOrdersInput
     externalAddress?: ExternalAddressCreateNestedOneWithoutOrdersInput
+    branch?: BranchCreateNestedOneWithoutOrdersInput
     orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryCreateNestedManyWithoutOrderInput
     feedback?: CustomerFeedbackCreateNestedOneWithoutOrderInput
@@ -104788,7 +113543,11 @@ export namespace Prisma {
     language?: string | null
     paidAt?: Date | string | null
     deliveredAt?: Date | string | null
+    leftAtDropOffAt?: Date | string | null
+    leftAtDropOffLat?: number | null
+    leftAtDropOffLng?: number | null
     estimatedDeliveryDurationMinutes?: number | null
+    currentEstimatedDeliveryDurationMinutes?: number | null
     dispatchOrderIndex?: number | null
     amount: number
     canceled?: boolean
@@ -104804,6 +113563,7 @@ export namespace Prisma {
     addressId?: string | null
     deliveryAddressId?: string | null
     externalAddressId?: string | null
+    branchId?: string | null
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryUncheckedCreateNestedManyWithoutOrderInput
     feedback?: CustomerFeedbackUncheckedCreateNestedOneWithoutOrderInput
@@ -104833,6 +113593,7 @@ export namespace Prisma {
     polyline?: string | null
     driver: DriverCreateNestedOneWithoutRouteSessionsInput
     points?: DispatchRoutePointCreateNestedManyWithoutSessionInput
+    milestones?: DispatchRouteMilestoneCreateNestedManyWithoutSessionInput
   }
 
   export type DispatchRouteSessionUncheckedCreateWithoutDispatchInput = {
@@ -104847,6 +113608,7 @@ export namespace Prisma {
     durationSeconds?: number | null
     polyline?: string | null
     points?: DispatchRoutePointUncheckedCreateNestedManyWithoutSessionInput
+    milestones?: DispatchRouteMilestoneUncheckedCreateNestedManyWithoutSessionInput
   }
 
   export type DispatchRouteSessionCreateOrConnectWithoutDispatchInput = {
@@ -104856,6 +113618,40 @@ export namespace Prisma {
 
   export type DispatchRouteSessionCreateManyDispatchInputEnvelope = {
     data: DispatchRouteSessionCreateManyDispatchInput | DispatchRouteSessionCreateManyDispatchInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type DispatchRouteMilestoneCreateWithoutDispatchInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    type: $Enums.DispatchRouteMilestoneType
+    recordedAt: Date | string
+    lat: number
+    lng: number
+    driver: DriverCreateNestedOneWithoutRouteMilestonesInput
+    session: DispatchRouteSessionCreateNestedOneWithoutMilestonesInput
+  }
+
+  export type DispatchRouteMilestoneUncheckedCreateWithoutDispatchInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    driverId: string
+    sessionId: string
+    type: $Enums.DispatchRouteMilestoneType
+    recordedAt: Date | string
+    lat: number
+    lng: number
+  }
+
+  export type DispatchRouteMilestoneCreateOrConnectWithoutDispatchInput = {
+    where: DispatchRouteMilestoneWhereUniqueInput
+    create: XOR<DispatchRouteMilestoneCreateWithoutDispatchInput, DispatchRouteMilestoneUncheckedCreateWithoutDispatchInput>
+  }
+
+  export type DispatchRouteMilestoneCreateManyDispatchInputEnvelope = {
+    data: DispatchRouteMilestoneCreateManyDispatchInput | DispatchRouteMilestoneCreateManyDispatchInput[]
     skipDuplicates?: boolean
   }
 
@@ -104914,6 +113710,7 @@ export namespace Prisma {
     deactivatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priorityLevel?: IntFieldUpdateOperationsInput | number
     routeSessions?: DispatchRouteSessionUpdateManyWithoutDriverNestedInput
+    routeMilestones?: DispatchRouteMilestoneUpdateManyWithoutDriverNestedInput
     activationEvents?: DriverActivationEventUpdateManyWithoutDriverNestedInput
   }
 
@@ -104927,6 +113724,7 @@ export namespace Prisma {
     deactivatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priorityLevel?: IntFieldUpdateOperationsInput | number
     routeSessions?: DispatchRouteSessionUncheckedUpdateManyWithoutDriverNestedInput
+    routeMilestones?: DispatchRouteMilestoneUncheckedUpdateManyWithoutDriverNestedInput
     activationEvents?: DriverActivationEventUncheckedUpdateManyWithoutDriverNestedInput
   }
 
@@ -104946,36 +113744,6 @@ export namespace Prisma {
     data: XOR<OrderUpdateManyMutationInput, OrderUncheckedUpdateManyWithoutDispatchInput>
   }
 
-  export type OrderScalarWhereInput = {
-    AND?: OrderScalarWhereInput | OrderScalarWhereInput[]
-    OR?: OrderScalarWhereInput[]
-    NOT?: OrderScalarWhereInput | OrderScalarWhereInput[]
-    id?: StringFilter<"Order"> | string
-    number?: StringNullableFilter<"Order"> | string | null
-    createdAt?: DateTimeFilter<"Order"> | Date | string
-    scheduleFor?: DateTimeNullableFilter<"Order"> | Date | string | null
-    language?: StringNullableFilter<"Order"> | string | null
-    paidAt?: DateTimeNullableFilter<"Order"> | Date | string | null
-    deliveredAt?: DateTimeNullableFilter<"Order"> | Date | string | null
-    estimatedDeliveryDurationMinutes?: IntNullableFilter<"Order"> | number | null
-    dispatchOrderIndex?: IntNullableFilter<"Order"> | number | null
-    amount?: IntFilter<"Order"> | number
-    canceled?: BoolFilter<"Order"> | boolean
-    status?: EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
-    type?: EnumOrderTypeFilter<"Order"> | $Enums.OrderType
-    paymentMethod?: EnumPaymentTypeFilter<"Order"> | $Enums.PaymentType
-    paymentProvider?: EnumPaymentProviderNullableFilter<"Order"> | $Enums.PaymentProvider | null
-    tipAmount?: IntNullableFilter<"Order"> | number | null
-    tags?: StringNullableListFilter<"Order">
-    progressiveDiscountSnapshot?: JsonNullableFilter<"Order">
-    customerId?: StringNullableFilter<"Order"> | string | null
-    externalId?: StringNullableFilter<"Order"> | string | null
-    dispatchId?: StringNullableFilter<"Order"> | string | null
-    addressId?: StringNullableFilter<"Order"> | string | null
-    deliveryAddressId?: StringNullableFilter<"Order"> | string | null
-    externalAddressId?: StringNullableFilter<"Order"> | string | null
-  }
-
   export type DispatchRouteSessionUpsertWithWhereUniqueWithoutDispatchInput = {
     where: DispatchRouteSessionWhereUniqueInput
     update: XOR<DispatchRouteSessionUpdateWithoutDispatchInput, DispatchRouteSessionUncheckedUpdateWithoutDispatchInput>
@@ -104990,6 +113758,22 @@ export namespace Prisma {
   export type DispatchRouteSessionUpdateManyWithWhereWithoutDispatchInput = {
     where: DispatchRouteSessionScalarWhereInput
     data: XOR<DispatchRouteSessionUpdateManyMutationInput, DispatchRouteSessionUncheckedUpdateManyWithoutDispatchInput>
+  }
+
+  export type DispatchRouteMilestoneUpsertWithWhereUniqueWithoutDispatchInput = {
+    where: DispatchRouteMilestoneWhereUniqueInput
+    update: XOR<DispatchRouteMilestoneUpdateWithoutDispatchInput, DispatchRouteMilestoneUncheckedUpdateWithoutDispatchInput>
+    create: XOR<DispatchRouteMilestoneCreateWithoutDispatchInput, DispatchRouteMilestoneUncheckedCreateWithoutDispatchInput>
+  }
+
+  export type DispatchRouteMilestoneUpdateWithWhereUniqueWithoutDispatchInput = {
+    where: DispatchRouteMilestoneWhereUniqueInput
+    data: XOR<DispatchRouteMilestoneUpdateWithoutDispatchInput, DispatchRouteMilestoneUncheckedUpdateWithoutDispatchInput>
+  }
+
+  export type DispatchRouteMilestoneUpdateManyWithWhereWithoutDispatchInput = {
+    where: DispatchRouteMilestoneScalarWhereInput
+    data: XOR<DispatchRouteMilestoneUpdateManyMutationInput, DispatchRouteMilestoneUncheckedUpdateManyWithoutDispatchInput>
   }
 
   export type DispatchEtaRecalculationJobUpsertWithWhereUniqueWithoutDispatchInput = {
@@ -105033,8 +113817,14 @@ export namespace Prisma {
     startedDeliveryAt?: Date | string | null
     estimatedDeliveryDurationMinutes?: number | null
     estimatedRoundTripDurationMinutes?: number | null
+    currentEstimatedDeliveryDurationMinutes?: number | null
+    currentEstimatedRoundTripDurationMinutes?: number | null
+    arrivedAtRestaurantAt?: Date | string | null
+    arrivedAtRestaurantLat?: number | null
+    arrivedAtRestaurantLng?: number | null
     driver?: DriverCreateNestedOneWithoutDispatchesInput
     orders?: OrderCreateNestedManyWithoutDispatchInput
+    routeMilestones?: DispatchRouteMilestoneCreateNestedManyWithoutDispatchInput
     etaRecalculationJobs?: DispatchEtaRecalculationJobCreateNestedManyWithoutDispatchInput
   }
 
@@ -105047,8 +113837,14 @@ export namespace Prisma {
     startedDeliveryAt?: Date | string | null
     estimatedDeliveryDurationMinutes?: number | null
     estimatedRoundTripDurationMinutes?: number | null
+    currentEstimatedDeliveryDurationMinutes?: number | null
+    currentEstimatedRoundTripDurationMinutes?: number | null
+    arrivedAtRestaurantAt?: Date | string | null
+    arrivedAtRestaurantLat?: number | null
+    arrivedAtRestaurantLng?: number | null
     driverId?: string | null
     orders?: OrderUncheckedCreateNestedManyWithoutDispatchInput
+    routeMilestones?: DispatchRouteMilestoneUncheckedCreateNestedManyWithoutDispatchInput
     etaRecalculationJobs?: DispatchEtaRecalculationJobUncheckedCreateNestedManyWithoutDispatchInput
   }
 
@@ -105067,6 +113863,7 @@ export namespace Prisma {
     deactivatedAt?: Date | string | null
     priorityLevel: number
     dispatches?: DispatchCreateNestedManyWithoutDriverInput
+    routeMilestones?: DispatchRouteMilestoneCreateNestedManyWithoutDriverInput
     activationEvents?: DriverActivationEventCreateNestedManyWithoutDriverInput
   }
 
@@ -105080,6 +113877,7 @@ export namespace Prisma {
     deactivatedAt?: Date | string | null
     priorityLevel: number
     dispatches?: DispatchUncheckedCreateNestedManyWithoutDriverInput
+    routeMilestones?: DispatchRouteMilestoneUncheckedCreateNestedManyWithoutDriverInput
     activationEvents?: DriverActivationEventUncheckedCreateNestedManyWithoutDriverInput
   }
 
@@ -105128,6 +113926,40 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type DispatchRouteMilestoneCreateWithoutSessionInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    type: $Enums.DispatchRouteMilestoneType
+    recordedAt: Date | string
+    lat: number
+    lng: number
+    dispatch: DispatchCreateNestedOneWithoutRouteMilestonesInput
+    driver: DriverCreateNestedOneWithoutRouteMilestonesInput
+  }
+
+  export type DispatchRouteMilestoneUncheckedCreateWithoutSessionInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    dispatchId: string
+    driverId: string
+    type: $Enums.DispatchRouteMilestoneType
+    recordedAt: Date | string
+    lat: number
+    lng: number
+  }
+
+  export type DispatchRouteMilestoneCreateOrConnectWithoutSessionInput = {
+    where: DispatchRouteMilestoneWhereUniqueInput
+    create: XOR<DispatchRouteMilestoneCreateWithoutSessionInput, DispatchRouteMilestoneUncheckedCreateWithoutSessionInput>
+  }
+
+  export type DispatchRouteMilestoneCreateManySessionInputEnvelope = {
+    data: DispatchRouteMilestoneCreateManySessionInput | DispatchRouteMilestoneCreateManySessionInput[]
+    skipDuplicates?: boolean
+  }
+
   export type DispatchUpsertWithoutRouteSessionsInput = {
     update: XOR<DispatchUpdateWithoutRouteSessionsInput, DispatchUncheckedUpdateWithoutRouteSessionsInput>
     create: XOR<DispatchCreateWithoutRouteSessionsInput, DispatchUncheckedCreateWithoutRouteSessionsInput>
@@ -105148,8 +113980,14 @@ export namespace Prisma {
     startedDeliveryAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     estimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    arrivedAtRestaurantAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    arrivedAtRestaurantLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    arrivedAtRestaurantLng?: NullableFloatFieldUpdateOperationsInput | number | null
     driver?: DriverUpdateOneWithoutDispatchesNestedInput
     orders?: OrderUpdateManyWithoutDispatchNestedInput
+    routeMilestones?: DispatchRouteMilestoneUpdateManyWithoutDispatchNestedInput
     etaRecalculationJobs?: DispatchEtaRecalculationJobUpdateManyWithoutDispatchNestedInput
   }
 
@@ -105162,8 +114000,14 @@ export namespace Prisma {
     startedDeliveryAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     estimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    arrivedAtRestaurantAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    arrivedAtRestaurantLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    arrivedAtRestaurantLng?: NullableFloatFieldUpdateOperationsInput | number | null
     driverId?: NullableStringFieldUpdateOperationsInput | string | null
     orders?: OrderUncheckedUpdateManyWithoutDispatchNestedInput
+    routeMilestones?: DispatchRouteMilestoneUncheckedUpdateManyWithoutDispatchNestedInput
     etaRecalculationJobs?: DispatchEtaRecalculationJobUncheckedUpdateManyWithoutDispatchNestedInput
   }
 
@@ -105188,6 +114032,7 @@ export namespace Prisma {
     deactivatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priorityLevel?: IntFieldUpdateOperationsInput | number
     dispatches?: DispatchUpdateManyWithoutDriverNestedInput
+    routeMilestones?: DispatchRouteMilestoneUpdateManyWithoutDriverNestedInput
     activationEvents?: DriverActivationEventUpdateManyWithoutDriverNestedInput
   }
 
@@ -105201,6 +114046,7 @@ export namespace Prisma {
     deactivatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priorityLevel?: IntFieldUpdateOperationsInput | number
     dispatches?: DispatchUncheckedUpdateManyWithoutDriverNestedInput
+    routeMilestones?: DispatchRouteMilestoneUncheckedUpdateManyWithoutDriverNestedInput
     activationEvents?: DriverActivationEventUncheckedUpdateManyWithoutDriverNestedInput
   }
 
@@ -105239,6 +114085,22 @@ export namespace Prisma {
     isMocked?: BoolNullableFilter<"DispatchRoutePoint"> | boolean | null
   }
 
+  export type DispatchRouteMilestoneUpsertWithWhereUniqueWithoutSessionInput = {
+    where: DispatchRouteMilestoneWhereUniqueInput
+    update: XOR<DispatchRouteMilestoneUpdateWithoutSessionInput, DispatchRouteMilestoneUncheckedUpdateWithoutSessionInput>
+    create: XOR<DispatchRouteMilestoneCreateWithoutSessionInput, DispatchRouteMilestoneUncheckedCreateWithoutSessionInput>
+  }
+
+  export type DispatchRouteMilestoneUpdateWithWhereUniqueWithoutSessionInput = {
+    where: DispatchRouteMilestoneWhereUniqueInput
+    data: XOR<DispatchRouteMilestoneUpdateWithoutSessionInput, DispatchRouteMilestoneUncheckedUpdateWithoutSessionInput>
+  }
+
+  export type DispatchRouteMilestoneUpdateManyWithWhereWithoutSessionInput = {
+    where: DispatchRouteMilestoneScalarWhereInput
+    data: XOR<DispatchRouteMilestoneUpdateManyMutationInput, DispatchRouteMilestoneUncheckedUpdateManyWithoutSessionInput>
+  }
+
   export type DispatchRouteSessionCreateWithoutPointsInput = {
     id: string
     createdAt?: Date | string
@@ -105251,6 +114113,7 @@ export namespace Prisma {
     polyline?: string | null
     dispatch: DispatchCreateNestedOneWithoutRouteSessionsInput
     driver: DriverCreateNestedOneWithoutRouteSessionsInput
+    milestones?: DispatchRouteMilestoneCreateNestedManyWithoutSessionInput
   }
 
   export type DispatchRouteSessionUncheckedCreateWithoutPointsInput = {
@@ -105265,6 +114128,7 @@ export namespace Prisma {
     totalDistanceMeters?: number | null
     durationSeconds?: number | null
     polyline?: string | null
+    milestones?: DispatchRouteMilestoneUncheckedCreateNestedManyWithoutSessionInput
   }
 
   export type DispatchRouteSessionCreateOrConnectWithoutPointsInput = {
@@ -105295,6 +114159,7 @@ export namespace Prisma {
     polyline?: NullableStringFieldUpdateOperationsInput | string | null
     dispatch?: DispatchUpdateOneRequiredWithoutRouteSessionsNestedInput
     driver?: DriverUpdateOneRequiredWithoutRouteSessionsNestedInput
+    milestones?: DispatchRouteMilestoneUpdateManyWithoutSessionNestedInput
   }
 
   export type DispatchRouteSessionUncheckedUpdateWithoutPointsInput = {
@@ -105309,6 +114174,251 @@ export namespace Prisma {
     totalDistanceMeters?: NullableIntFieldUpdateOperationsInput | number | null
     durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     polyline?: NullableStringFieldUpdateOperationsInput | string | null
+    milestones?: DispatchRouteMilestoneUncheckedUpdateManyWithoutSessionNestedInput
+  }
+
+  export type DispatchCreateWithoutRouteMilestonesInput = {
+    id: string
+    createdAt?: Date | string
+    queueIndex?: number | null
+    dispatched?: boolean
+    dispatchAt?: Date | string | null
+    startedDeliveryAt?: Date | string | null
+    estimatedDeliveryDurationMinutes?: number | null
+    estimatedRoundTripDurationMinutes?: number | null
+    currentEstimatedDeliveryDurationMinutes?: number | null
+    currentEstimatedRoundTripDurationMinutes?: number | null
+    arrivedAtRestaurantAt?: Date | string | null
+    arrivedAtRestaurantLat?: number | null
+    arrivedAtRestaurantLng?: number | null
+    driver?: DriverCreateNestedOneWithoutDispatchesInput
+    orders?: OrderCreateNestedManyWithoutDispatchInput
+    routeSessions?: DispatchRouteSessionCreateNestedManyWithoutDispatchInput
+    etaRecalculationJobs?: DispatchEtaRecalculationJobCreateNestedManyWithoutDispatchInput
+  }
+
+  export type DispatchUncheckedCreateWithoutRouteMilestonesInput = {
+    id: string
+    createdAt?: Date | string
+    queueIndex?: number | null
+    dispatched?: boolean
+    dispatchAt?: Date | string | null
+    startedDeliveryAt?: Date | string | null
+    estimatedDeliveryDurationMinutes?: number | null
+    estimatedRoundTripDurationMinutes?: number | null
+    currentEstimatedDeliveryDurationMinutes?: number | null
+    currentEstimatedRoundTripDurationMinutes?: number | null
+    arrivedAtRestaurantAt?: Date | string | null
+    arrivedAtRestaurantLat?: number | null
+    arrivedAtRestaurantLng?: number | null
+    driverId?: string | null
+    orders?: OrderUncheckedCreateNestedManyWithoutDispatchInput
+    routeSessions?: DispatchRouteSessionUncheckedCreateNestedManyWithoutDispatchInput
+    etaRecalculationJobs?: DispatchEtaRecalculationJobUncheckedCreateNestedManyWithoutDispatchInput
+  }
+
+  export type DispatchCreateOrConnectWithoutRouteMilestonesInput = {
+    where: DispatchWhereUniqueInput
+    create: XOR<DispatchCreateWithoutRouteMilestonesInput, DispatchUncheckedCreateWithoutRouteMilestonesInput>
+  }
+
+  export type DriverCreateWithoutRouteMilestonesInput = {
+    id: string
+    createdAt?: Date | string
+    name: string
+    phone?: string | null
+    active?: boolean
+    activatedAt?: Date | string | null
+    deactivatedAt?: Date | string | null
+    priorityLevel: number
+    dispatches?: DispatchCreateNestedManyWithoutDriverInput
+    routeSessions?: DispatchRouteSessionCreateNestedManyWithoutDriverInput
+    activationEvents?: DriverActivationEventCreateNestedManyWithoutDriverInput
+  }
+
+  export type DriverUncheckedCreateWithoutRouteMilestonesInput = {
+    id: string
+    createdAt?: Date | string
+    name: string
+    phone?: string | null
+    active?: boolean
+    activatedAt?: Date | string | null
+    deactivatedAt?: Date | string | null
+    priorityLevel: number
+    dispatches?: DispatchUncheckedCreateNestedManyWithoutDriverInput
+    routeSessions?: DispatchRouteSessionUncheckedCreateNestedManyWithoutDriverInput
+    activationEvents?: DriverActivationEventUncheckedCreateNestedManyWithoutDriverInput
+  }
+
+  export type DriverCreateOrConnectWithoutRouteMilestonesInput = {
+    where: DriverWhereUniqueInput
+    create: XOR<DriverCreateWithoutRouteMilestonesInput, DriverUncheckedCreateWithoutRouteMilestonesInput>
+  }
+
+  export type DispatchRouteSessionCreateWithoutMilestonesInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    startedAt?: Date | string
+    endedAt?: Date | string | null
+    status?: $Enums.DispatchRouteSessionStatus
+    totalDistanceMeters?: number | null
+    durationSeconds?: number | null
+    polyline?: string | null
+    dispatch: DispatchCreateNestedOneWithoutRouteSessionsInput
+    driver: DriverCreateNestedOneWithoutRouteSessionsInput
+    points?: DispatchRoutePointCreateNestedManyWithoutSessionInput
+  }
+
+  export type DispatchRouteSessionUncheckedCreateWithoutMilestonesInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    dispatchId: string
+    driverId: string
+    startedAt?: Date | string
+    endedAt?: Date | string | null
+    status?: $Enums.DispatchRouteSessionStatus
+    totalDistanceMeters?: number | null
+    durationSeconds?: number | null
+    polyline?: string | null
+    points?: DispatchRoutePointUncheckedCreateNestedManyWithoutSessionInput
+  }
+
+  export type DispatchRouteSessionCreateOrConnectWithoutMilestonesInput = {
+    where: DispatchRouteSessionWhereUniqueInput
+    create: XOR<DispatchRouteSessionCreateWithoutMilestonesInput, DispatchRouteSessionUncheckedCreateWithoutMilestonesInput>
+  }
+
+  export type DispatchUpsertWithoutRouteMilestonesInput = {
+    update: XOR<DispatchUpdateWithoutRouteMilestonesInput, DispatchUncheckedUpdateWithoutRouteMilestonesInput>
+    create: XOR<DispatchCreateWithoutRouteMilestonesInput, DispatchUncheckedCreateWithoutRouteMilestonesInput>
+    where?: DispatchWhereInput
+  }
+
+  export type DispatchUpdateToOneWithWhereWithoutRouteMilestonesInput = {
+    where?: DispatchWhereInput
+    data: XOR<DispatchUpdateWithoutRouteMilestonesInput, DispatchUncheckedUpdateWithoutRouteMilestonesInput>
+  }
+
+  export type DispatchUpdateWithoutRouteMilestonesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    queueIndex?: NullableIntFieldUpdateOperationsInput | number | null
+    dispatched?: BoolFieldUpdateOperationsInput | boolean
+    dispatchAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    startedDeliveryAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    estimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    arrivedAtRestaurantAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    arrivedAtRestaurantLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    arrivedAtRestaurantLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    driver?: DriverUpdateOneWithoutDispatchesNestedInput
+    orders?: OrderUpdateManyWithoutDispatchNestedInput
+    routeSessions?: DispatchRouteSessionUpdateManyWithoutDispatchNestedInput
+    etaRecalculationJobs?: DispatchEtaRecalculationJobUpdateManyWithoutDispatchNestedInput
+  }
+
+  export type DispatchUncheckedUpdateWithoutRouteMilestonesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    queueIndex?: NullableIntFieldUpdateOperationsInput | number | null
+    dispatched?: BoolFieldUpdateOperationsInput | boolean
+    dispatchAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    startedDeliveryAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    estimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    arrivedAtRestaurantAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    arrivedAtRestaurantLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    arrivedAtRestaurantLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    driverId?: NullableStringFieldUpdateOperationsInput | string | null
+    orders?: OrderUncheckedUpdateManyWithoutDispatchNestedInput
+    routeSessions?: DispatchRouteSessionUncheckedUpdateManyWithoutDispatchNestedInput
+    etaRecalculationJobs?: DispatchEtaRecalculationJobUncheckedUpdateManyWithoutDispatchNestedInput
+  }
+
+  export type DriverUpsertWithoutRouteMilestonesInput = {
+    update: XOR<DriverUpdateWithoutRouteMilestonesInput, DriverUncheckedUpdateWithoutRouteMilestonesInput>
+    create: XOR<DriverCreateWithoutRouteMilestonesInput, DriverUncheckedCreateWithoutRouteMilestonesInput>
+    where?: DriverWhereInput
+  }
+
+  export type DriverUpdateToOneWithWhereWithoutRouteMilestonesInput = {
+    where?: DriverWhereInput
+    data: XOR<DriverUpdateWithoutRouteMilestonesInput, DriverUncheckedUpdateWithoutRouteMilestonesInput>
+  }
+
+  export type DriverUpdateWithoutRouteMilestonesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    activatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deactivatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    priorityLevel?: IntFieldUpdateOperationsInput | number
+    dispatches?: DispatchUpdateManyWithoutDriverNestedInput
+    routeSessions?: DispatchRouteSessionUpdateManyWithoutDriverNestedInput
+    activationEvents?: DriverActivationEventUpdateManyWithoutDriverNestedInput
+  }
+
+  export type DriverUncheckedUpdateWithoutRouteMilestonesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    active?: BoolFieldUpdateOperationsInput | boolean
+    activatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deactivatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    priorityLevel?: IntFieldUpdateOperationsInput | number
+    dispatches?: DispatchUncheckedUpdateManyWithoutDriverNestedInput
+    routeSessions?: DispatchRouteSessionUncheckedUpdateManyWithoutDriverNestedInput
+    activationEvents?: DriverActivationEventUncheckedUpdateManyWithoutDriverNestedInput
+  }
+
+  export type DispatchRouteSessionUpsertWithoutMilestonesInput = {
+    update: XOR<DispatchRouteSessionUpdateWithoutMilestonesInput, DispatchRouteSessionUncheckedUpdateWithoutMilestonesInput>
+    create: XOR<DispatchRouteSessionCreateWithoutMilestonesInput, DispatchRouteSessionUncheckedCreateWithoutMilestonesInput>
+    where?: DispatchRouteSessionWhereInput
+  }
+
+  export type DispatchRouteSessionUpdateToOneWithWhereWithoutMilestonesInput = {
+    where?: DispatchRouteSessionWhereInput
+    data: XOR<DispatchRouteSessionUpdateWithoutMilestonesInput, DispatchRouteSessionUncheckedUpdateWithoutMilestonesInput>
+  }
+
+  export type DispatchRouteSessionUpdateWithoutMilestonesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumDispatchRouteSessionStatusFieldUpdateOperationsInput | $Enums.DispatchRouteSessionStatus
+    totalDistanceMeters?: NullableIntFieldUpdateOperationsInput | number | null
+    durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
+    polyline?: NullableStringFieldUpdateOperationsInput | string | null
+    dispatch?: DispatchUpdateOneRequiredWithoutRouteSessionsNestedInput
+    driver?: DriverUpdateOneRequiredWithoutRouteSessionsNestedInput
+    points?: DispatchRoutePointUpdateManyWithoutSessionNestedInput
+  }
+
+  export type DispatchRouteSessionUncheckedUpdateWithoutMilestonesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dispatchId?: StringFieldUpdateOperationsInput | string
+    driverId?: StringFieldUpdateOperationsInput | string
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumDispatchRouteSessionStatusFieldUpdateOperationsInput | $Enums.DispatchRouteSessionStatus
+    totalDistanceMeters?: NullableIntFieldUpdateOperationsInput | number | null
+    durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
+    polyline?: NullableStringFieldUpdateOperationsInput | string | null
+    points?: DispatchRoutePointUncheckedUpdateManyWithoutSessionNestedInput
   }
 
   export type DispatchCreateWithoutEtaRecalculationJobsInput = {
@@ -105320,9 +114430,15 @@ export namespace Prisma {
     startedDeliveryAt?: Date | string | null
     estimatedDeliveryDurationMinutes?: number | null
     estimatedRoundTripDurationMinutes?: number | null
+    currentEstimatedDeliveryDurationMinutes?: number | null
+    currentEstimatedRoundTripDurationMinutes?: number | null
+    arrivedAtRestaurantAt?: Date | string | null
+    arrivedAtRestaurantLat?: number | null
+    arrivedAtRestaurantLng?: number | null
     driver?: DriverCreateNestedOneWithoutDispatchesInput
     orders?: OrderCreateNestedManyWithoutDispatchInput
     routeSessions?: DispatchRouteSessionCreateNestedManyWithoutDispatchInput
+    routeMilestones?: DispatchRouteMilestoneCreateNestedManyWithoutDispatchInput
   }
 
   export type DispatchUncheckedCreateWithoutEtaRecalculationJobsInput = {
@@ -105334,9 +114450,15 @@ export namespace Prisma {
     startedDeliveryAt?: Date | string | null
     estimatedDeliveryDurationMinutes?: number | null
     estimatedRoundTripDurationMinutes?: number | null
+    currentEstimatedDeliveryDurationMinutes?: number | null
+    currentEstimatedRoundTripDurationMinutes?: number | null
+    arrivedAtRestaurantAt?: Date | string | null
+    arrivedAtRestaurantLat?: number | null
+    arrivedAtRestaurantLng?: number | null
     driverId?: string | null
     orders?: OrderUncheckedCreateNestedManyWithoutDispatchInput
     routeSessions?: DispatchRouteSessionUncheckedCreateNestedManyWithoutDispatchInput
+    routeMilestones?: DispatchRouteMilestoneUncheckedCreateNestedManyWithoutDispatchInput
   }
 
   export type DispatchCreateOrConnectWithoutEtaRecalculationJobsInput = {
@@ -105364,9 +114486,15 @@ export namespace Prisma {
     startedDeliveryAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     estimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    arrivedAtRestaurantAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    arrivedAtRestaurantLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    arrivedAtRestaurantLng?: NullableFloatFieldUpdateOperationsInput | number | null
     driver?: DriverUpdateOneWithoutDispatchesNestedInput
     orders?: OrderUpdateManyWithoutDispatchNestedInput
     routeSessions?: DispatchRouteSessionUpdateManyWithoutDispatchNestedInput
+    routeMilestones?: DispatchRouteMilestoneUpdateManyWithoutDispatchNestedInput
   }
 
   export type DispatchUncheckedUpdateWithoutEtaRecalculationJobsInput = {
@@ -105378,9 +114506,15 @@ export namespace Prisma {
     startedDeliveryAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     estimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    arrivedAtRestaurantAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    arrivedAtRestaurantLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    arrivedAtRestaurantLng?: NullableFloatFieldUpdateOperationsInput | number | null
     driverId?: NullableStringFieldUpdateOperationsInput | string | null
     orders?: OrderUncheckedUpdateManyWithoutDispatchNestedInput
     routeSessions?: DispatchRouteSessionUncheckedUpdateManyWithoutDispatchNestedInput
+    routeMilestones?: DispatchRouteMilestoneUncheckedUpdateManyWithoutDispatchNestedInput
   }
 
   export type BranchCreateWithoutAddressInput = {
@@ -105388,7 +114522,11 @@ export namespace Prisma {
     createdAt?: Date | string
     name: string
     operationHours?: NullableJsonNullValueInput | InputJsonValue
+    chatwootAccountId?: string | null
+    chatwootSourceId?: string | null
+    chatwootAgentId?: string | null
     business?: BusinessCreateNestedOneWithoutBranchesInput
+    orders?: OrderCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutAddressInput = {
@@ -105396,7 +114534,11 @@ export namespace Prisma {
     createdAt?: Date | string
     name: string
     operationHours?: NullableJsonNullValueInput | InputJsonValue
+    chatwootAccountId?: string | null
+    chatwootSourceId?: string | null
+    chatwootAgentId?: string | null
     businessId?: string | null
+    orders?: OrderUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutAddressInput = {
@@ -105412,7 +114554,11 @@ export namespace Prisma {
     language?: string | null
     paidAt?: Date | string | null
     deliveredAt?: Date | string | null
+    leftAtDropOffAt?: Date | string | null
+    leftAtDropOffLat?: number | null
+    leftAtDropOffLng?: number | null
     estimatedDeliveryDurationMinutes?: number | null
+    currentEstimatedDeliveryDurationMinutes?: number | null
     dispatchOrderIndex?: number | null
     amount: number
     canceled?: boolean
@@ -105428,6 +114574,7 @@ export namespace Prisma {
     dispatch?: DispatchCreateNestedOneWithoutOrdersInput
     deliveryAddress?: DeliveryAddressCreateNestedOneWithoutOrdersInput
     externalAddress?: ExternalAddressCreateNestedOneWithoutOrdersInput
+    branch?: BranchCreateNestedOneWithoutOrdersInput
     orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryCreateNestedManyWithoutOrderInput
     feedback?: CustomerFeedbackCreateNestedOneWithoutOrderInput
@@ -105443,7 +114590,11 @@ export namespace Prisma {
     language?: string | null
     paidAt?: Date | string | null
     deliveredAt?: Date | string | null
+    leftAtDropOffAt?: Date | string | null
+    leftAtDropOffLat?: number | null
+    leftAtDropOffLng?: number | null
     estimatedDeliveryDurationMinutes?: number | null
+    currentEstimatedDeliveryDurationMinutes?: number | null
     dispatchOrderIndex?: number | null
     amount: number
     canceled?: boolean
@@ -105459,6 +114610,7 @@ export namespace Prisma {
     dispatchId?: string | null
     deliveryAddressId?: string | null
     externalAddressId?: string | null
+    branchId?: string | null
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryUncheckedCreateNestedManyWithoutOrderInput
     feedback?: CustomerFeedbackUncheckedCreateNestedOneWithoutOrderInput
@@ -105492,7 +114644,11 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
     operationHours?: NullableJsonNullValueInput | InputJsonValue
+    chatwootAccountId?: NullableStringFieldUpdateOperationsInput | string | null
+    chatwootSourceId?: NullableStringFieldUpdateOperationsInput | string | null
+    chatwootAgentId?: NullableStringFieldUpdateOperationsInput | string | null
     business?: BusinessUpdateOneWithoutBranchesNestedInput
+    orders?: OrderUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutAddressInput = {
@@ -105500,7 +114656,11 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
     operationHours?: NullableJsonNullValueInput | InputJsonValue
+    chatwootAccountId?: NullableStringFieldUpdateOperationsInput | string | null
+    chatwootSourceId?: NullableStringFieldUpdateOperationsInput | string | null
+    chatwootAgentId?: NullableStringFieldUpdateOperationsInput | string | null
     businessId?: NullableStringFieldUpdateOperationsInput | string | null
+    orders?: OrderUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type OrderUpsertWithWhereUniqueWithoutAddressInput = {
@@ -105786,6 +114946,38 @@ export namespace Prisma {
 
   export type OrderProductsCreateManyProductInputEnvelope = {
     data: OrderProductsCreateManyProductInput | OrderProductsCreateManyProductInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type OrderIntentProductCreateWithoutProductInput = {
+    id: string
+    createdAt?: Date | string
+    quantity: number
+    comments?: string | null
+    fullAmount?: number | null
+    amount?: number | null
+    orderIntent: OrderIntentCreateNestedOneWithoutOrderProductsInput
+    modifierGroupItems?: ModifierGroupItemCreateNestedManyWithoutOrderIntentProductsInput
+  }
+
+  export type OrderIntentProductUncheckedCreateWithoutProductInput = {
+    id: string
+    createdAt?: Date | string
+    orderIntentId: string
+    quantity: number
+    comments?: string | null
+    fullAmount?: number | null
+    amount?: number | null
+    modifierGroupItems?: ModifierGroupItemUncheckedCreateNestedManyWithoutOrderIntentProductsInput
+  }
+
+  export type OrderIntentProductCreateOrConnectWithoutProductInput = {
+    where: OrderIntentProductWhereUniqueInput
+    create: XOR<OrderIntentProductCreateWithoutProductInput, OrderIntentProductUncheckedCreateWithoutProductInput>
+  }
+
+  export type OrderIntentProductCreateManyProductInputEnvelope = {
+    data: OrderIntentProductCreateManyProductInput | OrderIntentProductCreateManyProductInput[]
     skipDuplicates?: boolean
   }
 
@@ -106153,6 +115345,22 @@ export namespace Prisma {
     data: XOR<OrderProductsUpdateManyMutationInput, OrderProductsUncheckedUpdateManyWithoutProductInput>
   }
 
+  export type OrderIntentProductUpsertWithWhereUniqueWithoutProductInput = {
+    where: OrderIntentProductWhereUniqueInput
+    update: XOR<OrderIntentProductUpdateWithoutProductInput, OrderIntentProductUncheckedUpdateWithoutProductInput>
+    create: XOR<OrderIntentProductCreateWithoutProductInput, OrderIntentProductUncheckedCreateWithoutProductInput>
+  }
+
+  export type OrderIntentProductUpdateWithWhereUniqueWithoutProductInput = {
+    where: OrderIntentProductWhereUniqueInput
+    data: XOR<OrderIntentProductUpdateWithoutProductInput, OrderIntentProductUncheckedUpdateWithoutProductInput>
+  }
+
+  export type OrderIntentProductUpdateManyWithWhereWithoutProductInput = {
+    where: OrderIntentProductScalarWhereInput
+    data: XOR<OrderIntentProductUpdateManyMutationInput, OrderIntentProductUncheckedUpdateManyWithoutProductInput>
+  }
+
   export type ProgressiveDiscountPrizeProductUpsertWithWhereUniqueWithoutProductInput = {
     where: ProgressiveDiscountPrizeProductWhereUniqueInput
     update: XOR<ProgressiveDiscountPrizeProductUpdateWithoutProductInput, ProgressiveDiscountPrizeProductUncheckedUpdateWithoutProductInput>
@@ -106246,6 +115454,7 @@ export namespace Prisma {
     comboUsedInItems?: ComboProductItemCreateNestedManyWithoutProductInput
     exclusivePromotionProducts?: ExclusivePromotionProductCreateNestedManyWithoutProductInput
     OrderProducts?: OrderProductsCreateNestedManyWithoutProductInput
+    orderIntentProducts?: OrderIntentProductCreateNestedManyWithoutProductInput
     prizeProducts?: ProgressiveDiscountPrizeProductCreateNestedManyWithoutProductInput
     customerRewards?: CustomerRewardCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepCreateNestedManyWithoutProductsInput
@@ -106271,6 +115480,7 @@ export namespace Prisma {
     comboUsedInItems?: ComboProductItemUncheckedCreateNestedManyWithoutProductInput
     exclusivePromotionProducts?: ExclusivePromotionProductUncheckedCreateNestedManyWithoutProductInput
     OrderProducts?: OrderProductsUncheckedCreateNestedManyWithoutProductInput
+    orderIntentProducts?: OrderIntentProductUncheckedCreateNestedManyWithoutProductInput
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedCreateNestedManyWithoutProductInput
     customerRewards?: CustomerRewardUncheckedCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepUncheckedCreateNestedManyWithoutProductsInput
@@ -106301,6 +115511,7 @@ export namespace Prisma {
     comboProductItems?: ComboProductItemCreateNestedManyWithoutComboInput
     exclusivePromotionProducts?: ExclusivePromotionProductCreateNestedManyWithoutProductInput
     OrderProducts?: OrderProductsCreateNestedManyWithoutProductInput
+    orderIntentProducts?: OrderIntentProductCreateNestedManyWithoutProductInput
     prizeProducts?: ProgressiveDiscountPrizeProductCreateNestedManyWithoutProductInput
     customerRewards?: CustomerRewardCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepCreateNestedManyWithoutProductsInput
@@ -106326,6 +115537,7 @@ export namespace Prisma {
     comboProductItems?: ComboProductItemUncheckedCreateNestedManyWithoutComboInput
     exclusivePromotionProducts?: ExclusivePromotionProductUncheckedCreateNestedManyWithoutProductInput
     OrderProducts?: OrderProductsUncheckedCreateNestedManyWithoutProductInput
+    orderIntentProducts?: OrderIntentProductUncheckedCreateNestedManyWithoutProductInput
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedCreateNestedManyWithoutProductInput
     customerRewards?: CustomerRewardUncheckedCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepUncheckedCreateNestedManyWithoutProductsInput
@@ -106367,6 +115579,7 @@ export namespace Prisma {
     comboUsedInItems?: ComboProductItemUpdateManyWithoutProductNestedInput
     exclusivePromotionProducts?: ExclusivePromotionProductUpdateManyWithoutProductNestedInput
     OrderProducts?: OrderProductsUpdateManyWithoutProductNestedInput
+    orderIntentProducts?: OrderIntentProductUpdateManyWithoutProductNestedInput
     prizeProducts?: ProgressiveDiscountPrizeProductUpdateManyWithoutProductNestedInput
     customerRewards?: CustomerRewardUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUpdateManyWithoutProductsNestedInput
@@ -106392,6 +115605,7 @@ export namespace Prisma {
     comboUsedInItems?: ComboProductItemUncheckedUpdateManyWithoutProductNestedInput
     exclusivePromotionProducts?: ExclusivePromotionProductUncheckedUpdateManyWithoutProductNestedInput
     OrderProducts?: OrderProductsUncheckedUpdateManyWithoutProductNestedInput
+    orderIntentProducts?: OrderIntentProductUncheckedUpdateManyWithoutProductNestedInput
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutProductNestedInput
     customerRewards?: CustomerRewardUncheckedUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUncheckedUpdateManyWithoutProductsNestedInput
@@ -106428,6 +115642,7 @@ export namespace Prisma {
     comboProductItems?: ComboProductItemUpdateManyWithoutComboNestedInput
     exclusivePromotionProducts?: ExclusivePromotionProductUpdateManyWithoutProductNestedInput
     OrderProducts?: OrderProductsUpdateManyWithoutProductNestedInput
+    orderIntentProducts?: OrderIntentProductUpdateManyWithoutProductNestedInput
     prizeProducts?: ProgressiveDiscountPrizeProductUpdateManyWithoutProductNestedInput
     customerRewards?: CustomerRewardUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUpdateManyWithoutProductsNestedInput
@@ -106453,6 +115668,7 @@ export namespace Prisma {
     comboProductItems?: ComboProductItemUncheckedUpdateManyWithoutComboNestedInput
     exclusivePromotionProducts?: ExclusivePromotionProductUncheckedUpdateManyWithoutProductNestedInput
     OrderProducts?: OrderProductsUncheckedUpdateManyWithoutProductNestedInput
+    orderIntentProducts?: OrderIntentProductUncheckedUpdateManyWithoutProductNestedInput
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutProductNestedInput
     customerRewards?: CustomerRewardUncheckedUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUncheckedUpdateManyWithoutProductsNestedInput
@@ -106610,6 +115826,7 @@ export namespace Prisma {
     comboProductItems?: ComboProductItemCreateNestedManyWithoutComboInput
     comboUsedInItems?: ComboProductItemCreateNestedManyWithoutProductInput
     OrderProducts?: OrderProductsCreateNestedManyWithoutProductInput
+    orderIntentProducts?: OrderIntentProductCreateNestedManyWithoutProductInput
     prizeProducts?: ProgressiveDiscountPrizeProductCreateNestedManyWithoutProductInput
     customerRewards?: CustomerRewardCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepCreateNestedManyWithoutProductsInput
@@ -106635,6 +115852,7 @@ export namespace Prisma {
     comboProductItems?: ComboProductItemUncheckedCreateNestedManyWithoutComboInput
     comboUsedInItems?: ComboProductItemUncheckedCreateNestedManyWithoutProductInput
     OrderProducts?: OrderProductsUncheckedCreateNestedManyWithoutProductInput
+    orderIntentProducts?: OrderIntentProductUncheckedCreateNestedManyWithoutProductInput
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedCreateNestedManyWithoutProductInput
     customerRewards?: CustomerRewardUncheckedCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepUncheckedCreateNestedManyWithoutProductsInput
@@ -106709,6 +115927,7 @@ export namespace Prisma {
     comboProductItems?: ComboProductItemUpdateManyWithoutComboNestedInput
     comboUsedInItems?: ComboProductItemUpdateManyWithoutProductNestedInput
     OrderProducts?: OrderProductsUpdateManyWithoutProductNestedInput
+    orderIntentProducts?: OrderIntentProductUpdateManyWithoutProductNestedInput
     prizeProducts?: ProgressiveDiscountPrizeProductUpdateManyWithoutProductNestedInput
     customerRewards?: CustomerRewardUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUpdateManyWithoutProductsNestedInput
@@ -106734,6 +115953,7 @@ export namespace Prisma {
     comboProductItems?: ComboProductItemUncheckedUpdateManyWithoutComboNestedInput
     comboUsedInItems?: ComboProductItemUncheckedUpdateManyWithoutProductNestedInput
     OrderProducts?: OrderProductsUncheckedUpdateManyWithoutProductNestedInput
+    orderIntentProducts?: OrderIntentProductUncheckedUpdateManyWithoutProductNestedInput
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutProductNestedInput
     customerRewards?: CustomerRewardUncheckedUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUncheckedUpdateManyWithoutProductsNestedInput
@@ -107068,6 +116288,7 @@ export namespace Prisma {
     comboUsedInItems?: ComboProductItemCreateNestedManyWithoutProductInput
     exclusivePromotionProducts?: ExclusivePromotionProductCreateNestedManyWithoutProductInput
     OrderProducts?: OrderProductsCreateNestedManyWithoutProductInput
+    orderIntentProducts?: OrderIntentProductCreateNestedManyWithoutProductInput
     prizeProducts?: ProgressiveDiscountPrizeProductCreateNestedManyWithoutProductInput
     customerRewards?: CustomerRewardCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepCreateNestedManyWithoutProductsInput
@@ -107093,6 +116314,7 @@ export namespace Prisma {
     comboUsedInItems?: ComboProductItemUncheckedCreateNestedManyWithoutProductInput
     exclusivePromotionProducts?: ExclusivePromotionProductUncheckedCreateNestedManyWithoutProductInput
     OrderProducts?: OrderProductsUncheckedCreateNestedManyWithoutProductInput
+    orderIntentProducts?: OrderIntentProductUncheckedCreateNestedManyWithoutProductInput
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedCreateNestedManyWithoutProductInput
     customerRewards?: CustomerRewardUncheckedCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepUncheckedCreateNestedManyWithoutProductsInput
@@ -107421,6 +116643,7 @@ export namespace Prisma {
     comboUsedInItems?: ComboProductItemCreateNestedManyWithoutProductInput
     exclusivePromotionProducts?: ExclusivePromotionProductCreateNestedManyWithoutProductInput
     OrderProducts?: OrderProductsCreateNestedManyWithoutProductInput
+    orderIntentProducts?: OrderIntentProductCreateNestedManyWithoutProductInput
     prizeProducts?: ProgressiveDiscountPrizeProductCreateNestedManyWithoutProductInput
     customerRewards?: CustomerRewardCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepCreateNestedManyWithoutProductsInput
@@ -107446,6 +116669,7 @@ export namespace Prisma {
     comboUsedInItems?: ComboProductItemUncheckedCreateNestedManyWithoutProductInput
     exclusivePromotionProducts?: ExclusivePromotionProductUncheckedCreateNestedManyWithoutProductInput
     OrderProducts?: OrderProductsUncheckedCreateNestedManyWithoutProductInput
+    orderIntentProducts?: OrderIntentProductUncheckedCreateNestedManyWithoutProductInput
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedCreateNestedManyWithoutProductInput
     customerRewards?: CustomerRewardUncheckedCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepUncheckedCreateNestedManyWithoutProductsInput
@@ -107516,6 +116740,7 @@ export namespace Prisma {
     comboUsedInItems?: ComboProductItemUpdateManyWithoutProductNestedInput
     exclusivePromotionProducts?: ExclusivePromotionProductUpdateManyWithoutProductNestedInput
     OrderProducts?: OrderProductsUpdateManyWithoutProductNestedInput
+    orderIntentProducts?: OrderIntentProductUpdateManyWithoutProductNestedInput
     prizeProducts?: ProgressiveDiscountPrizeProductUpdateManyWithoutProductNestedInput
     customerRewards?: CustomerRewardUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUpdateManyWithoutProductsNestedInput
@@ -107541,6 +116766,7 @@ export namespace Prisma {
     comboUsedInItems?: ComboProductItemUncheckedUpdateManyWithoutProductNestedInput
     exclusivePromotionProducts?: ExclusivePromotionProductUncheckedUpdateManyWithoutProductNestedInput
     OrderProducts?: OrderProductsUncheckedUpdateManyWithoutProductNestedInput
+    orderIntentProducts?: OrderIntentProductUncheckedUpdateManyWithoutProductNestedInput
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutProductNestedInput
     customerRewards?: CustomerRewardUncheckedUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUncheckedUpdateManyWithoutProductsNestedInput
@@ -107601,6 +116827,7 @@ export namespace Prisma {
     comboUsedInItems?: ComboProductItemCreateNestedManyWithoutProductInput
     exclusivePromotionProducts?: ExclusivePromotionProductCreateNestedManyWithoutProductInput
     OrderProducts?: OrderProductsCreateNestedManyWithoutProductInput
+    orderIntentProducts?: OrderIntentProductCreateNestedManyWithoutProductInput
     prizeProducts?: ProgressiveDiscountPrizeProductCreateNestedManyWithoutProductInput
     customerRewards?: CustomerRewardCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepCreateNestedManyWithoutProductsInput
@@ -107626,6 +116853,7 @@ export namespace Prisma {
     comboUsedInItems?: ComboProductItemUncheckedCreateNestedManyWithoutProductInput
     exclusivePromotionProducts?: ExclusivePromotionProductUncheckedCreateNestedManyWithoutProductInput
     OrderProducts?: OrderProductsUncheckedCreateNestedManyWithoutProductInput
+    orderIntentProducts?: OrderIntentProductUncheckedCreateNestedManyWithoutProductInput
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedCreateNestedManyWithoutProductInput
     customerRewards?: CustomerRewardUncheckedCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepUncheckedCreateNestedManyWithoutProductsInput
@@ -107693,6 +116921,7 @@ export namespace Prisma {
     comboUsedInItems?: ComboProductItemUpdateManyWithoutProductNestedInput
     exclusivePromotionProducts?: ExclusivePromotionProductUpdateManyWithoutProductNestedInput
     OrderProducts?: OrderProductsUpdateManyWithoutProductNestedInput
+    orderIntentProducts?: OrderIntentProductUpdateManyWithoutProductNestedInput
     prizeProducts?: ProgressiveDiscountPrizeProductUpdateManyWithoutProductNestedInput
     customerRewards?: CustomerRewardUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUpdateManyWithoutProductsNestedInput
@@ -107718,6 +116947,7 @@ export namespace Prisma {
     comboUsedInItems?: ComboProductItemUncheckedUpdateManyWithoutProductNestedInput
     exclusivePromotionProducts?: ExclusivePromotionProductUncheckedUpdateManyWithoutProductNestedInput
     OrderProducts?: OrderProductsUncheckedUpdateManyWithoutProductNestedInput
+    orderIntentProducts?: OrderIntentProductUncheckedUpdateManyWithoutProductNestedInput
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutProductNestedInput
     customerRewards?: CustomerRewardUncheckedUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUncheckedUpdateManyWithoutProductsNestedInput
@@ -107790,6 +117020,7 @@ export namespace Prisma {
     comboUsedInItems?: ComboProductItemCreateNestedManyWithoutProductInput
     exclusivePromotionProducts?: ExclusivePromotionProductCreateNestedManyWithoutProductInput
     OrderProducts?: OrderProductsCreateNestedManyWithoutProductInput
+    orderIntentProducts?: OrderIntentProductCreateNestedManyWithoutProductInput
     prizeProducts?: ProgressiveDiscountPrizeProductCreateNestedManyWithoutProductInput
     customerRewards?: CustomerRewardCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepCreateNestedManyWithoutProductsInput
@@ -107815,6 +117046,7 @@ export namespace Prisma {
     comboUsedInItems?: ComboProductItemUncheckedCreateNestedManyWithoutProductInput
     exclusivePromotionProducts?: ExclusivePromotionProductUncheckedCreateNestedManyWithoutProductInput
     OrderProducts?: OrderProductsUncheckedCreateNestedManyWithoutProductInput
+    orderIntentProducts?: OrderIntentProductUncheckedCreateNestedManyWithoutProductInput
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedCreateNestedManyWithoutProductInput
     customerRewards?: CustomerRewardUncheckedCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepUncheckedCreateNestedManyWithoutProductsInput
@@ -107893,6 +117125,7 @@ export namespace Prisma {
     comboUsedInItems?: ComboProductItemUpdateManyWithoutProductNestedInput
     exclusivePromotionProducts?: ExclusivePromotionProductUpdateManyWithoutProductNestedInput
     OrderProducts?: OrderProductsUpdateManyWithoutProductNestedInput
+    orderIntentProducts?: OrderIntentProductUpdateManyWithoutProductNestedInput
     prizeProducts?: ProgressiveDiscountPrizeProductUpdateManyWithoutProductNestedInput
     customerRewards?: CustomerRewardUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUpdateManyWithoutProductsNestedInput
@@ -107918,6 +117151,7 @@ export namespace Prisma {
     comboUsedInItems?: ComboProductItemUncheckedUpdateManyWithoutProductNestedInput
     exclusivePromotionProducts?: ExclusivePromotionProductUncheckedUpdateManyWithoutProductNestedInput
     OrderProducts?: OrderProductsUncheckedUpdateManyWithoutProductNestedInput
+    orderIntentProducts?: OrderIntentProductUncheckedUpdateManyWithoutProductNestedInput
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutProductNestedInput
     customerRewards?: CustomerRewardUncheckedUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUncheckedUpdateManyWithoutProductsNestedInput
@@ -107982,7 +117216,11 @@ export namespace Prisma {
     language?: string | null
     paidAt?: Date | string | null
     deliveredAt?: Date | string | null
+    leftAtDropOffAt?: Date | string | null
+    leftAtDropOffLat?: number | null
+    leftAtDropOffLng?: number | null
     estimatedDeliveryDurationMinutes?: number | null
+    currentEstimatedDeliveryDurationMinutes?: number | null
     dispatchOrderIndex?: number | null
     amount: number
     canceled?: boolean
@@ -107998,6 +117236,7 @@ export namespace Prisma {
     address?: AddressCreateNestedOneWithoutOrdersInput
     deliveryAddress?: DeliveryAddressCreateNestedOneWithoutOrdersInput
     externalAddress?: ExternalAddressCreateNestedOneWithoutOrdersInput
+    branch?: BranchCreateNestedOneWithoutOrdersInput
     orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryCreateNestedManyWithoutOrderInput
     feedback?: CustomerFeedbackCreateNestedOneWithoutOrderInput
@@ -108013,7 +117252,11 @@ export namespace Prisma {
     language?: string | null
     paidAt?: Date | string | null
     deliveredAt?: Date | string | null
+    leftAtDropOffAt?: Date | string | null
+    leftAtDropOffLat?: number | null
+    leftAtDropOffLng?: number | null
     estimatedDeliveryDurationMinutes?: number | null
+    currentEstimatedDeliveryDurationMinutes?: number | null
     dispatchOrderIndex?: number | null
     amount: number
     canceled?: boolean
@@ -108029,6 +117272,7 @@ export namespace Prisma {
     addressId?: string | null
     deliveryAddressId?: string | null
     externalAddressId?: string | null
+    branchId?: string | null
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryUncheckedCreateNestedManyWithoutOrderInput
     feedback?: CustomerFeedbackUncheckedCreateNestedOneWithoutOrderInput
@@ -108085,6 +117329,7 @@ export namespace Prisma {
     complement?: string | null
     numberComplement?: string | null
     orders?: OrderCreateNestedManyWithoutDeliveryAddressInput
+    orderIntents?: OrderIntentCreateNestedManyWithoutDeliveryAddressInput
   }
 
   export type DeliveryAddressUncheckedCreateWithoutCustomerInput = {
@@ -108102,6 +117347,7 @@ export namespace Prisma {
     complement?: string | null
     numberComplement?: string | null
     orders?: OrderUncheckedCreateNestedManyWithoutDeliveryAddressInput
+    orderIntents?: OrderIntentUncheckedCreateNestedManyWithoutDeliveryAddressInput
   }
 
   export type DeliveryAddressCreateOrConnectWithoutCustomerInput = {
@@ -108349,6 +117595,52 @@ export namespace Prisma {
 
   export type CustomerCardCreateManyCustomerInputEnvelope = {
     data: CustomerCardCreateManyCustomerInput | CustomerCardCreateManyCustomerInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type OrderIntentCreateWithoutCustomerInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    active?: boolean
+    language?: string | null
+    status?: $Enums.OrderStatus
+    type?: $Enums.OrderType | null
+    paymentMethod?: $Enums.PaymentType
+    paymentProvider?: $Enums.PaymentProvider | null
+    tipAmount?: number | null
+    tags?: OrderIntentCreatetagsInput | string[]
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    amount?: number | null
+    deliveryAddress?: DeliveryAddressCreateNestedOneWithoutOrderIntentsInput
+    orderProducts?: OrderIntentProductCreateNestedManyWithoutOrderIntentInput
+  }
+
+  export type OrderIntentUncheckedCreateWithoutCustomerInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    active?: boolean
+    language?: string | null
+    status?: $Enums.OrderStatus
+    type?: $Enums.OrderType | null
+    paymentMethod?: $Enums.PaymentType
+    paymentProvider?: $Enums.PaymentProvider | null
+    tipAmount?: number | null
+    tags?: OrderIntentCreatetagsInput | string[]
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    amount?: number | null
+    deliveryAddressId?: string | null
+    orderProducts?: OrderIntentProductUncheckedCreateNestedManyWithoutOrderIntentInput
+  }
+
+  export type OrderIntentCreateOrConnectWithoutCustomerInput = {
+    where: OrderIntentWhereUniqueInput
+    create: XOR<OrderIntentCreateWithoutCustomerInput, OrderIntentUncheckedCreateWithoutCustomerInput>
+  }
+
+  export type OrderIntentCreateManyCustomerInputEnvelope = {
+    data: OrderIntentCreateManyCustomerInput | OrderIntentCreateManyCustomerInput[]
     skipDuplicates?: boolean
   }
 
@@ -108602,6 +117894,43 @@ export namespace Prisma {
     isDefault?: BoolFilter<"CustomerCard"> | boolean
   }
 
+  export type OrderIntentUpsertWithWhereUniqueWithoutCustomerInput = {
+    where: OrderIntentWhereUniqueInput
+    update: XOR<OrderIntentUpdateWithoutCustomerInput, OrderIntentUncheckedUpdateWithoutCustomerInput>
+    create: XOR<OrderIntentCreateWithoutCustomerInput, OrderIntentUncheckedCreateWithoutCustomerInput>
+  }
+
+  export type OrderIntentUpdateWithWhereUniqueWithoutCustomerInput = {
+    where: OrderIntentWhereUniqueInput
+    data: XOR<OrderIntentUpdateWithoutCustomerInput, OrderIntentUncheckedUpdateWithoutCustomerInput>
+  }
+
+  export type OrderIntentUpdateManyWithWhereWithoutCustomerInput = {
+    where: OrderIntentScalarWhereInput
+    data: XOR<OrderIntentUpdateManyMutationInput, OrderIntentUncheckedUpdateManyWithoutCustomerInput>
+  }
+
+  export type OrderIntentScalarWhereInput = {
+    AND?: OrderIntentScalarWhereInput | OrderIntentScalarWhereInput[]
+    OR?: OrderIntentScalarWhereInput[]
+    NOT?: OrderIntentScalarWhereInput | OrderIntentScalarWhereInput[]
+    id?: StringFilter<"OrderIntent"> | string
+    createdAt?: DateTimeFilter<"OrderIntent"> | Date | string
+    updatedAt?: DateTimeFilter<"OrderIntent"> | Date | string
+    active?: BoolFilter<"OrderIntent"> | boolean
+    language?: StringNullableFilter<"OrderIntent"> | string | null
+    status?: EnumOrderStatusFilter<"OrderIntent"> | $Enums.OrderStatus
+    type?: EnumOrderTypeNullableFilter<"OrderIntent"> | $Enums.OrderType | null
+    paymentMethod?: EnumPaymentTypeFilter<"OrderIntent"> | $Enums.PaymentType
+    paymentProvider?: EnumPaymentProviderNullableFilter<"OrderIntent"> | $Enums.PaymentProvider | null
+    tipAmount?: IntNullableFilter<"OrderIntent"> | number | null
+    tags?: StringNullableListFilter<"OrderIntent">
+    progressiveDiscountSnapshot?: JsonNullableFilter<"OrderIntent">
+    amount?: IntNullableFilter<"OrderIntent"> | number | null
+    customerId?: StringNullableFilter<"OrderIntent"> | string | null
+    deliveryAddressId?: StringNullableFilter<"OrderIntent"> | string | null
+  }
+
   export type CustomerCreateWithoutCardsInput = {
     id: string
     createdAt?: Date | string
@@ -108619,6 +117948,7 @@ export namespace Prisma {
     rewards?: CustomerRewardCreateNestedManyWithoutCustomerInput
     otpChallenges?: CustomerOtpChallengeCreateNestedManyWithoutCustomerInput
     accessTokens?: CustomerAccessTokenCreateNestedManyWithoutCustomerInput
+    orderIntents?: OrderIntentCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUncheckedCreateWithoutCardsInput = {
@@ -108638,6 +117968,7 @@ export namespace Prisma {
     rewards?: CustomerRewardUncheckedCreateNestedManyWithoutCustomerInput
     otpChallenges?: CustomerOtpChallengeUncheckedCreateNestedManyWithoutCustomerInput
     accessTokens?: CustomerAccessTokenUncheckedCreateNestedManyWithoutCustomerInput
+    orderIntents?: OrderIntentUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerCreateOrConnectWithoutCardsInput = {
@@ -108673,6 +118004,7 @@ export namespace Prisma {
     rewards?: CustomerRewardUpdateManyWithoutCustomerNestedInput
     otpChallenges?: CustomerOtpChallengeUpdateManyWithoutCustomerNestedInput
     accessTokens?: CustomerAccessTokenUpdateManyWithoutCustomerNestedInput
+    orderIntents?: OrderIntentUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateWithoutCardsInput = {
@@ -108692,6 +118024,7 @@ export namespace Prisma {
     rewards?: CustomerRewardUncheckedUpdateManyWithoutCustomerNestedInput
     otpChallenges?: CustomerOtpChallengeUncheckedUpdateManyWithoutCustomerNestedInput
     accessTokens?: CustomerAccessTokenUncheckedUpdateManyWithoutCustomerNestedInput
+    orderIntents?: OrderIntentUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerCreateWithoutOtpChallengesInput = {
@@ -108711,6 +118044,7 @@ export namespace Prisma {
     rewards?: CustomerRewardCreateNestedManyWithoutCustomerInput
     accessTokens?: CustomerAccessTokenCreateNestedManyWithoutCustomerInput
     cards?: CustomerCardCreateNestedManyWithoutCustomerInput
+    orderIntents?: OrderIntentCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUncheckedCreateWithoutOtpChallengesInput = {
@@ -108730,6 +118064,7 @@ export namespace Prisma {
     rewards?: CustomerRewardUncheckedCreateNestedManyWithoutCustomerInput
     accessTokens?: CustomerAccessTokenUncheckedCreateNestedManyWithoutCustomerInput
     cards?: CustomerCardUncheckedCreateNestedManyWithoutCustomerInput
+    orderIntents?: OrderIntentUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerCreateOrConnectWithoutOtpChallengesInput = {
@@ -108765,6 +118100,7 @@ export namespace Prisma {
     rewards?: CustomerRewardUpdateManyWithoutCustomerNestedInput
     accessTokens?: CustomerAccessTokenUpdateManyWithoutCustomerNestedInput
     cards?: CustomerCardUpdateManyWithoutCustomerNestedInput
+    orderIntents?: OrderIntentUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateWithoutOtpChallengesInput = {
@@ -108784,6 +118120,7 @@ export namespace Prisma {
     rewards?: CustomerRewardUncheckedUpdateManyWithoutCustomerNestedInput
     accessTokens?: CustomerAccessTokenUncheckedUpdateManyWithoutCustomerNestedInput
     cards?: CustomerCardUncheckedUpdateManyWithoutCustomerNestedInput
+    orderIntents?: OrderIntentUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerCreateWithoutAccessTokensInput = {
@@ -108803,6 +118140,7 @@ export namespace Prisma {
     rewards?: CustomerRewardCreateNestedManyWithoutCustomerInput
     otpChallenges?: CustomerOtpChallengeCreateNestedManyWithoutCustomerInput
     cards?: CustomerCardCreateNestedManyWithoutCustomerInput
+    orderIntents?: OrderIntentCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUncheckedCreateWithoutAccessTokensInput = {
@@ -108822,6 +118160,7 @@ export namespace Prisma {
     rewards?: CustomerRewardUncheckedCreateNestedManyWithoutCustomerInput
     otpChallenges?: CustomerOtpChallengeUncheckedCreateNestedManyWithoutCustomerInput
     cards?: CustomerCardUncheckedCreateNestedManyWithoutCustomerInput
+    orderIntents?: OrderIntentUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerCreateOrConnectWithoutAccessTokensInput = {
@@ -108857,6 +118196,7 @@ export namespace Prisma {
     rewards?: CustomerRewardUpdateManyWithoutCustomerNestedInput
     otpChallenges?: CustomerOtpChallengeUpdateManyWithoutCustomerNestedInput
     cards?: CustomerCardUpdateManyWithoutCustomerNestedInput
+    orderIntents?: OrderIntentUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateWithoutAccessTokensInput = {
@@ -108876,6 +118216,7 @@ export namespace Prisma {
     rewards?: CustomerRewardUncheckedUpdateManyWithoutCustomerNestedInput
     otpChallenges?: CustomerOtpChallengeUncheckedUpdateManyWithoutCustomerNestedInput
     cards?: CustomerCardUncheckedUpdateManyWithoutCustomerNestedInput
+    orderIntents?: OrderIntentUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerCreateWithoutAddressesInput = {
@@ -108895,6 +118236,7 @@ export namespace Prisma {
     otpChallenges?: CustomerOtpChallengeCreateNestedManyWithoutCustomerInput
     accessTokens?: CustomerAccessTokenCreateNestedManyWithoutCustomerInput
     cards?: CustomerCardCreateNestedManyWithoutCustomerInput
+    orderIntents?: OrderIntentCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUncheckedCreateWithoutAddressesInput = {
@@ -108914,6 +118256,7 @@ export namespace Prisma {
     otpChallenges?: CustomerOtpChallengeUncheckedCreateNestedManyWithoutCustomerInput
     accessTokens?: CustomerAccessTokenUncheckedCreateNestedManyWithoutCustomerInput
     cards?: CustomerCardUncheckedCreateNestedManyWithoutCustomerInput
+    orderIntents?: OrderIntentUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerCreateOrConnectWithoutAddressesInput = {
@@ -108929,7 +118272,11 @@ export namespace Prisma {
     language?: string | null
     paidAt?: Date | string | null
     deliveredAt?: Date | string | null
+    leftAtDropOffAt?: Date | string | null
+    leftAtDropOffLat?: number | null
+    leftAtDropOffLng?: number | null
     estimatedDeliveryDurationMinutes?: number | null
+    currentEstimatedDeliveryDurationMinutes?: number | null
     dispatchOrderIndex?: number | null
     amount: number
     canceled?: boolean
@@ -108945,6 +118292,7 @@ export namespace Prisma {
     dispatch?: DispatchCreateNestedOneWithoutOrdersInput
     address?: AddressCreateNestedOneWithoutOrdersInput
     externalAddress?: ExternalAddressCreateNestedOneWithoutOrdersInput
+    branch?: BranchCreateNestedOneWithoutOrdersInput
     orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryCreateNestedManyWithoutOrderInput
     feedback?: CustomerFeedbackCreateNestedOneWithoutOrderInput
@@ -108960,7 +118308,11 @@ export namespace Prisma {
     language?: string | null
     paidAt?: Date | string | null
     deliveredAt?: Date | string | null
+    leftAtDropOffAt?: Date | string | null
+    leftAtDropOffLat?: number | null
+    leftAtDropOffLng?: number | null
     estimatedDeliveryDurationMinutes?: number | null
+    currentEstimatedDeliveryDurationMinutes?: number | null
     dispatchOrderIndex?: number | null
     amount: number
     canceled?: boolean
@@ -108976,6 +118328,7 @@ export namespace Prisma {
     dispatchId?: string | null
     addressId?: string | null
     externalAddressId?: string | null
+    branchId?: string | null
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryUncheckedCreateNestedManyWithoutOrderInput
     feedback?: CustomerFeedbackUncheckedCreateNestedOneWithoutOrderInput
@@ -108990,6 +118343,52 @@ export namespace Prisma {
 
   export type OrderCreateManyDeliveryAddressInputEnvelope = {
     data: OrderCreateManyDeliveryAddressInput | OrderCreateManyDeliveryAddressInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type OrderIntentCreateWithoutDeliveryAddressInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    active?: boolean
+    language?: string | null
+    status?: $Enums.OrderStatus
+    type?: $Enums.OrderType | null
+    paymentMethod?: $Enums.PaymentType
+    paymentProvider?: $Enums.PaymentProvider | null
+    tipAmount?: number | null
+    tags?: OrderIntentCreatetagsInput | string[]
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    amount?: number | null
+    customer?: CustomerCreateNestedOneWithoutOrderIntentsInput
+    orderProducts?: OrderIntentProductCreateNestedManyWithoutOrderIntentInput
+  }
+
+  export type OrderIntentUncheckedCreateWithoutDeliveryAddressInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    active?: boolean
+    language?: string | null
+    status?: $Enums.OrderStatus
+    type?: $Enums.OrderType | null
+    paymentMethod?: $Enums.PaymentType
+    paymentProvider?: $Enums.PaymentProvider | null
+    tipAmount?: number | null
+    tags?: OrderIntentCreatetagsInput | string[]
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    amount?: number | null
+    customerId?: string | null
+    orderProducts?: OrderIntentProductUncheckedCreateNestedManyWithoutOrderIntentInput
+  }
+
+  export type OrderIntentCreateOrConnectWithoutDeliveryAddressInput = {
+    where: OrderIntentWhereUniqueInput
+    create: XOR<OrderIntentCreateWithoutDeliveryAddressInput, OrderIntentUncheckedCreateWithoutDeliveryAddressInput>
+  }
+
+  export type OrderIntentCreateManyDeliveryAddressInputEnvelope = {
+    data: OrderIntentCreateManyDeliveryAddressInput | OrderIntentCreateManyDeliveryAddressInput[]
     skipDuplicates?: boolean
   }
 
@@ -109021,6 +118420,7 @@ export namespace Prisma {
     otpChallenges?: CustomerOtpChallengeUpdateManyWithoutCustomerNestedInput
     accessTokens?: CustomerAccessTokenUpdateManyWithoutCustomerNestedInput
     cards?: CustomerCardUpdateManyWithoutCustomerNestedInput
+    orderIntents?: OrderIntentUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateWithoutAddressesInput = {
@@ -109040,6 +118440,7 @@ export namespace Prisma {
     otpChallenges?: CustomerOtpChallengeUncheckedUpdateManyWithoutCustomerNestedInput
     accessTokens?: CustomerAccessTokenUncheckedUpdateManyWithoutCustomerNestedInput
     cards?: CustomerCardUncheckedUpdateManyWithoutCustomerNestedInput
+    orderIntents?: OrderIntentUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type OrderUpsertWithWhereUniqueWithoutDeliveryAddressInput = {
@@ -109056,6 +118457,22 @@ export namespace Prisma {
   export type OrderUpdateManyWithWhereWithoutDeliveryAddressInput = {
     where: OrderScalarWhereInput
     data: XOR<OrderUpdateManyMutationInput, OrderUncheckedUpdateManyWithoutDeliveryAddressInput>
+  }
+
+  export type OrderIntentUpsertWithWhereUniqueWithoutDeliveryAddressInput = {
+    where: OrderIntentWhereUniqueInput
+    update: XOR<OrderIntentUpdateWithoutDeliveryAddressInput, OrderIntentUncheckedUpdateWithoutDeliveryAddressInput>
+    create: XOR<OrderIntentCreateWithoutDeliveryAddressInput, OrderIntentUncheckedCreateWithoutDeliveryAddressInput>
+  }
+
+  export type OrderIntentUpdateWithWhereUniqueWithoutDeliveryAddressInput = {
+    where: OrderIntentWhereUniqueInput
+    data: XOR<OrderIntentUpdateWithoutDeliveryAddressInput, OrderIntentUncheckedUpdateWithoutDeliveryAddressInput>
+  }
+
+  export type OrderIntentUpdateManyWithWhereWithoutDeliveryAddressInput = {
+    where: OrderIntentScalarWhereInput
+    data: XOR<OrderIntentUpdateManyMutationInput, OrderIntentUncheckedUpdateManyWithoutDeliveryAddressInput>
   }
 
   export type CustomerCreateWithoutExternalAddressesInput = {
@@ -109075,6 +118492,7 @@ export namespace Prisma {
     otpChallenges?: CustomerOtpChallengeCreateNestedManyWithoutCustomerInput
     accessTokens?: CustomerAccessTokenCreateNestedManyWithoutCustomerInput
     cards?: CustomerCardCreateNestedManyWithoutCustomerInput
+    orderIntents?: OrderIntentCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUncheckedCreateWithoutExternalAddressesInput = {
@@ -109094,6 +118512,7 @@ export namespace Prisma {
     otpChallenges?: CustomerOtpChallengeUncheckedCreateNestedManyWithoutCustomerInput
     accessTokens?: CustomerAccessTokenUncheckedCreateNestedManyWithoutCustomerInput
     cards?: CustomerCardUncheckedCreateNestedManyWithoutCustomerInput
+    orderIntents?: OrderIntentUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerCreateOrConnectWithoutExternalAddressesInput = {
@@ -109109,7 +118528,11 @@ export namespace Prisma {
     language?: string | null
     paidAt?: Date | string | null
     deliveredAt?: Date | string | null
+    leftAtDropOffAt?: Date | string | null
+    leftAtDropOffLat?: number | null
+    leftAtDropOffLng?: number | null
     estimatedDeliveryDurationMinutes?: number | null
+    currentEstimatedDeliveryDurationMinutes?: number | null
     dispatchOrderIndex?: number | null
     amount: number
     canceled?: boolean
@@ -109125,6 +118548,7 @@ export namespace Prisma {
     dispatch?: DispatchCreateNestedOneWithoutOrdersInput
     address?: AddressCreateNestedOneWithoutOrdersInput
     deliveryAddress?: DeliveryAddressCreateNestedOneWithoutOrdersInput
+    branch?: BranchCreateNestedOneWithoutOrdersInput
     orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryCreateNestedManyWithoutOrderInput
     feedback?: CustomerFeedbackCreateNestedOneWithoutOrderInput
@@ -109140,7 +118564,11 @@ export namespace Prisma {
     language?: string | null
     paidAt?: Date | string | null
     deliveredAt?: Date | string | null
+    leftAtDropOffAt?: Date | string | null
+    leftAtDropOffLat?: number | null
+    leftAtDropOffLng?: number | null
     estimatedDeliveryDurationMinutes?: number | null
+    currentEstimatedDeliveryDurationMinutes?: number | null
     dispatchOrderIndex?: number | null
     amount: number
     canceled?: boolean
@@ -109156,6 +118584,7 @@ export namespace Prisma {
     dispatchId?: string | null
     addressId?: string | null
     deliveryAddressId?: string | null
+    branchId?: string | null
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryUncheckedCreateNestedManyWithoutOrderInput
     feedback?: CustomerFeedbackUncheckedCreateNestedOneWithoutOrderInput
@@ -109201,6 +118630,7 @@ export namespace Prisma {
     otpChallenges?: CustomerOtpChallengeUpdateManyWithoutCustomerNestedInput
     accessTokens?: CustomerAccessTokenUpdateManyWithoutCustomerNestedInput
     cards?: CustomerCardUpdateManyWithoutCustomerNestedInput
+    orderIntents?: OrderIntentUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateWithoutExternalAddressesInput = {
@@ -109220,6 +118650,7 @@ export namespace Prisma {
     otpChallenges?: CustomerOtpChallengeUncheckedUpdateManyWithoutCustomerNestedInput
     accessTokens?: CustomerAccessTokenUncheckedUpdateManyWithoutCustomerNestedInput
     cards?: CustomerCardUncheckedUpdateManyWithoutCustomerNestedInput
+    orderIntents?: OrderIntentUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type OrderUpsertWithWhereUniqueWithoutExternalAddressInput = {
@@ -109333,6 +118764,7 @@ export namespace Prisma {
     otpChallenges?: CustomerOtpChallengeCreateNestedManyWithoutCustomerInput
     accessTokens?: CustomerAccessTokenCreateNestedManyWithoutCustomerInput
     cards?: CustomerCardCreateNestedManyWithoutCustomerInput
+    orderIntents?: OrderIntentCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUncheckedCreateWithoutPromotionalMessagesInput = {
@@ -109352,6 +118784,7 @@ export namespace Prisma {
     otpChallenges?: CustomerOtpChallengeUncheckedCreateNestedManyWithoutCustomerInput
     accessTokens?: CustomerAccessTokenUncheckedCreateNestedManyWithoutCustomerInput
     cards?: CustomerCardUncheckedCreateNestedManyWithoutCustomerInput
+    orderIntents?: OrderIntentUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerCreateOrConnectWithoutPromotionalMessagesInput = {
@@ -109437,6 +118870,7 @@ export namespace Prisma {
     otpChallenges?: CustomerOtpChallengeUpdateManyWithoutCustomerNestedInput
     accessTokens?: CustomerAccessTokenUpdateManyWithoutCustomerNestedInput
     cards?: CustomerCardUpdateManyWithoutCustomerNestedInput
+    orderIntents?: OrderIntentUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateWithoutPromotionalMessagesInput = {
@@ -109456,6 +118890,7 @@ export namespace Prisma {
     otpChallenges?: CustomerOtpChallengeUncheckedUpdateManyWithoutCustomerNestedInput
     accessTokens?: CustomerAccessTokenUncheckedUpdateManyWithoutCustomerNestedInput
     cards?: CustomerCardUncheckedUpdateManyWithoutCustomerNestedInput
+    orderIntents?: OrderIntentUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerCreateWithoutOrdersInput = {
@@ -109475,6 +118910,7 @@ export namespace Prisma {
     otpChallenges?: CustomerOtpChallengeCreateNestedManyWithoutCustomerInput
     accessTokens?: CustomerAccessTokenCreateNestedManyWithoutCustomerInput
     cards?: CustomerCardCreateNestedManyWithoutCustomerInput
+    orderIntents?: OrderIntentCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUncheckedCreateWithoutOrdersInput = {
@@ -109494,6 +118930,7 @@ export namespace Prisma {
     otpChallenges?: CustomerOtpChallengeUncheckedCreateNestedManyWithoutCustomerInput
     accessTokens?: CustomerAccessTokenUncheckedCreateNestedManyWithoutCustomerInput
     cards?: CustomerCardUncheckedCreateNestedManyWithoutCustomerInput
+    orderIntents?: OrderIntentUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerCreateOrConnectWithoutOrdersInput = {
@@ -109510,8 +118947,14 @@ export namespace Prisma {
     startedDeliveryAt?: Date | string | null
     estimatedDeliveryDurationMinutes?: number | null
     estimatedRoundTripDurationMinutes?: number | null
+    currentEstimatedDeliveryDurationMinutes?: number | null
+    currentEstimatedRoundTripDurationMinutes?: number | null
+    arrivedAtRestaurantAt?: Date | string | null
+    arrivedAtRestaurantLat?: number | null
+    arrivedAtRestaurantLng?: number | null
     driver?: DriverCreateNestedOneWithoutDispatchesInput
     routeSessions?: DispatchRouteSessionCreateNestedManyWithoutDispatchInput
+    routeMilestones?: DispatchRouteMilestoneCreateNestedManyWithoutDispatchInput
     etaRecalculationJobs?: DispatchEtaRecalculationJobCreateNestedManyWithoutDispatchInput
   }
 
@@ -109524,8 +118967,14 @@ export namespace Prisma {
     startedDeliveryAt?: Date | string | null
     estimatedDeliveryDurationMinutes?: number | null
     estimatedRoundTripDurationMinutes?: number | null
+    currentEstimatedDeliveryDurationMinutes?: number | null
+    currentEstimatedRoundTripDurationMinutes?: number | null
+    arrivedAtRestaurantAt?: Date | string | null
+    arrivedAtRestaurantLat?: number | null
+    arrivedAtRestaurantLng?: number | null
     driverId?: string | null
     routeSessions?: DispatchRouteSessionUncheckedCreateNestedManyWithoutDispatchInput
+    routeMilestones?: DispatchRouteMilestoneUncheckedCreateNestedManyWithoutDispatchInput
     etaRecalculationJobs?: DispatchEtaRecalculationJobUncheckedCreateNestedManyWithoutDispatchInput
   }
 
@@ -109590,6 +119039,7 @@ export namespace Prisma {
     complement?: string | null
     numberComplement?: string | null
     customer?: CustomerCreateNestedOneWithoutAddressesInput
+    orderIntents?: OrderIntentCreateNestedManyWithoutDeliveryAddressInput
   }
 
   export type DeliveryAddressUncheckedCreateWithoutOrdersInput = {
@@ -109607,6 +119057,7 @@ export namespace Prisma {
     complement?: string | null
     numberComplement?: string | null
     customerId?: string | null
+    orderIntents?: OrderIntentUncheckedCreateNestedManyWithoutDeliveryAddressInput
   }
 
   export type DeliveryAddressCreateOrConnectWithoutOrdersInput = {
@@ -109635,6 +119086,35 @@ export namespace Prisma {
   export type ExternalAddressCreateOrConnectWithoutOrdersInput = {
     where: ExternalAddressWhereUniqueInput
     create: XOR<ExternalAddressCreateWithoutOrdersInput, ExternalAddressUncheckedCreateWithoutOrdersInput>
+  }
+
+  export type BranchCreateWithoutOrdersInput = {
+    id: string
+    createdAt?: Date | string
+    name: string
+    operationHours?: NullableJsonNullValueInput | InputJsonValue
+    chatwootAccountId?: string | null
+    chatwootSourceId?: string | null
+    chatwootAgentId?: string | null
+    address?: AddressCreateNestedOneWithoutBranchInput
+    business?: BusinessCreateNestedOneWithoutBranchesInput
+  }
+
+  export type BranchUncheckedCreateWithoutOrdersInput = {
+    id: string
+    createdAt?: Date | string
+    name: string
+    operationHours?: NullableJsonNullValueInput | InputJsonValue
+    chatwootAccountId?: string | null
+    chatwootSourceId?: string | null
+    chatwootAgentId?: string | null
+    addressId?: string | null
+    businessId?: string | null
+  }
+
+  export type BranchCreateOrConnectWithoutOrdersInput = {
+    where: BranchWhereUniqueInput
+    create: XOR<BranchCreateWithoutOrdersInput, BranchUncheckedCreateWithoutOrdersInput>
   }
 
   export type OrderProductsCreateWithoutOrderInput = {
@@ -109868,6 +119348,7 @@ export namespace Prisma {
     otpChallenges?: CustomerOtpChallengeUpdateManyWithoutCustomerNestedInput
     accessTokens?: CustomerAccessTokenUpdateManyWithoutCustomerNestedInput
     cards?: CustomerCardUpdateManyWithoutCustomerNestedInput
+    orderIntents?: OrderIntentUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateWithoutOrdersInput = {
@@ -109887,6 +119368,7 @@ export namespace Prisma {
     otpChallenges?: CustomerOtpChallengeUncheckedUpdateManyWithoutCustomerNestedInput
     accessTokens?: CustomerAccessTokenUncheckedUpdateManyWithoutCustomerNestedInput
     cards?: CustomerCardUncheckedUpdateManyWithoutCustomerNestedInput
+    orderIntents?: OrderIntentUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type DispatchUpsertWithoutOrdersInput = {
@@ -109909,8 +119391,14 @@ export namespace Prisma {
     startedDeliveryAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     estimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    arrivedAtRestaurantAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    arrivedAtRestaurantLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    arrivedAtRestaurantLng?: NullableFloatFieldUpdateOperationsInput | number | null
     driver?: DriverUpdateOneWithoutDispatchesNestedInput
     routeSessions?: DispatchRouteSessionUpdateManyWithoutDispatchNestedInput
+    routeMilestones?: DispatchRouteMilestoneUpdateManyWithoutDispatchNestedInput
     etaRecalculationJobs?: DispatchEtaRecalculationJobUpdateManyWithoutDispatchNestedInput
   }
 
@@ -109923,8 +119411,14 @@ export namespace Prisma {
     startedDeliveryAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     estimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    arrivedAtRestaurantAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    arrivedAtRestaurantLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    arrivedAtRestaurantLng?: NullableFloatFieldUpdateOperationsInput | number | null
     driverId?: NullableStringFieldUpdateOperationsInput | string | null
     routeSessions?: DispatchRouteSessionUncheckedUpdateManyWithoutDispatchNestedInput
+    routeMilestones?: DispatchRouteMilestoneUncheckedUpdateManyWithoutDispatchNestedInput
     etaRecalculationJobs?: DispatchEtaRecalculationJobUncheckedUpdateManyWithoutDispatchNestedInput
   }
 
@@ -110001,6 +119495,7 @@ export namespace Prisma {
     complement?: NullableStringFieldUpdateOperationsInput | string | null
     numberComplement?: NullableStringFieldUpdateOperationsInput | string | null
     customer?: CustomerUpdateOneWithoutAddressesNestedInput
+    orderIntents?: OrderIntentUpdateManyWithoutDeliveryAddressNestedInput
   }
 
   export type DeliveryAddressUncheckedUpdateWithoutOrdersInput = {
@@ -110018,6 +119513,7 @@ export namespace Prisma {
     complement?: NullableStringFieldUpdateOperationsInput | string | null
     numberComplement?: NullableStringFieldUpdateOperationsInput | string | null
     customerId?: NullableStringFieldUpdateOperationsInput | string | null
+    orderIntents?: OrderIntentUncheckedUpdateManyWithoutDeliveryAddressNestedInput
   }
 
   export type ExternalAddressUpsertWithoutOrdersInput = {
@@ -110047,6 +119543,41 @@ export namespace Prisma {
     lat?: NullableStringFieldUpdateOperationsInput | string | null
     lng?: NullableStringFieldUpdateOperationsInput | string | null
     customerId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type BranchUpsertWithoutOrdersInput = {
+    update: XOR<BranchUpdateWithoutOrdersInput, BranchUncheckedUpdateWithoutOrdersInput>
+    create: XOR<BranchCreateWithoutOrdersInput, BranchUncheckedCreateWithoutOrdersInput>
+    where?: BranchWhereInput
+  }
+
+  export type BranchUpdateToOneWithWhereWithoutOrdersInput = {
+    where?: BranchWhereInput
+    data: XOR<BranchUpdateWithoutOrdersInput, BranchUncheckedUpdateWithoutOrdersInput>
+  }
+
+  export type BranchUpdateWithoutOrdersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    operationHours?: NullableJsonNullValueInput | InputJsonValue
+    chatwootAccountId?: NullableStringFieldUpdateOperationsInput | string | null
+    chatwootSourceId?: NullableStringFieldUpdateOperationsInput | string | null
+    chatwootAgentId?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: AddressUpdateOneWithoutBranchNestedInput
+    business?: BusinessUpdateOneWithoutBranchesNestedInput
+  }
+
+  export type BranchUncheckedUpdateWithoutOrdersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    operationHours?: NullableJsonNullValueInput | InputJsonValue
+    chatwootAccountId?: NullableStringFieldUpdateOperationsInput | string | null
+    chatwootSourceId?: NullableStringFieldUpdateOperationsInput | string | null
+    chatwootAgentId?: NullableStringFieldUpdateOperationsInput | string | null
+    addressId?: NullableStringFieldUpdateOperationsInput | string | null
+    businessId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type OrderProductsUpsertWithWhereUniqueWithoutOrderInput = {
@@ -110158,6 +119689,238 @@ export namespace Prisma {
     data: XOR<CustomerRewardUpdateManyMutationInput, CustomerRewardUncheckedUpdateManyWithoutRedeemedByOrderInput>
   }
 
+  export type CustomerCreateWithoutOrderIntentsInput = {
+    id: string
+    createdAt?: Date | string
+    name?: string | null
+    email?: string | null
+    phone?: string | null
+    stripeCustomerId?: string | null
+    address?: string | null
+    lastMessageSent?: Date | string | null
+    orders?: OrderCreateNestedManyWithoutCustomerInput
+    promotionalMessages?: PromotialMessageCreateNestedManyWithoutCustomerInput
+    addresses?: DeliveryAddressCreateNestedManyWithoutCustomerInput
+    externalAddresses?: ExternalAddressCreateNestedManyWithoutCustomerInput
+    feedbacks?: CustomerFeedbackCreateNestedManyWithoutCustomerInput
+    rewards?: CustomerRewardCreateNestedManyWithoutCustomerInput
+    otpChallenges?: CustomerOtpChallengeCreateNestedManyWithoutCustomerInput
+    accessTokens?: CustomerAccessTokenCreateNestedManyWithoutCustomerInput
+    cards?: CustomerCardCreateNestedManyWithoutCustomerInput
+  }
+
+  export type CustomerUncheckedCreateWithoutOrderIntentsInput = {
+    id: string
+    createdAt?: Date | string
+    name?: string | null
+    email?: string | null
+    phone?: string | null
+    stripeCustomerId?: string | null
+    address?: string | null
+    lastMessageSent?: Date | string | null
+    orders?: OrderUncheckedCreateNestedManyWithoutCustomerInput
+    promotionalMessages?: PromotialMessageUncheckedCreateNestedManyWithoutCustomerInput
+    addresses?: DeliveryAddressUncheckedCreateNestedManyWithoutCustomerInput
+    externalAddresses?: ExternalAddressUncheckedCreateNestedManyWithoutCustomerInput
+    feedbacks?: CustomerFeedbackUncheckedCreateNestedManyWithoutCustomerInput
+    rewards?: CustomerRewardUncheckedCreateNestedManyWithoutCustomerInput
+    otpChallenges?: CustomerOtpChallengeUncheckedCreateNestedManyWithoutCustomerInput
+    accessTokens?: CustomerAccessTokenUncheckedCreateNestedManyWithoutCustomerInput
+    cards?: CustomerCardUncheckedCreateNestedManyWithoutCustomerInput
+  }
+
+  export type CustomerCreateOrConnectWithoutOrderIntentsInput = {
+    where: CustomerWhereUniqueInput
+    create: XOR<CustomerCreateWithoutOrderIntentsInput, CustomerUncheckedCreateWithoutOrderIntentsInput>
+  }
+
+  export type DeliveryAddressCreateWithoutOrderIntentsInput = {
+    id: string
+    createdAt?: Date | string
+    lat: string
+    lng: string
+    deliveryFee?: number
+    city: string
+    zipCode: string
+    State: string
+    street: string
+    number: string
+    description: string
+    complement?: string | null
+    numberComplement?: string | null
+    customer?: CustomerCreateNestedOneWithoutAddressesInput
+    orders?: OrderCreateNestedManyWithoutDeliveryAddressInput
+  }
+
+  export type DeliveryAddressUncheckedCreateWithoutOrderIntentsInput = {
+    id: string
+    createdAt?: Date | string
+    lat: string
+    lng: string
+    deliveryFee?: number
+    city: string
+    zipCode: string
+    State: string
+    street: string
+    number: string
+    description: string
+    complement?: string | null
+    numberComplement?: string | null
+    customerId?: string | null
+    orders?: OrderUncheckedCreateNestedManyWithoutDeliveryAddressInput
+  }
+
+  export type DeliveryAddressCreateOrConnectWithoutOrderIntentsInput = {
+    where: DeliveryAddressWhereUniqueInput
+    create: XOR<DeliveryAddressCreateWithoutOrderIntentsInput, DeliveryAddressUncheckedCreateWithoutOrderIntentsInput>
+  }
+
+  export type OrderIntentProductCreateWithoutOrderIntentInput = {
+    id: string
+    createdAt?: Date | string
+    quantity: number
+    comments?: string | null
+    fullAmount?: number | null
+    amount?: number | null
+    product: ProductCreateNestedOneWithoutOrderIntentProductsInput
+    modifierGroupItems?: ModifierGroupItemCreateNestedManyWithoutOrderIntentProductsInput
+  }
+
+  export type OrderIntentProductUncheckedCreateWithoutOrderIntentInput = {
+    id: string
+    createdAt?: Date | string
+    productId: string
+    quantity: number
+    comments?: string | null
+    fullAmount?: number | null
+    amount?: number | null
+    modifierGroupItems?: ModifierGroupItemUncheckedCreateNestedManyWithoutOrderIntentProductsInput
+  }
+
+  export type OrderIntentProductCreateOrConnectWithoutOrderIntentInput = {
+    where: OrderIntentProductWhereUniqueInput
+    create: XOR<OrderIntentProductCreateWithoutOrderIntentInput, OrderIntentProductUncheckedCreateWithoutOrderIntentInput>
+  }
+
+  export type OrderIntentProductCreateManyOrderIntentInputEnvelope = {
+    data: OrderIntentProductCreateManyOrderIntentInput | OrderIntentProductCreateManyOrderIntentInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CustomerUpsertWithoutOrderIntentsInput = {
+    update: XOR<CustomerUpdateWithoutOrderIntentsInput, CustomerUncheckedUpdateWithoutOrderIntentsInput>
+    create: XOR<CustomerCreateWithoutOrderIntentsInput, CustomerUncheckedCreateWithoutOrderIntentsInput>
+    where?: CustomerWhereInput
+  }
+
+  export type CustomerUpdateToOneWithWhereWithoutOrderIntentsInput = {
+    where?: CustomerWhereInput
+    data: XOR<CustomerUpdateWithoutOrderIntentsInput, CustomerUncheckedUpdateWithoutOrderIntentsInput>
+  }
+
+  export type CustomerUpdateWithoutOrderIntentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    lastMessageSent?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    orders?: OrderUpdateManyWithoutCustomerNestedInput
+    promotionalMessages?: PromotialMessageUpdateManyWithoutCustomerNestedInput
+    addresses?: DeliveryAddressUpdateManyWithoutCustomerNestedInput
+    externalAddresses?: ExternalAddressUpdateManyWithoutCustomerNestedInput
+    feedbacks?: CustomerFeedbackUpdateManyWithoutCustomerNestedInput
+    rewards?: CustomerRewardUpdateManyWithoutCustomerNestedInput
+    otpChallenges?: CustomerOtpChallengeUpdateManyWithoutCustomerNestedInput
+    accessTokens?: CustomerAccessTokenUpdateManyWithoutCustomerNestedInput
+    cards?: CustomerCardUpdateManyWithoutCustomerNestedInput
+  }
+
+  export type CustomerUncheckedUpdateWithoutOrderIntentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    lastMessageSent?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    orders?: OrderUncheckedUpdateManyWithoutCustomerNestedInput
+    promotionalMessages?: PromotialMessageUncheckedUpdateManyWithoutCustomerNestedInput
+    addresses?: DeliveryAddressUncheckedUpdateManyWithoutCustomerNestedInput
+    externalAddresses?: ExternalAddressUncheckedUpdateManyWithoutCustomerNestedInput
+    feedbacks?: CustomerFeedbackUncheckedUpdateManyWithoutCustomerNestedInput
+    rewards?: CustomerRewardUncheckedUpdateManyWithoutCustomerNestedInput
+    otpChallenges?: CustomerOtpChallengeUncheckedUpdateManyWithoutCustomerNestedInput
+    accessTokens?: CustomerAccessTokenUncheckedUpdateManyWithoutCustomerNestedInput
+    cards?: CustomerCardUncheckedUpdateManyWithoutCustomerNestedInput
+  }
+
+  export type DeliveryAddressUpsertWithoutOrderIntentsInput = {
+    update: XOR<DeliveryAddressUpdateWithoutOrderIntentsInput, DeliveryAddressUncheckedUpdateWithoutOrderIntentsInput>
+    create: XOR<DeliveryAddressCreateWithoutOrderIntentsInput, DeliveryAddressUncheckedCreateWithoutOrderIntentsInput>
+    where?: DeliveryAddressWhereInput
+  }
+
+  export type DeliveryAddressUpdateToOneWithWhereWithoutOrderIntentsInput = {
+    where?: DeliveryAddressWhereInput
+    data: XOR<DeliveryAddressUpdateWithoutOrderIntentsInput, DeliveryAddressUncheckedUpdateWithoutOrderIntentsInput>
+  }
+
+  export type DeliveryAddressUpdateWithoutOrderIntentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lat?: StringFieldUpdateOperationsInput | string
+    lng?: StringFieldUpdateOperationsInput | string
+    deliveryFee?: IntFieldUpdateOperationsInput | number
+    city?: StringFieldUpdateOperationsInput | string
+    zipCode?: StringFieldUpdateOperationsInput | string
+    State?: StringFieldUpdateOperationsInput | string
+    street?: StringFieldUpdateOperationsInput | string
+    number?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    complement?: NullableStringFieldUpdateOperationsInput | string | null
+    numberComplement?: NullableStringFieldUpdateOperationsInput | string | null
+    customer?: CustomerUpdateOneWithoutAddressesNestedInput
+    orders?: OrderUpdateManyWithoutDeliveryAddressNestedInput
+  }
+
+  export type DeliveryAddressUncheckedUpdateWithoutOrderIntentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lat?: StringFieldUpdateOperationsInput | string
+    lng?: StringFieldUpdateOperationsInput | string
+    deliveryFee?: IntFieldUpdateOperationsInput | number
+    city?: StringFieldUpdateOperationsInput | string
+    zipCode?: StringFieldUpdateOperationsInput | string
+    State?: StringFieldUpdateOperationsInput | string
+    street?: StringFieldUpdateOperationsInput | string
+    number?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    complement?: NullableStringFieldUpdateOperationsInput | string | null
+    numberComplement?: NullableStringFieldUpdateOperationsInput | string | null
+    customerId?: NullableStringFieldUpdateOperationsInput | string | null
+    orders?: OrderUncheckedUpdateManyWithoutDeliveryAddressNestedInput
+  }
+
+  export type OrderIntentProductUpsertWithWhereUniqueWithoutOrderIntentInput = {
+    where: OrderIntentProductWhereUniqueInput
+    update: XOR<OrderIntentProductUpdateWithoutOrderIntentInput, OrderIntentProductUncheckedUpdateWithoutOrderIntentInput>
+    create: XOR<OrderIntentProductCreateWithoutOrderIntentInput, OrderIntentProductUncheckedCreateWithoutOrderIntentInput>
+  }
+
+  export type OrderIntentProductUpdateWithWhereUniqueWithoutOrderIntentInput = {
+    where: OrderIntentProductWhereUniqueInput
+    data: XOR<OrderIntentProductUpdateWithoutOrderIntentInput, OrderIntentProductUncheckedUpdateWithoutOrderIntentInput>
+  }
+
+  export type OrderIntentProductUpdateManyWithWhereWithoutOrderIntentInput = {
+    where: OrderIntentProductScalarWhereInput
+    data: XOR<OrderIntentProductUpdateManyMutationInput, OrderIntentProductUncheckedUpdateManyWithoutOrderIntentInput>
+  }
+
   export type CustomerCreateWithoutFeedbacksInput = {
     id: string
     createdAt?: Date | string
@@ -110175,6 +119938,7 @@ export namespace Prisma {
     otpChallenges?: CustomerOtpChallengeCreateNestedManyWithoutCustomerInput
     accessTokens?: CustomerAccessTokenCreateNestedManyWithoutCustomerInput
     cards?: CustomerCardCreateNestedManyWithoutCustomerInput
+    orderIntents?: OrderIntentCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUncheckedCreateWithoutFeedbacksInput = {
@@ -110194,6 +119958,7 @@ export namespace Prisma {
     otpChallenges?: CustomerOtpChallengeUncheckedCreateNestedManyWithoutCustomerInput
     accessTokens?: CustomerAccessTokenUncheckedCreateNestedManyWithoutCustomerInput
     cards?: CustomerCardUncheckedCreateNestedManyWithoutCustomerInput
+    orderIntents?: OrderIntentUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerCreateOrConnectWithoutFeedbacksInput = {
@@ -110209,7 +119974,11 @@ export namespace Prisma {
     language?: string | null
     paidAt?: Date | string | null
     deliveredAt?: Date | string | null
+    leftAtDropOffAt?: Date | string | null
+    leftAtDropOffLat?: number | null
+    leftAtDropOffLng?: number | null
     estimatedDeliveryDurationMinutes?: number | null
+    currentEstimatedDeliveryDurationMinutes?: number | null
     dispatchOrderIndex?: number | null
     amount: number
     canceled?: boolean
@@ -110226,6 +119995,7 @@ export namespace Prisma {
     address?: AddressCreateNestedOneWithoutOrdersInput
     deliveryAddress?: DeliveryAddressCreateNestedOneWithoutOrdersInput
     externalAddress?: ExternalAddressCreateNestedOneWithoutOrdersInput
+    branch?: BranchCreateNestedOneWithoutOrdersInput
     orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryCreateNestedManyWithoutOrderInput
     issuedRewards?: CustomerRewardCreateNestedManyWithoutIssuedForOrderInput
@@ -110240,7 +120010,11 @@ export namespace Prisma {
     language?: string | null
     paidAt?: Date | string | null
     deliveredAt?: Date | string | null
+    leftAtDropOffAt?: Date | string | null
+    leftAtDropOffLat?: number | null
+    leftAtDropOffLng?: number | null
     estimatedDeliveryDurationMinutes?: number | null
+    currentEstimatedDeliveryDurationMinutes?: number | null
     dispatchOrderIndex?: number | null
     amount: number
     canceled?: boolean
@@ -110257,6 +120031,7 @@ export namespace Prisma {
     addressId?: string | null
     deliveryAddressId?: string | null
     externalAddressId?: string | null
+    branchId?: string | null
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryUncheckedCreateNestedManyWithoutOrderInput
     issuedRewards?: CustomerRewardUncheckedCreateNestedManyWithoutIssuedForOrderInput
@@ -110343,6 +120118,7 @@ export namespace Prisma {
     otpChallenges?: CustomerOtpChallengeUpdateManyWithoutCustomerNestedInput
     accessTokens?: CustomerAccessTokenUpdateManyWithoutCustomerNestedInput
     cards?: CustomerCardUpdateManyWithoutCustomerNestedInput
+    orderIntents?: OrderIntentUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateWithoutFeedbacksInput = {
@@ -110362,6 +120138,7 @@ export namespace Prisma {
     otpChallenges?: CustomerOtpChallengeUncheckedUpdateManyWithoutCustomerNestedInput
     accessTokens?: CustomerAccessTokenUncheckedUpdateManyWithoutCustomerNestedInput
     cards?: CustomerCardUncheckedUpdateManyWithoutCustomerNestedInput
+    orderIntents?: OrderIntentUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type OrderUpsertWithoutFeedbackInput = {
@@ -110383,7 +120160,11 @@ export namespace Prisma {
     language?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    leftAtDropOffLng?: NullableFloatFieldUpdateOperationsInput | number | null
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
     canceled?: BoolFieldUpdateOperationsInput | boolean
@@ -110400,6 +120181,7 @@ export namespace Prisma {
     address?: AddressUpdateOneWithoutOrdersNestedInput
     deliveryAddress?: DeliveryAddressUpdateOneWithoutOrdersNestedInput
     externalAddress?: ExternalAddressUpdateOneWithoutOrdersNestedInput
+    branch?: BranchUpdateOneWithoutOrdersNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUpdateManyWithoutOrderNestedInput
     issuedRewards?: CustomerRewardUpdateManyWithoutIssuedForOrderNestedInput
@@ -110414,7 +120196,11 @@ export namespace Prisma {
     language?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    leftAtDropOffLng?: NullableFloatFieldUpdateOperationsInput | number | null
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
     canceled?: BoolFieldUpdateOperationsInput | boolean
@@ -110431,6 +120217,7 @@ export namespace Prisma {
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
     externalAddressId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUncheckedUpdateManyWithoutOrderNestedInput
     issuedRewards?: CustomerRewardUncheckedUpdateManyWithoutIssuedForOrderNestedInput
@@ -110507,6 +120294,7 @@ export namespace Prisma {
     otpChallenges?: CustomerOtpChallengeCreateNestedManyWithoutCustomerInput
     accessTokens?: CustomerAccessTokenCreateNestedManyWithoutCustomerInput
     cards?: CustomerCardCreateNestedManyWithoutCustomerInput
+    orderIntents?: OrderIntentCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUncheckedCreateWithoutRewardsInput = {
@@ -110526,6 +120314,7 @@ export namespace Prisma {
     otpChallenges?: CustomerOtpChallengeUncheckedCreateNestedManyWithoutCustomerInput
     accessTokens?: CustomerAccessTokenUncheckedCreateNestedManyWithoutCustomerInput
     cards?: CustomerCardUncheckedCreateNestedManyWithoutCustomerInput
+    orderIntents?: OrderIntentUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerCreateOrConnectWithoutRewardsInput = {
@@ -110554,6 +120343,7 @@ export namespace Prisma {
     comboUsedInItems?: ComboProductItemCreateNestedManyWithoutProductInput
     exclusivePromotionProducts?: ExclusivePromotionProductCreateNestedManyWithoutProductInput
     OrderProducts?: OrderProductsCreateNestedManyWithoutProductInput
+    orderIntentProducts?: OrderIntentProductCreateNestedManyWithoutProductInput
     prizeProducts?: ProgressiveDiscountPrizeProductCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepCreateNestedManyWithoutProductsInput
   }
@@ -110579,6 +120369,7 @@ export namespace Prisma {
     comboUsedInItems?: ComboProductItemUncheckedCreateNestedManyWithoutProductInput
     exclusivePromotionProducts?: ExclusivePromotionProductUncheckedCreateNestedManyWithoutProductInput
     OrderProducts?: OrderProductsUncheckedCreateNestedManyWithoutProductInput
+    orderIntentProducts?: OrderIntentProductUncheckedCreateNestedManyWithoutProductInput
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepUncheckedCreateNestedManyWithoutProductsInput
   }
@@ -110635,7 +120426,11 @@ export namespace Prisma {
     language?: string | null
     paidAt?: Date | string | null
     deliveredAt?: Date | string | null
+    leftAtDropOffAt?: Date | string | null
+    leftAtDropOffLat?: number | null
+    leftAtDropOffLng?: number | null
     estimatedDeliveryDurationMinutes?: number | null
+    currentEstimatedDeliveryDurationMinutes?: number | null
     dispatchOrderIndex?: number | null
     amount: number
     canceled?: boolean
@@ -110652,6 +120447,7 @@ export namespace Prisma {
     address?: AddressCreateNestedOneWithoutOrdersInput
     deliveryAddress?: DeliveryAddressCreateNestedOneWithoutOrdersInput
     externalAddress?: ExternalAddressCreateNestedOneWithoutOrdersInput
+    branch?: BranchCreateNestedOneWithoutOrdersInput
     orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryCreateNestedManyWithoutOrderInput
     feedback?: CustomerFeedbackCreateNestedOneWithoutOrderInput
@@ -110666,7 +120462,11 @@ export namespace Prisma {
     language?: string | null
     paidAt?: Date | string | null
     deliveredAt?: Date | string | null
+    leftAtDropOffAt?: Date | string | null
+    leftAtDropOffLat?: number | null
+    leftAtDropOffLng?: number | null
     estimatedDeliveryDurationMinutes?: number | null
+    currentEstimatedDeliveryDurationMinutes?: number | null
     dispatchOrderIndex?: number | null
     amount: number
     canceled?: boolean
@@ -110683,6 +120483,7 @@ export namespace Prisma {
     addressId?: string | null
     deliveryAddressId?: string | null
     externalAddressId?: string | null
+    branchId?: string | null
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryUncheckedCreateNestedManyWithoutOrderInput
     feedback?: CustomerFeedbackUncheckedCreateNestedOneWithoutOrderInput
@@ -110702,7 +120503,11 @@ export namespace Prisma {
     language?: string | null
     paidAt?: Date | string | null
     deliveredAt?: Date | string | null
+    leftAtDropOffAt?: Date | string | null
+    leftAtDropOffLat?: number | null
+    leftAtDropOffLng?: number | null
     estimatedDeliveryDurationMinutes?: number | null
+    currentEstimatedDeliveryDurationMinutes?: number | null
     dispatchOrderIndex?: number | null
     amount: number
     canceled?: boolean
@@ -110719,6 +120524,7 @@ export namespace Prisma {
     address?: AddressCreateNestedOneWithoutOrdersInput
     deliveryAddress?: DeliveryAddressCreateNestedOneWithoutOrdersInput
     externalAddress?: ExternalAddressCreateNestedOneWithoutOrdersInput
+    branch?: BranchCreateNestedOneWithoutOrdersInput
     orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryCreateNestedManyWithoutOrderInput
     feedback?: CustomerFeedbackCreateNestedOneWithoutOrderInput
@@ -110733,7 +120539,11 @@ export namespace Prisma {
     language?: string | null
     paidAt?: Date | string | null
     deliveredAt?: Date | string | null
+    leftAtDropOffAt?: Date | string | null
+    leftAtDropOffLat?: number | null
+    leftAtDropOffLng?: number | null
     estimatedDeliveryDurationMinutes?: number | null
+    currentEstimatedDeliveryDurationMinutes?: number | null
     dispatchOrderIndex?: number | null
     amount: number
     canceled?: boolean
@@ -110750,6 +120560,7 @@ export namespace Prisma {
     addressId?: string | null
     deliveryAddressId?: string | null
     externalAddressId?: string | null
+    branchId?: string | null
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryUncheckedCreateNestedManyWithoutOrderInput
     feedback?: CustomerFeedbackUncheckedCreateNestedOneWithoutOrderInput
@@ -110789,6 +120600,7 @@ export namespace Prisma {
     otpChallenges?: CustomerOtpChallengeUpdateManyWithoutCustomerNestedInput
     accessTokens?: CustomerAccessTokenUpdateManyWithoutCustomerNestedInput
     cards?: CustomerCardUpdateManyWithoutCustomerNestedInput
+    orderIntents?: OrderIntentUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateWithoutRewardsInput = {
@@ -110808,6 +120620,7 @@ export namespace Prisma {
     otpChallenges?: CustomerOtpChallengeUncheckedUpdateManyWithoutCustomerNestedInput
     accessTokens?: CustomerAccessTokenUncheckedUpdateManyWithoutCustomerNestedInput
     cards?: CustomerCardUncheckedUpdateManyWithoutCustomerNestedInput
+    orderIntents?: OrderIntentUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type ProductUpsertWithoutCustomerRewardsInput = {
@@ -110842,6 +120655,7 @@ export namespace Prisma {
     comboUsedInItems?: ComboProductItemUpdateManyWithoutProductNestedInput
     exclusivePromotionProducts?: ExclusivePromotionProductUpdateManyWithoutProductNestedInput
     OrderProducts?: OrderProductsUpdateManyWithoutProductNestedInput
+    orderIntentProducts?: OrderIntentProductUpdateManyWithoutProductNestedInput
     prizeProducts?: ProgressiveDiscountPrizeProductUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUpdateManyWithoutProductsNestedInput
   }
@@ -110867,6 +120681,7 @@ export namespace Prisma {
     comboUsedInItems?: ComboProductItemUncheckedUpdateManyWithoutProductNestedInput
     exclusivePromotionProducts?: ExclusivePromotionProductUncheckedUpdateManyWithoutProductNestedInput
     OrderProducts?: OrderProductsUncheckedUpdateManyWithoutProductNestedInput
+    orderIntentProducts?: OrderIntentProductUncheckedUpdateManyWithoutProductNestedInput
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUncheckedUpdateManyWithoutProductsNestedInput
   }
@@ -110935,7 +120750,11 @@ export namespace Prisma {
     language?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    leftAtDropOffLng?: NullableFloatFieldUpdateOperationsInput | number | null
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
     canceled?: BoolFieldUpdateOperationsInput | boolean
@@ -110952,6 +120771,7 @@ export namespace Prisma {
     address?: AddressUpdateOneWithoutOrdersNestedInput
     deliveryAddress?: DeliveryAddressUpdateOneWithoutOrdersNestedInput
     externalAddress?: ExternalAddressUpdateOneWithoutOrdersNestedInput
+    branch?: BranchUpdateOneWithoutOrdersNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUpdateManyWithoutOrderNestedInput
     feedback?: CustomerFeedbackUpdateOneWithoutOrderNestedInput
@@ -110966,7 +120786,11 @@ export namespace Prisma {
     language?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    leftAtDropOffLng?: NullableFloatFieldUpdateOperationsInput | number | null
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
     canceled?: BoolFieldUpdateOperationsInput | boolean
@@ -110983,6 +120807,7 @@ export namespace Prisma {
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
     externalAddressId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUncheckedUpdateManyWithoutOrderNestedInput
     feedback?: CustomerFeedbackUncheckedUpdateOneWithoutOrderNestedInput
@@ -111008,7 +120833,11 @@ export namespace Prisma {
     language?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    leftAtDropOffLng?: NullableFloatFieldUpdateOperationsInput | number | null
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
     canceled?: BoolFieldUpdateOperationsInput | boolean
@@ -111025,6 +120854,7 @@ export namespace Prisma {
     address?: AddressUpdateOneWithoutOrdersNestedInput
     deliveryAddress?: DeliveryAddressUpdateOneWithoutOrdersNestedInput
     externalAddress?: ExternalAddressUpdateOneWithoutOrdersNestedInput
+    branch?: BranchUpdateOneWithoutOrdersNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUpdateManyWithoutOrderNestedInput
     feedback?: CustomerFeedbackUpdateOneWithoutOrderNestedInput
@@ -111039,7 +120869,11 @@ export namespace Prisma {
     language?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    leftAtDropOffLng?: NullableFloatFieldUpdateOperationsInput | number | null
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
     canceled?: BoolFieldUpdateOperationsInput | boolean
@@ -111056,6 +120890,7 @@ export namespace Prisma {
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
     externalAddressId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUncheckedUpdateManyWithoutOrderNestedInput
     feedback?: CustomerFeedbackUncheckedUpdateOneWithoutOrderNestedInput
@@ -111082,6 +120917,7 @@ export namespace Prisma {
     comboProductItems?: ComboProductItemCreateNestedManyWithoutComboInput
     comboUsedInItems?: ComboProductItemCreateNestedManyWithoutProductInput
     exclusivePromotionProducts?: ExclusivePromotionProductCreateNestedManyWithoutProductInput
+    orderIntentProducts?: OrderIntentProductCreateNestedManyWithoutProductInput
     prizeProducts?: ProgressiveDiscountPrizeProductCreateNestedManyWithoutProductInput
     customerRewards?: CustomerRewardCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepCreateNestedManyWithoutProductsInput
@@ -111107,6 +120943,7 @@ export namespace Prisma {
     comboProductItems?: ComboProductItemUncheckedCreateNestedManyWithoutComboInput
     comboUsedInItems?: ComboProductItemUncheckedCreateNestedManyWithoutProductInput
     exclusivePromotionProducts?: ExclusivePromotionProductUncheckedCreateNestedManyWithoutProductInput
+    orderIntentProducts?: OrderIntentProductUncheckedCreateNestedManyWithoutProductInput
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedCreateNestedManyWithoutProductInput
     customerRewards?: CustomerRewardUncheckedCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepUncheckedCreateNestedManyWithoutProductsInput
@@ -111127,6 +120964,7 @@ export namespace Prisma {
     photo?: FileCreateNestedOneWithoutModifierGroupItemsInput
     modifierGroup?: ModifierGroupCreateNestedOneWithoutItemsInput
     preparationStepModifierTracks?: PreparationStepModifierTrackCreateNestedManyWithoutModifierGroupItemInput
+    orderIntentProducts?: OrderIntentProductCreateNestedManyWithoutModifierGroupItemsInput
   }
 
   export type ModifierGroupItemUncheckedCreateWithoutOrderProductsInput = {
@@ -111139,6 +120977,7 @@ export namespace Prisma {
     modifierGroupId?: string | null
     fileId?: string | null
     preparationStepModifierTracks?: PreparationStepModifierTrackUncheckedCreateNestedManyWithoutModifierGroupItemInput
+    orderIntentProducts?: OrderIntentProductUncheckedCreateNestedManyWithoutModifierGroupItemsInput
   }
 
   export type ModifierGroupItemCreateOrConnectWithoutOrderProductsInput = {
@@ -111154,7 +120993,11 @@ export namespace Prisma {
     language?: string | null
     paidAt?: Date | string | null
     deliveredAt?: Date | string | null
+    leftAtDropOffAt?: Date | string | null
+    leftAtDropOffLat?: number | null
+    leftAtDropOffLng?: number | null
     estimatedDeliveryDurationMinutes?: number | null
+    currentEstimatedDeliveryDurationMinutes?: number | null
     dispatchOrderIndex?: number | null
     amount: number
     canceled?: boolean
@@ -111171,6 +121014,7 @@ export namespace Prisma {
     address?: AddressCreateNestedOneWithoutOrdersInput
     deliveryAddress?: DeliveryAddressCreateNestedOneWithoutOrdersInput
     externalAddress?: ExternalAddressCreateNestedOneWithoutOrdersInput
+    branch?: BranchCreateNestedOneWithoutOrdersInput
     preparationStepCategories?: PreparationStepCategoryCreateNestedManyWithoutOrderInput
     feedback?: CustomerFeedbackCreateNestedOneWithoutOrderInput
     issuedRewards?: CustomerRewardCreateNestedManyWithoutIssuedForOrderInput
@@ -111185,7 +121029,11 @@ export namespace Prisma {
     language?: string | null
     paidAt?: Date | string | null
     deliveredAt?: Date | string | null
+    leftAtDropOffAt?: Date | string | null
+    leftAtDropOffLat?: number | null
+    leftAtDropOffLng?: number | null
     estimatedDeliveryDurationMinutes?: number | null
+    currentEstimatedDeliveryDurationMinutes?: number | null
     dispatchOrderIndex?: number | null
     amount: number
     canceled?: boolean
@@ -111202,6 +121050,7 @@ export namespace Prisma {
     addressId?: string | null
     deliveryAddressId?: string | null
     externalAddressId?: string | null
+    branchId?: string | null
     preparationStepCategories?: PreparationStepCategoryUncheckedCreateNestedManyWithoutOrderInput
     feedback?: CustomerFeedbackUncheckedCreateNestedOneWithoutOrderInput
     issuedRewards?: CustomerRewardUncheckedCreateNestedManyWithoutIssuedForOrderInput
@@ -111244,6 +121093,7 @@ export namespace Prisma {
     comboProductItems?: ComboProductItemUpdateManyWithoutComboNestedInput
     comboUsedInItems?: ComboProductItemUpdateManyWithoutProductNestedInput
     exclusivePromotionProducts?: ExclusivePromotionProductUpdateManyWithoutProductNestedInput
+    orderIntentProducts?: OrderIntentProductUpdateManyWithoutProductNestedInput
     prizeProducts?: ProgressiveDiscountPrizeProductUpdateManyWithoutProductNestedInput
     customerRewards?: CustomerRewardUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUpdateManyWithoutProductsNestedInput
@@ -111269,6 +121119,7 @@ export namespace Prisma {
     comboProductItems?: ComboProductItemUncheckedUpdateManyWithoutComboNestedInput
     comboUsedInItems?: ComboProductItemUncheckedUpdateManyWithoutProductNestedInput
     exclusivePromotionProducts?: ExclusivePromotionProductUncheckedUpdateManyWithoutProductNestedInput
+    orderIntentProducts?: OrderIntentProductUncheckedUpdateManyWithoutProductNestedInput
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutProductNestedInput
     customerRewards?: CustomerRewardUncheckedUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUncheckedUpdateManyWithoutProductsNestedInput
@@ -111309,7 +121160,11 @@ export namespace Prisma {
     language?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    leftAtDropOffLng?: NullableFloatFieldUpdateOperationsInput | number | null
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
     canceled?: BoolFieldUpdateOperationsInput | boolean
@@ -111326,6 +121181,7 @@ export namespace Prisma {
     address?: AddressUpdateOneWithoutOrdersNestedInput
     deliveryAddress?: DeliveryAddressUpdateOneWithoutOrdersNestedInput
     externalAddress?: ExternalAddressUpdateOneWithoutOrdersNestedInput
+    branch?: BranchUpdateOneWithoutOrdersNestedInput
     preparationStepCategories?: PreparationStepCategoryUpdateManyWithoutOrderNestedInput
     feedback?: CustomerFeedbackUpdateOneWithoutOrderNestedInput
     issuedRewards?: CustomerRewardUpdateManyWithoutIssuedForOrderNestedInput
@@ -111340,7 +121196,11 @@ export namespace Prisma {
     language?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    leftAtDropOffLng?: NullableFloatFieldUpdateOperationsInput | number | null
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
     canceled?: BoolFieldUpdateOperationsInput | boolean
@@ -111357,10 +121217,266 @@ export namespace Prisma {
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
     externalAddressId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     preparationStepCategories?: PreparationStepCategoryUncheckedUpdateManyWithoutOrderNestedInput
     feedback?: CustomerFeedbackUncheckedUpdateOneWithoutOrderNestedInput
     issuedRewards?: CustomerRewardUncheckedUpdateManyWithoutIssuedForOrderNestedInput
     redeemedRewards?: CustomerRewardUncheckedUpdateManyWithoutRedeemedByOrderNestedInput
+  }
+
+  export type OrderIntentCreateWithoutOrderProductsInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    active?: boolean
+    language?: string | null
+    status?: $Enums.OrderStatus
+    type?: $Enums.OrderType | null
+    paymentMethod?: $Enums.PaymentType
+    paymentProvider?: $Enums.PaymentProvider | null
+    tipAmount?: number | null
+    tags?: OrderIntentCreatetagsInput | string[]
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    amount?: number | null
+    customer?: CustomerCreateNestedOneWithoutOrderIntentsInput
+    deliveryAddress?: DeliveryAddressCreateNestedOneWithoutOrderIntentsInput
+  }
+
+  export type OrderIntentUncheckedCreateWithoutOrderProductsInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    active?: boolean
+    language?: string | null
+    status?: $Enums.OrderStatus
+    type?: $Enums.OrderType | null
+    paymentMethod?: $Enums.PaymentType
+    paymentProvider?: $Enums.PaymentProvider | null
+    tipAmount?: number | null
+    tags?: OrderIntentCreatetagsInput | string[]
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    amount?: number | null
+    customerId?: string | null
+    deliveryAddressId?: string | null
+  }
+
+  export type OrderIntentCreateOrConnectWithoutOrderProductsInput = {
+    where: OrderIntentWhereUniqueInput
+    create: XOR<OrderIntentCreateWithoutOrderProductsInput, OrderIntentUncheckedCreateWithoutOrderProductsInput>
+  }
+
+  export type ProductCreateWithoutOrderIntentProductsInput = {
+    id: string
+    createdAt?: Date | string
+    itemType?: $Enums.ProductItemType
+    name: string
+    visible?: boolean
+    description?: string | null
+    price?: number | null
+    comparedAtPrice?: number | null
+    categoryIndex?: number | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
+    photos?: FileCreateNestedManyWithoutProductInput
+    modifierGroups?: ModifierGroupCreateNestedManyWithoutProductsInput
+    category?: CategoryCreateNestedOneWithoutProductsInput
+    productCategories?: ProductCategoryCreateNestedManyWithoutProductInput
+    comboSlots?: ComboSlotCreateNestedManyWithoutComboInput
+    comboSlotOptions?: ComboSlotOptionCreateNestedManyWithoutProductInput
+    comboProductItems?: ComboProductItemCreateNestedManyWithoutComboInput
+    comboUsedInItems?: ComboProductItemCreateNestedManyWithoutProductInput
+    exclusivePromotionProducts?: ExclusivePromotionProductCreateNestedManyWithoutProductInput
+    OrderProducts?: OrderProductsCreateNestedManyWithoutProductInput
+    prizeProducts?: ProgressiveDiscountPrizeProductCreateNestedManyWithoutProductInput
+    customerRewards?: CustomerRewardCreateNestedManyWithoutProductInput
+    preparationSteps?: PreparationStepCreateNestedManyWithoutProductsInput
+  }
+
+  export type ProductUncheckedCreateWithoutOrderIntentProductsInput = {
+    id: string
+    createdAt?: Date | string
+    itemType?: $Enums.ProductItemType
+    name: string
+    visible?: boolean
+    description?: string | null
+    price?: number | null
+    comparedAtPrice?: number | null
+    categoryIndex?: number | null
+    categoryId?: string | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
+    photos?: FileUncheckedCreateNestedManyWithoutProductInput
+    modifierGroups?: ModifierGroupUncheckedCreateNestedManyWithoutProductsInput
+    productCategories?: ProductCategoryUncheckedCreateNestedManyWithoutProductInput
+    comboSlots?: ComboSlotUncheckedCreateNestedManyWithoutComboInput
+    comboSlotOptions?: ComboSlotOptionUncheckedCreateNestedManyWithoutProductInput
+    comboProductItems?: ComboProductItemUncheckedCreateNestedManyWithoutComboInput
+    comboUsedInItems?: ComboProductItemUncheckedCreateNestedManyWithoutProductInput
+    exclusivePromotionProducts?: ExclusivePromotionProductUncheckedCreateNestedManyWithoutProductInput
+    OrderProducts?: OrderProductsUncheckedCreateNestedManyWithoutProductInput
+    prizeProducts?: ProgressiveDiscountPrizeProductUncheckedCreateNestedManyWithoutProductInput
+    customerRewards?: CustomerRewardUncheckedCreateNestedManyWithoutProductInput
+    preparationSteps?: PreparationStepUncheckedCreateNestedManyWithoutProductsInput
+  }
+
+  export type ProductCreateOrConnectWithoutOrderIntentProductsInput = {
+    where: ProductWhereUniqueInput
+    create: XOR<ProductCreateWithoutOrderIntentProductsInput, ProductUncheckedCreateWithoutOrderIntentProductsInput>
+  }
+
+  export type ModifierGroupItemCreateWithoutOrderIntentProductsInput = {
+    id: string
+    createdAt?: Date | string
+    name: string
+    price: number
+    description?: string | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
+    photo?: FileCreateNestedOneWithoutModifierGroupItemsInput
+    modifierGroup?: ModifierGroupCreateNestedOneWithoutItemsInput
+    preparationStepModifierTracks?: PreparationStepModifierTrackCreateNestedManyWithoutModifierGroupItemInput
+    orderProducts?: OrderProductsCreateNestedManyWithoutModifierGroupItemsInput
+  }
+
+  export type ModifierGroupItemUncheckedCreateWithoutOrderIntentProductsInput = {
+    id: string
+    createdAt?: Date | string
+    name: string
+    price: number
+    description?: string | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
+    modifierGroupId?: string | null
+    fileId?: string | null
+    preparationStepModifierTracks?: PreparationStepModifierTrackUncheckedCreateNestedManyWithoutModifierGroupItemInput
+    orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutModifierGroupItemsInput
+  }
+
+  export type ModifierGroupItemCreateOrConnectWithoutOrderIntentProductsInput = {
+    where: ModifierGroupItemWhereUniqueInput
+    create: XOR<ModifierGroupItemCreateWithoutOrderIntentProductsInput, ModifierGroupItemUncheckedCreateWithoutOrderIntentProductsInput>
+  }
+
+  export type OrderIntentUpsertWithoutOrderProductsInput = {
+    update: XOR<OrderIntentUpdateWithoutOrderProductsInput, OrderIntentUncheckedUpdateWithoutOrderProductsInput>
+    create: XOR<OrderIntentCreateWithoutOrderProductsInput, OrderIntentUncheckedCreateWithoutOrderProductsInput>
+    where?: OrderIntentWhereInput
+  }
+
+  export type OrderIntentUpdateToOneWithWhereWithoutOrderProductsInput = {
+    where?: OrderIntentWhereInput
+    data: XOR<OrderIntentUpdateWithoutOrderProductsInput, OrderIntentUncheckedUpdateWithoutOrderProductsInput>
+  }
+
+  export type OrderIntentUpdateWithoutOrderProductsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    type?: NullableEnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType | null
+    paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
+    paymentProvider?: NullableEnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider | null
+    tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    tags?: OrderIntentUpdatetagsInput | string[]
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    amount?: NullableIntFieldUpdateOperationsInput | number | null
+    customer?: CustomerUpdateOneWithoutOrderIntentsNestedInput
+    deliveryAddress?: DeliveryAddressUpdateOneWithoutOrderIntentsNestedInput
+  }
+
+  export type OrderIntentUncheckedUpdateWithoutOrderProductsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    type?: NullableEnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType | null
+    paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
+    paymentProvider?: NullableEnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider | null
+    tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    tags?: OrderIntentUpdatetagsInput | string[]
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    amount?: NullableIntFieldUpdateOperationsInput | number | null
+    customerId?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ProductUpsertWithoutOrderIntentProductsInput = {
+    update: XOR<ProductUpdateWithoutOrderIntentProductsInput, ProductUncheckedUpdateWithoutOrderIntentProductsInput>
+    create: XOR<ProductCreateWithoutOrderIntentProductsInput, ProductUncheckedCreateWithoutOrderIntentProductsInput>
+    where?: ProductWhereInput
+  }
+
+  export type ProductUpdateToOneWithWhereWithoutOrderIntentProductsInput = {
+    where?: ProductWhereInput
+    data: XOR<ProductUpdateWithoutOrderIntentProductsInput, ProductUncheckedUpdateWithoutOrderIntentProductsInput>
+  }
+
+  export type ProductUpdateWithoutOrderIntentProductsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    itemType?: EnumProductItemTypeFieldUpdateOperationsInput | $Enums.ProductItemType
+    name?: StringFieldUpdateOperationsInput | string
+    visible?: BoolFieldUpdateOperationsInput | boolean
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: NullableIntFieldUpdateOperationsInput | number | null
+    comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
+    categoryIndex?: NullableIntFieldUpdateOperationsInput | number | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
+    photos?: FileUpdateManyWithoutProductNestedInput
+    modifierGroups?: ModifierGroupUpdateManyWithoutProductsNestedInput
+    category?: CategoryUpdateOneWithoutProductsNestedInput
+    productCategories?: ProductCategoryUpdateManyWithoutProductNestedInput
+    comboSlots?: ComboSlotUpdateManyWithoutComboNestedInput
+    comboSlotOptions?: ComboSlotOptionUpdateManyWithoutProductNestedInput
+    comboProductItems?: ComboProductItemUpdateManyWithoutComboNestedInput
+    comboUsedInItems?: ComboProductItemUpdateManyWithoutProductNestedInput
+    exclusivePromotionProducts?: ExclusivePromotionProductUpdateManyWithoutProductNestedInput
+    OrderProducts?: OrderProductsUpdateManyWithoutProductNestedInput
+    prizeProducts?: ProgressiveDiscountPrizeProductUpdateManyWithoutProductNestedInput
+    customerRewards?: CustomerRewardUpdateManyWithoutProductNestedInput
+    preparationSteps?: PreparationStepUpdateManyWithoutProductsNestedInput
+  }
+
+  export type ProductUncheckedUpdateWithoutOrderIntentProductsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    itemType?: EnumProductItemTypeFieldUpdateOperationsInput | $Enums.ProductItemType
+    name?: StringFieldUpdateOperationsInput | string
+    visible?: BoolFieldUpdateOperationsInput | boolean
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: NullableIntFieldUpdateOperationsInput | number | null
+    comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
+    categoryIndex?: NullableIntFieldUpdateOperationsInput | number | null
+    categoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
+    photos?: FileUncheckedUpdateManyWithoutProductNestedInput
+    modifierGroups?: ModifierGroupUncheckedUpdateManyWithoutProductsNestedInput
+    productCategories?: ProductCategoryUncheckedUpdateManyWithoutProductNestedInput
+    comboSlots?: ComboSlotUncheckedUpdateManyWithoutComboNestedInput
+    comboSlotOptions?: ComboSlotOptionUncheckedUpdateManyWithoutProductNestedInput
+    comboProductItems?: ComboProductItemUncheckedUpdateManyWithoutComboNestedInput
+    comboUsedInItems?: ComboProductItemUncheckedUpdateManyWithoutProductNestedInput
+    exclusivePromotionProducts?: ExclusivePromotionProductUncheckedUpdateManyWithoutProductNestedInput
+    OrderProducts?: OrderProductsUncheckedUpdateManyWithoutProductNestedInput
+    prizeProducts?: ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutProductNestedInput
+    customerRewards?: CustomerRewardUncheckedUpdateManyWithoutProductNestedInput
+    preparationSteps?: PreparationStepUncheckedUpdateManyWithoutProductsNestedInput
+  }
+
+  export type ModifierGroupItemUpsertWithWhereUniqueWithoutOrderIntentProductsInput = {
+    where: ModifierGroupItemWhereUniqueInput
+    update: XOR<ModifierGroupItemUpdateWithoutOrderIntentProductsInput, ModifierGroupItemUncheckedUpdateWithoutOrderIntentProductsInput>
+    create: XOR<ModifierGroupItemCreateWithoutOrderIntentProductsInput, ModifierGroupItemUncheckedCreateWithoutOrderIntentProductsInput>
+  }
+
+  export type ModifierGroupItemUpdateWithWhereUniqueWithoutOrderIntentProductsInput = {
+    where: ModifierGroupItemWhereUniqueInput
+    data: XOR<ModifierGroupItemUpdateWithoutOrderIntentProductsInput, ModifierGroupItemUncheckedUpdateWithoutOrderIntentProductsInput>
+  }
+
+  export type ModifierGroupItemUpdateManyWithWhereWithoutOrderIntentProductsInput = {
+    where: ModifierGroupItemScalarWhereInput
+    data: XOR<ModifierGroupItemUpdateManyMutationInput, ModifierGroupItemUncheckedUpdateManyWithoutOrderIntentProductsInput>
   }
 
   export type InventoryStockCreateWithoutPlaceInput = {
@@ -112987,6 +123103,7 @@ export namespace Prisma {
     comboUsedInItems?: ComboProductItemUpdateManyWithoutProductNestedInput
     exclusivePromotionProducts?: ExclusivePromotionProductUpdateManyWithoutProductNestedInput
     OrderProducts?: OrderProductsUpdateManyWithoutProductNestedInput
+    orderIntentProducts?: OrderIntentProductUpdateManyWithoutProductNestedInput
     prizeProducts?: ProgressiveDiscountPrizeProductUpdateManyWithoutProductNestedInput
     customerRewards?: CustomerRewardUpdateManyWithoutProductNestedInput
   }
@@ -113012,6 +123129,7 @@ export namespace Prisma {
     comboUsedInItems?: ComboProductItemUncheckedUpdateManyWithoutProductNestedInput
     exclusivePromotionProducts?: ExclusivePromotionProductUncheckedUpdateManyWithoutProductNestedInput
     OrderProducts?: OrderProductsUncheckedUpdateManyWithoutProductNestedInput
+    orderIntentProducts?: OrderIntentProductUncheckedUpdateManyWithoutProductNestedInput
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutProductNestedInput
     customerRewards?: CustomerRewardUncheckedUpdateManyWithoutProductNestedInput
   }
@@ -113269,6 +123387,7 @@ export namespace Prisma {
     modifierGroup?: ModifierGroupUpdateOneWithoutItemsNestedInput
     preparationStepModifierTracks?: PreparationStepModifierTrackUpdateManyWithoutModifierGroupItemNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutModifierGroupItemsNestedInput
+    orderIntentProducts?: OrderIntentProductUpdateManyWithoutModifierGroupItemsNestedInput
   }
 
   export type ModifierGroupItemUncheckedUpdateWithoutPhotoInput = {
@@ -113281,6 +123400,7 @@ export namespace Prisma {
     modifierGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     preparationStepModifierTracks?: PreparationStepModifierTrackUncheckedUpdateManyWithoutModifierGroupItemNestedInput
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutModifierGroupItemsNestedInput
+    orderIntentProducts?: OrderIntentProductUncheckedUpdateManyWithoutModifierGroupItemsNestedInput
   }
 
   export type ModifierGroupItemUncheckedUpdateManyWithoutPhotoInput = {
@@ -113323,6 +123443,7 @@ export namespace Prisma {
     comboUsedInItems?: ComboProductItemUpdateManyWithoutProductNestedInput
     exclusivePromotionProducts?: ExclusivePromotionProductUpdateManyWithoutProductNestedInput
     OrderProducts?: OrderProductsUpdateManyWithoutProductNestedInput
+    orderIntentProducts?: OrderIntentProductUpdateManyWithoutProductNestedInput
     prizeProducts?: ProgressiveDiscountPrizeProductUpdateManyWithoutProductNestedInput
     customerRewards?: CustomerRewardUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUpdateManyWithoutProductsNestedInput
@@ -113348,6 +123469,7 @@ export namespace Prisma {
     comboUsedInItems?: ComboProductItemUncheckedUpdateManyWithoutProductNestedInput
     exclusivePromotionProducts?: ExclusivePromotionProductUncheckedUpdateManyWithoutProductNestedInput
     OrderProducts?: OrderProductsUncheckedUpdateManyWithoutProductNestedInput
+    orderIntentProducts?: OrderIntentProductUncheckedUpdateManyWithoutProductNestedInput
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutProductNestedInput
     customerRewards?: CustomerRewardUncheckedUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUncheckedUpdateManyWithoutProductsNestedInput
@@ -113377,6 +123499,7 @@ export namespace Prisma {
     photo?: FileUpdateOneWithoutModifierGroupItemsNestedInput
     preparationStepModifierTracks?: PreparationStepModifierTrackUpdateManyWithoutModifierGroupItemNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutModifierGroupItemsNestedInput
+    orderIntentProducts?: OrderIntentProductUpdateManyWithoutModifierGroupItemsNestedInput
   }
 
   export type ModifierGroupItemUncheckedUpdateWithoutModifierGroupInput = {
@@ -113389,6 +123512,7 @@ export namespace Prisma {
     fileId?: NullableStringFieldUpdateOperationsInput | string | null
     preparationStepModifierTracks?: PreparationStepModifierTrackUncheckedUpdateManyWithoutModifierGroupItemNestedInput
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutModifierGroupItemsNestedInput
+    orderIntentProducts?: OrderIntentProductUncheckedUpdateManyWithoutModifierGroupItemsNestedInput
   }
 
   export type ModifierGroupItemUncheckedUpdateManyWithoutModifierGroupInput = {
@@ -113462,11 +123586,47 @@ export namespace Prisma {
     orderId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type OrderIntentProductUpdateWithoutModifierGroupItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    comments?: NullableStringFieldUpdateOperationsInput | string | null
+    fullAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    amount?: NullableIntFieldUpdateOperationsInput | number | null
+    orderIntent?: OrderIntentUpdateOneRequiredWithoutOrderProductsNestedInput
+    product?: ProductUpdateOneRequiredWithoutOrderIntentProductsNestedInput
+  }
+
+  export type OrderIntentProductUncheckedUpdateWithoutModifierGroupItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    orderIntentId?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    comments?: NullableStringFieldUpdateOperationsInput | string | null
+    fullAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    amount?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type OrderIntentProductUncheckedUpdateManyWithoutModifierGroupItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    orderIntentId?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    comments?: NullableStringFieldUpdateOperationsInput | string | null
+    fullAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    amount?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
   export type BranchCreateManyBusinessInput = {
     id: string
     createdAt?: Date | string
     name: string
     operationHours?: NullableJsonNullValueInput | InputJsonValue
+    chatwootAccountId?: string | null
+    chatwootSourceId?: string | null
+    chatwootAgentId?: string | null
     addressId?: string | null
   }
 
@@ -113486,12 +123646,29 @@ export namespace Prisma {
     rawPayload?: NullableJsonNullValueInput | InputJsonValue
   }
 
+  export type UserPushDeviceCreateManyBusinessInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    userId: string
+    platform?: $Enums.UserPushDevicePlatform
+    pushToken: string
+    lastSeenAt?: Date | string
+    lastNotifiedAt?: Date | string | null
+    notificationFailures?: number
+    revokedAt?: Date | string | null
+  }
+
   export type BranchUpdateWithoutBusinessInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
     operationHours?: NullableJsonNullValueInput | InputJsonValue
+    chatwootAccountId?: NullableStringFieldUpdateOperationsInput | string | null
+    chatwootSourceId?: NullableStringFieldUpdateOperationsInput | string | null
+    chatwootAgentId?: NullableStringFieldUpdateOperationsInput | string | null
     address?: AddressUpdateOneWithoutBranchNestedInput
+    orders?: OrderUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutBusinessInput = {
@@ -113499,7 +123676,11 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
     operationHours?: NullableJsonNullValueInput | InputJsonValue
+    chatwootAccountId?: NullableStringFieldUpdateOperationsInput | string | null
+    chatwootSourceId?: NullableStringFieldUpdateOperationsInput | string | null
+    chatwootAgentId?: NullableStringFieldUpdateOperationsInput | string | null
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
+    orders?: OrderUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateManyWithoutBusinessInput = {
@@ -113507,6 +123688,9 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
     operationHours?: NullableJsonNullValueInput | InputJsonValue
+    chatwootAccountId?: NullableStringFieldUpdateOperationsInput | string | null
+    chatwootSourceId?: NullableStringFieldUpdateOperationsInput | string | null
+    chatwootAgentId?: NullableStringFieldUpdateOperationsInput | string | null
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -113562,6 +123746,45 @@ export namespace Prisma {
     rawPayload?: NullableJsonNullValueInput | InputJsonValue
   }
 
+  export type UserPushDeviceUpdateWithoutBusinessInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    platform?: EnumUserPushDevicePlatformFieldUpdateOperationsInput | $Enums.UserPushDevicePlatform
+    pushToken?: StringFieldUpdateOperationsInput | string
+    lastSeenAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastNotifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notificationFailures?: IntFieldUpdateOperationsInput | number
+    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    user?: UserUpdateOneRequiredWithoutPushDevicesNestedInput
+  }
+
+  export type UserPushDeviceUncheckedUpdateWithoutBusinessInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: StringFieldUpdateOperationsInput | string
+    platform?: EnumUserPushDevicePlatformFieldUpdateOperationsInput | $Enums.UserPushDevicePlatform
+    pushToken?: StringFieldUpdateOperationsInput | string
+    lastSeenAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastNotifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notificationFailures?: IntFieldUpdateOperationsInput | number
+    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type UserPushDeviceUncheckedUpdateManyWithoutBusinessInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: StringFieldUpdateOperationsInput | string
+    platform?: EnumUserPushDevicePlatformFieldUpdateOperationsInput | $Enums.UserPushDevicePlatform
+    pushToken?: StringFieldUpdateOperationsInput | string
+    lastSeenAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastNotifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notificationFailures?: IntFieldUpdateOperationsInput | number
+    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
   export type BusinessOwnerCreateManyUserInput = {
     businessId: string
     createdAt?: Date | string
@@ -113594,6 +123817,19 @@ export namespace Prisma {
     attemptCount?: number
     maxAttempts?: number
     lastAttemptAt?: Date | string | null
+  }
+
+  export type UserPushDeviceCreateManyUserInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    businessId?: string | null
+    platform?: $Enums.UserPushDevicePlatform
+    pushToken: string
+    lastSeenAt?: Date | string
+    lastNotifiedAt?: Date | string | null
+    notificationFailures?: number
+    revokedAt?: Date | string | null
   }
 
   export type BusinessOwnerUpdateWithoutUserInput = {
@@ -113700,6 +123936,45 @@ export namespace Prisma {
     attemptCount?: IntFieldUpdateOperationsInput | number
     maxAttempts?: IntFieldUpdateOperationsInput | number
     lastAttemptAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type UserPushDeviceUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    platform?: EnumUserPushDevicePlatformFieldUpdateOperationsInput | $Enums.UserPushDevicePlatform
+    pushToken?: StringFieldUpdateOperationsInput | string
+    lastSeenAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastNotifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notificationFailures?: IntFieldUpdateOperationsInput | number
+    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    business?: BusinessUpdateOneWithoutPushDevicesNestedInput
+  }
+
+  export type UserPushDeviceUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessId?: NullableStringFieldUpdateOperationsInput | string | null
+    platform?: EnumUserPushDevicePlatformFieldUpdateOperationsInput | $Enums.UserPushDevicePlatform
+    pushToken?: StringFieldUpdateOperationsInput | string
+    lastSeenAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastNotifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notificationFailures?: IntFieldUpdateOperationsInput | number
+    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type UserPushDeviceUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessId?: NullableStringFieldUpdateOperationsInput | string | null
+    platform?: EnumUserPushDevicePlatformFieldUpdateOperationsInput | $Enums.UserPushDevicePlatform
+    pushToken?: StringFieldUpdateOperationsInput | string
+    lastSeenAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastNotifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notificationFailures?: IntFieldUpdateOperationsInput | number
+    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ExternalMenuEntityMapCreateManyExternalIntegrationConnectionInput = {
@@ -113854,6 +124129,140 @@ export namespace Prisma {
     responsePayload?: NullableJsonNullValueInput | InputJsonValue
   }
 
+  export type OrderCreateManyBranchInput = {
+    id: string
+    number?: string | null
+    createdAt?: Date | string
+    scheduleFor?: Date | string | null
+    language?: string | null
+    paidAt?: Date | string | null
+    deliveredAt?: Date | string | null
+    leftAtDropOffAt?: Date | string | null
+    leftAtDropOffLat?: number | null
+    leftAtDropOffLng?: number | null
+    estimatedDeliveryDurationMinutes?: number | null
+    currentEstimatedDeliveryDurationMinutes?: number | null
+    dispatchOrderIndex?: number | null
+    amount: number
+    canceled?: boolean
+    status?: $Enums.OrderStatus
+    type?: $Enums.OrderType
+    paymentMethod?: $Enums.PaymentType
+    paymentProvider?: $Enums.PaymentProvider | null
+    tipAmount?: number | null
+    tags?: OrderCreatetagsInput | string[]
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    customerId?: string | null
+    externalId?: string | null
+    dispatchId?: string | null
+    addressId?: string | null
+    deliveryAddressId?: string | null
+    externalAddressId?: string | null
+  }
+
+  export type OrderUpdateWithoutBranchInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    number?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    scheduleFor?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    leftAtDropOffLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
+    amount?: IntFieldUpdateOperationsInput | number
+    canceled?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+    paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
+    paymentProvider?: NullableEnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider | null
+    tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    tags?: OrderUpdatetagsInput | string[]
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    customer?: CustomerUpdateOneWithoutOrdersNestedInput
+    dispatch?: DispatchUpdateOneWithoutOrdersNestedInput
+    address?: AddressUpdateOneWithoutOrdersNestedInput
+    deliveryAddress?: DeliveryAddressUpdateOneWithoutOrdersNestedInput
+    externalAddress?: ExternalAddressUpdateOneWithoutOrdersNestedInput
+    orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
+    preparationStepCategories?: PreparationStepCategoryUpdateManyWithoutOrderNestedInput
+    feedback?: CustomerFeedbackUpdateOneWithoutOrderNestedInput
+    issuedRewards?: CustomerRewardUpdateManyWithoutIssuedForOrderNestedInput
+    redeemedRewards?: CustomerRewardUpdateManyWithoutRedeemedByOrderNestedInput
+  }
+
+  export type OrderUncheckedUpdateWithoutBranchInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    number?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    scheduleFor?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    leftAtDropOffLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
+    amount?: IntFieldUpdateOperationsInput | number
+    canceled?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+    paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
+    paymentProvider?: NullableEnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider | null
+    tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    tags?: OrderUpdatetagsInput | string[]
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    customerId?: NullableStringFieldUpdateOperationsInput | string | null
+    externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    dispatchId?: NullableStringFieldUpdateOperationsInput | string | null
+    addressId?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
+    externalAddressId?: NullableStringFieldUpdateOperationsInput | string | null
+    orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
+    preparationStepCategories?: PreparationStepCategoryUncheckedUpdateManyWithoutOrderNestedInput
+    feedback?: CustomerFeedbackUncheckedUpdateOneWithoutOrderNestedInput
+    issuedRewards?: CustomerRewardUncheckedUpdateManyWithoutIssuedForOrderNestedInput
+    redeemedRewards?: CustomerRewardUncheckedUpdateManyWithoutRedeemedByOrderNestedInput
+  }
+
+  export type OrderUncheckedUpdateManyWithoutBranchInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    number?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    scheduleFor?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    leftAtDropOffLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
+    amount?: IntFieldUpdateOperationsInput | number
+    canceled?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+    paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
+    paymentProvider?: NullableEnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider | null
+    tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    tags?: OrderUpdatetagsInput | string[]
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    customerId?: NullableStringFieldUpdateOperationsInput | string | null
+    externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    dispatchId?: NullableStringFieldUpdateOperationsInput | string | null
+    addressId?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
+    externalAddressId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
   export type DispatchCreateManyDriverInput = {
     id: string
     createdAt?: Date | string
@@ -113863,6 +124272,11 @@ export namespace Prisma {
     startedDeliveryAt?: Date | string | null
     estimatedDeliveryDurationMinutes?: number | null
     estimatedRoundTripDurationMinutes?: number | null
+    currentEstimatedDeliveryDurationMinutes?: number | null
+    currentEstimatedRoundTripDurationMinutes?: number | null
+    arrivedAtRestaurantAt?: Date | string | null
+    arrivedAtRestaurantLat?: number | null
+    arrivedAtRestaurantLng?: number | null
   }
 
   export type DispatchRouteSessionCreateManyDriverInput = {
@@ -113876,6 +124290,18 @@ export namespace Prisma {
     totalDistanceMeters?: number | null
     durationSeconds?: number | null
     polyline?: string | null
+  }
+
+  export type DispatchRouteMilestoneCreateManyDriverInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    dispatchId: string
+    sessionId: string
+    type: $Enums.DispatchRouteMilestoneType
+    recordedAt: Date | string
+    lat: number
+    lng: number
   }
 
   export type DriverActivationEventCreateManyDriverInput = {
@@ -113893,8 +124319,14 @@ export namespace Prisma {
     startedDeliveryAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     estimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    arrivedAtRestaurantAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    arrivedAtRestaurantLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    arrivedAtRestaurantLng?: NullableFloatFieldUpdateOperationsInput | number | null
     orders?: OrderUpdateManyWithoutDispatchNestedInput
     routeSessions?: DispatchRouteSessionUpdateManyWithoutDispatchNestedInput
+    routeMilestones?: DispatchRouteMilestoneUpdateManyWithoutDispatchNestedInput
     etaRecalculationJobs?: DispatchEtaRecalculationJobUpdateManyWithoutDispatchNestedInput
   }
 
@@ -113907,8 +124339,14 @@ export namespace Prisma {
     startedDeliveryAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     estimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    arrivedAtRestaurantAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    arrivedAtRestaurantLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    arrivedAtRestaurantLng?: NullableFloatFieldUpdateOperationsInput | number | null
     orders?: OrderUncheckedUpdateManyWithoutDispatchNestedInput
     routeSessions?: DispatchRouteSessionUncheckedUpdateManyWithoutDispatchNestedInput
+    routeMilestones?: DispatchRouteMilestoneUncheckedUpdateManyWithoutDispatchNestedInput
     etaRecalculationJobs?: DispatchEtaRecalculationJobUncheckedUpdateManyWithoutDispatchNestedInput
   }
 
@@ -113921,6 +124359,11 @@ export namespace Prisma {
     startedDeliveryAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     estimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    arrivedAtRestaurantAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    arrivedAtRestaurantLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    arrivedAtRestaurantLng?: NullableFloatFieldUpdateOperationsInput | number | null
   }
 
   export type DispatchRouteSessionUpdateWithoutDriverInput = {
@@ -113935,6 +124378,7 @@ export namespace Prisma {
     polyline?: NullableStringFieldUpdateOperationsInput | string | null
     dispatch?: DispatchUpdateOneRequiredWithoutRouteSessionsNestedInput
     points?: DispatchRoutePointUpdateManyWithoutSessionNestedInput
+    milestones?: DispatchRouteMilestoneUpdateManyWithoutSessionNestedInput
   }
 
   export type DispatchRouteSessionUncheckedUpdateWithoutDriverInput = {
@@ -113949,6 +124393,7 @@ export namespace Prisma {
     durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     polyline?: NullableStringFieldUpdateOperationsInput | string | null
     points?: DispatchRoutePointUncheckedUpdateManyWithoutSessionNestedInput
+    milestones?: DispatchRouteMilestoneUncheckedUpdateManyWithoutSessionNestedInput
   }
 
   export type DispatchRouteSessionUncheckedUpdateManyWithoutDriverInput = {
@@ -113962,6 +124407,42 @@ export namespace Prisma {
     totalDistanceMeters?: NullableIntFieldUpdateOperationsInput | number | null
     durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     polyline?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type DispatchRouteMilestoneUpdateWithoutDriverInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumDispatchRouteMilestoneTypeFieldUpdateOperationsInput | $Enums.DispatchRouteMilestoneType
+    recordedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lat?: FloatFieldUpdateOperationsInput | number
+    lng?: FloatFieldUpdateOperationsInput | number
+    dispatch?: DispatchUpdateOneRequiredWithoutRouteMilestonesNestedInput
+    session?: DispatchRouteSessionUpdateOneRequiredWithoutMilestonesNestedInput
+  }
+
+  export type DispatchRouteMilestoneUncheckedUpdateWithoutDriverInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dispatchId?: StringFieldUpdateOperationsInput | string
+    sessionId?: StringFieldUpdateOperationsInput | string
+    type?: EnumDispatchRouteMilestoneTypeFieldUpdateOperationsInput | $Enums.DispatchRouteMilestoneType
+    recordedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lat?: FloatFieldUpdateOperationsInput | number
+    lng?: FloatFieldUpdateOperationsInput | number
+  }
+
+  export type DispatchRouteMilestoneUncheckedUpdateManyWithoutDriverInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dispatchId?: StringFieldUpdateOperationsInput | string
+    sessionId?: StringFieldUpdateOperationsInput | string
+    type?: EnumDispatchRouteMilestoneTypeFieldUpdateOperationsInput | $Enums.DispatchRouteMilestoneType
+    recordedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lat?: FloatFieldUpdateOperationsInput | number
+    lng?: FloatFieldUpdateOperationsInput | number
   }
 
   export type DriverActivationEventUpdateWithoutDriverInput = {
@@ -113990,7 +124471,11 @@ export namespace Prisma {
     language?: string | null
     paidAt?: Date | string | null
     deliveredAt?: Date | string | null
+    leftAtDropOffAt?: Date | string | null
+    leftAtDropOffLat?: number | null
+    leftAtDropOffLng?: number | null
     estimatedDeliveryDurationMinutes?: number | null
+    currentEstimatedDeliveryDurationMinutes?: number | null
     dispatchOrderIndex?: number | null
     amount: number
     canceled?: boolean
@@ -114006,6 +124491,7 @@ export namespace Prisma {
     addressId?: string | null
     deliveryAddressId?: string | null
     externalAddressId?: string | null
+    branchId?: string | null
   }
 
   export type DispatchRouteSessionCreateManyDispatchInput = {
@@ -114019,6 +124505,18 @@ export namespace Prisma {
     totalDistanceMeters?: number | null
     durationSeconds?: number | null
     polyline?: string | null
+  }
+
+  export type DispatchRouteMilestoneCreateManyDispatchInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    driverId: string
+    sessionId: string
+    type: $Enums.DispatchRouteMilestoneType
+    recordedAt: Date | string
+    lat: number
+    lng: number
   }
 
   export type DispatchEtaRecalculationJobCreateManyDispatchInput = {
@@ -114041,7 +124539,11 @@ export namespace Prisma {
     language?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    leftAtDropOffLng?: NullableFloatFieldUpdateOperationsInput | number | null
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
     canceled?: BoolFieldUpdateOperationsInput | boolean
@@ -114057,6 +124559,7 @@ export namespace Prisma {
     address?: AddressUpdateOneWithoutOrdersNestedInput
     deliveryAddress?: DeliveryAddressUpdateOneWithoutOrdersNestedInput
     externalAddress?: ExternalAddressUpdateOneWithoutOrdersNestedInput
+    branch?: BranchUpdateOneWithoutOrdersNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUpdateManyWithoutOrderNestedInput
     feedback?: CustomerFeedbackUpdateOneWithoutOrderNestedInput
@@ -114072,7 +124575,11 @@ export namespace Prisma {
     language?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    leftAtDropOffLng?: NullableFloatFieldUpdateOperationsInput | number | null
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
     canceled?: BoolFieldUpdateOperationsInput | boolean
@@ -114088,6 +124595,7 @@ export namespace Prisma {
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
     externalAddressId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUncheckedUpdateManyWithoutOrderNestedInput
     feedback?: CustomerFeedbackUncheckedUpdateOneWithoutOrderNestedInput
@@ -114103,7 +124611,11 @@ export namespace Prisma {
     language?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    leftAtDropOffLng?: NullableFloatFieldUpdateOperationsInput | number | null
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
     canceled?: BoolFieldUpdateOperationsInput | boolean
@@ -114119,6 +124631,7 @@ export namespace Prisma {
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
     externalAddressId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type DispatchRouteSessionUpdateWithoutDispatchInput = {
@@ -114133,6 +124646,7 @@ export namespace Prisma {
     polyline?: NullableStringFieldUpdateOperationsInput | string | null
     driver?: DriverUpdateOneRequiredWithoutRouteSessionsNestedInput
     points?: DispatchRoutePointUpdateManyWithoutSessionNestedInput
+    milestones?: DispatchRouteMilestoneUpdateManyWithoutSessionNestedInput
   }
 
   export type DispatchRouteSessionUncheckedUpdateWithoutDispatchInput = {
@@ -114147,6 +124661,7 @@ export namespace Prisma {
     durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     polyline?: NullableStringFieldUpdateOperationsInput | string | null
     points?: DispatchRoutePointUncheckedUpdateManyWithoutSessionNestedInput
+    milestones?: DispatchRouteMilestoneUncheckedUpdateManyWithoutSessionNestedInput
   }
 
   export type DispatchRouteSessionUncheckedUpdateManyWithoutDispatchInput = {
@@ -114160,6 +124675,42 @@ export namespace Prisma {
     totalDistanceMeters?: NullableIntFieldUpdateOperationsInput | number | null
     durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     polyline?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type DispatchRouteMilestoneUpdateWithoutDispatchInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumDispatchRouteMilestoneTypeFieldUpdateOperationsInput | $Enums.DispatchRouteMilestoneType
+    recordedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lat?: FloatFieldUpdateOperationsInput | number
+    lng?: FloatFieldUpdateOperationsInput | number
+    driver?: DriverUpdateOneRequiredWithoutRouteMilestonesNestedInput
+    session?: DispatchRouteSessionUpdateOneRequiredWithoutMilestonesNestedInput
+  }
+
+  export type DispatchRouteMilestoneUncheckedUpdateWithoutDispatchInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    driverId?: StringFieldUpdateOperationsInput | string
+    sessionId?: StringFieldUpdateOperationsInput | string
+    type?: EnumDispatchRouteMilestoneTypeFieldUpdateOperationsInput | $Enums.DispatchRouteMilestoneType
+    recordedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lat?: FloatFieldUpdateOperationsInput | number
+    lng?: FloatFieldUpdateOperationsInput | number
+  }
+
+  export type DispatchRouteMilestoneUncheckedUpdateManyWithoutDispatchInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    driverId?: StringFieldUpdateOperationsInput | string
+    sessionId?: StringFieldUpdateOperationsInput | string
+    type?: EnumDispatchRouteMilestoneTypeFieldUpdateOperationsInput | $Enums.DispatchRouteMilestoneType
+    recordedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lat?: FloatFieldUpdateOperationsInput | number
+    lng?: FloatFieldUpdateOperationsInput | number
   }
 
   export type DispatchEtaRecalculationJobUpdateWithoutDispatchInput = {
@@ -114213,6 +124764,18 @@ export namespace Prisma {
     isMocked?: boolean | null
   }
 
+  export type DispatchRouteMilestoneCreateManySessionInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    dispatchId: string
+    driverId: string
+    type: $Enums.DispatchRouteMilestoneType
+    recordedAt: Date | string
+    lat: number
+    lng: number
+  }
+
   export type DispatchRoutePointUpdateWithoutSessionInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -114258,6 +124821,42 @@ export namespace Prisma {
     isMocked?: NullableBoolFieldUpdateOperationsInput | boolean | null
   }
 
+  export type DispatchRouteMilestoneUpdateWithoutSessionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumDispatchRouteMilestoneTypeFieldUpdateOperationsInput | $Enums.DispatchRouteMilestoneType
+    recordedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lat?: FloatFieldUpdateOperationsInput | number
+    lng?: FloatFieldUpdateOperationsInput | number
+    dispatch?: DispatchUpdateOneRequiredWithoutRouteMilestonesNestedInput
+    driver?: DriverUpdateOneRequiredWithoutRouteMilestonesNestedInput
+  }
+
+  export type DispatchRouteMilestoneUncheckedUpdateWithoutSessionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dispatchId?: StringFieldUpdateOperationsInput | string
+    driverId?: StringFieldUpdateOperationsInput | string
+    type?: EnumDispatchRouteMilestoneTypeFieldUpdateOperationsInput | $Enums.DispatchRouteMilestoneType
+    recordedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lat?: FloatFieldUpdateOperationsInput | number
+    lng?: FloatFieldUpdateOperationsInput | number
+  }
+
+  export type DispatchRouteMilestoneUncheckedUpdateManyWithoutSessionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dispatchId?: StringFieldUpdateOperationsInput | string
+    driverId?: StringFieldUpdateOperationsInput | string
+    type?: EnumDispatchRouteMilestoneTypeFieldUpdateOperationsInput | $Enums.DispatchRouteMilestoneType
+    recordedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lat?: FloatFieldUpdateOperationsInput | number
+    lng?: FloatFieldUpdateOperationsInput | number
+  }
+
   export type OrderCreateManyAddressInput = {
     id: string
     number?: string | null
@@ -114266,7 +124865,11 @@ export namespace Prisma {
     language?: string | null
     paidAt?: Date | string | null
     deliveredAt?: Date | string | null
+    leftAtDropOffAt?: Date | string | null
+    leftAtDropOffLat?: number | null
+    leftAtDropOffLng?: number | null
     estimatedDeliveryDurationMinutes?: number | null
+    currentEstimatedDeliveryDurationMinutes?: number | null
     dispatchOrderIndex?: number | null
     amount: number
     canceled?: boolean
@@ -114282,6 +124885,7 @@ export namespace Prisma {
     dispatchId?: string | null
     deliveryAddressId?: string | null
     externalAddressId?: string | null
+    branchId?: string | null
   }
 
   export type OrderUpdateWithoutAddressInput = {
@@ -114292,7 +124896,11 @@ export namespace Prisma {
     language?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    leftAtDropOffLng?: NullableFloatFieldUpdateOperationsInput | number | null
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
     canceled?: BoolFieldUpdateOperationsInput | boolean
@@ -114308,6 +124916,7 @@ export namespace Prisma {
     dispatch?: DispatchUpdateOneWithoutOrdersNestedInput
     deliveryAddress?: DeliveryAddressUpdateOneWithoutOrdersNestedInput
     externalAddress?: ExternalAddressUpdateOneWithoutOrdersNestedInput
+    branch?: BranchUpdateOneWithoutOrdersNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUpdateManyWithoutOrderNestedInput
     feedback?: CustomerFeedbackUpdateOneWithoutOrderNestedInput
@@ -114323,7 +124932,11 @@ export namespace Prisma {
     language?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    leftAtDropOffLng?: NullableFloatFieldUpdateOperationsInput | number | null
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
     canceled?: BoolFieldUpdateOperationsInput | boolean
@@ -114339,6 +124952,7 @@ export namespace Prisma {
     dispatchId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
     externalAddressId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUncheckedUpdateManyWithoutOrderNestedInput
     feedback?: CustomerFeedbackUncheckedUpdateOneWithoutOrderNestedInput
@@ -114354,7 +124968,11 @@ export namespace Prisma {
     language?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    leftAtDropOffLng?: NullableFloatFieldUpdateOperationsInput | number | null
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
     canceled?: BoolFieldUpdateOperationsInput | boolean
@@ -114370,6 +124988,7 @@ export namespace Prisma {
     dispatchId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
     externalAddressId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type FileCreateManyProductInput = {
@@ -114433,6 +125052,16 @@ export namespace Prisma {
     fullAmount: number
     amount: number
     orderId?: string | null
+  }
+
+  export type OrderIntentProductCreateManyProductInput = {
+    id: string
+    createdAt?: Date | string
+    orderIntentId: string
+    quantity: number
+    comments?: string | null
+    fullAmount?: number | null
+    amount?: number | null
   }
 
   export type ProgressiveDiscountPrizeProductCreateManyProductInput = {
@@ -114690,6 +125319,38 @@ export namespace Prisma {
     fullAmount?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
     orderId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type OrderIntentProductUpdateWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    comments?: NullableStringFieldUpdateOperationsInput | string | null
+    fullAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    amount?: NullableIntFieldUpdateOperationsInput | number | null
+    orderIntent?: OrderIntentUpdateOneRequiredWithoutOrderProductsNestedInput
+    modifierGroupItems?: ModifierGroupItemUpdateManyWithoutOrderIntentProductsNestedInput
+  }
+
+  export type OrderIntentProductUncheckedUpdateWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    orderIntentId?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    comments?: NullableStringFieldUpdateOperationsInput | string | null
+    fullAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    amount?: NullableIntFieldUpdateOperationsInput | number | null
+    modifierGroupItems?: ModifierGroupItemUncheckedUpdateManyWithoutOrderIntentProductsNestedInput
+  }
+
+  export type OrderIntentProductUncheckedUpdateManyWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    orderIntentId?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    comments?: NullableStringFieldUpdateOperationsInput | string | null
+    fullAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    amount?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type ProgressiveDiscountPrizeProductUpdateWithoutProductInput = {
@@ -115046,6 +125707,7 @@ export namespace Prisma {
     comboUsedInItems?: ComboProductItemUpdateManyWithoutProductNestedInput
     exclusivePromotionProducts?: ExclusivePromotionProductUpdateManyWithoutProductNestedInput
     OrderProducts?: OrderProductsUpdateManyWithoutProductNestedInput
+    orderIntentProducts?: OrderIntentProductUpdateManyWithoutProductNestedInput
     prizeProducts?: ProgressiveDiscountPrizeProductUpdateManyWithoutProductNestedInput
     customerRewards?: CustomerRewardUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUpdateManyWithoutProductsNestedInput
@@ -115071,6 +125733,7 @@ export namespace Prisma {
     comboUsedInItems?: ComboProductItemUncheckedUpdateManyWithoutProductNestedInput
     exclusivePromotionProducts?: ExclusivePromotionProductUncheckedUpdateManyWithoutProductNestedInput
     OrderProducts?: OrderProductsUncheckedUpdateManyWithoutProductNestedInput
+    orderIntentProducts?: OrderIntentProductUncheckedUpdateManyWithoutProductNestedInput
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutProductNestedInput
     customerRewards?: CustomerRewardUncheckedUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUncheckedUpdateManyWithoutProductsNestedInput
@@ -115219,7 +125882,11 @@ export namespace Prisma {
     language?: string | null
     paidAt?: Date | string | null
     deliveredAt?: Date | string | null
+    leftAtDropOffAt?: Date | string | null
+    leftAtDropOffLat?: number | null
+    leftAtDropOffLng?: number | null
     estimatedDeliveryDurationMinutes?: number | null
+    currentEstimatedDeliveryDurationMinutes?: number | null
     dispatchOrderIndex?: number | null
     amount: number
     canceled?: boolean
@@ -115235,6 +125902,7 @@ export namespace Prisma {
     addressId?: string | null
     deliveryAddressId?: string | null
     externalAddressId?: string | null
+    branchId?: string | null
   }
 
   export type PromotialMessageCreateManyCustomerInput = {
@@ -115347,6 +126015,23 @@ export namespace Prisma {
     isDefault?: boolean
   }
 
+  export type OrderIntentCreateManyCustomerInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    active?: boolean
+    language?: string | null
+    status?: $Enums.OrderStatus
+    type?: $Enums.OrderType | null
+    paymentMethod?: $Enums.PaymentType
+    paymentProvider?: $Enums.PaymentProvider | null
+    tipAmount?: number | null
+    tags?: OrderIntentCreatetagsInput | string[]
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    amount?: number | null
+    deliveryAddressId?: string | null
+  }
+
   export type OrderUpdateWithoutCustomerInput = {
     id?: StringFieldUpdateOperationsInput | string
     number?: NullableStringFieldUpdateOperationsInput | string | null
@@ -115355,7 +126040,11 @@ export namespace Prisma {
     language?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    leftAtDropOffLng?: NullableFloatFieldUpdateOperationsInput | number | null
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
     canceled?: BoolFieldUpdateOperationsInput | boolean
@@ -115371,6 +126060,7 @@ export namespace Prisma {
     address?: AddressUpdateOneWithoutOrdersNestedInput
     deliveryAddress?: DeliveryAddressUpdateOneWithoutOrdersNestedInput
     externalAddress?: ExternalAddressUpdateOneWithoutOrdersNestedInput
+    branch?: BranchUpdateOneWithoutOrdersNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUpdateManyWithoutOrderNestedInput
     feedback?: CustomerFeedbackUpdateOneWithoutOrderNestedInput
@@ -115386,7 +126076,11 @@ export namespace Prisma {
     language?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    leftAtDropOffLng?: NullableFloatFieldUpdateOperationsInput | number | null
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
     canceled?: BoolFieldUpdateOperationsInput | boolean
@@ -115402,6 +126096,7 @@ export namespace Prisma {
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
     externalAddressId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUncheckedUpdateManyWithoutOrderNestedInput
     feedback?: CustomerFeedbackUncheckedUpdateOneWithoutOrderNestedInput
@@ -115417,7 +126112,11 @@ export namespace Prisma {
     language?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    leftAtDropOffLng?: NullableFloatFieldUpdateOperationsInput | number | null
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
     canceled?: BoolFieldUpdateOperationsInput | boolean
@@ -115433,6 +126132,7 @@ export namespace Prisma {
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
     externalAddressId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type PromotialMessageUpdateWithoutCustomerInput = {
@@ -115471,6 +126171,7 @@ export namespace Prisma {
     complement?: NullableStringFieldUpdateOperationsInput | string | null
     numberComplement?: NullableStringFieldUpdateOperationsInput | string | null
     orders?: OrderUpdateManyWithoutDeliveryAddressNestedInput
+    orderIntents?: OrderIntentUpdateManyWithoutDeliveryAddressNestedInput
   }
 
   export type DeliveryAddressUncheckedUpdateWithoutCustomerInput = {
@@ -115488,6 +126189,7 @@ export namespace Prisma {
     complement?: NullableStringFieldUpdateOperationsInput | string | null
     numberComplement?: NullableStringFieldUpdateOperationsInput | string | null
     orders?: OrderUncheckedUpdateManyWithoutDeliveryAddressNestedInput
+    orderIntents?: OrderIntentUncheckedUpdateManyWithoutDeliveryAddressNestedInput
   }
 
   export type DeliveryAddressUncheckedUpdateManyWithoutCustomerInput = {
@@ -115771,6 +126473,59 @@ export namespace Prisma {
     isDefault?: BoolFieldUpdateOperationsInput | boolean
   }
 
+  export type OrderIntentUpdateWithoutCustomerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    type?: NullableEnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType | null
+    paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
+    paymentProvider?: NullableEnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider | null
+    tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    tags?: OrderIntentUpdatetagsInput | string[]
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    amount?: NullableIntFieldUpdateOperationsInput | number | null
+    deliveryAddress?: DeliveryAddressUpdateOneWithoutOrderIntentsNestedInput
+    orderProducts?: OrderIntentProductUpdateManyWithoutOrderIntentNestedInput
+  }
+
+  export type OrderIntentUncheckedUpdateWithoutCustomerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    type?: NullableEnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType | null
+    paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
+    paymentProvider?: NullableEnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider | null
+    tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    tags?: OrderIntentUpdatetagsInput | string[]
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    amount?: NullableIntFieldUpdateOperationsInput | number | null
+    deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
+    orderProducts?: OrderIntentProductUncheckedUpdateManyWithoutOrderIntentNestedInput
+  }
+
+  export type OrderIntentUncheckedUpdateManyWithoutCustomerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    type?: NullableEnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType | null
+    paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
+    paymentProvider?: NullableEnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider | null
+    tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    tags?: OrderIntentUpdatetagsInput | string[]
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    amount?: NullableIntFieldUpdateOperationsInput | number | null
+    deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
   export type OrderCreateManyDeliveryAddressInput = {
     id: string
     number?: string | null
@@ -115779,7 +126534,11 @@ export namespace Prisma {
     language?: string | null
     paidAt?: Date | string | null
     deliveredAt?: Date | string | null
+    leftAtDropOffAt?: Date | string | null
+    leftAtDropOffLat?: number | null
+    leftAtDropOffLng?: number | null
     estimatedDeliveryDurationMinutes?: number | null
+    currentEstimatedDeliveryDurationMinutes?: number | null
     dispatchOrderIndex?: number | null
     amount: number
     canceled?: boolean
@@ -115795,6 +126554,24 @@ export namespace Prisma {
     dispatchId?: string | null
     addressId?: string | null
     externalAddressId?: string | null
+    branchId?: string | null
+  }
+
+  export type OrderIntentCreateManyDeliveryAddressInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    active?: boolean
+    language?: string | null
+    status?: $Enums.OrderStatus
+    type?: $Enums.OrderType | null
+    paymentMethod?: $Enums.PaymentType
+    paymentProvider?: $Enums.PaymentProvider | null
+    tipAmount?: number | null
+    tags?: OrderIntentCreatetagsInput | string[]
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    amount?: number | null
+    customerId?: string | null
   }
 
   export type OrderUpdateWithoutDeliveryAddressInput = {
@@ -115805,7 +126582,11 @@ export namespace Prisma {
     language?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    leftAtDropOffLng?: NullableFloatFieldUpdateOperationsInput | number | null
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
     canceled?: BoolFieldUpdateOperationsInput | boolean
@@ -115821,6 +126602,7 @@ export namespace Prisma {
     dispatch?: DispatchUpdateOneWithoutOrdersNestedInput
     address?: AddressUpdateOneWithoutOrdersNestedInput
     externalAddress?: ExternalAddressUpdateOneWithoutOrdersNestedInput
+    branch?: BranchUpdateOneWithoutOrdersNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUpdateManyWithoutOrderNestedInput
     feedback?: CustomerFeedbackUpdateOneWithoutOrderNestedInput
@@ -115836,7 +126618,11 @@ export namespace Prisma {
     language?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    leftAtDropOffLng?: NullableFloatFieldUpdateOperationsInput | number | null
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
     canceled?: BoolFieldUpdateOperationsInput | boolean
@@ -115852,6 +126638,7 @@ export namespace Prisma {
     dispatchId?: NullableStringFieldUpdateOperationsInput | string | null
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     externalAddressId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUncheckedUpdateManyWithoutOrderNestedInput
     feedback?: CustomerFeedbackUncheckedUpdateOneWithoutOrderNestedInput
@@ -115867,7 +126654,11 @@ export namespace Prisma {
     language?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    leftAtDropOffLng?: NullableFloatFieldUpdateOperationsInput | number | null
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
     canceled?: BoolFieldUpdateOperationsInput | boolean
@@ -115883,6 +126674,60 @@ export namespace Prisma {
     dispatchId?: NullableStringFieldUpdateOperationsInput | string | null
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     externalAddressId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type OrderIntentUpdateWithoutDeliveryAddressInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    type?: NullableEnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType | null
+    paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
+    paymentProvider?: NullableEnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider | null
+    tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    tags?: OrderIntentUpdatetagsInput | string[]
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    amount?: NullableIntFieldUpdateOperationsInput | number | null
+    customer?: CustomerUpdateOneWithoutOrderIntentsNestedInput
+    orderProducts?: OrderIntentProductUpdateManyWithoutOrderIntentNestedInput
+  }
+
+  export type OrderIntentUncheckedUpdateWithoutDeliveryAddressInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    type?: NullableEnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType | null
+    paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
+    paymentProvider?: NullableEnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider | null
+    tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    tags?: OrderIntentUpdatetagsInput | string[]
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    amount?: NullableIntFieldUpdateOperationsInput | number | null
+    customerId?: NullableStringFieldUpdateOperationsInput | string | null
+    orderProducts?: OrderIntentProductUncheckedUpdateManyWithoutOrderIntentNestedInput
+  }
+
+  export type OrderIntentUncheckedUpdateManyWithoutDeliveryAddressInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    type?: NullableEnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType | null
+    paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
+    paymentProvider?: NullableEnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider | null
+    tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    tags?: OrderIntentUpdatetagsInput | string[]
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    amount?: NullableIntFieldUpdateOperationsInput | number | null
+    customerId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type OrderCreateManyExternalAddressInput = {
@@ -115893,7 +126738,11 @@ export namespace Prisma {
     language?: string | null
     paidAt?: Date | string | null
     deliveredAt?: Date | string | null
+    leftAtDropOffAt?: Date | string | null
+    leftAtDropOffLat?: number | null
+    leftAtDropOffLng?: number | null
     estimatedDeliveryDurationMinutes?: number | null
+    currentEstimatedDeliveryDurationMinutes?: number | null
     dispatchOrderIndex?: number | null
     amount: number
     canceled?: boolean
@@ -115909,6 +126758,7 @@ export namespace Prisma {
     dispatchId?: string | null
     addressId?: string | null
     deliveryAddressId?: string | null
+    branchId?: string | null
   }
 
   export type OrderUpdateWithoutExternalAddressInput = {
@@ -115919,7 +126769,11 @@ export namespace Prisma {
     language?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    leftAtDropOffLng?: NullableFloatFieldUpdateOperationsInput | number | null
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
     canceled?: BoolFieldUpdateOperationsInput | boolean
@@ -115935,6 +126789,7 @@ export namespace Prisma {
     dispatch?: DispatchUpdateOneWithoutOrdersNestedInput
     address?: AddressUpdateOneWithoutOrdersNestedInput
     deliveryAddress?: DeliveryAddressUpdateOneWithoutOrdersNestedInput
+    branch?: BranchUpdateOneWithoutOrdersNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUpdateManyWithoutOrderNestedInput
     feedback?: CustomerFeedbackUpdateOneWithoutOrderNestedInput
@@ -115950,7 +126805,11 @@ export namespace Prisma {
     language?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    leftAtDropOffLng?: NullableFloatFieldUpdateOperationsInput | number | null
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
     canceled?: BoolFieldUpdateOperationsInput | boolean
@@ -115966,6 +126825,7 @@ export namespace Prisma {
     dispatchId?: NullableStringFieldUpdateOperationsInput | string | null
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUncheckedUpdateManyWithoutOrderNestedInput
     feedback?: CustomerFeedbackUncheckedUpdateOneWithoutOrderNestedInput
@@ -115981,7 +126841,11 @@ export namespace Prisma {
     language?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    leftAtDropOffLng?: NullableFloatFieldUpdateOperationsInput | number | null
     estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: IntFieldUpdateOperationsInput | number
     canceled?: BoolFieldUpdateOperationsInput | boolean
@@ -115997,6 +126861,7 @@ export namespace Prisma {
     dispatchId?: NullableStringFieldUpdateOperationsInput | string | null
     addressId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type PromotialMessageCreateManyMessageInput = {
@@ -116271,6 +127136,48 @@ export namespace Prisma {
     metadata?: NullableJsonNullValueInput | InputJsonValue
   }
 
+  export type OrderIntentProductCreateManyOrderIntentInput = {
+    id: string
+    createdAt?: Date | string
+    productId: string
+    quantity: number
+    comments?: string | null
+    fullAmount?: number | null
+    amount?: number | null
+  }
+
+  export type OrderIntentProductUpdateWithoutOrderIntentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    comments?: NullableStringFieldUpdateOperationsInput | string | null
+    fullAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    amount?: NullableIntFieldUpdateOperationsInput | number | null
+    product?: ProductUpdateOneRequiredWithoutOrderIntentProductsNestedInput
+    modifierGroupItems?: ModifierGroupItemUpdateManyWithoutOrderIntentProductsNestedInput
+  }
+
+  export type OrderIntentProductUncheckedUpdateWithoutOrderIntentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    productId?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    comments?: NullableStringFieldUpdateOperationsInput | string | null
+    fullAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    amount?: NullableIntFieldUpdateOperationsInput | number | null
+    modifierGroupItems?: ModifierGroupItemUncheckedUpdateManyWithoutOrderIntentProductsNestedInput
+  }
+
+  export type OrderIntentProductUncheckedUpdateManyWithoutOrderIntentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    productId?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    comments?: NullableStringFieldUpdateOperationsInput | string | null
+    fullAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    amount?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
   export type ModifierGroupItemUpdateWithoutOrderProductsInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -116281,6 +127188,7 @@ export namespace Prisma {
     photo?: FileUpdateOneWithoutModifierGroupItemsNestedInput
     modifierGroup?: ModifierGroupUpdateOneWithoutItemsNestedInput
     preparationStepModifierTracks?: PreparationStepModifierTrackUpdateManyWithoutModifierGroupItemNestedInput
+    orderIntentProducts?: OrderIntentProductUpdateManyWithoutModifierGroupItemsNestedInput
   }
 
   export type ModifierGroupItemUncheckedUpdateWithoutOrderProductsInput = {
@@ -116293,9 +127201,47 @@ export namespace Prisma {
     modifierGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     fileId?: NullableStringFieldUpdateOperationsInput | string | null
     preparationStepModifierTracks?: PreparationStepModifierTrackUncheckedUpdateManyWithoutModifierGroupItemNestedInput
+    orderIntentProducts?: OrderIntentProductUncheckedUpdateManyWithoutModifierGroupItemsNestedInput
   }
 
   export type ModifierGroupItemUncheckedUpdateManyWithoutOrderProductsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    price?: IntFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
+    modifierGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    fileId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ModifierGroupItemUpdateWithoutOrderIntentProductsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    price?: IntFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
+    photo?: FileUpdateOneWithoutModifierGroupItemsNestedInput
+    modifierGroup?: ModifierGroupUpdateOneWithoutItemsNestedInput
+    preparationStepModifierTracks?: PreparationStepModifierTrackUpdateManyWithoutModifierGroupItemNestedInput
+    orderProducts?: OrderProductsUpdateManyWithoutModifierGroupItemsNestedInput
+  }
+
+  export type ModifierGroupItemUncheckedUpdateWithoutOrderIntentProductsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    price?: IntFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
+    modifierGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    fileId?: NullableStringFieldUpdateOperationsInput | string | null
+    preparationStepModifierTracks?: PreparationStepModifierTrackUncheckedUpdateManyWithoutModifierGroupItemNestedInput
+    orderProducts?: OrderProductsUncheckedUpdateManyWithoutModifierGroupItemsNestedInput
+  }
+
+  export type ModifierGroupItemUncheckedUpdateManyWithoutOrderIntentProductsInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string

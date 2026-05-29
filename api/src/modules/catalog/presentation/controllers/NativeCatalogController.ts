@@ -16,6 +16,7 @@ import * as posExclusivePromotionsRoute from "../../infrastructure/native/pos-ex
 import * as customerSearchRoute from "../../infrastructure/native/customers/searchRoute.js";
 import * as customersRoute from "../../infrastructure/native/customers/route.js";
 import * as customerAddressesRoute from "../../infrastructure/native/customers/customerAddressesRoute.js";
+import * as addressesByPhoneRoute from "../../infrastructure/native/customers/addressesByPhoneRoute.js";
 import * as addressSearchRoute from "../../infrastructure/native/address-search/route.js";
 
 export class NativeCatalogController implements HttpController {
@@ -138,6 +139,10 @@ export class NativeCatalogController implements HttpController {
 
     if (request.method === "GET" && pathname === "/customers/search") {
       return customerSearchRoute.GET(nextRequest);
+    }
+
+    if (request.method === "GET" && pathname === "/public/customers/addresses") {
+      return addressesByPhoneRoute.GET(nextRequest);
     }
 
     if (request.method === "POST" && pathname === "/customers") {
