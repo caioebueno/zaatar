@@ -594,6 +594,7 @@ model Product {
   itemType                   ProductItemType                   @default(PRODUCT)
   name                       String
   visible                    Boolean                           @default(true)
+  alertDriver                Boolean                           @default(false)
   description                String?
   price                      Int?
   comparedAtPrice            Int?

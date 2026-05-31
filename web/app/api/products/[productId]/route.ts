@@ -17,6 +17,7 @@ type RouteContext = {
 type PatchBody = {
   name?: unknown;
   visible?: unknown;
+  alertDriver?: unknown;
   description?: unknown;
   price?: unknown;
   comparedAtPrice?: unknown;
@@ -36,6 +37,10 @@ type PatchBody = {
 
 type ProductVisibleRow = {
   visible: boolean;
+};
+
+type ProductAlertDriverRow = {
+  alertDriver: boolean;
 };
 
 type ProductCategoryEntry = {
@@ -79,6 +84,7 @@ function mapProductRow(product: {
   itemType: ProductItemType;
   name: string;
   visible?: boolean;
+  alertDriver?: boolean;
   description: string | null;
   price: number | null;
   comparedAtPrice: number | null;
@@ -135,6 +141,7 @@ function mapProductRow(product: {
     itemType: product.itemType,
     name: product.name,
     visible: product.visible !== false,
+    alertDriver: product.alertDriver === true,
     description: product.description,
     price: product.price,
     comparedAtPrice: product.comparedAtPrice,
@@ -559,6 +566,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     const body = (await request.json()) as PatchBody;
     const data: Prisma.ProductUpdateInput = {};
     let visibleToPersist: boolean | undefined = undefined;
+    let alertDriverToPersist: boolean | undefined = undefined;
     let itemTypeToPersist: ProductItemType | undefined = undefined;
     let comboSlotsToPersist: ComboSlotInput[] | null = null;
     let comboProductsToPersist: LegacyComboItemInput[] | null = null;
@@ -578,6 +586,11 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
 
     if (body.visible !== undefined) {
       visibleToPersist = parseBoolean(body.visible, "visible");
+      hasAnyField = true;
+    }
+
+    if (body.alertDriver !== undefined) {
+      alertDriverToPersist = parseBoolean(body.alertDriver, "alertDriver");
       hasAnyField = true;
     }
 
@@ -1046,6 +1059,14 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       `;
     }
 
+    if (alertDriverToPersist !== undefined) {
+      await prisma.$executeRaw`
+        UPDATE "Product"
+        SET "alertDriver" = ${alertDriverToPersist}
+        WHERE "id" = ${normalizedProductId}
+      `;
+    }
+
     if (categoryIdsToLink !== null) {
       await prisma.$transaction(async (tx) => {
         if (categoryIdsToLink.length === 0) {
@@ -1161,6 +1182,12 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       WHERE "id" = ${normalizedProductId}
       LIMIT 1
     `;
+    const [alertDriverRow] = await prisma.$queryRaw<ProductAlertDriverRow[]>`
+      SELECT "alertDriver"
+      FROM "Product"
+      WHERE "id" = ${normalizedProductId}
+      LIMIT 1
+    `;
 
     const refreshedProduct = await prisma.product.findUniqueOrThrow({
       where: {
@@ -1190,6 +1217,13 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
         {
           ...refreshedProduct,
           visible: visibleRow?.visible ?? visibleToPersist ?? refreshedProduct.visible,
+          alertDriver:
+            alertDriverRow?.alertDriver ??
+            alertDriverToPersist ??
+            (refreshedProduct as typeof refreshedProduct & {
+              alertDriver?: boolean;
+            }).alertDriver ??
+            false,
         },
         productCategoryRows,
         directProducts,

@@ -501,6 +501,7 @@ exports.Prisma.ProductScalarFieldEnum = {
   itemType: 'itemType',
   name: 'name',
   visible: 'visible',
+  alertDriver: 'alertDriver',
   description: 'description',
   price: 'price',
   comparedAtPrice: 'comparedAtPrice',

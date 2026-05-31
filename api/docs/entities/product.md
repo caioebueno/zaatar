@@ -9,7 +9,9 @@ type Product = {
   description?: string | null;
   price: number;
   comparedAtPrice?: number | null;
-  active: boolean;
+  visible: boolean;
+  alertDriver: boolean;
+  itemType: "PRODUCT" | "COMBO";
   translations?: Record<string, unknown>;
   modifierGroups?: ModifierGroup[];
 };

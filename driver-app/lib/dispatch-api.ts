@@ -36,6 +36,14 @@ export type DispatchOrder = {
     numberComplement?: string;
     deliveryFee?: number;
   };
+  progressiveDiscountSnapshot?: {
+    selectedPrize?: {
+      prizeName: string;
+      quantity: number;
+      selectedProductCounts: Array<{ productId: string; quantity: number }>;
+      availableProducts: Array<{ id: string; name: string }>;
+    } | null;
+  } | null;
   orderProducts: Array<{
     id: string;
     productId: string;
@@ -46,6 +54,7 @@ export type DispatchOrder = {
       price: number | null;
       categoryId: string | null;
       comparedAtPrice: number | null;
+      alertDriver?: boolean;
     };
     comments?: string;
     selectedModifierGroupItems: Array<{

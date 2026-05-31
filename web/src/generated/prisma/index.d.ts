@@ -45177,6 +45177,7 @@ export namespace Prisma {
     itemType: $Enums.ProductItemType | null
     name: string | null
     visible: boolean | null
+    alertDriver: boolean | null
     description: string | null
     price: number | null
     comparedAtPrice: number | null
@@ -45190,6 +45191,7 @@ export namespace Prisma {
     itemType: $Enums.ProductItemType | null
     name: string | null
     visible: boolean | null
+    alertDriver: boolean | null
     description: string | null
     price: number | null
     comparedAtPrice: number | null
@@ -45203,6 +45205,7 @@ export namespace Prisma {
     itemType: number
     name: number
     visible: number
+    alertDriver: number
     description: number
     price: number
     comparedAtPrice: number
@@ -45231,6 +45234,7 @@ export namespace Prisma {
     itemType?: true
     name?: true
     visible?: true
+    alertDriver?: true
     description?: true
     price?: true
     comparedAtPrice?: true
@@ -45244,6 +45248,7 @@ export namespace Prisma {
     itemType?: true
     name?: true
     visible?: true
+    alertDriver?: true
     description?: true
     price?: true
     comparedAtPrice?: true
@@ -45257,6 +45262,7 @@ export namespace Prisma {
     itemType?: true
     name?: true
     visible?: true
+    alertDriver?: true
     description?: true
     price?: true
     comparedAtPrice?: true
@@ -45358,6 +45364,7 @@ export namespace Prisma {
     itemType: $Enums.ProductItemType
     name: string
     visible: boolean
+    alertDriver: boolean
     description: string | null
     price: number | null
     comparedAtPrice: number | null
@@ -45391,6 +45398,7 @@ export namespace Prisma {
     itemType?: boolean
     name?: boolean
     visible?: boolean
+    alertDriver?: boolean
     description?: boolean
     price?: boolean
     comparedAtPrice?: boolean
@@ -45420,6 +45428,7 @@ export namespace Prisma {
     itemType?: boolean
     name?: boolean
     visible?: boolean
+    alertDriver?: boolean
     description?: boolean
     price?: boolean
     comparedAtPrice?: boolean
@@ -45435,6 +45444,7 @@ export namespace Prisma {
     itemType?: boolean
     name?: boolean
     visible?: boolean
+    alertDriver?: boolean
     description?: boolean
     price?: boolean
     comparedAtPrice?: boolean
@@ -45450,6 +45460,7 @@ export namespace Prisma {
     itemType?: boolean
     name?: boolean
     visible?: boolean
+    alertDriver?: boolean
     description?: boolean
     price?: boolean
     comparedAtPrice?: boolean
@@ -45458,7 +45469,7 @@ export namespace Prisma {
     translations?: boolean
   }
 
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "itemType" | "name" | "visible" | "description" | "price" | "comparedAtPrice" | "categoryIndex" | "categoryId" | "translations", ExtArgs["result"]["product"]>
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "itemType" | "name" | "visible" | "alertDriver" | "description" | "price" | "comparedAtPrice" | "categoryIndex" | "categoryId" | "translations", ExtArgs["result"]["product"]>
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     photos?: boolean | Product$photosArgs<ExtArgs>
     modifierGroups?: boolean | Product$modifierGroupsArgs<ExtArgs>
@@ -45507,6 +45518,7 @@ export namespace Prisma {
       itemType: $Enums.ProductItemType
       name: string
       visible: boolean
+      alertDriver: boolean
       description: string | null
       price: number | null
       comparedAtPrice: number | null
@@ -45955,6 +45967,7 @@ export namespace Prisma {
     readonly itemType: FieldRef<"Product", 'ProductItemType'>
     readonly name: FieldRef<"Product", 'String'>
     readonly visible: FieldRef<"Product", 'Boolean'>
+    readonly alertDriver: FieldRef<"Product", 'Boolean'>
     readonly description: FieldRef<"Product", 'String'>
     readonly price: FieldRef<"Product", 'Int'>
     readonly comparedAtPrice: FieldRef<"Product", 'Int'>
@@ -86697,6 +86710,7 @@ export namespace Prisma {
     itemType: 'itemType',
     name: 'name',
     visible: 'visible',
+    alertDriver: 'alertDriver',
     description: 'description',
     price: 'price',
     comparedAtPrice: 'comparedAtPrice',
@@ -90198,6 +90212,7 @@ export namespace Prisma {
     itemType?: EnumProductItemTypeFilter<"Product"> | $Enums.ProductItemType
     name?: StringFilter<"Product"> | string
     visible?: BoolFilter<"Product"> | boolean
+    alertDriver?: BoolFilter<"Product"> | boolean
     description?: StringNullableFilter<"Product"> | string | null
     price?: IntNullableFilter<"Product"> | number | null
     comparedAtPrice?: IntNullableFilter<"Product"> | number | null
@@ -90226,6 +90241,7 @@ export namespace Prisma {
     itemType?: SortOrder
     name?: SortOrder
     visible?: SortOrder
+    alertDriver?: SortOrder
     description?: SortOrderInput | SortOrder
     price?: SortOrderInput | SortOrder
     comparedAtPrice?: SortOrderInput | SortOrder
@@ -90257,6 +90273,7 @@ export namespace Prisma {
     itemType?: EnumProductItemTypeFilter<"Product"> | $Enums.ProductItemType
     name?: StringFilter<"Product"> | string
     visible?: BoolFilter<"Product"> | boolean
+    alertDriver?: BoolFilter<"Product"> | boolean
     description?: StringNullableFilter<"Product"> | string | null
     price?: IntNullableFilter<"Product"> | number | null
     comparedAtPrice?: IntNullableFilter<"Product"> | number | null
@@ -90285,6 +90302,7 @@ export namespace Prisma {
     itemType?: SortOrder
     name?: SortOrder
     visible?: SortOrder
+    alertDriver?: SortOrder
     description?: SortOrderInput | SortOrder
     price?: SortOrderInput | SortOrder
     comparedAtPrice?: SortOrderInput | SortOrder
@@ -90307,6 +90325,7 @@ export namespace Prisma {
     itemType?: EnumProductItemTypeWithAggregatesFilter<"Product"> | $Enums.ProductItemType
     name?: StringWithAggregatesFilter<"Product"> | string
     visible?: BoolWithAggregatesFilter<"Product"> | boolean
+    alertDriver?: BoolWithAggregatesFilter<"Product"> | boolean
     description?: StringNullableWithAggregatesFilter<"Product"> | string | null
     price?: IntNullableWithAggregatesFilter<"Product"> | number | null
     comparedAtPrice?: IntNullableWithAggregatesFilter<"Product"> | number | null
@@ -95865,6 +95884,7 @@ export namespace Prisma {
     itemType?: $Enums.ProductItemType
     name: string
     visible?: boolean
+    alertDriver?: boolean
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
@@ -95892,6 +95912,7 @@ export namespace Prisma {
     itemType?: $Enums.ProductItemType
     name: string
     visible?: boolean
+    alertDriver?: boolean
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
@@ -95919,6 +95940,7 @@ export namespace Prisma {
     itemType?: EnumProductItemTypeFieldUpdateOperationsInput | $Enums.ProductItemType
     name?: StringFieldUpdateOperationsInput | string
     visible?: BoolFieldUpdateOperationsInput | boolean
+    alertDriver?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
@@ -95946,6 +95968,7 @@ export namespace Prisma {
     itemType?: EnumProductItemTypeFieldUpdateOperationsInput | $Enums.ProductItemType
     name?: StringFieldUpdateOperationsInput | string
     visible?: BoolFieldUpdateOperationsInput | boolean
+    alertDriver?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
@@ -95973,6 +95996,7 @@ export namespace Prisma {
     itemType?: $Enums.ProductItemType
     name: string
     visible?: boolean
+    alertDriver?: boolean
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
@@ -95987,6 +96011,7 @@ export namespace Prisma {
     itemType?: EnumProductItemTypeFieldUpdateOperationsInput | $Enums.ProductItemType
     name?: StringFieldUpdateOperationsInput | string
     visible?: BoolFieldUpdateOperationsInput | boolean
+    alertDriver?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
@@ -96000,6 +96025,7 @@ export namespace Prisma {
     itemType?: EnumProductItemTypeFieldUpdateOperationsInput | $Enums.ProductItemType
     name?: StringFieldUpdateOperationsInput | string
     visible?: BoolFieldUpdateOperationsInput | boolean
+    alertDriver?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
@@ -101364,6 +101390,7 @@ export namespace Prisma {
     itemType?: SortOrder
     name?: SortOrder
     visible?: SortOrder
+    alertDriver?: SortOrder
     description?: SortOrder
     price?: SortOrder
     comparedAtPrice?: SortOrder
@@ -101384,6 +101411,7 @@ export namespace Prisma {
     itemType?: SortOrder
     name?: SortOrder
     visible?: SortOrder
+    alertDriver?: SortOrder
     description?: SortOrder
     price?: SortOrder
     comparedAtPrice?: SortOrder
@@ -101397,6 +101425,7 @@ export namespace Prisma {
     itemType?: SortOrder
     name?: SortOrder
     visible?: SortOrder
+    alertDriver?: SortOrder
     description?: SortOrder
     price?: SortOrder
     comparedAtPrice?: SortOrder
@@ -109570,6 +109599,7 @@ export namespace Prisma {
     itemType?: $Enums.ProductItemType
     name: string
     visible?: boolean
+    alertDriver?: boolean
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
@@ -109596,6 +109626,7 @@ export namespace Prisma {
     itemType?: $Enums.ProductItemType
     name: string
     visible?: boolean
+    alertDriver?: boolean
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
@@ -109701,6 +109732,7 @@ export namespace Prisma {
     itemType?: EnumProductItemTypeFilter<"Product"> | $Enums.ProductItemType
     name?: StringFilter<"Product"> | string
     visible?: BoolFilter<"Product"> | boolean
+    alertDriver?: BoolFilter<"Product"> | boolean
     description?: StringNullableFilter<"Product"> | string | null
     price?: IntNullableFilter<"Product"> | number | null
     comparedAtPrice?: IntNullableFilter<"Product"> | number | null
@@ -110672,6 +110704,7 @@ export namespace Prisma {
     itemType?: $Enums.ProductItemType
     name: string
     visible?: boolean
+    alertDriver?: boolean
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
@@ -110698,6 +110731,7 @@ export namespace Prisma {
     itemType?: $Enums.ProductItemType
     name: string
     visible?: boolean
+    alertDriver?: boolean
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
@@ -110771,6 +110805,7 @@ export namespace Prisma {
     itemType?: EnumProductItemTypeFieldUpdateOperationsInput | $Enums.ProductItemType
     name?: StringFieldUpdateOperationsInput | string
     visible?: BoolFieldUpdateOperationsInput | boolean
+    alertDriver?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
@@ -110797,6 +110832,7 @@ export namespace Prisma {
     itemType?: EnumProductItemTypeFieldUpdateOperationsInput | $Enums.ProductItemType
     name?: StringFieldUpdateOperationsInput | string
     visible?: BoolFieldUpdateOperationsInput | boolean
+    alertDriver?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
@@ -110823,6 +110859,7 @@ export namespace Prisma {
     itemType?: $Enums.ProductItemType
     name: string
     visible?: boolean
+    alertDriver?: boolean
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
@@ -110849,6 +110886,7 @@ export namespace Prisma {
     itemType?: $Enums.ProductItemType
     name: string
     visible?: boolean
+    alertDriver?: boolean
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
@@ -110927,6 +110965,7 @@ export namespace Prisma {
     itemType?: EnumProductItemTypeFieldUpdateOperationsInput | $Enums.ProductItemType
     name?: StringFieldUpdateOperationsInput | string
     visible?: BoolFieldUpdateOperationsInput | boolean
+    alertDriver?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
@@ -110953,6 +110992,7 @@ export namespace Prisma {
     itemType?: EnumProductItemTypeFieldUpdateOperationsInput | $Enums.ProductItemType
     name?: StringFieldUpdateOperationsInput | string
     visible?: BoolFieldUpdateOperationsInput | boolean
+    alertDriver?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
@@ -111009,6 +111049,7 @@ export namespace Prisma {
     itemType?: $Enums.ProductItemType
     name: string
     visible?: boolean
+    alertDriver?: boolean
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
@@ -111035,6 +111076,7 @@ export namespace Prisma {
     itemType?: $Enums.ProductItemType
     name: string
     visible?: boolean
+    alertDriver?: boolean
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
@@ -115440,6 +115482,7 @@ export namespace Prisma {
     itemType?: $Enums.ProductItemType
     name: string
     visible?: boolean
+    alertDriver?: boolean
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
@@ -115466,6 +115509,7 @@ export namespace Prisma {
     itemType?: $Enums.ProductItemType
     name: string
     visible?: boolean
+    alertDriver?: boolean
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
@@ -115497,6 +115541,7 @@ export namespace Prisma {
     itemType?: $Enums.ProductItemType
     name: string
     visible?: boolean
+    alertDriver?: boolean
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
@@ -115523,6 +115568,7 @@ export namespace Prisma {
     itemType?: $Enums.ProductItemType
     name: string
     visible?: boolean
+    alertDriver?: boolean
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
@@ -115565,6 +115611,7 @@ export namespace Prisma {
     itemType?: EnumProductItemTypeFieldUpdateOperationsInput | $Enums.ProductItemType
     name?: StringFieldUpdateOperationsInput | string
     visible?: BoolFieldUpdateOperationsInput | boolean
+    alertDriver?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
@@ -115591,6 +115638,7 @@ export namespace Prisma {
     itemType?: EnumProductItemTypeFieldUpdateOperationsInput | $Enums.ProductItemType
     name?: StringFieldUpdateOperationsInput | string
     visible?: BoolFieldUpdateOperationsInput | boolean
+    alertDriver?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
@@ -115628,6 +115676,7 @@ export namespace Prisma {
     itemType?: EnumProductItemTypeFieldUpdateOperationsInput | $Enums.ProductItemType
     name?: StringFieldUpdateOperationsInput | string
     visible?: BoolFieldUpdateOperationsInput | boolean
+    alertDriver?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
@@ -115654,6 +115703,7 @@ export namespace Prisma {
     itemType?: EnumProductItemTypeFieldUpdateOperationsInput | $Enums.ProductItemType
     name?: StringFieldUpdateOperationsInput | string
     visible?: BoolFieldUpdateOperationsInput | boolean
+    alertDriver?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
@@ -115812,6 +115862,7 @@ export namespace Prisma {
     itemType?: $Enums.ProductItemType
     name: string
     visible?: boolean
+    alertDriver?: boolean
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
@@ -115838,6 +115889,7 @@ export namespace Prisma {
     itemType?: $Enums.ProductItemType
     name: string
     visible?: boolean
+    alertDriver?: boolean
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
@@ -115913,6 +115965,7 @@ export namespace Prisma {
     itemType?: EnumProductItemTypeFieldUpdateOperationsInput | $Enums.ProductItemType
     name?: StringFieldUpdateOperationsInput | string
     visible?: BoolFieldUpdateOperationsInput | boolean
+    alertDriver?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
@@ -115939,6 +115992,7 @@ export namespace Prisma {
     itemType?: EnumProductItemTypeFieldUpdateOperationsInput | $Enums.ProductItemType
     name?: StringFieldUpdateOperationsInput | string
     visible?: BoolFieldUpdateOperationsInput | boolean
+    alertDriver?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
@@ -116274,6 +116328,7 @@ export namespace Prisma {
     itemType?: $Enums.ProductItemType
     name: string
     visible?: boolean
+    alertDriver?: boolean
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
@@ -116300,6 +116355,7 @@ export namespace Prisma {
     itemType?: $Enums.ProductItemType
     name: string
     visible?: boolean
+    alertDriver?: boolean
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
@@ -116629,6 +116685,7 @@ export namespace Prisma {
     itemType?: $Enums.ProductItemType
     name: string
     visible?: boolean
+    alertDriver?: boolean
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
@@ -116655,6 +116712,7 @@ export namespace Prisma {
     itemType?: $Enums.ProductItemType
     name: string
     visible?: boolean
+    alertDriver?: boolean
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
@@ -116726,6 +116784,7 @@ export namespace Prisma {
     itemType?: EnumProductItemTypeFieldUpdateOperationsInput | $Enums.ProductItemType
     name?: StringFieldUpdateOperationsInput | string
     visible?: BoolFieldUpdateOperationsInput | boolean
+    alertDriver?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
@@ -116752,6 +116811,7 @@ export namespace Prisma {
     itemType?: EnumProductItemTypeFieldUpdateOperationsInput | $Enums.ProductItemType
     name?: StringFieldUpdateOperationsInput | string
     visible?: BoolFieldUpdateOperationsInput | boolean
+    alertDriver?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
@@ -116813,6 +116873,7 @@ export namespace Prisma {
     itemType?: $Enums.ProductItemType
     name: string
     visible?: boolean
+    alertDriver?: boolean
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
@@ -116839,6 +116900,7 @@ export namespace Prisma {
     itemType?: $Enums.ProductItemType
     name: string
     visible?: boolean
+    alertDriver?: boolean
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
@@ -116907,6 +116969,7 @@ export namespace Prisma {
     itemType?: EnumProductItemTypeFieldUpdateOperationsInput | $Enums.ProductItemType
     name?: StringFieldUpdateOperationsInput | string
     visible?: BoolFieldUpdateOperationsInput | boolean
+    alertDriver?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
@@ -116933,6 +116996,7 @@ export namespace Prisma {
     itemType?: EnumProductItemTypeFieldUpdateOperationsInput | $Enums.ProductItemType
     name?: StringFieldUpdateOperationsInput | string
     visible?: BoolFieldUpdateOperationsInput | boolean
+    alertDriver?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
@@ -117006,6 +117070,7 @@ export namespace Prisma {
     itemType?: $Enums.ProductItemType
     name: string
     visible?: boolean
+    alertDriver?: boolean
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
@@ -117032,6 +117097,7 @@ export namespace Prisma {
     itemType?: $Enums.ProductItemType
     name: string
     visible?: boolean
+    alertDriver?: boolean
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
@@ -117111,6 +117177,7 @@ export namespace Prisma {
     itemType?: EnumProductItemTypeFieldUpdateOperationsInput | $Enums.ProductItemType
     name?: StringFieldUpdateOperationsInput | string
     visible?: BoolFieldUpdateOperationsInput | boolean
+    alertDriver?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
@@ -117137,6 +117204,7 @@ export namespace Prisma {
     itemType?: EnumProductItemTypeFieldUpdateOperationsInput | $Enums.ProductItemType
     name?: StringFieldUpdateOperationsInput | string
     visible?: BoolFieldUpdateOperationsInput | boolean
+    alertDriver?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
@@ -120328,6 +120396,7 @@ export namespace Prisma {
     itemType?: $Enums.ProductItemType
     name: string
     visible?: boolean
+    alertDriver?: boolean
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
@@ -120354,6 +120423,7 @@ export namespace Prisma {
     itemType?: $Enums.ProductItemType
     name: string
     visible?: boolean
+    alertDriver?: boolean
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
@@ -120640,6 +120710,7 @@ export namespace Prisma {
     itemType?: EnumProductItemTypeFieldUpdateOperationsInput | $Enums.ProductItemType
     name?: StringFieldUpdateOperationsInput | string
     visible?: BoolFieldUpdateOperationsInput | boolean
+    alertDriver?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
@@ -120666,6 +120737,7 @@ export namespace Prisma {
     itemType?: EnumProductItemTypeFieldUpdateOperationsInput | $Enums.ProductItemType
     name?: StringFieldUpdateOperationsInput | string
     visible?: BoolFieldUpdateOperationsInput | boolean
+    alertDriver?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
@@ -120903,6 +120975,7 @@ export namespace Prisma {
     itemType?: $Enums.ProductItemType
     name: string
     visible?: boolean
+    alertDriver?: boolean
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
@@ -120929,6 +121002,7 @@ export namespace Prisma {
     itemType?: $Enums.ProductItemType
     name: string
     visible?: boolean
+    alertDriver?: boolean
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
@@ -121079,6 +121153,7 @@ export namespace Prisma {
     itemType?: EnumProductItemTypeFieldUpdateOperationsInput | $Enums.ProductItemType
     name?: StringFieldUpdateOperationsInput | string
     visible?: BoolFieldUpdateOperationsInput | boolean
+    alertDriver?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
@@ -121105,6 +121180,7 @@ export namespace Prisma {
     itemType?: EnumProductItemTypeFieldUpdateOperationsInput | $Enums.ProductItemType
     name?: StringFieldUpdateOperationsInput | string
     visible?: BoolFieldUpdateOperationsInput | boolean
+    alertDriver?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
@@ -121271,6 +121347,7 @@ export namespace Prisma {
     itemType?: $Enums.ProductItemType
     name: string
     visible?: boolean
+    alertDriver?: boolean
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
@@ -121297,6 +121374,7 @@ export namespace Prisma {
     itemType?: $Enums.ProductItemType
     name: string
     visible?: boolean
+    alertDriver?: boolean
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
@@ -121417,6 +121495,7 @@ export namespace Prisma {
     itemType?: EnumProductItemTypeFieldUpdateOperationsInput | $Enums.ProductItemType
     name?: StringFieldUpdateOperationsInput | string
     visible?: BoolFieldUpdateOperationsInput | boolean
+    alertDriver?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
@@ -121443,6 +121522,7 @@ export namespace Prisma {
     itemType?: EnumProductItemTypeFieldUpdateOperationsInput | $Enums.ProductItemType
     name?: StringFieldUpdateOperationsInput | string
     visible?: BoolFieldUpdateOperationsInput | boolean
+    alertDriver?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
@@ -123088,6 +123168,7 @@ export namespace Prisma {
     itemType?: EnumProductItemTypeFieldUpdateOperationsInput | $Enums.ProductItemType
     name?: StringFieldUpdateOperationsInput | string
     visible?: BoolFieldUpdateOperationsInput | boolean
+    alertDriver?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
@@ -123114,6 +123195,7 @@ export namespace Prisma {
     itemType?: EnumProductItemTypeFieldUpdateOperationsInput | $Enums.ProductItemType
     name?: StringFieldUpdateOperationsInput | string
     visible?: BoolFieldUpdateOperationsInput | boolean
+    alertDriver?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
@@ -123140,6 +123222,7 @@ export namespace Prisma {
     itemType?: EnumProductItemTypeFieldUpdateOperationsInput | $Enums.ProductItemType
     name?: StringFieldUpdateOperationsInput | string
     visible?: BoolFieldUpdateOperationsInput | boolean
+    alertDriver?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
@@ -123429,6 +123512,7 @@ export namespace Prisma {
     itemType?: EnumProductItemTypeFieldUpdateOperationsInput | $Enums.ProductItemType
     name?: StringFieldUpdateOperationsInput | string
     visible?: BoolFieldUpdateOperationsInput | boolean
+    alertDriver?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
@@ -123455,6 +123539,7 @@ export namespace Prisma {
     itemType?: EnumProductItemTypeFieldUpdateOperationsInput | $Enums.ProductItemType
     name?: StringFieldUpdateOperationsInput | string
     visible?: BoolFieldUpdateOperationsInput | boolean
+    alertDriver?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
@@ -123481,6 +123566,7 @@ export namespace Prisma {
     itemType?: EnumProductItemTypeFieldUpdateOperationsInput | $Enums.ProductItemType
     name?: StringFieldUpdateOperationsInput | string
     visible?: BoolFieldUpdateOperationsInput | boolean
+    alertDriver?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
@@ -125660,6 +125746,7 @@ export namespace Prisma {
     itemType?: $Enums.ProductItemType
     name: string
     visible?: boolean
+    alertDriver?: boolean
     description?: string | null
     price?: number | null
     comparedAtPrice?: number | null
@@ -125693,6 +125780,7 @@ export namespace Prisma {
     itemType?: EnumProductItemTypeFieldUpdateOperationsInput | $Enums.ProductItemType
     name?: StringFieldUpdateOperationsInput | string
     visible?: BoolFieldUpdateOperationsInput | boolean
+    alertDriver?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
@@ -125719,6 +125807,7 @@ export namespace Prisma {
     itemType?: EnumProductItemTypeFieldUpdateOperationsInput | $Enums.ProductItemType
     name?: StringFieldUpdateOperationsInput | string
     visible?: BoolFieldUpdateOperationsInput | boolean
+    alertDriver?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
@@ -125745,6 +125834,7 @@ export namespace Prisma {
     itemType?: EnumProductItemTypeFieldUpdateOperationsInput | $Enums.ProductItemType
     name?: StringFieldUpdateOperationsInput | string
     visible?: BoolFieldUpdateOperationsInput | boolean
+    alertDriver?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: NullableIntFieldUpdateOperationsInput | number | null
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null

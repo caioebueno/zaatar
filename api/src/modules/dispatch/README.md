@@ -290,6 +290,7 @@ type DispatchEntity = {
       product: {
         id: string;
         name: string;
+        alertDriver: boolean;
         description: string | null;
         price: number | null;
         categoryId: string | null;

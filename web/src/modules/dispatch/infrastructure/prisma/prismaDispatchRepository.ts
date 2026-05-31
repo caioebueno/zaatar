@@ -121,6 +121,7 @@ type DispatchOrderProductRow = {
   fullAmount: number;
   amount: number;
   product: {
+    alertDriver: boolean;
     id: string;
     name: string;
     createdAt: Date;
@@ -498,6 +499,7 @@ async function getDispatchOrderProducts(
       product: {
         id: row.product.id,
         name: row.product.name,
+        alertDriver: row.product.alertDriver === true,
         description: row.product.description,
         price: row.product.price,
         categoryId: row.product.categoryId,
