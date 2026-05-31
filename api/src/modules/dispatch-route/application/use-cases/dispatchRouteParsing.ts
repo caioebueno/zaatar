@@ -98,7 +98,7 @@ function normalizePoint(
     recordedAt:
       normalizeOptionalDate(point.recordedAt, `${fieldPrefix}.recordedAt`) ??
       new Date(),
-    accuracyMeters: normalizeOptionalNumber(
+    accuracyMeters: normalizeOptionalInteger(
       point.accuracyMeters,
       `${fieldPrefix}.accuracyMeters`,
       0,
@@ -179,6 +179,20 @@ function normalizeOptionalNumber(
   }
 
   return normalizeNumber(value, field, min, max);
+}
+
+function normalizeOptionalInteger(
+  value: unknown,
+  field: string,
+  min?: number,
+  max?: number,
+): number | null {
+  if (value === undefined || value === null || value === "") {
+    return null;
+  }
+
+  const parsed = normalizeNumber(value, field, min, max);
+  return Math.round(parsed);
 }
 
 function normalizeOptionalBoolean(value: unknown, field: string): boolean | null {
