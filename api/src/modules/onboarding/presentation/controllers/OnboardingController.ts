@@ -82,6 +82,8 @@ export class OnboardingController implements HttpController {
           addressZipCode: body.addressZipCode,
           addressComplement: body.addressComplement,
           addressNumberComplement: body.addressNumberComplement,
+          chatwootAccountId: body.chatwootAccountId,
+          chatwootSourceId: body.chatwootSourceId,
           operationHours: body.operationHours,
         });
 
@@ -113,6 +115,8 @@ export class OnboardingController implements HttpController {
           addressZipCode: body.addressZipCode,
           addressComplement: body.addressComplement,
           addressNumberComplement: body.addressNumberComplement,
+          chatwootAccountId: body.chatwootAccountId,
+          chatwootSourceId: body.chatwootSourceId,
           operationHours: body.operationHours,
         });
 

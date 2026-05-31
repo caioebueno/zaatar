@@ -33,6 +33,7 @@ type CategoriesResponse = Array<{
   translations?: TranslationMap;
   products: Array<{
     visible: boolean;
+    alertDriver: boolean;
     id: string;
     itemType: "PRODUCT" | "COMBO";
     name: string;

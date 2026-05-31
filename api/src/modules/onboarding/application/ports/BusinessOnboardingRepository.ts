@@ -45,6 +45,8 @@ export type BranchOnboardingRecord = {
     zipCode: string | null;
   } | null;
   createdAt: Date;
+  chatwootAccountId: string | null;
+  chatwootSourceId: string | null;
   id: string;
   name: string;
   operationHours: unknown;
@@ -63,6 +65,8 @@ export type UpsertBranchOnboardingInput = {
   addressState?: string | null;
   addressStreet?: string | null;
   addressZipCode?: string | null;
+  chatwootAccountId?: string | null;
+  chatwootSourceId?: string | null;
   name: string;
   operationHours: unknown;
 };

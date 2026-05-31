@@ -2,6 +2,7 @@ import type { DocEntry } from '../docs-manifest'
 import { docs } from '../docs-manifest'
 
 const GROUP_ORDER = [
+  'Entities',
   'Auth & Identity',
   'Business',
   'Catalog',
@@ -13,6 +14,7 @@ const GROUP_ORDER = [
 ]
 
 const GROUP_ICONS: Record<string, string> = {
+  'Entities': '⬡',
   'Auth & Identity': '⬡',
   'Business': '⬡',
   'Catalog': '⬡',

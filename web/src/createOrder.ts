@@ -35,6 +35,7 @@ import {
   sendWhatsAppTemplateMessage,
   sendWhatsAppTextMessage,
 } from "@/src/whatsappApi";
+import sendOrderConfirmationChatwootMessage from "@/src/sendOrderConfirmationChatwootMessage";
 import {
   MENU_ID_COOKIE_NAME,
   MENU_TAGS_COOKIE_NAME,
@@ -374,6 +375,7 @@ function resolvePrizeNameForLanguage(
 
 async function sendOrderConfirmationWhatsAppMessage(input: {
   language?: string | null;
+  branchId: string | null;
   customerName?: string | null;
   customerPhone: string;
   orderNumber?: string | null;
@@ -391,6 +393,22 @@ async function sendOrderConfirmationWhatsAppMessage(input: {
   const templateSid = resolveOrderConfirmationTemplateSid(templateLanguage);
 
   try {
+    const sentViaChatwoot = await sendOrderConfirmationChatwootMessage({
+      branchId: input.branchId,
+      customerPhone: input.customerPhone,
+      customerName: input.customerName,
+      content: message,
+      metadata: {
+        order_number: input.orderNumber ?? null,
+        order_type: input.orderType,
+        total_in_cents: Math.max(input.totalInCents, 0),
+      },
+    });
+
+    if (sentViaChatwoot) {
+      return;
+    }
+
     if (templateSid) {
       await sendWhatsAppTemplateMessage({
         customerPhone: input.customerPhone,
@@ -2016,6 +2034,7 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
     after(async () => {
       await sendOrderConfirmationWhatsAppMessage({
         language: language ?? null,
+        branchId: resolvedBranchId,
         customerName,
         customerPhone,
         orderNumber: transactionResult.orderNumber,

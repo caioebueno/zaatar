@@ -6,6 +6,7 @@ type TProduct = {
   itemType?: "PRODUCT" | "COMBO";
   name: string;
   visible?: boolean;
+  alertDriver?: boolean;
   photos?: Image[];
   price?: number | null;
   description?: string | null;

@@ -13,6 +13,11 @@ type ProductVisibleRow = {
   visible: boolean;
 };
 
+type ProductAlertDriverRow = {
+  id: string;
+  alertDriver: boolean;
+};
+
 type ProductCategoryEntry = {
   productId: string;
   categoryId: string;
@@ -52,6 +57,7 @@ type PostBody = {
   id?: unknown;
   name?: unknown;
   visible?: unknown;
+  alertDriver?: unknown;
   description?: unknown;
   price?: unknown;
   comparedAtPrice?: unknown;
@@ -75,6 +81,7 @@ type ProductRowResponse = {
   itemType: ProductItemType;
   name: string;
   visible: boolean;
+  alertDriver: boolean;
   description: string | null;
   price: number | null;
   comparedAtPrice: number | null;
@@ -147,6 +154,7 @@ function mapProductRow(product: {
   itemType: ProductItemType;
   name: string;
   visible?: boolean;
+  alertDriver?: boolean;
   description: string | null;
   price: number | null;
   comparedAtPrice: number | null;
@@ -203,6 +211,7 @@ function mapProductRow(product: {
     itemType: product.itemType,
     name: product.name,
     visible: product.visible !== false,
+    alertDriver: product.alertDriver === true,
     description: product.description,
     price: product.price,
     comparedAtPrice: product.comparedAtPrice,
@@ -596,6 +605,10 @@ export async function POST(request: NextRequest) {
     const name = parseString(body.name, "name");
     const visible =
       body.visible === undefined ? true : parseBoolean(body.visible, "visible");
+    const alertDriver =
+      body.alertDriver === undefined
+        ? false
+        : parseBoolean(body.alertDriver, "alertDriver");
 
     const description =
       body.description === undefined
@@ -1023,6 +1036,12 @@ export async function POST(request: NextRequest) {
         },
       });
 
+      await tx.$executeRaw`
+        UPDATE "Product"
+        SET "alertDriver" = ${alertDriver}
+        WHERE "id" = ${created.id}
+      `;
+
       if (allCategoryIds.length > 0) {
         await tx.$executeRaw`
           INSERT INTO "ProductCategory" ("productId", "categoryId", "categoryIndex")
@@ -1108,9 +1127,24 @@ export async function POST(request: NextRequest) {
       productName: row.productName,
       quantity: row.quantity,
     }));
+    const [createdProductAlertDriverRow] = await prisma.$queryRaw<
+      ProductAlertDriverRow[]
+    >`
+      SELECT "id", "alertDriver"
+      FROM "Product"
+      WHERE "id" = ${createdProduct.id}
+      LIMIT 1
+    `;
 
     return NextResponse.json(
-      mapProductRow(createdProduct, createdProductCategoryRows, directProducts),
+      mapProductRow(
+        {
+          ...createdProduct,
+          alertDriver: createdProductAlertDriverRow?.alertDriver ?? false,
+        },
+        createdProductCategoryRows,
+        directProducts,
+      ),
       { status: 201 },
     );
   } catch (error) {
@@ -1149,6 +1183,7 @@ export async function GET() {
     const [
       products,
       productVisibilityRows,
+      productAlertDriverRows,
       categories,
       files,
       modifierGroups,
@@ -1227,6 +1262,10 @@ export async function GET() {
         }),
         prisma.$queryRaw<ProductVisibleRow[]>`
           SELECT "id", "visible"
+          FROM "Product"
+        `,
+        prisma.$queryRaw<ProductAlertDriverRow[]>`
+          SELECT "id", "alertDriver"
           FROM "Product"
         `,
         prisma.category.findMany({
@@ -1313,6 +1352,9 @@ export async function GET() {
     const visibleByProductId = new Map(
       productVisibilityRows.map((row) => [row.id, row.visible]),
     );
+    const alertDriverByProductId = new Map(
+      productAlertDriverRows.map((row) => [row.id, row.alertDriver]),
+    );
 
     const productIds = products.map((product) => product.id);
     const productCategoryRows =
@@ -1361,6 +1403,11 @@ export async function GET() {
             visible:
               visibleByProductId.get(product.id) ??
               (product as typeof product & { visible?: boolean }).visible,
+            alertDriver:
+              alertDriverByProductId.get(product.id) ??
+              (product as typeof product & { alertDriver?: boolean })
+                .alertDriver ??
+              false,
           },
           productCategoriesByProductId.get(product.id) ?? [],
           directComboProductsByProductId.get(product.id) ?? [],

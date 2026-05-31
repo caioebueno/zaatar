@@ -257,6 +257,20 @@ exports.Prisma.UserScalarFieldEnum = {
   lastLoginAt: 'lastLoginAt'
 };
 
+exports.Prisma.UserPushDeviceScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  userId: 'userId',
+  businessId: 'businessId',
+  platform: 'platform',
+  pushToken: 'pushToken',
+  lastSeenAt: 'lastSeenAt',
+  lastNotifiedAt: 'lastNotifiedAt',
+  notificationFailures: 'notificationFailures',
+  revokedAt: 'revokedAt'
+};
+
 exports.Prisma.OwnerOtpChallengeScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
@@ -339,6 +353,9 @@ exports.Prisma.BranchScalarFieldEnum = {
   createdAt: 'createdAt',
   name: 'name',
   operationHours: 'operationHours',
+  chatwootAccountId: 'chatwootAccountId',
+  chatwootSourceId: 'chatwootSourceId',
+  chatwootAgentId: 'chatwootAgentId',
   addressId: 'addressId',
   businessId: 'businessId'
 };
@@ -370,6 +387,11 @@ exports.Prisma.DispatchScalarFieldEnum = {
   startedDeliveryAt: 'startedDeliveryAt',
   estimatedDeliveryDurationMinutes: 'estimatedDeliveryDurationMinutes',
   estimatedRoundTripDurationMinutes: 'estimatedRoundTripDurationMinutes',
+  currentEstimatedDeliveryDurationMinutes: 'currentEstimatedDeliveryDurationMinutes',
+  currentEstimatedRoundTripDurationMinutes: 'currentEstimatedRoundTripDurationMinutes',
+  arrivedAtRestaurantAt: 'arrivedAtRestaurantAt',
+  arrivedAtRestaurantLat: 'arrivedAtRestaurantLat',
+  arrivedAtRestaurantLng: 'arrivedAtRestaurantLng',
   driverId: 'driverId'
 };
 
@@ -401,6 +423,19 @@ exports.Prisma.DispatchRoutePointScalarFieldEnum = {
   altitudeMeters: 'altitudeMeters',
   source: 'source',
   isMocked: 'isMocked'
+};
+
+exports.Prisma.DispatchRouteMilestoneScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  dispatchId: 'dispatchId',
+  driverId: 'driverId',
+  sessionId: 'sessionId',
+  type: 'type',
+  recordedAt: 'recordedAt',
+  lat: 'lat',
+  lng: 'lng'
 };
 
 exports.Prisma.DispatchAssignmentJobScalarFieldEnum = {
@@ -466,6 +501,7 @@ exports.Prisma.ProductScalarFieldEnum = {
   itemType: 'itemType',
   name: 'name',
   visible: 'visible',
+  alertDriver: 'alertDriver',
   description: 'description',
   price: 'price',
   comparedAtPrice: 'comparedAtPrice',
@@ -678,7 +714,11 @@ exports.Prisma.OrderScalarFieldEnum = {
   language: 'language',
   paidAt: 'paidAt',
   deliveredAt: 'deliveredAt',
+  leftAtDropOffAt: 'leftAtDropOffAt',
+  leftAtDropOffLat: 'leftAtDropOffLat',
+  leftAtDropOffLng: 'leftAtDropOffLng',
   estimatedDeliveryDurationMinutes: 'estimatedDeliveryDurationMinutes',
+  currentEstimatedDeliveryDurationMinutes: 'currentEstimatedDeliveryDurationMinutes',
   dispatchOrderIndex: 'dispatchOrderIndex',
   amount: 'amount',
   canceled: 'canceled',
@@ -694,7 +734,26 @@ exports.Prisma.OrderScalarFieldEnum = {
   dispatchId: 'dispatchId',
   addressId: 'addressId',
   deliveryAddressId: 'deliveryAddressId',
-  externalAddressId: 'externalAddressId'
+  externalAddressId: 'externalAddressId',
+  branchId: 'branchId'
+};
+
+exports.Prisma.OrderIntentScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  active: 'active',
+  language: 'language',
+  status: 'status',
+  type: 'type',
+  paymentMethod: 'paymentMethod',
+  paymentProvider: 'paymentProvider',
+  tipAmount: 'tipAmount',
+  tags: 'tags',
+  progressiveDiscountSnapshot: 'progressiveDiscountSnapshot',
+  amount: 'amount',
+  customerId: 'customerId',
+  deliveryAddressId: 'deliveryAddressId'
 };
 
 exports.Prisma.CustomerFeedbackScalarFieldEnum = {
@@ -745,6 +804,17 @@ exports.Prisma.OrderProductsScalarFieldEnum = {
   fullAmount: 'fullAmount',
   amount: 'amount',
   orderId: 'orderId'
+};
+
+exports.Prisma.OrderIntentProductScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  orderIntentId: 'orderIntentId',
+  productId: 'productId',
+  quantity: 'quantity',
+  comments: 'comments',
+  fullAmount: 'fullAmount',
+  amount: 'amount'
 };
 
 exports.Prisma.InventoryPlaceScalarFieldEnum = {
@@ -888,6 +958,10 @@ exports.ModifierGroupType = exports.$Enums.ModifierGroupType = {
   SINGLE: 'SINGLE'
 };
 
+exports.UserPushDevicePlatform = exports.$Enums.UserPushDevicePlatform = {
+  IOS: 'IOS'
+};
+
 exports.ExternalIntegrationProvider = exports.$Enums.ExternalIntegrationProvider = {
   UBER_EATS: 'UBER_EATS'
 };
@@ -927,6 +1001,12 @@ exports.DispatchRoutePointSource = exports.$Enums.DispatchRoutePointSource = {
   GPS: 'GPS',
   NETWORK: 'NETWORK',
   MANUAL: 'MANUAL'
+};
+
+exports.DispatchRouteMilestoneType = exports.$Enums.DispatchRouteMilestoneType = {
+  LEFT_PIZZERIA: 'LEFT_PIZZERIA',
+  LEFT_DROPOFF: 'LEFT_DROPOFF',
+  ARRIVED_RESTAURANT: 'ARRIVED_RESTAURANT'
 };
 
 exports.DispatchAssignmentJobStatus = exports.$Enums.DispatchAssignmentJobStatus = {
@@ -1027,6 +1107,7 @@ exports.Prisma.ModelName = {
   ModifierGroupItem: 'ModifierGroupItem',
   Business: 'Business',
   User: 'User',
+  UserPushDevice: 'UserPushDevice',
   OwnerOtpChallenge: 'OwnerOtpChallenge',
   ExternalIntegrationConnection: 'ExternalIntegrationConnection',
   ExternalMenuEntityMap: 'ExternalMenuEntityMap',
@@ -1038,6 +1119,7 @@ exports.Prisma.ModelName = {
   Dispatch: 'Dispatch',
   DispatchRouteSession: 'DispatchRouteSession',
   DispatchRoutePoint: 'DispatchRoutePoint',
+  DispatchRouteMilestone: 'DispatchRouteMilestone',
   DispatchAssignmentJob: 'DispatchAssignmentJob',
   DispatchEtaRecalculationJob: 'DispatchEtaRecalculationJob',
   FeedbackWhatsAppJob: 'FeedbackWhatsAppJob',
@@ -1063,9 +1145,11 @@ exports.Prisma.ModelName = {
   Message: 'Message',
   PromotialMessage: 'PromotialMessage',
   Order: 'Order',
+  OrderIntent: 'OrderIntent',
   CustomerFeedback: 'CustomerFeedback',
   CustomerReward: 'CustomerReward',
   OrderProducts: 'OrderProducts',
+  OrderIntentProduct: 'OrderIntentProduct',
   InventoryPlace: 'InventoryPlace',
   InventoryProduct: 'InventoryProduct',
   InventoryStock: 'InventoryStock',

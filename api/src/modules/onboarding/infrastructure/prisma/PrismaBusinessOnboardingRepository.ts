@@ -35,8 +35,13 @@ export class PrismaBusinessOnboardingRepository
           address: true,
         },
       });
+      await persistBranchChatwootConfig(tx, branch.id, {
+        chatwootAccountId: input.chatwootAccountId,
+        chatwootSourceId: input.chatwootSourceId,
+      });
 
-      return mapBranch(branch);
+      const chatwootConfig = await loadBranchChatwootConfigById(tx, branch.id);
+      return mapBranch(branch, chatwootConfig);
     });
   }
 
@@ -70,8 +75,12 @@ export class PrismaBusinessOnboardingRepository
       },
       orderBy: [{ createdAt: "asc" }],
     });
+    const chatwootByBranchId = await loadBranchChatwootConfigsByIds(
+      prisma,
+      rows.map((row) => row.id),
+    );
 
-    return rows.map((row) => mapBranch(row));
+    return rows.map((row) => mapBranch(row, chatwootByBranchId.get(row.id) ?? null));
   }
 
   async removeBranch(businessId: string, branchId: string): Promise<boolean> {
@@ -186,8 +195,13 @@ export class PrismaBusinessOnboardingRepository
           address: true,
         },
       });
+      await persistBranchChatwootConfig(tx, updated.id, {
+        chatwootAccountId: input.chatwootAccountId,
+        chatwootSourceId: input.chatwootSourceId,
+      });
 
-      return mapBranch(updated);
+      const chatwootConfig = await loadBranchChatwootConfigById(tx, updated.id);
+      return mapBranch(updated, chatwootConfig);
     });
   }
 
@@ -235,13 +249,19 @@ function mapBranch(branch: {
     googleMapsUrl: string;
     [key: string]: unknown;
   } | null;
-}): BranchOnboardingRecord {
+},
+chatwootConfig?: {
+  chatwootAccountId: string | null;
+  chatwootSourceId: string | null;
+} | null): BranchOnboardingRecord {
   const addressRecord = toObjectRecord(branch.address);
 
   return {
     id: branch.id,
     name: branch.name,
     createdAt: branch.createdAt,
+    chatwootAccountId: chatwootConfig?.chatwootAccountId ?? null,
+    chatwootSourceId: chatwootConfig?.chatwootSourceId ?? null,
     operationHours: branch.operationHours,
     address: branch.address
       ? {
@@ -285,6 +305,148 @@ function toAddressWriteData(
     data.id = randomUUID();
   }
   return data;
+}
+
+type RawQueryClient = {
+  $executeRawUnsafe: (query: string, ...values: unknown[]) => Promise<unknown>;
+  $queryRaw: <T = unknown>(query: TemplateStringsArray, ...values: unknown[]) => Promise<T>;
+  $queryRawUnsafe: <T = unknown>(query: string, ...values: unknown[]) => Promise<T>;
+};
+
+async function persistBranchChatwootConfig(
+  tx: RawQueryClient,
+  branchId: string,
+  input: {
+    chatwootAccountId?: string | null;
+    chatwootSourceId?: string | null;
+  },
+): Promise<void> {
+  const availability = await getBranchChatwootColumnsAvailability(tx);
+
+  const sets: string[] = [];
+  const values: unknown[] = [];
+
+  if (availability.hasChatwootAccountId && input.chatwootAccountId !== undefined) {
+    sets.push(`"chatwootAccountId" = $${values.length + 1}`);
+    values.push(input.chatwootAccountId);
+  }
+
+  if (availability.hasChatwootSourceId && input.chatwootSourceId !== undefined) {
+    sets.push(`"chatwootSourceId" = $${values.length + 1}`);
+    values.push(input.chatwootSourceId);
+  }
+
+  if (sets.length === 0) {
+    return;
+  }
+
+  await tx.$executeRawUnsafe(
+    `UPDATE "Branch" SET ${sets.join(", ")} WHERE "id" = $${values.length + 1}`,
+    ...values,
+    branchId,
+  );
+}
+
+async function loadBranchChatwootConfigById(
+  tx: RawQueryClient,
+  branchId: string,
+): Promise<{ chatwootAccountId: string | null; chatwootSourceId: string | null } | null> {
+  const availability = await getBranchChatwootColumnsAvailability(tx);
+  if (!availability.hasChatwootAccountId && !availability.hasChatwootSourceId) {
+    return null;
+  }
+
+  const selectChatwootAccount = availability.hasChatwootAccountId
+    ? `"chatwootAccountId"`
+    : "NULL::text";
+  const selectChatwootSource = availability.hasChatwootSourceId
+    ? `"chatwootSourceId"`
+    : "NULL::text";
+
+  const rows = await tx.$queryRawUnsafe<
+    Array<{
+      chatwootAccountId: string | null;
+      chatwootSourceId: string | null;
+    }>
+  >(
+    `
+    SELECT
+      ${selectChatwootAccount} AS "chatwootAccountId",
+      ${selectChatwootSource} AS "chatwootSourceId"
+    FROM "Branch"
+    WHERE "id" = $1
+    LIMIT 1
+  `,
+    branchId,
+  );
+
+  return rows[0] ?? null;
+}
+
+async function loadBranchChatwootConfigsByIds(
+  tx: RawQueryClient,
+  branchIds: string[],
+): Promise<Map<string, { chatwootAccountId: string | null; chatwootSourceId: string | null }>> {
+  if (branchIds.length === 0) {
+    return new Map();
+  }
+  const availability = await getBranchChatwootColumnsAvailability(tx);
+  if (!availability.hasChatwootAccountId && !availability.hasChatwootSourceId) {
+    return new Map();
+  }
+
+  const selectChatwootAccount = availability.hasChatwootAccountId
+    ? `"chatwootAccountId"`
+    : "NULL::text";
+  const selectChatwootSource = availability.hasChatwootSourceId
+    ? `"chatwootSourceId"`
+    : "NULL::text";
+
+  const rows = await tx.$queryRawUnsafe<
+    Array<{
+      id: string;
+      chatwootAccountId: string | null;
+      chatwootSourceId: string | null;
+    }>
+  >(
+    `
+    SELECT
+      "id",
+      ${selectChatwootAccount} AS "chatwootAccountId",
+      ${selectChatwootSource} AS "chatwootSourceId"
+    FROM "Branch"
+    WHERE "id" = ANY($1::text[])
+  `,
+    branchIds,
+  );
+
+  return new Map(
+    rows.map((row) => [
+      row.id,
+      {
+        chatwootAccountId: row.chatwootAccountId,
+        chatwootSourceId: row.chatwootSourceId,
+      },
+    ]),
+  );
+}
+
+async function getBranchChatwootColumnsAvailability(
+  tx: RawQueryClient,
+): Promise<{ hasChatwootAccountId: boolean; hasChatwootSourceId: boolean }> {
+  const rows = await tx.$queryRaw<Array<{ columnName: string }>>`
+    SELECT c.column_name AS "columnName"
+    FROM information_schema.columns c
+    WHERE c.table_schema = 'public'
+      AND c.table_name = 'Branch'
+      AND c.column_name IN ('chatwootAccountId', 'chatwootSourceId')
+  `;
+
+  const set = new Set(rows.map((row) => row.columnName));
+  return {
+    hasChatwootAccountId: set.has("chatwootAccountId"),
+    hasChatwootSourceId: set.has("chatwootSourceId"),
+  };
 }
 
 function toObjectRecord(value: unknown): Record<string, unknown> | null {

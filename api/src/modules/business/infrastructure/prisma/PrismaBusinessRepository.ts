@@ -193,6 +193,10 @@ export class PrismaBusinessRepository implements BusinessRepository {
       return null;
     }
 
+    const chatwootByBranchId = await loadBranchChatwootConfigsByIds(
+      business.branches.map((branch) => branch.id),
+    );
+
     return {
       id: business.id,
       createdAt: business.createdAt,
@@ -201,10 +205,13 @@ export class PrismaBusinessRepository implements BusinessRepository {
       bannerPhotoUrl: business.bannerPhotoUrl,
       brandColor: business.brandColor,
       branches: business.branches.map((branch) => {
+        const chatwootConfig = chatwootByBranchId.get(branch.id) ?? null;
         const mapped: BusinessBranchRecord = {
           id: branch.id,
           createdAt: branch.createdAt,
           name: branch.name,
+          chatwootAccountId: chatwootConfig?.chatwootAccountId ?? null,
+          chatwootSourceId: chatwootConfig?.chatwootSourceId ?? null,
           operationHours: branch.operationHours,
           address: branch.address
             ? {
@@ -228,4 +235,70 @@ export class PrismaBusinessRepository implements BusinessRepository {
       }),
     };
   }
+}
+
+async function loadBranchChatwootConfigsByIds(
+  branchIds: string[],
+): Promise<Map<string, { chatwootAccountId: string | null; chatwootSourceId: string | null }>> {
+  if (branchIds.length === 0) {
+    return new Map();
+  }
+  const availability = await getBranchChatwootColumnsAvailability();
+  if (!availability.hasChatwootAccountId && !availability.hasChatwootSourceId) {
+    return new Map();
+  }
+
+  const selectChatwootAccount = availability.hasChatwootAccountId
+    ? `"chatwootAccountId"`
+    : "NULL::text";
+  const selectChatwootSource = availability.hasChatwootSourceId
+    ? `"chatwootSourceId"`
+    : "NULL::text";
+
+  const rows = await prisma.$queryRawUnsafe<
+    Array<{
+      id: string;
+      chatwootAccountId: string | null;
+      chatwootSourceId: string | null;
+    }>
+  >(
+    `
+    SELECT
+      "id",
+      ${selectChatwootAccount} AS "chatwootAccountId",
+      ${selectChatwootSource} AS "chatwootSourceId"
+    FROM "Branch"
+    WHERE "id" = ANY($1::text[])
+  `,
+    branchIds,
+  );
+
+  return new Map(
+    rows.map((row) => [
+      row.id,
+      {
+        chatwootAccountId: row.chatwootAccountId,
+        chatwootSourceId: row.chatwootSourceId,
+      },
+    ]),
+  );
+}
+
+async function getBranchChatwootColumnsAvailability(): Promise<{
+  hasChatwootAccountId: boolean;
+  hasChatwootSourceId: boolean;
+}> {
+  const rows = await prisma.$queryRaw<Array<{ columnName: string }>>`
+    SELECT c.column_name AS "columnName"
+    FROM information_schema.columns c
+    WHERE c.table_schema = 'public'
+      AND c.table_name = 'Branch'
+      AND c.column_name IN ('chatwootAccountId', 'chatwootSourceId')
+  `;
+
+  const set = new Set(rows.map((row) => row.columnName));
+  return {
+    hasChatwootAccountId: set.has("chatwootAccountId"),
+    hasChatwootSourceId: set.has("chatwootSourceId"),
+  };
 }

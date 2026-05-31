@@ -90,6 +90,7 @@ Description:
 
 - Assigns or unassigns a driver from a dispatch.
 - `dispatchAt` is legacy and not used by this endpoint.
+- When `dispatched` is set to `true` and resulting `dispatchAt` is non-null, API triggers `out_for_delivery` WhatsApp notification via Chatwoot for delivery orders with customer phone.
 
 Authentication:
 
@@ -121,6 +122,21 @@ Errors:
 - `400` invalid payload (for example missing/invalid `driverId`)
 - `404` dispatch not found
 - `404` driver not found
+
+Out-for-delivery Chatwoot template envs (optional overrides):
+
+- `CHATWOOT_OUT_FOR_DELIVERY_TEMPLATE_NAME_EN`
+- `CHATWOOT_OUT_FOR_DELIVERY_TEMPLATE_NAME_PT`
+- `CHATWOOT_OUT_FOR_DELIVERY_TEMPLATE_NAME_ES`
+- `CHATWOOT_OUT_FOR_DELIVERY_TEMPLATE_NAME` (fallback)
+- `CHATWOOT_OUT_FOR_DELIVERY_TEMPLATE_CATEGORY` (default `UTILITY`)
+- `CHATWOOT_OUT_FOR_DELIVERY_TEMPLATE_PREVIEW_EN`
+- `CHATWOOT_OUT_FOR_DELIVERY_TEMPLATE_PREVIEW_PT`
+- `CHATWOOT_OUT_FOR_DELIVERY_TEMPLATE_PREVIEW_ES`
+
+Preview placeholders:
+
+- `{{1}}` = ETA range label (example `20-30 min`)
 
 ## Get Next Dispatch For Driver
 
@@ -274,6 +290,7 @@ type DispatchEntity = {
       product: {
         id: string;
         name: string;
+        alertDriver: boolean;
         description: string | null;
         price: number | null;
         categoryId: string | null;

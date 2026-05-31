@@ -133,6 +133,16 @@ Triggers a menu sync publish to Uber Eats.
 
 ---
 
+## Chatwoot
+
+Chatwoot proxy routes are documented in a dedicated page:
+
+- [chatwoot.md](./chatwoot.md)
+- [chatwoot-webhook.md](./chatwoot-webhook.md)
+- [chatwoot-websocket.md](./chatwoot-websocket.md)
+
+---
+
 ## Public Business Settings
 
 `GET /public/order-link/settings`

@@ -36,6 +36,11 @@ type ProductVisibleRow = {
   visible: boolean;
 };
 
+type ProductAlertDriverRow = {
+  id: string;
+  alertDriver: boolean;
+};
+
 type ModifierGroupTranslationsRow = {
   id: string;
   translations: Prisma.JsonValue | null;
@@ -269,6 +274,7 @@ export async function GET(request: NextRequestLike) {
     const [
       prismaProducts,
       productVisibilityRows,
+      productAlertDriverRows,
       modifierGroupTranslationsRows,
       exclusivePromotionProductRows,
       comboProductRows,
@@ -287,6 +293,10 @@ export async function GET(request: NextRequestLike) {
       }),
       prisma.$queryRaw<ProductVisibleRow[]>`
         SELECT "id", "visible"
+        FROM "Product"
+      `,
+      prisma.$queryRaw<ProductAlertDriverRow[]>`
+        SELECT "id", "alertDriver"
         FROM "Product"
       `,
       prisma.$queryRaw<ModifierGroupTranslationsRow[]>`
@@ -327,6 +337,9 @@ export async function GET(request: NextRequestLike) {
 
     const visibleByProductId = new Map(
       productVisibilityRows.map((row) => [row.id, row.visible]),
+    );
+    const alertDriverByProductId = new Map(
+      productAlertDriverRows.map((row) => [row.id, row.alertDriver]),
     );
     const modifierGroupTranslationsById = new Map<
       string,
@@ -479,6 +492,11 @@ export async function GET(request: NextRequestLike) {
               visibleByProductId.get(product.id) ??
               (product as typeof product & { visible?: boolean }).visible ??
               true,
+            alertDriver:
+              alertDriverByProductId.get(product.id) ??
+              (product as typeof product & { alertDriver?: boolean })
+                .alertDriver ??
+              false,
             id: product.id,
             itemType: product.itemType,
             name: product.name,

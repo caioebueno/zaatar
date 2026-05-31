@@ -20,9 +20,40 @@ Returns all products for the active business.
 
 `POST /products`
 
+Request body (main fields):
+
+```ts
+type CreateProductBody = {
+  id?: string;
+  name: string;
+  visible?: boolean;
+  alertDriver?: boolean; // defaults to false
+  description?: string | null;
+  price?: number | null;
+  comparedAtPrice?: number | null;
+  itemType?: "PRODUCT" | "COMBO";
+  // ...category/modifier/photo/combo fields
+};
+```
+
 ### Update Product
 
 `PATCH /products/:productId`
+
+Request body (partial update):
+
+```ts
+type UpdateProductBody = {
+  name?: string;
+  visible?: boolean;
+  alertDriver?: boolean;
+  description?: string | null;
+  price?: number | null;
+  comparedAtPrice?: number | null;
+  itemType?: "PRODUCT" | "COMBO";
+  // ...category/modifier/photo/combo fields
+};
+```
 
 ---
 

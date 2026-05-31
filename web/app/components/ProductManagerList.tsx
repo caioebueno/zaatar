@@ -78,6 +78,7 @@ type ProductEditorState = {
   description: string;
   categoryId: string;
   visible: boolean;
+  alertDriver: boolean;
   priceInput: string;
   comparedAtPriceInput: string;
   itemType: ProductManagerProductItemType;
@@ -1420,6 +1421,7 @@ export default function ProductManagerList({
       description: product.description ?? "",
       categoryId: product.categoryId ?? "",
       visible: product.visible,
+      alertDriver: product.alertDriver === true,
       priceInput: formatCurrencyInput(product.price),
       comparedAtPriceInput: formatCurrencyInput(product.comparedAtPrice),
       itemType: product.itemType,
@@ -1468,6 +1470,7 @@ export default function ProductManagerList({
       description: "",
       categoryId: defaultCategoryId,
       visible: true,
+      alertDriver: false,
       priceInput: "",
       comparedAtPriceInput: "",
       itemType: "PRODUCT",
@@ -2873,6 +2876,7 @@ export default function ProductManagerList({
         categoryId: editor.categoryId.trim() || null,
         categoryIndex: editor.categoryIndex,
         visible: editor.visible,
+        alertDriver: editor.alertDriver,
         price,
         comparedAtPrice,
         itemType: editor.itemType,
@@ -2922,6 +2926,7 @@ export default function ProductManagerList({
         createdAt?: unknown;
         name?: unknown;
         visible?: unknown;
+        alertDriver?: unknown;
         description?: unknown;
         price?: unknown;
         comparedAtPrice?: unknown;
@@ -2971,6 +2976,10 @@ export default function ProductManagerList({
             : editor.itemType,
         visible:
           typeof payload.visible === "boolean" ? payload.visible : editor.visible,
+        alertDriver:
+          typeof payload.alertDriver === "boolean"
+            ? payload.alertDriver
+            : editor.alertDriver,
         description:
           typeof payload.description === "string" || payload.description === null
             ? payload.description
@@ -3614,6 +3623,22 @@ export default function ProductManagerList({
                       checked={editor.visible}
                       disabled={editor.saving}
                       onChange={() => updateEditorField("visible", !editor.visible)}
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between rounded-lg border border-zinc-200 px-3 py-2">
+                    <div>
+                      <p className="text-sm font-medium text-zinc-900">Alert driver</p>
+                      <p className="text-xs text-zinc-500">
+                        Highlight this product for delivery drivers
+                      </p>
+                    </div>
+                    <Toggle
+                      checked={editor.alertDriver}
+                      disabled={editor.saving}
+                      onChange={() =>
+                        updateEditorField("alertDriver", !editor.alertDriver)
+                      }
                     />
                   </div>
                 </div>

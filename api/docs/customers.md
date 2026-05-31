@@ -6,6 +6,65 @@ Auth: manager access token required.
 
 ---
 
+## Public Customer Addresses By Phone (n8n)
+
+`GET /public/customers/addresses`
+
+Auth: not required.
+
+Query params:
+
+- `phone` (required): phone number (digits or formatted)
+
+Behavior:
+
+- Normalizes to digits and searches `Customer.phone` using `contains`.
+- Ranks candidate customers by phone match (exact > suffix > contains).
+- Returns a flat list of unique delivery addresses ordered by best phone match and newest addresses first.
+- If no customer matches the phone, returns `[]` (200).
+
+Success (`200`) schema:
+
+```ts
+type PublicCustomerAddressesResponse = Array<{
+  id: string;
+  createdAt: string; // ISO datetime
+  description: string;
+  street: string;
+  number: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  lat: string;
+  lng: string;
+  complement: string | null;
+  numberComplement: string | null;
+  customerId: string | null;
+  deliveryFee: number;
+}>;
+```
+
+Validation error (`400`):
+
+```json
+{ "error": "Invalid payload", "field": "phone" }
+```
+
+Server error (`500`):
+
+```json
+{ "error": "Internal Server Error" }
+```
+
+Example:
+
+```bash
+curl --request GET \
+  --url 'http://localhost:4000/api/public/customers/addresses?phone=19297669288'
+```
+
+---
+
 ## Search Customers
 
 `GET /customers/search`

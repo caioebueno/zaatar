@@ -65,6 +65,7 @@ export type ProductManagerProduct = {
   itemType: ProductManagerProductItemType;
   name: string;
   visible: boolean;
+  alertDriver: boolean;
   description: string | null;
   price: number | null;
   comparedAtPrice: number | null;
@@ -99,6 +100,7 @@ type ProductListRow = Prisma.ProductGetPayload<{
     itemType: true;
     name: true;
     visible: true;
+    alertDriver: true;
     price: true;
     comparedAtPrice: true;
     categoryId: true;
@@ -307,6 +309,7 @@ function mapProduct(
     itemType: product.itemType,
     name: product.name,
     visible: product.visible !== false,
+    alertDriver: product.alertDriver === true,
     description: product.description,
     price: product.price,
     comparedAtPrice: product.comparedAtPrice,
@@ -404,6 +407,7 @@ export default async function getProductsManagerList(
         itemType: true,
         name: true,
         visible: true,
+        alertDriver: true,
         price: true,
         comparedAtPrice: true,
         categoryId: true,

@@ -91,6 +91,7 @@ type DispatchOrderProductRow = {
   }>;
   orderId: string | null;
   product: {
+    alertDriver: boolean;
     categoryId: string | null;
     comparedAtPrice: number | null;
     description: string | null;
@@ -454,6 +455,7 @@ async function getDispatchOrderProducts(
       product: {
         id: row.product.id,
         name: row.product.name,
+        alertDriver: row.product.alertDriver === true,
         description: row.product.description,
         price: row.product.price,
         categoryId: row.product.categoryId,

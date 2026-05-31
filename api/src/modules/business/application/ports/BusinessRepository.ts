@@ -40,6 +40,8 @@ export type BusinessBranchRecord = {
     zipCode: string | null;
   } | null;
   createdAt: Date;
+  chatwootAccountId: string | null;
+  chatwootSourceId: string | null;
   id: string;
   name: string;
   operationHours: unknown;

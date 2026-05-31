@@ -31,6 +31,8 @@ export type GetBusinessOnboardingStatusOutput = {
     addressState: string | null;
     addressStreet: string | null;
     addressZipCode: string | null;
+    chatwootAccountId: string | null;
+    chatwootSourceId: string | null;
     createdAt: string;
     id: string;
     name: string;
@@ -123,6 +125,8 @@ function mapBranch(branch: BranchOnboardingRecord): {
   addressState: string | null;
   addressStreet: string | null;
   addressZipCode: string | null;
+  chatwootAccountId: string | null;
+  chatwootSourceId: string | null;
   createdAt: string;
   id: string;
   name: string;
@@ -141,6 +145,8 @@ function mapBranch(branch: BranchOnboardingRecord): {
     id: branch.id,
     name: branch.name,
     createdAt: branch.createdAt.toISOString(),
+    chatwootAccountId: branch.chatwootAccountId ?? null,
+    chatwootSourceId: branch.chatwootSourceId ?? null,
     operationHours: branch.operationHours,
     addressDescription: branch.address?.description ?? "",
     addressGoogleMapsUrl: branch.address?.googleMapsUrl ?? "",

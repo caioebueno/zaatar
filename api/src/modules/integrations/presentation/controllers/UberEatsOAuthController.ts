@@ -401,8 +401,6 @@ export class UberEatsOAuthController implements HttpController {
       if (prompt) oauthUrl.searchParams.set("prompt", prompt);
       if (state) oauthUrl.searchParams.set("state", state);
 
-      console.log("[api] Uber Eats OAuth authorize URL:", oauthUrl.toString());
-
       return {
         statusCode: 200,
         body: {

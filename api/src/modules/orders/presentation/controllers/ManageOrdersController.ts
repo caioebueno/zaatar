@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { Prisma } from "../../../../../../web/src/generated/prisma/index.js";
 import prisma from "../../../../prisma.js";
+import { sendOrderConfirmationChatwootMessage } from "../../infrastructure/messaging/sendOrderConfirmationChatwootMessage.js";
 import type {
   HttpController,
   HttpRequest,
@@ -38,6 +39,13 @@ type ParsedOrderProductChange =
   | ParsedOrderProductDelete
   | ParsedOrderProductCreate;
 
+type AddedOrderProductForPreparation = {
+  comments: string | null;
+  productId: string;
+  quantity: number;
+  selectedModifierGroupItemIds: string[];
+};
+
 export class ManageOrdersController implements HttpController {
   async handle(request: HttpRequest): Promise<HttpResponse> {
     const url = new URL(request.path, "http://localhost");
@@ -68,6 +76,7 @@ export class ManageOrdersController implements HttpController {
       const language = parseOptionalString(body.language, "language");
       const scheduleFor = parseOptionalDate(body.scheduleFor, "scheduleFor");
       const deliveryAddressId = parseOptionalNullableId(body.addressId, "addressId");
+      const orderIntentId = parseOptionalNullableId(body.orderIntentId, "orderIntentId");
       const tipAmount = parseOptionalInt(body.tipAmount, "tipAmount");
       const branchId = await resolveBranchId({
         explicitBranchId: parseOptionalNullableId(body.branchId, "branchId"),
@@ -311,6 +320,16 @@ export class ManageOrdersController implements HttpController {
             },
           });
         }
+
+        if (orderIntentId) {
+          await tx.$executeRaw`
+            UPDATE "OrderIntent"
+            SET
+              "active" = false,
+              "updatedAt" = NOW()
+            WHERE "id" = ${orderIntentId}
+          `;
+        }
       });
 
       if (orderType === "DELIVERY" && deliveryAddressId) {
@@ -318,6 +337,37 @@ export class ManageOrdersController implements HttpController {
           orderId,
           deliveryAddressId,
           isScheduledOrder: Boolean(scheduleFor),
+        });
+      }
+
+      let customerContact: { name: string | null; phone: string | null } | null =
+        null;
+      if (customerId !== null && customerId !== undefined) {
+        customerContact = await prisma.customer.findUnique({
+          where: { id: customerId },
+          select: {
+            name: true,
+            phone: true,
+          },
+        });
+      }
+
+      const customerPhone = customerContact?.phone?.trim() || null;
+      if (customerPhone) {
+        void sendOrderConfirmationChatwootMessage({
+          branchId: branchId ?? null,
+          customerName: customerContact?.name ?? null,
+          customerPhone,
+          language: language ?? null,
+          orderId,
+          orderNumber,
+          orderType,
+          totalAmountInCents: orderAmount,
+        }).catch((error: unknown) => {
+          console.error(
+            "Failed to send order confirmation WhatsApp message:",
+            error,
+          );
         });
       }
 
@@ -344,6 +394,7 @@ export class ManageOrdersController implements HttpController {
         where: { id: orderId },
         select: {
           id: true,
+          createdAt: true,
           type: true,
           deliveryAddressId: true,
         },
@@ -465,7 +516,52 @@ export class ManageOrdersController implements HttpController {
           `;
         }
 
-        await applyOrderProductChanges(tx, orderId, orderProductChanges);
+        const addedOrderProducts = await applyOrderProductChanges(
+          tx,
+          orderId,
+          orderProductChanges,
+        );
+
+        if (addedOrderProducts.length > 0) {
+          const productIds = Array.from(
+            new Set(addedOrderProducts.map((item) => item.productId)),
+          );
+          const products = await tx.product.findMany({
+            where: {
+              id: {
+                in: productIds,
+              },
+            },
+            select: {
+              id: true,
+              itemType: true,
+            },
+          });
+
+          const productById = new Map(
+            products.map((product) => [
+              product.id,
+              {
+                id: product.id,
+                itemType: product.itemType as ProductItemType,
+              },
+            ]),
+          );
+
+          await createPreparationStepCategoriesForOrderTx(tx, {
+            orderId,
+            orderCreatedAt: existingOrder.createdAt,
+            cartItems: addedOrderProducts.map((item) => ({
+              cartId: randomUUID(),
+              productId: item.productId,
+              quantity: item.quantity,
+              modifiers: [],
+              comboSelections: [],
+            })),
+            orderProducts: addedOrderProducts,
+            productById,
+          });
+        }
       });
 
       const order = await loadOrderWithRelations(orderId);
@@ -707,8 +803,8 @@ async function applyOrderProductChanges(
   tx: Prisma.TransactionClient,
   orderId: string,
   changes: ParsedOrderProductChange[],
-): Promise<void> {
-  if (changes.length === 0) return;
+): Promise<AddedOrderProductForPreparation[]> {
+  if (changes.length === 0) return [];
 
   const deleteIds = changes
     .filter((item): item is ParsedOrderProductDelete => item.kind === "delete")
@@ -753,6 +849,8 @@ async function applyOrderProductChanges(
   if (createProducts.length !== createProductIds.length) {
     throw invalidField("orderProducts.productId");
   }
+
+  const addedOrderProducts: AddedOrderProductForPreparation[] = [];
 
   const modifierIds = Array.from(
     new Set(
@@ -835,6 +933,13 @@ async function applyOrderProductChanges(
           : {}),
       },
     });
+
+    addedOrderProducts.push({
+      productId: change.productId,
+      quantity: change.quantity,
+      comments: change.comments ?? null,
+      selectedModifierGroupItemIds: change.selectedModifierGroupItemIds,
+    });
   }
 
   const subtotal = await tx.orderProducts.aggregate({
@@ -850,6 +955,8 @@ async function applyOrderProductChanges(
       amount: subtotal._sum.amount ?? 0,
     },
   });
+
+  return addedOrderProducts;
 }
 
 async function normalizeDispatchOrderIndexes(
