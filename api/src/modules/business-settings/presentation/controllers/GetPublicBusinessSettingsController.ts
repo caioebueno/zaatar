@@ -8,6 +8,7 @@ import { BusinessNotFoundError } from "../../application/errors/BusinessNotFound
 import type { GetCurrentBusinessSettingsUseCase } from "../../application/use-cases/GetCurrentBusinessSettingsUseCase.js";
 
 const BUSINESS_ID_HEADER_NAME = "x-business-id";
+const BRANCH_ID_HEADER_NAME = "x-branch-id";
 
 export class GetPublicBusinessSettingsController implements HttpController {
   constructor(private readonly useCase: GetCurrentBusinessSettingsUseCase) {}
@@ -15,8 +16,10 @@ export class GetPublicBusinessSettingsController implements HttpController {
   async handle(request: HttpRequest): Promise<HttpResponse> {
     try {
       const businessId = this.readBusinessId(request);
+      const branchId = this.readBranchId(request);
       const result = await this.useCase.execute({
         businessId,
+        branchId,
       });
 
       return {
@@ -60,5 +63,17 @@ export class GetPublicBusinessSettingsController implements HttpController {
       return null;
     }
   }
-}
 
+  private readBranchId(request: HttpRequest): string | null {
+    const fromHeader = request.headers?.[BRANCH_ID_HEADER_NAME]?.trim();
+    if (fromHeader) return fromHeader;
+
+    try {
+      const parsed = new URL(request.path, "http://localhost");
+      const fromQuery = parsed.searchParams.get("branchId")?.trim();
+      return fromQuery || null;
+    } catch {
+      return null;
+    }
+  }
+}

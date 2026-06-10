@@ -71,6 +71,7 @@ Success (`200`):
 
 Order-level persistence:
 
+- `LEFT_PIZZERIA` updates `Dispatch.leftRestaurantAt/Lat/Lng`.
 - `LEFT_DROPOFF` updates that order's `Order.leftAtDropOffAt/Lat/Lng`.
 - `ARRIVED_RESTAURANT` updates `Dispatch.arrivedAtRestaurantAt/Lat/Lng`.
 - When `ARRIVED_RESTAURANT` is tracked, the active route session is completed automatically and subsequent location ingests for that dispatch are ignored.
@@ -79,18 +80,16 @@ Geofence detection rules:
 
 - Origin: first branch address (`Branch -> Address.lat/lng`) found for orders in the dispatch.
 - Ignores mocked points (`isMocked = true`) and very inaccurate points (`accuracyMeters > 100`, configurable).
-- Requires inside evidence (`<= 80m`) plus outside streak (`> 120m`) on recent points.
-- Outside streak defaults to 3 consecutive points with movement (`speedMps >= 1.5` when speed exists).
+- `LEFT_PIZZERIA`: tracked when latest valid point is outside configured radius from restaurant origin.
+- `ARRIVED_RESTAURANT`: tracked when latest valid point is inside configured radius from restaurant origin.
 
 Optional environment flags:
 
-- `DISPATCH_LEFT_PIZZERIA_INSIDE_RADIUS_METERS` (default `80`)
 - `DISPATCH_LEFT_PIZZERIA_OUTSIDE_RADIUS_METERS` (default `120`)
-- `DISPATCH_LEFT_PIZZERIA_STREAK_POINTS` (default `3`)
-- `DISPATCH_LEFT_PIZZERIA_MIN_SPEED_MPS` (default `1.5`)
 - `DISPATCH_LEFT_DROPOFF_INSIDE_RADIUS_METERS` (default `60`)
 - `DISPATCH_LEFT_DROPOFF_OUTSIDE_RADIUS_METERS` (default `100`)
 - `DISPATCH_LEFT_DROPOFF_STREAK_POINTS` (default `3`)
+- `DISPATCH_LEFT_PIZZERIA_MIN_SPEED_MPS` (default `1.5`, used as minimum movement speed for streak-based left drop-off detection)
 - `DISPATCH_ARRIVED_RESTAURANT_RADIUS_METERS` (default `70`)
 - `DISPATCH_LOCATION_MAX_ACCURACY_METERS` (default `100`)
 

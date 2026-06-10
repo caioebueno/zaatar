@@ -27,6 +27,7 @@ export type TOrderTotalInput = {
   progressiveDiscountPercent?: number | null;
   progressiveDiscountAmount?: number | null;
   progressiveDiscountSteps?: TProgressiveDiscountStep[] | null;
+  progressiveDiscountSnapshot?: { discountedPrice?: number | null } | null;
   salesTaxRate?: number | null;
 };
 
@@ -93,7 +94,16 @@ export function calculateOrderTotal(order: TOrderTotalInput | null | undefined) 
           progressiveDiscountPercent,
         );
 
-  const discountedSubtotal = Math.max(0, subtotal - progressiveDiscountAmount);
+  const snapshotDiscountedPrice = (() => {
+    const snap = order.progressiveDiscountSnapshot;
+    if (!snap || typeof snap.discountedPrice !== 'number') return null;
+    const rounded = Math.round(snap.discountedPrice);
+    return Number.isFinite(rounded) && rounded >= 0 ? rounded : null;
+  })();
+
+  const discountedSubtotal = snapshotDiscountedPrice !== null
+    ? Math.min(subtotal, snapshotDiscountedPrice)
+    : Math.max(0, subtotal - progressiveDiscountAmount);
 
   const taxRate =
     typeof order.salesTaxRate === "number" && Number.isFinite(order.salesTaxRate)

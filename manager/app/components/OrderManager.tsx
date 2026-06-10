@@ -13,8 +13,15 @@ export type ManagerOrderListItem = {
   number: string | null;
   orderType: string;
   paymentMethod: string;
+  payments?: OrderPaymentSummary[];
   status: string;
   totalCents: number;
+};
+
+type OrderPaymentSummary = {
+  amount: number;
+  paidAt: string | null;
+  paymentType: string;
 };
 
 type OrderDetail = {
@@ -34,6 +41,7 @@ type OrderDetail = {
   number: string | null;
   orderType: string;
   paymentMethod: string;
+  payments?: OrderPaymentSummary[];
   status: string;
   subtotalCents: number;
   tipAmountCents: number;
@@ -476,24 +484,58 @@ function ItemsSection({ order }: { order: OrderDetail }) {
   );
 }
 
-function PaymentSection({ method }: { method: string }) {
+function PaymentSection({
+  method,
+  payments,
+}: {
+  method: string;
+  payments?: OrderPaymentSummary[];
+}) {
   const labels: Record<string, { label: string; note: string }> = {
     CARD:  { label: "Card payment",       note: "Charged at checkout"   },
-    PIX:   { label: "PIX",                note: "Instant · confirmed"   },
+    ZELLE: { label: "Zelle",              note: "External transfer"     },
     CASH:  { label: "Cash on delivery",   note: "Collected on delivery" },
   };
-  const m = labels[method] ?? { label: method, note: "" };
+  const entries =
+    payments && payments.length > 0
+      ? payments
+      : [{ amount: 0, paidAt: null, paymentType: method }];
   return (
     <div style={{ marginBottom: 20 }}>
       <SecHdr icon={<ICard />} label="Payment" />
-      <div style={{ background: D.surf2, border: `1px solid ${D.line}`, borderRadius: 12, padding: "14px 16px", display: "flex", alignItems: "center", gap: 12 }}>
-        <div style={{ width: 36, height: 36, borderRadius: 9, flexShrink: 0, background: D.surf, border: `1px solid ${D.line}`, display: "grid", placeItems: "center", color: D.faint }}>
-          <ICard />
-        </div>
-        <div>
-          <div style={{ fontSize: 13, fontWeight: 600, color: D.text }}>{m.label}</div>
-          {m.note && <div style={{ fontSize: 11.5, color: D.faint, marginTop: 2 }}>{m.note}</div>}
-        </div>
+      <div style={{ background: D.surf2, border: `1px solid ${D.line}`, borderRadius: 12, overflow: "hidden" }}>
+        {entries.map((payment, index) => {
+          const m = labels[payment.paymentType] ?? { label: payment.paymentType, note: "" };
+          return (
+            <div
+              key={`${payment.paymentType}-${payment.paidAt ?? "pending"}-${index}`}
+              style={{
+                padding: "14px 16px",
+                display: "flex",
+                alignItems: "center",
+                gap: 12,
+                borderBottom: index === entries.length - 1 ? "none" : `1px solid ${D.line}`,
+              }}
+            >
+              <div style={{ width: 36, height: 36, borderRadius: 9, flexShrink: 0, background: D.surf, border: `1px solid ${D.line}`, display: "grid", placeItems: "center", color: D.faint }}>
+                <ICard />
+              </div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontSize: 13, fontWeight: 600, color: D.text }}>{m.label}</div>
+                <div style={{ fontSize: 11.5, color: D.faint, marginTop: 2 }}>
+                  {payment.paidAt
+                    ? `Paid ${fmtDate(payment.paidAt)} at ${fmtTime(payment.paidAt)}`
+                    : m.note || "Pending payment"}
+                </div>
+              </div>
+              {payment.amount > 0 && (
+                <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, fontWeight: 700, color: D.dim }}>
+                  {fmtCents(payment.amount)}
+                </span>
+              )}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
@@ -555,7 +597,7 @@ function OrderDetailPanel({ order, loading, error }: {
         <CustomerSection customer={order.customer} />
         <OrderTypeSection orderType={order.orderType} />
         <ItemsSection order={order} />
-        <PaymentSection method={order.paymentMethod} />
+        <PaymentSection method={order.paymentMethod} payments={order.payments} />
       </div>
     </div>
   );

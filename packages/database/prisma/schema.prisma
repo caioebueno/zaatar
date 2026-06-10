@@ -359,6 +359,7 @@ model Branch {
   createdAt      DateTime  @default(now())
   name           String
   operationHours Json?
+  showUpsellModalOnAddToCart Boolean @default(false)
   chatwootAccountId String?
   chatwootSourceId  String?
   chatwootAgentId   String?
@@ -410,6 +411,9 @@ model Dispatch {
   estimatedRoundTripDurationMinutes Int?
   currentEstimatedDeliveryDurationMinutes  Int?
   currentEstimatedRoundTripDurationMinutes Int?
+  leftRestaurantAt                DateTime?
+  leftRestaurantLat               Float?
+  leftRestaurantLng               Float?
   arrivedAtRestaurantAt             DateTime?
   arrivedAtRestaurantLat            Float?
   arrivedAtRestaurantLng            Float?
@@ -956,6 +960,7 @@ model Order {
   externalAddress                  ExternalAddress?          @relation(fields: [externalAddressId], references: [id])
   branch                           Branch?                   @relation(fields: [branchId], references: [id])
   orderProducts                    OrderProducts[]
+  payments                         OrderPayment[]
   customerId                       String?
   externalId                       String?                   @unique
   dispatchId                       String?
@@ -970,6 +975,20 @@ model Order {
 
   @@index([dispatchId, dispatchOrderIndex])
   @@index([branchId])
+}
+
+model OrderPayment {
+  id          String      @id
+  createdAt   DateTime    @default(now())
+  amount      Int
+  paidAt      DateTime?
+  paymentType PaymentType
+  order       Order       @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId     String
+
+  @@index([orderId])
+  @@index([paymentType])
+  @@index([paidAt])
 }
 
 model OrderIntent {

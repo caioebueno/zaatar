@@ -11,8 +11,10 @@ Endpoint:
 Description:
 
 - Returns dispatches using the same visibility logic as the existing dispatch board:
-  - today's dispatches
-  - plus non-today dispatches that are not dispatched yet or still have pending orders
+  - all today's dispatches, including completed ones
+  - non-today dispatches only when they are not completed
+  - takeaway dispatches are completed when their order has `deliveredAt`
+  - delivery dispatches are completed when every order in the dispatch has `deliveredAt`
 - Ordered by `dispatched`, then `queueIndex`, then dispatch/create time.
 - Supports query filters.
 
@@ -35,20 +37,24 @@ Query filters:
 - `endAt=<date-or-datetime>`
   - Optional upper bound (inclusive) for `Dispatch.createdAt`.
   - Accepts `YYYY-MM-DD` or ISO datetime.
+- `include=routePoints`
+  - Optional.
+  - Includes all collected route points for each dispatch.
+  - Without this param, list responses include only `latestRoutePoint`.
 
 Examples:
 
 - `GET /dispatches`
 - `GET /dispatches?status=active`
+- `GET /dispatches?include=routePoints`
 - `GET /dispatches?startAt=2026-05-14&endAt=2026-05-21`
 - `GET /dispatches?status=active&startAt=2026-05-14T00:00:00.000Z&endAt=2026-05-21T23:59:59.999Z`
 
 Success (`200`):
 
 - Returns `DispatchEntity[]` (same shape documented below in "Get Next Dispatch For Driver").
-- Includes both:
-  - `latestRoutePoint` (single latest point)
-  - `routePoints` (all collected points for each dispatch)
+- Includes `latestRoutePoint` by default.
+- Includes `routePoints` only when `include=routePoints` is supplied.
 
 Validation error (`400`):
 
@@ -204,7 +210,7 @@ type DispatchEntity = {
   estimatedRoundTripDurationMinutes?: number;
   currentEstimatedDeliveryDurationMinutes?: number;
   currentEstimatedRoundTripDurationMinutes?: number;
-  leftRestaurantAt?: string; // ISO datetime (from LEFT_PIZZERIA milestone)
+  leftRestaurantAt?: string; // ISO datetime
   arrivedAtRestaurantAt?: string; // ISO datetime
   arrivedAtRestaurantLat?: number;
   arrivedAtRestaurantLng?: number;

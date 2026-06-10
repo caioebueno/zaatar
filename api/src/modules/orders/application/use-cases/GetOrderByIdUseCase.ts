@@ -1,4 +1,7 @@
-import type { OrdersRepository } from "../ports/OrdersRepository.js";
+import type {
+  OrderPaymentSummary,
+  OrdersRepository,
+} from "../ports/OrdersRepository.js";
 
 export type GetOrderByIdInput = {
   orderId: string;
@@ -24,6 +27,7 @@ export type GetOrderByIdOutput = {
   number: string | null;
   orderType: string;
   paymentMethod: string;
+  payments: OrderPaymentSummary[];
   status: string;
   subtotalCents: number;
   tipAmountCents: number;

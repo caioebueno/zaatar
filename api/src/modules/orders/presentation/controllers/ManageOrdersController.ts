@@ -1070,6 +1070,13 @@ async function loadOrderWithRelations(orderId: string): Promise<unknown> {
     scheduleFor: order.scheduleFor ? order.scheduleFor.toISOString() : null,
     paidAt: order.paidAt ? order.paidAt.toISOString() : null,
     deliveredAt: order.deliveredAt ? order.deliveredAt.toISOString() : null,
+    payments: [
+      {
+        amount: order.amount,
+        paidAt: order.paidAt ? order.paidAt.toISOString() : null,
+        paymentType: order.paymentMethod,
+      },
+    ],
     orderProducts: order.orderProducts.map((item) => ({
       ...item,
       createdAt: item.createdAt.toISOString(),

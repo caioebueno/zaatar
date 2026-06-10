@@ -195,8 +195,10 @@ Notes:
 Auth: manager access token required.
 
 Returns dispatches using the same visibility logic as the dispatch board:
-- Today's dispatches
-- Non-today dispatches that are not dispatched yet or still have pending orders
+- All today's dispatches, including completed ones
+- Non-today dispatches only when they are not completed
+- Takeaway dispatches are completed when their order has `deliveredAt`
+- Delivery dispatches are completed when every order in the dispatch has `deliveredAt`
 
 Ordered by: `dispatched` → `queueIndex` → dispatch/create time.
 

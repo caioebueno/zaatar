@@ -147,6 +147,7 @@ Customer routes:
 - `GET /customers/search`
 - `POST /customers`
 - `POST /customers/:customerId/addresses`
+- `PATCH /delivery-addresses/:addressId`
 
 Detailed schemas and examples: see [customers.md](./customers.md).
 

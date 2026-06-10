@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Alert,
   ScrollView,
@@ -13,13 +13,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 
 import { useAuth } from '@/context/auth';
-import {
-  SIMULATION_ROUTE_GPX,
-  SimStatus,
-  onSimStatus,
-  startSimulation,
-  stopSimulation,
-} from '@/lib/gpx-simulator';
 
 // ─── Design tokens ────────────────────────────────────────────────────────────
 const D = {
@@ -163,20 +156,9 @@ export default function SettingsScreen() {
   const [soundEnabled,   setSoundEnabled]   = useState(true);
   const [vibration,      setVibration]      = useState(true);
   const [showMap,        setShowMap]        = useState(true);
-  const [simFast,   setSimFast]   = useState(false);
-  const [simStatus, setSimStatus] = useState<SimStatus>({ running: false, current: 0, total: 0 });
-
-  useEffect(() => onSimStatus(setSimStatus), []);
-
   const initial   = driver?.name?.[0]?.toUpperCase() ?? '?';
   const firstName = driver?.name?.split(' ')[0] ?? '';
   const lastName  = driver?.name?.split(' ').slice(1).join(' ') ?? '';
-
-  const handleSimToggle = async () => {
-    if (simStatus.running) { stopSimulation(); return; }
-    const err = await startSimulation(SIMULATION_ROUTE_GPX, simFast ? 500 : 10_000);
-    if (err) Alert.alert('Simulação', err);
-  };
 
   const handleLogout = () => {
     Alert.alert(
@@ -308,46 +290,6 @@ export default function SettingsScreen() {
           />
         </Card>
 
-        {/* ── Desenvolvedor ── */}
-        <SectionHeader label="Desenvolvedor" />
-        <Card>
-          <View style={[styles.row, styles.rowLast]}>
-            <View style={[styles.rowIcon, { backgroundColor: 'rgba(130,80,255,0.12)', borderColor: 'rgba(130,80,255,0.22)' }]}>
-              <Ionicons name="navigate-circle-outline" size={16} color="#8250ff" />
-            </View>
-            <View style={{ flex: 1, gap: 2 }}>
-              <Text style={[styles.rowLabel, { color: D.text }]}>Simular Rota (GPX)</Text>
-              {simStatus.total > 0 && (
-                <Text style={styles.rowValue}>
-                  {simStatus.running ? `${simStatus.current} / ${simStatus.total} pontos` : 'Concluído'}
-                </Text>
-              )}
-            </View>
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-              <Switch
-                value={simFast}
-                onValueChange={v => { if (!simStatus.running) setSimFast(v); }}
-                disabled={simStatus.running}
-                trackColor={{ false: D.surf3, true: 'rgba(130,80,255,0.35)' }}
-                thumbColor={simFast ? '#8250ff' : D.faint}
-                ios_backgroundColor={D.surf3}
-              />
-              <Text style={{ fontFamily: MONO, fontSize: 9, color: D.faint, marginRight: 4 }}>
-                {simFast ? '500ms' : '10s'}
-              </Text>
-              <TouchableOpacity
-                style={[simDevStyles.btn, simStatus.running && simDevStyles.btnStop]}
-                onPress={handleSimToggle}
-                activeOpacity={0.75}
-              >
-                <Text style={[simDevStyles.btnText, simStatus.running && { color: D.zippy }]}>
-                  {simStatus.running ? 'Parar' : 'Iniciar'}
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Card>
-
         {/* ── Sair ── */}
         <View style={{ height: 8 }} />
         <Card>
@@ -435,16 +377,3 @@ const styles = StyleSheet.create({
   },
 });
 
-const simDevStyles = StyleSheet.create({
-  btn: {
-    height: 28, borderRadius: 8, paddingHorizontal: 12,
-    alignItems: 'center', justifyContent: 'center',
-    backgroundColor: 'rgba(130,80,255,0.15)',
-    borderWidth: 1, borderColor: 'rgba(130,80,255,0.30)',
-  },
-  btnStop: {
-    backgroundColor: 'rgba(255,61,20,0.10)',
-    borderColor: 'rgba(255,61,20,0.25)',
-  },
-  btnText: { fontFamily: SANS_SB, fontSize: 12, color: '#8250ff' },
-});

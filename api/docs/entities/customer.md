@@ -15,6 +15,7 @@ type Customer = {
 
 type DeliveryAddress = {
   id: string;
+  createdAt: string;
   description: string;
   street: string;
   number: string;
@@ -23,6 +24,9 @@ type DeliveryAddress = {
   zipCode: string;
   lat: string;
   lng: string;
+  complement: string | null;
+  numberComplement: string | null;
+  customerId: string | null;
   deliveryFee: number;
 };
 ```
@@ -32,6 +36,7 @@ type DeliveryAddress = {
 - `GET /customers/search?phone=...`
 - `POST /customers`
 - `POST /customers/:customerId/addresses`
+- `PATCH /delivery-addresses/:addressId`
 
 ## Detailed Docs
 

@@ -3,6 +3,7 @@ import { BusinessNotFoundError } from "../errors/BusinessNotFoundError.js";
 import type { BusinessSettingsRepository } from "../ports/BusinessSettingsRepository.js";
 
 export type GetCurrentBusinessSettingsInput = {
+  branchId?: string | null;
   businessId?: string | null;
 };
 
@@ -13,6 +14,7 @@ export type GetCurrentBusinessSettingsOutput = {
   logoUrl: string | null;
   name: string;
   orderLinkUrl: string;
+  showUpsellModalOnAddToCart: boolean;
 };
 
 export class GetCurrentBusinessSettingsUseCase {
@@ -26,7 +28,12 @@ export class GetCurrentBusinessSettingsUseCase {
       throw new BusinessContextRequiredError();
     }
 
-    const business = await this.repository.findById(businessId);
+    const branchId =
+      typeof input.branchId === "string" && input.branchId.trim().length > 0
+        ? input.branchId.trim()
+        : null;
+
+    const business = await this.repository.findById(businessId, branchId);
     if (!business) {
       throw new BusinessNotFoundError();
     }
@@ -38,6 +45,7 @@ export class GetCurrentBusinessSettingsUseCase {
       logoUrl: business.logoUrl,
       bannerPhotoUrl: business.bannerPhotoUrl,
       orderLinkUrl: buildOrderLinkUrl(business.id),
+      showUpsellModalOnAddToCart: business.showUpsellModalOnAddToCart,
     };
   }
 }

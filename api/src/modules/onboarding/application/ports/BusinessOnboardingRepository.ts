@@ -50,6 +50,7 @@ export type BranchOnboardingRecord = {
   id: string;
   name: string;
   operationHours: unknown;
+  showUpsellModalOnAddToCart: boolean;
 };
 
 export type UpsertBranchOnboardingInput = {
@@ -69,6 +70,7 @@ export type UpsertBranchOnboardingInput = {
   chatwootSourceId?: string | null;
   name: string;
   operationHours: unknown;
+  showUpsellModalOnAddToCart: boolean;
 };
 
 export interface BusinessOnboardingRepository {

@@ -17,6 +17,7 @@ import * as customerSearchRoute from "../../infrastructure/native/customers/sear
 import * as customersRoute from "../../infrastructure/native/customers/route.js";
 import * as customerAddressesRoute from "../../infrastructure/native/customers/customerAddressesRoute.js";
 import * as addressesByPhoneRoute from "../../infrastructure/native/customers/addressesByPhoneRoute.js";
+import * as deliveryAddressIdRoute from "../../infrastructure/native/delivery-addresses/addressIdRoute.js";
 import * as addressSearchRoute from "../../infrastructure/native/address-search/route.js";
 
 export class NativeCatalogController implements HttpController {
@@ -158,6 +159,18 @@ export class NativeCatalogController implements HttpController {
       );
       return customerAddressesRoute.POST(nextRequest, {
         params: Promise.resolve({ customerId }),
+      });
+    }
+
+    if (
+      request.method === "PATCH" &&
+      pathname.startsWith("/delivery-addresses/")
+    ) {
+      const addressId = decodeURIComponent(
+        pathname.slice("/delivery-addresses/".length),
+      );
+      return deliveryAddressIdRoute.PATCH(nextRequest, {
+        params: Promise.resolve({ addressId }),
       });
     }
 

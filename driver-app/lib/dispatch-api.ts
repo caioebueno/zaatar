@@ -37,6 +37,7 @@ export type DispatchOrder = {
     deliveryFee?: number;
   };
   progressiveDiscountSnapshot?: {
+    discountedPrice?: number | null;
     selectedPrize?: {
       prizeName: string;
       quantity: number;

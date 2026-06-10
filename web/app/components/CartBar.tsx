@@ -12,6 +12,7 @@ import { getCartTotalQuantity } from "@/utils/getCartTotalQuantity";
 type TCartBar = {
   data: TGetProductsResponse;
   onLearnMoreClick: () => void;
+  onCartClick?: () => void;
   content: {
     [key: string]: string;
   };
@@ -21,6 +22,7 @@ type TCartBar = {
 const CartBar: React.FC<TCartBar> = ({
   data,
   onLearnMoreClick,
+  onCartClick,
   content,
   lg,
 }) => {
@@ -46,7 +48,7 @@ const CartBar: React.FC<TCartBar> = ({
   }, [price.discountedPrice]);
 
   return (
-    <div className="p-4 bg-foreground fixed bottom-0 w-full flex flex-col box-shadow max-w-[600px] lg:bottom-6 lg:border-gray-300 lg:rounded-xl lg:border">
+    <div className="p-4 bg-foreground fixed bottom-0 w-full flex flex-col box-shadow max-w-150 lg:bottom-6 lg:border-gray-300 lg:rounded-xl lg:border">
       <div className="flex flex-row justify-between">
         <span className="text-sm font-bold">
           {content["progressiveDiscount"]}
@@ -95,12 +97,22 @@ const CartBar: React.FC<TCartBar> = ({
           </div>
         </div>
         <div>
-          <Link href={`/menu/${lg}/cart`}>
-            <Button className="py-3 px-8 bg-brandBackground text-[16px]">
+          {onCartClick && data.progressiveDiscount && cart.items.length > 0 ? (
+            <Button
+              onClick={onCartClick}
+              className="py-3 px-8 bg-brandBackground text-[16px]"
+            >
               {content["myCart"]}{" "}
               {cart.items.length > 0 ? `(${getCartTotalQuantity(cart)})` : null}
             </Button>
-          </Link>
+          ) : (
+            <Link href={`/menu/${lg}/cart`}>
+              <Button className="py-3 px-8 bg-brandBackground text-[16px]">
+                {content["myCart"]}{" "}
+                {cart.items.length > 0 ? `(${getCartTotalQuantity(cart)})` : null}
+              </Button>
+            </Link>
+          )}
         </div>
       </div>
     </div>

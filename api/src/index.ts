@@ -648,6 +648,13 @@ const routes: Route[] = [
     bodyMode: "json",
   },
   {
+    method: "PATCH",
+    matcher: /^\/delivery-addresses\/[^/]+$/,
+    controller: nativeCatalogController,
+    requiresAuth: true,
+    bodyMode: "json",
+  },
+  {
     method: "POST",
     matcher: /^\/order-intents\/upsert$/,
     controller: orderIntentController,

@@ -150,3 +150,28 @@ Chatwoot proxy routes are documented in a dedicated page:
 No auth required.
 
 Returns public-facing settings for the order link flow (e.g. business name, logo).
+
+Query params:
+
+```ts
+type PublicOrderLinkSettingsQuery = {
+  businessId: string;
+  branchId?: string;
+};
+```
+
+Success (`200`) schema:
+
+```ts
+type PublicOrderLinkSettingsResponse = {
+  businessId: string;
+  name: string;
+  brandColor: string;
+  logoUrl: string | null;
+  bannerPhotoUrl: string | null;
+  orderLinkUrl: string;
+  showUpsellModalOnAddToCart: boolean;
+};
+```
+
+When `branchId` is supplied and belongs to the business, `showUpsellModalOnAddToCart` reflects the branch flag. Without `branchId`, it returns `false`.

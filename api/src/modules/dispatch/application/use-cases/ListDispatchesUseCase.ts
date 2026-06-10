@@ -8,6 +8,7 @@ import type {
 export type ListDispatchesInput = {
   filters?: {
     endAt?: unknown;
+    include?: unknown;
     startAt?: unknown;
     status?: unknown;
   };
@@ -32,6 +33,10 @@ export class ListDispatchesUseCase {
 
     if (input.filters?.endAt !== undefined) {
       filters.endAt = normalizeDate(input.filters.endAt, "endAt");
+    }
+
+    if (input.filters?.include !== undefined) {
+      filters.includeRoutePoints = normalizeInclude(input.filters.include);
     }
 
     if (
@@ -80,4 +85,23 @@ function normalizeDate(value: unknown, field: "startAt" | "endAt"): Date {
   }
 
   return parsed;
+}
+
+function normalizeInclude(value: unknown): boolean {
+  if (typeof value !== "string") {
+    throw new InvalidDispatchListPayloadError("include");
+  }
+
+  const includes = value
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean);
+
+  for (const include of includes) {
+    if (include !== "routePoints") {
+      throw new InvalidDispatchListPayloadError("include");
+    }
+  }
+
+  return includes.includes("routePoints");
 }

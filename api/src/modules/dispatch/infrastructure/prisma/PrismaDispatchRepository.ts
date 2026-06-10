@@ -23,6 +23,9 @@ type DispatchRow = {
   currentEstimatedDeliveryDurationMinutes: number | null;
   currentEstimatedRoundTripDurationMinutes: number | null;
   dispatchAt: Date | null;
+  leftRestaurantAt: Date | null;
+  leftRestaurantLat: number | null;
+  leftRestaurantLng: number | null;
   startedDeliveryAt: Date | null;
   dispatched: boolean;
   driverActive: boolean | null;
@@ -128,11 +131,6 @@ type DispatchLatestRoutePointRow = {
 
 type DispatchRoutePointRow = DispatchLatestRoutePointRow;
 
-type DispatchLeftRestaurantRow = {
-  dispatchId: string;
-  recordedAt: Date;
-};
-
 type RedeemedRewardOutput = {
   couponCode?: string | null;
   customerId: string;
@@ -185,7 +183,6 @@ function mapDispatch(
   redeemedRewardsByOrderId: Map<string, RedeemedRewardOutput[]>,
   preparationStepCategoriesByOrderId: Map<string, unknown[]>,
   orderReadinessByOrderId: Map<string, boolean>,
-  leftRestaurantAtByDispatchId: Map<string, string>,
   latestRoutePointByDispatchId: Map<
     string,
     {
@@ -224,7 +221,6 @@ function mapDispatch(
   >,
 ): DispatchEntity {
   const dispatchOrderRows = orderRows.filter((orderRow) => orderRow.dispatchId === row.id);
-  const leftRestaurantAt = leftRestaurantAtByDispatchId.get(row.id);
 
   const orders: DispatchOrder[] = dispatchOrderRows.map((orderRow, index) => ({
     id: orderRow.id,
@@ -313,7 +309,9 @@ function mapDispatch(
   return {
     id: row.id,
     createdAt: row.createdAt.toISOString(),
-    ...(leftRestaurantAt ? { leftRestaurantAt } : {}),
+    ...(row.leftRestaurantAt
+      ? { leftRestaurantAt: row.leftRestaurantAt.toISOString() }
+      : {}),
     ...(row.queueIndex !== null ? { queueIndex: row.queueIndex } : {}),
     ...(row.dispatchAt ? { dispatchAt: row.dispatchAt.toISOString() } : {}),
     ...(row.startedDeliveryAt
@@ -920,28 +918,6 @@ async function getRoutePointsByDispatchIds(
   return pointsByDispatchId;
 }
 
-async function getLeftRestaurantAtByDispatchIds(
-  dispatchIds: string[],
-): Promise<Map<string, string>> {
-  if (dispatchIds.length === 0) {
-    return new Map();
-  }
-
-  const rows = await prisma.$queryRaw<DispatchLeftRestaurantRow[]>`
-    SELECT
-      milestone."dispatchId",
-      MIN(milestone."recordedAt") AS "recordedAt"
-    FROM "DispatchRouteMilestone" milestone
-    WHERE milestone."dispatchId" IN (${Prisma.join(dispatchIds)})
-      AND milestone."type" = 'LEFT_PIZZERIA'::"DispatchRouteMilestoneType"
-    GROUP BY milestone."dispatchId"
-  `;
-
-  return new Map(
-    rows.map((row) => [row.dispatchId, row.recordedAt.toISOString()]),
-  );
-}
-
 async function assertDriverCanBeAssigned(
   tx: Prisma.TransactionClient,
   driverId: string,
@@ -1066,6 +1042,9 @@ export class PrismaDispatchRepository implements DispatchRepository {
         dispatch."createdAt",
         dispatch."queueIndex",
         dispatch."dispatchAt",
+        dispatch."leftRestaurantAt",
+        dispatch."leftRestaurantLat",
+        dispatch."leftRestaurantLng",
         dispatch."startedDeliveryAt",
         dispatch."dispatched",
         dispatch."estimatedDeliveryDurationMinutes",
@@ -1098,8 +1077,6 @@ export class PrismaDispatchRepository implements DispatchRepository {
     const preparationStepCategoriesByOrderId =
       await getDispatchPreparationStepCategories(orderIds);
     const orderReadinessByOrderId = await getOrderReadinessByOrderIds(orderIds);
-    const leftRestaurantAtByDispatchId =
-      await getLeftRestaurantAtByDispatchIds(dispatchIds);
     const latestRoutePointByDispatchId =
       await getLatestRoutePointByDispatchIds(dispatchIds);
     const routePointsByDispatchId = await getRoutePointsByDispatchIds(dispatchIds);
@@ -1112,7 +1089,6 @@ export class PrismaDispatchRepository implements DispatchRepository {
         redeemedRewardsByOrderId,
         preparationStepCategoriesByOrderId,
         orderReadinessByOrderId,
-        leftRestaurantAtByDispatchId,
         latestRoutePointByDispatchId,
         routePointsByDispatchId,
       ),
@@ -1140,6 +1116,9 @@ export class PrismaDispatchRepository implements DispatchRepository {
         dispatch."createdAt",
         dispatch."queueIndex",
         dispatch."dispatchAt",
+        dispatch."leftRestaurantAt",
+        dispatch."leftRestaurantLat",
+        dispatch."leftRestaurantLng",
         dispatch."startedDeliveryAt",
         dispatch."dispatched",
         dispatch."estimatedDeliveryDurationMinutes",
@@ -1171,9 +1150,6 @@ export class PrismaDispatchRepository implements DispatchRepository {
     const preparationStepCategoriesByOrderId =
       await getDispatchPreparationStepCategories(orderIds);
     const orderReadinessByOrderId = await getOrderReadinessByOrderIds(orderIds);
-    const leftRestaurantAtByDispatchId = await getLeftRestaurantAtByDispatchIds([
-      dispatchRow.id,
-    ]);
     const latestRoutePointByDispatchId = await getLatestRoutePointByDispatchIds([
       dispatchRow.id,
     ]);
@@ -1185,7 +1161,6 @@ export class PrismaDispatchRepository implements DispatchRepository {
       redeemedRewardsByOrderId,
       preparationStepCategoriesByOrderId,
       orderReadinessByOrderId,
-      leftRestaurantAtByDispatchId,
       latestRoutePointByDispatchId,
     );
   }
@@ -1431,7 +1406,11 @@ export class PrismaDispatchRepository implements DispatchRepository {
             OR dispatch."createdAt" >= DATE_TRUNC('day', CURRENT_TIMESTAMP) + INTERVAL '1 day'
           )
           AND (
-            dispatch."dispatched" = false
+            NOT EXISTS (
+              SELECT 1
+              FROM "Order" orders
+              WHERE orders."dispatchId" = dispatch."id"
+            )
             OR EXISTS (
               SELECT 1
               FROM "Order" orders
@@ -1491,6 +1470,9 @@ export class PrismaDispatchRepository implements DispatchRepository {
         dispatch."createdAt",
         dispatch."queueIndex",
         dispatch."dispatchAt",
+        dispatch."leftRestaurantAt",
+        dispatch."leftRestaurantLat",
+        dispatch."leftRestaurantLng",
         dispatch."startedDeliveryAt",
         dispatch."dispatched",
         dispatch."estimatedDeliveryDurationMinutes",
@@ -1523,11 +1505,11 @@ export class PrismaDispatchRepository implements DispatchRepository {
     const preparationStepCategoriesByOrderId =
       await getDispatchPreparationStepCategories(orderIds);
     const orderReadinessByOrderId = await getOrderReadinessByOrderIds(orderIds);
-    const leftRestaurantAtByDispatchId =
-      await getLeftRestaurantAtByDispatchIds(dispatchIds);
     const latestRoutePointByDispatchId =
       await getLatestRoutePointByDispatchIds(dispatchIds);
-    const routePointsByDispatchId = await getRoutePointsByDispatchIds(dispatchIds);
+    const routePointsByDispatchId = filters.includeRoutePoints
+      ? await getRoutePointsByDispatchIds(dispatchIds)
+      : undefined;
 
     return dispatchRows.map((dispatch) =>
       mapDispatch(
@@ -1537,7 +1519,6 @@ export class PrismaDispatchRepository implements DispatchRepository {
         redeemedRewardsByOrderId,
         preparationStepCategoriesByOrderId,
         orderReadinessByOrderId,
-        leftRestaurantAtByDispatchId,
         latestRoutePointByDispatchId,
         routePointsByDispatchId,
       ),
@@ -1562,6 +1543,9 @@ export class PrismaDispatchRepository implements DispatchRepository {
         dispatch."createdAt",
         dispatch."queueIndex",
         dispatch."dispatchAt",
+        dispatch."leftRestaurantAt",
+        dispatch."leftRestaurantLat",
+        dispatch."leftRestaurantLng",
         dispatch."startedDeliveryAt",
         dispatch."dispatched",
         dispatch."estimatedDeliveryDurationMinutes",
@@ -1604,9 +1588,6 @@ export class PrismaDispatchRepository implements DispatchRepository {
     const preparationStepCategoriesByOrderId =
       await getDispatchPreparationStepCategories(orderIds);
     const orderReadinessByOrderId = await getOrderReadinessByOrderIds(orderIds);
-    const leftRestaurantAtByDispatchId = await getLeftRestaurantAtByDispatchIds([
-      dispatchRow.id,
-    ]);
     const latestRoutePointByDispatchId = await getLatestRoutePointByDispatchIds([
       dispatchRow.id,
     ]);
@@ -1618,7 +1599,6 @@ export class PrismaDispatchRepository implements DispatchRepository {
       redeemedRewardsByOrderId,
       preparationStepCategoriesByOrderId,
       orderReadinessByOrderId,
-      leftRestaurantAtByDispatchId,
       latestRoutePointByDispatchId,
     );
   }
@@ -1656,6 +1636,9 @@ export class PrismaDispatchRepository implements DispatchRepository {
         dispatch."createdAt",
         dispatch."queueIndex",
         dispatch."dispatchAt",
+        dispatch."leftRestaurantAt",
+        dispatch."leftRestaurantLat",
+        dispatch."leftRestaurantLng",
         dispatch."startedDeliveryAt",
         dispatch."dispatched",
         dispatch."estimatedDeliveryDurationMinutes",
@@ -1687,9 +1670,6 @@ export class PrismaDispatchRepository implements DispatchRepository {
     const preparationStepCategoriesByOrderId =
       await getDispatchPreparationStepCategories(orderIds);
     const orderReadinessByOrderId = await getOrderReadinessByOrderIds(orderIds);
-    const leftRestaurantAtByDispatchId = await getLeftRestaurantAtByDispatchIds([
-      dispatchRow.id,
-    ]);
     const latestRoutePointByDispatchId = await getLatestRoutePointByDispatchIds([
       dispatchRow.id,
     ]);
@@ -1701,7 +1681,6 @@ export class PrismaDispatchRepository implements DispatchRepository {
       redeemedRewardsByOrderId,
       preparationStepCategoriesByOrderId,
       orderReadinessByOrderId,
-      leftRestaurantAtByDispatchId,
       latestRoutePointByDispatchId,
     );
   }

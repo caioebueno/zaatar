@@ -35554,6 +35554,8 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes: number | null
     currentEstimatedDeliveryDurationMinutes: number | null
     currentEstimatedRoundTripDurationMinutes: number | null
+    leftRestaurantLat: number | null
+    leftRestaurantLng: number | null
     arrivedAtRestaurantLat: number | null
     arrivedAtRestaurantLng: number | null
   }
@@ -35564,6 +35566,8 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes: number | null
     currentEstimatedDeliveryDurationMinutes: number | null
     currentEstimatedRoundTripDurationMinutes: number | null
+    leftRestaurantLat: number | null
+    leftRestaurantLng: number | null
     arrivedAtRestaurantLat: number | null
     arrivedAtRestaurantLng: number | null
   }
@@ -35579,6 +35583,9 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes: number | null
     currentEstimatedDeliveryDurationMinutes: number | null
     currentEstimatedRoundTripDurationMinutes: number | null
+    leftRestaurantAt: Date | null
+    leftRestaurantLat: number | null
+    leftRestaurantLng: number | null
     arrivedAtRestaurantAt: Date | null
     arrivedAtRestaurantLat: number | null
     arrivedAtRestaurantLng: number | null
@@ -35596,6 +35603,9 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes: number | null
     currentEstimatedDeliveryDurationMinutes: number | null
     currentEstimatedRoundTripDurationMinutes: number | null
+    leftRestaurantAt: Date | null
+    leftRestaurantLat: number | null
+    leftRestaurantLng: number | null
     arrivedAtRestaurantAt: Date | null
     arrivedAtRestaurantLat: number | null
     arrivedAtRestaurantLng: number | null
@@ -35613,6 +35623,9 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes: number
     currentEstimatedDeliveryDurationMinutes: number
     currentEstimatedRoundTripDurationMinutes: number
+    leftRestaurantAt: number
+    leftRestaurantLat: number
+    leftRestaurantLng: number
     arrivedAtRestaurantAt: number
     arrivedAtRestaurantLat: number
     arrivedAtRestaurantLng: number
@@ -35627,6 +35640,8 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes?: true
     currentEstimatedDeliveryDurationMinutes?: true
     currentEstimatedRoundTripDurationMinutes?: true
+    leftRestaurantLat?: true
+    leftRestaurantLng?: true
     arrivedAtRestaurantLat?: true
     arrivedAtRestaurantLng?: true
   }
@@ -35637,6 +35652,8 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes?: true
     currentEstimatedDeliveryDurationMinutes?: true
     currentEstimatedRoundTripDurationMinutes?: true
+    leftRestaurantLat?: true
+    leftRestaurantLng?: true
     arrivedAtRestaurantLat?: true
     arrivedAtRestaurantLng?: true
   }
@@ -35652,6 +35669,9 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes?: true
     currentEstimatedDeliveryDurationMinutes?: true
     currentEstimatedRoundTripDurationMinutes?: true
+    leftRestaurantAt?: true
+    leftRestaurantLat?: true
+    leftRestaurantLng?: true
     arrivedAtRestaurantAt?: true
     arrivedAtRestaurantLat?: true
     arrivedAtRestaurantLng?: true
@@ -35669,6 +35689,9 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes?: true
     currentEstimatedDeliveryDurationMinutes?: true
     currentEstimatedRoundTripDurationMinutes?: true
+    leftRestaurantAt?: true
+    leftRestaurantLat?: true
+    leftRestaurantLng?: true
     arrivedAtRestaurantAt?: true
     arrivedAtRestaurantLat?: true
     arrivedAtRestaurantLng?: true
@@ -35686,6 +35709,9 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes?: true
     currentEstimatedDeliveryDurationMinutes?: true
     currentEstimatedRoundTripDurationMinutes?: true
+    leftRestaurantAt?: true
+    leftRestaurantLat?: true
+    leftRestaurantLng?: true
     arrivedAtRestaurantAt?: true
     arrivedAtRestaurantLat?: true
     arrivedAtRestaurantLng?: true
@@ -35790,6 +35816,9 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes: number | null
     currentEstimatedDeliveryDurationMinutes: number | null
     currentEstimatedRoundTripDurationMinutes: number | null
+    leftRestaurantAt: Date | null
+    leftRestaurantLat: number | null
+    leftRestaurantLng: number | null
     arrivedAtRestaurantAt: Date | null
     arrivedAtRestaurantLat: number | null
     arrivedAtRestaurantLng: number | null
@@ -35826,6 +35855,9 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes?: boolean
     currentEstimatedDeliveryDurationMinutes?: boolean
     currentEstimatedRoundTripDurationMinutes?: boolean
+    leftRestaurantAt?: boolean
+    leftRestaurantLat?: boolean
+    leftRestaurantLng?: boolean
     arrivedAtRestaurantAt?: boolean
     arrivedAtRestaurantLat?: boolean
     arrivedAtRestaurantLng?: boolean
@@ -35849,6 +35881,9 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes?: boolean
     currentEstimatedDeliveryDurationMinutes?: boolean
     currentEstimatedRoundTripDurationMinutes?: boolean
+    leftRestaurantAt?: boolean
+    leftRestaurantLat?: boolean
+    leftRestaurantLng?: boolean
     arrivedAtRestaurantAt?: boolean
     arrivedAtRestaurantLat?: boolean
     arrivedAtRestaurantLng?: boolean
@@ -35867,6 +35902,9 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes?: boolean
     currentEstimatedDeliveryDurationMinutes?: boolean
     currentEstimatedRoundTripDurationMinutes?: boolean
+    leftRestaurantAt?: boolean
+    leftRestaurantLat?: boolean
+    leftRestaurantLng?: boolean
     arrivedAtRestaurantAt?: boolean
     arrivedAtRestaurantLat?: boolean
     arrivedAtRestaurantLng?: boolean
@@ -35885,13 +35923,16 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes?: boolean
     currentEstimatedDeliveryDurationMinutes?: boolean
     currentEstimatedRoundTripDurationMinutes?: boolean
+    leftRestaurantAt?: boolean
+    leftRestaurantLat?: boolean
+    leftRestaurantLng?: boolean
     arrivedAtRestaurantAt?: boolean
     arrivedAtRestaurantLat?: boolean
     arrivedAtRestaurantLng?: boolean
     driverId?: boolean
   }
 
-  export type DispatchOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "queueIndex" | "dispatched" | "dispatchAt" | "startedDeliveryAt" | "estimatedDeliveryDurationMinutes" | "estimatedRoundTripDurationMinutes" | "currentEstimatedDeliveryDurationMinutes" | "currentEstimatedRoundTripDurationMinutes" | "arrivedAtRestaurantAt" | "arrivedAtRestaurantLat" | "arrivedAtRestaurantLng" | "driverId", ExtArgs["result"]["dispatch"]>
+  export type DispatchOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "queueIndex" | "dispatched" | "dispatchAt" | "startedDeliveryAt" | "estimatedDeliveryDurationMinutes" | "estimatedRoundTripDurationMinutes" | "currentEstimatedDeliveryDurationMinutes" | "currentEstimatedRoundTripDurationMinutes" | "leftRestaurantAt" | "leftRestaurantLat" | "leftRestaurantLng" | "arrivedAtRestaurantAt" | "arrivedAtRestaurantLat" | "arrivedAtRestaurantLng" | "driverId", ExtArgs["result"]["dispatch"]>
   export type DispatchInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     driver?: boolean | Dispatch$driverArgs<ExtArgs>
     orders?: boolean | Dispatch$ordersArgs<ExtArgs>
@@ -35927,6 +35968,9 @@ export namespace Prisma {
       estimatedRoundTripDurationMinutes: number | null
       currentEstimatedDeliveryDurationMinutes: number | null
       currentEstimatedRoundTripDurationMinutes: number | null
+      leftRestaurantAt: Date | null
+      leftRestaurantLat: number | null
+      leftRestaurantLng: number | null
       arrivedAtRestaurantAt: Date | null
       arrivedAtRestaurantLat: number | null
       arrivedAtRestaurantLng: number | null
@@ -36369,6 +36413,9 @@ export namespace Prisma {
     readonly estimatedRoundTripDurationMinutes: FieldRef<"Dispatch", 'Int'>
     readonly currentEstimatedDeliveryDurationMinutes: FieldRef<"Dispatch", 'Int'>
     readonly currentEstimatedRoundTripDurationMinutes: FieldRef<"Dispatch", 'Int'>
+    readonly leftRestaurantAt: FieldRef<"Dispatch", 'DateTime'>
+    readonly leftRestaurantLat: FieldRef<"Dispatch", 'Float'>
+    readonly leftRestaurantLng: FieldRef<"Dispatch", 'Float'>
     readonly arrivedAtRestaurantAt: FieldRef<"Dispatch", 'DateTime'>
     readonly arrivedAtRestaurantLat: FieldRef<"Dispatch", 'Float'>
     readonly arrivedAtRestaurantLng: FieldRef<"Dispatch", 'Float'>
@@ -86574,6 +86621,9 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes: 'estimatedRoundTripDurationMinutes',
     currentEstimatedDeliveryDurationMinutes: 'currentEstimatedDeliveryDurationMinutes',
     currentEstimatedRoundTripDurationMinutes: 'currentEstimatedRoundTripDurationMinutes',
+    leftRestaurantAt: 'leftRestaurantAt',
+    leftRestaurantLat: 'leftRestaurantLat',
+    leftRestaurantLng: 'leftRestaurantLng',
     arrivedAtRestaurantAt: 'arrivedAtRestaurantAt',
     arrivedAtRestaurantLat: 'arrivedAtRestaurantLat',
     arrivedAtRestaurantLng: 'arrivedAtRestaurantLng',
@@ -89472,6 +89522,9 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes?: IntNullableFilter<"Dispatch"> | number | null
     currentEstimatedDeliveryDurationMinutes?: IntNullableFilter<"Dispatch"> | number | null
     currentEstimatedRoundTripDurationMinutes?: IntNullableFilter<"Dispatch"> | number | null
+    leftRestaurantAt?: DateTimeNullableFilter<"Dispatch"> | Date | string | null
+    leftRestaurantLat?: FloatNullableFilter<"Dispatch"> | number | null
+    leftRestaurantLng?: FloatNullableFilter<"Dispatch"> | number | null
     arrivedAtRestaurantAt?: DateTimeNullableFilter<"Dispatch"> | Date | string | null
     arrivedAtRestaurantLat?: FloatNullableFilter<"Dispatch"> | number | null
     arrivedAtRestaurantLng?: FloatNullableFilter<"Dispatch"> | number | null
@@ -89494,6 +89547,9 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes?: SortOrderInput | SortOrder
     currentEstimatedDeliveryDurationMinutes?: SortOrderInput | SortOrder
     currentEstimatedRoundTripDurationMinutes?: SortOrderInput | SortOrder
+    leftRestaurantAt?: SortOrderInput | SortOrder
+    leftRestaurantLat?: SortOrderInput | SortOrder
+    leftRestaurantLng?: SortOrderInput | SortOrder
     arrivedAtRestaurantAt?: SortOrderInput | SortOrder
     arrivedAtRestaurantLat?: SortOrderInput | SortOrder
     arrivedAtRestaurantLng?: SortOrderInput | SortOrder
@@ -89519,6 +89575,9 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes?: IntNullableFilter<"Dispatch"> | number | null
     currentEstimatedDeliveryDurationMinutes?: IntNullableFilter<"Dispatch"> | number | null
     currentEstimatedRoundTripDurationMinutes?: IntNullableFilter<"Dispatch"> | number | null
+    leftRestaurantAt?: DateTimeNullableFilter<"Dispatch"> | Date | string | null
+    leftRestaurantLat?: FloatNullableFilter<"Dispatch"> | number | null
+    leftRestaurantLng?: FloatNullableFilter<"Dispatch"> | number | null
     arrivedAtRestaurantAt?: DateTimeNullableFilter<"Dispatch"> | Date | string | null
     arrivedAtRestaurantLat?: FloatNullableFilter<"Dispatch"> | number | null
     arrivedAtRestaurantLng?: FloatNullableFilter<"Dispatch"> | number | null
@@ -89541,6 +89600,9 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes?: SortOrderInput | SortOrder
     currentEstimatedDeliveryDurationMinutes?: SortOrderInput | SortOrder
     currentEstimatedRoundTripDurationMinutes?: SortOrderInput | SortOrder
+    leftRestaurantAt?: SortOrderInput | SortOrder
+    leftRestaurantLat?: SortOrderInput | SortOrder
+    leftRestaurantLng?: SortOrderInput | SortOrder
     arrivedAtRestaurantAt?: SortOrderInput | SortOrder
     arrivedAtRestaurantLat?: SortOrderInput | SortOrder
     arrivedAtRestaurantLng?: SortOrderInput | SortOrder
@@ -89566,6 +89628,9 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes?: IntNullableWithAggregatesFilter<"Dispatch"> | number | null
     currentEstimatedDeliveryDurationMinutes?: IntNullableWithAggregatesFilter<"Dispatch"> | number | null
     currentEstimatedRoundTripDurationMinutes?: IntNullableWithAggregatesFilter<"Dispatch"> | number | null
+    leftRestaurantAt?: DateTimeNullableWithAggregatesFilter<"Dispatch"> | Date | string | null
+    leftRestaurantLat?: FloatNullableWithAggregatesFilter<"Dispatch"> | number | null
+    leftRestaurantLng?: FloatNullableWithAggregatesFilter<"Dispatch"> | number | null
     arrivedAtRestaurantAt?: DateTimeNullableWithAggregatesFilter<"Dispatch"> | Date | string | null
     arrivedAtRestaurantLat?: FloatNullableWithAggregatesFilter<"Dispatch"> | number | null
     arrivedAtRestaurantLng?: FloatNullableWithAggregatesFilter<"Dispatch"> | number | null
@@ -95046,6 +95111,9 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes?: number | null
     currentEstimatedDeliveryDurationMinutes?: number | null
     currentEstimatedRoundTripDurationMinutes?: number | null
+    leftRestaurantAt?: Date | string | null
+    leftRestaurantLat?: number | null
+    leftRestaurantLng?: number | null
     arrivedAtRestaurantAt?: Date | string | null
     arrivedAtRestaurantLat?: number | null
     arrivedAtRestaurantLng?: number | null
@@ -95067,6 +95135,9 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes?: number | null
     currentEstimatedDeliveryDurationMinutes?: number | null
     currentEstimatedRoundTripDurationMinutes?: number | null
+    leftRestaurantAt?: Date | string | null
+    leftRestaurantLat?: number | null
+    leftRestaurantLng?: number | null
     arrivedAtRestaurantAt?: Date | string | null
     arrivedAtRestaurantLat?: number | null
     arrivedAtRestaurantLng?: number | null
@@ -95088,6 +95159,9 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     currentEstimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    leftRestaurantAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftRestaurantLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    leftRestaurantLng?: NullableFloatFieldUpdateOperationsInput | number | null
     arrivedAtRestaurantAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     arrivedAtRestaurantLat?: NullableFloatFieldUpdateOperationsInput | number | null
     arrivedAtRestaurantLng?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -95109,6 +95183,9 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     currentEstimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    leftRestaurantAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftRestaurantLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    leftRestaurantLng?: NullableFloatFieldUpdateOperationsInput | number | null
     arrivedAtRestaurantAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     arrivedAtRestaurantLat?: NullableFloatFieldUpdateOperationsInput | number | null
     arrivedAtRestaurantLng?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -95130,6 +95207,9 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes?: number | null
     currentEstimatedDeliveryDurationMinutes?: number | null
     currentEstimatedRoundTripDurationMinutes?: number | null
+    leftRestaurantAt?: Date | string | null
+    leftRestaurantLat?: number | null
+    leftRestaurantLng?: number | null
     arrivedAtRestaurantAt?: Date | string | null
     arrivedAtRestaurantLat?: number | null
     arrivedAtRestaurantLng?: number | null
@@ -95147,6 +95227,9 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     currentEstimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    leftRestaurantAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftRestaurantLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    leftRestaurantLng?: NullableFloatFieldUpdateOperationsInput | number | null
     arrivedAtRestaurantAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     arrivedAtRestaurantLat?: NullableFloatFieldUpdateOperationsInput | number | null
     arrivedAtRestaurantLng?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -95163,6 +95246,9 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     currentEstimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    leftRestaurantAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftRestaurantLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    leftRestaurantLng?: NullableFloatFieldUpdateOperationsInput | number | null
     arrivedAtRestaurantAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     arrivedAtRestaurantLat?: NullableFloatFieldUpdateOperationsInput | number | null
     arrivedAtRestaurantLng?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -100680,6 +100766,9 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes?: SortOrder
     currentEstimatedDeliveryDurationMinutes?: SortOrder
     currentEstimatedRoundTripDurationMinutes?: SortOrder
+    leftRestaurantAt?: SortOrder
+    leftRestaurantLat?: SortOrder
+    leftRestaurantLng?: SortOrder
     arrivedAtRestaurantAt?: SortOrder
     arrivedAtRestaurantLat?: SortOrder
     arrivedAtRestaurantLng?: SortOrder
@@ -100692,6 +100781,8 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes?: SortOrder
     currentEstimatedDeliveryDurationMinutes?: SortOrder
     currentEstimatedRoundTripDurationMinutes?: SortOrder
+    leftRestaurantLat?: SortOrder
+    leftRestaurantLng?: SortOrder
     arrivedAtRestaurantLat?: SortOrder
     arrivedAtRestaurantLng?: SortOrder
   }
@@ -100707,6 +100798,9 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes?: SortOrder
     currentEstimatedDeliveryDurationMinutes?: SortOrder
     currentEstimatedRoundTripDurationMinutes?: SortOrder
+    leftRestaurantAt?: SortOrder
+    leftRestaurantLat?: SortOrder
+    leftRestaurantLng?: SortOrder
     arrivedAtRestaurantAt?: SortOrder
     arrivedAtRestaurantLat?: SortOrder
     arrivedAtRestaurantLng?: SortOrder
@@ -100724,6 +100818,9 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes?: SortOrder
     currentEstimatedDeliveryDurationMinutes?: SortOrder
     currentEstimatedRoundTripDurationMinutes?: SortOrder
+    leftRestaurantAt?: SortOrder
+    leftRestaurantLat?: SortOrder
+    leftRestaurantLng?: SortOrder
     arrivedAtRestaurantAt?: SortOrder
     arrivedAtRestaurantLat?: SortOrder
     arrivedAtRestaurantLng?: SortOrder
@@ -100736,6 +100833,8 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes?: SortOrder
     currentEstimatedDeliveryDurationMinutes?: SortOrder
     currentEstimatedRoundTripDurationMinutes?: SortOrder
+    leftRestaurantLat?: SortOrder
+    leftRestaurantLng?: SortOrder
     arrivedAtRestaurantLat?: SortOrder
     arrivedAtRestaurantLng?: SortOrder
   }
@@ -113174,6 +113273,9 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes?: number | null
     currentEstimatedDeliveryDurationMinutes?: number | null
     currentEstimatedRoundTripDurationMinutes?: number | null
+    leftRestaurantAt?: Date | string | null
+    leftRestaurantLat?: number | null
+    leftRestaurantLng?: number | null
     arrivedAtRestaurantAt?: Date | string | null
     arrivedAtRestaurantLat?: number | null
     arrivedAtRestaurantLng?: number | null
@@ -113194,6 +113296,9 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes?: number | null
     currentEstimatedDeliveryDurationMinutes?: number | null
     currentEstimatedRoundTripDurationMinutes?: number | null
+    leftRestaurantAt?: Date | string | null
+    leftRestaurantLat?: number | null
+    leftRestaurantLng?: number | null
     arrivedAtRestaurantAt?: Date | string | null
     arrivedAtRestaurantLat?: number | null
     arrivedAtRestaurantLng?: number | null
@@ -113339,6 +113444,9 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes?: IntNullableFilter<"Dispatch"> | number | null
     currentEstimatedDeliveryDurationMinutes?: IntNullableFilter<"Dispatch"> | number | null
     currentEstimatedRoundTripDurationMinutes?: IntNullableFilter<"Dispatch"> | number | null
+    leftRestaurantAt?: DateTimeNullableFilter<"Dispatch"> | Date | string | null
+    leftRestaurantLat?: FloatNullableFilter<"Dispatch"> | number | null
+    leftRestaurantLng?: FloatNullableFilter<"Dispatch"> | number | null
     arrivedAtRestaurantAt?: DateTimeNullableFilter<"Dispatch"> | Date | string | null
     arrivedAtRestaurantLat?: FloatNullableFilter<"Dispatch"> | number | null
     arrivedAtRestaurantLng?: FloatNullableFilter<"Dispatch"> | number | null
@@ -113861,6 +113969,9 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes?: number | null
     currentEstimatedDeliveryDurationMinutes?: number | null
     currentEstimatedRoundTripDurationMinutes?: number | null
+    leftRestaurantAt?: Date | string | null
+    leftRestaurantLat?: number | null
+    leftRestaurantLng?: number | null
     arrivedAtRestaurantAt?: Date | string | null
     arrivedAtRestaurantLat?: number | null
     arrivedAtRestaurantLng?: number | null
@@ -113881,6 +113992,9 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes?: number | null
     currentEstimatedDeliveryDurationMinutes?: number | null
     currentEstimatedRoundTripDurationMinutes?: number | null
+    leftRestaurantAt?: Date | string | null
+    leftRestaurantLat?: number | null
+    leftRestaurantLng?: number | null
     arrivedAtRestaurantAt?: Date | string | null
     arrivedAtRestaurantLat?: number | null
     arrivedAtRestaurantLng?: number | null
@@ -114024,6 +114138,9 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     currentEstimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    leftRestaurantAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftRestaurantLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    leftRestaurantLng?: NullableFloatFieldUpdateOperationsInput | number | null
     arrivedAtRestaurantAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     arrivedAtRestaurantLat?: NullableFloatFieldUpdateOperationsInput | number | null
     arrivedAtRestaurantLng?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -114044,6 +114161,9 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     currentEstimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    leftRestaurantAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftRestaurantLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    leftRestaurantLng?: NullableFloatFieldUpdateOperationsInput | number | null
     arrivedAtRestaurantAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     arrivedAtRestaurantLat?: NullableFloatFieldUpdateOperationsInput | number | null
     arrivedAtRestaurantLng?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -114230,6 +114350,9 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes?: number | null
     currentEstimatedDeliveryDurationMinutes?: number | null
     currentEstimatedRoundTripDurationMinutes?: number | null
+    leftRestaurantAt?: Date | string | null
+    leftRestaurantLat?: number | null
+    leftRestaurantLng?: number | null
     arrivedAtRestaurantAt?: Date | string | null
     arrivedAtRestaurantLat?: number | null
     arrivedAtRestaurantLng?: number | null
@@ -114250,6 +114373,9 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes?: number | null
     currentEstimatedDeliveryDurationMinutes?: number | null
     currentEstimatedRoundTripDurationMinutes?: number | null
+    leftRestaurantAt?: Date | string | null
+    leftRestaurantLat?: number | null
+    leftRestaurantLng?: number | null
     arrivedAtRestaurantAt?: Date | string | null
     arrivedAtRestaurantLat?: number | null
     arrivedAtRestaurantLng?: number | null
@@ -114354,6 +114480,9 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     currentEstimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    leftRestaurantAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftRestaurantLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    leftRestaurantLng?: NullableFloatFieldUpdateOperationsInput | number | null
     arrivedAtRestaurantAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     arrivedAtRestaurantLat?: NullableFloatFieldUpdateOperationsInput | number | null
     arrivedAtRestaurantLng?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -114374,6 +114503,9 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     currentEstimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    leftRestaurantAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftRestaurantLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    leftRestaurantLng?: NullableFloatFieldUpdateOperationsInput | number | null
     arrivedAtRestaurantAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     arrivedAtRestaurantLat?: NullableFloatFieldUpdateOperationsInput | number | null
     arrivedAtRestaurantLng?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -114474,6 +114606,9 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes?: number | null
     currentEstimatedDeliveryDurationMinutes?: number | null
     currentEstimatedRoundTripDurationMinutes?: number | null
+    leftRestaurantAt?: Date | string | null
+    leftRestaurantLat?: number | null
+    leftRestaurantLng?: number | null
     arrivedAtRestaurantAt?: Date | string | null
     arrivedAtRestaurantLat?: number | null
     arrivedAtRestaurantLng?: number | null
@@ -114494,6 +114629,9 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes?: number | null
     currentEstimatedDeliveryDurationMinutes?: number | null
     currentEstimatedRoundTripDurationMinutes?: number | null
+    leftRestaurantAt?: Date | string | null
+    leftRestaurantLat?: number | null
+    leftRestaurantLng?: number | null
     arrivedAtRestaurantAt?: Date | string | null
     arrivedAtRestaurantLat?: number | null
     arrivedAtRestaurantLng?: number | null
@@ -114530,6 +114668,9 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     currentEstimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    leftRestaurantAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftRestaurantLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    leftRestaurantLng?: NullableFloatFieldUpdateOperationsInput | number | null
     arrivedAtRestaurantAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     arrivedAtRestaurantLat?: NullableFloatFieldUpdateOperationsInput | number | null
     arrivedAtRestaurantLng?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -114550,6 +114691,9 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     currentEstimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    leftRestaurantAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftRestaurantLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    leftRestaurantLng?: NullableFloatFieldUpdateOperationsInput | number | null
     arrivedAtRestaurantAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     arrivedAtRestaurantLat?: NullableFloatFieldUpdateOperationsInput | number | null
     arrivedAtRestaurantLng?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -119017,6 +119161,9 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes?: number | null
     currentEstimatedDeliveryDurationMinutes?: number | null
     currentEstimatedRoundTripDurationMinutes?: number | null
+    leftRestaurantAt?: Date | string | null
+    leftRestaurantLat?: number | null
+    leftRestaurantLng?: number | null
     arrivedAtRestaurantAt?: Date | string | null
     arrivedAtRestaurantLat?: number | null
     arrivedAtRestaurantLng?: number | null
@@ -119037,6 +119184,9 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes?: number | null
     currentEstimatedDeliveryDurationMinutes?: number | null
     currentEstimatedRoundTripDurationMinutes?: number | null
+    leftRestaurantAt?: Date | string | null
+    leftRestaurantLat?: number | null
+    leftRestaurantLng?: number | null
     arrivedAtRestaurantAt?: Date | string | null
     arrivedAtRestaurantLat?: number | null
     arrivedAtRestaurantLng?: number | null
@@ -119461,6 +119611,9 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     currentEstimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    leftRestaurantAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftRestaurantLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    leftRestaurantLng?: NullableFloatFieldUpdateOperationsInput | number | null
     arrivedAtRestaurantAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     arrivedAtRestaurantLat?: NullableFloatFieldUpdateOperationsInput | number | null
     arrivedAtRestaurantLng?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -119481,6 +119634,9 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     currentEstimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    leftRestaurantAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftRestaurantLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    leftRestaurantLng?: NullableFloatFieldUpdateOperationsInput | number | null
     arrivedAtRestaurantAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     arrivedAtRestaurantLat?: NullableFloatFieldUpdateOperationsInput | number | null
     arrivedAtRestaurantLng?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -124360,6 +124516,9 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes?: number | null
     currentEstimatedDeliveryDurationMinutes?: number | null
     currentEstimatedRoundTripDurationMinutes?: number | null
+    leftRestaurantAt?: Date | string | null
+    leftRestaurantLat?: number | null
+    leftRestaurantLng?: number | null
     arrivedAtRestaurantAt?: Date | string | null
     arrivedAtRestaurantLat?: number | null
     arrivedAtRestaurantLng?: number | null
@@ -124407,6 +124566,9 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     currentEstimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    leftRestaurantAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftRestaurantLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    leftRestaurantLng?: NullableFloatFieldUpdateOperationsInput | number | null
     arrivedAtRestaurantAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     arrivedAtRestaurantLat?: NullableFloatFieldUpdateOperationsInput | number | null
     arrivedAtRestaurantLng?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -124427,6 +124589,9 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     currentEstimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    leftRestaurantAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftRestaurantLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    leftRestaurantLng?: NullableFloatFieldUpdateOperationsInput | number | null
     arrivedAtRestaurantAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     arrivedAtRestaurantLat?: NullableFloatFieldUpdateOperationsInput | number | null
     arrivedAtRestaurantLng?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -124447,6 +124612,9 @@ export namespace Prisma {
     estimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     currentEstimatedRoundTripDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    leftRestaurantAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftRestaurantLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    leftRestaurantLng?: NullableFloatFieldUpdateOperationsInput | number | null
     arrivedAtRestaurantAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     arrivedAtRestaurantLat?: NullableFloatFieldUpdateOperationsInput | number | null
     arrivedAtRestaurantLng?: NullableFloatFieldUpdateOperationsInput | number | null

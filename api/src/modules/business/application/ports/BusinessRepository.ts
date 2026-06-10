@@ -45,6 +45,7 @@ export type BusinessBranchRecord = {
   id: string;
   name: string;
   operationHours: unknown;
+  showUpsellModalOnAddToCart: boolean;
 };
 
 export type CurrentBusinessRecord = {

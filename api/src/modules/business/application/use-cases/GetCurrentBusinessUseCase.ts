@@ -30,6 +30,7 @@ export type GetCurrentBusinessOutput = {
     id: string;
     name: string;
     operationHours: unknown;
+    showUpsellModalOnAddToCart: boolean;
   }>;
   createdAt: string;
   id: string;
@@ -74,6 +75,7 @@ export class GetCurrentBusinessUseCase {
           name: branch.name,
           chatwootAccountId: branch.chatwootAccountId ?? null,
           chatwootSourceId: branch.chatwootSourceId ?? null,
+          showUpsellModalOnAddToCart: branch.showUpsellModalOnAddToCart,
           operationHours: branch.operationHours,
           address: branch.address
             ? {

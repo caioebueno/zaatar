@@ -203,6 +203,8 @@ export default async function OnboardingPage({ searchParams }: PageProps) {
                     addressZipCode:
                       typeof record.addressZipCode === "string" ? record.addressZipCode : null,
                     operationHours: record.operationHours,
+                    showUpsellModalOnAddToCart:
+                      record.showUpsellModalOnAddToCart === true,
                   };
                 })
                 .filter(

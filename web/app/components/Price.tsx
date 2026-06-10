@@ -2936,13 +2936,18 @@ const FindAddressModal: React.FC<TFindAddressModal> = ({
     null,
   );
   const [loading, setLoading] = useState(false);
-  const [number, setNumber] = useState("");
   const [complement, setComplement] = useState("");
+  const [hasGate, setHasGate] = useState<boolean | null>(null);
+  const [gateCode, setGateCode] = useState("");
   const [error, setError] = useState<string | null>(null);
 
   const handleConfirm = async () => {
     if (!selectedAddress) return;
     if (!selectedAddress.raw.address?.house_number) return;
+    if (hasGate && !gateCode.trim()) {
+      setError(content["gateCodeRequired"] ?? "Gate code is required.");
+      return;
+    }
     setLoading(true);
     setError(null);
     try {
@@ -2957,8 +2962,8 @@ const FindAddressModal: React.FC<TFindAddressModal> = ({
           state: selectedAddress.state,
           street: selectedAddress.street1,
           zipCode: selectedAddress.zip,
-          numberComplement: number || undefined,
           complement: complement || undefined,
+          numberComplement: hasGate ? gateCode.trim() : undefined,
           createdAt: "",
           customerId: custumerId,
         },
@@ -3007,30 +3012,60 @@ const FindAddressModal: React.FC<TFindAddressModal> = ({
             selected={selectedAddress}
           />
           {selectedAddress !== null && (
-            <>
-              <TextInput
-                value={number}
-                onChange={(e) => {
-                  setNumber(e.target.value);
-                  setError(null);
-                }}
-                label={content["numberAppartment"]}
-              />
-              <TextInput
-                value={complement}
-                onChange={(e) => {
-                  setComplement(e.target.value);
-                  setError(null);
-                }}
-                label={content["reference"]}
-              />
-            </>
+            <TextInput
+              value={complement}
+              onChange={(e) => {
+                setComplement(e.target.value);
+                setError(null);
+              }}
+              label={content["complementLabel"]}
+              placeholder={content["complementPlaceholder"]}
+            />
+          )}
+          {selectedAddress !== null && (
+            <div className="flex flex-col gap-2">
+              <span className="font-semibold text-sm">
+                {content["gateQuestion"] ?? "O endereço fica em condomínio com portão?"}
+              </span>
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => { setHasGate(true); setError(null); }}
+                  className={`flex-1 py-2.5 rounded-xl border-2 font-semibold text-sm transition ${
+                    hasGate === true
+                      ? "border-brandBackground bg-brandBackground/10 text-brandBackground"
+                      : "border-neutral-200 text-neutral-600"
+                  }`}
+                >
+                  {content["yes"] ?? "Sim"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { setHasGate(false); setGateCode(""); setError(null); }}
+                  className={`flex-1 py-2.5 rounded-xl border-2 font-semibold text-sm transition ${
+                    hasGate === false
+                      ? "border-brandBackground bg-brandBackground/10 text-brandBackground"
+                      : "border-neutral-200 text-neutral-600"
+                  }`}
+                >
+                  {content["no"] ?? "Não"}
+                </button>
+              </div>
+              {hasGate && (
+                <TextInput
+                  value={gateCode}
+                  onChange={(e) => { setGateCode(e.target.value); setError(null); }}
+                  label={content["gateCodeLabel"] ?? "Código do portão"}
+                  placeholder={content["gateCodePlaceholder"] ?? "Ex: #1234"}
+                />
+              )}
+            </div>
           )}
           {error && <span className="text-red-600 text-sm">{error}</span>}
         </div>
         <div className="bg-foreground pt-4 px-4 pb-8 w-full shrink-0 border-t border-brandBackground/15">
           <Button
-            disabled={selectedAddress === null || loading}
+            disabled={selectedAddress === null || loading || hasGate === null || (hasGate && !gateCode.trim())}
             onClick={() => handleConfirm()}
             className="bg-brandBackground w-full disabled:opacity-50"
           >

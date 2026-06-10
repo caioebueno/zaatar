@@ -108,6 +108,7 @@ export type DispatchEntity = {
 
 export type DispatchListFilters = {
   endAt?: Date;
+  includeRoutePoints?: boolean;
   startAt?: Date;
   status?: "active";
 };

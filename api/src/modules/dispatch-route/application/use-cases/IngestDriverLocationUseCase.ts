@@ -102,47 +102,42 @@ export class IngestDriverLocationUseCase {
 
     const points = await this.repository.listRecentPointsBySessionId(input.sessionId, 24);
     const validPoints = points.filter((point) => isPointValidForGeofence(point));
-    if (validPoints.length < 4) {
+    const latestPoint = validPoints[validPoints.length - 1];
+    if (!latestPoint) {
       return false;
     }
 
-    const distances = validPoints.map((point) => ({
-      point,
-      distanceMeters: haversineDistanceMeters(origin.lat, origin.lng, point.lat, point.lng),
-    }));
-
-    const hasInsideEvidence = distances.some(
-      (entry) => entry.distanceMeters <= INSIDE_RADIUS_METERS,
+    const distanceToRestaurant = haversineDistanceMeters(
+      origin.lat,
+      origin.lng,
+      latestPoint.lat,
+      latestPoint.lng,
     );
-    if (!hasInsideEvidence) {
+    if (distanceToRestaurant <= LEFT_PIZZERIA_OUTSIDE_RADIUS_METERS) {
       return false;
     }
 
-    const trailing = distances.slice(-OUTSIDE_STREAK_REQUIRED);
-    const outsideStreak =
-      trailing.length === OUTSIDE_STREAK_REQUIRED &&
-      trailing.every((entry) =>
-        entry.distanceMeters > OUTSIDE_RADIUS_METERS && isPointMoving(entry.point),
-      );
-
-    if (!outsideStreak) {
+    const marked = await this.repository.markDispatchLeftRestaurantIfMissing({
+      dispatchId: input.dispatchId,
+      recordedAt: latestPoint.recordedAt,
+      lat: latestPoint.lat,
+      lng: latestPoint.lng,
+    });
+    if (!marked) {
       return false;
     }
 
-    const triggerPoint = trailing[0]?.point;
-    if (!triggerPoint) {
-      return false;
-    }
-
-    return this.repository.createMilestoneIfMissing({
+    await this.repository.createMilestoneIfMissing({
       type: "LEFT_PIZZERIA",
       dispatchId: input.dispatchId,
       driverId: input.driverId,
       sessionId: input.sessionId,
-      recordedAt: triggerPoint.recordedAt,
-      lat: triggerPoint.lat,
-      lng: triggerPoint.lng,
+      recordedAt: latestPoint.recordedAt,
+      lat: latestPoint.lat,
+      lng: latestPoint.lng,
     });
+
+    return true;
   }
 
   private async trackLeftDropOffMilestone(input: {
@@ -285,19 +280,9 @@ export class IngestDriverLocationUseCase {
   }
 }
 
-const INSIDE_RADIUS_METERS = parsePositiveNumber(
-  process.env.DISPATCH_LEFT_PIZZERIA_INSIDE_RADIUS_METERS,
-  80,
-);
-const OUTSIDE_RADIUS_METERS = parsePositiveNumber(
+const LEFT_PIZZERIA_OUTSIDE_RADIUS_METERS = parsePositiveNumber(
   process.env.DISPATCH_LEFT_PIZZERIA_OUTSIDE_RADIUS_METERS,
   120,
-);
-const OUTSIDE_STREAK_REQUIRED = Math.max(
-  2,
-  Math.round(
-    parsePositiveNumber(process.env.DISPATCH_LEFT_PIZZERIA_STREAK_POINTS, 3),
-  ),
 );
 const MAX_ACCEPTABLE_ACCURACY_METERS = parsePositiveNumber(
   process.env.DISPATCH_LOCATION_MAX_ACCURACY_METERS,

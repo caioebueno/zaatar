@@ -22,7 +22,7 @@ All responses are JSON. All protected routes require an `Authorization: Bearer <
 | [business.md](./business.md) | Businesses, branches, onboarding, business settings |
 | [catalog.md](./catalog.md) | Products, menus, categories, modifier groups, media upload, customers, address search |
 | [categories.md](./categories.md) | Full `/categories` request/response schemas (list/create/update/detach) |
-| [customers.md](./customers.md) | Full customer APIs (`/customers`, `/customers/search`, `/customers/:customerId/addresses`) |
+| [customers.md](./customers.md) | Full customer APIs (`/customers`, `/customers/search`, customer addresses, delivery address updates) |
 | [progressive-discount.md](./progressive-discount.md) | Full `/progressive-discount` schema, selection behavior, and examples |
 | [address-search.md](./address-search.md) | Full `/address-search` schema, behavior, and examples |
 | [orders.md](./orders.md) | List/get/create/update orders, orders by station |

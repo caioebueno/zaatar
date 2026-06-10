@@ -27,6 +27,7 @@ export type UpdateOnboardingBranchInput = {
   businessId?: string | null;
   name?: unknown;
   operationHours?: unknown;
+  showUpsellModalOnAddToCart?: unknown;
 };
 
 export type UpdateOnboardingBranchOutput = {
@@ -48,6 +49,7 @@ export type UpdateOnboardingBranchOutput = {
   id: string;
   name: string;
   operationHours: unknown;
+  showUpsellModalOnAddToCart: boolean;
 };
 
 export class UpdateOnboardingBranchUseCase {
@@ -86,6 +88,7 @@ export class UpdateOnboardingBranchUseCase {
       operationHours: input.operationHours,
       chatwootAccountId: input.chatwootAccountId,
       chatwootSourceId: input.chatwootSourceId,
+      showUpsellModalOnAddToCart: input.showUpsellModalOnAddToCart,
     });
 
     const branch = await this.repository.updateBranch(
@@ -119,6 +122,7 @@ function parseBranchInput(input: {
   chatwootSourceId?: unknown;
   name?: unknown;
   operationHours?: unknown;
+  showUpsellModalOnAddToCart?: unknown;
 }): UpsertBranchOnboardingInput {
   const name = parseRequiredText(input.name, "name", 120);
   const addressDescription = parseRequiredText(
@@ -156,6 +160,11 @@ function parseBranchInput(input: {
     "chatwootSourceId",
     120,
   );
+  const showUpsellModalOnAddToCart = parseOptionalBoolean(
+    input.showUpsellModalOnAddToCart,
+    false,
+    "showUpsellModalOnAddToCart",
+  );
 
   return {
     name,
@@ -174,6 +183,7 @@ function parseBranchInput(input: {
     operationHours,
     chatwootAccountId,
     chatwootSourceId,
+    showUpsellModalOnAddToCart,
   };
 }
 
@@ -229,6 +239,18 @@ function parseOperationHours(value: unknown): unknown {
   return value;
 }
 
+function parseOptionalBoolean(
+  value: unknown,
+  fallback: boolean,
+  field: string,
+): boolean {
+  if (value === undefined) return fallback;
+  if (typeof value !== "boolean") {
+    throw new InvalidOnboardingPayloadError(field);
+  }
+  return value;
+}
+
 function parseOptionalCoordinate(
   value: unknown,
   field: string,
@@ -280,6 +302,7 @@ function mapBranch(
     createdAt: branch.createdAt.toISOString(),
     chatwootAccountId: branch.chatwootAccountId ?? null,
     chatwootSourceId: branch.chatwootSourceId ?? null,
+    showUpsellModalOnAddToCart: branch.showUpsellModalOnAddToCart,
     operationHours: branch.operationHours,
     addressDescription: branch.address?.description ?? "",
     addressGoogleMapsUrl: branch.address?.googleMapsUrl ?? "",

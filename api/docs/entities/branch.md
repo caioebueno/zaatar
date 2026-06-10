@@ -9,6 +9,7 @@ type Branch = {
   name: string;
   workingHours?: unknown;
   address?: unknown;
+  showUpsellModalOnAddToCart: boolean;
   chatwootAccountId?: string | null;
   chatwootSourceId?: string | null;
   chatwootAgentId?: string | null;

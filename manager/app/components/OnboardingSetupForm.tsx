@@ -42,6 +42,7 @@ type OnboardingBranch = {
   id: string;
   name: string;
   operationHours: unknown;
+  showUpsellModalOnAddToCart: boolean;
 };
 
 type MapboxAddressSuggestion = {
@@ -211,6 +212,7 @@ const EMPTY_BRANCH: OnboardingBranch = {
   addressNumberComplement: null, addressPlaceId: null, addressState: null,
   addressStreet: null, addressZipCode: null, addressCity: null,
   addressComplement: null, createdAt: "", operationHours: null,
+  showUpsellModalOnAddToCart: false,
 };
 
 // ── BranchCardForm — self-contained editable card for a saved branch ──────────
@@ -221,6 +223,7 @@ type BranchUpdatePayload = {
   city: string | null; state: string | null; zipCode: string | null;
   complement: string | null; numberComplement: string | null;
   mapsUrl: string; operationHours: BranchOperationHours;
+  showUpsellModalOnAddToCart: boolean;
 };
 
 type BranchCardHandle = {
@@ -251,6 +254,9 @@ const BranchCardForm = forwardRef<BranchCardHandle, {
   const [complement, setComplement] = useState<string | null>(branch.addressComplement ?? null);
   const [numberComplement, setNumberComplement] = useState<string | null>(branch.addressNumberComplement ?? null);
   const [hours, setHours] = useState<BranchOperationHours>(() => parseOperationHours(branch.operationHours));
+  const [showUpsellModalOnAddToCart, setShowUpsellModalOnAddToCart] = useState(
+    branch.showUpsellModalOnAddToCart === true,
+  );
   const [suggestions, setSuggestions] = useState<MapboxAddressSuggestion[]>([]);
   const [searching, setSearching] = useState(false);
   const [addressError, setAddressError] = useState<string | null>(null);
@@ -259,8 +265,8 @@ const BranchCardForm = forwardRef<BranchCardHandle, {
   const [open, setOpen] = useState(true);
 
   // Keep a ref to the latest values so getPayload() never has stale closures
-  const latest = useRef({ name, address, placeId, latitude, longitude, street, number, city, bState, zipCode, complement, numberComplement, mapsUrl, hours });
-  useEffect(() => { latest.current = { name, address, placeId, latitude, longitude, street, number, city, bState, zipCode, complement, numberComplement, mapsUrl, hours }; });
+  const latest = useRef({ name, address, placeId, latitude, longitude, street, number, city, bState, zipCode, complement, numberComplement, mapsUrl, hours, showUpsellModalOnAddToCart });
+  useEffect(() => { latest.current = { name, address, placeId, latitude, longitude, street, number, city, bState, zipCode, complement, numberComplement, mapsUrl, hours, showUpsellModalOnAddToCart }; });
 
   const onNameChangeRef = useRef(onNameChange);
   onNameChangeRef.current = onNameChange;
@@ -294,7 +300,7 @@ const BranchCardForm = forwardRef<BranchCardHandle, {
     getPayload() {
       const v = latest.current;
       if (!v.placeId || v.latitude === null || v.longitude === null) return null;
-      return { branchId: branch.id, name: v.name, address: v.address, placeId: v.placeId, latitude: v.latitude, longitude: v.longitude, street: v.street, number: v.number, city: v.city, state: v.bState, zipCode: v.zipCode, complement: v.complement, numberComplement: v.numberComplement, mapsUrl: v.mapsUrl, operationHours: v.hours };
+      return { branchId: branch.id, name: v.name, address: v.address, placeId: v.placeId, latitude: v.latitude, longitude: v.longitude, street: v.street, number: v.number, city: v.city, state: v.bState, zipCode: v.zipCode, complement: v.complement, numberComplement: v.numberComplement, mapsUrl: v.mapsUrl, operationHours: v.hours, showUpsellModalOnAddToCart: v.showUpsellModalOnAddToCart };
     },
     validateAndShowErrors() {
       const v = latest.current;
@@ -453,6 +459,34 @@ const BranchCardForm = forwardRef<BranchCardHandle, {
             })}
           </div>
         </div>
+
+        <label
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 12,
+            border: "1px solid rgba(22,18,15,0.10)",
+            borderRadius: 8,
+            padding: "10px 12px",
+            cursor: "pointer",
+          }}
+        >
+          <span style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            <span style={{ fontFamily: "var(--font-sans)", fontSize: 13, fontWeight: 650, color: "var(--ink)" }}>
+              Show upsell modal on add to cart
+            </span>
+            <span style={{ fontFamily: "var(--font-sans)", fontSize: 11, color: "var(--slate)" }}>
+              Opens the reward/discount prompt after customers add an item.
+            </span>
+          </span>
+          <input
+            type="checkbox"
+            checked={showUpsellModalOnAddToCart}
+            onChange={(event) => setShowUpsellModalOnAddToCart(event.target.checked)}
+            style={{ accentColor: "var(--zippy)", width: 16, height: 16, flexShrink: 0 }}
+          />
+        </label>
 
         <div>
           <button
@@ -621,7 +655,7 @@ export default function OnboardingSetupForm({
     const res = await fetch(`/api/businesses/current/onboarding/branches/${encodeURIComponent(payload.branchId)}`, {
       method: "PATCH",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ name: payload.name, addressDescription: payload.address, mapboxPlaceId: payload.placeId, mapboxLatitude: payload.latitude, mapboxLongitude: payload.longitude, addressStreet: payload.street, addressNumber: payload.number, addressCity: payload.city, addressState: payload.state, addressZipCode: payload.zipCode, addressComplement: payload.complement, addressNumberComplement: payload.numberComplement, addressGoogleMapsUrl: payload.mapsUrl, operationHours: payload.operationHours }),
+      body: JSON.stringify({ name: payload.name, addressDescription: payload.address, mapboxPlaceId: payload.placeId, mapboxLatitude: payload.latitude, mapboxLongitude: payload.longitude, addressStreet: payload.street, addressNumber: payload.number, addressCity: payload.city, addressState: payload.state, addressZipCode: payload.zipCode, addressComplement: payload.complement, addressNumberComplement: payload.numberComplement, addressGoogleMapsUrl: payload.mapsUrl, operationHours: payload.operationHours, showUpsellModalOnAddToCart: payload.showUpsellModalOnAddToCart }),
     });
     const data = (await res.json().catch(() => ({}))) as unknown;
     if (!res.ok || !isRecord(data)) { setMessage("Could not update branch."); setMessageType("error"); throw new Error("update failed"); }
@@ -642,6 +676,10 @@ export default function OnboardingSetupForm({
       addressPlaceId: typeof data.addressPlaceId === "string" ? data.addressPlaceId : payload.placeId,
       createdAt: typeof data.createdAt === "string" ? data.createdAt : new Date().toISOString(),
       operationHours: data.operationHours ?? payload.operationHours,
+      showUpsellModalOnAddToCart:
+        typeof data.showUpsellModalOnAddToCart === "boolean"
+          ? data.showUpsellModalOnAddToCart
+          : payload.showUpsellModalOnAddToCart,
     };
     setStatus((cur) => ({ ...cur, branches: cur.branches.map((b) => (b.id === payload.branchId ? updated : b)) }));
     setMessage("Branch updated."); setMessageType("success");
@@ -674,7 +712,7 @@ export default function OnboardingSetupForm({
         const res = await fetch("/api/businesses/current/branches", {
           method: "POST",
           headers: { "content-type": "application/json" },
-          body: JSON.stringify({ name: payload.name, addressDescription: payload.address, mapboxPlaceId: payload.placeId, mapboxLatitude: payload.latitude, mapboxLongitude: payload.longitude, addressStreet: payload.street, addressNumber: payload.number, addressCity: payload.city, addressState: payload.state, addressZipCode: payload.zipCode, addressComplement: payload.complement, addressNumberComplement: payload.numberComplement, addressGoogleMapsUrl: payload.mapsUrl, operationHours: payload.operationHours }),
+          body: JSON.stringify({ name: payload.name, addressDescription: payload.address, mapboxPlaceId: payload.placeId, mapboxLatitude: payload.latitude, mapboxLongitude: payload.longitude, addressStreet: payload.street, addressNumber: payload.number, addressCity: payload.city, addressState: payload.state, addressZipCode: payload.zipCode, addressComplement: payload.complement, addressNumberComplement: payload.numberComplement, addressGoogleMapsUrl: payload.mapsUrl, operationHours: payload.operationHours, showUpsellModalOnAddToCart: payload.showUpsellModalOnAddToCart }),
         });
         const data = (await res.json().catch(() => ({}))) as unknown;
         if (!res.ok || !isRecord(data)) { setMessage("Could not save branch."); setMessageType("error"); return; }
@@ -695,6 +733,10 @@ export default function OnboardingSetupForm({
           addressPlaceId: typeof data.addressPlaceId === "string" ? data.addressPlaceId : payload.placeId,
           createdAt: typeof data.createdAt === "string" ? data.createdAt : new Date().toISOString(),
           operationHours: data.operationHours ?? payload.operationHours,
+          showUpsellModalOnAddToCart:
+            typeof data.showUpsellModalOnAddToCart === "boolean"
+              ? data.showUpsellModalOnAddToCart
+              : payload.showUpsellModalOnAddToCart,
         });
       }
       if (newlyCreated.length > 0) {
@@ -1148,4 +1190,3 @@ export default function OnboardingSetupForm({
     </div>
   );
 }
-

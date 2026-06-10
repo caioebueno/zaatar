@@ -35,13 +35,20 @@ export class PrismaBusinessOnboardingRepository
           address: true,
         },
       });
+      await persistBranchUpsellSetting(tx, branch.id, {
+        showUpsellModalOnAddToCart: input.showUpsellModalOnAddToCart,
+      });
       await persistBranchChatwootConfig(tx, branch.id, {
         chatwootAccountId: input.chatwootAccountId,
         chatwootSourceId: input.chatwootSourceId,
       });
 
       const chatwootConfig = await loadBranchChatwootConfigById(tx, branch.id);
-      return mapBranch(branch, chatwootConfig);
+      return mapBranch(
+        branch,
+        chatwootConfig,
+        input.showUpsellModalOnAddToCart,
+      );
     });
   }
 
@@ -79,8 +86,18 @@ export class PrismaBusinessOnboardingRepository
       prisma,
       rows.map((row) => row.id),
     );
+    const upsellByBranchId = await loadBranchUpsellSettingsByIds(
+      prisma,
+      rows.map((row) => row.id),
+    );
 
-    return rows.map((row) => mapBranch(row, chatwootByBranchId.get(row.id) ?? null));
+    return rows.map((row) =>
+      mapBranch(
+        row,
+        chatwootByBranchId.get(row.id) ?? null,
+        upsellByBranchId.get(row.id) ?? false,
+      ),
+    );
   }
 
   async removeBranch(businessId: string, branchId: string): Promise<boolean> {
@@ -195,13 +212,20 @@ export class PrismaBusinessOnboardingRepository
           address: true,
         },
       });
+      await persistBranchUpsellSetting(tx, updated.id, {
+        showUpsellModalOnAddToCart: input.showUpsellModalOnAddToCart,
+      });
       await persistBranchChatwootConfig(tx, updated.id, {
         chatwootAccountId: input.chatwootAccountId,
         chatwootSourceId: input.chatwootSourceId,
       });
 
       const chatwootConfig = await loadBranchChatwootConfigById(tx, updated.id);
-      return mapBranch(updated, chatwootConfig);
+      return mapBranch(
+        updated,
+        chatwootConfig,
+        input.showUpsellModalOnAddToCart,
+      );
     });
   }
 
@@ -253,7 +277,8 @@ function mapBranch(branch: {
 chatwootConfig?: {
   chatwootAccountId: string | null;
   chatwootSourceId: string | null;
-} | null): BranchOnboardingRecord {
+} | null,
+showUpsellModalOnAddToCart = false): BranchOnboardingRecord {
   const addressRecord = toObjectRecord(branch.address);
 
   return {
@@ -262,6 +287,7 @@ chatwootConfig?: {
     createdAt: branch.createdAt,
     chatwootAccountId: chatwootConfig?.chatwootAccountId ?? null,
     chatwootSourceId: chatwootConfig?.chatwootSourceId ?? null,
+    showUpsellModalOnAddToCart,
     operationHours: branch.operationHours,
     address: branch.address
       ? {
@@ -345,6 +371,61 @@ async function persistBranchChatwootConfig(
     ...values,
     branchId,
   );
+}
+
+async function persistBranchUpsellSetting(
+  tx: RawQueryClient,
+  branchId: string,
+  input: {
+    showUpsellModalOnAddToCart: boolean;
+  },
+): Promise<void> {
+  if (!(await hasBranchShowUpsellModalColumn(tx))) {
+    return;
+  }
+
+  await tx.$executeRawUnsafe(
+    `UPDATE "Branch" SET "showUpsellModalOnAddToCart" = $1 WHERE "id" = $2`,
+    input.showUpsellModalOnAddToCart,
+    branchId,
+  );
+}
+
+async function loadBranchUpsellSettingsByIds(
+  client: RawQueryClient,
+  branchIds: string[],
+): Promise<Map<string, boolean>> {
+  if (branchIds.length === 0 || !(await hasBranchShowUpsellModalColumn(client))) {
+    return new Map();
+  }
+
+  const placeholders = branchIds.map((_, index) => `$${index + 1}`).join(", ");
+  const rows = await client.$queryRawUnsafe<
+    Array<{ id: string; showUpsellModalOnAddToCart: boolean | null }>
+  >(
+    `SELECT "id", "showUpsellModalOnAddToCart" FROM "Branch" WHERE "id" IN (${placeholders})`,
+    ...branchIds,
+  );
+
+  return new Map(
+    rows.map((row) => [row.id, row.showUpsellModalOnAddToCart === true]),
+  );
+}
+
+async function hasBranchShowUpsellModalColumn(
+  client: RawQueryClient,
+): Promise<boolean> {
+  const rows = await client.$queryRaw<Array<{ exists: boolean }>>`
+    SELECT EXISTS (
+      SELECT 1
+      FROM information_schema.columns
+      WHERE table_schema = 'public'
+        AND table_name = 'Branch'
+        AND column_name = 'showUpsellModalOnAddToCart'
+    ) AS "exists"
+  `;
+
+  return rows[0]?.exists === true;
 }
 
 async function loadBranchChatwootConfigById(
