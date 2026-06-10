@@ -410,6 +410,9 @@ model Dispatch {
   estimatedRoundTripDurationMinutes        Int?
   currentEstimatedDeliveryDurationMinutes  Int?
   currentEstimatedRoundTripDurationMinutes Int?
+  leftRestaurantAt                         DateTime?
+  leftRestaurantLat                        Float?
+  leftRestaurantLng                        Float?
   arrivedAtRestaurantAt                    DateTime?
   arrivedAtRestaurantLat                   Float?
   arrivedAtRestaurantLng                   Float?

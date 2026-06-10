@@ -10,6 +10,9 @@ import TProduct from "../../src/types/product";
 import TCategory from "../../src/types/category";
 import TProgressiveDiscount from "../../src/types/progressiveDiscount";
 import DiscountModal from "./DiscountModal";
+import DiscountInfoModal from "./DiscountInfoModal";
+import UpsellModal from "./UpsellModal";
+import { calculateCartWithProgressiveDiscount } from "@/utils/calculatePrice";
 import { forwardRef, useEffect, useMemo, useRef, useState } from "react";
 import CartBar from "./CartBar";
 import ProductImage from "./ProductImage";
@@ -86,7 +89,9 @@ function normalizeBrandImageSrc(src: string | null | undefined): string | null {
 
 const MenuPage: React.FC<TMenuPage> = ({ data, lg }) => {
   console.log(data)
-  const [openDiscountModal, setOpenDiscountModal] = useState(true);
+  const [openDiscountModal, setOpenDiscountModal] = useState(false);
+  const [openInfoModal, setOpenInfoModal] = useState(false);
+  const [openUpsellModal, setOpenUpsellModal] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState<null | string>(
     null,
   );
@@ -323,6 +328,12 @@ const MenuPage: React.FC<TMenuPage> = ({ data, lg }) => {
       comboSelections,
       description: description,
     });
+    if (
+      data.orderLinkSettings?.showUpsellModalOnAddToCart === true &&
+      data.progressiveDiscount
+    ) {
+      setOpenUpsellModal(true);
+    }
     setSelectedProductId(null);
   };
 
@@ -514,16 +525,63 @@ const MenuPage: React.FC<TMenuPage> = ({ data, lg }) => {
         ))}
         {data.progressiveDiscount && (
           <DiscountModal
-            progressiveDiscount={data.progressiveDiscount}
+            data={data}
             onOpenChange={setOpenDiscountModal}
             open={openDiscountModal}
             content={content}
+            lg={lg}
           />
         )}
+        {data.progressiveDiscount && (
+          <DiscountInfoModal
+            data={data}
+            open={openInfoModal}
+            onOpenChange={setOpenInfoModal}
+            content={content}
+            lg={lg}
+          />
+        )}
+        {/* UpsellModal temporarily hidden
+        {data.progressiveDiscount && (
+          <UpsellModal
+            data={data}
+            open={openUpsellModal}
+            onOpenChange={setOpenUpsellModal}
+            onGoToCart={() => {
+              setOpenUpsellModal(false);
+              window.location.href = `/menu/${lg}/cart`;
+            }}
+            content={content}
+            lg={lg}
+          />
+        )}
+        */}
       </div>
       <CartBar
         data={data}
-        onLearnMoreClick={() => setOpenDiscountModal(true)}
+        onLearnMoreClick={() => setOpenInfoModal(true)}
+        onCartClick={() => {
+          if (data.progressiveDiscount) {
+            const price = calculateCartWithProgressiveDiscount(
+              data.categories, cart, data.progressiveDiscount,
+              data.activePromotion?.products, data.promotionProductIds,
+            );
+            const steps = [...(data.progressiveDiscount.steps ?? [])]
+              .filter((s) => typeof s.amount === "number")
+              .sort((a, b) => (a.amount ?? 0) - (b.amount ?? 0));
+            const subtotal = price.progressiveDiscountBaseFullPrice;
+            const allUnlocked = steps.every((s) => subtotal >= (s.amount ?? 0));
+            const alwaysShow = process.env.NEXT_PUBLIC_ALWAYS_SHOW_DISCOUNT_MODAL === "true";
+            const shownKey = `discount_modal_shown_${data.progressiveDiscount.id}`;
+            const shownToday = !alwaysShow && localStorage.getItem(shownKey) === new Date().toDateString();
+            if (!allUnlocked && !shownToday) {
+              if (!alwaysShow) localStorage.setItem(shownKey, new Date().toDateString());
+              setOpenDiscountModal(true);
+              return;
+            }
+          }
+          window.location.href = `/menu/${lg}/cart`;
+        }}
         content={content}
         lg={lg}
       />

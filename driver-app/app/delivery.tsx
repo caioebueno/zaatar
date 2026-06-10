@@ -392,6 +392,7 @@ function NextCard({ order, sequenceIdx }: { order: DispatchOrder; sequenceIdx: n
           {addr && (
             <Text style={nextStyles.addr} numberOfLines={1}>
               {addr.street}, {addr.number}
+              {addr.numberComplement ? ` / ${addr.numberComplement}` : ''}
             </Text>
           )}
         </View>
@@ -928,6 +929,7 @@ function DeliveryContent({
             <View style={{ flex: 1 }}>
               <Text style={contentStyles.addrMain}>
                 {addr.street}, {addr.number}
+                {addr.numberComplement ? ` / ${addr.numberComplement}` : ''}
                 {addr.complement ? ` — ${addr.complement}` : ''}
               </Text>
               <Text style={contentStyles.addrSub}>{addr.city}, {addr.state}</Text>

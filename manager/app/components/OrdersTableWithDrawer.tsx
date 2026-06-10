@@ -20,8 +20,15 @@ export type ManagerOrderListItem = {
   number: string | null;
   orderType: string;
   paymentMethod: string;
+  payments?: OrderPaymentSummary[];
   status: string;
   totalCents: number;
+};
+
+type OrderPaymentSummary = {
+  amount: number;
+  paidAt: string | null;
+  paymentType: string;
 };
 
 type OrderDetail = {
@@ -44,6 +51,7 @@ type OrderDetail = {
   number: string | null;
   orderType: string;
   paymentMethod: string;
+  payments?: OrderPaymentSummary[];
   status: string;
   subtotalCents: number;
   tipAmountCents: number;
@@ -332,6 +340,33 @@ export default function OrdersTableWithDrawer({
                 {activeOrder.items.length === 0 && (
                   <p style={{ margin: 0, color: "var(--slate)", fontSize: 13 }}>No line items.</p>
                 )}
+              </div>
+            </section>
+
+            <section style={drawerSection}>
+              <DrawerSectionHead>Payments</DrawerSectionHead>
+              <div style={{ display: "grid", gap: 8 }}>
+                {(activeOrder.payments && activeOrder.payments.length > 0
+                  ? activeOrder.payments
+                  : [
+                      {
+                        amount: activeOrder.totalCents,
+                        paidAt: null,
+                        paymentType: activeOrder.paymentMethod,
+                      },
+                    ]
+                ).map((payment, index) => (
+                  <div
+                    key={`${payment.paymentType}-${payment.paidAt ?? "pending"}-${index}`}
+                    style={{ display: "flex", justifyContent: "space-between", gap: 10, fontSize: 13, color: "var(--char)" }}
+                  >
+                    <span>
+                      {payment.paymentType}
+                      {payment.paidAt ? ` · ${formatDateTime(payment.paidAt)}` : " · Pending"}
+                    </span>
+                    <strong className="mono">{formatCents(payment.amount)}</strong>
+                  </div>
+                ))}
               </div>
             </section>
 

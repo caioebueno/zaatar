@@ -131,6 +131,7 @@ function mapBranch(branch: BranchOnboardingRecord): {
   id: string;
   name: string;
   operationHours: unknown;
+  showUpsellModalOnAddToCart: boolean;
 } {
   const latitude =
     branch.address?.lat !== null && branch.address?.lat !== undefined
@@ -147,6 +148,7 @@ function mapBranch(branch: BranchOnboardingRecord): {
     createdAt: branch.createdAt.toISOString(),
     chatwootAccountId: branch.chatwootAccountId ?? null,
     chatwootSourceId: branch.chatwootSourceId ?? null,
+    showUpsellModalOnAddToCart: branch.showUpsellModalOnAddToCart,
     operationHours: branch.operationHours,
     addressDescription: branch.address?.description ?? "",
     addressGoogleMapsUrl: branch.address?.googleMapsUrl ?? "",

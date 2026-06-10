@@ -1458,6 +1458,25 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
           `;
         }
 
+        if (shouldChargeWithStripe) {
+          await tx.$executeRaw`
+            INSERT INTO "OrderPayment" (
+              "id",
+              "amount",
+              "paidAt",
+              "paymentType",
+              "orderId"
+            )
+            VALUES (
+              ${randomUUID()},
+              ${orderTotalInCents},
+              ${now},
+              'CARD'::"PaymentType",
+              ${createdOrder.id}
+            )
+          `;
+        }
+
         if (orderTags.length > 0) {
           await tx.$executeRaw`
             UPDATE "Order"

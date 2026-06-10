@@ -276,6 +276,10 @@ function toPreparationTaskLookupMap(
     map.set(entry.id, {
       id: entry.id,
       name: entry.name,
+      goalMinutes:
+        typeof entry.goalMinutes === "number" && Number.isFinite(entry.goalMinutes)
+          ? Math.max(0, Math.floor(entry.goalMinutes))
+          : 0,
       stationId: typeof entry.stationId === "string" ? entry.stationId : null,
       stationName: typeof entry.stationName === "string" ? entry.stationName : null,
       includeComments: entry.includeComments === true,

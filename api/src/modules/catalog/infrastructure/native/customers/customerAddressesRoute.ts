@@ -279,6 +279,7 @@ export async function POST(request: NextRequestLike, context: RouteContext) {
         numberComplement: created.numberComplement,
         customerId: created.customerId,
         deliveryFee: created.deliveryFee,
+        expectedHandoffDuration: 300,
       },
       { status: 201 },
     );

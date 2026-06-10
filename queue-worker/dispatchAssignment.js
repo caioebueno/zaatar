@@ -689,7 +689,7 @@ async function findMatchingOpenDispatchForDeliveryAddress(deliveryAddressId) {
   return bestMatch?.dispatchId;
 }
 
-async function refreshRouteMetrics(dispatchId) {
+export async function refreshRouteMetrics(dispatchId) {
   const routeOrdersResult = await pool.query(
     `
       SELECT

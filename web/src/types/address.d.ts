@@ -13,6 +13,7 @@ type TAddress = {
   numberComplement?: string;
   customerId?: string;
   deliveryFee?: number;
+  expectedHandoffDuration?: number;
 };
 
 export default TAddress;

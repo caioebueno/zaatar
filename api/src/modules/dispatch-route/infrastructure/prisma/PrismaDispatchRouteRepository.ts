@@ -599,6 +599,26 @@ export class PrismaDispatchRouteRepository implements DispatchRouteRepository {
     return rows.length > 0;
   }
 
+  async markDispatchLeftRestaurantIfMissing(input: {
+    dispatchId: string;
+    lat: number;
+    lng: number;
+    recordedAt: Date;
+  }): Promise<boolean> {
+    const rows = await prisma.$queryRaw<Array<{ id: string }>>`
+      UPDATE "Dispatch"
+      SET
+        "leftRestaurantAt" = ${input.recordedAt},
+        "leftRestaurantLat" = ${input.lat},
+        "leftRestaurantLng" = ${input.lng}
+      WHERE "id" = ${input.dispatchId}
+        AND "leftRestaurantAt" IS NULL
+      RETURNING "id"
+    `;
+
+    return rows.length > 0;
+  }
+
   async hasMilestone(
     dispatchId: string,
     type: DispatchRouteMilestoneType,

@@ -359,6 +359,7 @@ model Branch {
   createdAt      DateTime  @default(now())
   name           String
   operationHours Json?
+  showUpsellModalOnAddToCart Boolean @default(false)
   chatwootAccountId String?
   chatwootSourceId  String?
   chatwootAgentId   String?
@@ -402,6 +403,7 @@ model DriverActivationEvent {
 model Dispatch {
   id                                String    @id
   createdAt                         DateTime  @default(now())
+  completedAt                       DateTime?
   queueIndex                        Int?
   dispatched                        Boolean   @default(false)
   dispatchAt                        DateTime?
@@ -410,6 +412,9 @@ model Dispatch {
   estimatedRoundTripDurationMinutes Int?
   currentEstimatedDeliveryDurationMinutes  Int?
   currentEstimatedRoundTripDurationMinutes Int?
+  leftRestaurantAt                DateTime?
+  leftRestaurantLat               Float?
+  leftRestaurantLng               Float?
   arrivedAtRestaurantAt             DateTime?
   arrivedAtRestaurantLat            Float?
   arrivedAtRestaurantLng            Float?
@@ -419,6 +424,7 @@ model Dispatch {
   routeSessions                     DispatchRouteSession[]
   routeMilestones                   DispatchRouteMilestone[]
   etaRecalculationJobs              DispatchEtaRecalculationJob[]
+  routeMetricsRefreshJobs           DispatchRouteMetricsRefreshJob[]
 
   @@index([queueIndex])
 }
@@ -523,6 +529,29 @@ model DispatchAssignmentJob {
   lastError           String?
   orderId             String                      @unique
   deliveryAddressId   String
+}
+
+enum DispatchRouteMetricsRefreshJobStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+model DispatchRouteMetricsRefreshJob {
+  id                  String                               @id
+  createdAt           DateTime                             @default(now())
+  updatedAt           DateTime                             @updatedAt
+  status              DispatchRouteMetricsRefreshJobStatus @default(PENDING)
+  attempts            Int                                  @default(0)
+  availableAt         DateTime                             @default(now())
+  processingStartedAt DateTime?
+  completedAt         DateTime?
+  lastError           String?
+  dispatch            Dispatch                             @relation(fields: [dispatchId], references: [id], onDelete: Cascade)
+  dispatchId          String                               @unique
+
+  @@index([status, availableAt, createdAt])
 }
 
 enum DispatchEtaRecalculationJobStatus {
@@ -879,6 +908,7 @@ model DeliveryAddress {
   lat              String
   lng              String
   deliveryFee      Int       @default(0)
+  expectedHandoffDuration Int @default(300)
   city             String
   zipCode          String
   State            String
@@ -956,6 +986,7 @@ model Order {
   externalAddress                  ExternalAddress?          @relation(fields: [externalAddressId], references: [id])
   branch                           Branch?                   @relation(fields: [branchId], references: [id])
   orderProducts                    OrderProducts[]
+  payments                         OrderPayment[]
   customerId                       String?
   externalId                       String?                   @unique
   dispatchId                       String?
@@ -970,6 +1001,20 @@ model Order {
 
   @@index([dispatchId, dispatchOrderIndex])
   @@index([branchId])
+}
+
+model OrderPayment {
+  id          String      @id
+  createdAt   DateTime    @default(now())
+  amount      Int
+  paidAt      DateTime?
+  paymentType PaymentType
+  order       Order       @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId     String
+
+  @@index([orderId])
+  @@index([paymentType])
+  @@index([paidAt])
 }
 
 model OrderIntent {

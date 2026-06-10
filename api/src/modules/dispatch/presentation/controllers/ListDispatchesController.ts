@@ -24,12 +24,14 @@ export class ListDispatchesController implements HttpController {
       const statusRaw = url.searchParams.get("status");
       const startAtRaw = url.searchParams.get("startAt");
       const endAtRaw = url.searchParams.get("endAt");
+      const includeRaw = url.searchParams.get("include");
 
       const result = await this.useCase.execute({
         filters: {
           status: statusRaw ?? undefined,
           startAt: startAtRaw ?? undefined,
           endAt: endAtRaw ?? undefined,
+          include: includeRaw ?? undefined,
         },
       });
 

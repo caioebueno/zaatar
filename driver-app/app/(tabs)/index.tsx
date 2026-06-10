@@ -646,7 +646,7 @@ function HomeScreen({
         }
 
         {/* Delivery / Activate section */}
-        <View>
+        <View style={{ marginHorizontal: -6 }}>
           {loading
             ? <HomeSkeletonCard />
             : !active

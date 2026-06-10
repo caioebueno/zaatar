@@ -21,6 +21,7 @@ export type UpdateCurrentBusinessSettingsOutput = {
   logoUrl: string | null;
   name: string;
   orderLinkUrl: string;
+  showUpsellModalOnAddToCart: boolean;
 };
 
 export class UpdateCurrentBusinessSettingsUseCase {
@@ -62,6 +63,7 @@ export class UpdateCurrentBusinessSettingsUseCase {
       logoUrl: updated.logoUrl,
       bannerPhotoUrl: updated.bannerPhotoUrl,
       orderLinkUrl: buildOrderLinkUrl(updated.id),
+      showUpsellModalOnAddToCart: updated.showUpsellModalOnAddToCart,
     };
   }
 }

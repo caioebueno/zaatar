@@ -35,6 +35,7 @@ export class BranchesController implements HttpController {
           addressNumberComplement: body.addressNumberComplement,
           chatwootAccountId: body.chatwootAccountId,
           chatwootSourceId: body.chatwootSourceId,
+          showUpsellModalOnAddToCart: body.showUpsellModalOnAddToCart,
           operationHours: body.operationHours,
         });
 

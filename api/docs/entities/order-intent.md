@@ -42,6 +42,7 @@ type DeliveryAddress = {
   lat: string;
   lng: string;
   deliveryFee: number;
+  expectedHandoffDuration: number; // seconds, default 300
 };
 ```
 

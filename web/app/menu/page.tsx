@@ -55,7 +55,7 @@ const Menu = async ({ searchParams }: MenuLandingPageProps) => {
 
   return (
     <div
-      className={`bg-brandBackground h-dvh flex flex-col items-center pt-9 ${montserrat.className}`}
+      className={`bg-brandBackground min-h-dvh w-full flex flex-col items-center pt-9 pb-30 ${montserrat.className}`}
       style={
         {
           "--brandBackground": orderLinkSettings.brandColor,

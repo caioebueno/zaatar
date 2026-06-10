@@ -55,6 +55,7 @@ export type ProductManagerComboSlot = {
 export type ProductManagerPreparationTask = {
   id: string;
   name: string;
+  goalMinutes: number;
   stationId: string | null;
   stationName: string | null;
   includeComments: boolean;

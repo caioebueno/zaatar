@@ -22,6 +22,7 @@ export type CustomerWithAddresses = {
     numberComplement: string | null;
     customerId: string | null;
     deliveryFee: number;
+    expectedHandoffDuration?: number;
   }[];
 };
 
@@ -65,6 +66,7 @@ export function mapCustomer(customer: CustomerWithAddresses): {
     createdAt: string;
     customerId: string | null;
     deliveryFee: number;
+    expectedHandoffDuration: number;
     description: string;
     id: string;
     lat: string;
@@ -103,6 +105,7 @@ export function mapCustomer(customer: CustomerWithAddresses): {
       numberComplement: address.numberComplement,
       customerId: address.customerId,
       deliveryFee: address.deliveryFee,
+      expectedHandoffDuration: address.expectedHandoffDuration ?? 300,
     })),
   };
 }

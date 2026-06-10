@@ -21,6 +21,7 @@ import type {
 type DispatchRow = {
   id: string;
   createdAt: Date;
+  completedAt: Date | null;
   queueIndex: number | null;
   dispatchAt: Date | null;
   dispatched: boolean;
@@ -68,6 +69,7 @@ type DispatchOrderRow = {
   deliveryAddressNumberComplement: string | null;
   deliveryAddressCustomerId: string | null;
   deliveryAddressFee: number | null;
+  deliveryAddressExpectedHandoffDuration: number | null;
 };
 
 type DeliveryAddressCoordinatesRow = {
@@ -257,6 +259,8 @@ function mapDispatch(
                   customerId:
                     orderRow.deliveryAddressCustomerId ?? undefined,
                   deliveryFee: orderRow.deliveryAddressFee ?? undefined,
+                  expectedHandoffDuration:
+                    orderRow.deliveryAddressExpectedHandoffDuration ?? 300,
                 },
               }
             : {}),
@@ -272,6 +276,7 @@ function mapDispatch(
   return {
     id: row.id,
     createdAt: row.createdAt.toISOString(),
+    ...(row.completedAt ? { completedAt: row.completedAt.toISOString() } : {}),
     ...(row.queueIndex !== null ? { queueIndex: row.queueIndex } : {}),
     ...(row.dispatchAt ? { dispatchAt: row.dispatchAt.toISOString() } : {}),
     dispatched: row.dispatched,
@@ -450,7 +455,8 @@ async function getDispatchOrders(
       deliveryAddress."complement" AS "deliveryAddressComplement",
       deliveryAddress."numberComplement" AS "deliveryAddressNumberComplement",
       deliveryAddress."customerId" AS "deliveryAddressCustomerId",
-      deliveryAddress."deliveryFee" AS "deliveryAddressFee"
+      deliveryAddress."deliveryFee" AS "deliveryAddressFee",
+      deliveryAddress."expectedHandoffDuration" AS "deliveryAddressExpectedHandoffDuration"
     FROM "Order" orders
     LEFT JOIN "Customer" customer
       ON customer."id" = orders."customerId"
@@ -1410,6 +1416,7 @@ class PrismaDispatchRepository implements DispatchRepository {
       SELECT
         dispatch."id",
         dispatch."createdAt",
+        dispatch."completedAt",
         dispatch."queueIndex",
         dispatch."dispatchAt",
         dispatch."dispatched",
@@ -1610,6 +1617,7 @@ class PrismaDispatchRepository implements DispatchRepository {
       SELECT
         dispatch."id",
         dispatch."createdAt",
+        dispatch."completedAt",
         dispatch."queueIndex",
         dispatch."dispatchAt",
         dispatch."dispatched",
@@ -1668,6 +1676,7 @@ class PrismaDispatchRepository implements DispatchRepository {
       SELECT
         dispatch."id",
         dispatch."createdAt",
+        dispatch."completedAt",
         dispatch."queueIndex",
         dispatch."dispatchAt",
         dispatch."dispatched",
@@ -1818,6 +1827,7 @@ class PrismaDispatchRepository implements DispatchRepository {
         SELECT
           dispatch."id",
           dispatch."createdAt",
+          dispatch."completedAt",
           dispatch."queueIndex",
           dispatch."dispatchAt",
           dispatch."dispatched",
@@ -1849,6 +1859,7 @@ class PrismaDispatchRepository implements DispatchRepository {
       SELECT
         dispatch."id",
         dispatch."createdAt",
+        dispatch."completedAt",
         dispatch."queueIndex",
         dispatch."dispatchAt",
         dispatch."dispatched",
@@ -1947,6 +1958,7 @@ class PrismaDispatchRepository implements DispatchRepository {
       SELECT
         dispatch."id",
         dispatch."createdAt",
+        dispatch."completedAt",
         dispatch."queueIndex",
         dispatch."dispatchAt",
         dispatch."dispatched",

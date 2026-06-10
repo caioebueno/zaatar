@@ -4,6 +4,7 @@ export type BusinessSettingsRecord = {
   id: string;
   logoUrl: string | null;
   name: string;
+  showUpsellModalOnAddToCart: boolean;
 };
 
 export type UpdateBusinessSettingsInput = {
@@ -14,7 +15,10 @@ export type UpdateBusinessSettingsInput = {
 };
 
 export interface BusinessSettingsRepository {
-  findById(businessId: string): Promise<BusinessSettingsRecord | null>;
+  findById(
+    businessId: string,
+    branchId?: string | null,
+  ): Promise<BusinessSettingsRecord | null>;
   updateById(
     businessId: string,
     input: UpdateBusinessSettingsInput,

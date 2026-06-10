@@ -10,6 +10,11 @@ type Order = {
   orderType: "DELIVERY" | "TAKEAWAY" | string;
   paymentMethod: string;
   paymentProvider?: string | null;
+  payments: Array<{
+    amount: number; // cents
+    paidAt: string | null; // ISO datetime
+    paymentType: "CASH" | "CARD" | "ZELLE" | string;
+  }>;
   status: string;
   canceled: boolean;
   customer: { name: string | null; phone: string | null };
@@ -28,6 +33,8 @@ type Order = {
   totalCents: number;
 };
 ```
+
+If no `OrderPayment` records exist yet, APIs return one derived payment using the legacy order fields: `amount`, `paidAt`, and `paymentMethod`.
 
 ## APIs
 

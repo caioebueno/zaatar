@@ -16,6 +16,20 @@ Most catalog routes proxy to the legacy web API. The `x-business-id` header (or 
 
 Returns all products for the active business.
 
+Product preparation steps include both ids and goal timing:
+
+```ts
+type ProductPreparationStep = {
+  id: string;
+  goalMinutes: number;
+};
+
+type ProductListItem = {
+  preparationStepIds: string[];
+  preparationSteps: ProductPreparationStep[];
+};
+```
+
 ### Create Product
 
 `POST /products`
@@ -32,6 +46,7 @@ type CreateProductBody = {
   price?: number | null;
   comparedAtPrice?: number | null;
   itemType?: "PRODUCT" | "COMBO";
+  preparationStepIds?: string[];
   // ...category/modifier/photo/combo fields
 };
 ```
@@ -51,6 +66,7 @@ type UpdateProductBody = {
   price?: number | null;
   comparedAtPrice?: number | null;
   itemType?: "PRODUCT" | "COMBO";
+  preparationStepIds?: string[];
   // ...category/modifier/photo/combo fields
 };
 ```
@@ -147,6 +163,7 @@ Customer routes:
 - `GET /customers/search`
 - `POST /customers`
 - `POST /customers/:customerId/addresses`
+- `PATCH /delivery-addresses/:addressId`
 
 Detailed schemas and examples: see [customers.md](./customers.md).
 

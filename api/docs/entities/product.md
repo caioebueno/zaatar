@@ -14,6 +14,11 @@ type Product = {
   itemType: "PRODUCT" | "COMBO";
   translations?: Record<string, unknown>;
   modifierGroups?: ModifierGroup[];
+  preparationStepIds: string[];
+  preparationSteps: Array<{
+    id: string;
+    goalMinutes: number;
+  }>;
 };
 ```
 

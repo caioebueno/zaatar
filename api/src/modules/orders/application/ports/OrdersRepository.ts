@@ -20,8 +20,15 @@ export type OrderListItem = {
   number: string | null;
   orderType: string;
   paymentMethod: string;
+  payments: OrderPaymentSummary[];
   status: string;
   totalCents: number;
+};
+
+export type OrderPaymentSummary = {
+  amount: number;
+  paidAt: string | null;
+  paymentType: string;
 };
 
 export type OrderDetailLineItem = {
@@ -46,6 +53,7 @@ export type OrderDetail = {
   number: string | null;
   orderType: string;
   paymentMethod: string;
+  payments: OrderPaymentSummary[];
   status: string;
   subtotalCents: number;
   tipAmountCents: number;
@@ -87,6 +95,7 @@ export type OrdersByStationItem = {
   paidAt?: string | null;
   paymentMethod: string;
   paymentProvider?: string | null;
+  payments?: OrderPaymentSummary[];
   preparationTaskStation: unknown[];
   productionIndex?: number;
   progressiveDiscountSnapshot?: unknown;

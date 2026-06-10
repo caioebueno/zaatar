@@ -1,4 +1,8 @@
-import type { OrderListItem, OrdersRepository } from "../ports/OrdersRepository.js";
+import type {
+  OrderListItem,
+  OrderPaymentSummary,
+  OrdersRepository,
+} from "../ports/OrdersRepository.js";
 
 export type ListOrdersInput = {
   from?: string;
@@ -18,6 +22,7 @@ export type ListOrdersOutput = {
     number: string | null;
     orderType: string;
     paymentMethod: string;
+    payments: OrderPaymentSummary[];
     status: string;
     totalCents: number;
   }>;

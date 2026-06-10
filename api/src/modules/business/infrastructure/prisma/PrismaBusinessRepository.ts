@@ -196,6 +196,9 @@ export class PrismaBusinessRepository implements BusinessRepository {
     const chatwootByBranchId = await loadBranchChatwootConfigsByIds(
       business.branches.map((branch) => branch.id),
     );
+    const upsellByBranchId = await loadBranchUpsellSettingsByIds(
+      business.branches.map((branch) => branch.id),
+    );
 
     return {
       id: business.id,
@@ -212,6 +215,8 @@ export class PrismaBusinessRepository implements BusinessRepository {
           name: branch.name,
           chatwootAccountId: chatwootConfig?.chatwootAccountId ?? null,
           chatwootSourceId: chatwootConfig?.chatwootSourceId ?? null,
+          showUpsellModalOnAddToCart:
+            upsellByBranchId.get(branch.id) ?? false,
           operationHours: branch.operationHours,
           address: branch.address
             ? {
@@ -282,6 +287,43 @@ async function loadBranchChatwootConfigsByIds(
       },
     ]),
   );
+}
+
+async function loadBranchUpsellSettingsByIds(
+  branchIds: string[],
+): Promise<Map<string, boolean>> {
+  if (branchIds.length === 0 || !(await hasBranchShowUpsellModalColumn())) {
+    return new Map();
+  }
+
+  const rows = await prisma.$queryRawUnsafe<
+    Array<{ id: string; showUpsellModalOnAddToCart: boolean | null }>
+  >(
+    `
+    SELECT "id", "showUpsellModalOnAddToCart"
+    FROM "Branch"
+    WHERE "id" = ANY($1::text[])
+  `,
+    branchIds,
+  );
+
+  return new Map(
+    rows.map((row) => [row.id, row.showUpsellModalOnAddToCart === true]),
+  );
+}
+
+async function hasBranchShowUpsellModalColumn(): Promise<boolean> {
+  const rows = await prisma.$queryRaw<Array<{ exists: boolean }>>`
+    SELECT EXISTS (
+      SELECT 1
+      FROM information_schema.columns
+      WHERE table_schema = 'public'
+        AND table_name = 'Branch'
+        AND column_name = 'showUpsellModalOnAddToCart'
+    ) AS "exists"
+  `;
+
+  return rows[0]?.exists === true;
 }
 
 async function getBranchChatwootColumnsAvailability(): Promise<{

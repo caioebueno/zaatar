@@ -5,6 +5,7 @@ import type {
   OrderDetail,
   OrderDetailLineItem,
   OrderListItem,
+  OrderPaymentSummary,
   OrderListQuery,
   OrdersByStationItem,
   OrdersRepository,
@@ -20,6 +21,7 @@ type OrderRow = {
   id: string;
   number: string | null;
   orderType: string;
+  paidAt: Date | null;
   paymentMethod: string;
   status: string;
   totalCents: string;
@@ -248,6 +250,11 @@ export class PrismaOrdersRepository implements OrdersRepository {
                   paymentProvider?: string | null;
                 }
               ).paymentProvider ?? null,
+            payments: buildOrderPayments([], {
+              amount: order.amount,
+              paidAt: order.paidAt ?? null,
+              paymentType: order.paymentMethod,
+            }),
             tip: order.tipAmount ?? undefined,
             tipAmount: order.tipAmount ?? undefined,
             addressId: order.addressId ?? undefined,
@@ -486,6 +493,7 @@ export class PrismaOrdersRepository implements OrdersRepository {
     });
 
     if (!order) return null;
+    const storedPaymentsByOrderId = await loadOrderPaymentsByOrderIds([orderId]);
 
     const items: OrderDetailLineItem[] = order.orderProducts.map((item) => {
       const lineTotalCents = item.amount * item.quantity;
@@ -522,6 +530,11 @@ export class PrismaOrdersRepository implements OrdersRepository {
       createdAt: order.createdAt,
       orderType: order.type,
       paymentMethod: order.paymentMethod,
+      payments: buildOrderPayments(storedPaymentsByOrderId.get(order.id) ?? [], {
+        amount: totalCents,
+        paidAt: order.paidAt,
+        paymentType: order.paymentMethod,
+      }),
       status: order.canceled ? "CANCELED" : order.status,
       canceled: order.canceled,
       customer: {
@@ -551,6 +564,7 @@ export class PrismaOrdersRepository implements OrdersRepository {
         o."id",
         o."number",
         o."createdAt",
+        o."paidAt",
         o."type"::text AS "orderType",
         o."paymentMethod"::text AS "paymentMethod",
         o."status"::text AS "status",
@@ -592,6 +606,9 @@ export class PrismaOrdersRepository implements OrdersRepository {
       ORDER BY o."createdAt" DESC
       LIMIT ${query.limit}
     `;
+    const storedPaymentsByOrderId = await loadOrderPaymentsByOrderIds(
+      rows.map((row) => row.id),
+    );
 
     return rows.map((row: OrderRow) => ({
       id: row.id,
@@ -599,6 +616,11 @@ export class PrismaOrdersRepository implements OrdersRepository {
       createdAt: row.createdAt,
       orderType: row.orderType,
       paymentMethod: row.paymentMethod,
+      payments: buildOrderPayments(storedPaymentsByOrderId.get(row.id) ?? [], {
+        amount: Number(row.totalCents || "0"),
+        paidAt: row.paidAt,
+        paymentType: row.paymentMethod,
+      }),
       status: row.canceled ? "CANCELED" : row.status,
       canceled: row.canceled,
       customerName: row.customerName,
@@ -616,4 +638,73 @@ function extractDiscountedSubtotalFromSnapshot(value: unknown): number | null {
     return null;
   }
   return Math.round(discountedPrice);
+}
+
+type OrderPaymentRow = {
+  amount: number | string;
+  orderId: string;
+  paidAt: Date | null;
+  paymentType: string;
+};
+
+async function loadOrderPaymentsByOrderIds(
+  orderIds: string[],
+): Promise<Map<string, OrderPaymentSummary[]>> {
+  const uniqueOrderIds = Array.from(new Set(orderIds.filter(Boolean)));
+  const paymentsByOrderId = new Map<string, OrderPaymentSummary[]>();
+
+  if (uniqueOrderIds.length === 0) {
+    return paymentsByOrderId;
+  }
+
+  try {
+    const rows = await prisma.$queryRaw<OrderPaymentRow[]>`
+      SELECT
+        "orderId",
+        "amount",
+        "paidAt",
+        "paymentType"::text AS "paymentType"
+      FROM "OrderPayment"
+      WHERE "orderId" IN (${Prisma.join(uniqueOrderIds)})
+      ORDER BY "createdAt" ASC, "id" ASC
+    `;
+
+    for (const row of rows) {
+      const payments = paymentsByOrderId.get(row.orderId) ?? [];
+      payments.push({
+        amount: Number(row.amount || 0),
+        paidAt: row.paidAt ? row.paidAt.toISOString() : null,
+        paymentType: row.paymentType,
+      });
+      paymentsByOrderId.set(row.orderId, payments);
+    }
+  } catch {
+    return paymentsByOrderId;
+  }
+
+  return paymentsByOrderId;
+}
+
+function buildOrderPayments(
+  storedPayments: OrderPaymentSummary[],
+  fallback: {
+    amount: number;
+    paidAt: Date | string | null;
+    paymentType: string;
+  },
+): OrderPaymentSummary[] {
+  if (storedPayments.length > 0) {
+    return storedPayments;
+  }
+
+  return [
+    {
+      amount: Math.max(0, Math.round(fallback.amount || 0)),
+      paidAt:
+        fallback.paidAt instanceof Date
+          ? fallback.paidAt.toISOString()
+          : fallback.paidAt,
+      paymentType: fallback.paymentType,
+    },
+  ];
 }

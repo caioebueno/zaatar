@@ -19,6 +19,7 @@ type DeliveryAddressRow = {
   lat: string;
   lng: string;
   deliveryFee: number;
+  expectedHandoffDuration: number;
   city: string;
   zipCode: string;
   State: string;
@@ -67,6 +68,7 @@ function mapDeliveryAddress(address: DeliveryAddressRow): TAddress {
     numberComplement: address.numberComplement || undefined,
     customerId: address.customerId || undefined,
     deliveryFee: address.deliveryFee,
+    expectedHandoffDuration: address.expectedHandoffDuration,
   };
 }
 
@@ -121,6 +123,7 @@ const getCustomerData = async (data: TGetCustomerData): Promise<TCustomer> => {
       "lat",
       "lng",
       "deliveryFee",
+      "expectedHandoffDuration",
       "city",
       "zipCode",
       "State",

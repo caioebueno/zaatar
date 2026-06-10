@@ -14,6 +14,28 @@ Returns orders for the active business.
 
 Success (`200`): array of order objects.
 
+```ts
+type OrderPayment = {
+  amount: number; // cents
+  paidAt: string | null; // ISO datetime
+  paymentType: "CASH" | "CARD" | "ZELLE";
+};
+
+type OrderListItem = {
+  id: string;
+  number: string | null;
+  createdAt: string; // ISO datetime
+  orderType: "DELIVERY" | "TAKEAWAY";
+  paymentMethod: "CARD" | "CASH" | "ZELLE";
+  payments: OrderPayment[];
+  status: string;
+  canceled: boolean;
+  customerName: string | null;
+  customerPhone: string | null;
+  totalCents: number;
+};
+```
+
 ---
 
 ## Get Order By ID
@@ -23,6 +45,35 @@ Success (`200`): array of order objects.
 Auth: manager access token required.
 
 Success (`200`): order object.
+
+```ts
+type OrderDetail = {
+  id: string;
+  number: string | null;
+  createdAt: string; // ISO datetime
+  orderType: "DELIVERY" | "TAKEAWAY";
+  paymentMethod: "CARD" | "CASH" | "ZELLE";
+  payments: OrderPayment[];
+  status: string;
+  canceled: boolean;
+  customer: { name: string | null; phone: string | null };
+  items: Array<{
+    productId: string;
+    productName: string;
+    quantity: number;
+    unitAmountCents: number;
+    lineTotalCents: number;
+  }>;
+  subtotalCents: number;
+  discountedSubtotalCents: number;
+  tipPercent: number;
+  tipAmountCents: number;
+  deliveryFeeCents: number;
+  totalCents: number;
+};
+```
+
+Payment compatibility rule: if the order has no `OrderPayment` rows, the API returns a single payment derived from legacy fields: total amount, `paidAt`, and `paymentMethod`.
 
 Errors:
 
@@ -417,6 +468,7 @@ type OrdersByStationResponse = Array<{
   type: "DELIVERY" | "TAKEAWAY";
   paymentMethod: "CASH" | "CARD" | "ZELLE";
   paymentProvider?: "STRIPE" | null;
+  payments: OrderPayment[];
   tip?: number;
   tipAmount?: number;
   addressId?: string;
@@ -495,6 +547,13 @@ Sample response:
     "type": "DELIVERY",
     "paymentMethod": "CARD",
     "paymentProvider": "STRIPE",
+    "payments": [
+      {
+        "amount": 1299,
+        "paidAt": "2026-05-17T14:25:11.000Z",
+        "paymentType": "CARD"
+      }
+    ],
     "customer": { "id": "customer-id", "name": "John Doe" },
     "orderProducts": [
       { "id": "op-id", "productId": "product-id", "amount": 1299, "fullAmount": 1299, "quantity": 1 }

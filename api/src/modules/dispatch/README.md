@@ -11,8 +11,10 @@ Endpoint:
 Description:
 
 - Returns dispatches using the same visibility logic as the existing dispatch board:
-  - today's dispatches
-  - plus non-today dispatches that are not dispatched yet or still have pending orders
+  - all today's dispatches, including completed ones
+  - non-today dispatches only when they are not completed
+  - takeaway dispatches are completed when their order has `deliveredAt`
+  - delivery dispatches are completed when every order in the dispatch has `deliveredAt`
 - Ordered by `dispatched`, then `queueIndex`, then dispatch/create time.
 - Supports query filters.
 
@@ -35,20 +37,24 @@ Query filters:
 - `endAt=<date-or-datetime>`
   - Optional upper bound (inclusive) for `Dispatch.createdAt`.
   - Accepts `YYYY-MM-DD` or ISO datetime.
+- `include=routePoints`
+  - Optional.
+  - Includes all collected route points for each dispatch.
+  - Without this param, list responses include only `latestRoutePoint`.
 
 Examples:
 
 - `GET /dispatches`
 - `GET /dispatches?status=active`
+- `GET /dispatches?include=routePoints`
 - `GET /dispatches?startAt=2026-05-14&endAt=2026-05-21`
 - `GET /dispatches?status=active&startAt=2026-05-14T00:00:00.000Z&endAt=2026-05-21T23:59:59.999Z`
 
 Success (`200`):
 
 - Returns `DispatchEntity[]` (same shape documented below in "Get Next Dispatch For Driver").
-- Includes both:
-  - `latestRoutePoint` (single latest point)
-  - `routePoints` (all collected points for each dispatch)
+- Includes `latestRoutePoint` by default.
+- Includes `routePoints` only when `include=routePoints` is supplied.
 
 Validation error (`400`):
 
@@ -89,6 +95,7 @@ Endpoint:
 Description:
 
 - Assigns or unassigns a driver from a dispatch.
+- Sets or clears `completedAt` manually.
 - `dispatchAt` is legacy and not used by this endpoint.
 - When `dispatched` is set to `true` and resulting `dispatchAt` is non-null, API triggers `out_for_delivery` WhatsApp notification via Chatwoot for delivery orders with customer phone.
 
@@ -110,6 +117,22 @@ To unassign driver:
 ```json
 {
   "driverId": null
+}
+```
+
+To set dispatch completed:
+
+```json
+{
+  "completedAt": "2026-06-10T18:30:00.000Z"
+}
+```
+
+To clear dispatch completion:
+
+```json
+{
+  "completedAt": null
 }
 ```
 
@@ -165,6 +188,7 @@ type GetNextDispatchResponse = DispatchEntity | null;
 type DispatchEntity = {
   id: string;
   createdAt: string; // ISO datetime
+  completedAt?: string; // ISO datetime
   queueIndex?: number;
   dispatchAt?: string; // ISO datetime (legacy)
   startedDeliveryAt?: string; // ISO datetime
@@ -204,7 +228,7 @@ type DispatchEntity = {
   estimatedRoundTripDurationMinutes?: number;
   currentEstimatedDeliveryDurationMinutes?: number;
   currentEstimatedRoundTripDurationMinutes?: number;
-  leftRestaurantAt?: string; // ISO datetime (from LEFT_PIZZERIA milestone)
+  leftRestaurantAt?: string; // ISO datetime
   arrivedAtRestaurantAt?: string; // ISO datetime
   arrivedAtRestaurantLat?: number;
   arrivedAtRestaurantLng?: number;
@@ -359,6 +383,7 @@ Notes:
 - `dispatchAt` is legacy and should not be used for new dispatch status logic.
 - `estimated*` fields are baseline/planned ETA values.
 - `currentEstimated*` fields are live ETA values recalculated from latest driver location.
+- `completedAt` is a manual dispatch completion timestamp and is independent from order `deliveredAt`.
 - Dispatch status logic:
   - `DELIVERED`: all dispatch orders are delivered
   - `OUT_FOR_DELIVERY`: `startedDeliveryAt` is set and not all orders are delivered

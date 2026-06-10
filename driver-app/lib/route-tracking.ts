@@ -142,6 +142,7 @@ export async function startDriverTracking(token: string): Promise<void> {
     token,
     buffer: existing.buffer ?? [],
     lastFlushAt: existing.lastFlushAt ?? Date.now(),
+
   }));
   await startTask(Location.Accuracy.High, 'Você está disponível para entregas.');
 }

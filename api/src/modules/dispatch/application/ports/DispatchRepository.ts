@@ -43,6 +43,7 @@ export type DispatchOrder = {
     createdAt: string;
     customerId?: string;
     deliveryFee?: number;
+    expectedHandoffDuration?: number;
     description: string;
     id: string;
     lat: string;
@@ -59,6 +60,7 @@ export type DispatchEntity = {
   arrivedAtRestaurantAt?: string;
   arrivedAtRestaurantLat?: number;
   arrivedAtRestaurantLng?: number;
+  completedAt?: string;
   createdAt: string;
   currentEstimatedDeliveryDurationMinutes?: number;
   currentEstimatedRoundTripDurationMinutes?: number;
@@ -108,11 +110,13 @@ export type DispatchEntity = {
 
 export type DispatchListFilters = {
   endAt?: Date;
+  includeRoutePoints?: boolean;
   startAt?: Date;
   status?: "active";
 };
 
 export type UpdateDispatchStatusInput = {
+  completedAt?: string | null;
   dispatchAt?: string | null;
   dispatched?: boolean;
   dispatchId: string;

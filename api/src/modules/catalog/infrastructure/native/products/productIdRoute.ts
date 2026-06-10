@@ -113,7 +113,7 @@ function mapProductRow(product: {
       } | null;
     }[];
   }[];
-  preparationSteps: { id: string }[];
+  preparationSteps: { id: string; goalMinutes: number }[];
   comboSlots: {
     id: string;
     name: string;
@@ -184,6 +184,10 @@ function mapProductRow(product: {
     preparationStepIds: product.preparationSteps.map(
       (preparationStep) => preparationStep.id,
     ),
+    preparationSteps: product.preparationSteps.map((preparationStep) => ({
+      id: preparationStep.id,
+      goalMinutes: preparationStep.goalMinutes,
+    })),
     comboSlots: product.comboSlots.map((comboSlot) => ({
       id: comboSlot.id,
       name: comboSlot.name,
@@ -999,6 +1003,7 @@ export async function PATCH(request: NextRequestLike, context: RouteContext) {
       preparationSteps: {
         select: {
           id: true,
+          goalMinutes: true,
         },
       },
       comboSlots: {

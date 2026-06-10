@@ -127,6 +127,9 @@ export type DispatchRouteRepository = {
   markDispatchArrivedAtRestaurantIfMissing(
     input: MarkDispatchArrivalMilestoneInput,
   ): Promise<boolean>;
+  markDispatchLeftRestaurantIfMissing(
+    input: MarkDispatchArrivalMilestoneInput,
+  ): Promise<boolean>;
   createMilestoneIfMissing(input: CreateDispatchRouteMilestoneInput): Promise<boolean>;
   hasMilestone(dispatchId: string, type: DispatchRouteMilestoneType): Promise<boolean>;
 };

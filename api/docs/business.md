@@ -61,6 +61,7 @@ Success (`200`):
       "id": "branch-id",
       "createdAt": "2026-05-18T12:01:00.000Z",
       "name": "Downtown",
+      "showUpsellModalOnAddToCart": true,
       "operationHours": {
         "MONDAY": [{ "open": "09:00", "close": "18:00" }]
       },
@@ -143,6 +144,7 @@ Request body:
   "addressZipCode": "33601",
   "addressComplement": null,
   "addressNumberComplement": null,
+  "showUpsellModalOnAddToCart": false,
   "operationHours": {
     "MONDAY": [{ "open": "10:00", "close": "22:00" }]
   }
@@ -150,6 +152,20 @@ Request body:
 ```
 
 Success (`201`): returns created branch object.
+
+### Update Branch
+
+`PATCH /businesses/current/onboarding/branches/:branchId`
+
+Request body supports the same fields as create branch, including:
+
+```json
+{
+  "showUpsellModalOnAddToCart": true
+}
+```
+
+When enabled, the ordering menu can show the upsell modal after a customer adds an item to cart for that branch.
 
 ---
 

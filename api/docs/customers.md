@@ -41,6 +41,7 @@ type PublicCustomerAddressesResponse = Array<{
   numberComplement: string | null;
   customerId: string | null;
   deliveryFee: number;
+  expectedHandoffDuration: number; // seconds, default 300
 }>;
 ```
 
@@ -104,6 +105,7 @@ type SearchCustomersResponse = Array<{
     numberComplement: string | null;
     customerId: string | null;
     deliveryFee: number;
+    expectedHandoffDuration: number; // seconds, default 300
   }>;
 }>;
 ```
@@ -180,6 +182,7 @@ type CreateCustomerResponse = {
     numberComplement: string | null;
     customerId: string | null;
     deliveryFee: number;
+    expectedHandoffDuration: number; // seconds, default 300
   }>;
 };
 ```
@@ -218,8 +221,115 @@ Validation errors (`400`):
 { "error": "Invalid payload", "field": "name" }
 ```
 
+---
+
+## Update Delivery Address
+
+`PATCH /delivery-addresses/:addressId`
+
+Update an existing customer delivery address.
+
+Auth: manager access token required.
+
+Request body schema:
+
+```ts
+type UpdateDeliveryAddressBody = {
+  // At least one property is required.
+  description?: string; // non-empty when supplied
+  street?: string; // non-empty when supplied
+  number?: string; // non-empty when supplied
+  city?: string; // non-empty when supplied
+  state?: string; // non-empty when supplied
+  zipCode?: string; // non-empty when supplied
+  lat?: string; // numeric string
+  lng?: string; // numeric string
+  complement?: string | null; // string updates, "" or null clears
+  numberComplement?: string | null; // string updates, "" or null clears
+  expectedHandoffDuration?: number; // seconds, integer >= 0
+};
+```
+
+Request body example:
+
 ```json
-{ "error": "Invalid payload", "field": "email" }
+{
+  "description": "123 Main St, Orlando, FL 32801",
+  "street": "Main St",
+  "number": "123",
+  "city": "Orlando",
+  "state": "FL",
+  "zipCode": "32801",
+  "lat": "28.542110",
+  "lng": "-81.379030",
+  "complement": "Leave at front desk",
+  "numberComplement": "Apt 204",
+  "expectedHandoffDuration": 300
+}
+```
+
+Clear complement example:
+
+```json
+{
+  "complement": null,
+  "numberComplement": ""
+}
+```
+
+Behavior:
+
+- Any supplied address field is updated.
+- `complement` and `numberComplement` can be set to a string, empty string, or `null`.
+- Empty string and `null` clear nullable fields.
+- If `lat` or `lng` is supplied, delivery fee is recalculated using Mapbox and the business branch origin.
+- If the updated coordinates are outside delivery coverage, the update is rejected.
+
+Success (`200`) schema:
+
+```ts
+type UpdateDeliveryAddressResponse = {
+  id: string;
+  createdAt: string; // ISO datetime
+  description: string;
+  street: string;
+  number: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  lat: string;
+  lng: string;
+  complement: string | null;
+  numberComplement: string | null;
+  customerId: string | null;
+  deliveryFee: number;
+  expectedHandoffDuration: number; // seconds, default 300
+};
+```
+
+Minimal example:
+
+```json
+{
+  "complement": "Leave at front desk",
+  "numberComplement": "Apt 204"
+}
+```
+
+Validation errors (`400`):
+
+```json
+{ "error": "Invalid payload", "field": "complement" }
+```
+
+```json
+{ "error": "Invalid payload", "field": "body" }
+```
+
+Not found (`404`):
+
+```json
+{ "error": "Delivery address not found" }
 ```
 
 Server error (`500`):
@@ -281,6 +391,7 @@ type CreateCustomerAddressResponse = {
   numberComplement: string | null;
   customerId: string | null;
   deliveryFee: number;
+  expectedHandoffDuration: number; // seconds, default 300
 };
 ```
 

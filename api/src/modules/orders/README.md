@@ -54,6 +54,11 @@ type OrdersByStationResponse = Array<{
   type: "DELIVERY" | "TAKEAWAY";
   paymentMethod: "CASH" | "CARD" | "ZELLE";
   paymentProvider?: "STRIPE" | null;
+  payments?: Array<{
+    amount: number; // cents
+    paidAt: string | null; // ISO datetime
+    paymentType: "CASH" | "CARD" | "ZELLE";
+  }>;
   tip?: number; // percent
   tipAmount?: number; // percent
   addressId?: string;
