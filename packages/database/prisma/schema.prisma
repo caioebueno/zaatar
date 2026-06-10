@@ -403,6 +403,7 @@ model DriverActivationEvent {
 model Dispatch {
   id                                String    @id
   createdAt                         DateTime  @default(now())
+  completedAt                       DateTime?
   queueIndex                        Int?
   dispatched                        Boolean   @default(false)
   dispatchAt                        DateTime?
@@ -423,6 +424,7 @@ model Dispatch {
   routeSessions                     DispatchRouteSession[]
   routeMilestones                   DispatchRouteMilestone[]
   etaRecalculationJobs              DispatchEtaRecalculationJob[]
+  routeMetricsRefreshJobs           DispatchRouteMetricsRefreshJob[]
 
   @@index([queueIndex])
 }
@@ -527,6 +529,29 @@ model DispatchAssignmentJob {
   lastError           String?
   orderId             String                      @unique
   deliveryAddressId   String
+}
+
+enum DispatchRouteMetricsRefreshJobStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+model DispatchRouteMetricsRefreshJob {
+  id                  String                               @id
+  createdAt           DateTime                             @default(now())
+  updatedAt           DateTime                             @updatedAt
+  status              DispatchRouteMetricsRefreshJobStatus @default(PENDING)
+  attempts            Int                                  @default(0)
+  availableAt         DateTime                             @default(now())
+  processingStartedAt DateTime?
+  completedAt         DateTime?
+  lastError           String?
+  dispatch            Dispatch                             @relation(fields: [dispatchId], references: [id], onDelete: Cascade)
+  dispatchId          String                               @unique
+
+  @@index([status, availableAt, createdAt])
 }
 
 enum DispatchEtaRecalculationJobStatus {
@@ -883,6 +908,7 @@ model DeliveryAddress {
   lat              String
   lng              String
   deliveryFee      Int       @default(0)
+  expectedHandoffDuration Int @default(300)
   city             String
   zipCode          String
   State            String

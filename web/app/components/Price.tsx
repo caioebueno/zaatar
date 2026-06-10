@@ -28,7 +28,7 @@ import { QuantitySelector } from "./ProductModal";
 import { parseAsInteger, parseAsStringLiteral, useQueryState } from "nuqs";
 import PhoneInput, { PhoneValue } from "./PhoneInput";
 import getCustomerData from "../../src/getCustomerData";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import TCustomer from "../../src/types/customer";
 import TextInput from "./TextInput";
 import { Dialog } from "radix-ui";
@@ -726,6 +726,14 @@ function resolveCheckoutErrorMessage(
       ? (error as { data?: { message?: string } }).data?.message
       : undefined;
 
+  const stripeErrorDetail =
+    typeof error === "object" &&
+      error !== null &&
+      "data" in error &&
+      typeof (error as { data?: { error?: string } }).data?.error === "string"
+      ? (error as { data?: { error?: string } }).data?.error
+      : undefined;
+
   switch (reason) {
     case "CART_ITEMS_REQUIRED":
       return content["yourCart"] || "Your cart is empty";
@@ -748,6 +756,9 @@ function resolveCheckoutErrorMessage(
     case "STRIPE_PAYMENT_NOT_COMPLETED":
     case "STRIPE_PAYMENT_FAILED":
     case "INVALID_STRIPE_AMOUNT":
+      if (stripeErrorDetail && stripeErrorDetail !== "Unknown Stripe payment error") {
+        return stripeErrorDetail;
+      }
       return "We could not charge your card. Please try another card.";
     case "ORDER_CREATION_FAILED_AFTER_CHARGE_REFUNDED":
       return "We could not create your order. Your card charge was refunded.";
@@ -777,6 +788,8 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
   const [openSummaryModal, setOpenSummaryModal] = useState(false);
   const [openPrizeModal, setOpenPrizeModal] = useState(false);
   const [prizeBannerShakeSignal, setPrizeBannerShakeSignal] = useState(0);
+  const [prizeError, setPrizeError] = useState<string | null>(null);
+  const prizeRef = useRef<HTMLDivElement | null>(null);
   const [name, setName] = useState<null | string>(null);
   const [operationHours, setOperationHours] = useState<TOperationHours | null>(
     null,
@@ -954,8 +967,11 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
 
     if (prizeSelectionRequired && (!selectedPrize || !isSelectedPrizeReady)) {
       setPrizeBannerShakeSignal((currentValue) => currentValue + 1);
+      setPrizeError(content["selectPrizeToContinue"] ?? "Selecione um brinde para continuar.");
+      prizeRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
       return;
     }
+    setPrizeError(null);
 
     setCheckoutError(null);
     setStep(2);
@@ -1282,6 +1298,7 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
           </div>
         )}
         {prizeSelectionRequired && (
+          <div ref={prizeRef} className="w-full flex flex-col gap-1.5">
           <div
             key={`prize-banner-${prizeBannerShakeSignal}`}
             className="w-full"
@@ -1325,6 +1342,10 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
                 </div>
               </button>
             )}
+          </div>
+          {prizeError && (
+            <span className="text-sm font-semibold text-red-500 px-1">{prizeError}</span>
+          )}
           </div>
         )}
         {cart.items.length > 0 ? (
@@ -1392,6 +1413,7 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
                 [payload.prizeId]: payload.productIds,
               },
             });
+            setPrizeError(null);
           }}
           lg={lg}
           open={openPrizeModal}
@@ -2987,7 +3009,7 @@ const FindAddressModal: React.FC<TFindAddressModal> = ({
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Overlay className="fixed inset-0 z-[79] bg-black/45 backdrop-blur-[2px] duration-300 ease-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0" />
-      <Dialog.Content className="w-dvw h-dvh bg-background fixed top-0 left-0 z-[80] flex flex-col duration-300 ease-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0 data-[state=open]:slide-in-from-bottom-3 data-[state=closed]:slide-out-to-bottom-3">
+      <Dialog.Content className="w-dvw h-dvh bg-background fixed top-0 left-0 z-[80] flex flex-col overflow-hidden duration-300 ease-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0 data-[state=open]:slide-in-from-bottom-3 data-[state=closed]:slide-out-to-bottom-3">
         <Dialog.Title className="sr-only">
           {content["addAddress"]}
         </Dialog.Title>

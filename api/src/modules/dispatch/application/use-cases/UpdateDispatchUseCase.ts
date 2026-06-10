@@ -7,6 +7,7 @@ import type {
 import type { OutForDeliveryNotifier } from "../ports/OutForDeliveryNotifier.js";
 
 export type UpdateDispatchInput = {
+  completedAt?: unknown;
   dispatchAt?: unknown;
   dispatched?: unknown;
   dispatchId: unknown;
@@ -22,12 +23,14 @@ export class UpdateDispatchUseCase {
 
   async execute(input: UpdateDispatchInput): Promise<DispatchEntity> {
     const dispatchId = normalizeRequiredString(input.dispatchId, "dispatchId");
+    const completedAt = normalizeOptionalDate(input.completedAt, "completedAt");
     const dispatched = normalizeOptionalBoolean(input.dispatched, "dispatched");
-    const dispatchAt = normalizeOptionalDispatchAt(input.dispatchAt);
+    const dispatchAt = normalizeOptionalDate(input.dispatchAt, "dispatchAt");
     const driverId = normalizeOptionalNullableString(input.driverId, "driverId");
     const queueIndex = normalizeOptionalQueueIndex(input.queueIndex);
 
     if (
+      completedAt === undefined &&
       dispatched === undefined &&
       driverId === undefined &&
       queueIndex === undefined
@@ -41,6 +44,7 @@ export class UpdateDispatchUseCase {
 
     const updatedDispatch = await this.dispatchRepository.updateStatus({
       dispatchId,
+      completedAt,
       dispatched,
       dispatchAt,
       driverId,
@@ -109,23 +113,26 @@ function normalizeOptionalBoolean(
   return value;
 }
 
-function normalizeOptionalDispatchAt(value: unknown): string | null | undefined {
+function normalizeOptionalDate(
+  value: unknown,
+  field: "completedAt" | "dispatchAt",
+): string | null | undefined {
   if (value === undefined || value === null) {
     return value as null | undefined;
   }
 
   if (typeof value !== "string") {
-    throw new InvalidDispatchUpdatePayloadError("dispatchAt");
+    throw new InvalidDispatchUpdatePayloadError(field);
   }
 
   const normalized = value.trim();
   if (!normalized) {
-    throw new InvalidDispatchUpdatePayloadError("dispatchAt");
+    throw new InvalidDispatchUpdatePayloadError(field);
   }
 
   const parsedDate = new Date(normalized);
   if (Number.isNaN(parsedDate.getTime())) {
-    throw new InvalidDispatchUpdatePayloadError("dispatchAt");
+    throw new InvalidDispatchUpdatePayloadError(field);
   }
 
   return normalized;

@@ -41,6 +41,7 @@ type PublicCustomerAddressesResponse = Array<{
   numberComplement: string | null;
   customerId: string | null;
   deliveryFee: number;
+  expectedHandoffDuration: number; // seconds, default 300
 }>;
 ```
 
@@ -104,6 +105,7 @@ type SearchCustomersResponse = Array<{
     numberComplement: string | null;
     customerId: string | null;
     deliveryFee: number;
+    expectedHandoffDuration: number; // seconds, default 300
   }>;
 }>;
 ```
@@ -180,6 +182,7 @@ type CreateCustomerResponse = {
     numberComplement: string | null;
     customerId: string | null;
     deliveryFee: number;
+    expectedHandoffDuration: number; // seconds, default 300
   }>;
 };
 ```
@@ -243,6 +246,7 @@ type UpdateDeliveryAddressBody = {
   lng?: string; // numeric string
   complement?: string | null; // string updates, "" or null clears
   numberComplement?: string | null; // string updates, "" or null clears
+  expectedHandoffDuration?: number; // seconds, integer >= 0
 };
 ```
 
@@ -259,7 +263,8 @@ Request body example:
   "lat": "28.542110",
   "lng": "-81.379030",
   "complement": "Leave at front desk",
-  "numberComplement": "Apt 204"
+  "numberComplement": "Apt 204",
+  "expectedHandoffDuration": 300
 }
 ```
 
@@ -298,6 +303,7 @@ type UpdateDeliveryAddressResponse = {
   numberComplement: string | null;
   customerId: string | null;
   deliveryFee: number;
+  expectedHandoffDuration: number; // seconds, default 300
 };
 ```
 
@@ -385,6 +391,7 @@ type CreateCustomerAddressResponse = {
   numberComplement: string | null;
   customerId: string | null;
   deliveryFee: number;
+  expectedHandoffDuration: number; // seconds, default 300
 };
 ```
 

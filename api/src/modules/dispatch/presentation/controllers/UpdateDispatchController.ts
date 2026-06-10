@@ -21,6 +21,7 @@ export class UpdateDispatchController implements HttpController {
       const parsedDispatchAt = parseDispatchAtAlias(body);
       const result = await this.useCase.execute({
         dispatchId,
+        completedAt: body.completedAt,
         dispatched: body.dispatched,
         dispatchAt: parsedDispatchAt,
         driverId: body.driverId,

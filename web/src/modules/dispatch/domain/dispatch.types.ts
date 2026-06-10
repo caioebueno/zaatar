@@ -6,6 +6,7 @@ import type TCustomer from "@/src/types/customer";
 export type Dispatch = {
   id: string;
   createdAt: string;
+  completedAt?: string;
   queueIndex?: number;
   dispatchAt?: string;
   dispatched: boolean;

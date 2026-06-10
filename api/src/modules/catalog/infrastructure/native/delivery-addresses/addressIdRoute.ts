@@ -12,6 +12,7 @@ type PatchBody = {
   city?: unknown;
   complement?: unknown;
   description?: unknown;
+  expectedHandoffDuration?: unknown;
   lat?: unknown;
   lng?: unknown;
   number?: unknown;
@@ -39,6 +40,7 @@ type DeliveryAddressRow = {
   customerId: string | null;
   deliveryFee: number;
   description: string;
+  expectedHandoffDuration: number;
   id: string;
   lat: string;
   lng: string;
@@ -110,6 +112,12 @@ export async function PATCH(request: NextRequestLike, context: RouteContext) {
       "numberComplement",
     );
 
+    if (body.expectedHandoffDuration !== undefined) {
+      updateData.expectedHandoffDuration = parseExpectedHandoffDuration(
+        body.expectedHandoffDuration,
+      );
+    }
+
     if (body.lat !== undefined) {
       updateData.lat = parseCoordinate(body.lat, "lat");
     }
@@ -172,7 +180,33 @@ export async function PATCH(request: NextRequestLike, context: RouteContext) {
       },
     });
 
-    return NextResponse.json(mapDeliveryAddress(updated));
+    const [updatedWithHandoff] = await prisma.$queryRaw<DeliveryAddressRow[]>`
+      SELECT
+        "id",
+        "createdAt",
+        "description",
+        "street",
+        "number",
+        "city",
+        "State",
+        "zipCode",
+        "lat",
+        "lng",
+        "complement",
+        "numberComplement",
+        "customerId",
+        "deliveryFee",
+        "expectedHandoffDuration"
+      FROM "DeliveryAddress"
+      WHERE "id" = ${updated.id}
+      LIMIT 1
+    `;
+
+    if (!updatedWithHandoff) {
+      return NextResponse.json({ error: "Delivery address not found" }, { status: 404 });
+    }
+
+    return NextResponse.json(mapDeliveryAddress(updatedWithHandoff));
   } catch (error) {
     if (
       typeof error === "object" &&
@@ -258,6 +292,14 @@ function parseCoordinateNumber(value: string, field: "lat" | "lng"): number {
   }
 
   return parsed;
+}
+
+function parseExpectedHandoffDuration(value: unknown): number {
+  if (typeof value !== "number" || !Number.isInteger(value) || value < 0) {
+    throw { code: "INVALID_PARAMS", details: { field: "expectedHandoffDuration" } };
+  }
+
+  return value;
 }
 
 function calculateDeliveryFeeInCents(distanceInKm: number): number {
@@ -356,5 +398,6 @@ function mapDeliveryAddress(address: DeliveryAddressRow) {
     numberComplement: address.numberComplement,
     customerId: address.customerId,
     deliveryFee: address.deliveryFee,
+    expectedHandoffDuration: address.expectedHandoffDuration,
   };
 }

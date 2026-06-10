@@ -118,6 +118,10 @@ type ProductRowResponse = {
     }[];
   }[];
   preparationStepIds: string[];
+  preparationSteps: {
+    id: string;
+    goalMinutes: number;
+  }[];
   comboSlots: {
     id: string;
     name: string;
@@ -183,7 +187,7 @@ function mapProductRow(product: {
       } | null;
     }[];
   }[];
-  preparationSteps: { id: string }[];
+  preparationSteps: { id: string; goalMinutes: number }[];
   comboSlots: {
     id: string;
     name: string;
@@ -254,6 +258,10 @@ function mapProductRow(product: {
     preparationStepIds: product.preparationSteps.map(
       (preparationStep) => preparationStep.id,
     ),
+    preparationSteps: product.preparationSteps.map((preparationStep) => ({
+      id: preparationStep.id,
+      goalMinutes: preparationStep.goalMinutes,
+    })),
     comboSlots: product.comboSlots.map((comboSlot) => ({
       id: comboSlot.id,
       name: comboSlot.name,
@@ -953,6 +961,7 @@ export async function POST(request: NextRequestLike) {
       preparationSteps: {
         select: {
           id: true,
+          goalMinutes: true,
         },
       },
       comboSlots: {
@@ -1217,6 +1226,7 @@ export async function GET() {
             preparationSteps: {
               select: {
                 id: true,
+                goalMinutes: true,
               },
             },
             comboSlots: {
@@ -1321,6 +1331,7 @@ export async function GET() {
           select: {
             id: true,
             name: true,
+            goalMinutes: true,
             includeComments: true,
             includeModifiers: true,
             stationId: true,
@@ -1438,6 +1449,7 @@ export async function GET() {
         preparationSteps: preparationSteps.map((step) => ({
           id: step.id,
           name: step.name,
+          goalMinutes: step.goalMinutes,
           includeComments: step.includeComments,
           includeModifiers: step.includeModifiers,
           stationId: step.stationId,

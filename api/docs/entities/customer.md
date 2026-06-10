@@ -28,6 +28,7 @@ type DeliveryAddress = {
   numberComplement: string | null;
   customerId: string | null;
   deliveryFee: number;
+  expectedHandoffDuration: number; // seconds, default 300
 };
 ```
 

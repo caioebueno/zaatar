@@ -106,6 +106,7 @@ type MenuExportFixedComboProduct = {
 type MenuExportPreparationTask = {
   id: string;
   name: string;
+  goalMinutes: number;
   stationId: string | null;
   stationName: string | null;
   includeComments: boolean;
@@ -272,6 +273,12 @@ type ProductEditorState = {
   newPrepStepIncludeComments: boolean;
   newPrepStepIncludeModifiers: boolean;
   creatingPrepStep: boolean;
+  editingPrepTaskStepId: string | null;
+  editPrepStepName: string;
+  editPrepStepGoalMinutes: string;
+  editPrepStepIncludeComments: boolean;
+  editPrepStepIncludeModifiers: boolean;
+  savingPrepStep: boolean;
 };
 
 const currencyFormatter = new Intl.NumberFormat("en-US", {
@@ -662,6 +669,7 @@ function mapPreparationTaskFromUnknown(
     name?: unknown;
     stationId?: unknown;
     stationName?: unknown;
+    goalMinutes?: unknown;
     includeComments?: unknown;
     includeModifiers?: unknown;
   };
@@ -673,6 +681,10 @@ function mapPreparationTaskFromUnknown(
   return {
     id: record.id,
     name: record.name,
+    goalMinutes:
+      typeof record.goalMinutes === "number" && Number.isFinite(record.goalMinutes)
+        ? Math.max(0, Math.floor(record.goalMinutes))
+        : 0,
     stationId: typeof record.stationId === "string" ? record.stationId : null,
     stationName:
       typeof record.stationName === "string" ? record.stationName : null,
@@ -1991,6 +2003,7 @@ export default function ProductManagerList({
           preparationTasks: p.preparationTasks.map((task) => ({
             id: task.id,
             name: task.name,
+            goalMinutes: task.goalMinutes,
             stationId: task.stationId,
             stationName: task.stationName,
             includeComments: task.includeComments,
@@ -2049,6 +2062,7 @@ export default function ProductManagerList({
         preparationTasks: p.preparationTasks.map((task) => ({
           id: task.id,
           name: task.name,
+          goalMinutes: task.goalMinutes,
           stationId: task.stationId,
           stationName: task.stationName,
           includeComments: task.includeComments,
@@ -2984,6 +2998,7 @@ export default function ProductManagerList({
             },
             body: JSON.stringify({
               name: stepName,
+              goalMinutes: task.goalMinutes,
               includeComments: task.includeComments,
               includeModifiers: task.includeModifiers,
             }),
@@ -3785,7 +3800,7 @@ export default function ProductManagerList({
         stationName: task.stationName ?? "",
         includeComments: task.includeComments,
         includeModifiers: task.includeModifiers,
-        goalMinutes: 0,
+        goalMinutes: task.goalMinutes,
       })),
       prepTaskLookupStepId: "",
       newPrepStepFormOpen: false,
@@ -3795,6 +3810,12 @@ export default function ProductManagerList({
       newPrepStepIncludeComments: false,
       newPrepStepIncludeModifiers: false,
       creatingPrepStep: false,
+      editingPrepTaskStepId: null,
+      editPrepStepName: "",
+      editPrepStepGoalMinutes: "",
+      editPrepStepIncludeComments: false,
+      editPrepStepIncludeModifiers: false,
+      savingPrepStep: false,
     });
   }
 
@@ -3852,6 +3873,12 @@ export default function ProductManagerList({
       newPrepStepIncludeComments: false,
       newPrepStepIncludeModifiers: false,
       creatingPrepStep: false,
+      editingPrepTaskStepId: null,
+      editPrepStepName: "",
+      editPrepStepGoalMinutes: "",
+      editPrepStepIncludeComments: false,
+      editPrepStepIncludeModifiers: false,
+      savingPrepStep: false,
     });
   }
 
@@ -3969,6 +3996,73 @@ export default function ProductManagerList({
       });
     } catch {
       setEditor((c) => c ? { ...c, creatingPrepStep: false, error: "Could not reach server" } : c);
+    }
+  }
+
+  async function saveEditedPrepStep() {
+    if (!editor || !editor.editingPrepTaskStepId) return;
+    const task = editor.prepTasks.find((t) => t.stepId === editor.editingPrepTaskStepId);
+    if (!task) return;
+    const name = editor.editPrepStepName.trim();
+    if (!name) return;
+    const goalMinutes = Math.max(0, Number.parseInt(editor.editPrepStepGoalMinutes || "0", 10) || 0);
+
+    setEditor((c) => c ? { ...c, savingPrepStep: true } : c);
+    try {
+      const res = await apiFetch(
+        `/api/stations/${task.stationId}/steps/${task.stepId}`,
+        {
+          method: "PATCH",
+          body: JSON.stringify({
+            name,
+            goalMinutes,
+            includeComments: editor.editPrepStepIncludeComments,
+            includeModifiers: editor.editPrepStepIncludeModifiers,
+          }),
+        },
+      );
+      const payload = (await res.json().catch(() => ({}))) as {
+        id?: string; name?: string; goalMinutes?: number;
+        includeComments?: boolean; includeModifiers?: boolean; error?: string;
+      };
+      if (!res.ok) {
+        setEditor((c) => c ? { ...c, savingPrepStep: false, error: payload.error ?? "Failed to update step" } : c);
+        return;
+      }
+      const updatedName = payload.name ?? name;
+      const updatedGoalMinutes = payload.goalMinutes ?? goalMinutes;
+      const updatedIncludeComments = payload.includeComments ?? editor.editPrepStepIncludeComments;
+      const updatedIncludeModifiers = payload.includeModifiers ?? editor.editPrepStepIncludeModifiers;
+
+      setAvailableStations((prev) =>
+        prev.map((s) =>
+          s.id === task.stationId
+            ? {
+                ...s,
+                preparationSteps: s.preparationSteps.map((p) =>
+                  p.id === task.stepId
+                    ? { ...p, name: updatedName, goalMinutes: updatedGoalMinutes, includeComments: updatedIncludeComments, includeModifiers: updatedIncludeModifiers }
+                    : p,
+                ),
+              }
+            : s,
+        ),
+      );
+      setEditor((c) => {
+        if (!c) return c;
+        return {
+          ...c,
+          savingPrepStep: false,
+          editingPrepTaskStepId: null,
+          prepTasks: c.prepTasks.map((t) =>
+            t.stepId === task.stepId
+              ? { ...t, stepName: updatedName, goalMinutes: updatedGoalMinutes, includeComments: updatedIncludeComments, includeModifiers: updatedIncludeModifiers }
+              : t,
+          ),
+        };
+      });
+    } catch {
+      setEditor((c) => c ? { ...c, savingPrepStep: false, error: "Could not reach server" } : c);
     }
   }
 
@@ -5656,6 +5750,8 @@ export default function ProductManagerList({
       saving: false, error: null, prepTasks: [], prepTaskLookupStepId: "",
       newPrepStepFormOpen: false, newPrepStepStationId: "", newPrepStepName: "",
       newPrepStepGoalMinutes: "", newPrepStepIncludeComments: false, newPrepStepIncludeModifiers: false, creatingPrepStep: false,
+      editingPrepTaskStepId: null, editPrepStepName: "", editPrepStepGoalMinutes: "",
+      editPrepStepIncludeComments: false, editPrepStepIncludeModifiers: false, savingPrepStep: false,
     });
   }
 
@@ -6659,29 +6755,120 @@ export default function ProductManagerList({
                       <p style={{ fontSize: 13, color: "rgba(245,240,232,0.3)", padding: "4px 0 10px" }}>No steps attached yet.</p>
                     )}
                     <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: editor.prepTasks.length > 0 ? 14 : 0 }}>
-                      {editor.prepTasks.map((task) => (
-                        <div key={task.stepId} style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 14px", background: "rgba(255,255,255,0.04)", borderRadius: 8, border: "1px solid rgba(255,255,255,0.09)" }}>
-                          <div style={{ flex: 1, minWidth: 0 }}>
-                            <div style={{ fontSize: 13, fontWeight: 600, color: "#f5f0e8", marginBottom: 3 }}>{task.stepName}</div>
-                            <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" as const }}>
-                              <span style={{ fontSize: 11, color: "rgba(245,240,232,0.45)", background: "rgba(255,255,255,0.06)", padding: "1px 7px", borderRadius: 4 }}>{task.stationName || "No station"}</span>
-                              {task.goalMinutes > 0 && (
-                                <span style={{ fontSize: 11, color: "rgba(245,240,232,0.4)", background: "rgba(255,255,255,0.05)", padding: "1px 7px", borderRadius: 4 }}>⏱ {task.goalMinutes} min</span>
-                              )}
-                              {task.includeComments && (
-                                <span style={{ fontSize: 11, color: "rgba(245,240,232,0.4)", background: "rgba(255,255,255,0.05)", padding: "1px 7px", borderRadius: 4 }}>comments</span>
-                              )}
-                              {task.includeModifiers && (
-                                <span style={{ fontSize: 11, color: "rgba(245,240,232,0.4)", background: "rgba(255,255,255,0.05)", padding: "1px 7px", borderRadius: 4 }}>modifiers</span>
-                              )}
+                      {editor.prepTasks.map((task) => {
+                        const isEditing = editor.editingPrepTaskStepId === task.stepId;
+                        return (
+                          <div key={task.stepId} style={{ background: "rgba(255,255,255,0.04)", borderRadius: 8, border: `1px solid ${isEditing ? "rgba(255,61,20,0.35)" : "rgba(255,255,255,0.09)"}`, overflow: "hidden" }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 14px" }}>
+                              <div style={{ flex: 1, minWidth: 0 }}>
+                                <div style={{ fontSize: 13, fontWeight: 600, color: "#f5f0e8", marginBottom: 3 }}>{task.stepName}</div>
+                                <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" as const }}>
+                                  <span style={{ fontSize: 11, color: "rgba(245,240,232,0.45)", background: "rgba(255,255,255,0.06)", padding: "1px 7px", borderRadius: 4 }}>{task.stationName || "No station"}</span>
+                                  {task.goalMinutes > 0 && (
+                                    <span style={{ fontSize: 11, color: "rgba(245,240,232,0.4)", background: "rgba(255,255,255,0.05)", padding: "1px 7px", borderRadius: 4 }}>⏱ {task.goalMinutes} min</span>
+                                  )}
+                                  {task.includeComments && (
+                                    <span style={{ fontSize: 11, color: "rgba(245,240,232,0.4)", background: "rgba(255,255,255,0.05)", padding: "1px 7px", borderRadius: 4 }}>comments</span>
+                                  )}
+                                  {task.includeModifiers && (
+                                    <span style={{ fontSize: 11, color: "rgba(245,240,232,0.4)", background: "rgba(255,255,255,0.05)", padding: "1px 7px", borderRadius: 4 }}>modifiers</span>
+                                  )}
+                                </div>
+                              </div>
+                              <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    if (isEditing) {
+                                      setEditor((c) => c ? { ...c, editingPrepTaskStepId: null } : c);
+                                    } else {
+                                      setEditor((c) => c ? {
+                                        ...c,
+                                        editingPrepTaskStepId: task.stepId,
+                                        editPrepStepName: task.stepName,
+                                        editPrepStepGoalMinutes: task.goalMinutes > 0 ? String(task.goalMinutes) : "",
+                                        editPrepStepIncludeComments: task.includeComments,
+                                        editPrepStepIncludeModifiers: task.includeModifiers,
+                                      } : c);
+                                    }
+                                  }}
+                                  style={{ padding: "3px 8px", borderRadius: 5, border: "1px solid rgba(255,255,255,0.18)", background: "transparent", fontSize: 11, color: isEditing ? "rgba(245,240,232,0.45)" : "rgba(245,240,232,0.65)", cursor: "pointer" }}
+                                >
+                                  {isEditing ? "Cancel" : "Edit"}
+                                </button>
+                                <button type="button" onClick={() => removePrepTask(task.stepId)}
+                                  style={{ padding: "3px 8px", borderRadius: 5, border: "1px solid rgba(255,61,20,0.3)", background: "transparent", fontSize: 11, color: "#ff8066", cursor: "pointer" }}>
+                                  Remove
+                                </button>
+                              </div>
                             </div>
+                            {isEditing && (
+                              <div style={{ padding: "12px 14px 14px", borderTop: "1px solid rgba(255,255,255,0.07)", background: "rgba(0,0,0,0.15)" }}>
+                                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 10 }}>
+                                  <div style={{ gridColumn: "1/-1" }}>
+                                    <EdFieldLabel required>Step name</EdFieldLabel>
+                                    <input
+                                      autoFocus
+                                      value={editor.editPrepStepName}
+                                      onChange={(e) => updateEditorField("editPrepStepName", e.target.value)}
+                                      placeholder="e.g. Grill patty"
+                                      style={edInput}
+                                    />
+                                  </div>
+                                  <div>
+                                    <EdFieldLabel>Goal minutes</EdFieldLabel>
+                                    <input
+                                      type="number"
+                                      min={0}
+                                      value={editor.editPrepStepGoalMinutes}
+                                      onChange={(e) => updateEditorField("editPrepStepGoalMinutes", e.target.value)}
+                                      placeholder="0"
+                                      style={edInput}
+                                    />
+                                  </div>
+                                </div>
+                                <div style={{ display: "flex", gap: 20, marginBottom: 12 }}>
+                                  <label style={{ display: "flex", alignItems: "center", gap: 7, cursor: "pointer", userSelect: "none" as const }}>
+                                    <input
+                                      type="checkbox"
+                                      checked={editor.editPrepStepIncludeComments}
+                                      onChange={(e) => updateEditorField("editPrepStepIncludeComments", e.target.checked)}
+                                      style={{ accentColor: "#ff3d14" }}
+                                    />
+                                    <span style={{ fontSize: 12.5, color: "rgba(245,240,232,0.65)" }}>Include comments</span>
+                                  </label>
+                                  <label style={{ display: "flex", alignItems: "center", gap: 7, cursor: "pointer", userSelect: "none" as const }}>
+                                    <input
+                                      type="checkbox"
+                                      checked={editor.editPrepStepIncludeModifiers}
+                                      onChange={(e) => updateEditorField("editPrepStepIncludeModifiers", e.target.checked)}
+                                      style={{ accentColor: "#ff3d14" }}
+                                    />
+                                    <span style={{ fontSize: 12.5, color: "rgba(245,240,232,0.65)" }}>Include modifiers</span>
+                                  </label>
+                                </div>
+                                <div style={{ display: "flex", gap: 8 }}>
+                                  <button
+                                    type="button"
+                                    disabled={editor.savingPrepStep || !editor.editPrepStepName.trim()}
+                                    onClick={() => void saveEditedPrepStep()}
+                                    style={{ ...edOutlineBtn, borderColor: "#ff3d14", color: "#ff3d14", opacity: editor.savingPrepStep || !editor.editPrepStepName.trim() ? 0.4 : 1 }}
+                                  >
+                                    {editor.savingPrepStep ? "Saving…" : "Save changes"}
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => setEditor((c) => c ? { ...c, editingPrepTaskStepId: null } : c)}
+                                    style={{ ...edOutlineBtn, borderColor: "rgba(255,255,255,0.18)", color: "rgba(245,240,232,0.45)" }}
+                                  >
+                                    Cancel
+                                  </button>
+                                </div>
+                              </div>
+                            )}
                           </div>
-                          <button type="button" onClick={() => removePrepTask(task.stepId)}
-                            style={{ padding: "3px 8px", borderRadius: 5, border: "1px solid rgba(255,61,20,0.3)", background: "transparent", fontSize: 11, color: "#ff8066", cursor: "pointer", flexShrink: 0 }}>
-                            Remove
-                          </button>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                     {/* Attach existing step row */}
                     <div style={{ display: "flex", gap: 8, marginBottom: editor.newPrepStepFormOpen ? 0 : 10 }}>

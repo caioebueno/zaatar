@@ -32,6 +32,7 @@ type AddressResponse = {
   createdAt: string;
   customerId: string | null;
   deliveryFee: number;
+  expectedHandoffDuration: number;
   description: string;
   id: string;
   lat: string;
@@ -113,6 +114,7 @@ export async function GET(request: NextRequestLike) {
           numberComplement: address.numberComplement,
           customerId: address.customerId,
           deliveryFee: address.deliveryFee,
+          expectedHandoffDuration: address.expectedHandoffDuration ?? 300,
         });
       }
     }

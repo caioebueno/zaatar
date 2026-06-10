@@ -6,6 +6,7 @@
 type Dispatch = {
   id: string;
   status: "READY_FOR_DELIVERY" | "OUT_FOR_DELIVERY" | "DELIVERED" | string;
+  completedAt?: string | null;
   queueIndex?: number | null;
   driverId?: string | null;
   startedDeliveryAt?: string | null;

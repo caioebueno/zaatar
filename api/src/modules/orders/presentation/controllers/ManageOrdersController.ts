@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import { Prisma } from "../../../../../../web/src/generated/prisma/index.js";
 import prisma from "../../../../prisma.js";
 import { sendOrderConfirmationChatwootMessage } from "../../infrastructure/messaging/sendOrderConfirmationChatwootMessage.js";
+import { enqueueDispatchRouteMetricsRefresh } from "../../../dispatch/infrastructure/prisma/enqueueDispatchRouteMetricsRefresh.js";
 import type {
   HttpController,
   HttpRequest,
@@ -396,6 +397,7 @@ export class ManageOrdersController implements HttpController {
           id: true,
           createdAt: true,
           type: true,
+          dispatchId: true,
           deliveryAddressId: true,
         },
       });
@@ -483,7 +485,13 @@ export class ManageOrdersController implements HttpController {
               WHERE "id" = ${orderId}
             `;
             await normalizeDispatchOrderIndexes(tx, orderDispatch.dispatchId);
-            await removeDispatchIfEmpty(tx, orderDispatch.dispatchId);
+            const removedDispatch = await removeDispatchIfEmpty(
+              tx,
+              orderDispatch.dispatchId,
+            );
+            if (!removedDispatch) {
+              await enqueueDispatchRouteMetricsRefresh(orderDispatch.dispatchId, tx);
+            }
           }
         }
 
@@ -506,6 +514,16 @@ export class ManageOrdersController implements HttpController {
             where: { id: orderId },
             data: updates,
           });
+        }
+
+        if (
+          existingOrder.dispatchId &&
+          parsedCanceled !== true &&
+          (parsedAddressId !== undefined ||
+            parsedDeliveredAt !== undefined ||
+            parsedOrderType !== undefined)
+        ) {
+          await enqueueDispatchRouteMetricsRefresh(existingOrder.dispatchId, tx);
         }
 
         if (parsedPaymentProvider !== undefined) {
@@ -986,7 +1004,7 @@ async function normalizeDispatchOrderIndexes(
 async function removeDispatchIfEmpty(
   tx: Prisma.TransactionClient,
   dispatchId: string,
-): Promise<void> {
+): Promise<boolean> {
   const [sourceCountResult] = await tx.$queryRaw<Array<{ count: bigint }>>`
     SELECT COUNT(*)::BIGINT AS "count"
     FROM "Order"
@@ -994,13 +1012,15 @@ async function removeDispatchIfEmpty(
   `;
 
   if (Number(sourceCountResult?.count ?? 0) > 0) {
-    return;
+    return false;
   }
 
   await tx.$executeRaw`
     DELETE FROM "Dispatch"
     WHERE "id" = ${dispatchId}
   `;
+
+  return true;
 }
 
 async function resolveBranchId(input: {
@@ -1182,6 +1202,8 @@ async function ensureDeliveryOrderHasDispatch(input: {
         "dispatchOrderIndex" = ${targetOrderCount + 1}
       WHERE "id" = ${input.orderId}
     `;
+
+    await enqueueDispatchRouteMetricsRefresh(targetDispatchId, tx);
   });
 }
 

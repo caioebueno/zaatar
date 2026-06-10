@@ -12,6 +12,7 @@ The following shape is returned by all dispatch endpoints:
 type DispatchEntity = {
   id: string;
   createdAt: string; // ISO datetime
+  completedAt?: string; // ISO datetime — manual dispatch completion timestamp
   queueIndex?: number;
   dispatchAt?: string; // ISO datetime (legacy, do not use for status logic)
   startedDeliveryAt?: string; // ISO datetime — canonical delivery start timestamp
@@ -84,6 +85,7 @@ type DispatchEntity = {
       numberComplement?: string;
       customerId?: string;
       deliveryFee?: number;
+      expectedHandoffDuration?: number; // seconds, default 300
     };
     redeemedRewards: Array<{
       id: string;
@@ -174,6 +176,7 @@ Notes:
 
 - `estimated*` fields are baseline/planned ETA values.
 - `currentEstimated*` fields are live ETA values recalculated from latest driver location.
+- `completedAt` is a manual dispatch completion timestamp. It is updated through `PATCH /dispatches/:dispatchId` and is independent from order `deliveredAt`.
 
 ### Dispatch Status Logic
 
@@ -223,13 +226,13 @@ Validation error (`400`):
 
 ---
 
-### Update Dispatch (Assign/Unassign Driver)
+### Update Dispatch
 
 `PATCH /dispatches/:dispatchId`
 
 Auth: manager access token required.
 
-Request body:
+Request body examples:
 
 ```json
 { "driverId": "driver-id" }
@@ -239,6 +242,18 @@ To unassign:
 
 ```json
 { "driverId": null }
+```
+
+To set dispatch completed:
+
+```json
+{ "completedAt": "2026-06-10T18:30:00.000Z" }
+```
+
+To clear dispatch completion:
+
+```json
+{ "completedAt": null }
 ```
 
 Success (`200`): updated `DispatchEntity`.

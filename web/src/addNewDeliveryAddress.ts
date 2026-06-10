@@ -25,6 +25,7 @@ type DeliveryAddressRow = {
   lat: string;
   lng: string;
   deliveryFee: number;
+  expectedHandoffDuration: number;
   city: string;
   zipCode: string;
   State: string;
@@ -52,6 +53,7 @@ function mapDeliveryAddress(address: DeliveryAddressRow): TAddress {
     customerId: address.customerId || undefined,
     numberComplement: address.numberComplement || undefined,
     deliveryFee: address.deliveryFee,
+    expectedHandoffDuration: address.expectedHandoffDuration,
   };
 }
 
@@ -118,6 +120,7 @@ const addNewDeliveryAddress = async (
       "lat",
       "lng",
       "deliveryFee",
+      "expectedHandoffDuration",
       "city",
       "zipCode",
       "State",

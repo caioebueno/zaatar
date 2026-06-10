@@ -541,6 +541,7 @@ const MenuPage: React.FC<TMenuPage> = ({ data, lg }) => {
             lg={lg}
           />
         )}
+        {/* UpsellModal temporarily hidden
         {data.progressiveDiscount && (
           <UpsellModal
             data={data}
@@ -554,6 +555,7 @@ const MenuPage: React.FC<TMenuPage> = ({ data, lg }) => {
             lg={lg}
           />
         )}
+        */}
       </div>
       <CartBar
         data={data}

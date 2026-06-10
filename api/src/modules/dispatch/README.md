@@ -95,6 +95,7 @@ Endpoint:
 Description:
 
 - Assigns or unassigns a driver from a dispatch.
+- Sets or clears `completedAt` manually.
 - `dispatchAt` is legacy and not used by this endpoint.
 - When `dispatched` is set to `true` and resulting `dispatchAt` is non-null, API triggers `out_for_delivery` WhatsApp notification via Chatwoot for delivery orders with customer phone.
 
@@ -116,6 +117,22 @@ To unassign driver:
 ```json
 {
   "driverId": null
+}
+```
+
+To set dispatch completed:
+
+```json
+{
+  "completedAt": "2026-06-10T18:30:00.000Z"
+}
+```
+
+To clear dispatch completion:
+
+```json
+{
+  "completedAt": null
 }
 ```
 
@@ -171,6 +188,7 @@ type GetNextDispatchResponse = DispatchEntity | null;
 type DispatchEntity = {
   id: string;
   createdAt: string; // ISO datetime
+  completedAt?: string; // ISO datetime
   queueIndex?: number;
   dispatchAt?: string; // ISO datetime (legacy)
   startedDeliveryAt?: string; // ISO datetime
@@ -365,6 +383,7 @@ Notes:
 - `dispatchAt` is legacy and should not be used for new dispatch status logic.
 - `estimated*` fields are baseline/planned ETA values.
 - `currentEstimated*` fields are live ETA values recalculated from latest driver location.
+- `completedAt` is a manual dispatch completion timestamp and is independent from order `deliveredAt`.
 - Dispatch status logic:
   - `DELIVERED`: all dispatch orders are delivered
   - `OUT_FOR_DELIVERY`: `startedDeliveryAt` is set and not all orders are delivered

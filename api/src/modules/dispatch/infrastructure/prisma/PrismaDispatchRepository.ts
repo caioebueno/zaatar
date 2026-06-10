@@ -14,11 +14,13 @@ import type {
 import { DispatchNotFoundError } from "../../application/errors/DispatchNotFoundError.js";
 import { DriverNotFoundError } from "../../application/errors/DriverNotFoundError.js";
 import { OrderNotFoundError } from "../../application/errors/OrderNotFoundError.js";
+import { enqueueDispatchRouteMetricsRefresh } from "./enqueueDispatchRouteMetricsRefresh.js";
 
 type DispatchRow = {
   arrivedAtRestaurantAt: Date | null;
   arrivedAtRestaurantLat: number | null;
   arrivedAtRestaurantLng: number | null;
+  completedAt: Date | null;
   createdAt: Date;
   currentEstimatedDeliveryDurationMinutes: number | null;
   currentEstimatedRoundTripDurationMinutes: number | null;
@@ -51,6 +53,7 @@ type DispatchOrderRow = {
   deliveryAddressCustomerId: string | null;
   deliveryAddressDescription: string | null;
   deliveryAddressFee: number | null;
+  deliveryAddressExpectedHandoffDuration: number | null;
   deliveryAddressId: string | null;
   deliveryAddressLat: string | null;
   deliveryAddressLng: string | null;
@@ -282,6 +285,8 @@ function mapDispatch(
             numberComplement: orderRow.deliveryAddressNumberComplement ?? undefined,
             customerId: orderRow.deliveryAddressCustomerId ?? undefined,
             deliveryFee: orderRow.deliveryAddressFee ?? undefined,
+            expectedHandoffDuration:
+              orderRow.deliveryAddressExpectedHandoffDuration ?? 300,
           },
         }
       : {}),
@@ -309,6 +314,7 @@ function mapDispatch(
   return {
     id: row.id,
     createdAt: row.createdAt.toISOString(),
+    ...(row.completedAt ? { completedAt: row.completedAt.toISOString() } : {}),
     ...(row.leftRestaurantAt
       ? { leftRestaurantAt: row.leftRestaurantAt.toISOString() }
       : {}),
@@ -404,7 +410,8 @@ async function getDispatchOrders(dispatchIds: string[]): Promise<DispatchOrderRo
       deliveryAddress."complement" AS "deliveryAddressComplement",
       deliveryAddress."numberComplement" AS "deliveryAddressNumberComplement",
       deliveryAddress."customerId" AS "deliveryAddressCustomerId",
-      deliveryAddress."deliveryFee" AS "deliveryAddressFee"
+      deliveryAddress."deliveryFee" AS "deliveryAddressFee",
+      deliveryAddress."expectedHandoffDuration" AS "deliveryAddressExpectedHandoffDuration"
     FROM "Order" orders
     LEFT JOIN "Customer" customer
       ON customer."id" = orders."customerId"
@@ -1040,6 +1047,7 @@ export class PrismaDispatchRepository implements DispatchRepository {
       SELECT
         dispatch."id",
         dispatch."createdAt",
+        dispatch."completedAt",
         dispatch."queueIndex",
         dispatch."dispatchAt",
         dispatch."leftRestaurantAt",
@@ -1114,6 +1122,7 @@ export class PrismaDispatchRepository implements DispatchRepository {
       SELECT
         dispatch."id",
         dispatch."createdAt",
+        dispatch."completedAt",
         dispatch."queueIndex",
         dispatch."dispatchAt",
         dispatch."leftRestaurantAt",
@@ -1179,8 +1188,14 @@ export class PrismaDispatchRepository implements DispatchRepository {
       }
 
       const updates: Prisma.Sql[] = [];
+      const parsedCompletedAt =
+        typeof input.completedAt === "string" ? new Date(input.completedAt) : null;
       const parsedDispatchAt =
         typeof input.dispatchAt === "string" ? new Date(input.dispatchAt) : null;
+
+      if (input.completedAt !== undefined) {
+        updates.push(Prisma.sql`"completedAt" = ${parsedCompletedAt}`);
+      }
 
       if (input.dispatched !== undefined) {
         updates.push(Prisma.sql`"dispatched" = ${input.dispatched}`);
@@ -1347,6 +1362,11 @@ export class PrismaDispatchRepository implements DispatchRepository {
         }
       }
 
+      await enqueueDispatchRouteMetricsRefresh(targetDispatchId, tx);
+      if (sourceDispatchId && sourceDispatchId !== targetDispatchId && !sourceDispatchDeleted) {
+        await enqueueDispatchRouteMetricsRefresh(sourceDispatchId, tx);
+      }
+
       return {
         orderId: input.orderId,
         sourceDispatchId,
@@ -1468,6 +1488,7 @@ export class PrismaDispatchRepository implements DispatchRepository {
       SELECT
         dispatch."id",
         dispatch."createdAt",
+        dispatch."completedAt",
         dispatch."queueIndex",
         dispatch."dispatchAt",
         dispatch."leftRestaurantAt",
@@ -1541,6 +1562,7 @@ export class PrismaDispatchRepository implements DispatchRepository {
       SELECT
         dispatch."id",
         dispatch."createdAt",
+        dispatch."completedAt",
         dispatch."queueIndex",
         dispatch."dispatchAt",
         dispatch."leftRestaurantAt",
@@ -1634,6 +1656,7 @@ export class PrismaDispatchRepository implements DispatchRepository {
       SELECT
         dispatch."id",
         dispatch."createdAt",
+        dispatch."completedAt",
         dispatch."queueIndex",
         dispatch."dispatchAt",
         dispatch."leftRestaurantAt",
