@@ -88,8 +88,20 @@ type OrderCreationTransactionResult = {
   orderNumber?: string | null;
 };
 
+type PreparationStepDefinition = {
+  goalMinutes: number;
+  id: string;
+  includeComments: boolean;
+  includeModifiers: boolean;
+  name: string;
+  productIds: string[];
+  stationId: string;
+};
+
 const MAX_ORDER_CREATION_TRANSACTION_RETRIES = 3;
 const MAX_ORDER_TAGS_PER_ORDER = 30;
+const ORDER_CREATION_TRANSACTION_MAX_WAIT_MS = 10_000;
+const ORDER_CREATION_TRANSACTION_TIMEOUT_MS = 20_000;
 const DEFAULT_TWILIO_ORDER_CONFIRMATION_TEMPLATE_SID_EN =
   "HXb4649c3b598a13c6564a9f6e41dc1e33";
 const DEFAULT_TWILIO_ORDER_CONFIRMATION_TEMPLATE_SID_PT =
@@ -601,34 +613,11 @@ async function ensureDeliveryOrderHasDispatch(input: {
 async function createPreparationStepCategoriesForOrderTx(
   tx: Prisma.TransactionClient,
   order: TOrder,
+  preparationSteps: PreparationStepDefinition[],
 ): Promise<void> {
-  const preparationSteps = await tx.preparationStep.findMany({
-    include: {
-      products: {
-        select: {
-          id: true,
-        },
-      },
-    },
-  });
-
   const categories = buildPreparationStepCategories(
     order,
-    preparationSteps.map((step) => ({
-      id: step.id,
-      name: step.name,
-      stationId: step.stationId,
-      goalMinutes:
-        typeof (step as { goalMinutes?: unknown }).goalMinutes === "number"
-          ? Math.max(
-              0,
-              Math.floor((step as { goalMinutes?: number }).goalMinutes ?? 0),
-            )
-          : 0,
-      includeComments: step.includeComments,
-      includeModifiers: step.includeModifiers,
-      productIds: step.products.map((product) => product.id),
-    })),
+    preparationSteps,
   );
 
   for (const category of categories) {
@@ -663,6 +652,41 @@ async function createPreparationStepCategoriesForOrderTx(
       },
     });
   }
+}
+
+async function getPreparationStepDefinitions(
+  db: Pick<typeof prisma, "preparationStep">,
+): Promise<PreparationStepDefinition[]> {
+  const preparationSteps = await db.preparationStep.findMany({
+    include: {
+      products: {
+        select: {
+          id: true,
+        },
+      },
+    },
+  });
+
+  return preparationSteps
+    .filter(
+      (step): step is typeof step & { stationId: string } =>
+        typeof step.stationId === "string" && step.stationId.length > 0,
+    )
+    .map((step) => ({
+      id: step.id,
+      name: step.name,
+      stationId: step.stationId,
+      goalMinutes:
+        typeof (step as { goalMinutes?: unknown }).goalMinutes === "number"
+          ? Math.max(
+              0,
+              Math.floor((step as { goalMinutes?: number }).goalMinutes ?? 0),
+            )
+          : 0,
+      includeComments: step.includeComments,
+      includeModifiers: step.includeModifiers,
+      productIds: step.products.map((product) => product.id),
+    }));
 }
 
 function isRetryableOrderCreationTransactionError(error: unknown): boolean {
@@ -1420,6 +1444,7 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
       }
     : null;
   let stripePaymentIntentId: string | null = null;
+  const preparationStepDefinitions = await getPreparationStepDefinitions(prisma);
 
   const runOrderCreationTransaction = async (): Promise<OrderCreationTransactionResult> =>
     prisma.$transaction(
@@ -1909,7 +1934,11 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
               }
             : order;
 
-        await createPreparationStepCategoriesForOrderTx(tx, orderForPreparationSteps);
+        await createPreparationStepCategoriesForOrderTx(
+          tx,
+          orderForPreparationSteps,
+          preparationStepDefinitions,
+        );
 
         if (data.orderType === "DELIVERY" && data.addressId) {
           await enqueueDispatchAssignmentJobTx(tx, {
@@ -1962,6 +1991,8 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
       },
       {
         isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
+        maxWait: ORDER_CREATION_TRANSACTION_MAX_WAIT_MS,
+        timeout: ORDER_CREATION_TRANSACTION_TIMEOUT_MS,
       },
     );
 
