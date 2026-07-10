@@ -216,6 +216,8 @@ export class ManageOrdersController implements HttpController {
 
       const orderId = randomUUID();
       const orderNumber = buildReadableOrderNumber();
+      const preparationStepDefinitions = await getPreparationStepDefinitions(prisma);
+
       await prisma.$transaction(async (tx) => {
         const createdOrder = await tx.order.create({
           data: {
@@ -263,26 +265,30 @@ export class ManageOrdersController implements HttpController {
           });
         }
 
-        await createPreparationStepCategoriesForOrderTx(tx, {
-          orderId,
-          orderCreatedAt: createdOrder.createdAt,
-          orderProducts: createdOrderProducts.map((item) => ({
-            productId: item.productId,
-            quantity: item.quantity,
-            comments: item.comments,
-            selectedModifierGroupItemIds: item.modifierGroupItemIds,
-          })),
-          cartItems: cart.items,
-          productById: new Map(
-            Array.from(productById.entries()).map(([id, product]) => [
-              id,
-              {
-                id: product.id,
-                itemType: product.itemType as ProductItemType,
-              },
-            ]),
-          ),
-        });
+        await createPreparationStepCategoriesForOrderTx(
+          tx,
+          {
+            orderId,
+            orderCreatedAt: createdOrder.createdAt,
+            orderProducts: createdOrderProducts.map((item) => ({
+              productId: item.productId,
+              quantity: item.quantity,
+              comments: item.comments,
+              selectedModifierGroupItemIds: item.modifierGroupItemIds,
+            })),
+            cartItems: cart.items,
+            productById: new Map(
+              Array.from(productById.entries()).map(([id, product]) => [
+                id,
+                {
+                  id: product.id,
+                  itemType: product.itemType as ProductItemType,
+                },
+              ]),
+            ),
+          },
+          preparationStepDefinitions,
+        );
 
         if (orderType === "TAKEAWAY") {
           const dispatchId = randomUUID();
@@ -331,6 +337,9 @@ export class ManageOrdersController implements HttpController {
             WHERE "id" = ${orderIntentId}
           `;
         }
+      }, {
+        maxWait: ORDER_CREATION_TRANSACTION_MAX_WAIT_MS,
+        timeout: ORDER_CREATION_TRANSACTION_TIMEOUT_MS,
       });
 
       if (orderType === "DELIVERY" && deliveryAddressId) {
@@ -565,20 +574,26 @@ export class ManageOrdersController implements HttpController {
               },
             ]),
           );
+          const preparationStepDefinitions =
+            await getPreparationStepDefinitions(tx);
 
-          await createPreparationStepCategoriesForOrderTx(tx, {
-            orderId,
-            orderCreatedAt: existingOrder.createdAt,
-            cartItems: addedOrderProducts.map((item) => ({
-              cartId: randomUUID(),
-              productId: item.productId,
-              quantity: item.quantity,
-              modifiers: [],
-              comboSelections: [],
-            })),
-            orderProducts: addedOrderProducts,
-            productById,
-          });
+          await createPreparationStepCategoriesForOrderTx(
+            tx,
+            {
+              orderId,
+              orderCreatedAt: existingOrder.createdAt,
+              cartItems: addedOrderProducts.map((item) => ({
+                cartId: randomUUID(),
+                productId: item.productId,
+                quantity: item.quantity,
+                modifiers: [],
+                comboSelections: [],
+              })),
+              orderProducts: addedOrderProducts,
+              productById,
+            },
+            preparationStepDefinitions,
+          );
         }
       });
 
@@ -644,6 +659,9 @@ type PreparationStepDefinition = {
   productIds: string[];
   stationId: string;
 };
+
+const ORDER_CREATION_TRANSACTION_MAX_WAIT_MS = 10_000;
+const ORDER_CREATION_TRANSACTION_TIMEOUT_MS = 20_000;
 
 function parseCart(value: unknown): ParsedCart {
   if (typeof value !== "object" || value === null || Array.isArray(value)) {
@@ -1227,6 +1245,7 @@ async function createPreparationStepCategoriesForOrderTx(
       }
     >;
   },
+  preparationSteps: PreparationStepDefinition[],
 ): Promise<void> {
   const preparationOrderProducts: Array<{
     comments?: string;
@@ -1323,37 +1342,13 @@ async function createPreparationStepCategoriesForOrderTx(
     }
   }
 
-  const preparationSteps = await tx.preparationStep.findMany({
-    include: {
-      products: {
-        select: {
-          id: true,
-        },
-      },
-    },
-  });
-
   const categories = buildPreparationTaskStations(
     {
       id: input.orderId,
       createdAt: input.orderCreatedAt.toISOString(),
       orderProducts: preparationOrderProducts,
     },
-    preparationSteps.map((step) => ({
-      id: step.id,
-      name: step.name,
-      stationId: step.stationId,
-      goalMinutes:
-        typeof (step as { goalMinutes?: unknown }).goalMinutes === "number"
-          ? Math.max(
-              0,
-              Math.floor((step as { goalMinutes?: number }).goalMinutes ?? 0),
-            )
-          : 0,
-      includeComments: step.includeComments,
-      includeModifiers: step.includeModifiers,
-      productIds: step.products.map((product) => product.id),
-    })),
+    preparationSteps,
   );
 
   for (const category of categories) {
@@ -1389,6 +1384,41 @@ async function createPreparationStepCategoriesForOrderTx(
       },
     });
   }
+}
+
+async function getPreparationStepDefinitions(
+  db: Pick<typeof prisma, "preparationStep">,
+): Promise<PreparationStepDefinition[]> {
+  const preparationSteps = await db.preparationStep.findMany({
+    include: {
+      products: {
+        select: {
+          id: true,
+        },
+      },
+    },
+  });
+
+  return preparationSteps
+    .filter(
+      (step): step is typeof step & { stationId: string } =>
+        typeof step.stationId === "string" && step.stationId.length > 0,
+    )
+    .map((step) => ({
+      id: step.id,
+      name: step.name,
+      stationId: step.stationId,
+      goalMinutes:
+        typeof (step as { goalMinutes?: unknown }).goalMinutes === "number"
+          ? Math.max(
+              0,
+              Math.floor((step as { goalMinutes?: number }).goalMinutes ?? 0),
+            )
+          : 0,
+      includeComments: step.includeComments,
+      includeModifiers: step.includeModifiers,
+      productIds: step.products.map((product) => product.id),
+    }));
 }
 
 function buildPreparationTaskStations(
