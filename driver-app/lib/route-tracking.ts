@@ -29,6 +29,12 @@ type LocationCtx = {
   lastFlushAt: number;
 };
 
+export type TrackingStatus = {
+  hasBufferedPoints: boolean;
+  isRunning: boolean;
+  mode: 'inactive' | 'driver' | 'route';
+};
+
 function buildPoint(loc: Location.LocationObject): RoutePoint {
   return {
     lat: loc.coords.latitude,
@@ -201,4 +207,25 @@ export async function stopRouteTracking(): Promise<void> {
     lastFlushAt: Date.now(),
   }));
   await startTask(Location.Accuracy.High, 'Você está disponível para entregas.');
+}
+
+export async function getTrackingStatus(): Promise<TrackingStatus> {
+  const isRunning = await Location.hasStartedLocationUpdatesAsync(ROUTE_TASK).catch(() => false);
+  const raw = await AsyncStorage.getItem(CTX_KEY).catch(() => null);
+
+  if (!isRunning || !raw) {
+    return {
+      hasBufferedPoints: false,
+      isRunning: false,
+      mode: 'inactive',
+    };
+  }
+
+  const ctx = JSON.parse(raw) as Partial<LocationCtx>;
+
+  return {
+    hasBufferedPoints: (ctx.buffer?.length ?? 0) > 0,
+    isRunning: true,
+    mode: ctx.dispatchId ? 'route' : 'driver',
+  };
 }

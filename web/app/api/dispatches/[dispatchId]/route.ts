@@ -10,19 +10,15 @@ type RouteContext = {
 };
 
 type PatchBody = {
-  dispatched?: unknown;
   dispatchAt?: unknown;
+  dispatched?: unknown;
   dispatchedAt?: unknown;
   driverId?: unknown;
   queueIndex?: unknown;
 };
 
-function parseDispatchAt(body: PatchBody): string | null | undefined {
-  if (
-    body.dispatchAt !== undefined &&
-    body.dispatchedAt !== undefined &&
-    body.dispatchAt !== body.dispatchedAt
-  ) {
+function assertNoLegacyDispatchAt(body: PatchBody): void {
+  if (body.dispatchAt !== undefined) {
     throw {
       code: "INVALID_PARAMS",
       details: {
@@ -30,10 +26,10 @@ function parseDispatchAt(body: PatchBody): string | null | undefined {
       },
     };
   }
+}
 
-  const value =
-    body.dispatchAt !== undefined ? body.dispatchAt : body.dispatchedAt;
-
+function parseDispatchedAt(body: PatchBody): string | null | undefined {
+  const value = body.dispatchedAt;
   if (
     value !== undefined &&
     value !== null &&
@@ -42,7 +38,7 @@ function parseDispatchAt(body: PatchBody): string | null | undefined {
     throw {
       code: "INVALID_PARAMS",
       details: {
-        field: "dispatchAt",
+        field: "dispatchedAt",
       },
     };
   }
@@ -154,7 +150,8 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       );
     }
 
-    const parsedDispatchAt = parseDispatchAt(body);
+    assertNoLegacyDispatchAt(body);
+    const parsedDispatchAt = parseDispatchedAt(body);
 
     if (parsedDispatchAt !== undefined && !hasDispatched) {
       return NextResponse.json(

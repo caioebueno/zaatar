@@ -18,12 +18,12 @@ export class UpdateDispatchController implements HttpController {
     const body = toObject(request.body);
 
     try {
-      const parsedDispatchAt = parseDispatchAtAlias(body);
+      assertNoLegacyDispatchAt(body);
       const result = await this.useCase.execute({
         dispatchId,
         completedAt: body.completedAt,
         dispatched: body.dispatched,
-        dispatchAt: parsedDispatchAt,
+        dispatchedAt: body.dispatchedAt,
         driverId: body.driverId,
         queueIndex: body.queueIndex,
       });
@@ -71,20 +71,8 @@ function toObject(value: unknown): Record<string, unknown> {
   return {};
 }
 
-function parseDispatchAtAlias(
-  body: Record<string, unknown>,
-): unknown {
-  if (
-    body.dispatchAt !== undefined &&
-    body.dispatchedAt !== undefined &&
-    body.dispatchAt !== body.dispatchedAt
-  ) {
+function assertNoLegacyDispatchAt(body: Record<string, unknown>): void {
+  if (body.dispatchAt !== undefined) {
     throw new InvalidDispatchUpdatePayloadError("dispatchAt");
   }
-
-  if (body.dispatchAt !== undefined) {
-    return body.dispatchAt;
-  }
-
-  return body.dispatchedAt;
 }

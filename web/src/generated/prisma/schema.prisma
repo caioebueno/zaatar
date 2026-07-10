@@ -181,25 +181,25 @@ model Business {
   stripeOnboardingCompletedAt DateTime?
   onboardingCompletedAt       DateTime?
   branches                    Branch[]
-  owner                       BusinessOwner?
+  members                     BusinessMember[]
   integrations                ExternalIntegrationConnection[]
   pushDevices                 UserPushDevice[]
 }
 
 model User {
-  id              String                          @id
-  createdAt       DateTime                        @default(now())
-  updatedAt       DateTime                        @updatedAt
-  email           String                          @unique
-  phone           String?                         @unique
-  name            String
-  passwordHash    String
-  emailVerifiedAt DateTime?
-  lastLoginAt     DateTime?
-  ownedBusinesses BusinessOwner[]
-  integrations    ExternalIntegrationConnection[]
-  otpChallenges   OwnerOtpChallenge[]
-  pushDevices     UserPushDevice[]
+  id                  String                          @id
+  createdAt           DateTime                        @default(now())
+  updatedAt           DateTime                        @updatedAt
+  email               String                          @unique
+  phone               String?                         @unique
+  name                String
+  passwordHash        String
+  emailVerifiedAt     DateTime?
+  lastLoginAt         DateTime?
+  businessMemberships BusinessMember[]
+  integrations        ExternalIntegrationConnection[]
+  otpChallenges       OwnerOtpChallenge[]
+  pushDevices         UserPushDevice[]
 }
 
 enum UserPushDevicePlatform {
@@ -344,29 +344,48 @@ model ExternalMenuSyncRun {
   @@index([connectionId])
 }
 
-model BusinessOwner {
-  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
-  businessId String   @id
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId     String
-  createdAt  DateTime @default(now())
+model BusinessMember {
+  business        Business                 @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  businessId      String
+  user            User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId          String
+  role            BusinessMemberRole       @default(MANAGER)
+  status          BusinessMembershipStatus @default(ACTIVE)
+  invitedByUserId String?
+  createdAt       DateTime                 @default(now())
+  updatedAt       DateTime                 @updatedAt
 
-  @@index([userId])
+  @@id([businessId, userId])
+  @@index([userId, status, createdAt])
+  @@index([businessId, role, status, createdAt])
+}
+
+enum BusinessMemberRole {
+  OWNER
+  ADMIN
+  MANAGER
+}
+
+enum BusinessMembershipStatus {
+  ACTIVE
+  INVITED
+  SUSPENDED
 }
 
 model Branch {
-  id                String    @id
-  createdAt         DateTime  @default(now())
-  name              String
-  operationHours    Json?
-  chatwootAccountId String?
-  chatwootSourceId  String?
-  chatwootAgentId   String?
-  address           Address?  @relation(fields: [addressId], references: [id])
-  addressId         String?   @unique
-  business          Business? @relation(fields: [businessId], references: [id])
-  businessId        String?
-  orders            Order[]
+  id                         String    @id
+  createdAt                  DateTime  @default(now())
+  name                       String
+  operationHours             Json?
+  showUpsellModalOnAddToCart Boolean   @default(false)
+  chatwootAccountId          String?
+  chatwootSourceId           String?
+  chatwootAgentId            String?
+  address                    Address?  @relation(fields: [addressId], references: [id])
+  addressId                  String?   @unique
+  business                   Business? @relation(fields: [businessId], references: [id])
+  businessId                 String?
+  orders                     Order[]
 }
 
 model Driver {
@@ -400,10 +419,11 @@ model DriverActivationEvent {
 }
 
 model Dispatch {
-  id                                       String                        @id
-  createdAt                                DateTime                      @default(now())
+  id                                       String                           @id
+  createdAt                                DateTime                         @default(now())
+  completedAt                              DateTime?
   queueIndex                               Int?
-  dispatched                               Boolean                       @default(false)
+  dispatched                               Boolean                          @default(false)
   dispatchAt                               DateTime?
   startedDeliveryAt                        DateTime?
   estimatedDeliveryDurationMinutes         Int?
@@ -416,12 +436,13 @@ model Dispatch {
   arrivedAtRestaurantAt                    DateTime?
   arrivedAtRestaurantLat                   Float?
   arrivedAtRestaurantLng                   Float?
-  driver                                   Driver?                       @relation(fields: [driverId], references: [id])
+  driver                                   Driver?                          @relation(fields: [driverId], references: [id])
   driverId                                 String?
   orders                                   Order[]
   routeSessions                            DispatchRouteSession[]
   routeMilestones                          DispatchRouteMilestone[]
   etaRecalculationJobs                     DispatchEtaRecalculationJob[]
+  routeMetricsRefreshJobs                  DispatchRouteMetricsRefreshJob[]
 
   @@index([queueIndex])
 }
@@ -526,6 +547,29 @@ model DispatchAssignmentJob {
   lastError           String?
   orderId             String                      @unique
   deliveryAddressId   String
+}
+
+enum DispatchRouteMetricsRefreshJobStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+model DispatchRouteMetricsRefreshJob {
+  id                  String                               @id
+  createdAt           DateTime                             @default(now())
+  updatedAt           DateTime                             @updatedAt
+  status              DispatchRouteMetricsRefreshJobStatus @default(PENDING)
+  attempts            Int                                  @default(0)
+  availableAt         DateTime                             @default(now())
+  processingStartedAt DateTime?
+  completedAt         DateTime?
+  lastError           String?
+  dispatch            Dispatch                             @relation(fields: [dispatchId], references: [id], onDelete: Cascade)
+  dispatchId          String                               @unique
+
+  @@index([status, availableAt, createdAt])
 }
 
 enum DispatchEtaRecalculationJobStatus {
@@ -877,23 +921,24 @@ model CustomerAccessToken {
 }
 
 model DeliveryAddress {
-  id               String        @id
-  createdAt        DateTime      @default(now())
-  lat              String
-  lng              String
-  deliveryFee      Int           @default(0)
-  city             String
-  zipCode          String
-  State            String
-  street           String
-  number           String
-  description      String
-  complement       String?
-  numberComplement String?
-  customer         Customer?     @relation(fields: [customerId], references: [id])
-  customerId       String?
-  orders           Order[]
-  orderIntents     OrderIntent[]
+  id                      String        @id
+  createdAt               DateTime      @default(now())
+  lat                     String
+  lng                     String
+  deliveryFee             Int           @default(0)
+  expectedHandoffDuration Int           @default(300)
+  city                    String
+  zipCode                 String
+  State                   String
+  street                  String
+  number                  String
+  description             String
+  complement              String?
+  numberComplement        String?
+  customer                Customer?     @relation(fields: [customerId], references: [id])
+  customerId              String?
+  orders                  Order[]
+  orderIntents            OrderIntent[]
 }
 
 model ExternalAddress {
@@ -959,6 +1004,7 @@ model Order {
   externalAddress                         ExternalAddress?          @relation(fields: [externalAddressId], references: [id])
   branch                                  Branch?                   @relation(fields: [branchId], references: [id])
   orderProducts                           OrderProducts[]
+  payments                                OrderPayment[]
   customerId                              String?
   externalId                              String?                   @unique
   dispatchId                              String?
@@ -973,6 +1019,24 @@ model Order {
 
   @@index([dispatchId, dispatchOrderIndex])
   @@index([branchId])
+}
+
+model OrderPayment {
+  id              String           @id
+  createdAt       DateTime         @default(now())
+  amount          Int
+  paidAt          DateTime?
+  paymentType     PaymentType
+  paymentProvider PaymentProvider?
+  externalId      String?
+  order           Order            @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId         String
+
+  @@index([orderId])
+  @@index([paymentType])
+  @@index([paymentProvider])
+  @@index([paidAt])
+  @@index([externalId])
 }
 
 model OrderIntent {

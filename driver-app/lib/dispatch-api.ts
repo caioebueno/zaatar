@@ -1,5 +1,13 @@
 const BASE = process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:4000';
 
+export type OrderPaymentSummary = {
+  amount: number;
+  externalId: string | null;
+  paidAt: string | null;
+  paymentProvider: string | null;
+  paymentType: string;
+};
+
 export type DispatchOrder = {
   id: string;
   createdAt: string;
@@ -14,6 +22,7 @@ export type DispatchOrder = {
   delivered: boolean;
   type: string;
   paymentMethod: string;
+  payments: OrderPaymentSummary[];
   tip?: number;
   tipAmount?: number;
   dispatchId?: string;

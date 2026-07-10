@@ -1419,6 +1419,8 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
         selectedPrize: selectedPrizeSnapshot,
       }
     : null;
+  let stripePaymentIntentId: string | null = null;
+
   const runOrderCreationTransaction = async (): Promise<OrderCreationTransactionResult> =>
     prisma.$transaction(
       async (tx) => {
@@ -1459,12 +1461,18 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
         }
 
         if (shouldChargeWithStripe) {
+          if (!stripePaymentIntentId) {
+            throw new Error("STRIPE_PAYMENT_INTENT_ID_MISSING");
+          }
+
           await tx.$executeRaw`
             INSERT INTO "OrderPayment" (
               "id",
               "amount",
               "paidAt",
               "paymentType",
+              "paymentProvider",
+              "externalId",
               "orderId"
             )
             VALUES (
@@ -1472,6 +1480,8 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
               ${orderTotalInCents},
               ${now},
               'CARD'::"PaymentType",
+              'STRIPE'::"PaymentProvider",
+              ${stripePaymentIntentId},
               ${createdOrder.id}
             )
           `;
@@ -1955,7 +1965,6 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
       },
     );
 
-  let stripePaymentIntentId: string | null = null;
   if (shouldChargeWithStripe) {
     const chargedPayment = await chargeStripeCard();
     stripePaymentIntentId = chargedPayment.paymentIntentId;

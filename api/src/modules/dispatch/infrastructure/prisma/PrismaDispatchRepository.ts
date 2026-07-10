@@ -9,6 +9,7 @@ import type {
   MoveDispatchOrderResult,
   DispatchOrder,
   DispatchRepository,
+  OrderPaymentSummary,
   UpdateDispatchStatusInput,
 } from "../../application/ports/DispatchRepository.js";
 import { DispatchNotFoundError } from "../../application/errors/DispatchNotFoundError.js";
@@ -186,6 +187,7 @@ function mapDispatch(
   redeemedRewardsByOrderId: Map<string, RedeemedRewardOutput[]>,
   preparationStepCategoriesByOrderId: Map<string, unknown[]>,
   orderReadinessByOrderId: Map<string, boolean>,
+  paymentsByOrderId: Map<string, OrderPaymentSummary[]>,
   latestRoutePointByDispatchId: Map<
     string,
     {
@@ -290,6 +292,7 @@ function mapDispatch(
           },
         }
       : {}),
+    payments: paymentsByOrderId.get(orderRow.id) ?? [],
     orderProducts: orderProductsByOrderId.get(orderRow.id) || [],
     preparationTaskStation:
       preparationStepCategoriesByOrderId.get(orderRow.id) || [],
@@ -495,6 +498,32 @@ async function getDispatchOrderProducts(
   }
 
   return orderProductsByOrderId;
+}
+
+async function getOrderPaymentsByOrderIds(
+  orderIds: string[],
+): Promise<Map<string, OrderPaymentSummary[]>> {
+  const map = new Map<string, OrderPaymentSummary[]>();
+  if (orderIds.length === 0) return map;
+
+  const rows = await prisma.orderPayment.findMany({
+    where: { orderId: { in: orderIds } },
+    orderBy: [{ createdAt: "asc" }, { id: "asc" }],
+  });
+
+  for (const row of rows) {
+    const list = map.get(row.orderId) ?? [];
+    list.push({
+      amount: row.amount,
+      externalId: row.externalId ?? null,
+      paidAt: row.paidAt ? row.paidAt.toISOString() : null,
+      paymentProvider: row.paymentProvider ?? null,
+      paymentType: row.paymentType,
+    });
+    map.set(row.orderId, list);
+  }
+
+  return map;
 }
 
 async function getDispatchPreparationStepCategories(
@@ -1085,6 +1114,7 @@ export class PrismaDispatchRepository implements DispatchRepository {
     const preparationStepCategoriesByOrderId =
       await getDispatchPreparationStepCategories(orderIds);
     const orderReadinessByOrderId = await getOrderReadinessByOrderIds(orderIds);
+    const paymentsByOrderId = await getOrderPaymentsByOrderIds(orderIds);
     const latestRoutePointByDispatchId =
       await getLatestRoutePointByDispatchIds(dispatchIds);
     const routePointsByDispatchId = await getRoutePointsByDispatchIds(dispatchIds);
@@ -1097,6 +1127,7 @@ export class PrismaDispatchRepository implements DispatchRepository {
         redeemedRewardsByOrderId,
         preparationStepCategoriesByOrderId,
         orderReadinessByOrderId,
+        paymentsByOrderId,
         latestRoutePointByDispatchId,
         routePointsByDispatchId,
       ),
@@ -1159,6 +1190,7 @@ export class PrismaDispatchRepository implements DispatchRepository {
     const preparationStepCategoriesByOrderId =
       await getDispatchPreparationStepCategories(orderIds);
     const orderReadinessByOrderId = await getOrderReadinessByOrderIds(orderIds);
+    const paymentsByOrderId = await getOrderPaymentsByOrderIds(orderIds);
     const latestRoutePointByDispatchId = await getLatestRoutePointByDispatchIds([
       dispatchRow.id,
     ]);
@@ -1170,6 +1202,7 @@ export class PrismaDispatchRepository implements DispatchRepository {
       redeemedRewardsByOrderId,
       preparationStepCategoriesByOrderId,
       orderReadinessByOrderId,
+      paymentsByOrderId,
       latestRoutePointByDispatchId,
     );
   }
@@ -1526,6 +1559,7 @@ export class PrismaDispatchRepository implements DispatchRepository {
     const preparationStepCategoriesByOrderId =
       await getDispatchPreparationStepCategories(orderIds);
     const orderReadinessByOrderId = await getOrderReadinessByOrderIds(orderIds);
+    const paymentsByOrderId = await getOrderPaymentsByOrderIds(orderIds);
     const latestRoutePointByDispatchId =
       await getLatestRoutePointByDispatchIds(dispatchIds);
     const routePointsByDispatchId = filters.includeRoutePoints
@@ -1540,6 +1574,7 @@ export class PrismaDispatchRepository implements DispatchRepository {
         redeemedRewardsByOrderId,
         preparationStepCategoriesByOrderId,
         orderReadinessByOrderId,
+        paymentsByOrderId,
         latestRoutePointByDispatchId,
         routePointsByDispatchId,
       ),
@@ -1610,6 +1645,7 @@ export class PrismaDispatchRepository implements DispatchRepository {
     const preparationStepCategoriesByOrderId =
       await getDispatchPreparationStepCategories(orderIds);
     const orderReadinessByOrderId = await getOrderReadinessByOrderIds(orderIds);
+    const paymentsByOrderId = await getOrderPaymentsByOrderIds(orderIds);
     const latestRoutePointByDispatchId = await getLatestRoutePointByDispatchIds([
       dispatchRow.id,
     ]);
@@ -1621,6 +1657,7 @@ export class PrismaDispatchRepository implements DispatchRepository {
       redeemedRewardsByOrderId,
       preparationStepCategoriesByOrderId,
       orderReadinessByOrderId,
+      paymentsByOrderId,
       latestRoutePointByDispatchId,
     );
   }
@@ -1693,6 +1730,7 @@ export class PrismaDispatchRepository implements DispatchRepository {
     const preparationStepCategoriesByOrderId =
       await getDispatchPreparationStepCategories(orderIds);
     const orderReadinessByOrderId = await getOrderReadinessByOrderIds(orderIds);
+    const paymentsByOrderId = await getOrderPaymentsByOrderIds(orderIds);
     const latestRoutePointByDispatchId = await getLatestRoutePointByDispatchIds([
       dispatchRow.id,
     ]);
@@ -1704,6 +1742,7 @@ export class PrismaDispatchRepository implements DispatchRepository {
       redeemedRewardsByOrderId,
       preparationStepCategoriesByOrderId,
       orderReadinessByOrderId,
+      paymentsByOrderId,
       latestRoutePointByDispatchId,
     );
   }

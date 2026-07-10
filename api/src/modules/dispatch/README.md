@@ -96,7 +96,8 @@ Description:
 
 - Assigns or unassigns a driver from a dispatch.
 - Sets or clears `completedAt` manually.
-- `dispatchAt` is legacy and not used by this endpoint.
+- `dispatchedAt` is the accepted request field for the legacy `Dispatch.dispatchAt` column.
+- `dispatchAt` is rejected in request payloads.
 - When `dispatched` is set to `true` and resulting `dispatchAt` is non-null, API triggers `out_for_delivery` WhatsApp notification via Chatwoot for delivery orders with customer phone.
 
 Authentication:
@@ -133,6 +134,15 @@ To clear dispatch completion:
 ```json
 {
   "completedAt": null
+}
+```
+
+To mark dispatch as dispatched at a specific time:
+
+```json
+{
+  "dispatched": true,
+  "dispatchedAt": "2026-06-10T18:30:00.000Z"
 }
 ```
 

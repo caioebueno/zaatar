@@ -6,6 +6,7 @@ import type {
   CreateOwnerInput,
   OwnedBusinessRecord,
   OwnerAuthRecord,
+  OwnerLookupRecord,
   OwnerOtpChallengeRecord,
   OwnerRecord,
   OwnerRepository,
@@ -159,6 +160,33 @@ export class PrismaOwnerRepository implements OwnerRepository {
     return rows[0] ?? null;
   }
 
+  async findByPhone(phoneCandidates: string[]): Promise<OwnerLookupRecord | null> {
+    if (phoneCandidates.length === 0) {
+      return null;
+    }
+
+    const rows = await prisma.$queryRaw<
+      Array<{
+        email: string;
+        id: string;
+        name: string;
+        phone: string | null;
+      }>
+    >`
+      SELECT
+        "id",
+        "name",
+        "email",
+        "phone"
+      FROM "User"
+      WHERE regexp_replace(COALESCE("phone", ''), '\\D', '', 'g')
+        IN (${Prisma.join(phoneCandidates)})
+      LIMIT 1
+    `;
+
+    return rows[0] ?? null;
+  }
+
   async findLatestValidOtpChallenge(
     phone: string,
   ): Promise<OwnerOtpChallengeRecord | null> {
@@ -216,8 +244,11 @@ export class PrismaOwnerRepository implements OwnerRepository {
   }
 
   async findOwnedBusinesses(userId: string): Promise<OwnedBusinessRecord[]> {
-    const rows = await prisma.businessOwner.findMany({
-      where: { userId },
+    const rows = await prisma.businessMember.findMany({
+      where: {
+        userId,
+        status: "ACTIVE",
+      },
       include: {
         business: {
           select: {

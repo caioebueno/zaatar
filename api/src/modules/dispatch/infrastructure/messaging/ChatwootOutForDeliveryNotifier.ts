@@ -27,6 +27,7 @@ type NormalizedTemplateLanguage = "en" | "pt" | "es";
 
 const DEFAULT_CHATWOOT_BASE_URL =
   "https://chatwoot-production-487ab.up.railway.app";
+const ORDER_MESSAGE_MAX_AGE_MS = 5 * 60 * 60 * 1000;
 
 export class ChatwootOutForDeliveryNotifier implements OutForDeliveryNotifier {
   async sendForDispatch(dispatch: DispatchEntity): Promise<void> {
@@ -49,6 +50,13 @@ export class ChatwootOutForDeliveryNotifier implements OutForDeliveryNotifier {
 
     const results = await Promise.allSettled(
       deliveryOrders.map(async (order) => {
+        if (isOrderOlderThanMessageWindow(order.createdAt)) {
+          console.info(
+            `[out-for-delivery] skipped stale order=${order.id} createdAt=${order.createdAt}`,
+          );
+          return;
+        }
+
         const orderBranchConfig = branchConfigByOrderId.get(order.id);
         if (!orderBranchConfig) return;
 
@@ -281,6 +289,17 @@ function buildOutForDeliveryFallbackMessage(
   }
 
   return `Your order is on the way. ETA: ${etaRangeLabel}.`;
+}
+
+function isOrderOlderThanMessageWindow(createdAt: string | null | undefined): boolean {
+  if (!createdAt) return false;
+
+  const createdAtDate = new Date(createdAt);
+  if (Number.isNaN(createdAtDate.getTime())) {
+    return false;
+  }
+
+  return Date.now() - createdAtDate.getTime() > ORDER_MESSAGE_MAX_AGE_MS;
 }
 
 function normalizePhoneDigits(value: string): string {

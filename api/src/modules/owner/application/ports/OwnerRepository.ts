@@ -27,6 +27,13 @@ export type OwnedBusinessRecord = {
   name: string;
 };
 
+export type OwnerLookupRecord = {
+  email: string;
+  id: string;
+  name: string;
+  phone: string | null;
+};
+
 export type OwnerOtpChallengeRecord = {
   attemptCount: number;
   codeHash: string;
@@ -48,6 +55,7 @@ export interface OwnerRepository {
   }): Promise<void>;
   create(input: CreateOwnerInput): Promise<OwnerRecord>;
   findByPhoneForAuth(phoneCandidates: string[]): Promise<OwnerAuthRecord | null>;
+  findByPhone(phoneCandidates: string[]): Promise<OwnerLookupRecord | null>;
   findLatestValidOtpChallenge(phone: string): Promise<OwnerOtpChallengeRecord | null>;
   findByEmailForAuth(email: string): Promise<OwnerAuthRecord | null>;
   findOwnedBusinesses(userId: string): Promise<OwnedBusinessRecord[]>;

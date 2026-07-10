@@ -181,7 +181,7 @@ model Business {
   stripeOnboardingCompletedAt DateTime?
   onboardingCompletedAt DateTime?
   branches     Branch[]
-  owner        BusinessOwner?
+  members      BusinessMember[]
   integrations ExternalIntegrationConnection[]
   pushDevices  UserPushDevice[]
 }
@@ -196,7 +196,7 @@ model User {
   passwordHash    String
   emailVerifiedAt DateTime?
   lastLoginAt     DateTime?
-  ownedBusinesses BusinessOwner[]
+  businessMemberships BusinessMember[]
   integrations    ExternalIntegrationConnection[]
   otpChallenges   OwnerOtpChallenge[]
   pushDevices     UserPushDevice[]
@@ -344,14 +344,32 @@ model ExternalMenuSyncRun {
   @@index([connectionId])
 }
 
-model BusinessOwner {
-  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
-  businessId String   @id
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId     String
-  createdAt  DateTime @default(now())
+model BusinessMember {
+  business        Business                  @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  businessId      String
+  user            User                      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId          String
+  role            BusinessMemberRole        @default(MANAGER)
+  status          BusinessMembershipStatus  @default(ACTIVE)
+  invitedByUserId String?
+  createdAt       DateTime                  @default(now())
+  updatedAt       DateTime                  @updatedAt
 
-  @@index([userId])
+  @@id([businessId, userId])
+  @@index([userId, status, createdAt])
+  @@index([businessId, role, status, createdAt])
+}
+
+enum BusinessMemberRole {
+  OWNER
+  ADMIN
+  MANAGER
+}
+
+enum BusinessMembershipStatus {
+  ACTIVE
+  INVITED
+  SUSPENDED
 }
 
 model Branch {
@@ -1009,12 +1027,16 @@ model OrderPayment {
   amount      Int
   paidAt      DateTime?
   paymentType PaymentType
+  paymentProvider PaymentProvider?
+  externalId  String?
   order       Order       @relation(fields: [orderId], references: [id], onDelete: Cascade)
   orderId     String
 
   @@index([orderId])
   @@index([paymentType])
+  @@index([paymentProvider])
   @@index([paidAt])
+  @@index([externalId])
 }
 
 model OrderIntent {

@@ -87,6 +87,13 @@ type DispatchEntity = {
       deliveryFee?: number;
       expectedHandoffDuration?: number; // seconds, default 300
     };
+    payments: Array<{
+      amount: number;               // in cents
+      externalId: string | null;    // e.g. Stripe PaymentIntent ID
+      paidAt: string | null;        // ISO datetime
+      paymentProvider: string | null; // "STRIPE" | null
+      paymentType: string;          // "CASH" | "CARD" | "ZELLE"
+    }>;
     redeemedRewards: Array<{
       id: string;
       customerId: string;
@@ -177,6 +184,21 @@ Notes:
 - `estimated*` fields are baseline/planned ETA values.
 - `currentEstimated*` fields are live ETA values recalculated from latest driver location.
 - `completedAt` is a manual dispatch completion timestamp. It is updated through `PATCH /dispatches/:dispatchId` and is independent from order `deliveredAt`.
+- `payments` is always present. It is an empty array when no `OrderPayment` rows exist for an order.
+
+### OrderPayment Entity
+
+Each element of `order.payments` is an `OrderPayment`:
+
+| Field | Type | Description |
+|---|---|---|
+| `amount` | `number` | Payment amount in cents |
+| `externalId` | `string \| null` | Provider-side ID (e.g. Stripe PaymentIntent ID) |
+| `paidAt` | `string \| null` | ISO datetime when this payment was captured; `null` if pending |
+| `paymentProvider` | `string \| null` | `"STRIPE"` or `null` for cash/manual |
+| `paymentType` | `string` | `"CASH"`, `"CARD"`, or `"ZELLE"` |
+
+An order may have more than one `OrderPayment` row (split-payment scenarios). Sum `amount` across all entries for the total charged.
 
 ### Dispatch Status Logic
 
@@ -256,6 +278,12 @@ To clear dispatch completion:
 { "completedAt": null }
 ```
 
+To mark dispatch as dispatched at a specific time:
+
+```json
+{ "dispatched": true, "dispatchedAt": "2026-06-10T18:30:00.000Z" }
+```
+
 Success (`200`): updated `DispatchEntity`.
 
 Errors:
@@ -263,6 +291,7 @@ Errors:
 - `400`: invalid payload
 - `404`: dispatch not found
 - `404`: driver not found
+- `dispatchAt` is not accepted in request payloads; use `dispatchedAt`
 
 ---
 

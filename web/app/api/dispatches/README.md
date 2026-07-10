@@ -12,8 +12,8 @@ Dispatches are ordered by `dispatched` first, then by `queueIndex`, then by `cre
 Updates dispatch fields:
 
 - `dispatched` (optional boolean)
-- `dispatchAt` (optional ISO string or `null`, requires `dispatched` in the same request)
-- `dispatchedAt` is also accepted as an alias of `dispatchAt`
+- `dispatchedAt` (optional ISO string or `null`, requires `dispatched` in the same request)
+- `dispatchAt` is rejected in request payloads
 - `driverId` (optional string or `null`; use `null` to unassign)
 - `queueIndex` (optional positive integer): moves the dispatch to this 1-based position in the global dispatch queue and reindexes all dispatches to keep the queue contiguous
 

@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Alert,
   Animated,
+  AppState,
   ScrollView,
   StyleSheet,
   Text,
@@ -15,7 +16,14 @@ import { useRouter } from 'expo-router';
 import { useAuth } from '@/context/auth';
 import { getNextDispatch, listDriverDispatches, activateDriver, deactivateDriver, DispatchEntity } from '@/lib/dispatch-api';
 import { calculateOrderTotal } from '@/utils/orderTotal';
-import { startDriverTracking, stopDriverTracking, startRouteTracking, stopRouteTracking } from '@/lib/route-tracking';
+import {
+  getTrackingStatus,
+  startDriverTracking,
+  stopDriverTracking,
+  startRouteTracking,
+  stopRouteTracking,
+  type TrackingStatus,
+} from '@/lib/route-tracking';
 
 // ─── Design tokens ────────────────────────────────────────────────────────────
 const D = {
@@ -89,24 +97,6 @@ function dateRangeFor(filter: 'today' | 'week' | 'month'): { start: string; end:
   if (filter === 'week')  from.setDate(now.getDate() - 6);
   if (filter === 'month') from.setDate(now.getDate() - 29);
   return { start: from.toISOString().split('T')[0], end };
-}
-
-// ─── ZippyMark ────────────────────────────────────────────────────────────────
-function ZippyMark({ size = 24 }: { size?: number }) {
-  const s = size / 100;
-  const cx = 50 * s;
-  const cy = 60 * s;
-  return (
-    <View style={{ width: size, height: size, borderRadius: size * 0.22, backgroundColor: D.zippy, overflow: 'hidden' }}>
-      <View style={{ position: 'absolute', left: cx - 32 * s, top: cy - 32 * s, width: 64 * s, height: 32 * s, overflow: 'hidden' }}>
-        <View style={{ width: 64 * s, height: 64 * s, borderRadius: 32 * s, borderWidth: 6 * s, borderColor: 'rgba(255,255,255,0.25)' }} />
-      </View>
-      <View style={{ position: 'absolute', left: cx - 22 * s, top: cy - 22 * s, width: 44 * s, height: 22 * s, overflow: 'hidden' }}>
-        <View style={{ width: 44 * s, height: 44 * s, borderRadius: 22 * s, borderWidth: 8 * s, borderColor: 'rgba(255,255,255,0.55)' }} />
-      </View>
-      <View style={{ position: 'absolute', left: 41 * s, top: 51 * s, width: 18 * s, height: 18 * s, borderRadius: 4 * s, backgroundColor: '#fff' }} />
-    </View>
-  );
 }
 
 // ─── Animated ring dot (pulse) ────────────────────────────────────────────────
@@ -188,52 +178,207 @@ const activateStyles = StyleSheet.create({
   btnText:    { fontFamily: SANS_B, fontSize: 14, color: '#fff', letterSpacing: -0.1 },
 });
 
-// ─── DeactivateBanner ─────────────────────────────────────────────────────────
-function DeactivateBanner({ onDeactivate, loading }: { onDeactivate: () => void; loading: boolean }) {
+function TrackingGlyph({ active }: { active: boolean }) {
+  if (active) {
+    return (
+      <View style={trackingCardStyles.activeGlyph}>
+        <View style={trackingCardStyles.activeGlyphDot} />
+      </View>
+    );
+  }
+
   return (
-    <View style={deactivateStyles.bar}>
-      <RingDot color={D.green} size={8} />
-      <Text style={deactivateStyles.label}>Em serviço · Online</Text>
-      <TouchableOpacity
-        style={deactivateStyles.btn}
-        onPress={onDeactivate}
-        disabled={loading}
-        activeOpacity={0.75}
+    <View style={trackingCardStyles.inactiveGlyph}>
+      <Ionicons name="location-outline" size={26} color={D.faint} />
+    </View>
+  );
+}
+
+// ─── LocationTrackingCard ─────────────────────────────────────────────────────
+function LocationTrackingCard({
+  active,
+  busy,
+  mode,
+  onPress,
+}: {
+  active: boolean;
+  busy: boolean;
+  mode: TrackingStatus['mode'];
+  onPress: () => void;
+}) {
+  const title = active ? 'Rastreamento ativado' : 'Rastreamento desativado';
+  const subtitle = active
+    ? mode === 'route'
+      ? 'COMPARTILHANDO POSIÇÃO • ENTREGA EM ROTA'
+      : 'COMPARTILHANDO POSIÇÃO • SEGUNDO PLANO'
+    : 'Sua posição não está sendo compartilhada';
+  const ctaLabel = active ? 'Desativar rastreamento' : 'Ativar rastreamento de posição';
+
+  return (
+    <View style={trackingCardStyles.section}>
+      <Text style={trackingCardStyles.kicker}>Rastreamento de Posição</Text>
+
+      <View
+        style={[
+          trackingCardStyles.card,
+          active ? trackingCardStyles.cardActive : trackingCardStyles.cardInactive,
+        ]}
       >
-        <Text style={deactivateStyles.btnText}>Desativar</Text>
-      </TouchableOpacity>
+        <View style={trackingCardStyles.body}>
+          <TrackingGlyph active={active} />
+          <View style={{ flex: 1 }}>
+            <Text style={trackingCardStyles.title}>{title}</Text>
+            <Text
+              style={[
+                trackingCardStyles.subtitle,
+                active ? trackingCardStyles.subtitleActive : trackingCardStyles.subtitleInactive,
+              ]}
+            >
+              {subtitle}
+            </Text>
+          </View>
+        </View>
+
+        <TouchableOpacity
+          style={[
+            trackingCardStyles.cta,
+            active ? trackingCardStyles.ctaActive : trackingCardStyles.ctaInactive,
+            busy && { opacity: 0.65 },
+          ]}
+          onPress={onPress}
+          disabled={busy}
+          activeOpacity={0.9}
+        >
+          <View style={trackingCardStyles.ctaInner}>
+            {!active ? <Ionicons name="paper-plane-outline" size={18} color={D.zippy} /> : null}
+            <Text
+              style={[
+                trackingCardStyles.ctaText,
+                active ? trackingCardStyles.ctaTextActive : trackingCardStyles.ctaTextInactive,
+              ]}
+            >
+              {ctaLabel}
+            </Text>
+          </View>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
 
-const deactivateStyles = StyleSheet.create({
-  bar:     { flexDirection: 'row', alignItems: 'center', gap: 10, backgroundColor: D.surf2, borderWidth: 1, borderColor: D.line, borderRadius: 12, paddingVertical: 9, paddingLeft: 14, paddingRight: 10 },
-  label:   { flex: 1, fontFamily: MONO_B, fontSize: 13, color: D.dim, letterSpacing: 0.4 },
-  btn:     { height: 30, borderRadius: 8, borderWidth: 1, borderColor: D.line, paddingHorizontal: 12, alignItems: 'center', justifyContent: 'center' },
-  btnText: { fontFamily: SANS_B, fontSize: 13, color: D.faint, letterSpacing: -0.1 },
-});
-
-// ─── OfflineStatusStrip ───────────────────────────────────────────────────────
-function OfflineStatusStrip() {
-  return (
-    <View style={offlineStyles.strip}>
-      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-        <View style={offlineStyles.dot} />
-        <Text style={offlineStyles.label}>Offline · Inativo</Text>
-      </View>
-      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
-        <ZippyMark size={14} />
-        <Text style={offlineStyles.portal}>Portal do Motorista</Text>
-      </View>
-    </View>
-  );
-}
-
-const offlineStyles = StyleSheet.create({
-  strip:  { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: D.surf2, borderWidth: 1, borderColor: D.line, borderRadius: 12, paddingVertical: 9, paddingHorizontal: 14 },
-  dot:    { width: 7, height: 7, borderRadius: 3.5, backgroundColor: 'rgba(250,245,238,0.20)' },
-  label:  { fontFamily: MONO_B, fontSize: 10, color: D.faint, letterSpacing: 0.6 },
-  portal: { fontFamily: MONO, fontSize: 9.5, color: D.vfaint, letterSpacing: 0.6 },
+const trackingCardStyles = StyleSheet.create({
+  section: { gap: 10 },
+  kicker: {
+    fontFamily: MONO_B,
+    fontSize: 10.5,
+    letterSpacing: 1.8,
+    textTransform: 'uppercase',
+    color: D.vfaint,
+    paddingHorizontal: 2,
+  },
+  card: {
+    backgroundColor: D.surf,
+    borderRadius: 22,
+    overflow: 'hidden',
+    borderWidth: 1.5,
+  },
+  cardActive: {
+    borderColor: 'rgba(52,211,154,0.46)',
+    shadowColor: D.green,
+    shadowOpacity: 0.12,
+    shadowRadius: 18,
+    shadowOffset: { width: 0, height: 6 },
+    elevation: 4,
+  },
+  cardInactive: {
+    borderColor: 'rgba(250,245,238,0.10)',
+  },
+  body: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 14,
+    paddingHorizontal: 18,
+    paddingTop: 18,
+    paddingBottom: 16,
+  },
+  activeGlyph: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: 'rgba(52,211,154,0.16)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  activeGlyphDot: {
+    width: 14,
+    height: 14,
+    borderRadius: 7,
+    backgroundColor: D.green,
+  },
+  inactiveGlyph: {
+    width: 58,
+    height: 58,
+    borderRadius: 18,
+    backgroundColor: 'rgba(250,245,238,0.03)',
+    borderWidth: 1,
+    borderColor: 'rgba(250,245,238,0.08)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  title: {
+    fontSize: 18,
+    fontFamily: SANS_EB,
+    color: D.text,
+    letterSpacing: -0.5,
+    marginBottom: 5,
+  },
+  subtitle: {
+    fontSize: 12.5,
+    lineHeight: 18,
+  },
+  subtitleActive: {
+    fontFamily: MONO_B,
+    color: D.green,
+    letterSpacing: 1.15,
+    textTransform: 'uppercase',
+  },
+  subtitleInactive: {
+    fontFamily: SANS,
+    color: D.faint,
+  },
+  cta: {
+    minHeight: 68,
+    borderTopWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 18,
+    paddingVertical: 18,
+  },
+  ctaActive: {
+    backgroundColor: '#30251d',
+    borderTopColor: 'rgba(52,211,154,0.08)',
+  },
+  ctaInactive: {
+    backgroundColor: 'rgba(95,34,19,0.88)',
+    borderTopColor: 'rgba(255,61,20,0.18)',
+  },
+  ctaInner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
+  },
+  ctaText: {
+    fontFamily: SANS_B,
+    fontSize: 15,
+    letterSpacing: -0.2,
+  },
+  ctaTextActive: {
+    color: 'rgba(250,245,238,0.70)',
+  },
+  ctaTextInactive: {
+    color: D.zippy,
+  },
 });
 
 // ─── WaitingCard ──────────────────────────────────────────────────────────────
@@ -600,14 +745,28 @@ function HomeSkeletonCard() {
 
 // ─── HomeScreen ───────────────────────────────────────────────────────────────
 function HomeScreen({
-  dispatch, active, activating, loading, onActivate, onDeactivate, onShowHistory,
+  dispatch,
+  active,
+  activating,
+  loading,
+  trackingActive,
+  trackingBusy,
+  trackingMode,
+  onActivate,
+  onDeactivate,
+  onToggleTracking,
+  onShowHistory,
 }: {
   dispatch: DispatchEntity | null;
   active: boolean;
   activating: boolean;
   loading: boolean;
+  trackingActive: boolean;
+  trackingBusy: boolean;
+  trackingMode: TrackingStatus['mode'];
   onActivate: () => void;
   onDeactivate: () => void;
+  onToggleTracking: () => void;
   onShowHistory: () => void;
 }) {
   const { driver } = useAuth();
@@ -639,11 +798,28 @@ function HomeScreen({
         contentContainerStyle={{ paddingHorizontal: 18, paddingBottom: insets.bottom + 36, gap: 14 }}
         showsVerticalScrollIndicator={false}
       >
-        {/* Status strip / Deactivate banner */}
-        {active
-          ? <DeactivateBanner onDeactivate={onDeactivate} loading={activating} />
-          : <OfflineStatusStrip />
-        }
+        <LocationTrackingCard
+          active={trackingActive}
+          busy={trackingBusy}
+          mode={trackingMode}
+          onPress={onToggleTracking}
+        />
+
+        {active ? (
+          <View style={{ alignItems: 'flex-end', marginTop: -4 }}>
+            <TouchableOpacity
+              onPress={onDeactivate}
+              disabled={activating}
+              activeOpacity={0.8}
+              style={[
+                homeStyles.secondaryAction,
+                activating && { opacity: 0.55 },
+              ]}
+            >
+              <Text style={homeStyles.secondaryActionText}>Encerrar turno</Text>
+            </TouchableOpacity>
+          </View>
+        ) : null}
 
         {/* Delivery / Activate section */}
         <View style={{ marginHorizontal: -6 }}>
@@ -670,9 +846,20 @@ const homeStyles = StyleSheet.create({
   topNav:      { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 18, paddingBottom: 12 },
   greeting:    { fontFamily: MONO_B, fontSize: 9.5, letterSpacing: 1.8, textTransform: 'uppercase', color: D.faint, marginBottom: 3 },
   driverName:  { fontSize: 20, fontFamily: SANS_EB, color: D.text, letterSpacing: -0.6 },
-avatar:      { width: 36, height: 36, borderRadius: 10, backgroundColor: 'rgba(255,61,20,0.12)', borderWidth: 1.5, borderColor: 'rgba(255,61,20,0.24)', alignItems: 'center', justifyContent: 'center' },
+  avatar:      { width: 36, height: 36, borderRadius: 10, backgroundColor: 'rgba(255,61,20,0.12)', borderWidth: 1.5, borderColor: 'rgba(255,61,20,0.24)', alignItems: 'center', justifyContent: 'center' },
   avatarText:  { fontFamily: SANS_EB, fontSize: 14, color: D.zippy, letterSpacing: -0.3 },
   sectionKicker:   { fontFamily: MONO_B, fontSize: 11.5, letterSpacing: 1.5, textTransform: 'uppercase', color: D.faint },
+  secondaryAction: {
+    paddingVertical: 8,
+    paddingHorizontal: 4,
+  },
+  secondaryActionText: {
+    fontFamily: MONO_B,
+    fontSize: 11,
+    letterSpacing: 0.9,
+    textTransform: 'uppercase',
+    color: D.faint,
+  },
 });
 
 // ─── Root export ──────────────────────────────────────────────────────────────
@@ -683,7 +870,22 @@ export default function DriverHome() {
   const [active,        setActive]        = useState(driver?.active ?? false);
   const [activating,    setActivating]    = useState(false);
   const [loadingInitial, setLoadingInitial] = useState(driver?.active ?? false);
+  const [trackingBusy,  setTrackingBusy]  = useState(false);
+  const [trackingStatus, setTrackingStatus] = useState<TrackingStatus>({
+    hasBufferedPoints: false,
+    isRunning: false,
+    mode: 'inactive',
+  });
   const didInitialFetch = useRef(false);
+
+  const refreshTrackingStatus = useCallback(async () => {
+    const nextStatus = await getTrackingStatus().catch((): TrackingStatus => ({
+      hasBufferedPoints: false,
+      isRunning: false,
+      mode: 'inactive',
+    }));
+    setTrackingStatus(nextStatus);
+  }, []);
 
   const fetchDispatch = useCallback(async () => {
     if (!token || !active) return;
@@ -706,13 +908,34 @@ export default function DriverHome() {
     return () => clearInterval(interval);
   }, [fetchDispatch]);
 
+  useEffect(() => {
+    void refreshTrackingStatus();
+
+    const interval = setInterval(() => {
+      void refreshTrackingStatus();
+    }, 4000);
+
+    const subscription = AppState.addEventListener('change', (state) => {
+      if (state === 'active') {
+        void refreshTrackingStatus();
+      }
+    });
+
+    return () => {
+      clearInterval(interval);
+      subscription.remove();
+    };
+  }, [refreshTrackingStatus]);
+
   // Resume driver-level tracking on mount if already active (e.g. app restarted)
   const didResume = useRef(false);
   useEffect(() => {
     if (didResume.current || !token || !active) return;
     didResume.current = true;
-    startDriverTracking(token).catch((e) => console.log('[home] resume tracking error', e));
-  }, [token, active]);
+    startDriverTracking(token)
+      .then(refreshTrackingStatus)
+      .catch((e) => console.log('[home] resume tracking error', e));
+  }, [token, active, refreshTrackingStatus]);
 
   // Manage route tracking lifecycle from the dispatch polling state
   const prevRouteRef = useRef<{ id: string; started: boolean } | null>(null);
@@ -722,13 +945,17 @@ export default function DriverHome() {
     const prev = prevRouteRef.current;
 
     if (cur?.started && (prev?.id !== cur.id || !prev?.started)) {
-      startRouteTracking(token, cur.id).catch((e) => console.log('[home] startRouteTracking error', e));
+      startRouteTracking(token, cur.id)
+        .then(refreshTrackingStatus)
+        .catch((e) => console.log('[home] startRouteTracking error', e));
     } else if (!cur?.started && prev?.started) {
-      stopRouteTracking().catch((e) => console.log('[home] stopRouteTracking error', e));
+      stopRouteTracking()
+        .then(refreshTrackingStatus)
+        .catch((e) => console.log('[home] stopRouteTracking error', e));
     }
 
     prevRouteRef.current = cur;
-  }, [dispatch?.id, dispatch?.startedDeliveryAt, token, active]);
+  }, [dispatch, token, active, refreshTrackingStatus]);
 
   const handleActivate = useCallback(async () => {
     if (!token) return;
@@ -736,13 +963,15 @@ export default function DriverHome() {
     try {
       await activateDriver(token);
       setActive(true);
-      startDriverTracking(token).catch((e) => console.log('[home] startDriverTracking error', e));
+      startDriverTracking(token)
+        .then(refreshTrackingStatus)
+        .catch((e) => console.log('[home] startDriverTracking error', e));
     } catch (e) {
       console.log('[home] activate error', e);
     } finally {
       setActivating(false);
     }
-  }, [token]);
+  }, [token, refreshTrackingStatus]);
 
   const handleDeactivate = useCallback(async () => {
     if (!token) return;
@@ -759,13 +988,41 @@ export default function DriverHome() {
       await deactivateDriver(token);
       setActive(false);
       setDispatch(null);
-      stopDriverTracking().catch((e) => console.log('[home] stopDriverTracking error', e));
+      stopDriverTracking()
+        .then(refreshTrackingStatus)
+        .catch((e) => console.log('[home] stopDriverTracking error', e));
     } catch (e) {
       console.log('[home] deactivate error', e);
     } finally {
       setActivating(false);
     }
-  }, [token]);
+  }, [token, dispatch, refreshTrackingStatus]);
+
+  const handleToggleTracking = useCallback(async () => {
+    if (!token) return;
+
+    setTrackingBusy(true);
+
+    try {
+      if (trackingStatus.isRunning) {
+        await stopDriverTracking();
+      } else if (dispatch?.startedDeliveryAt) {
+        await startRouteTracking(token, dispatch.id);
+      } else {
+        await startDriverTracking(token);
+      }
+
+      await refreshTrackingStatus();
+    } catch (error) {
+      console.log('[home] toggle tracking error', error);
+      Alert.alert(
+        'Nao foi possivel atualizar o rastreamento',
+        'Verifique as permissoes de localizacao e tente novamente.',
+      );
+    } finally {
+      setTrackingBusy(false);
+    }
+  }, [token, trackingStatus.isRunning, dispatch, refreshTrackingStatus]);
 
   return (
     <HomeScreen
@@ -773,8 +1030,12 @@ export default function DriverHome() {
       active={active}
       activating={activating}
       loading={loadingInitial}
+      trackingActive={trackingStatus.isRunning}
+      trackingBusy={trackingBusy}
+      trackingMode={trackingStatus.mode}
       onActivate={handleActivate}
       onDeactivate={handleDeactivate}
+      onToggleTracking={handleToggleTracking}
       onShowHistory={() => router.push('/entregas')}
     />
   );

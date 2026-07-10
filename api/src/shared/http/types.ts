@@ -1,6 +1,7 @@
 export type HttpRequest = {
   auth?: {
     businessId?: string | null;
+    businessRole?: string | null;
     email: string;
     name: string;
     userId: string;

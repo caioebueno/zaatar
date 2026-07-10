@@ -24,6 +24,23 @@ export type OwnedBusinessRecord = {
   name: string;
 };
 
+export type BusinessMemberRecord = {
+  createdAt: Date;
+  email: string;
+  name: string;
+  phone: string | null;
+  role: string;
+  status: string;
+  userId: string;
+};
+
+export type CreateBusinessMemberInput = {
+  businessId: string;
+  invitedByUserId?: string | null;
+  role: "OWNER" | "ADMIN" | "MANAGER";
+  userId: string;
+};
+
 export type BusinessBranchRecord = {
   address: {
     city: string | null;
@@ -59,7 +76,9 @@ export type CurrentBusinessRecord = {
 };
 
 export interface BusinessRepository {
+  addBusinessMember(input: CreateBusinessMemberInput): Promise<BusinessMemberRecord>;
   createOwnedBusiness(input: CreateOwnedBusinessInput): Promise<BusinessRecord>;
   findCurrentBusinessById(businessId: string): Promise<CurrentBusinessRecord | null>;
   findOwnedBusinesses(userId: string): Promise<OwnedBusinessRecord[]>;
+  listBusinessMembers(businessId: string): Promise<BusinessMemberRecord[]>;
 }

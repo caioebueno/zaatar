@@ -80,8 +80,9 @@ export class PrismaUberEatsConnectionRepository
   async save(input: SaveUberEatsConnectionInput): Promise<UberEatsConnectionView> {
     const businessOwnerRows = await prisma.$queryRaw<{ businessId: string }[]>`
       SELECT "businessId"
-      FROM "BusinessOwner"
+      FROM "BusinessMember"
       WHERE "userId" = ${input.userId}
+        AND "status" = 'ACTIVE'::"BusinessMembershipStatus"
       LIMIT 1
     `;
     const defaultBusinessId = businessOwnerRows[0]?.businessId ?? null;
