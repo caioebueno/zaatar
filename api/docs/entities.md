@@ -5,6 +5,7 @@ Each entity now has its own page in the sidebar under the `Entities` group.
 ## Pages
 
 - [Order](./entities/order.md)
+- [OrderPayment](./entities/order-payment.md)
 - [OrderIntent](./entities/order-intent.md)
 - [Customer](./entities/customer.md)
 - [Dispatch](./entities/dispatch.md)

@@ -2,6 +2,7 @@ import { Pool } from "pg";
 
 const DEFAULT_MAX_JOBS_PER_RUN = 10;
 const DEFAULT_MAX_FEEDBACK_RETRIES = 2;
+const ORDER_MESSAGE_MAX_AGE_MS = 5 * 60 * 60 * 1000;
 
 const DEFAULT_TWILIO_FEEDBACK_TEMPLATE_SID_EN =
   "HXa1728d7711e5ea52947eed912d6ec611";
@@ -88,6 +89,19 @@ function toErrorMessage(error) {
 function getRetryDate(attempts) {
   const delayInSeconds = Math.min(30 * 2 ** Math.max(attempts - 1, 0), 15 * 60);
   return new Date(Date.now() + delayInSeconds * 1000);
+}
+
+function isOrderOlderThanMessageWindow(createdAt) {
+  if (!createdAt) return false;
+
+  const createdAtDate =
+    createdAt instanceof Date ? createdAt : new Date(createdAt);
+
+  if (Number.isNaN(createdAtDate.getTime())) {
+    return false;
+  }
+
+  return Date.now() - createdAtDate.getTime() > ORDER_MESSAGE_MAX_AGE_MS;
 }
 
 function getMaxFeedbackRetries() {
@@ -341,14 +355,16 @@ async function claimFeedbackWhatsAppJobs(limit, maxAttempts) {
           "status" = 'PROCESSING',
           "attempts" = job."attempts" + 1,
           "processingStartedAt" = NOW()
-        FROM candidate_jobs
+        FROM candidate_jobs, "Order" orders
         WHERE job."id" = candidate_jobs."id"
+          AND orders."id" = job."orderId"
         RETURNING
           job."id",
           job."orderId",
           job."customerPhone",
           job."language",
-          job."attempts"
+          job."attempts",
+          orders."createdAt" AS "orderCreatedAt"
       `,
       [limit, maxAttempts],
     );
@@ -445,6 +461,14 @@ export async function processFeedbackWhatsAppJobs(limit = DEFAULT_MAX_JOBS_PER_R
 
   for (const job of jobs) {
     try {
+      if (isOrderOlderThanMessageWindow(job.orderCreatedAt)) {
+        await markFeedbackWhatsAppJobCompleted(job.id);
+        console.info(
+          `[queue-worker] skipped stale feedback WhatsApp order=${job.orderId} job=${job.id} createdAt=${job.orderCreatedAt?.toISOString?.() ?? job.orderCreatedAt}`,
+        );
+        continue;
+      }
+
       const templateLanguage = normalizeLanguageForTemplate(job.language);
       const templateSid = resolveFeedbackTemplateSid(templateLanguage);
       console.log(

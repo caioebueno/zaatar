@@ -13,6 +13,7 @@ import { useRouter } from 'expo-router';
 
 import { useAuth } from '@/context/auth';
 import { listDriverDispatches, DispatchEntity } from '@/lib/dispatch-api';
+import { setSelectedEntrega } from '@/lib/entrega-store';
 
 const D = {
   bg:     '#0a0807',
@@ -84,7 +85,7 @@ function dateRangeFor(filter: 'today' | 'week' | 'month'): { start: string; end:
   return { start: from.toISOString().split('T')[0], end };
 }
 
-function PastDeliveryRow({ delivery }: { delivery: PastDelivery }) {
+function PastDeliveryRow({ delivery, onPress }: { delivery: PastDelivery; onPress: () => void }) {
   const isLate  = delivery.status === 'late';
   const actual  = delivery.actualMin ?? 0;
   const eta     = delivery.etaMin ?? actual;
@@ -94,7 +95,7 @@ function PastDeliveryRow({ delivery }: { delivery: PastDelivery }) {
   const etaPct  = Math.round((eta / Math.max(eta, actual, 1)) * 100);
 
   return (
-    <View style={rowStyles.row}>
+    <TouchableOpacity style={rowStyles.row} onPress={onPress} activeOpacity={0.7}>
       <View style={[rowStyles.icon, isLate ? rowStyles.iconAmber : rowStyles.iconGreen]}>
         <Ionicons name={isLate ? 'time-outline' : 'checkmark-outline'} size={16} color={isLate ? D.amber : D.green} />
       </View>
@@ -122,7 +123,7 @@ function PastDeliveryRow({ delivery }: { delivery: PastDelivery }) {
           <Text style={rowStyles.time}>{delivery.etaMin !== null ? `ETA ${delivery.etaMin}m · ` : ''}{delivery.at}</Text>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 
@@ -151,9 +152,10 @@ export default function EntregasScreen() {
   const router    = useRouter();
   const insets    = useSafeAreaInsets();
 
-  const [filter,  setFilter]  = useState<'today' | 'week' | 'month'>('today');
-  const [rows,    setRows]    = useState<PastDelivery[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [filter,       setFilter]       = useState<'today' | 'week' | 'month'>('today');
+  const [rows,         setRows]         = useState<PastDelivery[]>([]);
+  const [rawDispatches, setRawDispatches] = useState<DispatchEntity[]>([]);
+  const [loading,      setLoading]      = useState(true);
 
   useEffect(() => {
     if (!token) return;
@@ -161,6 +163,7 @@ export default function EntregasScreen() {
     const { start, end } = dateRangeFor(filter);
     listDriverDispatches(token, start, end)
       .then(dispatches => {
+        setRawDispatches(dispatches);
         const mapped = dispatches
           .map(mapDispatchToPast)
           .filter((d): d is PastDelivery => d !== null)
@@ -240,7 +243,16 @@ export default function EntregasScreen() {
           <View style={styles.list}>
             {rows.map((d, i) => (
               <View key={d.id} style={i < rows.length - 1 ? { borderBottomWidth: 1, borderBottomColor: D.line } : undefined}>
-                <PastDeliveryRow delivery={d} />
+                <PastDeliveryRow
+                  delivery={d}
+                  onPress={() => {
+                    const dispatch = rawDispatches.find(rd => rd.id === d.id);
+                    if (dispatch) {
+                      setSelectedEntrega(dispatch);
+                      router.push(`/entrega/${d.id}`);
+                    }
+                  }}
+                />
               </View>
             ))}
             {avgActual !== null && (

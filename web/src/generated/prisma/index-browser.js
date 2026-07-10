@@ -342,10 +342,14 @@ exports.Prisma.ExternalMenuSyncRunScalarFieldEnum = {
   connectionId: 'connectionId'
 };
 
-exports.Prisma.BusinessOwnerScalarFieldEnum = {
+exports.Prisma.BusinessMemberScalarFieldEnum = {
   businessId: 'businessId',
   userId: 'userId',
-  createdAt: 'createdAt'
+  role: 'role',
+  status: 'status',
+  invitedByUserId: 'invitedByUserId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.BranchScalarFieldEnum = {
@@ -353,6 +357,7 @@ exports.Prisma.BranchScalarFieldEnum = {
   createdAt: 'createdAt',
   name: 'name',
   operationHours: 'operationHours',
+  showUpsellModalOnAddToCart: 'showUpsellModalOnAddToCart',
   chatwootAccountId: 'chatwootAccountId',
   chatwootSourceId: 'chatwootSourceId',
   chatwootAgentId: 'chatwootAgentId',
@@ -381,6 +386,7 @@ exports.Prisma.DriverActivationEventScalarFieldEnum = {
 exports.Prisma.DispatchScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
+  completedAt: 'completedAt',
   queueIndex: 'queueIndex',
   dispatched: 'dispatched',
   dispatchAt: 'dispatchAt',
@@ -452,6 +458,19 @@ exports.Prisma.DispatchAssignmentJobScalarFieldEnum = {
   lastError: 'lastError',
   orderId: 'orderId',
   deliveryAddressId: 'deliveryAddressId'
+};
+
+exports.Prisma.DispatchRouteMetricsRefreshJobScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  status: 'status',
+  attempts: 'attempts',
+  availableAt: 'availableAt',
+  processingStartedAt: 'processingStartedAt',
+  completedAt: 'completedAt',
+  lastError: 'lastError',
+  dispatchId: 'dispatchId'
 };
 
 exports.Prisma.DispatchEtaRecalculationJobScalarFieldEnum = {
@@ -673,6 +692,7 @@ exports.Prisma.DeliveryAddressScalarFieldEnum = {
   lat: 'lat',
   lng: 'lng',
   deliveryFee: 'deliveryFee',
+  expectedHandoffDuration: 'expectedHandoffDuration',
   city: 'city',
   zipCode: 'zipCode',
   State: 'State',
@@ -739,6 +759,17 @@ exports.Prisma.OrderScalarFieldEnum = {
   deliveryAddressId: 'deliveryAddressId',
   externalAddressId: 'externalAddressId',
   branchId: 'branchId'
+};
+
+exports.Prisma.OrderPaymentScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  amount: 'amount',
+  paidAt: 'paidAt',
+  paymentType: 'paymentType',
+  paymentProvider: 'paymentProvider',
+  externalId: 'externalId',
+  orderId: 'orderId'
 };
 
 exports.Prisma.OrderIntentScalarFieldEnum = {
@@ -989,6 +1020,18 @@ exports.ExternalMenuSyncStatus = exports.$Enums.ExternalMenuSyncStatus = {
   SKIPPED: 'SKIPPED'
 };
 
+exports.BusinessMemberRole = exports.$Enums.BusinessMemberRole = {
+  OWNER: 'OWNER',
+  ADMIN: 'ADMIN',
+  MANAGER: 'MANAGER'
+};
+
+exports.BusinessMembershipStatus = exports.$Enums.BusinessMembershipStatus = {
+  ACTIVE: 'ACTIVE',
+  INVITED: 'INVITED',
+  SUSPENDED: 'SUSPENDED'
+};
+
 exports.DriverActivationStatus = exports.$Enums.DriverActivationStatus = {
   ACTIVATED: 'ACTIVATED',
   DEACTIVATED: 'DEACTIVATED'
@@ -1013,6 +1056,13 @@ exports.DispatchRouteMilestoneType = exports.$Enums.DispatchRouteMilestoneType =
 };
 
 exports.DispatchAssignmentJobStatus = exports.$Enums.DispatchAssignmentJobStatus = {
+  PENDING: 'PENDING',
+  PROCESSING: 'PROCESSING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED'
+};
+
+exports.DispatchRouteMetricsRefreshJobStatus = exports.$Enums.DispatchRouteMetricsRefreshJobStatus = {
   PENDING: 'PENDING',
   PROCESSING: 'PROCESSING',
   COMPLETED: 'COMPLETED',
@@ -1115,7 +1165,7 @@ exports.Prisma.ModelName = {
   ExternalIntegrationConnection: 'ExternalIntegrationConnection',
   ExternalMenuEntityMap: 'ExternalMenuEntityMap',
   ExternalMenuSyncRun: 'ExternalMenuSyncRun',
-  BusinessOwner: 'BusinessOwner',
+  BusinessMember: 'BusinessMember',
   Branch: 'Branch',
   Driver: 'Driver',
   DriverActivationEvent: 'DriverActivationEvent',
@@ -1124,6 +1174,7 @@ exports.Prisma.ModelName = {
   DispatchRoutePoint: 'DispatchRoutePoint',
   DispatchRouteMilestone: 'DispatchRouteMilestone',
   DispatchAssignmentJob: 'DispatchAssignmentJob',
+  DispatchRouteMetricsRefreshJob: 'DispatchRouteMetricsRefreshJob',
   DispatchEtaRecalculationJob: 'DispatchEtaRecalculationJob',
   FeedbackWhatsAppJob: 'FeedbackWhatsAppJob',
   Address: 'Address',
@@ -1148,6 +1199,7 @@ exports.Prisma.ModelName = {
   Message: 'Message',
   PromotialMessage: 'PromotialMessage',
   Order: 'Order',
+  OrderPayment: 'OrderPayment',
   OrderIntent: 'OrderIntent',
   CustomerFeedback: 'CustomerFeedback',
   CustomerReward: 'CustomerReward',

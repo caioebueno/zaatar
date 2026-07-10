@@ -8,7 +8,7 @@ import type { OutForDeliveryNotifier } from "../ports/OutForDeliveryNotifier.js"
 
 export type UpdateDispatchInput = {
   completedAt?: unknown;
-  dispatchAt?: unknown;
+  dispatchedAt?: unknown;
   dispatched?: unknown;
   dispatchId: unknown;
   driverId?: unknown;
@@ -25,7 +25,10 @@ export class UpdateDispatchUseCase {
     const dispatchId = normalizeRequiredString(input.dispatchId, "dispatchId");
     const completedAt = normalizeOptionalDate(input.completedAt, "completedAt");
     const dispatched = normalizeOptionalBoolean(input.dispatched, "dispatched");
-    const dispatchAt = normalizeOptionalDate(input.dispatchAt, "dispatchAt");
+    const dispatchAt = normalizeOptionalDate(
+      input.dispatchedAt,
+      "dispatchedAt",
+    );
     const driverId = normalizeOptionalNullableString(input.driverId, "driverId");
     const queueIndex = normalizeOptionalQueueIndex(input.queueIndex);
 
@@ -115,7 +118,7 @@ function normalizeOptionalBoolean(
 
 function normalizeOptionalDate(
   value: unknown,
-  field: "completedAt" | "dispatchAt",
+  field: "completedAt" | "dispatchedAt",
 ): string | null | undefined {
   if (value === undefined || value === null) {
     return value as null | undefined;

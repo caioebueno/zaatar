@@ -1,7 +1,6 @@
 "use client";
 
 import clsx from "clsx";
-import Image from "next/image";
 import { FiImage } from "react-icons/fi";
 
 type TProductImage = {
@@ -31,7 +30,6 @@ const ProductImage: React.FC<TProductImage> = ({
   className,
   iconClassName,
   priority,
-  quality,
   sizes,
   src,
 }) => {
@@ -39,13 +37,14 @@ const ProductImage: React.FC<TProductImage> = ({
 
   if (normalizedSrc) {
     return (
-      <Image
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
         src={normalizedSrc}
         alt={alt}
         width={1200}
         height={1200}
-        priority={priority}
-        quality={quality}
+        loading={priority ? "eager" : "lazy"}
+        fetchPriority={priority ? "high" : "auto"}
         sizes={sizes || "(max-width: 1024px) 50vw, 33vw"}
         className={className}
       />

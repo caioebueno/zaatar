@@ -6,6 +6,14 @@ export type DispatchDriver = {
   priorityLevel: number;
 };
 
+export type OrderPaymentSummary = {
+  amount: number;
+  externalId: string | null;
+  paidAt: string | null;
+  paymentProvider: string | null;
+  paymentType: string;
+};
+
 export type DispatchOrder = {
   createdAt: string;
   currentEstimatedDeliveryDurationMinutes?: number | null;
@@ -30,6 +38,7 @@ export type DispatchOrder = {
   orderProducts: unknown[];
   paidAt: string | null;
   paymentMethod: string;
+  payments: OrderPaymentSummary[];
   preparationTaskStation: unknown[];
   progressiveDiscountSnapshot?: unknown;
   redeemedRewards: unknown[];

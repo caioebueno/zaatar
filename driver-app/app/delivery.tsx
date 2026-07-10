@@ -1089,8 +1089,8 @@ export default function DeliveryScreen() {
   const router  = useRouter();
   const insets  = useSafeAreaInsets();
 
-  const [dispatch,      setDispatch]      = useState<DispatchEntity | null>(null);
-  const [loading,       setLoading]       = useState(true);
+  const [dispatch,        setDispatch]        = useState<DispatchEntity | null>(null);
+  const [loading,         setLoading]         = useState(true);
   const [completedOrders, setCompletedOrders] = useState<DispatchOrder[] | null>(null);
 
   const fetchDispatch = useCallback(async () => {

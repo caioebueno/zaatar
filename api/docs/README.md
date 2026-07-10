@@ -26,6 +26,7 @@ All responses are JSON. All protected routes require an `Authorization: Bearer <
 | [progressive-discount.md](./progressive-discount.md) | Full `/progressive-discount` schema, selection behavior, and examples |
 | [address-search.md](./address-search.md) | Full `/address-search` schema, behavior, and examples |
 | [orders.md](./orders.md) | List/get/create/update orders, orders by station |
+| [entities/order-payment.md](./entities/order-payment.md) | OrderPayment CRUD (`/orders/:id/payments`, `/payments/:id`) |
 | [order-intents.md](./order-intents.md) | Create/edit customer draft order intents (`/order-intents/upsert`) |
 | [dispatch.md](./dispatch.md) | Dispatch management (manager), driver dispatch flow |
 | [dispatch-route.md](./dispatch-route.md) | GPS route tracking, route sessions, route history |

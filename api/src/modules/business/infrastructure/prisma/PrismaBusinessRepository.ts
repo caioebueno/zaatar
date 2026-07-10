@@ -1,9 +1,11 @@
 import { randomUUID } from "node:crypto";
 import prisma from "../../../../prisma.js";
 import type {
+  BusinessMemberRecord,
   BusinessBranchRecord,
   BusinessRecord,
   BusinessRepository,
+  CreateBusinessMemberInput,
   CurrentBusinessRecord,
   CreateOwnedBusinessInput,
   OwnedBusinessRecord,
@@ -65,10 +67,12 @@ export class PrismaBusinessRepository implements BusinessRepository {
         ...insertValues,
       );
 
-      await tx.businessOwner.create({
+      await tx.businessMember.create({
         data: {
           businessId,
           userId: input.userId,
+          role: "OWNER",
+          status: "ACTIVE",
         },
       });
 
@@ -116,8 +120,11 @@ export class PrismaBusinessRepository implements BusinessRepository {
   }
 
   async findOwnedBusinesses(userId: string): Promise<OwnedBusinessRecord[]> {
-    const rows = await prisma.businessOwner.findMany({
-      where: { userId },
+    const rows = await prisma.businessMember.findMany({
+      where: {
+        userId,
+        status: "ACTIVE",
+      },
       select: {
         businessId: true,
         business: {
@@ -143,6 +150,90 @@ export class PrismaBusinessRepository implements BusinessRepository {
         } satisfies OwnedBusinessRecord;
       })
       .filter((row): row is OwnedBusinessRecord => row !== null);
+  }
+
+  async listBusinessMembers(businessId: string): Promise<BusinessMemberRecord[]> {
+    const rows = await prisma.businessMember.findMany({
+      where: {
+        businessId,
+        status: "ACTIVE",
+      },
+      select: {
+        createdAt: true,
+        role: true,
+        status: true,
+        userId: true,
+        user: {
+          select: {
+            email: true,
+            name: true,
+            phone: true,
+          },
+        },
+      },
+      orderBy: [
+        { createdAt: "asc" },
+        { userId: "asc" },
+      ],
+    });
+
+    return rows.map((row) => ({
+      createdAt: row.createdAt,
+      email: row.user.email,
+      name: row.user.name,
+      phone: row.user.phone,
+      role: row.role,
+      status: row.status,
+      userId: row.userId,
+    }));
+  }
+
+  async addBusinessMember(
+    input: CreateBusinessMemberInput,
+  ): Promise<BusinessMemberRecord> {
+    const membership = await prisma.businessMember.upsert({
+      where: {
+        businessId_userId: {
+          businessId: input.businessId,
+          userId: input.userId,
+        },
+      },
+      create: {
+        businessId: input.businessId,
+        invitedByUserId: input.invitedByUserId ?? null,
+        role: input.role,
+        status: "ACTIVE",
+        userId: input.userId,
+      },
+      update: {
+        invitedByUserId: input.invitedByUserId ?? null,
+        role: input.role,
+        status: "ACTIVE",
+      },
+      select: {
+        createdAt: true,
+        role: true,
+        status: true,
+        userId: true,
+        user: {
+          select: {
+            email: true,
+            name: true,
+            phone: true,
+          },
+        },
+      },
+    });
+
+    return {
+      createdAt: membership.createdAt,
+      email: membership.user.email,
+      name: membership.user.name,
+      phone: membership.user.phone,
+      role: membership.role,
+      status: membership.status,
+      userId: membership.userId,
+    };
   }
 
   async findCurrentBusinessById(

@@ -27,7 +27,9 @@ export type OrderListItem = {
 
 export type OrderPaymentSummary = {
   amount: number;
+  externalId: string | null;
   paidAt: string | null;
+  paymentProvider: string | null;
   paymentType: string;
 };
 

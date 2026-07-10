@@ -1,6 +1,7 @@
 import overviewMd from '../../api/docs/README.md?raw'
 import entitiesMd from '../../api/docs/entities.md?raw'
 import entityOrderMd from '../../api/docs/entities/order.md?raw'
+import entityOrderPaymentMd from '../../api/docs/entities/order-payment.md?raw'
 import entityOrderIntentMd from '../../api/docs/entities/order-intent.md?raw'
 import entityCustomerMd from '../../api/docs/entities/customer.md?raw'
 import entityDispatchMd from '../../api/docs/entities/dispatch.md?raw'
@@ -47,7 +48,8 @@ export type DocEntry = {
 export const docs: DocEntry[] = [
   { id: 'overview',       title: 'Overview',          group: null,                    content: overviewMd },
   { id: 'entities',       title: 'Entities Overview', group: 'Entities',              content: entitiesMd },
-  { id: 'entity-order',   title: 'Order',             group: 'Entities',              content: entityOrderMd },
+  { id: 'entity-order',         title: 'Order',         group: 'Entities',              content: entityOrderMd },
+  { id: 'entity-order-payment', title: 'OrderPayment', group: 'Entities',              content: entityOrderPaymentMd },
   { id: 'entity-order-intent', title: 'OrderIntent',  group: 'Entities',              content: entityOrderIntentMd },
   { id: 'entity-customer',title: 'Customer',          group: 'Entities',              content: entityCustomerMd },
   { id: 'entity-dispatch',title: 'Dispatch',          group: 'Entities',              content: entityDispatchMd },

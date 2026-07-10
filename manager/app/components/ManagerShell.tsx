@@ -137,7 +137,7 @@ const NAV_GROUPS: NavGroup[] = [
       //   ],
       // },
       // { type: "link", href: "/onboarding",          label: "Onboarding", icon: <IOnboarding /> },
-      // { type: "link", href: "/settings/order-link", label: "Settings",   icon: <ISettings />   },
+      { type: "link", href: "/settings/team", label: "Team", icon: <ISettings /> },
     ],
   },
   {

@@ -86,9 +86,10 @@ export class PrismaChatwootWebhookRepository implements ChatwootWebhookRepositor
     const rows = await prisma.$queryRaw<TokenRow[]>`
       SELECT DISTINCT d."pushToken" AS "pushToken"
       FROM "UserPushDevice" d
-      INNER JOIN "BusinessOwner" bo
-        ON bo."userId" = d."userId"
-        AND bo."businessId" = ${businessId}
+      INNER JOIN "BusinessMember" bm
+        ON bm."userId" = d."userId"
+        AND bm."businessId" = ${businessId}
+        AND bm."status" = 'ACTIVE'::"BusinessMembershipStatus"
       WHERE d."businessId" = ${businessId}
         AND d."platform" = 'IOS'::"UserPushDevicePlatform"
         AND d."revokedAt" IS NULL

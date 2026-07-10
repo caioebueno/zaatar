@@ -642,8 +642,10 @@ function extractDiscountedSubtotalFromSnapshot(value: unknown): number | null {
 
 type OrderPaymentRow = {
   amount: number | string;
+  externalId: string | null;
   orderId: string;
   paidAt: Date | null;
+  paymentProvider: string | null;
   paymentType: string;
 };
 
@@ -663,6 +665,8 @@ async function loadOrderPaymentsByOrderIds(
         "orderId",
         "amount",
         "paidAt",
+        "paymentProvider"::text AS "paymentProvider",
+        "externalId",
         "paymentType"::text AS "paymentType"
       FROM "OrderPayment"
       WHERE "orderId" IN (${Prisma.join(uniqueOrderIds)})
@@ -673,7 +677,9 @@ async function loadOrderPaymentsByOrderIds(
       const payments = paymentsByOrderId.get(row.orderId) ?? [];
       payments.push({
         amount: Number(row.amount || 0),
+        externalId: row.externalId,
         paidAt: row.paidAt ? row.paidAt.toISOString() : null,
+        paymentProvider: row.paymentProvider,
         paymentType: row.paymentType,
       });
       paymentsByOrderId.set(row.orderId, payments);
@@ -689,7 +695,9 @@ function buildOrderPayments(
   storedPayments: OrderPaymentSummary[],
   fallback: {
     amount: number;
+    externalId?: string | null;
     paidAt: Date | string | null;
+    paymentProvider?: string | null;
     paymentType: string;
   },
 ): OrderPaymentSummary[] {
@@ -700,10 +708,12 @@ function buildOrderPayments(
   return [
     {
       amount: Math.max(0, Math.round(fallback.amount || 0)),
+      externalId: fallback.externalId ?? null,
       paidAt:
         fallback.paidAt instanceof Date
           ? fallback.paidAt.toISOString()
           : fallback.paidAt,
+      paymentProvider: fallback.paymentProvider ?? null,
       paymentType: fallback.paymentType,
     },
   ];

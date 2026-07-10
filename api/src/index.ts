@@ -6,6 +6,7 @@ import { makeLoginOwnerController } from "./modules/owner/main/makeLoginOwnerCon
 import { makeOwnerAuthController } from "./modules/owner/main/makeOwnerAuthController.js";
 import { makeRegisterOwnerController } from "./modules/owner/main/makeRegisterOwnerController.js";
 import { makeCreateBusinessController } from "./modules/business/main/makeCreateBusinessController.js";
+import { makeBusinessMembersController } from "./modules/business/main/makeBusinessMembersController.js";
 import { makeGetCurrentBusinessController } from "./modules/business/main/makeGetCurrentBusinessController.js";
 import { makeListOwnedBusinessesController } from "./modules/business/main/makeListOwnedBusinessesController.js";
 import { makeGetCurrentBusinessSettingsController } from "./modules/business-settings/main/makeGetCurrentBusinessSettingsController.js";
@@ -36,6 +37,7 @@ import { makeStationController } from "./modules/station/main/makeStationControl
 import { makePreparationTaskController } from "./modules/preparation-task/main/makePreparationTaskController.js";
 import { makeChatwootWebhookController } from "./modules/chatwoot-webhook/main/makeChatwootWebhookController.js";
 import { makeOrderIntentController } from "./modules/order-intent/main/makeOrderIntentController.js";
+import { makePaymentsController } from "./modules/payments/main/makePaymentsController.js";
 import { HmacDriverAccessTokenVerifier } from "./modules/driver/infrastructure/security/HmacDriverAccessTokenVerifier.js";
 import { HmacAccessTokenVerifier } from "./modules/owner/infrastructure/security/HmacAccessTokenVerifier.js";
 import { chatwootRealtimeHub } from "./shared/realtime/chatwootRealtimeHub.js";
@@ -61,6 +63,7 @@ const loginOwnerController = makeLoginOwnerController();
 const ownerAuthController = makeOwnerAuthController();
 const listOwnedBusinessesController = makeListOwnedBusinessesController();
 const createBusinessController = makeCreateBusinessController();
+const businessMembersController = makeBusinessMembersController();
 const getCurrentBusinessController = makeGetCurrentBusinessController();
 const getCurrentBusinessSettingsController = makeGetCurrentBusinessSettingsController();
 const getPublicBusinessSettingsController = makeGetPublicBusinessSettingsController();
@@ -94,6 +97,7 @@ const setDispatchStartedDeliveryAtController =
 const dispatchRouteController = makeDispatchRouteController();
 const chatwootWebhookController = makeChatwootWebhookController();
 const orderIntentController = makeOrderIntentController();
+const paymentsController = makePaymentsController();
 const accessTokenVerifier = new HmacAccessTokenVerifier();
 const driverAccessTokenVerifier = new HmacDriverAccessTokenVerifier();
 
@@ -451,6 +455,19 @@ const routes: Route[] = [
   },
   {
     method: "GET",
+    matcher: /^\/businesses\/current\/members$/,
+    controller: businessMembersController,
+    requiresAuth: true,
+  },
+  {
+    method: "POST",
+    matcher: /^\/businesses\/current\/members$/,
+    controller: businessMembersController,
+    requiresAuth: true,
+    bodyMode: "json",
+  },
+  {
+    method: "GET",
     matcher: /^\/businesses\/current\/settings$/,
     controller: getCurrentBusinessSettingsController,
     requiresAuth: true,
@@ -540,6 +557,32 @@ const routes: Route[] = [
     controller: manageOrdersController,
     requiresAuth: true,
     bodyMode: "json",
+  },
+  {
+    method: "GET",
+    matcher: /^\/orders\/[^/]+\/payments$/,
+    controller: paymentsController,
+    requiresAuth: true,
+  },
+  {
+    method: "POST",
+    matcher: /^\/orders\/[^/]+\/payments$/,
+    controller: paymentsController,
+    requiresAuth: true,
+    bodyMode: "json",
+  },
+  {
+    method: "PATCH",
+    matcher: /^\/payments\/[^/]+$/,
+    controller: paymentsController,
+    requiresAuth: true,
+    bodyMode: "json",
+  },
+  {
+    method: "DELETE",
+    matcher: /^\/payments\/[^/]+$/,
+    controller: paymentsController,
+    requiresAuth: true,
   },
   {
     method: "PATCH",
@@ -1035,6 +1078,7 @@ const server = createServer(async (request, response) => {
   let auth:
     | {
         businessId?: string | null;
+        businessRole?: string | null;
         email: string;
         name: string;
         userId: string;
@@ -1083,7 +1127,8 @@ const server = createServer(async (request, response) => {
 
     auth = {
       ...tokenPayload,
-      businessId: businessContext,
+      businessId: businessContext.businessId,
+      businessRole: businessContext.businessRole,
     };
   }
 
@@ -1244,29 +1289,50 @@ function extractBusinessId(request: IncomingMessage, parsedUrl: URL): string | n
 async function resolveBusinessIdForUser(
   userId: string,
   requestedBusinessId: string | null,
-): Promise<string | null | "__forbidden__"> {
-  const owned = await prisma.businessOwner.findMany({
-    where: { userId },
+): Promise<
+  | {
+      businessId: string | null;
+      businessRole: string | null;
+    }
+  | "__forbidden__"
+> {
+  const memberships = await prisma.businessMember.findMany({
+    where: {
+      userId,
+      status: "ACTIVE",
+    },
     select: {
       businessId: true,
+      role: true,
     },
     orderBy: {
       createdAt: "asc",
     },
   });
 
-  if (owned.length === 0) {
-    return null;
+  if (memberships.length === 0) {
+    return {
+      businessId: null,
+      businessRole: null,
+    };
   }
 
   if (requestedBusinessId) {
-    const allowed = owned.some(
+    const allowedMembership = memberships.find(
       (item) => item.businessId.trim() === requestedBusinessId.trim(),
     );
-    return allowed ? requestedBusinessId : "__forbidden__";
+    return allowedMembership
+      ? {
+          businessId: requestedBusinessId,
+          businessRole: allowedMembership.role,
+        }
+      : "__forbidden__";
   }
 
-  return owned[0]?.businessId ?? null;
+  return {
+    businessId: memberships[0]?.businessId ?? null,
+    businessRole: memberships[0]?.role ?? null,
+  };
 }
 
 function normalizeApiPath(pathname: string): string {
@@ -1292,6 +1358,7 @@ async function resolveManagerAuthContext(input: {
       ok: true;
       auth: {
         businessId?: string | null;
+        businessRole?: string | null;
         email: string;
         name: string;
         userId: string;
@@ -1326,7 +1393,8 @@ async function resolveManagerAuthContext(input: {
     ok: true,
     auth: {
       ...tokenPayload,
-      businessId: businessContext,
+      businessId: businessContext.businessId,
+      businessRole: businessContext.businessRole,
     },
   };
 }
