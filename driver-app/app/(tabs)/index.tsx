@@ -14,7 +14,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 
 import { useAuth } from '@/context/auth';
-import { getNextDispatch, listDriverDispatches, activateDriver, deactivateDriver, DispatchEntity } from '@/lib/dispatch-api';
+import { getNextDispatch, listDriverDispatches, activateDriver, DispatchEntity } from '@/lib/dispatch-api';
 import { calculateOrderTotal } from '@/utils/orderTotal';
 import {
   getTrackingStatus,
@@ -211,23 +211,21 @@ function LocationTrackingCard({
     ? mode === 'route'
       ? 'COMPARTILHANDO POSIÇÃO • ENTREGA EM ROTA'
       : 'COMPARTILHANDO POSIÇÃO • SEGUNDO PLANO'
-    : 'Sua posição não está sendo compartilhada';
+    : null;
   const ctaLabel = active ? 'Desativar rastreamento' : 'Ativar rastreamento de posição';
 
   return (
-    <View style={trackingCardStyles.section}>
-      <Text style={trackingCardStyles.kicker}>Rastreamento de Posição</Text>
-
-      <View
-        style={[
-          trackingCardStyles.card,
-          active ? trackingCardStyles.cardActive : trackingCardStyles.cardInactive,
-        ]}
-      >
-        <View style={trackingCardStyles.body}>
-          <TrackingGlyph active={active} />
-          <View style={{ flex: 1 }}>
-            <Text style={trackingCardStyles.title}>{title}</Text>
+    <View
+      style={[
+        trackingCardStyles.card,
+        active ? trackingCardStyles.cardActive : trackingCardStyles.cardInactive,
+      ]}
+    >
+      <View style={trackingCardStyles.body}>
+        <TrackingGlyph active={active} />
+        <View style={{ flex: 1 }}>
+          <Text style={trackingCardStyles.title}>{title}</Text>
+          {subtitle ? (
             <Text
               style={[
                 trackingCardStyles.subtitle,
@@ -236,46 +234,37 @@ function LocationTrackingCard({
             >
               {subtitle}
             </Text>
-          </View>
+          ) : null}
         </View>
-
-        <TouchableOpacity
-          style={[
-            trackingCardStyles.cta,
-            active ? trackingCardStyles.ctaActive : trackingCardStyles.ctaInactive,
-            busy && { opacity: 0.65 },
-          ]}
-          onPress={onPress}
-          disabled={busy}
-          activeOpacity={0.9}
-        >
-          <View style={trackingCardStyles.ctaInner}>
-            {!active ? <Ionicons name="paper-plane-outline" size={18} color={D.zippy} /> : null}
-            <Text
-              style={[
-                trackingCardStyles.ctaText,
-                active ? trackingCardStyles.ctaTextActive : trackingCardStyles.ctaTextInactive,
-              ]}
-            >
-              {ctaLabel}
-            </Text>
-          </View>
-        </TouchableOpacity>
       </View>
+
+      <TouchableOpacity
+        style={[
+          trackingCardStyles.cta,
+          active ? trackingCardStyles.ctaActive : trackingCardStyles.ctaInactive,
+          busy && { opacity: 0.65 },
+        ]}
+        onPress={onPress}
+        disabled={busy}
+        activeOpacity={0.9}
+      >
+        <View style={trackingCardStyles.ctaInner}>
+          {!active ? <Ionicons name="paper-plane-outline" size={18} color={D.zippy} /> : null}
+          <Text
+            style={[
+              trackingCardStyles.ctaText,
+              active ? trackingCardStyles.ctaTextActive : trackingCardStyles.ctaTextInactive,
+            ]}
+          >
+            {ctaLabel}
+          </Text>
+        </View>
+      </TouchableOpacity>
     </View>
   );
 }
 
 const trackingCardStyles = StyleSheet.create({
-  section: { gap: 10 },
-  kicker: {
-    fontFamily: MONO_B,
-    fontSize: 10.5,
-    letterSpacing: 1.8,
-    textTransform: 'uppercase',
-    color: D.vfaint,
-    paddingHorizontal: 2,
-  },
   card: {
     backgroundColor: D.surf,
     borderRadius: 22,
@@ -753,7 +742,6 @@ function HomeScreen({
   trackingBusy,
   trackingMode,
   onActivate,
-  onDeactivate,
   onToggleTracking,
   onShowHistory,
 }: {
@@ -765,7 +753,6 @@ function HomeScreen({
   trackingBusy: boolean;
   trackingMode: TrackingStatus['mode'];
   onActivate: () => void;
-  onDeactivate: () => void;
   onToggleTracking: () => void;
   onShowHistory: () => void;
 }) {
@@ -805,22 +792,6 @@ function HomeScreen({
           onPress={onToggleTracking}
         />
 
-        {active ? (
-          <View style={{ alignItems: 'flex-end', marginTop: -4 }}>
-            <TouchableOpacity
-              onPress={onDeactivate}
-              disabled={activating}
-              activeOpacity={0.8}
-              style={[
-                homeStyles.secondaryAction,
-                activating && { opacity: 0.55 },
-              ]}
-            >
-              <Text style={homeStyles.secondaryActionText}>Encerrar turno</Text>
-            </TouchableOpacity>
-          </View>
-        ) : null}
-
         {/* Delivery / Activate section */}
         <View style={{ marginHorizontal: -6 }}>
           {loading
@@ -849,17 +820,6 @@ const homeStyles = StyleSheet.create({
   avatar:      { width: 36, height: 36, borderRadius: 10, backgroundColor: 'rgba(255,61,20,0.12)', borderWidth: 1.5, borderColor: 'rgba(255,61,20,0.24)', alignItems: 'center', justifyContent: 'center' },
   avatarText:  { fontFamily: SANS_EB, fontSize: 14, color: D.zippy, letterSpacing: -0.3 },
   sectionKicker:   { fontFamily: MONO_B, fontSize: 11.5, letterSpacing: 1.5, textTransform: 'uppercase', color: D.faint },
-  secondaryAction: {
-    paddingVertical: 8,
-    paddingHorizontal: 4,
-  },
-  secondaryActionText: {
-    fontFamily: MONO_B,
-    fontSize: 11,
-    letterSpacing: 0.9,
-    textTransform: 'uppercase',
-    color: D.faint,
-  },
 });
 
 // ─── Root export ──────────────────────────────────────────────────────────────
@@ -973,31 +933,6 @@ export default function DriverHome() {
     }
   }, [token, refreshTrackingStatus]);
 
-  const handleDeactivate = useCallback(async () => {
-    if (!token) return;
-    if (dispatch) {
-      Alert.alert(
-        'Entrega em andamento',
-        'Conclua a entrega atual antes de se desativar.',
-        [{ text: 'OK' }],
-      );
-      return;
-    }
-    setActivating(true);
-    try {
-      await deactivateDriver(token);
-      setActive(false);
-      setDispatch(null);
-      stopDriverTracking()
-        .then(refreshTrackingStatus)
-        .catch((e) => console.log('[home] stopDriverTracking error', e));
-    } catch (e) {
-      console.log('[home] deactivate error', e);
-    } finally {
-      setActivating(false);
-    }
-  }, [token, dispatch, refreshTrackingStatus]);
-
   const handleToggleTracking = useCallback(async () => {
     if (!token) return;
 
@@ -1034,7 +969,6 @@ export default function DriverHome() {
       trackingBusy={trackingBusy}
       trackingMode={trackingStatus.mode}
       onActivate={handleActivate}
-      onDeactivate={handleDeactivate}
       onToggleTracking={handleToggleTracking}
       onShowHistory={() => router.push('/entregas')}
     />

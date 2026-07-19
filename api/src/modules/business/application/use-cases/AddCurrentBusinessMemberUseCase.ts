@@ -113,10 +113,6 @@ function normalizeActorRole(value: unknown): AssignableMemberRole {
     throw new BusinessAccessDeniedError();
   }
 
-  if (value !== "OWNER" && value !== "ADMIN") {
-    throw new BusinessAccessDeniedError();
-  }
-
   return value as AssignableMemberRole;
 }
 
@@ -136,6 +132,14 @@ function normalizeRequestedRole(
   }
 
   const normalized = value as AssignableMemberRole;
+  if (actorRole === "MANAGER" && normalized !== "MANAGER") {
+    throw new BusinessAccessDeniedError();
+  }
+
+  if (normalized === "ADMIN" && actorRole === "MANAGER") {
+    throw new BusinessAccessDeniedError();
+  }
+
   if (normalized === "OWNER" && actorRole !== "OWNER") {
     throw new BusinessAccessDeniedError();
   }
