@@ -2,9 +2,39 @@ import type { IncomingMessage, ServerResponse } from "node:http";
 import { setCorsHeaders } from "./cors.js";
 
 export function sendJson(response: ServerResponse, statusCode: number, payload: unknown) {
+  sendHttpResponse(response, {
+    statusCode,
+    body: payload,
+  });
+}
+
+export function sendHttpResponse(
+  response: ServerResponse,
+  input: {
+    body: unknown;
+    contentType?: string;
+    headers?: Record<string, string>;
+    statusCode: number;
+  },
+) {
   setCorsHeaders(response);
-  response.writeHead(statusCode, { "content-type": "application/json" });
-  response.end(JSON.stringify(payload));
+
+  const headers = { ...(input.headers ?? {}) };
+  const payload = input.body;
+  const isBufferPayload = Buffer.isBuffer(payload);
+  const defaultContentType =
+    typeof payload === "string" || isBufferPayload
+      ? "text/plain; charset=utf-8"
+      : "application/json";
+
+  if (!headers["content-type"]) {
+    headers["content-type"] = input.contentType ?? defaultContentType;
+  }
+
+  response.writeHead(input.statusCode, headers);
+  response.end(
+    typeof payload === "string" || isBufferPayload ? payload : JSON.stringify(payload),
+  );
 }
 
 export async function readJsonBody(request: IncomingMessage): Promise<unknown> {

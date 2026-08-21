@@ -133,16 +133,18 @@ model File {
 }
 
 model ModifierGroup {
-  id           String              @id
-  createdAt    DateTime            @default(now())
-  title        String
-  translations Json?
-  required     Boolean             @default(false)
-  type         ModifierGroupType?
-  products     Product[]
-  items        ModifierGroupItem[]
-  minSelection Int?
-  maxSelection Int?
+  id                        String              @id
+  createdAt                 DateTime            @default(now())
+  title                     String
+  translations              Json?
+  required                  Boolean             @default(false)
+  type                      ModifierGroupType?
+  products                  Product[]
+  items                     ModifierGroupItem[]
+  minSelection              Int?
+  maxSelection              Int?
+  squareModifierListId      String?             @unique
+  squareModifierListVersion String?
 }
 
 model ModifierGroupItem {
@@ -159,6 +161,8 @@ model ModifierGroupItem {
   preparationStepModifierTracks PreparationStepModifierTrack[]
   orderProducts                 OrderProducts[]
   orderIntentProducts           OrderIntentProduct[]
+  squareModifierId              String?                        @unique
+  squareModifierVersion         String?
 }
 
 enum ModifierGroupType {
@@ -183,6 +187,7 @@ model Business {
   branches                    Branch[]
   members                     BusinessMember[]
   integrations                ExternalIntegrationConnection[]
+  squareConnections           SquareConnection[]
   pushDevices                 UserPushDevice[]
 }
 
@@ -198,6 +203,7 @@ model User {
   lastLoginAt         DateTime?
   businessMemberships BusinessMember[]
   integrations        ExternalIntegrationConnection[]
+  squareConnections   SquareConnection[]
   otpChallenges       OwnerOtpChallenge[]
   pushDevices         UserPushDevice[]
 }
@@ -291,6 +297,28 @@ model ExternalIntegrationConnection {
   @@unique([provider, userId])
   @@index([userId, provider])
   @@index([businessId])
+}
+
+model SquareConnection {
+  id           String                         @id
+  createdAt    DateTime                       @default(now())
+  updatedAt    DateTime                       @updatedAt
+  environment  ExternalIntegrationEnvironment @default(SANDBOX)
+  user         User                           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       String
+  business     Business                       @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  businessId   String                         @unique
+  merchantId   String?                        @unique
+  accessToken  String
+  refreshToken String?
+  scope        String?
+  tokenType    String?
+  expiresAt    DateTime?
+  connectedAt  DateTime                       @default(now())
+  rawPayload   Json?
+
+  @@index([userId, environment])
+  @@index([merchantId])
 }
 
 model ExternalMenuEntityMap {
@@ -662,6 +690,10 @@ model Product {
   customerRewards            CustomerReward[]
   translations               Json?
   preparationSteps           PreparationStep[]
+  squareItemId               String?                           @unique
+  squareItemVersion          String?
+  squareVariationId          String?                           @unique
+  squareVariationVersion     String?
 
   @@index([categoryId, categoryIndex])
 }
@@ -719,15 +751,17 @@ enum ProductItemType {
 }
 
 model Menu {
-  id             String         @id
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
-  name           String
-  active         Boolean        @default(true)
-  isDefault      Boolean        @default(false)
-  categories     Category[]
-  menuCategories MenuCategory[]
-  menuVisits     MenuVisit[]
+  id                String         @id
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+  name              String
+  active            Boolean        @default(true)
+  isDefault         Boolean        @default(false)
+  squareMenuId      String?        @unique
+  squareMenuVersion String?
+  categories        Category[]
+  menuCategories    MenuCategory[]
+  menuVisits        MenuVisit[]
 
   @@index([isDefault])
 }
@@ -770,12 +804,16 @@ model Category {
 }
 
 model MenuCategory {
-  menu       Menu     @relation(fields: [menuId], references: [id], onDelete: Cascade)
-  menuId     String
-  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  categoryId String
-  menuIndex  Int?
-  createdAt  DateTime @default(now())
+  menu                      Menu     @relation(fields: [menuId], references: [id], onDelete: Cascade)
+  menuId                    String
+  category                  Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId                String
+  menuIndex                 Int?
+  createdAt                 DateTime @default(now())
+  squareCategoryId          String?  @unique
+  squareCategoryVersion     String?
+  squareMenuCategoryId      String?  @unique
+  squareMenuCategoryVersion String?
 
   @@id([menuId, categoryId])
   @@index([menuId, menuIndex])
@@ -995,6 +1033,8 @@ model Order {
   type                                    OrderType                 @default(DELIVERY)
   paymentMethod                           PaymentType               @default(CARD)
   paymentProvider                         PaymentProvider?
+  sourcePlatform                          OrderSourcePlatform?
+  customerNameSnapshot                    String?
   tipAmount                               Int?
   tags                                    String[]                  @default([])
   progressiveDiscountSnapshot             Json?
@@ -1019,6 +1059,7 @@ model Order {
 
   @@index([dispatchId, dispatchOrderIndex])
   @@index([branchId])
+  @@index([sourcePlatform])
 }
 
 model OrderPayment {
@@ -1150,6 +1191,14 @@ enum PaymentType {
 
 enum PaymentProvider {
   STRIPE
+}
+
+enum OrderSourcePlatform {
+  FOODY
+  DOORDASH
+  UBER_EATS
+  SQUARE
+  UNKNOWN
 }
 
 enum OrderType {

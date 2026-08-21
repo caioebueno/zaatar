@@ -29,16 +29,23 @@ export class PrismaDriverAuthRepository implements DriverAuthRepository {
 
     const rows = await prisma.$queryRaw<DriverRow[]>`
       SELECT
-        "id",
-        "name",
-        "active",
-        "activatedAt",
-        "deactivatedAt",
-        "priorityLevel",
-        "phone"
-      FROM "Driver"
-      WHERE "phone" IN (${Prisma.join(phoneCandidates)})
-      ORDER BY "createdAt" ASC
+        driver."id",
+        driver."name",
+        EXISTS (
+          SELECT 1
+          FROM "DispatchRouteSession" session
+          INNER JOIN "DispatchRoutePoint" point
+            ON point."sessionId" = session."id"
+          WHERE session."driverId" = driver."id"
+            AND point."recordedAt" >= CURRENT_TIMESTAMP - INTERVAL '10 minutes'
+        ) AS "active",
+        driver."activatedAt",
+        driver."deactivatedAt",
+        driver."priorityLevel",
+        driver."phone"
+      FROM "Driver" driver
+      WHERE driver."phone" IN (${Prisma.join(phoneCandidates)})
+      ORDER BY driver."createdAt" ASC
       LIMIT 1
     `;
 

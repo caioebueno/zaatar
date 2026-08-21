@@ -217,23 +217,25 @@ export class ManageOrdersController implements HttpController {
       const orderId = randomUUID();
       const orderNumber = buildReadableOrderNumber();
       const preparationStepDefinitions = await getPreparationStepDefinitions(prisma);
+      const orderCreateData: Prisma.OrderUncheckedCreateInput = {
+        id: orderId,
+        number: orderNumber,
+        amount: orderAmount,
+        type: orderType,
+        paymentMethod,
+        paymentProvider: paymentProvider ?? null,
+        sourcePlatform: "FOODY",
+        language: language ?? null,
+        customerId: customerId ?? null,
+        deliveryAddressId:
+          orderType === "DELIVERY" ? deliveryAddressId ?? null : null,
+        tipAmount: tipAmount ?? null,
+        scheduleFor: scheduleFor ?? null,
+      };
 
       await prisma.$transaction(async (tx) => {
         const createdOrder = await tx.order.create({
-          data: {
-            id: orderId,
-            number: orderNumber,
-            amount: orderAmount,
-            type: orderType,
-            paymentMethod,
-            paymentProvider: paymentProvider ?? null,
-            language: language ?? null,
-            customerId: customerId ?? null,
-            deliveryAddressId:
-              orderType === "DELIVERY" ? deliveryAddressId ?? null : null,
-            tipAmount: tipAmount ?? null,
-            scheduleFor: scheduleFor ?? null,
-          },
+          data: orderCreateData,
         });
 
         if (branchId !== undefined) {

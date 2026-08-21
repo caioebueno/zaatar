@@ -1,25 +1,9 @@
 import type { StationRepository } from "../domain/station.repository";
 
-function buildDayWindow(referenceDate: Date) {
+function buildRecentWindow(referenceDate: Date) {
   return {
-    start: new Date(
-      referenceDate.getFullYear(),
-      referenceDate.getMonth(),
-      referenceDate.getDate(),
-      0,
-      0,
-      0,
-      0,
-    ),
-    end: new Date(
-      referenceDate.getFullYear(),
-      referenceDate.getMonth(),
-      referenceDate.getDate() + 1,
-      0,
-      0,
-      0,
-      0,
-    ),
+    start: new Date(referenceDate.getTime() - 24 * 60 * 60 * 1000),
+    end: referenceDate,
   };
 }
 
@@ -27,5 +11,5 @@ export async function getOrdersByStationUseCase(
   repository: StationRepository,
   stationId: string,
 ) {
-  return repository.findOrdersByStation(stationId, buildDayWindow(new Date()));
+  return repository.findOrdersByStation(stationId, buildRecentWindow(new Date()));
 }

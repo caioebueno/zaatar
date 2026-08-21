@@ -7,26 +7,10 @@ export type GetOrdersByStationInput = {
   stationId: string;
 };
 
-function buildDayWindow(referenceDate: Date) {
+function buildRecentWindow(referenceDate: Date) {
   return {
-    start: new Date(
-      referenceDate.getFullYear(),
-      referenceDate.getMonth(),
-      referenceDate.getDate(),
-      0,
-      0,
-      0,
-      0,
-    ),
-    end: new Date(
-      referenceDate.getFullYear(),
-      referenceDate.getMonth(),
-      referenceDate.getDate() + 1,
-      0,
-      0,
-      0,
-      0,
-    ),
+    start: new Date(referenceDate.getTime() - 24 * 60 * 60 * 1000),
+    end: referenceDate,
   };
 }
 
@@ -36,7 +20,7 @@ export class GetOrdersByStationUseCase {
   async execute(input: GetOrdersByStationInput): Promise<OrdersByStationItem[]> {
     return this.repository.findByStation(
       input.stationId,
-      buildDayWindow(new Date()),
+      buildRecentWindow(new Date()),
     );
   }
 }

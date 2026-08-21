@@ -8,6 +8,11 @@ Endpoints:
 
 - `GET /analytics/sales`
 - `GET /analytics/orders/sales`
+- `GET /v1/analytics/order-quantity`
+- `GET /v1/analytics/revenue`
+- `GET /v1/analytics/new-customers`
+- `GET /v1/analytics/average-ticket`
+- `GET /v1/analytics/customer-retention`
 
 Both routes return the same payload.
 
@@ -126,7 +131,7 @@ Sample:
 
 - Values are returned in **cents** to avoid floating point issues.
 - Canceled orders are excluded.
-- Sales totals include `OrderProducts subtotal + tip + deliveryFee` (delivery orders), without using `Order.amount`.
+- Sales totals include discounted item subtotal plus delivery fee, exclude collected tips, and do not use `Order.amount`.
 
 ### Validation errors (`400`)
 
@@ -156,3 +161,156 @@ Missing business context:
   "field": "businessId"
 }
 ```
+
+## Order Quantity Analytics V1 (Manager Owner Auth)
+
+Endpoint:
+
+- `GET /v1/analytics/order-quantity`
+
+### Purpose
+
+Provides bar-chart-ready order quantity buckets for a date range, with optional comparison data aligned by bucket.
+
+### Authentication
+
+- Requires manager owner access token:
+  - `Authorization: Bearer <manager-access-token>`
+
+### Query params
+
+- `startDate` (required, ISO-8601 datetime)
+- `endDate` (required, ISO-8601 datetime)
+- `compareStartDate` (optional, ISO-8601 datetime)
+- `timezone` (optional, IANA timezone, default `America/New_York`)
+
+Rules:
+
+- `startDate <= endDate`
+- max range: `367` days
+- comparison end date is derived automatically using the same duration as the main range
+
+### Success response (`200`)
+
+```ts
+type OrderQuantityAnalyticsResponse = {
+  metric: "orderQuantity";
+  chartType: "bar";
+  granularity: "day";
+  timezone: string;
+  range: {
+    startDate: string;
+    endDate: string;
+  };
+  comparison?: {
+    startDate: string;
+    endDate: string;
+    total: number;
+    delta: number;
+    deltaPercentage: number | null;
+  };
+  summary: {
+    total: number;
+    averagePerBucket: number;
+    maxBucketValue: number;
+  };
+  buckets: Array<{
+    key: string;
+    label: string;
+    startDate: string;
+    endDate: string;
+    value: number;
+    compareValue?: number | null;
+    delta?: number | null;
+    deltaPercentage?: number | null;
+  }>;
+};
+```
+
+## Metric Analytics V1 (Manager Owner Auth)
+
+Endpoints:
+
+- `GET /v1/analytics/revenue`
+- `GET /v1/analytics/new-customers`
+- `GET /v1/analytics/average-ticket`
+
+### Shared query params
+
+- `startDate` (required, ISO-8601 datetime)
+- `endDate` (required, ISO-8601 datetime)
+- `compareStartDate` (optional, ISO-8601 datetime)
+- `timezone` (optional, IANA timezone, default `America/New_York`)
+
+### Shared response shape
+
+```ts
+type MetricAnalyticsResponse = {
+  metric: "revenue" | "newCustomers" | "averageTicket";
+  chartType: "bar";
+  granularity: "day";
+  timezone: string;
+  range: {
+    startDate: string;
+    endDate: string;
+  };
+  comparison?: {
+    startDate: string;
+    endDate: string;
+    total: number;
+    delta: number;
+    deltaPercentage: number | null;
+  };
+  summary: {
+    total: number;
+    averagePerBucket: number;
+    maxBucketValue: number;
+  };
+  buckets: Array<{
+    key: string;
+    label: string;
+    startDate: string;
+    endDate: string;
+    value: number;
+    compareValue?: number | null;
+    delta?: number | null;
+    deltaPercentage?: number | null;
+  }>;
+};
+```
+
+## Customer Retention Analytics V1 (Manager Owner Auth)
+
+Endpoint:
+
+- `GET /v1/analytics/customer-retention`
+
+### Purpose
+
+Provides retention-oriented customer analytics for a date range, including:
+
+- active customer count
+- won customers and lost customers versus an optional comparison period
+- customer distribution by order count buckets
+- daily new vs returning customer activity and share
+
+### Shared query params
+
+- `startDate` (required, ISO-8601 datetime)
+- `endDate` (required, ISO-8601 datetime)
+- `compareStartDate` (optional, ISO-8601 datetime)
+- `timezone` (optional, IANA timezone, default `America/New_York`)
+
+### Notes
+
+- `activeCustomerCount` means customers with at least one non-canceled order in the main range.
+- `wonCustomers` means active now but not active in the comparison range.
+- `lostCustomers` means the customer's last non-canceled order was at least 45 days before the selected `endDate`.
+- `newVsReturningPerDay` is based on unique active customers per day, not raw orders.
+- `+8` bucket means 9 or more orders.
+
+Notes:
+
+- `revenue` values are in cents and exclude collected tips.
+- `averageTicket` values are in cents and `summary.total` is the overall average ticket across the full range.
+- `newCustomers` counts customers whose first non-canceled order for the business falls inside each bucket.

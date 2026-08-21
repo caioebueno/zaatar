@@ -2,8 +2,16 @@ import prisma from "../../../../../prisma.js";
 import { ensureComboProductItemTable, getComboProductsByComboIds, replaceComboProducts, type ComboProductInput, } from "../persistence/comboProductsStore.js";
 import { Prisma } from "../../../../../../../web/src/generated/prisma/index.js";
 import type { HttpResponse } from "../../../../../shared/http/types.js";
+import { DEFAULT_MENU_ID } from "../constants/menu.js";
 import { NextResponse } from "../shared/http.js";
 import type { NextRequestLike } from "../shared/http.js";
+import { PrismaSquareCatalogSyncTaskRepository } from "../../../../integrations/infrastructure/prisma/PrismaSquareCatalogSyncTaskRepository.js";
+import { PrismaSquareConnectionRepository } from "../../../../integrations/infrastructure/prisma/PrismaSquareConnectionRepository.js";
+import { triggerSquareCatalogSyncTaskProcessing } from "../../../../integrations/main/runSquareCatalogSyncTasks.js";
+import {
+  mapSquareSyncTask,
+  type ProductSquareSyncTaskResponse,
+} from "./squareSyncTask.js";
 
 type ProductVisibleRow = {
   id: string;
@@ -19,6 +27,14 @@ type ProductCategoryEntry = {
   productId: string;
   categoryId: string;
   categoryIndex: number | null;
+};
+
+type LookupCategoryRow = {
+  id: string;
+  name: string;
+  createdAt: Date;
+  menuIndex: number | null;
+  translations: unknown | null;
 };
 
 type DirectComboProductResponse = {
@@ -49,6 +65,9 @@ type ComboSlotInput = {
   sortIndex: number | null;
   options: ComboSlotOptionInput[];
 };
+
+const squareCatalogSyncTaskRepository = new PrismaSquareCatalogSyncTaskRepository();
+const squareConnectionRepository = new PrismaSquareConnectionRepository();
 
 type PostBody = {
   id?: unknown;
@@ -147,6 +166,7 @@ type ProductRowResponse = {
     productName: string;
     quantity: number;
   }[];
+  squareSyncTask: ProductSquareSyncTaskResponse | null;
 };
 
 function mapProductRow(product: {
@@ -205,7 +225,7 @@ function mapProductRow(product: {
       };
     }[];
   }[];
-}, productCategoryEntries: ProductCategoryEntry[], directComboProducts: DirectComboProductResponse[]): ProductRowResponse {
+}, productCategoryEntries: ProductCategoryEntry[], directComboProducts: DirectComboProductResponse[], squareSyncTask?: ProductSquareSyncTaskResponse | null): ProductRowResponse {
   return {
     id: product.id,
     createdAt: product.createdAt.toISOString(),
@@ -293,6 +313,7 @@ function mapProductRow(product: {
           item !== null,
       ),
     products: directComboProducts,
+    squareSyncTask: squareSyncTask ?? null,
   };
 }
 
@@ -604,6 +625,7 @@ function buildFileNameFromUrl(urlValue: string): string {
 export async function POST(request: NextRequestLike) {
   try {
     await ensureComboProductItemTable(prisma);
+    const businessId = request.headers?.["x-business-id"]?.trim() || null;
 
     const body = (await request.json()) as PostBody;
     const id = body.id === undefined ? createId() : parseString(body.id, "id");
@@ -1142,6 +1164,28 @@ export async function POST(request: NextRequestLike) {
       LIMIT 1
     `;
 
+    let squareSyncTask: ProductSquareSyncTaskResponse | null = null;
+    if (businessId) {
+      const squareConnection = await squareConnectionRepository.findByBusinessId(
+        businessId,
+      );
+
+      if (squareConnection) {
+        const createdTask =
+          await squareCatalogSyncTaskRepository.createProductUpdateTask({
+            businessId,
+            productId: createdProduct.id,
+            requestPayload: {
+              source: "PRODUCT_CREATE",
+              triggeredAt: new Date().toISOString(),
+            },
+          });
+
+        squareSyncTask = mapSquareSyncTask(createdTask);
+        triggerSquareCatalogSyncTaskProcessing(5);
+      }
+    }
+
     return NextResponse.json(
       mapProductRow(
         {
@@ -1150,6 +1194,7 @@ export async function POST(request: NextRequestLike) {
         },
         createdProductCategoryRows,
         directProducts,
+        squareSyncTask,
       ),
       { status: 201 },
     );
@@ -1182,9 +1227,10 @@ export async function POST(request: NextRequestLike) {
   }
 }
 
-export async function GET() {
+export async function GET(request?: NextRequestLike) {
   try {
     await ensureComboProductItemTable(prisma);
+    const businessId = request?.headers?.["x-business-id"]?.trim() || null;
 
     const [
       products,
@@ -1275,22 +1321,21 @@ export async function GET() {
           SELECT "id", "alertDriver"
           FROM "Product"
         `,
-        prisma.category.findMany({
-          select: {
-            id: true,
-            name: true,
-            createdAt: true,
-            menuIndex: true,
-          },
-          orderBy: [
-            {
-              menuIndex: "asc",
-            },
-            {
-              createdAt: "asc",
-            },
-          ],
-        }),
+        prisma.$queryRaw<LookupCategoryRow[]>`
+          SELECT
+            c."id",
+            c."name",
+            c."createdAt",
+            mc."menuIndex" AS "menuIndex",
+            c."translations"
+          FROM "MenuCategory" mc
+          INNER JOIN "Category" c ON c."id" = mc."categoryId"
+          WHERE mc."menuId" = ${DEFAULT_MENU_ID}
+          ORDER BY
+            COALESCE(mc."menuIndex", 2147483647) ASC,
+            mc."createdAt" ASC,
+            c."createdAt" ASC
+        `,
         prisma.file.findMany({
           select: {
             id: true,
@@ -1365,6 +1410,12 @@ export async function GET() {
     );
 
     const productIds = products.map((product) => product.id);
+    const latestSquareSyncTasks = businessId
+      ? await squareCatalogSyncTaskRepository.findLatestForProducts({
+          businessId,
+          productIds,
+        })
+      : new Map();
     const productCategoryRows =
       productIds.length === 0
         ? []
@@ -1419,6 +1470,7 @@ export async function GET() {
           },
           productCategoriesByProductId.get(product.id) ?? [],
           directComboProductsByProductId.get(product.id) ?? [],
+          mapSquareSyncTask(latestSquareSyncTasks.get(product.id) ?? null),
         ),
       ),
       lookup: {

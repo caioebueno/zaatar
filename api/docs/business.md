@@ -114,6 +114,15 @@ Request body (all fields optional):
 }
 ```
 
+Supported update fields:
+
+- `name`: business display name
+- `brandColor`: business brand color in `#rrggbb` format
+- `logoUrl`: logo image URL
+- `bannerPhotoUrl`: header image URL
+
+This route is the current API for updating business branding fields. If the manager app says "header image", the API field name is `bannerPhotoUrl`.
+
 Success (`200`): returns updated settings object.
 
 Errors:
@@ -165,6 +174,40 @@ Request body supports the same fields as create branch, including:
 }
 ```
 
+Common branch update fields:
+
+- `name`: branch name
+- `addressDescription`: branch address label or summary
+- `addressGoogleMapsUrl`: maps link for the branch
+- `addressStreet`: street name
+- `addressNumber`: street number
+- `addressCity`: city
+- `addressState`: state
+- `addressZipCode`: zip code
+- `addressComplement`: address complement
+- `addressNumberComplement`: secondary number/complement
+- `operationHours`: opening hours object keyed by weekday
+
+Example updating branch name, address, and opening hours:
+
+```json
+{
+  "name": "Downtown",
+  "addressDescription": "Downtown location",
+  "addressStreet": "Orange Ave",
+  "addressNumber": "101",
+  "addressCity": "Orlando",
+  "addressState": "FL",
+  "addressZipCode": "32801",
+  "operationHours": {
+    "MONDAY": [{ "open": "09:00", "close": "18:00" }],
+    "TUESDAY": [{ "open": "09:00", "close": "18:00" }]
+  }
+}
+```
+
+This is the current API for updating branch profile data. There is no separate general-purpose `PATCH /branches/:branchId` route today.
+
 When enabled, the ordering menu can show the upsell modal after a customer adds an item to cart for that branch.
 
 ---
@@ -193,6 +236,15 @@ Request body (all fields optional):
   "bannerPhotoUrl": "https://.../banner.png"
 }
 ```
+
+Supported update fields:
+
+- `name`: business display name
+- `brandColor`: business brand color in `#rrggbb` format
+- `logoUrl`: logo image URL
+- `bannerPhotoUrl`: header image URL
+
+This route mirrors the main branding fields during onboarding. If the UI says "header image", use `bannerPhotoUrl` in the request body.
 
 Success (`200`): returns updated onboarding object.
 
@@ -230,6 +282,12 @@ Success (`201`): returns created branch object.
 `PATCH /businesses/current/onboarding/branches/:branchId`
 
 Same body as create, all fields optional.
+
+Common update use cases:
+
+- Update branch name with `name`
+- Update branch address with the `address*` fields
+- Update opening hours with `operationHours`
 
 Success (`200`): returns updated branch object.
 

@@ -35,6 +35,13 @@ export type FeedbackListItem = {
   temperature: number | null;
 };
 
+export type FeedbackAnalyticsRangeQuery = {
+  businessId: string;
+  endDate: string;
+  startDate: string;
+};
+
 export interface FeedbackRepository {
+  listByDateTimeRange(query: FeedbackAnalyticsRangeQuery): Promise<FeedbackListItem[]>;
   list(query: FeedbackListQuery): Promise<FeedbackListItem[]>;
 }

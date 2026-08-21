@@ -14,13 +14,24 @@ import { makeGetPublicBusinessSettingsController } from "./modules/business-sett
 import { makeUpdateCurrentBusinessSettingsController } from "./modules/business-settings/main/makeUpdateCurrentBusinessSettingsController.js";
 import { makeUberEatsOAuthController } from "./modules/integrations/main/makeUberEatsOAuthController.js";
 import { makeChatwootProxyController } from "./modules/integrations/main/makeChatwootProxyController.js";
+import { makeSquareCatalogSyncTaskController } from "./modules/integrations/main/makeSquareCatalogSyncTaskController.js";
+import { makeSquareMenuSyncController } from "./modules/integrations/main/makeSquareMenuSyncController.js";
+import { makeSquareOAuthController } from "./modules/integrations/main/makeSquareOAuthController.js";
+import { makeSquareOrdersWebhookController } from "./modules/integrations/main/makeSquareOrdersWebhookController.js";
 import { makeGetOrderSalesAnalyticsController } from "./modules/analytics/main/makeGetOrderSalesAnalyticsController.js";
+import { makeGetOrderQuantityAnalyticsController } from "./modules/analytics/main/makeGetOrderQuantityAnalyticsController.js";
+import { makeGetRevenueAnalyticsController } from "./modules/analytics/main/makeGetRevenueAnalyticsController.js";
+import { makeGetNewCustomersAnalyticsController } from "./modules/analytics/main/makeGetNewCustomersAnalyticsController.js";
+import { makeGetAverageTicketAnalyticsController } from "./modules/analytics/main/makeGetAverageTicketAnalyticsController.js";
+import { makeGetCustomerRetentionAnalyticsController } from "./modules/analytics/main/makeGetCustomerRetentionAnalyticsController.js";
 import { makeListOrdersController } from "./modules/orders/main/makeListOrdersController.js";
+import { makeListOrdersV1Controller } from "./modules/orders/main/makeListOrdersV1Controller.js";
 import { makeGetOrderByIdController } from "./modules/orders/main/makeGetOrderByIdController.js";
 import { makeGetOrdersByStationController } from "./modules/orders/main/makeGetOrdersByStationController.js";
 import { makeUpdateOrderController } from "./modules/orders/main/makeUpdateOrderController.js";
 import { makeManageOrdersController } from "./modules/orders/main/makeManageOrdersController.js";
 import { makeListFeedbackController } from "./modules/feedback/main/makeListFeedbackController.js";
+import { makeGetFeedbackAnalyticsController } from "./modules/feedback/main/makeGetFeedbackAnalyticsController.js";
 import { makeOnboardingController } from "./modules/onboarding/main/makeOnboardingController.js";
 import { makeBranchesController } from "./modules/branches/main/makeBranchesController.js";
 import { makeDriverAuthController } from "./modules/driver/main/makeDriverAuthController.js";
@@ -45,6 +56,7 @@ import prisma from "./prisma.js";
 import { setCorsHeaders } from "./shared/http/cors.js";
 import {
   readFormDataBody,
+  sendHttpResponse,
   readJsonBody,
   readRawBody,
   sendJson,
@@ -72,13 +84,24 @@ const updateCurrentBusinessSettingsController =
 const nativeCatalogController = makeNativeCatalogController();
 const uberEatsOAuthController = makeUberEatsOAuthController();
 const chatwootProxyController = makeChatwootProxyController();
+const squareCatalogSyncTaskController = makeSquareCatalogSyncTaskController();
+const squareMenuSyncController = makeSquareMenuSyncController();
+const squareOAuthController = makeSquareOAuthController();
+const squareOrdersWebhookController = makeSquareOrdersWebhookController();
 const getOrderSalesAnalyticsController = makeGetOrderSalesAnalyticsController();
+const getOrderQuantityAnalyticsController = makeGetOrderQuantityAnalyticsController();
+const getRevenueAnalyticsController = makeGetRevenueAnalyticsController();
+const getNewCustomersAnalyticsController = makeGetNewCustomersAnalyticsController();
+const getAverageTicketAnalyticsController = makeGetAverageTicketAnalyticsController();
+const getCustomerRetentionAnalyticsController = makeGetCustomerRetentionAnalyticsController();
 const listOrdersController = makeListOrdersController();
+const listOrdersV1Controller = makeListOrdersV1Controller();
 const getOrderByIdController = makeGetOrderByIdController();
 const getOrdersByStationController = makeGetOrdersByStationController();
 const updateOrderController = makeUpdateOrderController();
 const manageOrdersController = makeManageOrdersController();
 const listFeedbackController = makeListFeedbackController();
+const getFeedbackAnalyticsController = makeGetFeedbackAnalyticsController();
 const onboardingController = makeOnboardingController();
 const branchesController = makeBranchesController();
 const stationController = makeStationController();
@@ -164,6 +187,13 @@ const routes: Route[] = [
     method: "POST",
     matcher: /^\/webhooks\/chatwoot$/,
     controller: chatwootWebhookController,
+    requiresAuth: false,
+    bodyMode: "raw",
+  },
+  {
+    method: "POST",
+    matcher: /^\/webhooks\/square\/orders$/,
+    controller: squareOrdersWebhookController,
     requiresAuth: false,
     bodyMode: "raw",
   },
@@ -540,6 +570,12 @@ const routes: Route[] = [
   },
   {
     method: "GET",
+    matcher: /^\/v1\/order$/,
+    controller: listOrdersV1Controller,
+    requiresAuth: true,
+  },
+  {
+    method: "GET",
     matcher: /^\/orders\/[^/]+$/,
     controller: getOrderByIdController,
     requiresAuth: true,
@@ -605,6 +641,12 @@ const routes: Route[] = [
     requiresAuth: true,
   },
   {
+    method: "GET",
+    matcher: /^\/v1\/feedback$/,
+    controller: getFeedbackAnalyticsController,
+    requiresAuth: true,
+  },
+  {
     method: "POST",
     matcher: /^\/products$/,
     controller: nativeCatalogController,
@@ -635,6 +677,36 @@ const routes: Route[] = [
     method: "GET",
     matcher: /^\/analytics\/orders\/sales$/,
     controller: getOrderSalesAnalyticsController,
+    requiresAuth: true,
+  },
+  {
+    method: "GET",
+    matcher: /^\/v1\/analytics\/order-quantity$/,
+    controller: getOrderQuantityAnalyticsController,
+    requiresAuth: true,
+  },
+  {
+    method: "GET",
+    matcher: /^\/v1\/analytics\/revenue$/,
+    controller: getRevenueAnalyticsController,
+    requiresAuth: true,
+  },
+  {
+    method: "GET",
+    matcher: /^\/v1\/analytics\/new-customers$/,
+    controller: getNewCustomersAnalyticsController,
+    requiresAuth: true,
+  },
+  {
+    method: "GET",
+    matcher: /^\/v1\/analytics\/average-ticket$/,
+    controller: getAverageTicketAnalyticsController,
+    requiresAuth: true,
+  },
+  {
+    method: "GET",
+    matcher: /^\/v1\/analytics\/customer-retention$/,
+    controller: getCustomerRetentionAnalyticsController,
     requiresAuth: true,
   },
   {
@@ -845,6 +917,62 @@ const routes: Route[] = [
     method: "POST",
     matcher: /^\/conversation\/[^/]+\/read$/,
     controller: chatwootProxyController,
+    requiresAuth: true,
+    bodyMode: "json",
+  },
+  {
+    method: "POST",
+    matcher: /^\/integrations\/square\/menu-sync\/publish-all$/,
+    controller: squareMenuSyncController,
+    requiresAuth: true,
+    bodyMode: "json",
+  },
+  {
+    method: "GET",
+    matcher: /^\/integrations\/square\/catalog-sync-tasks$/,
+    controller: squareCatalogSyncTaskController,
+    requiresAuth: true,
+  },
+  {
+    method: "GET",
+    matcher: /^\/integrations\/square\/catalog-sync-tasks\/[^/]+$/,
+    controller: squareCatalogSyncTaskController,
+    requiresAuth: true,
+  },
+  {
+    method: "GET",
+    matcher: /^\/integrations\/square\/connection$/,
+    controller: squareOAuthController,
+    requiresAuth: true,
+  },
+  {
+    method: "DELETE",
+    matcher: /^\/integrations\/square\/connection$/,
+    controller: squareOAuthController,
+    requiresAuth: true,
+  },
+  {
+    method: "GET",
+    matcher: /^\/integrations\/square\/oauth\/url$/,
+    controller: squareOAuthController,
+    requiresAuth: true,
+  },
+  {
+    method: "GET",
+    matcher: /^\/integrations\/square\/oauth\/exchange$/,
+    controller: squareOAuthController,
+    requiresAuth: false,
+  },
+  {
+    method: "GET",
+    matcher: /^\/integrations\/square\/oauth\/callback$/,
+    controller: squareOAuthController,
+    requiresAuth: false,
+  },
+  {
+    method: "POST",
+    matcher: /^\/integrations\/square\/oauth\/exchange$/,
+    controller: squareOAuthController,
     requiresAuth: true,
     bodyMode: "json",
   },
@@ -1171,14 +1299,19 @@ const server = createServer(async (request, response) => {
       rawBody,
       headers: {
         "content-type": request.headers["content-type"],
+        host: readHeaderValue(request.headers.host) ?? undefined,
+        origin: readHeaderValue(request.headers.origin) ?? undefined,
         [BUSINESS_ID_HEADER_NAME]:
           auth?.businessId ?? incomingBusinessIdHeader ?? undefined,
+        "x-forwarded-host": readHeaderValue(request.headers["x-forwarded-host"]) ?? undefined,
+        "x-forwarded-proto":
+          readHeaderValue(request.headers["x-forwarded-proto"]) ?? undefined,
         "x-chatwoot-signature": incomingChatwootSignatureHeader ?? undefined,
         "x-chatwoot-token": incomingChatwootTokenHeader ?? undefined,
       },
     });
 
-    sendJsonWithLog(result.statusCode, result.body);
+    sendHttpResponse(response, result);
   } catch (error) {
     if (error instanceof Error && error.message === "PAYLOAD_TOO_LARGE") {
       sendJsonWithLog(413, { error: "Payload too large" });

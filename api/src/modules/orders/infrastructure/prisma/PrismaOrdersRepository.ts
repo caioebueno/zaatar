@@ -5,6 +5,9 @@ import type {
   OrderDetail,
   OrderDetailLineItem,
   OrderListItem,
+  PaginatedOrderListQuery,
+  PaginatedOrderListItem,
+  PaginatedOrderListResult,
   OrderPaymentSummary,
   OrderListQuery,
   OrdersByStationItem,
@@ -23,6 +26,7 @@ type OrderRow = {
   orderType: string;
   paidAt: Date | null;
   paymentMethod: string;
+  sourcePlatform: string | null;
   status: string;
   totalCents: string;
 };
@@ -34,26 +38,35 @@ export class PrismaOrdersRepository implements OrdersRepository {
   ): Promise<OrdersByStationItem[]> {
     const orders = await prisma.order.findMany({
       where: {
-        OR: [
+        AND: [
           {
             preparationStepCategories: {
               some: {
-                preparationStepTracks: {
-                  some: {
-                    completed: false,
-                    preparationStep: {
-                      stationId,
-                    },
-                  },
-                },
+                stationId,
               },
             },
           },
           {
-            createdAt: {
-              gte: window.start,
-              lt: window.end,
-            },
+            OR: [
+              {
+                preparationStepCategories: {
+                  some: {
+                    stationId,
+                    preparationStepTracks: {
+                      some: {
+                        completed: false,
+                      },
+                    },
+                  },
+                },
+              },
+              {
+                createdAt: {
+                  gte: window.start,
+                  lt: window.end,
+                },
+              },
+            ],
           },
         ],
       },
@@ -67,6 +80,9 @@ export class PrismaOrdersRepository implements OrdersRepository {
           },
         },
         preparationStepCategories: {
+          where: {
+            stationId,
+          },
           include: {
             station: true,
             preparationStepTracks: {
@@ -76,11 +92,6 @@ export class PrismaOrdersRepository implements OrdersRepository {
                   include: {
                     modifierGroupItem: true,
                   },
-                },
-              },
-              where: {
-                preparationStep: {
-                  stationId,
                 },
               },
             },
@@ -148,13 +159,13 @@ export class PrismaOrdersRepository implements OrdersRepository {
               orderId: string;
             }
           | null => {
-          const isToday =
+          const isWithinWindow =
             order.createdAt >= window.start && order.createdAt < window.end;
 
           const categories = order.preparationStepCategories
             .map((category) => {
               const relevantTracks = category.preparationStepTracks.filter(
-                (track) => isToday || !track.completed,
+                (track) => isWithinWindow || !track.completed,
               );
 
               const steps = relevantTracks.map((track) => ({
@@ -259,12 +270,25 @@ export class PrismaOrdersRepository implements OrdersRepository {
             tipAmount: order.tipAmount ?? undefined,
             addressId: order.addressId ?? undefined,
             address: order.address ?? undefined,
-            customer: order.customer
-              ? {
-                  id: order.customer.id,
-                  name: order.customer.name,
+            customer:
+              order.customer ||
+              (
+                order as typeof order & {
+                  customerNameSnapshot?: string | null;
                 }
-              : undefined,
+              ).customerNameSnapshot
+                ? {
+                    ...(order.customer?.id ? { id: order.customer.id } : {}),
+                    name:
+                      order.customer?.name ??
+                      (
+                        order as typeof order & {
+                          customerNameSnapshot?: string | null;
+                        }
+                      ).customerNameSnapshot ??
+                      null,
+                  }
+                : undefined,
             redeemedRewards: order.redeemedRewards.map((reward) => ({
               id: reward.id,
               customerId: reward.customerId,
@@ -529,6 +553,12 @@ export class PrismaOrdersRepository implements OrdersRepository {
       number: order.number,
       createdAt: order.createdAt,
       orderType: order.type,
+      sourcePlatform:
+        (
+          order as typeof order & {
+            sourcePlatform?: string | null;
+          }
+        ).sourcePlatform ?? null,
       paymentMethod: order.paymentMethod,
       payments: buildOrderPayments(storedPaymentsByOrderId.get(order.id) ?? [], {
         amount: totalCents,
@@ -538,7 +568,14 @@ export class PrismaOrdersRepository implements OrdersRepository {
       status: order.canceled ? "CANCELED" : order.status,
       canceled: order.canceled,
       customer: {
-        name: order.customer?.name ?? null,
+        name:
+          order.customer?.name ??
+          (
+            order as typeof order & {
+              customerNameSnapshot?: string | null;
+            }
+          ).customerNameSnapshot ??
+          null,
         phone: order.customer?.phone ?? null,
       },
       items,
@@ -552,81 +589,44 @@ export class PrismaOrdersRepository implements OrdersRepository {
   }
 
   async list(query: OrderListQuery): Promise<OrderListItem[]> {
-    const rows = await prisma.$queryRaw<OrderRow[]>`
-      WITH order_subtotals AS (
-        SELECT
-          op."orderId" AS "orderId",
-          COALESCE(SUM(op."amount" * op."quantity"), 0)::numeric AS subtotal_cents
-        FROM "OrderProducts" op
-        GROUP BY op."orderId"
-      )
-      SELECT
-        o."id",
-        o."number",
-        o."createdAt",
-        o."paidAt",
-        o."type"::text AS "orderType",
-        o."paymentMethod"::text AS "paymentMethod",
-        o."status"::text AS "status",
-        o."canceled",
-        customer."name" AS "customerName",
-        customer."phone" AS "customerPhone",
-        (
-          GREATEST(
-            0,
-            CASE
-              WHEN o."progressiveDiscountSnapshot" IS NOT NULL
-                AND jsonb_typeof(o."progressiveDiscountSnapshot"::jsonb) = 'object'
-                AND (o."progressiveDiscountSnapshot"::jsonb ? 'discountedPrice')
-                AND (o."progressiveDiscountSnapshot"::jsonb ->> 'discountedPrice') ~ '^-?[0-9]+(\\.[0-9]+)?$'
-              THEN (o."progressiveDiscountSnapshot"::jsonb ->> 'discountedPrice')::numeric
-              ELSE COALESCE(os.subtotal_cents, 0)
-            END
-          )
-          + ROUND(
-              (GREATEST(
-                0,
-                CASE
-                  WHEN o."progressiveDiscountSnapshot" IS NOT NULL
-                    AND jsonb_typeof(o."progressiveDiscountSnapshot"::jsonb) = 'object'
-                    AND (o."progressiveDiscountSnapshot"::jsonb ? 'discountedPrice')
-                    AND (o."progressiveDiscountSnapshot"::jsonb ->> 'discountedPrice') ~ '^-?[0-9]+(\\.[0-9]+)?$'
-                  THEN (o."progressiveDiscountSnapshot"::jsonb ->> 'discountedPrice')::numeric
-                  ELSE COALESCE(os.subtotal_cents, 0)
-                END
-              ) * COALESCE(o."tipAmount", 0)::numeric) / 100.0
-            )
-        )::bigint::text AS "totalCents"
-      FROM "Order" o
-      LEFT JOIN "Customer" customer ON customer."id" = o."customerId"
-      LEFT JOIN order_subtotals os ON os."orderId" = o."id"
-      WHERE (${query.includeCanceled} = true OR o."canceled" = false)
-        AND (${query.from}::text IS NULL OR timezone(${query.timezone}, o."createdAt")::date >= ${query.from}::date)
-        AND (${query.to}::text IS NULL OR timezone(${query.timezone}, o."createdAt")::date <= ${query.to}::date)
-      ORDER BY o."createdAt" DESC
-      LIMIT ${query.limit}
-    `;
-    const storedPaymentsByOrderId = await loadOrderPaymentsByOrderIds(
-      rows.map((row) => row.id),
-    );
+    const rows = await loadOrderListRows({
+      includeCanceled: query.includeCanceled,
+      from: query.from,
+      to: query.to,
+      timezone: query.timezone,
+      limit: query.limit,
+      offset: 0,
+    });
 
-    return rows.map((row: OrderRow) => ({
-      id: row.id,
-      number: row.number,
-      createdAt: row.createdAt,
-      orderType: row.orderType,
-      paymentMethod: row.paymentMethod,
-      payments: buildOrderPayments(storedPaymentsByOrderId.get(row.id) ?? [], {
-        amount: Number(row.totalCents || "0"),
-        paidAt: row.paidAt,
-        paymentType: row.paymentMethod,
-      }),
-      status: row.canceled ? "CANCELED" : row.status,
-      canceled: row.canceled,
-      customerName: row.customerName,
-      customerPhone: row.customerPhone,
-      totalCents: Number(row.totalCents || "0"),
-    }));
+    return mapOrderListItems(rows);
+  }
+
+  async listPaginated(
+    query: PaginatedOrderListQuery,
+  ): Promise<PaginatedOrderListResult> {
+    const totalItems = await loadOrderListCount({
+      includeCanceled: query.includeCanceled,
+      from: query.from,
+      to: query.to,
+      timezone: query.timezone,
+    });
+    const offset = (query.page - 1) * query.pageSize;
+    const rows =
+      totalItems > 0
+        ? await loadOrderListRows({
+            includeCanceled: query.includeCanceled,
+            from: query.from,
+            to: query.to,
+            timezone: query.timezone,
+            limit: query.pageSize,
+            offset,
+          })
+        : [];
+
+    return {
+      items: await mapPaginatedOrderListItems(rows),
+      totalItems,
+    };
   }
 }
 
@@ -648,6 +648,381 @@ type OrderPaymentRow = {
   paymentProvider: string | null;
   paymentType: string;
 };
+
+type DetailedOrderRow = Awaited<
+  ReturnType<
+    typeof prisma.order.findMany<{
+      include: {
+        customer: {
+          select: {
+            name: true;
+            phone: true;
+          };
+        };
+        deliveryAddress: {
+          select: {
+            id: true;
+            description: true;
+            street: true;
+            number: true;
+            city: true;
+            State: true;
+            zipCode: true;
+            lat: true;
+            lng: true;
+            complement: true;
+            numberComplement: true;
+            deliveryFee: true;
+            expectedHandoffDuration: true;
+          };
+        };
+        orderProducts: {
+          include: {
+            product: {
+              select: {
+                id: true;
+                name: true;
+              };
+            };
+            modifierGroupItems: {
+              select: {
+                id: true;
+                name: true;
+                description: true;
+                price: true;
+              };
+            };
+          };
+          orderBy: {
+            createdAt: "asc";
+          };
+        };
+      };
+    }>
+  >
+>[number];
+
+type OrderListFilterInput = {
+  from?: string;
+  includeCanceled: boolean;
+  timezone: string;
+  to?: string;
+};
+
+type OrderListRowsInput = OrderListFilterInput & {
+  limit: number;
+  offset: number;
+};
+
+function buildOrderListWhereClause(query: OrderListFilterInput): Prisma.Sql {
+  const from = query.from ?? null;
+  const to = query.to ?? null;
+
+  return Prisma.sql`
+    (${query.includeCanceled} = true OR o."canceled" = false)
+    AND (${from}::text IS NULL OR timezone(${query.timezone}, o."createdAt")::date >= ${from}::date)
+    AND (${to}::text IS NULL OR timezone(${query.timezone}, o."createdAt")::date <= ${to}::date)
+  `;
+}
+
+async function loadOrderListCount(query: OrderListFilterInput): Promise<number> {
+  const whereClause = buildOrderListWhereClause(query);
+  const [row] = await prisma.$queryRaw<Array<{ totalItems: string }>>`
+    SELECT COUNT(*)::bigint::text AS "totalItems"
+    FROM "Order" o
+    WHERE ${whereClause}
+  `;
+
+  return Number(row?.totalItems ?? "0");
+}
+
+async function loadOrderListRows(query: OrderListRowsInput): Promise<OrderRow[]> {
+  const whereClause = buildOrderListWhereClause(query);
+
+  return prisma.$queryRaw<OrderRow[]>`
+    WITH order_subtotals AS (
+      SELECT
+        op."orderId" AS "orderId",
+        COALESCE(SUM(op."amount" * op."quantity"), 0)::numeric AS subtotal_cents
+      FROM "OrderProducts" op
+      GROUP BY op."orderId"
+    )
+    SELECT
+      o."id",
+      o."number",
+      o."createdAt",
+      o."paidAt",
+      o."type"::text AS "orderType",
+      o."paymentMethod"::text AS "paymentMethod",
+      o."sourcePlatform"::text AS "sourcePlatform",
+      o."status"::text AS "status",
+      o."canceled",
+      COALESCE(customer."name", o."customerNameSnapshot") AS "customerName",
+      customer."phone" AS "customerPhone",
+      (
+        GREATEST(
+          0,
+          CASE
+            WHEN o."progressiveDiscountSnapshot" IS NOT NULL
+              AND jsonb_typeof(o."progressiveDiscountSnapshot"::jsonb) = 'object'
+              AND (o."progressiveDiscountSnapshot"::jsonb ? 'discountedPrice')
+              AND (o."progressiveDiscountSnapshot"::jsonb ->> 'discountedPrice') ~ '^-?[0-9]+(\\.[0-9]+)?$'
+            THEN (o."progressiveDiscountSnapshot"::jsonb ->> 'discountedPrice')::numeric
+            ELSE COALESCE(os.subtotal_cents, 0)
+          END
+        )
+        + ROUND(
+            (GREATEST(
+              0,
+              CASE
+                WHEN o."progressiveDiscountSnapshot" IS NOT NULL
+                  AND jsonb_typeof(o."progressiveDiscountSnapshot"::jsonb) = 'object'
+                  AND (o."progressiveDiscountSnapshot"::jsonb ? 'discountedPrice')
+                  AND (o."progressiveDiscountSnapshot"::jsonb ->> 'discountedPrice') ~ '^-?[0-9]+(\\.[0-9]+)?$'
+                THEN (o."progressiveDiscountSnapshot"::jsonb ->> 'discountedPrice')::numeric
+                ELSE COALESCE(os.subtotal_cents, 0)
+              END
+            ) * COALESCE(o."tipAmount", 0)::numeric) / 100.0
+          )
+      )::bigint::text AS "totalCents"
+    FROM "Order" o
+    LEFT JOIN "Customer" customer ON customer."id" = o."customerId"
+    LEFT JOIN order_subtotals os ON os."orderId" = o."id"
+    WHERE ${whereClause}
+    ORDER BY o."createdAt" DESC
+    LIMIT ${query.limit}
+    OFFSET ${query.offset}
+  `;
+}
+
+async function mapOrderListItems(rows: OrderRow[]): Promise<OrderListItem[]> {
+  const storedPaymentsByOrderId = await loadOrderPaymentsByOrderIds(
+    rows.map((row) => row.id),
+  );
+
+  return rows.map((row: OrderRow) => ({
+    id: row.id,
+    number: row.number,
+    createdAt: row.createdAt,
+    orderType: row.orderType,
+    sourcePlatform: row.sourcePlatform,
+    paymentMethod: row.paymentMethod,
+    payments: buildOrderPayments(storedPaymentsByOrderId.get(row.id) ?? [], {
+      amount: Number(row.totalCents || "0"),
+      paidAt: row.paidAt,
+      paymentType: row.paymentMethod,
+    }),
+    status: row.canceled ? "CANCELED" : row.status,
+    canceled: row.canceled,
+    customerName: row.customerName,
+    customerPhone: row.customerPhone,
+    totalCents: Number(row.totalCents || "0"),
+  }));
+}
+
+async function mapPaginatedOrderListItems(
+  rows: OrderRow[],
+): Promise<PaginatedOrderListItem[]> {
+  const orderIds = rows.map((row) => row.id);
+  const uniqueOrderIds = Array.from(new Set(orderIds));
+
+  if (uniqueOrderIds.length === 0) {
+    return [];
+  }
+
+  const [orders, storedPaymentsByOrderId] = await Promise.all([
+    prisma.order.findMany({
+      where: {
+        id: {
+          in: uniqueOrderIds,
+        },
+      },
+      include: {
+        customer: {
+          select: {
+            name: true,
+            phone: true,
+          },
+        },
+        deliveryAddress: {
+          select: {
+            id: true,
+            description: true,
+            street: true,
+            number: true,
+            city: true,
+            State: true,
+            zipCode: true,
+            lat: true,
+            lng: true,
+            complement: true,
+            numberComplement: true,
+            deliveryFee: true,
+            expectedHandoffDuration: true,
+          },
+        },
+        orderProducts: {
+          include: {
+            product: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+            modifierGroupItems: {
+              select: {
+                id: true,
+                name: true,
+                description: true,
+                price: true,
+              },
+            },
+          },
+          orderBy: {
+            createdAt: "asc",
+          },
+        },
+      },
+    }),
+    loadOrderPaymentsByOrderIds(uniqueOrderIds),
+  ]);
+
+  const orderById = new Map(orders.map((order) => [order.id, order]));
+
+  return rows.flatMap((row) => {
+    const order = orderById.get(row.id);
+    if (!order) return [];
+
+    return [mapPaginatedOrderItem(order, storedPaymentsByOrderId)];
+  });
+}
+
+function mapPaginatedOrderItem(
+  order: DetailedOrderRow,
+  storedPaymentsByOrderId: Map<string, OrderPaymentSummary[]>,
+): PaginatedOrderListItem {
+  const sourcePlatform =
+    (
+      order as DetailedOrderRow & {
+        sourcePlatform?: string | null;
+      }
+    ).sourcePlatform ?? null;
+  const items = order.orderProducts.map((item) => {
+    const lineTotalCents = item.amount * item.quantity;
+
+    return {
+      productId: item.productId,
+      productName: item.product?.name ?? "Unknown product",
+      quantity: item.quantity,
+      unitAmountCents: item.amount,
+      lineTotalCents,
+      ...(item.comments ? { comments: item.comments } : {}),
+      modifierGroupItems: item.modifierGroupItems.map((modifierItem) => ({
+        id: modifierItem.id,
+        name: modifierItem.name,
+        price: modifierItem.price,
+        ...(modifierItem.description ? { description: modifierItem.description } : {}),
+      })),
+    };
+  });
+
+  const subtotalCents = items.reduce((sum, item) => sum + item.lineTotalCents, 0);
+  const discountedFromSnapshot = extractDiscountedSubtotalFromSnapshot(
+    order.progressiveDiscountSnapshot,
+  );
+  const discountedSubtotalCents =
+    discountedFromSnapshot !== null ? discountedFromSnapshot : subtotalCents;
+  const safeDiscountedSubtotal = Math.max(0, discountedSubtotalCents);
+  const tipPercent =
+    typeof order.tipAmount === "number" && Number.isFinite(order.tipAmount)
+      ? Math.max(order.tipAmount, 0)
+      : 0;
+  const tipAmountCents = Math.round((safeDiscountedSubtotal * tipPercent) / 100);
+  const deliveryFeeCents =
+    order.type === "DELIVERY"
+      ? Math.max(order.deliveryAddress?.deliveryFee ?? 0, 0)
+      : 0;
+  const totalCents = safeDiscountedSubtotal + tipAmountCents + deliveryFeeCents;
+  const customerNameSnapshot =
+    (
+      order as DetailedOrderRow & {
+        customerNameSnapshot?: string | null;
+      }
+    ).customerNameSnapshot ?? null;
+
+  return {
+    id: order.id,
+    number: order.number,
+    ...(order.externalId ? { externalId: order.externalId } : { externalId: null }),
+    createdAt: order.createdAt,
+    ...(order.scheduleFor ? { scheduleFor: order.scheduleFor.toISOString() } : {}),
+    ...(order.language ? { language: order.language } : { language: null }),
+    ...(order.paidAt ? { paidAt: order.paidAt.toISOString() } : { paidAt: null }),
+    ...(order.deliveredAt ? { deliveredAt: order.deliveredAt.toISOString() } : { deliveredAt: null }),
+    orderType: order.type,
+    sourcePlatform,
+    paymentMethod: order.paymentMethod,
+    paymentProvider: order.paymentProvider ?? null,
+    payments: buildOrderPayments(storedPaymentsByOrderId.get(order.id) ?? [], {
+      amount: totalCents,
+      paidAt: order.paidAt,
+      paymentType: order.paymentMethod,
+    }),
+    status: order.canceled ? "CANCELED" : order.status,
+    canceled: order.canceled,
+    customer: {
+      name: order.customer?.name ?? customerNameSnapshot,
+      phone: order.customer?.phone ?? null,
+    },
+    ...(order.deliveryAddressId
+      ? { deliveryAddressId: order.deliveryAddressId }
+      : { deliveryAddressId: null }),
+    ...(order.deliveryAddress
+      ? {
+          deliveryAddress: {
+            id: order.deliveryAddress.id,
+            description: order.deliveryAddress.description,
+            street: order.deliveryAddress.street,
+            number: order.deliveryAddress.number,
+            city: order.deliveryAddress.city,
+            state: order.deliveryAddress.State,
+            zipCode: order.deliveryAddress.zipCode,
+            lat: order.deliveryAddress.lat,
+            lng: order.deliveryAddress.lng,
+            ...(order.deliveryAddress.complement
+              ? { complement: order.deliveryAddress.complement }
+              : {}),
+            ...(order.deliveryAddress.numberComplement
+              ? { numberComplement: order.deliveryAddress.numberComplement }
+              : {}),
+            ...(typeof order.deliveryAddress.deliveryFee === "number"
+              ? { deliveryFee: order.deliveryAddress.deliveryFee }
+              : {}),
+            ...(typeof order.deliveryAddress.expectedHandoffDuration === "number"
+              ? {
+                  expectedHandoffDuration:
+                    order.deliveryAddress.expectedHandoffDuration,
+                }
+              : {}),
+          },
+        }
+      : { deliveryAddress: null }),
+    ...(order.dispatchId ? { dispatchId: order.dispatchId } : { dispatchId: null }),
+    ...(order.branchId ? { branchId: order.branchId } : { branchId: null }),
+    tags: Array.isArray(order.tags) ? order.tags : [],
+    ...(order.progressiveDiscountSnapshot &&
+    typeof order.progressiveDiscountSnapshot === "object"
+      ? { progressiveDiscountSnapshot: order.progressiveDiscountSnapshot }
+      : {}),
+    items,
+    subtotalCents,
+    discountedSubtotalCents: safeDiscountedSubtotal,
+    tipPercent,
+    tipAmountCents,
+    deliveryFeeCents,
+    totalCents,
+  };
+}
 
 async function loadOrderPaymentsByOrderIds(
   orderIds: string[],

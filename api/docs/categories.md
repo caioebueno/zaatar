@@ -162,13 +162,21 @@ Request body schema:
 ```ts
 type UpdateCategoryBody = {
   menuId?: string; // defaults to default menu when omitted
-  menuIndex?: number | null; // integer >= 0, null clears explicit index
+  menuIndex?: number | null; // integer >= 0, null moves category to the end
 };
 ```
 
 Validation rules:
 
 - At least one of `menuId` or `menuIndex` must be provided.
+
+Behavior notes:
+
+- Updating one category's `menuIndex` automatically reindexes the other categories in the same menu.
+- The API normalizes section ordering to a consecutive sequence starting at `1`.
+- If `menuIndex` is greater than the available positions, the category is moved to the end.
+- If `menuIndex` is `null`, the category is moved to the end of the menu.
+- If only `menuId` is provided and the category is not yet attached to that menu, it is appended to the end and all section indexes are normalized.
 
 Success (`200`):
 

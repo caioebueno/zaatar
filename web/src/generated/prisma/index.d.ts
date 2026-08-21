@@ -99,6 +99,11 @@ export type OwnerOtpChallenge = $Result.DefaultSelection<Prisma.$OwnerOtpChallen
  */
 export type ExternalIntegrationConnection = $Result.DefaultSelection<Prisma.$ExternalIntegrationConnectionPayload>
 /**
+ * Model SquareConnection
+ * 
+ */
+export type SquareConnection = $Result.DefaultSelection<Prisma.$SquareConnectionPayload>
+/**
  * Model ExternalMenuEntityMap
  * 
  */
@@ -579,6 +584,17 @@ export const PaymentProvider: {
 export type PaymentProvider = (typeof PaymentProvider)[keyof typeof PaymentProvider]
 
 
+export const OrderSourcePlatform: {
+  FOODY: 'FOODY',
+  DOORDASH: 'DOORDASH',
+  UBER_EATS: 'UBER_EATS',
+  SQUARE: 'SQUARE',
+  UNKNOWN: 'UNKNOWN'
+};
+
+export type OrderSourcePlatform = (typeof OrderSourcePlatform)[keyof typeof OrderSourcePlatform]
+
+
 export const OrderType: {
   DELIVERY: 'DELIVERY',
   TAKEAWAY: 'TAKEAWAY'
@@ -756,6 +772,10 @@ export const PaymentType: typeof $Enums.PaymentType
 export type PaymentProvider = $Enums.PaymentProvider
 
 export const PaymentProvider: typeof $Enums.PaymentProvider
+
+export type OrderSourcePlatform = $Enums.OrderSourcePlatform
+
+export const OrderSourcePlatform: typeof $Enums.OrderSourcePlatform
 
 export type OrderType = $Enums.OrderType
 
@@ -1079,6 +1099,16 @@ export class PrismaClient<
     * ```
     */
   get externalIntegrationConnection(): Prisma.ExternalIntegrationConnectionDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.squareConnection`: Exposes CRUD operations for the **SquareConnection** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SquareConnections
+    * const squareConnections = await prisma.squareConnection.findMany()
+    * ```
+    */
+  get squareConnection(): Prisma.SquareConnectionDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.externalMenuEntityMap`: Exposes CRUD operations for the **ExternalMenuEntityMap** model.
@@ -2030,6 +2060,7 @@ export namespace Prisma {
     UserPushDevice: 'UserPushDevice',
     OwnerOtpChallenge: 'OwnerOtpChallenge',
     ExternalIntegrationConnection: 'ExternalIntegrationConnection',
+    SquareConnection: 'SquareConnection',
     ExternalMenuEntityMap: 'ExternalMenuEntityMap',
     ExternalMenuSyncRun: 'ExternalMenuSyncRun',
     BusinessMember: 'BusinessMember',
@@ -2095,7 +2126,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "station" | "preparationStep" | "preparationStepCategory" | "preparationStepTrack" | "preparationStepModifierTrack" | "progressiveDiscount" | "progressiveDiscountStep" | "progressiveDiscountPrize" | "progressiveDiscountPrizeProduct" | "file" | "modifierGroup" | "modifierGroupItem" | "business" | "user" | "userPushDevice" | "ownerOtpChallenge" | "externalIntegrationConnection" | "externalMenuEntityMap" | "externalMenuSyncRun" | "businessMember" | "branch" | "driver" | "driverActivationEvent" | "dispatch" | "dispatchRouteSession" | "dispatchRoutePoint" | "dispatchRouteMilestone" | "dispatchAssignmentJob" | "dispatchRouteMetricsRefreshJob" | "dispatchEtaRecalculationJob" | "feedbackWhatsAppJob" | "address" | "product" | "comboProductItem" | "exclusivePromotion" | "exclusivePromotionProduct" | "menu" | "menuVisit" | "category" | "menuCategory" | "productCategory" | "comboSlot" | "comboSlotOption" | "campaign" | "customer" | "customerCard" | "customerOtpChallenge" | "customerAccessToken" | "deliveryAddress" | "externalAddress" | "message" | "promotialMessage" | "order" | "orderPayment" | "orderIntent" | "customerFeedback" | "customerReward" | "orderProducts" | "orderIntentProduct" | "inventoryPlace" | "inventoryProduct" | "inventoryStock" | "inventoryChecklist" | "inventoryChecklistItem" | "inventoryAlert" | "inventoryStockEvent" | "feedbackSettings"
+      modelProps: "station" | "preparationStep" | "preparationStepCategory" | "preparationStepTrack" | "preparationStepModifierTrack" | "progressiveDiscount" | "progressiveDiscountStep" | "progressiveDiscountPrize" | "progressiveDiscountPrizeProduct" | "file" | "modifierGroup" | "modifierGroupItem" | "business" | "user" | "userPushDevice" | "ownerOtpChallenge" | "externalIntegrationConnection" | "squareConnection" | "externalMenuEntityMap" | "externalMenuSyncRun" | "businessMember" | "branch" | "driver" | "driverActivationEvent" | "dispatch" | "dispatchRouteSession" | "dispatchRoutePoint" | "dispatchRouteMilestone" | "dispatchAssignmentJob" | "dispatchRouteMetricsRefreshJob" | "dispatchEtaRecalculationJob" | "feedbackWhatsAppJob" | "address" | "product" | "comboProductItem" | "exclusivePromotion" | "exclusivePromotionProduct" | "menu" | "menuVisit" | "category" | "menuCategory" | "productCategory" | "comboSlot" | "comboSlotOption" | "campaign" | "customer" | "customerCard" | "customerOtpChallenge" | "customerAccessToken" | "deliveryAddress" | "externalAddress" | "message" | "promotialMessage" | "order" | "orderPayment" | "orderIntent" | "customerFeedback" | "customerReward" | "orderProducts" | "orderIntentProduct" | "inventoryPlace" | "inventoryProduct" | "inventoryStock" | "inventoryChecklist" | "inventoryChecklistItem" | "inventoryAlert" | "inventoryStockEvent" | "feedbackSettings"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3354,6 +3385,80 @@ export namespace Prisma {
           count: {
             args: Prisma.ExternalIntegrationConnectionCountArgs<ExtArgs>
             result: $Utils.Optional<ExternalIntegrationConnectionCountAggregateOutputType> | number
+          }
+        }
+      }
+      SquareConnection: {
+        payload: Prisma.$SquareConnectionPayload<ExtArgs>
+        fields: Prisma.SquareConnectionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SquareConnectionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SquareConnectionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SquareConnectionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SquareConnectionPayload>
+          }
+          findFirst: {
+            args: Prisma.SquareConnectionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SquareConnectionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SquareConnectionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SquareConnectionPayload>
+          }
+          findMany: {
+            args: Prisma.SquareConnectionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SquareConnectionPayload>[]
+          }
+          create: {
+            args: Prisma.SquareConnectionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SquareConnectionPayload>
+          }
+          createMany: {
+            args: Prisma.SquareConnectionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SquareConnectionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SquareConnectionPayload>[]
+          }
+          delete: {
+            args: Prisma.SquareConnectionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SquareConnectionPayload>
+          }
+          update: {
+            args: Prisma.SquareConnectionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SquareConnectionPayload>
+          }
+          deleteMany: {
+            args: Prisma.SquareConnectionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SquareConnectionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.SquareConnectionUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SquareConnectionPayload>[]
+          }
+          upsert: {
+            args: Prisma.SquareConnectionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SquareConnectionPayload>
+          }
+          aggregate: {
+            args: Prisma.SquareConnectionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSquareConnection>
+          }
+          groupBy: {
+            args: Prisma.SquareConnectionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SquareConnectionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SquareConnectionCountArgs<ExtArgs>
+            result: $Utils.Optional<SquareConnectionCountAggregateOutputType> | number
           }
         }
       }
@@ -7182,6 +7287,7 @@ export namespace Prisma {
     userPushDevice?: UserPushDeviceOmit
     ownerOtpChallenge?: OwnerOtpChallengeOmit
     externalIntegrationConnection?: ExternalIntegrationConnectionOmit
+    squareConnection?: SquareConnectionOmit
     externalMenuEntityMap?: ExternalMenuEntityMapOmit
     externalMenuSyncRun?: ExternalMenuSyncRunOmit
     businessMember?: BusinessMemberOmit
@@ -7670,6 +7776,7 @@ export namespace Prisma {
     branches: number
     members: number
     integrations: number
+    squareConnections: number
     pushDevices: number
   }
 
@@ -7677,6 +7784,7 @@ export namespace Prisma {
     branches?: boolean | BusinessCountOutputTypeCountBranchesArgs
     members?: boolean | BusinessCountOutputTypeCountMembersArgs
     integrations?: boolean | BusinessCountOutputTypeCountIntegrationsArgs
+    squareConnections?: boolean | BusinessCountOutputTypeCountSquareConnectionsArgs
     pushDevices?: boolean | BusinessCountOutputTypeCountPushDevicesArgs
   }
 
@@ -7715,6 +7823,13 @@ export namespace Prisma {
   /**
    * BusinessCountOutputType without action
    */
+  export type BusinessCountOutputTypeCountSquareConnectionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SquareConnectionWhereInput
+  }
+
+  /**
+   * BusinessCountOutputType without action
+   */
   export type BusinessCountOutputTypeCountPushDevicesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: UserPushDeviceWhereInput
   }
@@ -7727,6 +7842,7 @@ export namespace Prisma {
   export type UserCountOutputType = {
     businessMemberships: number
     integrations: number
+    squareConnections: number
     otpChallenges: number
     pushDevices: number
   }
@@ -7734,6 +7850,7 @@ export namespace Prisma {
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     businessMemberships?: boolean | UserCountOutputTypeCountBusinessMembershipsArgs
     integrations?: boolean | UserCountOutputTypeCountIntegrationsArgs
+    squareConnections?: boolean | UserCountOutputTypeCountSquareConnectionsArgs
     otpChallenges?: boolean | UserCountOutputTypeCountOtpChallengesArgs
     pushDevices?: boolean | UserCountOutputTypeCountPushDevicesArgs
   }
@@ -7761,6 +7878,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountIntegrationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ExternalIntegrationConnectionWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountSquareConnectionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SquareConnectionWhereInput
   }
 
   /**
@@ -20240,6 +20364,8 @@ export namespace Prisma {
     type: $Enums.ModifierGroupType | null
     minSelection: number | null
     maxSelection: number | null
+    squareModifierListId: string | null
+    squareModifierListVersion: string | null
   }
 
   export type ModifierGroupMaxAggregateOutputType = {
@@ -20250,6 +20376,8 @@ export namespace Prisma {
     type: $Enums.ModifierGroupType | null
     minSelection: number | null
     maxSelection: number | null
+    squareModifierListId: string | null
+    squareModifierListVersion: string | null
   }
 
   export type ModifierGroupCountAggregateOutputType = {
@@ -20261,6 +20389,8 @@ export namespace Prisma {
     type: number
     minSelection: number
     maxSelection: number
+    squareModifierListId: number
+    squareModifierListVersion: number
     _all: number
   }
 
@@ -20283,6 +20413,8 @@ export namespace Prisma {
     type?: true
     minSelection?: true
     maxSelection?: true
+    squareModifierListId?: true
+    squareModifierListVersion?: true
   }
 
   export type ModifierGroupMaxAggregateInputType = {
@@ -20293,6 +20425,8 @@ export namespace Prisma {
     type?: true
     minSelection?: true
     maxSelection?: true
+    squareModifierListId?: true
+    squareModifierListVersion?: true
   }
 
   export type ModifierGroupCountAggregateInputType = {
@@ -20304,6 +20438,8 @@ export namespace Prisma {
     type?: true
     minSelection?: true
     maxSelection?: true
+    squareModifierListId?: true
+    squareModifierListVersion?: true
     _all?: true
   }
 
@@ -20402,6 +20538,8 @@ export namespace Prisma {
     type: $Enums.ModifierGroupType | null
     minSelection: number | null
     maxSelection: number | null
+    squareModifierListId: string | null
+    squareModifierListVersion: string | null
     _count: ModifierGroupCountAggregateOutputType | null
     _avg: ModifierGroupAvgAggregateOutputType | null
     _sum: ModifierGroupSumAggregateOutputType | null
@@ -20432,6 +20570,8 @@ export namespace Prisma {
     type?: boolean
     minSelection?: boolean
     maxSelection?: boolean
+    squareModifierListId?: boolean
+    squareModifierListVersion?: boolean
     products?: boolean | ModifierGroup$productsArgs<ExtArgs>
     items?: boolean | ModifierGroup$itemsArgs<ExtArgs>
     _count?: boolean | ModifierGroupCountOutputTypeDefaultArgs<ExtArgs>
@@ -20446,6 +20586,8 @@ export namespace Prisma {
     type?: boolean
     minSelection?: boolean
     maxSelection?: boolean
+    squareModifierListId?: boolean
+    squareModifierListVersion?: boolean
   }, ExtArgs["result"]["modifierGroup"]>
 
   export type ModifierGroupSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -20457,6 +20599,8 @@ export namespace Prisma {
     type?: boolean
     minSelection?: boolean
     maxSelection?: boolean
+    squareModifierListId?: boolean
+    squareModifierListVersion?: boolean
   }, ExtArgs["result"]["modifierGroup"]>
 
   export type ModifierGroupSelectScalar = {
@@ -20468,9 +20612,11 @@ export namespace Prisma {
     type?: boolean
     minSelection?: boolean
     maxSelection?: boolean
+    squareModifierListId?: boolean
+    squareModifierListVersion?: boolean
   }
 
-  export type ModifierGroupOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "title" | "translations" | "required" | "type" | "minSelection" | "maxSelection", ExtArgs["result"]["modifierGroup"]>
+  export type ModifierGroupOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "title" | "translations" | "required" | "type" | "minSelection" | "maxSelection" | "squareModifierListId" | "squareModifierListVersion", ExtArgs["result"]["modifierGroup"]>
   export type ModifierGroupInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     products?: boolean | ModifierGroup$productsArgs<ExtArgs>
     items?: boolean | ModifierGroup$itemsArgs<ExtArgs>
@@ -20494,6 +20640,8 @@ export namespace Prisma {
       type: $Enums.ModifierGroupType | null
       minSelection: number | null
       maxSelection: number | null
+      squareModifierListId: string | null
+      squareModifierListVersion: string | null
     }, ExtArgs["result"]["modifierGroup"]>
     composites: {}
   }
@@ -20927,6 +21075,8 @@ export namespace Prisma {
     readonly type: FieldRef<"ModifierGroup", 'ModifierGroupType'>
     readonly minSelection: FieldRef<"ModifierGroup", 'Int'>
     readonly maxSelection: FieldRef<"ModifierGroup", 'Int'>
+    readonly squareModifierListId: FieldRef<"ModifierGroup", 'String'>
+    readonly squareModifierListVersion: FieldRef<"ModifierGroup", 'String'>
   }
     
 
@@ -21414,6 +21564,8 @@ export namespace Prisma {
     description: string | null
     modifierGroupId: string | null
     fileId: string | null
+    squareModifierId: string | null
+    squareModifierVersion: string | null
   }
 
   export type ModifierGroupItemMaxAggregateOutputType = {
@@ -21424,6 +21576,8 @@ export namespace Prisma {
     description: string | null
     modifierGroupId: string | null
     fileId: string | null
+    squareModifierId: string | null
+    squareModifierVersion: string | null
   }
 
   export type ModifierGroupItemCountAggregateOutputType = {
@@ -21435,6 +21589,8 @@ export namespace Prisma {
     translations: number
     modifierGroupId: number
     fileId: number
+    squareModifierId: number
+    squareModifierVersion: number
     _all: number
   }
 
@@ -21455,6 +21611,8 @@ export namespace Prisma {
     description?: true
     modifierGroupId?: true
     fileId?: true
+    squareModifierId?: true
+    squareModifierVersion?: true
   }
 
   export type ModifierGroupItemMaxAggregateInputType = {
@@ -21465,6 +21623,8 @@ export namespace Prisma {
     description?: true
     modifierGroupId?: true
     fileId?: true
+    squareModifierId?: true
+    squareModifierVersion?: true
   }
 
   export type ModifierGroupItemCountAggregateInputType = {
@@ -21476,6 +21636,8 @@ export namespace Prisma {
     translations?: true
     modifierGroupId?: true
     fileId?: true
+    squareModifierId?: true
+    squareModifierVersion?: true
     _all?: true
   }
 
@@ -21574,6 +21736,8 @@ export namespace Prisma {
     translations: JsonValue | null
     modifierGroupId: string | null
     fileId: string | null
+    squareModifierId: string | null
+    squareModifierVersion: string | null
     _count: ModifierGroupItemCountAggregateOutputType | null
     _avg: ModifierGroupItemAvgAggregateOutputType | null
     _sum: ModifierGroupItemSumAggregateOutputType | null
@@ -21604,6 +21768,8 @@ export namespace Prisma {
     translations?: boolean
     modifierGroupId?: boolean
     fileId?: boolean
+    squareModifierId?: boolean
+    squareModifierVersion?: boolean
     photo?: boolean | ModifierGroupItem$photoArgs<ExtArgs>
     modifierGroup?: boolean | ModifierGroupItem$modifierGroupArgs<ExtArgs>
     preparationStepModifierTracks?: boolean | ModifierGroupItem$preparationStepModifierTracksArgs<ExtArgs>
@@ -21621,6 +21787,8 @@ export namespace Prisma {
     translations?: boolean
     modifierGroupId?: boolean
     fileId?: boolean
+    squareModifierId?: boolean
+    squareModifierVersion?: boolean
     photo?: boolean | ModifierGroupItem$photoArgs<ExtArgs>
     modifierGroup?: boolean | ModifierGroupItem$modifierGroupArgs<ExtArgs>
   }, ExtArgs["result"]["modifierGroupItem"]>
@@ -21634,6 +21802,8 @@ export namespace Prisma {
     translations?: boolean
     modifierGroupId?: boolean
     fileId?: boolean
+    squareModifierId?: boolean
+    squareModifierVersion?: boolean
     photo?: boolean | ModifierGroupItem$photoArgs<ExtArgs>
     modifierGroup?: boolean | ModifierGroupItem$modifierGroupArgs<ExtArgs>
   }, ExtArgs["result"]["modifierGroupItem"]>
@@ -21647,9 +21817,11 @@ export namespace Prisma {
     translations?: boolean
     modifierGroupId?: boolean
     fileId?: boolean
+    squareModifierId?: boolean
+    squareModifierVersion?: boolean
   }
 
-  export type ModifierGroupItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "name" | "price" | "description" | "translations" | "modifierGroupId" | "fileId", ExtArgs["result"]["modifierGroupItem"]>
+  export type ModifierGroupItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "name" | "price" | "description" | "translations" | "modifierGroupId" | "fileId" | "squareModifierId" | "squareModifierVersion", ExtArgs["result"]["modifierGroupItem"]>
   export type ModifierGroupItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     photo?: boolean | ModifierGroupItem$photoArgs<ExtArgs>
     modifierGroup?: boolean | ModifierGroupItem$modifierGroupArgs<ExtArgs>
@@ -21685,6 +21857,8 @@ export namespace Prisma {
       translations: Prisma.JsonValue | null
       modifierGroupId: string | null
       fileId: string | null
+      squareModifierId: string | null
+      squareModifierVersion: string | null
     }, ExtArgs["result"]["modifierGroupItem"]>
     composites: {}
   }
@@ -22121,6 +22295,8 @@ export namespace Prisma {
     readonly translations: FieldRef<"ModifierGroupItem", 'Json'>
     readonly modifierGroupId: FieldRef<"ModifierGroupItem", 'String'>
     readonly fileId: FieldRef<"ModifierGroupItem", 'String'>
+    readonly squareModifierId: FieldRef<"ModifierGroupItem", 'String'>
+    readonly squareModifierVersion: FieldRef<"ModifierGroupItem", 'String'>
   }
     
 
@@ -22881,6 +23057,7 @@ export namespace Prisma {
     branches?: boolean | Business$branchesArgs<ExtArgs>
     members?: boolean | Business$membersArgs<ExtArgs>
     integrations?: boolean | Business$integrationsArgs<ExtArgs>
+    squareConnections?: boolean | Business$squareConnectionsArgs<ExtArgs>
     pushDevices?: boolean | Business$pushDevicesArgs<ExtArgs>
     _count?: boolean | BusinessCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["business"]>
@@ -22938,6 +23115,7 @@ export namespace Prisma {
     branches?: boolean | Business$branchesArgs<ExtArgs>
     members?: boolean | Business$membersArgs<ExtArgs>
     integrations?: boolean | Business$integrationsArgs<ExtArgs>
+    squareConnections?: boolean | Business$squareConnectionsArgs<ExtArgs>
     pushDevices?: boolean | Business$pushDevicesArgs<ExtArgs>
     _count?: boolean | BusinessCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -22950,6 +23128,7 @@ export namespace Prisma {
       branches: Prisma.$BranchPayload<ExtArgs>[]
       members: Prisma.$BusinessMemberPayload<ExtArgs>[]
       integrations: Prisma.$ExternalIntegrationConnectionPayload<ExtArgs>[]
+      squareConnections: Prisma.$SquareConnectionPayload<ExtArgs>[]
       pushDevices: Prisma.$UserPushDevicePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -23363,6 +23542,7 @@ export namespace Prisma {
     branches<T extends Business$branchesArgs<ExtArgs> = {}>(args?: Subset<T, Business$branchesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     members<T extends Business$membersArgs<ExtArgs> = {}>(args?: Subset<T, Business$membersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BusinessMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     integrations<T extends Business$integrationsArgs<ExtArgs> = {}>(args?: Subset<T, Business$integrationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExternalIntegrationConnectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    squareConnections<T extends Business$squareConnectionsArgs<ExtArgs> = {}>(args?: Subset<T, Business$squareConnectionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SquareConnectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     pushDevices<T extends Business$pushDevicesArgs<ExtArgs> = {}>(args?: Subset<T, Business$pushDevicesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPushDevicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -23871,6 +24051,30 @@ export namespace Prisma {
   }
 
   /**
+   * Business.squareConnections
+   */
+  export type Business$squareConnectionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareConnection
+     */
+    select?: SquareConnectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquareConnection
+     */
+    omit?: SquareConnectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SquareConnectionInclude<ExtArgs> | null
+    where?: SquareConnectionWhereInput
+    orderBy?: SquareConnectionOrderByWithRelationInput | SquareConnectionOrderByWithRelationInput[]
+    cursor?: SquareConnectionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SquareConnectionScalarFieldEnum | SquareConnectionScalarFieldEnum[]
+  }
+
+  /**
    * Business.pushDevices
    */
   export type Business$pushDevicesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -24111,6 +24315,7 @@ export namespace Prisma {
     lastLoginAt?: boolean
     businessMemberships?: boolean | User$businessMembershipsArgs<ExtArgs>
     integrations?: boolean | User$integrationsArgs<ExtArgs>
+    squareConnections?: boolean | User$squareConnectionsArgs<ExtArgs>
     otpChallenges?: boolean | User$otpChallengesArgs<ExtArgs>
     pushDevices?: boolean | User$pushDevicesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -24156,6 +24361,7 @@ export namespace Prisma {
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     businessMemberships?: boolean | User$businessMembershipsArgs<ExtArgs>
     integrations?: boolean | User$integrationsArgs<ExtArgs>
+    squareConnections?: boolean | User$squareConnectionsArgs<ExtArgs>
     otpChallenges?: boolean | User$otpChallengesArgs<ExtArgs>
     pushDevices?: boolean | User$pushDevicesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -24168,6 +24374,7 @@ export namespace Prisma {
     objects: {
       businessMemberships: Prisma.$BusinessMemberPayload<ExtArgs>[]
       integrations: Prisma.$ExternalIntegrationConnectionPayload<ExtArgs>[]
+      squareConnections: Prisma.$SquareConnectionPayload<ExtArgs>[]
       otpChallenges: Prisma.$OwnerOtpChallengePayload<ExtArgs>[]
       pushDevices: Prisma.$UserPushDevicePayload<ExtArgs>[]
     }
@@ -24577,6 +24784,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     businessMemberships<T extends User$businessMembershipsArgs<ExtArgs> = {}>(args?: Subset<T, User$businessMembershipsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BusinessMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     integrations<T extends User$integrationsArgs<ExtArgs> = {}>(args?: Subset<T, User$integrationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExternalIntegrationConnectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    squareConnections<T extends User$squareConnectionsArgs<ExtArgs> = {}>(args?: Subset<T, User$squareConnectionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SquareConnectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     otpChallenges<T extends User$otpChallengesArgs<ExtArgs> = {}>(args?: Subset<T, User$otpChallengesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OwnerOtpChallengePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     pushDevices<T extends User$pushDevicesArgs<ExtArgs> = {}>(args?: Subset<T, User$pushDevicesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPushDevicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -25055,6 +25263,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ExternalIntegrationConnectionScalarFieldEnum | ExternalIntegrationConnectionScalarFieldEnum[]
+  }
+
+  /**
+   * User.squareConnections
+   */
+  export type User$squareConnectionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareConnection
+     */
+    select?: SquareConnectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquareConnection
+     */
+    omit?: SquareConnectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SquareConnectionInclude<ExtArgs> | null
+    where?: SquareConnectionWhereInput
+    orderBy?: SquareConnectionOrderByWithRelationInput | SquareConnectionOrderByWithRelationInput[]
+    cursor?: SquareConnectionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SquareConnectionScalarFieldEnum | SquareConnectionScalarFieldEnum[]
   }
 
   /**
@@ -28763,6 +28995,1190 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: ExternalIntegrationConnectionInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model SquareConnection
+   */
+
+  export type AggregateSquareConnection = {
+    _count: SquareConnectionCountAggregateOutputType | null
+    _min: SquareConnectionMinAggregateOutputType | null
+    _max: SquareConnectionMaxAggregateOutputType | null
+  }
+
+  export type SquareConnectionMinAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    environment: $Enums.ExternalIntegrationEnvironment | null
+    userId: string | null
+    businessId: string | null
+    merchantId: string | null
+    accessToken: string | null
+    refreshToken: string | null
+    scope: string | null
+    tokenType: string | null
+    expiresAt: Date | null
+    connectedAt: Date | null
+  }
+
+  export type SquareConnectionMaxAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    environment: $Enums.ExternalIntegrationEnvironment | null
+    userId: string | null
+    businessId: string | null
+    merchantId: string | null
+    accessToken: string | null
+    refreshToken: string | null
+    scope: string | null
+    tokenType: string | null
+    expiresAt: Date | null
+    connectedAt: Date | null
+  }
+
+  export type SquareConnectionCountAggregateOutputType = {
+    id: number
+    createdAt: number
+    updatedAt: number
+    environment: number
+    userId: number
+    businessId: number
+    merchantId: number
+    accessToken: number
+    refreshToken: number
+    scope: number
+    tokenType: number
+    expiresAt: number
+    connectedAt: number
+    rawPayload: number
+    _all: number
+  }
+
+
+  export type SquareConnectionMinAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    environment?: true
+    userId?: true
+    businessId?: true
+    merchantId?: true
+    accessToken?: true
+    refreshToken?: true
+    scope?: true
+    tokenType?: true
+    expiresAt?: true
+    connectedAt?: true
+  }
+
+  export type SquareConnectionMaxAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    environment?: true
+    userId?: true
+    businessId?: true
+    merchantId?: true
+    accessToken?: true
+    refreshToken?: true
+    scope?: true
+    tokenType?: true
+    expiresAt?: true
+    connectedAt?: true
+  }
+
+  export type SquareConnectionCountAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    environment?: true
+    userId?: true
+    businessId?: true
+    merchantId?: true
+    accessToken?: true
+    refreshToken?: true
+    scope?: true
+    tokenType?: true
+    expiresAt?: true
+    connectedAt?: true
+    rawPayload?: true
+    _all?: true
+  }
+
+  export type SquareConnectionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SquareConnection to aggregate.
+     */
+    where?: SquareConnectionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SquareConnections to fetch.
+     */
+    orderBy?: SquareConnectionOrderByWithRelationInput | SquareConnectionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SquareConnectionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SquareConnections from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SquareConnections.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SquareConnections
+    **/
+    _count?: true | SquareConnectionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SquareConnectionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SquareConnectionMaxAggregateInputType
+  }
+
+  export type GetSquareConnectionAggregateType<T extends SquareConnectionAggregateArgs> = {
+        [P in keyof T & keyof AggregateSquareConnection]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSquareConnection[P]>
+      : GetScalarType<T[P], AggregateSquareConnection[P]>
+  }
+
+
+
+
+  export type SquareConnectionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SquareConnectionWhereInput
+    orderBy?: SquareConnectionOrderByWithAggregationInput | SquareConnectionOrderByWithAggregationInput[]
+    by: SquareConnectionScalarFieldEnum[] | SquareConnectionScalarFieldEnum
+    having?: SquareConnectionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SquareConnectionCountAggregateInputType | true
+    _min?: SquareConnectionMinAggregateInputType
+    _max?: SquareConnectionMaxAggregateInputType
+  }
+
+  export type SquareConnectionGroupByOutputType = {
+    id: string
+    createdAt: Date
+    updatedAt: Date
+    environment: $Enums.ExternalIntegrationEnvironment
+    userId: string
+    businessId: string
+    merchantId: string | null
+    accessToken: string
+    refreshToken: string | null
+    scope: string | null
+    tokenType: string | null
+    expiresAt: Date | null
+    connectedAt: Date
+    rawPayload: JsonValue | null
+    _count: SquareConnectionCountAggregateOutputType | null
+    _min: SquareConnectionMinAggregateOutputType | null
+    _max: SquareConnectionMaxAggregateOutputType | null
+  }
+
+  type GetSquareConnectionGroupByPayload<T extends SquareConnectionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SquareConnectionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SquareConnectionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SquareConnectionGroupByOutputType[P]>
+            : GetScalarType<T[P], SquareConnectionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SquareConnectionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    environment?: boolean
+    userId?: boolean
+    businessId?: boolean
+    merchantId?: boolean
+    accessToken?: boolean
+    refreshToken?: boolean
+    scope?: boolean
+    tokenType?: boolean
+    expiresAt?: boolean
+    connectedAt?: boolean
+    rawPayload?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    business?: boolean | BusinessDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["squareConnection"]>
+
+  export type SquareConnectionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    environment?: boolean
+    userId?: boolean
+    businessId?: boolean
+    merchantId?: boolean
+    accessToken?: boolean
+    refreshToken?: boolean
+    scope?: boolean
+    tokenType?: boolean
+    expiresAt?: boolean
+    connectedAt?: boolean
+    rawPayload?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    business?: boolean | BusinessDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["squareConnection"]>
+
+  export type SquareConnectionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    environment?: boolean
+    userId?: boolean
+    businessId?: boolean
+    merchantId?: boolean
+    accessToken?: boolean
+    refreshToken?: boolean
+    scope?: boolean
+    tokenType?: boolean
+    expiresAt?: boolean
+    connectedAt?: boolean
+    rawPayload?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    business?: boolean | BusinessDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["squareConnection"]>
+
+  export type SquareConnectionSelectScalar = {
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    environment?: boolean
+    userId?: boolean
+    businessId?: boolean
+    merchantId?: boolean
+    accessToken?: boolean
+    refreshToken?: boolean
+    scope?: boolean
+    tokenType?: boolean
+    expiresAt?: boolean
+    connectedAt?: boolean
+    rawPayload?: boolean
+  }
+
+  export type SquareConnectionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "environment" | "userId" | "businessId" | "merchantId" | "accessToken" | "refreshToken" | "scope" | "tokenType" | "expiresAt" | "connectedAt" | "rawPayload", ExtArgs["result"]["squareConnection"]>
+  export type SquareConnectionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    business?: boolean | BusinessDefaultArgs<ExtArgs>
+  }
+  export type SquareConnectionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    business?: boolean | BusinessDefaultArgs<ExtArgs>
+  }
+  export type SquareConnectionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    business?: boolean | BusinessDefaultArgs<ExtArgs>
+  }
+
+  export type $SquareConnectionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SquareConnection"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      business: Prisma.$BusinessPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      createdAt: Date
+      updatedAt: Date
+      environment: $Enums.ExternalIntegrationEnvironment
+      userId: string
+      businessId: string
+      merchantId: string | null
+      accessToken: string
+      refreshToken: string | null
+      scope: string | null
+      tokenType: string | null
+      expiresAt: Date | null
+      connectedAt: Date
+      rawPayload: Prisma.JsonValue | null
+    }, ExtArgs["result"]["squareConnection"]>
+    composites: {}
+  }
+
+  type SquareConnectionGetPayload<S extends boolean | null | undefined | SquareConnectionDefaultArgs> = $Result.GetResult<Prisma.$SquareConnectionPayload, S>
+
+  type SquareConnectionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SquareConnectionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SquareConnectionCountAggregateInputType | true
+    }
+
+  export interface SquareConnectionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SquareConnection'], meta: { name: 'SquareConnection' } }
+    /**
+     * Find zero or one SquareConnection that matches the filter.
+     * @param {SquareConnectionFindUniqueArgs} args - Arguments to find a SquareConnection
+     * @example
+     * // Get one SquareConnection
+     * const squareConnection = await prisma.squareConnection.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SquareConnectionFindUniqueArgs>(args: SelectSubset<T, SquareConnectionFindUniqueArgs<ExtArgs>>): Prisma__SquareConnectionClient<$Result.GetResult<Prisma.$SquareConnectionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one SquareConnection that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SquareConnectionFindUniqueOrThrowArgs} args - Arguments to find a SquareConnection
+     * @example
+     * // Get one SquareConnection
+     * const squareConnection = await prisma.squareConnection.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SquareConnectionFindUniqueOrThrowArgs>(args: SelectSubset<T, SquareConnectionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SquareConnectionClient<$Result.GetResult<Prisma.$SquareConnectionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SquareConnection that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SquareConnectionFindFirstArgs} args - Arguments to find a SquareConnection
+     * @example
+     * // Get one SquareConnection
+     * const squareConnection = await prisma.squareConnection.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SquareConnectionFindFirstArgs>(args?: SelectSubset<T, SquareConnectionFindFirstArgs<ExtArgs>>): Prisma__SquareConnectionClient<$Result.GetResult<Prisma.$SquareConnectionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SquareConnection that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SquareConnectionFindFirstOrThrowArgs} args - Arguments to find a SquareConnection
+     * @example
+     * // Get one SquareConnection
+     * const squareConnection = await prisma.squareConnection.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SquareConnectionFindFirstOrThrowArgs>(args?: SelectSubset<T, SquareConnectionFindFirstOrThrowArgs<ExtArgs>>): Prisma__SquareConnectionClient<$Result.GetResult<Prisma.$SquareConnectionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more SquareConnections that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SquareConnectionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SquareConnections
+     * const squareConnections = await prisma.squareConnection.findMany()
+     * 
+     * // Get first 10 SquareConnections
+     * const squareConnections = await prisma.squareConnection.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const squareConnectionWithIdOnly = await prisma.squareConnection.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SquareConnectionFindManyArgs>(args?: SelectSubset<T, SquareConnectionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SquareConnectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a SquareConnection.
+     * @param {SquareConnectionCreateArgs} args - Arguments to create a SquareConnection.
+     * @example
+     * // Create one SquareConnection
+     * const SquareConnection = await prisma.squareConnection.create({
+     *   data: {
+     *     // ... data to create a SquareConnection
+     *   }
+     * })
+     * 
+     */
+    create<T extends SquareConnectionCreateArgs>(args: SelectSubset<T, SquareConnectionCreateArgs<ExtArgs>>): Prisma__SquareConnectionClient<$Result.GetResult<Prisma.$SquareConnectionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many SquareConnections.
+     * @param {SquareConnectionCreateManyArgs} args - Arguments to create many SquareConnections.
+     * @example
+     * // Create many SquareConnections
+     * const squareConnection = await prisma.squareConnection.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SquareConnectionCreateManyArgs>(args?: SelectSubset<T, SquareConnectionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many SquareConnections and returns the data saved in the database.
+     * @param {SquareConnectionCreateManyAndReturnArgs} args - Arguments to create many SquareConnections.
+     * @example
+     * // Create many SquareConnections
+     * const squareConnection = await prisma.squareConnection.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many SquareConnections and only return the `id`
+     * const squareConnectionWithIdOnly = await prisma.squareConnection.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SquareConnectionCreateManyAndReturnArgs>(args?: SelectSubset<T, SquareConnectionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SquareConnectionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a SquareConnection.
+     * @param {SquareConnectionDeleteArgs} args - Arguments to delete one SquareConnection.
+     * @example
+     * // Delete one SquareConnection
+     * const SquareConnection = await prisma.squareConnection.delete({
+     *   where: {
+     *     // ... filter to delete one SquareConnection
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SquareConnectionDeleteArgs>(args: SelectSubset<T, SquareConnectionDeleteArgs<ExtArgs>>): Prisma__SquareConnectionClient<$Result.GetResult<Prisma.$SquareConnectionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one SquareConnection.
+     * @param {SquareConnectionUpdateArgs} args - Arguments to update one SquareConnection.
+     * @example
+     * // Update one SquareConnection
+     * const squareConnection = await prisma.squareConnection.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SquareConnectionUpdateArgs>(args: SelectSubset<T, SquareConnectionUpdateArgs<ExtArgs>>): Prisma__SquareConnectionClient<$Result.GetResult<Prisma.$SquareConnectionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more SquareConnections.
+     * @param {SquareConnectionDeleteManyArgs} args - Arguments to filter SquareConnections to delete.
+     * @example
+     * // Delete a few SquareConnections
+     * const { count } = await prisma.squareConnection.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SquareConnectionDeleteManyArgs>(args?: SelectSubset<T, SquareConnectionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SquareConnections.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SquareConnectionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SquareConnections
+     * const squareConnection = await prisma.squareConnection.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SquareConnectionUpdateManyArgs>(args: SelectSubset<T, SquareConnectionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SquareConnections and returns the data updated in the database.
+     * @param {SquareConnectionUpdateManyAndReturnArgs} args - Arguments to update many SquareConnections.
+     * @example
+     * // Update many SquareConnections
+     * const squareConnection = await prisma.squareConnection.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more SquareConnections and only return the `id`
+     * const squareConnectionWithIdOnly = await prisma.squareConnection.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends SquareConnectionUpdateManyAndReturnArgs>(args: SelectSubset<T, SquareConnectionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SquareConnectionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one SquareConnection.
+     * @param {SquareConnectionUpsertArgs} args - Arguments to update or create a SquareConnection.
+     * @example
+     * // Update or create a SquareConnection
+     * const squareConnection = await prisma.squareConnection.upsert({
+     *   create: {
+     *     // ... data to create a SquareConnection
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SquareConnection we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SquareConnectionUpsertArgs>(args: SelectSubset<T, SquareConnectionUpsertArgs<ExtArgs>>): Prisma__SquareConnectionClient<$Result.GetResult<Prisma.$SquareConnectionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of SquareConnections.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SquareConnectionCountArgs} args - Arguments to filter SquareConnections to count.
+     * @example
+     * // Count the number of SquareConnections
+     * const count = await prisma.squareConnection.count({
+     *   where: {
+     *     // ... the filter for the SquareConnections we want to count
+     *   }
+     * })
+    **/
+    count<T extends SquareConnectionCountArgs>(
+      args?: Subset<T, SquareConnectionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SquareConnectionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SquareConnection.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SquareConnectionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SquareConnectionAggregateArgs>(args: Subset<T, SquareConnectionAggregateArgs>): Prisma.PrismaPromise<GetSquareConnectionAggregateType<T>>
+
+    /**
+     * Group by SquareConnection.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SquareConnectionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SquareConnectionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SquareConnectionGroupByArgs['orderBy'] }
+        : { orderBy?: SquareConnectionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SquareConnectionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSquareConnectionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SquareConnection model
+   */
+  readonly fields: SquareConnectionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SquareConnection.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SquareConnectionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    business<T extends BusinessDefaultArgs<ExtArgs> = {}>(args?: Subset<T, BusinessDefaultArgs<ExtArgs>>): Prisma__BusinessClient<$Result.GetResult<Prisma.$BusinessPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SquareConnection model
+   */
+  interface SquareConnectionFieldRefs {
+    readonly id: FieldRef<"SquareConnection", 'String'>
+    readonly createdAt: FieldRef<"SquareConnection", 'DateTime'>
+    readonly updatedAt: FieldRef<"SquareConnection", 'DateTime'>
+    readonly environment: FieldRef<"SquareConnection", 'ExternalIntegrationEnvironment'>
+    readonly userId: FieldRef<"SquareConnection", 'String'>
+    readonly businessId: FieldRef<"SquareConnection", 'String'>
+    readonly merchantId: FieldRef<"SquareConnection", 'String'>
+    readonly accessToken: FieldRef<"SquareConnection", 'String'>
+    readonly refreshToken: FieldRef<"SquareConnection", 'String'>
+    readonly scope: FieldRef<"SquareConnection", 'String'>
+    readonly tokenType: FieldRef<"SquareConnection", 'String'>
+    readonly expiresAt: FieldRef<"SquareConnection", 'DateTime'>
+    readonly connectedAt: FieldRef<"SquareConnection", 'DateTime'>
+    readonly rawPayload: FieldRef<"SquareConnection", 'Json'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SquareConnection findUnique
+   */
+  export type SquareConnectionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareConnection
+     */
+    select?: SquareConnectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquareConnection
+     */
+    omit?: SquareConnectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SquareConnectionInclude<ExtArgs> | null
+    /**
+     * Filter, which SquareConnection to fetch.
+     */
+    where: SquareConnectionWhereUniqueInput
+  }
+
+  /**
+   * SquareConnection findUniqueOrThrow
+   */
+  export type SquareConnectionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareConnection
+     */
+    select?: SquareConnectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquareConnection
+     */
+    omit?: SquareConnectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SquareConnectionInclude<ExtArgs> | null
+    /**
+     * Filter, which SquareConnection to fetch.
+     */
+    where: SquareConnectionWhereUniqueInput
+  }
+
+  /**
+   * SquareConnection findFirst
+   */
+  export type SquareConnectionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareConnection
+     */
+    select?: SquareConnectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquareConnection
+     */
+    omit?: SquareConnectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SquareConnectionInclude<ExtArgs> | null
+    /**
+     * Filter, which SquareConnection to fetch.
+     */
+    where?: SquareConnectionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SquareConnections to fetch.
+     */
+    orderBy?: SquareConnectionOrderByWithRelationInput | SquareConnectionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SquareConnections.
+     */
+    cursor?: SquareConnectionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SquareConnections from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SquareConnections.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SquareConnections.
+     */
+    distinct?: SquareConnectionScalarFieldEnum | SquareConnectionScalarFieldEnum[]
+  }
+
+  /**
+   * SquareConnection findFirstOrThrow
+   */
+  export type SquareConnectionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareConnection
+     */
+    select?: SquareConnectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquareConnection
+     */
+    omit?: SquareConnectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SquareConnectionInclude<ExtArgs> | null
+    /**
+     * Filter, which SquareConnection to fetch.
+     */
+    where?: SquareConnectionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SquareConnections to fetch.
+     */
+    orderBy?: SquareConnectionOrderByWithRelationInput | SquareConnectionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SquareConnections.
+     */
+    cursor?: SquareConnectionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SquareConnections from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SquareConnections.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SquareConnections.
+     */
+    distinct?: SquareConnectionScalarFieldEnum | SquareConnectionScalarFieldEnum[]
+  }
+
+  /**
+   * SquareConnection findMany
+   */
+  export type SquareConnectionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareConnection
+     */
+    select?: SquareConnectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquareConnection
+     */
+    omit?: SquareConnectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SquareConnectionInclude<ExtArgs> | null
+    /**
+     * Filter, which SquareConnections to fetch.
+     */
+    where?: SquareConnectionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SquareConnections to fetch.
+     */
+    orderBy?: SquareConnectionOrderByWithRelationInput | SquareConnectionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SquareConnections.
+     */
+    cursor?: SquareConnectionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SquareConnections from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SquareConnections.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SquareConnections.
+     */
+    distinct?: SquareConnectionScalarFieldEnum | SquareConnectionScalarFieldEnum[]
+  }
+
+  /**
+   * SquareConnection create
+   */
+  export type SquareConnectionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareConnection
+     */
+    select?: SquareConnectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquareConnection
+     */
+    omit?: SquareConnectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SquareConnectionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a SquareConnection.
+     */
+    data: XOR<SquareConnectionCreateInput, SquareConnectionUncheckedCreateInput>
+  }
+
+  /**
+   * SquareConnection createMany
+   */
+  export type SquareConnectionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SquareConnections.
+     */
+    data: SquareConnectionCreateManyInput | SquareConnectionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SquareConnection createManyAndReturn
+   */
+  export type SquareConnectionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareConnection
+     */
+    select?: SquareConnectionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquareConnection
+     */
+    omit?: SquareConnectionOmit<ExtArgs> | null
+    /**
+     * The data used to create many SquareConnections.
+     */
+    data: SquareConnectionCreateManyInput | SquareConnectionCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SquareConnectionIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SquareConnection update
+   */
+  export type SquareConnectionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareConnection
+     */
+    select?: SquareConnectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquareConnection
+     */
+    omit?: SquareConnectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SquareConnectionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a SquareConnection.
+     */
+    data: XOR<SquareConnectionUpdateInput, SquareConnectionUncheckedUpdateInput>
+    /**
+     * Choose, which SquareConnection to update.
+     */
+    where: SquareConnectionWhereUniqueInput
+  }
+
+  /**
+   * SquareConnection updateMany
+   */
+  export type SquareConnectionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SquareConnections.
+     */
+    data: XOR<SquareConnectionUpdateManyMutationInput, SquareConnectionUncheckedUpdateManyInput>
+    /**
+     * Filter which SquareConnections to update
+     */
+    where?: SquareConnectionWhereInput
+    /**
+     * Limit how many SquareConnections to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SquareConnection updateManyAndReturn
+   */
+  export type SquareConnectionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareConnection
+     */
+    select?: SquareConnectionSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquareConnection
+     */
+    omit?: SquareConnectionOmit<ExtArgs> | null
+    /**
+     * The data used to update SquareConnections.
+     */
+    data: XOR<SquareConnectionUpdateManyMutationInput, SquareConnectionUncheckedUpdateManyInput>
+    /**
+     * Filter which SquareConnections to update
+     */
+    where?: SquareConnectionWhereInput
+    /**
+     * Limit how many SquareConnections to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SquareConnectionIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SquareConnection upsert
+   */
+  export type SquareConnectionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareConnection
+     */
+    select?: SquareConnectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquareConnection
+     */
+    omit?: SquareConnectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SquareConnectionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the SquareConnection to update in case it exists.
+     */
+    where: SquareConnectionWhereUniqueInput
+    /**
+     * In case the SquareConnection found by the `where` argument doesn't exist, create a new SquareConnection with this data.
+     */
+    create: XOR<SquareConnectionCreateInput, SquareConnectionUncheckedCreateInput>
+    /**
+     * In case the SquareConnection was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SquareConnectionUpdateInput, SquareConnectionUncheckedUpdateInput>
+  }
+
+  /**
+   * SquareConnection delete
+   */
+  export type SquareConnectionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareConnection
+     */
+    select?: SquareConnectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquareConnection
+     */
+    omit?: SquareConnectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SquareConnectionInclude<ExtArgs> | null
+    /**
+     * Filter which SquareConnection to delete.
+     */
+    where: SquareConnectionWhereUniqueInput
+  }
+
+  /**
+   * SquareConnection deleteMany
+   */
+  export type SquareConnectionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SquareConnections to delete
+     */
+    where?: SquareConnectionWhereInput
+    /**
+     * Limit how many SquareConnections to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * SquareConnection without action
+   */
+  export type SquareConnectionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareConnection
+     */
+    select?: SquareConnectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquareConnection
+     */
+    omit?: SquareConnectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SquareConnectionInclude<ExtArgs> | null
   }
 
 
@@ -46752,6 +48168,10 @@ export namespace Prisma {
     comparedAtPrice: number | null
     categoryIndex: number | null
     categoryId: string | null
+    squareItemId: string | null
+    squareItemVersion: string | null
+    squareVariationId: string | null
+    squareVariationVersion: string | null
   }
 
   export type ProductMaxAggregateOutputType = {
@@ -46766,6 +48186,10 @@ export namespace Prisma {
     comparedAtPrice: number | null
     categoryIndex: number | null
     categoryId: string | null
+    squareItemId: string | null
+    squareItemVersion: string | null
+    squareVariationId: string | null
+    squareVariationVersion: string | null
   }
 
   export type ProductCountAggregateOutputType = {
@@ -46781,6 +48205,10 @@ export namespace Prisma {
     categoryIndex: number
     categoryId: number
     translations: number
+    squareItemId: number
+    squareItemVersion: number
+    squareVariationId: number
+    squareVariationVersion: number
     _all: number
   }
 
@@ -46809,6 +48237,10 @@ export namespace Prisma {
     comparedAtPrice?: true
     categoryIndex?: true
     categoryId?: true
+    squareItemId?: true
+    squareItemVersion?: true
+    squareVariationId?: true
+    squareVariationVersion?: true
   }
 
   export type ProductMaxAggregateInputType = {
@@ -46823,6 +48255,10 @@ export namespace Prisma {
     comparedAtPrice?: true
     categoryIndex?: true
     categoryId?: true
+    squareItemId?: true
+    squareItemVersion?: true
+    squareVariationId?: true
+    squareVariationVersion?: true
   }
 
   export type ProductCountAggregateInputType = {
@@ -46838,6 +48274,10 @@ export namespace Prisma {
     categoryIndex?: true
     categoryId?: true
     translations?: true
+    squareItemId?: true
+    squareItemVersion?: true
+    squareVariationId?: true
+    squareVariationVersion?: true
     _all?: true
   }
 
@@ -46940,6 +48380,10 @@ export namespace Prisma {
     categoryIndex: number | null
     categoryId: string | null
     translations: JsonValue | null
+    squareItemId: string | null
+    squareItemVersion: string | null
+    squareVariationId: string | null
+    squareVariationVersion: string | null
     _count: ProductCountAggregateOutputType | null
     _avg: ProductAvgAggregateOutputType | null
     _sum: ProductSumAggregateOutputType | null
@@ -46974,6 +48418,10 @@ export namespace Prisma {
     categoryIndex?: boolean
     categoryId?: boolean
     translations?: boolean
+    squareItemId?: boolean
+    squareItemVersion?: boolean
+    squareVariationId?: boolean
+    squareVariationVersion?: boolean
     photos?: boolean | Product$photosArgs<ExtArgs>
     modifierGroups?: boolean | Product$modifierGroupsArgs<ExtArgs>
     category?: boolean | Product$categoryArgs<ExtArgs>
@@ -47004,6 +48452,10 @@ export namespace Prisma {
     categoryIndex?: boolean
     categoryId?: boolean
     translations?: boolean
+    squareItemId?: boolean
+    squareItemVersion?: boolean
+    squareVariationId?: boolean
+    squareVariationVersion?: boolean
     category?: boolean | Product$categoryArgs<ExtArgs>
   }, ExtArgs["result"]["product"]>
 
@@ -47020,6 +48472,10 @@ export namespace Prisma {
     categoryIndex?: boolean
     categoryId?: boolean
     translations?: boolean
+    squareItemId?: boolean
+    squareItemVersion?: boolean
+    squareVariationId?: boolean
+    squareVariationVersion?: boolean
     category?: boolean | Product$categoryArgs<ExtArgs>
   }, ExtArgs["result"]["product"]>
 
@@ -47036,9 +48492,13 @@ export namespace Prisma {
     categoryIndex?: boolean
     categoryId?: boolean
     translations?: boolean
+    squareItemId?: boolean
+    squareItemVersion?: boolean
+    squareVariationId?: boolean
+    squareVariationVersion?: boolean
   }
 
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "itemType" | "name" | "visible" | "alertDriver" | "description" | "price" | "comparedAtPrice" | "categoryIndex" | "categoryId" | "translations", ExtArgs["result"]["product"]>
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "itemType" | "name" | "visible" | "alertDriver" | "description" | "price" | "comparedAtPrice" | "categoryIndex" | "categoryId" | "translations" | "squareItemId" | "squareItemVersion" | "squareVariationId" | "squareVariationVersion", ExtArgs["result"]["product"]>
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     photos?: boolean | Product$photosArgs<ExtArgs>
     modifierGroups?: boolean | Product$modifierGroupsArgs<ExtArgs>
@@ -47094,6 +48554,10 @@ export namespace Prisma {
       categoryIndex: number | null
       categoryId: string | null
       translations: Prisma.JsonValue | null
+      squareItemId: string | null
+      squareItemVersion: string | null
+      squareVariationId: string | null
+      squareVariationVersion: string | null
     }, ExtArgs["result"]["product"]>
     composites: {}
   }
@@ -47543,6 +49007,10 @@ export namespace Prisma {
     readonly categoryIndex: FieldRef<"Product", 'Int'>
     readonly categoryId: FieldRef<"Product", 'String'>
     readonly translations: FieldRef<"Product", 'Json'>
+    readonly squareItemId: FieldRef<"Product", 'String'>
+    readonly squareItemVersion: FieldRef<"Product", 'String'>
+    readonly squareVariationId: FieldRef<"Product", 'String'>
+    readonly squareVariationVersion: FieldRef<"Product", 'String'>
   }
     
 
@@ -51589,6 +53057,8 @@ export namespace Prisma {
     name: string | null
     active: boolean | null
     isDefault: boolean | null
+    squareMenuId: string | null
+    squareMenuVersion: string | null
   }
 
   export type MenuMaxAggregateOutputType = {
@@ -51598,6 +53068,8 @@ export namespace Prisma {
     name: string | null
     active: boolean | null
     isDefault: boolean | null
+    squareMenuId: string | null
+    squareMenuVersion: string | null
   }
 
   export type MenuCountAggregateOutputType = {
@@ -51607,6 +53079,8 @@ export namespace Prisma {
     name: number
     active: number
     isDefault: number
+    squareMenuId: number
+    squareMenuVersion: number
     _all: number
   }
 
@@ -51618,6 +53092,8 @@ export namespace Prisma {
     name?: true
     active?: true
     isDefault?: true
+    squareMenuId?: true
+    squareMenuVersion?: true
   }
 
   export type MenuMaxAggregateInputType = {
@@ -51627,6 +53103,8 @@ export namespace Prisma {
     name?: true
     active?: true
     isDefault?: true
+    squareMenuId?: true
+    squareMenuVersion?: true
   }
 
   export type MenuCountAggregateInputType = {
@@ -51636,6 +53114,8 @@ export namespace Prisma {
     name?: true
     active?: true
     isDefault?: true
+    squareMenuId?: true
+    squareMenuVersion?: true
     _all?: true
   }
 
@@ -51718,6 +53198,8 @@ export namespace Prisma {
     name: string
     active: boolean
     isDefault: boolean
+    squareMenuId: string | null
+    squareMenuVersion: string | null
     _count: MenuCountAggregateOutputType | null
     _min: MenuMinAggregateOutputType | null
     _max: MenuMaxAggregateOutputType | null
@@ -51744,6 +53226,8 @@ export namespace Prisma {
     name?: boolean
     active?: boolean
     isDefault?: boolean
+    squareMenuId?: boolean
+    squareMenuVersion?: boolean
     categories?: boolean | Menu$categoriesArgs<ExtArgs>
     menuCategories?: boolean | Menu$menuCategoriesArgs<ExtArgs>
     menuVisits?: boolean | Menu$menuVisitsArgs<ExtArgs>
@@ -51757,6 +53241,8 @@ export namespace Prisma {
     name?: boolean
     active?: boolean
     isDefault?: boolean
+    squareMenuId?: boolean
+    squareMenuVersion?: boolean
   }, ExtArgs["result"]["menu"]>
 
   export type MenuSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -51766,6 +53252,8 @@ export namespace Prisma {
     name?: boolean
     active?: boolean
     isDefault?: boolean
+    squareMenuId?: boolean
+    squareMenuVersion?: boolean
   }, ExtArgs["result"]["menu"]>
 
   export type MenuSelectScalar = {
@@ -51775,9 +53263,11 @@ export namespace Prisma {
     name?: boolean
     active?: boolean
     isDefault?: boolean
+    squareMenuId?: boolean
+    squareMenuVersion?: boolean
   }
 
-  export type MenuOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "name" | "active" | "isDefault", ExtArgs["result"]["menu"]>
+  export type MenuOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "name" | "active" | "isDefault" | "squareMenuId" | "squareMenuVersion", ExtArgs["result"]["menu"]>
   export type MenuInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     categories?: boolean | Menu$categoriesArgs<ExtArgs>
     menuCategories?: boolean | Menu$menuCategoriesArgs<ExtArgs>
@@ -51801,6 +53291,8 @@ export namespace Prisma {
       name: string
       active: boolean
       isDefault: boolean
+      squareMenuId: string | null
+      squareMenuVersion: string | null
     }, ExtArgs["result"]["menu"]>
     composites: {}
   }
@@ -52233,6 +53725,8 @@ export namespace Prisma {
     readonly name: FieldRef<"Menu", 'String'>
     readonly active: FieldRef<"Menu", 'Boolean'>
     readonly isDefault: FieldRef<"Menu", 'Boolean'>
+    readonly squareMenuId: FieldRef<"Menu", 'String'>
+    readonly squareMenuVersion: FieldRef<"Menu", 'String'>
   }
     
 
@@ -55148,6 +56642,10 @@ export namespace Prisma {
     categoryId: string | null
     menuIndex: number | null
     createdAt: Date | null
+    squareCategoryId: string | null
+    squareCategoryVersion: string | null
+    squareMenuCategoryId: string | null
+    squareMenuCategoryVersion: string | null
   }
 
   export type MenuCategoryMaxAggregateOutputType = {
@@ -55155,6 +56653,10 @@ export namespace Prisma {
     categoryId: string | null
     menuIndex: number | null
     createdAt: Date | null
+    squareCategoryId: string | null
+    squareCategoryVersion: string | null
+    squareMenuCategoryId: string | null
+    squareMenuCategoryVersion: string | null
   }
 
   export type MenuCategoryCountAggregateOutputType = {
@@ -55162,6 +56664,10 @@ export namespace Prisma {
     categoryId: number
     menuIndex: number
     createdAt: number
+    squareCategoryId: number
+    squareCategoryVersion: number
+    squareMenuCategoryId: number
+    squareMenuCategoryVersion: number
     _all: number
   }
 
@@ -55179,6 +56685,10 @@ export namespace Prisma {
     categoryId?: true
     menuIndex?: true
     createdAt?: true
+    squareCategoryId?: true
+    squareCategoryVersion?: true
+    squareMenuCategoryId?: true
+    squareMenuCategoryVersion?: true
   }
 
   export type MenuCategoryMaxAggregateInputType = {
@@ -55186,6 +56696,10 @@ export namespace Prisma {
     categoryId?: true
     menuIndex?: true
     createdAt?: true
+    squareCategoryId?: true
+    squareCategoryVersion?: true
+    squareMenuCategoryId?: true
+    squareMenuCategoryVersion?: true
   }
 
   export type MenuCategoryCountAggregateInputType = {
@@ -55193,6 +56707,10 @@ export namespace Prisma {
     categoryId?: true
     menuIndex?: true
     createdAt?: true
+    squareCategoryId?: true
+    squareCategoryVersion?: true
+    squareMenuCategoryId?: true
+    squareMenuCategoryVersion?: true
     _all?: true
   }
 
@@ -55287,6 +56805,10 @@ export namespace Prisma {
     categoryId: string
     menuIndex: number | null
     createdAt: Date
+    squareCategoryId: string | null
+    squareCategoryVersion: string | null
+    squareMenuCategoryId: string | null
+    squareMenuCategoryVersion: string | null
     _count: MenuCategoryCountAggregateOutputType | null
     _avg: MenuCategoryAvgAggregateOutputType | null
     _sum: MenuCategorySumAggregateOutputType | null
@@ -55313,6 +56835,10 @@ export namespace Prisma {
     categoryId?: boolean
     menuIndex?: boolean
     createdAt?: boolean
+    squareCategoryId?: boolean
+    squareCategoryVersion?: boolean
+    squareMenuCategoryId?: boolean
+    squareMenuCategoryVersion?: boolean
     menu?: boolean | MenuDefaultArgs<ExtArgs>
     category?: boolean | CategoryDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["menuCategory"]>
@@ -55322,6 +56848,10 @@ export namespace Prisma {
     categoryId?: boolean
     menuIndex?: boolean
     createdAt?: boolean
+    squareCategoryId?: boolean
+    squareCategoryVersion?: boolean
+    squareMenuCategoryId?: boolean
+    squareMenuCategoryVersion?: boolean
     menu?: boolean | MenuDefaultArgs<ExtArgs>
     category?: boolean | CategoryDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["menuCategory"]>
@@ -55331,6 +56861,10 @@ export namespace Prisma {
     categoryId?: boolean
     menuIndex?: boolean
     createdAt?: boolean
+    squareCategoryId?: boolean
+    squareCategoryVersion?: boolean
+    squareMenuCategoryId?: boolean
+    squareMenuCategoryVersion?: boolean
     menu?: boolean | MenuDefaultArgs<ExtArgs>
     category?: boolean | CategoryDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["menuCategory"]>
@@ -55340,9 +56874,13 @@ export namespace Prisma {
     categoryId?: boolean
     menuIndex?: boolean
     createdAt?: boolean
+    squareCategoryId?: boolean
+    squareCategoryVersion?: boolean
+    squareMenuCategoryId?: boolean
+    squareMenuCategoryVersion?: boolean
   }
 
-  export type MenuCategoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"menuId" | "categoryId" | "menuIndex" | "createdAt", ExtArgs["result"]["menuCategory"]>
+  export type MenuCategoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"menuId" | "categoryId" | "menuIndex" | "createdAt" | "squareCategoryId" | "squareCategoryVersion" | "squareMenuCategoryId" | "squareMenuCategoryVersion", ExtArgs["result"]["menuCategory"]>
   export type MenuCategoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     menu?: boolean | MenuDefaultArgs<ExtArgs>
     category?: boolean | CategoryDefaultArgs<ExtArgs>
@@ -55367,6 +56905,10 @@ export namespace Prisma {
       categoryId: string
       menuIndex: number | null
       createdAt: Date
+      squareCategoryId: string | null
+      squareCategoryVersion: string | null
+      squareMenuCategoryId: string | null
+      squareMenuCategoryVersion: string | null
     }, ExtArgs["result"]["menuCategory"]>
     composites: {}
   }
@@ -55796,6 +57338,10 @@ export namespace Prisma {
     readonly categoryId: FieldRef<"MenuCategory", 'String'>
     readonly menuIndex: FieldRef<"MenuCategory", 'Int'>
     readonly createdAt: FieldRef<"MenuCategory", 'DateTime'>
+    readonly squareCategoryId: FieldRef<"MenuCategory", 'String'>
+    readonly squareCategoryVersion: FieldRef<"MenuCategory", 'String'>
+    readonly squareMenuCategoryId: FieldRef<"MenuCategory", 'String'>
+    readonly squareMenuCategoryVersion: FieldRef<"MenuCategory", 'String'>
   }
     
 
@@ -70255,6 +71801,8 @@ export namespace Prisma {
     type: $Enums.OrderType | null
     paymentMethod: $Enums.PaymentType | null
     paymentProvider: $Enums.PaymentProvider | null
+    sourcePlatform: $Enums.OrderSourcePlatform | null
+    customerNameSnapshot: string | null
     tipAmount: number | null
     customerId: string | null
     externalId: string | null
@@ -70285,6 +71833,8 @@ export namespace Prisma {
     type: $Enums.OrderType | null
     paymentMethod: $Enums.PaymentType | null
     paymentProvider: $Enums.PaymentProvider | null
+    sourcePlatform: $Enums.OrderSourcePlatform | null
+    customerNameSnapshot: string | null
     tipAmount: number | null
     customerId: string | null
     externalId: string | null
@@ -70315,6 +71865,8 @@ export namespace Prisma {
     type: number
     paymentMethod: number
     paymentProvider: number
+    sourcePlatform: number
+    customerNameSnapshot: number
     tipAmount: number
     tags: number
     progressiveDiscountSnapshot: number
@@ -70369,6 +71921,8 @@ export namespace Prisma {
     type?: true
     paymentMethod?: true
     paymentProvider?: true
+    sourcePlatform?: true
+    customerNameSnapshot?: true
     tipAmount?: true
     customerId?: true
     externalId?: true
@@ -70399,6 +71953,8 @@ export namespace Prisma {
     type?: true
     paymentMethod?: true
     paymentProvider?: true
+    sourcePlatform?: true
+    customerNameSnapshot?: true
     tipAmount?: true
     customerId?: true
     externalId?: true
@@ -70429,6 +71985,8 @@ export namespace Prisma {
     type?: true
     paymentMethod?: true
     paymentProvider?: true
+    sourcePlatform?: true
+    customerNameSnapshot?: true
     tipAmount?: true
     tags?: true
     progressiveDiscountSnapshot?: true
@@ -70548,6 +72106,8 @@ export namespace Prisma {
     type: $Enums.OrderType
     paymentMethod: $Enums.PaymentType
     paymentProvider: $Enums.PaymentProvider | null
+    sourcePlatform: $Enums.OrderSourcePlatform | null
+    customerNameSnapshot: string | null
     tipAmount: number | null
     tags: string[]
     progressiveDiscountSnapshot: JsonValue | null
@@ -70599,6 +72159,8 @@ export namespace Prisma {
     type?: boolean
     paymentMethod?: boolean
     paymentProvider?: boolean
+    sourcePlatform?: boolean
+    customerNameSnapshot?: boolean
     tipAmount?: boolean
     tags?: boolean
     progressiveDiscountSnapshot?: boolean
@@ -70644,6 +72206,8 @@ export namespace Prisma {
     type?: boolean
     paymentMethod?: boolean
     paymentProvider?: boolean
+    sourcePlatform?: boolean
+    customerNameSnapshot?: boolean
     tipAmount?: boolean
     tags?: boolean
     progressiveDiscountSnapshot?: boolean
@@ -70682,6 +72246,8 @@ export namespace Prisma {
     type?: boolean
     paymentMethod?: boolean
     paymentProvider?: boolean
+    sourcePlatform?: boolean
+    customerNameSnapshot?: boolean
     tipAmount?: boolean
     tags?: boolean
     progressiveDiscountSnapshot?: boolean
@@ -70720,6 +72286,8 @@ export namespace Prisma {
     type?: boolean
     paymentMethod?: boolean
     paymentProvider?: boolean
+    sourcePlatform?: boolean
+    customerNameSnapshot?: boolean
     tipAmount?: boolean
     tags?: boolean
     progressiveDiscountSnapshot?: boolean
@@ -70732,7 +72300,7 @@ export namespace Prisma {
     branchId?: boolean
   }
 
-  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "number" | "createdAt" | "scheduleFor" | "language" | "paidAt" | "deliveredAt" | "leftAtDropOffAt" | "leftAtDropOffLat" | "leftAtDropOffLng" | "estimatedDeliveryDurationMinutes" | "currentEstimatedDeliveryDurationMinutes" | "dispatchOrderIndex" | "amount" | "canceled" | "status" | "type" | "paymentMethod" | "paymentProvider" | "tipAmount" | "tags" | "progressiveDiscountSnapshot" | "customerId" | "externalId" | "dispatchId" | "addressId" | "deliveryAddressId" | "externalAddressId" | "branchId", ExtArgs["result"]["order"]>
+  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "number" | "createdAt" | "scheduleFor" | "language" | "paidAt" | "deliveredAt" | "leftAtDropOffAt" | "leftAtDropOffLat" | "leftAtDropOffLng" | "estimatedDeliveryDurationMinutes" | "currentEstimatedDeliveryDurationMinutes" | "dispatchOrderIndex" | "amount" | "canceled" | "status" | "type" | "paymentMethod" | "paymentProvider" | "sourcePlatform" | "customerNameSnapshot" | "tipAmount" | "tags" | "progressiveDiscountSnapshot" | "customerId" | "externalId" | "dispatchId" | "addressId" | "deliveryAddressId" | "externalAddressId" | "branchId", ExtArgs["result"]["order"]>
   export type OrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     customer?: boolean | Order$customerArgs<ExtArgs>
     dispatch?: boolean | Order$dispatchArgs<ExtArgs>
@@ -70801,6 +72369,8 @@ export namespace Prisma {
       type: $Enums.OrderType
       paymentMethod: $Enums.PaymentType
       paymentProvider: $Enums.PaymentProvider | null
+      sourcePlatform: $Enums.OrderSourcePlatform | null
+      customerNameSnapshot: string | null
       tipAmount: number | null
       tags: string[]
       progressiveDiscountSnapshot: Prisma.JsonValue | null
@@ -71265,6 +72835,8 @@ export namespace Prisma {
     readonly type: FieldRef<"Order", 'OrderType'>
     readonly paymentMethod: FieldRef<"Order", 'PaymentType'>
     readonly paymentProvider: FieldRef<"Order", 'PaymentProvider'>
+    readonly sourcePlatform: FieldRef<"Order", 'OrderSourcePlatform'>
+    readonly customerNameSnapshot: FieldRef<"Order", 'String'>
     readonly tipAmount: FieldRef<"Order", 'Int'>
     readonly tags: FieldRef<"Order", 'String[]'>
     readonly progressiveDiscountSnapshot: FieldRef<"Order", 'Json'>
@@ -89111,7 +90683,9 @@ export namespace Prisma {
     required: 'required',
     type: 'type',
     minSelection: 'minSelection',
-    maxSelection: 'maxSelection'
+    maxSelection: 'maxSelection',
+    squareModifierListId: 'squareModifierListId',
+    squareModifierListVersion: 'squareModifierListVersion'
   };
 
   export type ModifierGroupScalarFieldEnum = (typeof ModifierGroupScalarFieldEnum)[keyof typeof ModifierGroupScalarFieldEnum]
@@ -89125,7 +90699,9 @@ export namespace Prisma {
     description: 'description',
     translations: 'translations',
     modifierGroupId: 'modifierGroupId',
-    fileId: 'fileId'
+    fileId: 'fileId',
+    squareModifierId: 'squareModifierId',
+    squareModifierVersion: 'squareModifierVersion'
   };
 
   export type ModifierGroupItemScalarFieldEnum = (typeof ModifierGroupItemScalarFieldEnum)[keyof typeof ModifierGroupItemScalarFieldEnum]
@@ -89217,6 +90793,26 @@ export namespace Prisma {
   };
 
   export type ExternalIntegrationConnectionScalarFieldEnum = (typeof ExternalIntegrationConnectionScalarFieldEnum)[keyof typeof ExternalIntegrationConnectionScalarFieldEnum]
+
+
+  export const SquareConnectionScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    environment: 'environment',
+    userId: 'userId',
+    businessId: 'businessId',
+    merchantId: 'merchantId',
+    accessToken: 'accessToken',
+    refreshToken: 'refreshToken',
+    scope: 'scope',
+    tokenType: 'tokenType',
+    expiresAt: 'expiresAt',
+    connectedAt: 'connectedAt',
+    rawPayload: 'rawPayload'
+  };
+
+  export type SquareConnectionScalarFieldEnum = (typeof SquareConnectionScalarFieldEnum)[keyof typeof SquareConnectionScalarFieldEnum]
 
 
   export const ExternalMenuEntityMapScalarFieldEnum: {
@@ -89491,7 +91087,11 @@ export namespace Prisma {
     comparedAtPrice: 'comparedAtPrice',
     categoryIndex: 'categoryIndex',
     categoryId: 'categoryId',
-    translations: 'translations'
+    translations: 'translations',
+    squareItemId: 'squareItemId',
+    squareItemVersion: 'squareItemVersion',
+    squareVariationId: 'squareVariationId',
+    squareVariationVersion: 'squareVariationVersion'
   };
 
   export type ProductScalarFieldEnum = (typeof ProductScalarFieldEnum)[keyof typeof ProductScalarFieldEnum]
@@ -89536,7 +91136,9 @@ export namespace Prisma {
     updatedAt: 'updatedAt',
     name: 'name',
     active: 'active',
-    isDefault: 'isDefault'
+    isDefault: 'isDefault',
+    squareMenuId: 'squareMenuId',
+    squareMenuVersion: 'squareMenuVersion'
   };
 
   export type MenuScalarFieldEnum = (typeof MenuScalarFieldEnum)[keyof typeof MenuScalarFieldEnum]
@@ -89575,7 +91177,11 @@ export namespace Prisma {
     menuId: 'menuId',
     categoryId: 'categoryId',
     menuIndex: 'menuIndex',
-    createdAt: 'createdAt'
+    createdAt: 'createdAt',
+    squareCategoryId: 'squareCategoryId',
+    squareCategoryVersion: 'squareCategoryVersion',
+    squareMenuCategoryId: 'squareMenuCategoryId',
+    squareMenuCategoryVersion: 'squareMenuCategoryVersion'
   };
 
   export type MenuCategoryScalarFieldEnum = (typeof MenuCategoryScalarFieldEnum)[keyof typeof MenuCategoryScalarFieldEnum]
@@ -89771,6 +91377,8 @@ export namespace Prisma {
     type: 'type',
     paymentMethod: 'paymentMethod',
     paymentProvider: 'paymentProvider',
+    sourcePlatform: 'sourcePlatform',
+    customerNameSnapshot: 'customerNameSnapshot',
     tipAmount: 'tipAmount',
     tags: 'tags',
     progressiveDiscountSnapshot: 'progressiveDiscountSnapshot',
@@ -90484,6 +92092,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'OrderSourcePlatform'
+   */
+  export type EnumOrderSourcePlatformFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OrderSourcePlatform'>
+    
+
+
+  /**
+   * Reference to a field of type 'OrderSourcePlatform[]'
+   */
+  export type ListEnumOrderSourcePlatformFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OrderSourcePlatform[]'>
+    
+
+
+  /**
    * Reference to a field of type 'CustomerFeedbackSentiment'
    */
   export type EnumCustomerFeedbackSentimentFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CustomerFeedbackSentiment'>
@@ -91175,6 +92797,8 @@ export namespace Prisma {
     type?: EnumModifierGroupTypeNullableFilter<"ModifierGroup"> | $Enums.ModifierGroupType | null
     minSelection?: IntNullableFilter<"ModifierGroup"> | number | null
     maxSelection?: IntNullableFilter<"ModifierGroup"> | number | null
+    squareModifierListId?: StringNullableFilter<"ModifierGroup"> | string | null
+    squareModifierListVersion?: StringNullableFilter<"ModifierGroup"> | string | null
     products?: ProductListRelationFilter
     items?: ModifierGroupItemListRelationFilter
   }
@@ -91188,12 +92812,15 @@ export namespace Prisma {
     type?: SortOrderInput | SortOrder
     minSelection?: SortOrderInput | SortOrder
     maxSelection?: SortOrderInput | SortOrder
+    squareModifierListId?: SortOrderInput | SortOrder
+    squareModifierListVersion?: SortOrderInput | SortOrder
     products?: ProductOrderByRelationAggregateInput
     items?: ModifierGroupItemOrderByRelationAggregateInput
   }
 
   export type ModifierGroupWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    squareModifierListId?: string
     AND?: ModifierGroupWhereInput | ModifierGroupWhereInput[]
     OR?: ModifierGroupWhereInput[]
     NOT?: ModifierGroupWhereInput | ModifierGroupWhereInput[]
@@ -91204,9 +92831,10 @@ export namespace Prisma {
     type?: EnumModifierGroupTypeNullableFilter<"ModifierGroup"> | $Enums.ModifierGroupType | null
     minSelection?: IntNullableFilter<"ModifierGroup"> | number | null
     maxSelection?: IntNullableFilter<"ModifierGroup"> | number | null
+    squareModifierListVersion?: StringNullableFilter<"ModifierGroup"> | string | null
     products?: ProductListRelationFilter
     items?: ModifierGroupItemListRelationFilter
-  }, "id">
+  }, "id" | "squareModifierListId">
 
   export type ModifierGroupOrderByWithAggregationInput = {
     id?: SortOrder
@@ -91217,6 +92845,8 @@ export namespace Prisma {
     type?: SortOrderInput | SortOrder
     minSelection?: SortOrderInput | SortOrder
     maxSelection?: SortOrderInput | SortOrder
+    squareModifierListId?: SortOrderInput | SortOrder
+    squareModifierListVersion?: SortOrderInput | SortOrder
     _count?: ModifierGroupCountOrderByAggregateInput
     _avg?: ModifierGroupAvgOrderByAggregateInput
     _max?: ModifierGroupMaxOrderByAggregateInput
@@ -91236,6 +92866,8 @@ export namespace Prisma {
     type?: EnumModifierGroupTypeNullableWithAggregatesFilter<"ModifierGroup"> | $Enums.ModifierGroupType | null
     minSelection?: IntNullableWithAggregatesFilter<"ModifierGroup"> | number | null
     maxSelection?: IntNullableWithAggregatesFilter<"ModifierGroup"> | number | null
+    squareModifierListId?: StringNullableWithAggregatesFilter<"ModifierGroup"> | string | null
+    squareModifierListVersion?: StringNullableWithAggregatesFilter<"ModifierGroup"> | string | null
   }
 
   export type ModifierGroupItemWhereInput = {
@@ -91250,6 +92882,8 @@ export namespace Prisma {
     translations?: JsonNullableFilter<"ModifierGroupItem">
     modifierGroupId?: StringNullableFilter<"ModifierGroupItem"> | string | null
     fileId?: StringNullableFilter<"ModifierGroupItem"> | string | null
+    squareModifierId?: StringNullableFilter<"ModifierGroupItem"> | string | null
+    squareModifierVersion?: StringNullableFilter<"ModifierGroupItem"> | string | null
     photo?: XOR<FileNullableScalarRelationFilter, FileWhereInput> | null
     modifierGroup?: XOR<ModifierGroupNullableScalarRelationFilter, ModifierGroupWhereInput> | null
     preparationStepModifierTracks?: PreparationStepModifierTrackListRelationFilter
@@ -91266,6 +92900,8 @@ export namespace Prisma {
     translations?: SortOrderInput | SortOrder
     modifierGroupId?: SortOrderInput | SortOrder
     fileId?: SortOrderInput | SortOrder
+    squareModifierId?: SortOrderInput | SortOrder
+    squareModifierVersion?: SortOrderInput | SortOrder
     photo?: FileOrderByWithRelationInput
     modifierGroup?: ModifierGroupOrderByWithRelationInput
     preparationStepModifierTracks?: PreparationStepModifierTrackOrderByRelationAggregateInput
@@ -91275,6 +92911,7 @@ export namespace Prisma {
 
   export type ModifierGroupItemWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    squareModifierId?: string
     AND?: ModifierGroupItemWhereInput | ModifierGroupItemWhereInput[]
     OR?: ModifierGroupItemWhereInput[]
     NOT?: ModifierGroupItemWhereInput | ModifierGroupItemWhereInput[]
@@ -91285,12 +92922,13 @@ export namespace Prisma {
     translations?: JsonNullableFilter<"ModifierGroupItem">
     modifierGroupId?: StringNullableFilter<"ModifierGroupItem"> | string | null
     fileId?: StringNullableFilter<"ModifierGroupItem"> | string | null
+    squareModifierVersion?: StringNullableFilter<"ModifierGroupItem"> | string | null
     photo?: XOR<FileNullableScalarRelationFilter, FileWhereInput> | null
     modifierGroup?: XOR<ModifierGroupNullableScalarRelationFilter, ModifierGroupWhereInput> | null
     preparationStepModifierTracks?: PreparationStepModifierTrackListRelationFilter
     orderProducts?: OrderProductsListRelationFilter
     orderIntentProducts?: OrderIntentProductListRelationFilter
-  }, "id">
+  }, "id" | "squareModifierId">
 
   export type ModifierGroupItemOrderByWithAggregationInput = {
     id?: SortOrder
@@ -91301,6 +92939,8 @@ export namespace Prisma {
     translations?: SortOrderInput | SortOrder
     modifierGroupId?: SortOrderInput | SortOrder
     fileId?: SortOrderInput | SortOrder
+    squareModifierId?: SortOrderInput | SortOrder
+    squareModifierVersion?: SortOrderInput | SortOrder
     _count?: ModifierGroupItemCountOrderByAggregateInput
     _avg?: ModifierGroupItemAvgOrderByAggregateInput
     _max?: ModifierGroupItemMaxOrderByAggregateInput
@@ -91320,6 +92960,8 @@ export namespace Prisma {
     translations?: JsonNullableWithAggregatesFilter<"ModifierGroupItem">
     modifierGroupId?: StringNullableWithAggregatesFilter<"ModifierGroupItem"> | string | null
     fileId?: StringNullableWithAggregatesFilter<"ModifierGroupItem"> | string | null
+    squareModifierId?: StringNullableWithAggregatesFilter<"ModifierGroupItem"> | string | null
+    squareModifierVersion?: StringNullableWithAggregatesFilter<"ModifierGroupItem"> | string | null
   }
 
   export type BusinessWhereInput = {
@@ -91342,6 +92984,7 @@ export namespace Prisma {
     branches?: BranchListRelationFilter
     members?: BusinessMemberListRelationFilter
     integrations?: ExternalIntegrationConnectionListRelationFilter
+    squareConnections?: SquareConnectionListRelationFilter
     pushDevices?: UserPushDeviceListRelationFilter
   }
 
@@ -91362,6 +93005,7 @@ export namespace Prisma {
     branches?: BranchOrderByRelationAggregateInput
     members?: BusinessMemberOrderByRelationAggregateInput
     integrations?: ExternalIntegrationConnectionOrderByRelationAggregateInput
+    squareConnections?: SquareConnectionOrderByRelationAggregateInput
     pushDevices?: UserPushDeviceOrderByRelationAggregateInput
   }
 
@@ -91385,6 +93029,7 @@ export namespace Prisma {
     branches?: BranchListRelationFilter
     members?: BusinessMemberListRelationFilter
     integrations?: ExternalIntegrationConnectionListRelationFilter
+    squareConnections?: SquareConnectionListRelationFilter
     pushDevices?: UserPushDeviceListRelationFilter
   }, "id" | "stripeAccountId">
 
@@ -91441,6 +93086,7 @@ export namespace Prisma {
     lastLoginAt?: DateTimeNullableFilter<"User"> | Date | string | null
     businessMemberships?: BusinessMemberListRelationFilter
     integrations?: ExternalIntegrationConnectionListRelationFilter
+    squareConnections?: SquareConnectionListRelationFilter
     otpChallenges?: OwnerOtpChallengeListRelationFilter
     pushDevices?: UserPushDeviceListRelationFilter
   }
@@ -91457,6 +93103,7 @@ export namespace Prisma {
     lastLoginAt?: SortOrderInput | SortOrder
     businessMemberships?: BusinessMemberOrderByRelationAggregateInput
     integrations?: ExternalIntegrationConnectionOrderByRelationAggregateInput
+    squareConnections?: SquareConnectionOrderByRelationAggregateInput
     otpChallenges?: OwnerOtpChallengeOrderByRelationAggregateInput
     pushDevices?: UserPushDeviceOrderByRelationAggregateInput
   }
@@ -91476,6 +93123,7 @@ export namespace Prisma {
     lastLoginAt?: DateTimeNullableFilter<"User"> | Date | string | null
     businessMemberships?: BusinessMemberListRelationFilter
     integrations?: ExternalIntegrationConnectionListRelationFilter
+    squareConnections?: SquareConnectionListRelationFilter
     otpChallenges?: OwnerOtpChallengeListRelationFilter
     pushDevices?: UserPushDeviceListRelationFilter
   }, "id" | "email" | "phone">
@@ -91795,6 +93443,109 @@ export namespace Prisma {
     expiresAt?: DateTimeNullableWithAggregatesFilter<"ExternalIntegrationConnection"> | Date | string | null
     connectedAt?: DateTimeWithAggregatesFilter<"ExternalIntegrationConnection"> | Date | string
     rawPayload?: JsonNullableWithAggregatesFilter<"ExternalIntegrationConnection">
+  }
+
+  export type SquareConnectionWhereInput = {
+    AND?: SquareConnectionWhereInput | SquareConnectionWhereInput[]
+    OR?: SquareConnectionWhereInput[]
+    NOT?: SquareConnectionWhereInput | SquareConnectionWhereInput[]
+    id?: StringFilter<"SquareConnection"> | string
+    createdAt?: DateTimeFilter<"SquareConnection"> | Date | string
+    updatedAt?: DateTimeFilter<"SquareConnection"> | Date | string
+    environment?: EnumExternalIntegrationEnvironmentFilter<"SquareConnection"> | $Enums.ExternalIntegrationEnvironment
+    userId?: StringFilter<"SquareConnection"> | string
+    businessId?: StringFilter<"SquareConnection"> | string
+    merchantId?: StringNullableFilter<"SquareConnection"> | string | null
+    accessToken?: StringFilter<"SquareConnection"> | string
+    refreshToken?: StringNullableFilter<"SquareConnection"> | string | null
+    scope?: StringNullableFilter<"SquareConnection"> | string | null
+    tokenType?: StringNullableFilter<"SquareConnection"> | string | null
+    expiresAt?: DateTimeNullableFilter<"SquareConnection"> | Date | string | null
+    connectedAt?: DateTimeFilter<"SquareConnection"> | Date | string
+    rawPayload?: JsonNullableFilter<"SquareConnection">
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    business?: XOR<BusinessScalarRelationFilter, BusinessWhereInput>
+  }
+
+  export type SquareConnectionOrderByWithRelationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    environment?: SortOrder
+    userId?: SortOrder
+    businessId?: SortOrder
+    merchantId?: SortOrderInput | SortOrder
+    accessToken?: SortOrder
+    refreshToken?: SortOrderInput | SortOrder
+    scope?: SortOrderInput | SortOrder
+    tokenType?: SortOrderInput | SortOrder
+    expiresAt?: SortOrderInput | SortOrder
+    connectedAt?: SortOrder
+    rawPayload?: SortOrderInput | SortOrder
+    user?: UserOrderByWithRelationInput
+    business?: BusinessOrderByWithRelationInput
+  }
+
+  export type SquareConnectionWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    businessId?: string
+    merchantId?: string
+    AND?: SquareConnectionWhereInput | SquareConnectionWhereInput[]
+    OR?: SquareConnectionWhereInput[]
+    NOT?: SquareConnectionWhereInput | SquareConnectionWhereInput[]
+    createdAt?: DateTimeFilter<"SquareConnection"> | Date | string
+    updatedAt?: DateTimeFilter<"SquareConnection"> | Date | string
+    environment?: EnumExternalIntegrationEnvironmentFilter<"SquareConnection"> | $Enums.ExternalIntegrationEnvironment
+    userId?: StringFilter<"SquareConnection"> | string
+    accessToken?: StringFilter<"SquareConnection"> | string
+    refreshToken?: StringNullableFilter<"SquareConnection"> | string | null
+    scope?: StringNullableFilter<"SquareConnection"> | string | null
+    tokenType?: StringNullableFilter<"SquareConnection"> | string | null
+    expiresAt?: DateTimeNullableFilter<"SquareConnection"> | Date | string | null
+    connectedAt?: DateTimeFilter<"SquareConnection"> | Date | string
+    rawPayload?: JsonNullableFilter<"SquareConnection">
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    business?: XOR<BusinessScalarRelationFilter, BusinessWhereInput>
+  }, "id" | "businessId" | "merchantId">
+
+  export type SquareConnectionOrderByWithAggregationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    environment?: SortOrder
+    userId?: SortOrder
+    businessId?: SortOrder
+    merchantId?: SortOrderInput | SortOrder
+    accessToken?: SortOrder
+    refreshToken?: SortOrderInput | SortOrder
+    scope?: SortOrderInput | SortOrder
+    tokenType?: SortOrderInput | SortOrder
+    expiresAt?: SortOrderInput | SortOrder
+    connectedAt?: SortOrder
+    rawPayload?: SortOrderInput | SortOrder
+    _count?: SquareConnectionCountOrderByAggregateInput
+    _max?: SquareConnectionMaxOrderByAggregateInput
+    _min?: SquareConnectionMinOrderByAggregateInput
+  }
+
+  export type SquareConnectionScalarWhereWithAggregatesInput = {
+    AND?: SquareConnectionScalarWhereWithAggregatesInput | SquareConnectionScalarWhereWithAggregatesInput[]
+    OR?: SquareConnectionScalarWhereWithAggregatesInput[]
+    NOT?: SquareConnectionScalarWhereWithAggregatesInput | SquareConnectionScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"SquareConnection"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"SquareConnection"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"SquareConnection"> | Date | string
+    environment?: EnumExternalIntegrationEnvironmentWithAggregatesFilter<"SquareConnection"> | $Enums.ExternalIntegrationEnvironment
+    userId?: StringWithAggregatesFilter<"SquareConnection"> | string
+    businessId?: StringWithAggregatesFilter<"SquareConnection"> | string
+    merchantId?: StringNullableWithAggregatesFilter<"SquareConnection"> | string | null
+    accessToken?: StringWithAggregatesFilter<"SquareConnection"> | string
+    refreshToken?: StringNullableWithAggregatesFilter<"SquareConnection"> | string | null
+    scope?: StringNullableWithAggregatesFilter<"SquareConnection"> | string | null
+    tokenType?: StringNullableWithAggregatesFilter<"SquareConnection"> | string | null
+    expiresAt?: DateTimeNullableWithAggregatesFilter<"SquareConnection"> | Date | string | null
+    connectedAt?: DateTimeWithAggregatesFilter<"SquareConnection"> | Date | string
+    rawPayload?: JsonNullableWithAggregatesFilter<"SquareConnection">
   }
 
   export type ExternalMenuEntityMapWhereInput = {
@@ -93182,6 +94933,10 @@ export namespace Prisma {
     categoryIndex?: IntNullableFilter<"Product"> | number | null
     categoryId?: StringNullableFilter<"Product"> | string | null
     translations?: JsonNullableFilter<"Product">
+    squareItemId?: StringNullableFilter<"Product"> | string | null
+    squareItemVersion?: StringNullableFilter<"Product"> | string | null
+    squareVariationId?: StringNullableFilter<"Product"> | string | null
+    squareVariationVersion?: StringNullableFilter<"Product"> | string | null
     photos?: FileListRelationFilter
     modifierGroups?: ModifierGroupListRelationFilter
     category?: XOR<CategoryNullableScalarRelationFilter, CategoryWhereInput> | null
@@ -93211,6 +94966,10 @@ export namespace Prisma {
     categoryIndex?: SortOrderInput | SortOrder
     categoryId?: SortOrderInput | SortOrder
     translations?: SortOrderInput | SortOrder
+    squareItemId?: SortOrderInput | SortOrder
+    squareItemVersion?: SortOrderInput | SortOrder
+    squareVariationId?: SortOrderInput | SortOrder
+    squareVariationVersion?: SortOrderInput | SortOrder
     photos?: FileOrderByRelationAggregateInput
     modifierGroups?: ModifierGroupOrderByRelationAggregateInput
     category?: CategoryOrderByWithRelationInput
@@ -93229,6 +94988,8 @@ export namespace Prisma {
 
   export type ProductWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    squareItemId?: string
+    squareVariationId?: string
     AND?: ProductWhereInput | ProductWhereInput[]
     OR?: ProductWhereInput[]
     NOT?: ProductWhereInput | ProductWhereInput[]
@@ -93243,6 +95004,8 @@ export namespace Prisma {
     categoryIndex?: IntNullableFilter<"Product"> | number | null
     categoryId?: StringNullableFilter<"Product"> | string | null
     translations?: JsonNullableFilter<"Product">
+    squareItemVersion?: StringNullableFilter<"Product"> | string | null
+    squareVariationVersion?: StringNullableFilter<"Product"> | string | null
     photos?: FileListRelationFilter
     modifierGroups?: ModifierGroupListRelationFilter
     category?: XOR<CategoryNullableScalarRelationFilter, CategoryWhereInput> | null
@@ -93257,7 +95020,7 @@ export namespace Prisma {
     prizeProducts?: ProgressiveDiscountPrizeProductListRelationFilter
     customerRewards?: CustomerRewardListRelationFilter
     preparationSteps?: PreparationStepListRelationFilter
-  }, "id">
+  }, "id" | "squareItemId" | "squareVariationId">
 
   export type ProductOrderByWithAggregationInput = {
     id?: SortOrder
@@ -93272,6 +95035,10 @@ export namespace Prisma {
     categoryIndex?: SortOrderInput | SortOrder
     categoryId?: SortOrderInput | SortOrder
     translations?: SortOrderInput | SortOrder
+    squareItemId?: SortOrderInput | SortOrder
+    squareItemVersion?: SortOrderInput | SortOrder
+    squareVariationId?: SortOrderInput | SortOrder
+    squareVariationVersion?: SortOrderInput | SortOrder
     _count?: ProductCountOrderByAggregateInput
     _avg?: ProductAvgOrderByAggregateInput
     _max?: ProductMaxOrderByAggregateInput
@@ -93295,6 +95062,10 @@ export namespace Prisma {
     categoryIndex?: IntNullableWithAggregatesFilter<"Product"> | number | null
     categoryId?: StringNullableWithAggregatesFilter<"Product"> | string | null
     translations?: JsonNullableWithAggregatesFilter<"Product">
+    squareItemId?: StringNullableWithAggregatesFilter<"Product"> | string | null
+    squareItemVersion?: StringNullableWithAggregatesFilter<"Product"> | string | null
+    squareVariationId?: StringNullableWithAggregatesFilter<"Product"> | string | null
+    squareVariationVersion?: StringNullableWithAggregatesFilter<"Product"> | string | null
   }
 
   export type ComboProductItemWhereInput = {
@@ -93485,6 +95256,8 @@ export namespace Prisma {
     name?: StringFilter<"Menu"> | string
     active?: BoolFilter<"Menu"> | boolean
     isDefault?: BoolFilter<"Menu"> | boolean
+    squareMenuId?: StringNullableFilter<"Menu"> | string | null
+    squareMenuVersion?: StringNullableFilter<"Menu"> | string | null
     categories?: CategoryListRelationFilter
     menuCategories?: MenuCategoryListRelationFilter
     menuVisits?: MenuVisitListRelationFilter
@@ -93497,6 +95270,8 @@ export namespace Prisma {
     name?: SortOrder
     active?: SortOrder
     isDefault?: SortOrder
+    squareMenuId?: SortOrderInput | SortOrder
+    squareMenuVersion?: SortOrderInput | SortOrder
     categories?: CategoryOrderByRelationAggregateInput
     menuCategories?: MenuCategoryOrderByRelationAggregateInput
     menuVisits?: MenuVisitOrderByRelationAggregateInput
@@ -93504,6 +95279,7 @@ export namespace Prisma {
 
   export type MenuWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    squareMenuId?: string
     AND?: MenuWhereInput | MenuWhereInput[]
     OR?: MenuWhereInput[]
     NOT?: MenuWhereInput | MenuWhereInput[]
@@ -93512,10 +95288,11 @@ export namespace Prisma {
     name?: StringFilter<"Menu"> | string
     active?: BoolFilter<"Menu"> | boolean
     isDefault?: BoolFilter<"Menu"> | boolean
+    squareMenuVersion?: StringNullableFilter<"Menu"> | string | null
     categories?: CategoryListRelationFilter
     menuCategories?: MenuCategoryListRelationFilter
     menuVisits?: MenuVisitListRelationFilter
-  }, "id">
+  }, "id" | "squareMenuId">
 
   export type MenuOrderByWithAggregationInput = {
     id?: SortOrder
@@ -93524,6 +95301,8 @@ export namespace Prisma {
     name?: SortOrder
     active?: SortOrder
     isDefault?: SortOrder
+    squareMenuId?: SortOrderInput | SortOrder
+    squareMenuVersion?: SortOrderInput | SortOrder
     _count?: MenuCountOrderByAggregateInput
     _max?: MenuMaxOrderByAggregateInput
     _min?: MenuMinOrderByAggregateInput
@@ -93539,6 +95318,8 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"Menu"> | string
     active?: BoolWithAggregatesFilter<"Menu"> | boolean
     isDefault?: BoolWithAggregatesFilter<"Menu"> | boolean
+    squareMenuId?: StringNullableWithAggregatesFilter<"Menu"> | string | null
+    squareMenuVersion?: StringNullableWithAggregatesFilter<"Menu"> | string | null
   }
 
   export type MenuVisitWhereInput = {
@@ -93712,6 +95493,10 @@ export namespace Prisma {
     categoryId?: StringFilter<"MenuCategory"> | string
     menuIndex?: IntNullableFilter<"MenuCategory"> | number | null
     createdAt?: DateTimeFilter<"MenuCategory"> | Date | string
+    squareCategoryId?: StringNullableFilter<"MenuCategory"> | string | null
+    squareCategoryVersion?: StringNullableFilter<"MenuCategory"> | string | null
+    squareMenuCategoryId?: StringNullableFilter<"MenuCategory"> | string | null
+    squareMenuCategoryVersion?: StringNullableFilter<"MenuCategory"> | string | null
     menu?: XOR<MenuScalarRelationFilter, MenuWhereInput>
     category?: XOR<CategoryScalarRelationFilter, CategoryWhereInput>
   }
@@ -93721,11 +95506,17 @@ export namespace Prisma {
     categoryId?: SortOrder
     menuIndex?: SortOrderInput | SortOrder
     createdAt?: SortOrder
+    squareCategoryId?: SortOrderInput | SortOrder
+    squareCategoryVersion?: SortOrderInput | SortOrder
+    squareMenuCategoryId?: SortOrderInput | SortOrder
+    squareMenuCategoryVersion?: SortOrderInput | SortOrder
     menu?: MenuOrderByWithRelationInput
     category?: CategoryOrderByWithRelationInput
   }
 
   export type MenuCategoryWhereUniqueInput = Prisma.AtLeast<{
+    squareCategoryId?: string
+    squareMenuCategoryId?: string
     menuId_categoryId?: MenuCategoryMenuIdCategoryIdCompoundUniqueInput
     AND?: MenuCategoryWhereInput | MenuCategoryWhereInput[]
     OR?: MenuCategoryWhereInput[]
@@ -93734,15 +95525,21 @@ export namespace Prisma {
     categoryId?: StringFilter<"MenuCategory"> | string
     menuIndex?: IntNullableFilter<"MenuCategory"> | number | null
     createdAt?: DateTimeFilter<"MenuCategory"> | Date | string
+    squareCategoryVersion?: StringNullableFilter<"MenuCategory"> | string | null
+    squareMenuCategoryVersion?: StringNullableFilter<"MenuCategory"> | string | null
     menu?: XOR<MenuScalarRelationFilter, MenuWhereInput>
     category?: XOR<CategoryScalarRelationFilter, CategoryWhereInput>
-  }, "menuId_categoryId">
+  }, "menuId_categoryId" | "squareCategoryId" | "squareMenuCategoryId">
 
   export type MenuCategoryOrderByWithAggregationInput = {
     menuId?: SortOrder
     categoryId?: SortOrder
     menuIndex?: SortOrderInput | SortOrder
     createdAt?: SortOrder
+    squareCategoryId?: SortOrderInput | SortOrder
+    squareCategoryVersion?: SortOrderInput | SortOrder
+    squareMenuCategoryId?: SortOrderInput | SortOrder
+    squareMenuCategoryVersion?: SortOrderInput | SortOrder
     _count?: MenuCategoryCountOrderByAggregateInput
     _avg?: MenuCategoryAvgOrderByAggregateInput
     _max?: MenuCategoryMaxOrderByAggregateInput
@@ -93758,6 +95555,10 @@ export namespace Prisma {
     categoryId?: StringWithAggregatesFilter<"MenuCategory"> | string
     menuIndex?: IntNullableWithAggregatesFilter<"MenuCategory"> | number | null
     createdAt?: DateTimeWithAggregatesFilter<"MenuCategory"> | Date | string
+    squareCategoryId?: StringNullableWithAggregatesFilter<"MenuCategory"> | string | null
+    squareCategoryVersion?: StringNullableWithAggregatesFilter<"MenuCategory"> | string | null
+    squareMenuCategoryId?: StringNullableWithAggregatesFilter<"MenuCategory"> | string | null
+    squareMenuCategoryVersion?: StringNullableWithAggregatesFilter<"MenuCategory"> | string | null
   }
 
   export type ProductCategoryWhereInput = {
@@ -94698,6 +96499,8 @@ export namespace Prisma {
     type?: EnumOrderTypeFilter<"Order"> | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFilter<"Order"> | $Enums.PaymentType
     paymentProvider?: EnumPaymentProviderNullableFilter<"Order"> | $Enums.PaymentProvider | null
+    sourcePlatform?: EnumOrderSourcePlatformNullableFilter<"Order"> | $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: StringNullableFilter<"Order"> | string | null
     tipAmount?: IntNullableFilter<"Order"> | number | null
     tags?: StringNullableListFilter<"Order">
     progressiveDiscountSnapshot?: JsonNullableFilter<"Order">
@@ -94742,6 +96545,8 @@ export namespace Prisma {
     type?: SortOrder
     paymentMethod?: SortOrder
     paymentProvider?: SortOrderInput | SortOrder
+    sourcePlatform?: SortOrderInput | SortOrder
+    customerNameSnapshot?: SortOrderInput | SortOrder
     tipAmount?: SortOrderInput | SortOrder
     tags?: SortOrder
     progressiveDiscountSnapshot?: SortOrderInput | SortOrder
@@ -94790,6 +96595,8 @@ export namespace Prisma {
     type?: EnumOrderTypeFilter<"Order"> | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFilter<"Order"> | $Enums.PaymentType
     paymentProvider?: EnumPaymentProviderNullableFilter<"Order"> | $Enums.PaymentProvider | null
+    sourcePlatform?: EnumOrderSourcePlatformNullableFilter<"Order"> | $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: StringNullableFilter<"Order"> | string | null
     tipAmount?: IntNullableFilter<"Order"> | number | null
     tags?: StringNullableListFilter<"Order">
     progressiveDiscountSnapshot?: JsonNullableFilter<"Order">
@@ -94833,6 +96640,8 @@ export namespace Prisma {
     type?: SortOrder
     paymentMethod?: SortOrder
     paymentProvider?: SortOrderInput | SortOrder
+    sourcePlatform?: SortOrderInput | SortOrder
+    customerNameSnapshot?: SortOrderInput | SortOrder
     tipAmount?: SortOrderInput | SortOrder
     tags?: SortOrder
     progressiveDiscountSnapshot?: SortOrderInput | SortOrder
@@ -94873,6 +96682,8 @@ export namespace Prisma {
     type?: EnumOrderTypeWithAggregatesFilter<"Order"> | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeWithAggregatesFilter<"Order"> | $Enums.PaymentType
     paymentProvider?: EnumPaymentProviderNullableWithAggregatesFilter<"Order"> | $Enums.PaymentProvider | null
+    sourcePlatform?: EnumOrderSourcePlatformNullableWithAggregatesFilter<"Order"> | $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: StringNullableWithAggregatesFilter<"Order"> | string | null
     tipAmount?: IntNullableWithAggregatesFilter<"Order"> | number | null
     tags?: StringNullableListFilter<"Order">
     progressiveDiscountSnapshot?: JsonNullableWithAggregatesFilter<"Order">
@@ -96824,6 +98635,8 @@ export namespace Prisma {
     type?: $Enums.ModifierGroupType | null
     minSelection?: number | null
     maxSelection?: number | null
+    squareModifierListId?: string | null
+    squareModifierListVersion?: string | null
     products?: ProductCreateNestedManyWithoutModifierGroupsInput
     items?: ModifierGroupItemCreateNestedManyWithoutModifierGroupInput
   }
@@ -96837,6 +98650,8 @@ export namespace Prisma {
     type?: $Enums.ModifierGroupType | null
     minSelection?: number | null
     maxSelection?: number | null
+    squareModifierListId?: string | null
+    squareModifierListVersion?: string | null
     products?: ProductUncheckedCreateNestedManyWithoutModifierGroupsInput
     items?: ModifierGroupItemUncheckedCreateNestedManyWithoutModifierGroupInput
   }
@@ -96850,6 +98665,8 @@ export namespace Prisma {
     type?: NullableEnumModifierGroupTypeFieldUpdateOperationsInput | $Enums.ModifierGroupType | null
     minSelection?: NullableIntFieldUpdateOperationsInput | number | null
     maxSelection?: NullableIntFieldUpdateOperationsInput | number | null
+    squareModifierListId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareModifierListVersion?: NullableStringFieldUpdateOperationsInput | string | null
     products?: ProductUpdateManyWithoutModifierGroupsNestedInput
     items?: ModifierGroupItemUpdateManyWithoutModifierGroupNestedInput
   }
@@ -96863,6 +98680,8 @@ export namespace Prisma {
     type?: NullableEnumModifierGroupTypeFieldUpdateOperationsInput | $Enums.ModifierGroupType | null
     minSelection?: NullableIntFieldUpdateOperationsInput | number | null
     maxSelection?: NullableIntFieldUpdateOperationsInput | number | null
+    squareModifierListId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareModifierListVersion?: NullableStringFieldUpdateOperationsInput | string | null
     products?: ProductUncheckedUpdateManyWithoutModifierGroupsNestedInput
     items?: ModifierGroupItemUncheckedUpdateManyWithoutModifierGroupNestedInput
   }
@@ -96876,6 +98695,8 @@ export namespace Prisma {
     type?: $Enums.ModifierGroupType | null
     minSelection?: number | null
     maxSelection?: number | null
+    squareModifierListId?: string | null
+    squareModifierListVersion?: string | null
   }
 
   export type ModifierGroupUpdateManyMutationInput = {
@@ -96887,6 +98708,8 @@ export namespace Prisma {
     type?: NullableEnumModifierGroupTypeFieldUpdateOperationsInput | $Enums.ModifierGroupType | null
     minSelection?: NullableIntFieldUpdateOperationsInput | number | null
     maxSelection?: NullableIntFieldUpdateOperationsInput | number | null
+    squareModifierListId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareModifierListVersion?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ModifierGroupUncheckedUpdateManyInput = {
@@ -96898,6 +98721,8 @@ export namespace Prisma {
     type?: NullableEnumModifierGroupTypeFieldUpdateOperationsInput | $Enums.ModifierGroupType | null
     minSelection?: NullableIntFieldUpdateOperationsInput | number | null
     maxSelection?: NullableIntFieldUpdateOperationsInput | number | null
+    squareModifierListId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareModifierListVersion?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ModifierGroupItemCreateInput = {
@@ -96907,6 +98732,8 @@ export namespace Prisma {
     price: number
     description?: string | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareModifierId?: string | null
+    squareModifierVersion?: string | null
     photo?: FileCreateNestedOneWithoutModifierGroupItemsInput
     modifierGroup?: ModifierGroupCreateNestedOneWithoutItemsInput
     preparationStepModifierTracks?: PreparationStepModifierTrackCreateNestedManyWithoutModifierGroupItemInput
@@ -96923,6 +98750,8 @@ export namespace Prisma {
     translations?: NullableJsonNullValueInput | InputJsonValue
     modifierGroupId?: string | null
     fileId?: string | null
+    squareModifierId?: string | null
+    squareModifierVersion?: string | null
     preparationStepModifierTracks?: PreparationStepModifierTrackUncheckedCreateNestedManyWithoutModifierGroupItemInput
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutModifierGroupItemsInput
     orderIntentProducts?: OrderIntentProductUncheckedCreateNestedManyWithoutModifierGroupItemsInput
@@ -96935,6 +98764,8 @@ export namespace Prisma {
     price?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareModifierId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareModifierVersion?: NullableStringFieldUpdateOperationsInput | string | null
     photo?: FileUpdateOneWithoutModifierGroupItemsNestedInput
     modifierGroup?: ModifierGroupUpdateOneWithoutItemsNestedInput
     preparationStepModifierTracks?: PreparationStepModifierTrackUpdateManyWithoutModifierGroupItemNestedInput
@@ -96951,6 +98782,8 @@ export namespace Prisma {
     translations?: NullableJsonNullValueInput | InputJsonValue
     modifierGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     fileId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareModifierId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareModifierVersion?: NullableStringFieldUpdateOperationsInput | string | null
     preparationStepModifierTracks?: PreparationStepModifierTrackUncheckedUpdateManyWithoutModifierGroupItemNestedInput
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutModifierGroupItemsNestedInput
     orderIntentProducts?: OrderIntentProductUncheckedUpdateManyWithoutModifierGroupItemsNestedInput
@@ -96965,6 +98798,8 @@ export namespace Prisma {
     translations?: NullableJsonNullValueInput | InputJsonValue
     modifierGroupId?: string | null
     fileId?: string | null
+    squareModifierId?: string | null
+    squareModifierVersion?: string | null
   }
 
   export type ModifierGroupItemUpdateManyMutationInput = {
@@ -96974,6 +98809,8 @@ export namespace Prisma {
     price?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareModifierId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareModifierVersion?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ModifierGroupItemUncheckedUpdateManyInput = {
@@ -96985,6 +98822,8 @@ export namespace Prisma {
     translations?: NullableJsonNullValueInput | InputJsonValue
     modifierGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     fileId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareModifierId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareModifierVersion?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type BusinessCreateInput = {
@@ -97004,6 +98843,7 @@ export namespace Prisma {
     branches?: BranchCreateNestedManyWithoutBusinessInput
     members?: BusinessMemberCreateNestedManyWithoutBusinessInput
     integrations?: ExternalIntegrationConnectionCreateNestedManyWithoutBusinessInput
+    squareConnections?: SquareConnectionCreateNestedManyWithoutBusinessInput
     pushDevices?: UserPushDeviceCreateNestedManyWithoutBusinessInput
   }
 
@@ -97024,6 +98864,7 @@ export namespace Prisma {
     branches?: BranchUncheckedCreateNestedManyWithoutBusinessInput
     members?: BusinessMemberUncheckedCreateNestedManyWithoutBusinessInput
     integrations?: ExternalIntegrationConnectionUncheckedCreateNestedManyWithoutBusinessInput
+    squareConnections?: SquareConnectionUncheckedCreateNestedManyWithoutBusinessInput
     pushDevices?: UserPushDeviceUncheckedCreateNestedManyWithoutBusinessInput
   }
 
@@ -97044,6 +98885,7 @@ export namespace Prisma {
     branches?: BranchUpdateManyWithoutBusinessNestedInput
     members?: BusinessMemberUpdateManyWithoutBusinessNestedInput
     integrations?: ExternalIntegrationConnectionUpdateManyWithoutBusinessNestedInput
+    squareConnections?: SquareConnectionUpdateManyWithoutBusinessNestedInput
     pushDevices?: UserPushDeviceUpdateManyWithoutBusinessNestedInput
   }
 
@@ -97064,6 +98906,7 @@ export namespace Prisma {
     branches?: BranchUncheckedUpdateManyWithoutBusinessNestedInput
     members?: BusinessMemberUncheckedUpdateManyWithoutBusinessNestedInput
     integrations?: ExternalIntegrationConnectionUncheckedUpdateManyWithoutBusinessNestedInput
+    squareConnections?: SquareConnectionUncheckedUpdateManyWithoutBusinessNestedInput
     pushDevices?: UserPushDeviceUncheckedUpdateManyWithoutBusinessNestedInput
   }
 
@@ -97127,6 +98970,7 @@ export namespace Prisma {
     lastLoginAt?: Date | string | null
     businessMemberships?: BusinessMemberCreateNestedManyWithoutUserInput
     integrations?: ExternalIntegrationConnectionCreateNestedManyWithoutUserInput
+    squareConnections?: SquareConnectionCreateNestedManyWithoutUserInput
     otpChallenges?: OwnerOtpChallengeCreateNestedManyWithoutOwnerInput
     pushDevices?: UserPushDeviceCreateNestedManyWithoutUserInput
   }
@@ -97143,6 +98987,7 @@ export namespace Prisma {
     lastLoginAt?: Date | string | null
     businessMemberships?: BusinessMemberUncheckedCreateNestedManyWithoutUserInput
     integrations?: ExternalIntegrationConnectionUncheckedCreateNestedManyWithoutUserInput
+    squareConnections?: SquareConnectionUncheckedCreateNestedManyWithoutUserInput
     otpChallenges?: OwnerOtpChallengeUncheckedCreateNestedManyWithoutOwnerInput
     pushDevices?: UserPushDeviceUncheckedCreateNestedManyWithoutUserInput
   }
@@ -97159,6 +99004,7 @@ export namespace Prisma {
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     businessMemberships?: BusinessMemberUpdateManyWithoutUserNestedInput
     integrations?: ExternalIntegrationConnectionUpdateManyWithoutUserNestedInput
+    squareConnections?: SquareConnectionUpdateManyWithoutUserNestedInput
     otpChallenges?: OwnerOtpChallengeUpdateManyWithoutOwnerNestedInput
     pushDevices?: UserPushDeviceUpdateManyWithoutUserNestedInput
   }
@@ -97175,6 +99021,7 @@ export namespace Prisma {
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     businessMemberships?: BusinessMemberUncheckedUpdateManyWithoutUserNestedInput
     integrations?: ExternalIntegrationConnectionUncheckedUpdateManyWithoutUserNestedInput
+    squareConnections?: SquareConnectionUncheckedUpdateManyWithoutUserNestedInput
     otpChallenges?: OwnerOtpChallengeUncheckedUpdateManyWithoutOwnerNestedInput
     pushDevices?: UserPushDeviceUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -97524,6 +99371,123 @@ export namespace Prisma {
     environment?: EnumExternalIntegrationEnvironmentFieldUpdateOperationsInput | $Enums.ExternalIntegrationEnvironment
     userId?: StringFieldUpdateOperationsInput | string
     businessId?: NullableStringFieldUpdateOperationsInput | string | null
+    accessToken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    scope?: NullableStringFieldUpdateOperationsInput | string | null
+    tokenType?: NullableStringFieldUpdateOperationsInput | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    connectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    rawPayload?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SquareConnectionCreateInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    environment?: $Enums.ExternalIntegrationEnvironment
+    merchantId?: string | null
+    accessToken: string
+    refreshToken?: string | null
+    scope?: string | null
+    tokenType?: string | null
+    expiresAt?: Date | string | null
+    connectedAt?: Date | string
+    rawPayload?: NullableJsonNullValueInput | InputJsonValue
+    user: UserCreateNestedOneWithoutSquareConnectionsInput
+    business: BusinessCreateNestedOneWithoutSquareConnectionsInput
+  }
+
+  export type SquareConnectionUncheckedCreateInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    environment?: $Enums.ExternalIntegrationEnvironment
+    userId: string
+    businessId: string
+    merchantId?: string | null
+    accessToken: string
+    refreshToken?: string | null
+    scope?: string | null
+    tokenType?: string | null
+    expiresAt?: Date | string | null
+    connectedAt?: Date | string
+    rawPayload?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SquareConnectionUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    environment?: EnumExternalIntegrationEnvironmentFieldUpdateOperationsInput | $Enums.ExternalIntegrationEnvironment
+    merchantId?: NullableStringFieldUpdateOperationsInput | string | null
+    accessToken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    scope?: NullableStringFieldUpdateOperationsInput | string | null
+    tokenType?: NullableStringFieldUpdateOperationsInput | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    connectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    rawPayload?: NullableJsonNullValueInput | InputJsonValue
+    user?: UserUpdateOneRequiredWithoutSquareConnectionsNestedInput
+    business?: BusinessUpdateOneRequiredWithoutSquareConnectionsNestedInput
+  }
+
+  export type SquareConnectionUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    environment?: EnumExternalIntegrationEnvironmentFieldUpdateOperationsInput | $Enums.ExternalIntegrationEnvironment
+    userId?: StringFieldUpdateOperationsInput | string
+    businessId?: StringFieldUpdateOperationsInput | string
+    merchantId?: NullableStringFieldUpdateOperationsInput | string | null
+    accessToken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    scope?: NullableStringFieldUpdateOperationsInput | string | null
+    tokenType?: NullableStringFieldUpdateOperationsInput | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    connectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    rawPayload?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SquareConnectionCreateManyInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    environment?: $Enums.ExternalIntegrationEnvironment
+    userId: string
+    businessId: string
+    merchantId?: string | null
+    accessToken: string
+    refreshToken?: string | null
+    scope?: string | null
+    tokenType?: string | null
+    expiresAt?: Date | string | null
+    connectedAt?: Date | string
+    rawPayload?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SquareConnectionUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    environment?: EnumExternalIntegrationEnvironmentFieldUpdateOperationsInput | $Enums.ExternalIntegrationEnvironment
+    merchantId?: NullableStringFieldUpdateOperationsInput | string | null
+    accessToken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    scope?: NullableStringFieldUpdateOperationsInput | string | null
+    tokenType?: NullableStringFieldUpdateOperationsInput | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    connectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    rawPayload?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SquareConnectionUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    environment?: EnumExternalIntegrationEnvironmentFieldUpdateOperationsInput | $Enums.ExternalIntegrationEnvironment
+    userId?: StringFieldUpdateOperationsInput | string
+    businessId?: StringFieldUpdateOperationsInput | string
+    merchantId?: NullableStringFieldUpdateOperationsInput | string | null
     accessToken?: StringFieldUpdateOperationsInput | string
     refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
     scope?: NullableStringFieldUpdateOperationsInput | string | null
@@ -99090,6 +101054,10 @@ export namespace Prisma {
     comparedAtPrice?: number | null
     categoryIndex?: number | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: string | null
+    squareItemVersion?: string | null
+    squareVariationId?: string | null
+    squareVariationVersion?: string | null
     photos?: FileCreateNestedManyWithoutProductInput
     modifierGroups?: ModifierGroupCreateNestedManyWithoutProductsInput
     category?: CategoryCreateNestedOneWithoutProductsInput
@@ -99119,6 +101087,10 @@ export namespace Prisma {
     categoryIndex?: number | null
     categoryId?: string | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: string | null
+    squareItemVersion?: string | null
+    squareVariationId?: string | null
+    squareVariationVersion?: string | null
     photos?: FileUncheckedCreateNestedManyWithoutProductInput
     modifierGroups?: ModifierGroupUncheckedCreateNestedManyWithoutProductsInput
     productCategories?: ProductCategoryUncheckedCreateNestedManyWithoutProductInput
@@ -99146,6 +101118,10 @@ export namespace Prisma {
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
     categoryIndex?: NullableIntFieldUpdateOperationsInput | number | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareItemVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationVersion?: NullableStringFieldUpdateOperationsInput | string | null
     photos?: FileUpdateManyWithoutProductNestedInput
     modifierGroups?: ModifierGroupUpdateManyWithoutProductsNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
@@ -99175,6 +101151,10 @@ export namespace Prisma {
     categoryIndex?: NullableIntFieldUpdateOperationsInput | number | null
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareItemVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationVersion?: NullableStringFieldUpdateOperationsInput | string | null
     photos?: FileUncheckedUpdateManyWithoutProductNestedInput
     modifierGroups?: ModifierGroupUncheckedUpdateManyWithoutProductsNestedInput
     productCategories?: ProductCategoryUncheckedUpdateManyWithoutProductNestedInput
@@ -99203,6 +101183,10 @@ export namespace Prisma {
     categoryIndex?: number | null
     categoryId?: string | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: string | null
+    squareItemVersion?: string | null
+    squareVariationId?: string | null
+    squareVariationVersion?: string | null
   }
 
   export type ProductUpdateManyMutationInput = {
@@ -99217,6 +101201,10 @@ export namespace Prisma {
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
     categoryIndex?: NullableIntFieldUpdateOperationsInput | number | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareItemVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationVersion?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ProductUncheckedUpdateManyInput = {
@@ -99232,6 +101220,10 @@ export namespace Prisma {
     categoryIndex?: NullableIntFieldUpdateOperationsInput | number | null
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareItemVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationVersion?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ComboProductItemCreateInput = {
@@ -99413,6 +101405,8 @@ export namespace Prisma {
     name: string
     active?: boolean
     isDefault?: boolean
+    squareMenuId?: string | null
+    squareMenuVersion?: string | null
     categories?: CategoryCreateNestedManyWithoutMenuInput
     menuCategories?: MenuCategoryCreateNestedManyWithoutMenuInput
     menuVisits?: MenuVisitCreateNestedManyWithoutMenuInput
@@ -99425,6 +101419,8 @@ export namespace Prisma {
     name: string
     active?: boolean
     isDefault?: boolean
+    squareMenuId?: string | null
+    squareMenuVersion?: string | null
     categories?: CategoryUncheckedCreateNestedManyWithoutMenuInput
     menuCategories?: MenuCategoryUncheckedCreateNestedManyWithoutMenuInput
     menuVisits?: MenuVisitUncheckedCreateNestedManyWithoutMenuInput
@@ -99437,6 +101433,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     active?: BoolFieldUpdateOperationsInput | boolean
     isDefault?: BoolFieldUpdateOperationsInput | boolean
+    squareMenuId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareMenuVersion?: NullableStringFieldUpdateOperationsInput | string | null
     categories?: CategoryUpdateManyWithoutMenuNestedInput
     menuCategories?: MenuCategoryUpdateManyWithoutMenuNestedInput
     menuVisits?: MenuVisitUpdateManyWithoutMenuNestedInput
@@ -99449,6 +101447,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     active?: BoolFieldUpdateOperationsInput | boolean
     isDefault?: BoolFieldUpdateOperationsInput | boolean
+    squareMenuId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareMenuVersion?: NullableStringFieldUpdateOperationsInput | string | null
     categories?: CategoryUncheckedUpdateManyWithoutMenuNestedInput
     menuCategories?: MenuCategoryUncheckedUpdateManyWithoutMenuNestedInput
     menuVisits?: MenuVisitUncheckedUpdateManyWithoutMenuNestedInput
@@ -99461,6 +101461,8 @@ export namespace Prisma {
     name: string
     active?: boolean
     isDefault?: boolean
+    squareMenuId?: string | null
+    squareMenuVersion?: string | null
   }
 
   export type MenuUpdateManyMutationInput = {
@@ -99470,6 +101472,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     active?: BoolFieldUpdateOperationsInput | boolean
     isDefault?: BoolFieldUpdateOperationsInput | boolean
+    squareMenuId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareMenuVersion?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type MenuUncheckedUpdateManyInput = {
@@ -99479,6 +101483,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     active?: BoolFieldUpdateOperationsInput | boolean
     isDefault?: BoolFieldUpdateOperationsInput | boolean
+    squareMenuId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareMenuVersion?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type MenuVisitCreateInput = {
@@ -99658,6 +101664,10 @@ export namespace Prisma {
   export type MenuCategoryCreateInput = {
     menuIndex?: number | null
     createdAt?: Date | string
+    squareCategoryId?: string | null
+    squareCategoryVersion?: string | null
+    squareMenuCategoryId?: string | null
+    squareMenuCategoryVersion?: string | null
     menu: MenuCreateNestedOneWithoutMenuCategoriesInput
     category: CategoryCreateNestedOneWithoutMenuCategoriesInput
   }
@@ -99667,11 +101677,19 @@ export namespace Prisma {
     categoryId: string
     menuIndex?: number | null
     createdAt?: Date | string
+    squareCategoryId?: string | null
+    squareCategoryVersion?: string | null
+    squareMenuCategoryId?: string | null
+    squareMenuCategoryVersion?: string | null
   }
 
   export type MenuCategoryUpdateInput = {
     menuIndex?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    squareCategoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareCategoryVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    squareMenuCategoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareMenuCategoryVersion?: NullableStringFieldUpdateOperationsInput | string | null
     menu?: MenuUpdateOneRequiredWithoutMenuCategoriesNestedInput
     category?: CategoryUpdateOneRequiredWithoutMenuCategoriesNestedInput
   }
@@ -99681,6 +101699,10 @@ export namespace Prisma {
     categoryId?: StringFieldUpdateOperationsInput | string
     menuIndex?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    squareCategoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareCategoryVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    squareMenuCategoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareMenuCategoryVersion?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type MenuCategoryCreateManyInput = {
@@ -99688,11 +101710,19 @@ export namespace Prisma {
     categoryId: string
     menuIndex?: number | null
     createdAt?: Date | string
+    squareCategoryId?: string | null
+    squareCategoryVersion?: string | null
+    squareMenuCategoryId?: string | null
+    squareMenuCategoryVersion?: string | null
   }
 
   export type MenuCategoryUpdateManyMutationInput = {
     menuIndex?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    squareCategoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareCategoryVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    squareMenuCategoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareMenuCategoryVersion?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type MenuCategoryUncheckedUpdateManyInput = {
@@ -99700,6 +101730,10 @@ export namespace Prisma {
     categoryId?: StringFieldUpdateOperationsInput | string
     menuIndex?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    squareCategoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareCategoryVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    squareMenuCategoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareMenuCategoryVersion?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ProductCategoryCreateInput = {
@@ -100711,6 +102745,8 @@ export namespace Prisma {
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     paymentProvider?: $Enums.PaymentProvider | null
+    sourcePlatform?: $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: string | null
     tipAmount?: number | null
     tags?: OrderCreatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -100749,6 +102785,8 @@ export namespace Prisma {
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     paymentProvider?: $Enums.PaymentProvider | null
+    sourcePlatform?: $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: string | null
     tipAmount?: number | null
     tags?: OrderCreatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -100787,6 +102825,8 @@ export namespace Prisma {
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     paymentProvider?: NullableEnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider | null
+    sourcePlatform?: NullableEnumOrderSourcePlatformFieldUpdateOperationsInput | $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     tags?: OrderUpdatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -100825,6 +102865,8 @@ export namespace Prisma {
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     paymentProvider?: NullableEnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider | null
+    sourcePlatform?: NullableEnumOrderSourcePlatformFieldUpdateOperationsInput | $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     tags?: OrderUpdatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -100863,6 +102905,8 @@ export namespace Prisma {
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     paymentProvider?: $Enums.PaymentProvider | null
+    sourcePlatform?: $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: string | null
     tipAmount?: number | null
     tags?: OrderCreatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -100895,6 +102939,8 @@ export namespace Prisma {
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     paymentProvider?: NullableEnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider | null
+    sourcePlatform?: NullableEnumOrderSourcePlatformFieldUpdateOperationsInput | $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     tags?: OrderUpdatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -100921,6 +102967,8 @@ export namespace Prisma {
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     paymentProvider?: NullableEnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider | null
+    sourcePlatform?: NullableEnumOrderSourcePlatformFieldUpdateOperationsInput | $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     tags?: OrderUpdatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -103073,6 +105121,8 @@ export namespace Prisma {
     type?: SortOrder
     minSelection?: SortOrder
     maxSelection?: SortOrder
+    squareModifierListId?: SortOrder
+    squareModifierListVersion?: SortOrder
   }
 
   export type ModifierGroupAvgOrderByAggregateInput = {
@@ -103088,6 +105138,8 @@ export namespace Prisma {
     type?: SortOrder
     minSelection?: SortOrder
     maxSelection?: SortOrder
+    squareModifierListId?: SortOrder
+    squareModifierListVersion?: SortOrder
   }
 
   export type ModifierGroupMinOrderByAggregateInput = {
@@ -103098,6 +105150,8 @@ export namespace Prisma {
     type?: SortOrder
     minSelection?: SortOrder
     maxSelection?: SortOrder
+    squareModifierListId?: SortOrder
+    squareModifierListVersion?: SortOrder
   }
 
   export type ModifierGroupSumOrderByAggregateInput = {
@@ -103154,6 +105208,8 @@ export namespace Prisma {
     translations?: SortOrder
     modifierGroupId?: SortOrder
     fileId?: SortOrder
+    squareModifierId?: SortOrder
+    squareModifierVersion?: SortOrder
   }
 
   export type ModifierGroupItemAvgOrderByAggregateInput = {
@@ -103168,6 +105224,8 @@ export namespace Prisma {
     description?: SortOrder
     modifierGroupId?: SortOrder
     fileId?: SortOrder
+    squareModifierId?: SortOrder
+    squareModifierVersion?: SortOrder
   }
 
   export type ModifierGroupItemMinOrderByAggregateInput = {
@@ -103178,6 +105236,8 @@ export namespace Prisma {
     description?: SortOrder
     modifierGroupId?: SortOrder
     fileId?: SortOrder
+    squareModifierId?: SortOrder
+    squareModifierVersion?: SortOrder
   }
 
   export type ModifierGroupItemSumOrderByAggregateInput = {
@@ -103202,6 +105262,12 @@ export namespace Prisma {
     none?: ExternalIntegrationConnectionWhereInput
   }
 
+  export type SquareConnectionListRelationFilter = {
+    every?: SquareConnectionWhereInput
+    some?: SquareConnectionWhereInput
+    none?: SquareConnectionWhereInput
+  }
+
   export type UserPushDeviceListRelationFilter = {
     every?: UserPushDeviceWhereInput
     some?: UserPushDeviceWhereInput
@@ -103217,6 +105283,10 @@ export namespace Prisma {
   }
 
   export type ExternalIntegrationConnectionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type SquareConnectionOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -103555,6 +105625,60 @@ export namespace Prisma {
     _max?: NestedEnumExternalIntegrationEnvironmentFilter<$PrismaModel>
   }
 
+  export type BusinessScalarRelationFilter = {
+    is?: BusinessWhereInput
+    isNot?: BusinessWhereInput
+  }
+
+  export type SquareConnectionCountOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    environment?: SortOrder
+    userId?: SortOrder
+    businessId?: SortOrder
+    merchantId?: SortOrder
+    accessToken?: SortOrder
+    refreshToken?: SortOrder
+    scope?: SortOrder
+    tokenType?: SortOrder
+    expiresAt?: SortOrder
+    connectedAt?: SortOrder
+    rawPayload?: SortOrder
+  }
+
+  export type SquareConnectionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    environment?: SortOrder
+    userId?: SortOrder
+    businessId?: SortOrder
+    merchantId?: SortOrder
+    accessToken?: SortOrder
+    refreshToken?: SortOrder
+    scope?: SortOrder
+    tokenType?: SortOrder
+    expiresAt?: SortOrder
+    connectedAt?: SortOrder
+  }
+
+  export type SquareConnectionMinOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    environment?: SortOrder
+    userId?: SortOrder
+    businessId?: SortOrder
+    merchantId?: SortOrder
+    accessToken?: SortOrder
+    refreshToken?: SortOrder
+    scope?: SortOrder
+    tokenType?: SortOrder
+    expiresAt?: SortOrder
+    connectedAt?: SortOrder
+  }
+
   export type EnumExternalMenuEntityTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.ExternalMenuEntityType | EnumExternalMenuEntityTypeFieldRefInput<$PrismaModel>
     in?: $Enums.ExternalMenuEntityType[] | ListEnumExternalMenuEntityTypeFieldRefInput<$PrismaModel>
@@ -103741,11 +105865,6 @@ export namespace Prisma {
     in?: $Enums.BusinessMembershipStatus[] | ListEnumBusinessMembershipStatusFieldRefInput<$PrismaModel>
     notIn?: $Enums.BusinessMembershipStatus[] | ListEnumBusinessMembershipStatusFieldRefInput<$PrismaModel>
     not?: NestedEnumBusinessMembershipStatusFilter<$PrismaModel> | $Enums.BusinessMembershipStatus
-  }
-
-  export type BusinessScalarRelationFilter = {
-    is?: BusinessWhereInput
-    isNot?: BusinessWhereInput
   }
 
   export type BusinessMemberBusinessIdUserIdCompoundUniqueInput = {
@@ -104823,6 +106942,10 @@ export namespace Prisma {
     categoryIndex?: SortOrder
     categoryId?: SortOrder
     translations?: SortOrder
+    squareItemId?: SortOrder
+    squareItemVersion?: SortOrder
+    squareVariationId?: SortOrder
+    squareVariationVersion?: SortOrder
   }
 
   export type ProductAvgOrderByAggregateInput = {
@@ -104843,6 +106966,10 @@ export namespace Prisma {
     comparedAtPrice?: SortOrder
     categoryIndex?: SortOrder
     categoryId?: SortOrder
+    squareItemId?: SortOrder
+    squareItemVersion?: SortOrder
+    squareVariationId?: SortOrder
+    squareVariationVersion?: SortOrder
   }
 
   export type ProductMinOrderByAggregateInput = {
@@ -104857,6 +106984,10 @@ export namespace Prisma {
     comparedAtPrice?: SortOrder
     categoryIndex?: SortOrder
     categoryId?: SortOrder
+    squareItemId?: SortOrder
+    squareItemVersion?: SortOrder
+    squareVariationId?: SortOrder
+    squareVariationVersion?: SortOrder
   }
 
   export type ProductSumOrderByAggregateInput = {
@@ -105015,6 +107146,8 @@ export namespace Prisma {
     name?: SortOrder
     active?: SortOrder
     isDefault?: SortOrder
+    squareMenuId?: SortOrder
+    squareMenuVersion?: SortOrder
   }
 
   export type MenuMaxOrderByAggregateInput = {
@@ -105024,6 +107157,8 @@ export namespace Prisma {
     name?: SortOrder
     active?: SortOrder
     isDefault?: SortOrder
+    squareMenuId?: SortOrder
+    squareMenuVersion?: SortOrder
   }
 
   export type MenuMinOrderByAggregateInput = {
@@ -105033,6 +107168,8 @@ export namespace Prisma {
     name?: SortOrder
     active?: SortOrder
     isDefault?: SortOrder
+    squareMenuId?: SortOrder
+    squareMenuVersion?: SortOrder
   }
 
   export type MenuNullableScalarRelationFilter = {
@@ -105145,6 +107282,10 @@ export namespace Prisma {
     categoryId?: SortOrder
     menuIndex?: SortOrder
     createdAt?: SortOrder
+    squareCategoryId?: SortOrder
+    squareCategoryVersion?: SortOrder
+    squareMenuCategoryId?: SortOrder
+    squareMenuCategoryVersion?: SortOrder
   }
 
   export type MenuCategoryAvgOrderByAggregateInput = {
@@ -105156,6 +107297,10 @@ export namespace Prisma {
     categoryId?: SortOrder
     menuIndex?: SortOrder
     createdAt?: SortOrder
+    squareCategoryId?: SortOrder
+    squareCategoryVersion?: SortOrder
+    squareMenuCategoryId?: SortOrder
+    squareMenuCategoryVersion?: SortOrder
   }
 
   export type MenuCategoryMinOrderByAggregateInput = {
@@ -105163,6 +107308,10 @@ export namespace Prisma {
     categoryId?: SortOrder
     menuIndex?: SortOrder
     createdAt?: SortOrder
+    squareCategoryId?: SortOrder
+    squareCategoryVersion?: SortOrder
+    squareMenuCategoryId?: SortOrder
+    squareMenuCategoryVersion?: SortOrder
   }
 
   export type MenuCategorySumOrderByAggregateInput = {
@@ -105789,6 +107938,13 @@ export namespace Prisma {
     not?: NestedEnumPaymentProviderNullableFilter<$PrismaModel> | $Enums.PaymentProvider | null
   }
 
+  export type EnumOrderSourcePlatformNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.OrderSourcePlatform | EnumOrderSourcePlatformFieldRefInput<$PrismaModel> | null
+    in?: $Enums.OrderSourcePlatform[] | ListEnumOrderSourcePlatformFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.OrderSourcePlatform[] | ListEnumOrderSourcePlatformFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumOrderSourcePlatformNullableFilter<$PrismaModel> | $Enums.OrderSourcePlatform | null
+  }
+
   export type StringNullableListFilter<$PrismaModel = never> = {
     equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
     has?: string | StringFieldRefInput<$PrismaModel> | null
@@ -105847,6 +108003,8 @@ export namespace Prisma {
     type?: SortOrder
     paymentMethod?: SortOrder
     paymentProvider?: SortOrder
+    sourcePlatform?: SortOrder
+    customerNameSnapshot?: SortOrder
     tipAmount?: SortOrder
     tags?: SortOrder
     progressiveDiscountSnapshot?: SortOrder
@@ -105889,6 +108047,8 @@ export namespace Prisma {
     type?: SortOrder
     paymentMethod?: SortOrder
     paymentProvider?: SortOrder
+    sourcePlatform?: SortOrder
+    customerNameSnapshot?: SortOrder
     tipAmount?: SortOrder
     customerId?: SortOrder
     externalId?: SortOrder
@@ -105919,6 +108079,8 @@ export namespace Prisma {
     type?: SortOrder
     paymentMethod?: SortOrder
     paymentProvider?: SortOrder
+    sourcePlatform?: SortOrder
+    customerNameSnapshot?: SortOrder
     tipAmount?: SortOrder
     customerId?: SortOrder
     externalId?: SortOrder
@@ -105977,6 +108139,16 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedEnumPaymentProviderNullableFilter<$PrismaModel>
     _max?: NestedEnumPaymentProviderNullableFilter<$PrismaModel>
+  }
+
+  export type EnumOrderSourcePlatformNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.OrderSourcePlatform | EnumOrderSourcePlatformFieldRefInput<$PrismaModel> | null
+    in?: $Enums.OrderSourcePlatform[] | ListEnumOrderSourcePlatformFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.OrderSourcePlatform[] | ListEnumOrderSourcePlatformFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumOrderSourcePlatformNullableWithAggregatesFilter<$PrismaModel> | $Enums.OrderSourcePlatform | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumOrderSourcePlatformNullableFilter<$PrismaModel>
+    _max?: NestedEnumOrderSourcePlatformNullableFilter<$PrismaModel>
   }
 
   export type OrderPaymentCountOrderByAggregateInput = {
@@ -107741,6 +109913,13 @@ export namespace Prisma {
     connect?: ExternalIntegrationConnectionWhereUniqueInput | ExternalIntegrationConnectionWhereUniqueInput[]
   }
 
+  export type SquareConnectionCreateNestedManyWithoutBusinessInput = {
+    create?: XOR<SquareConnectionCreateWithoutBusinessInput, SquareConnectionUncheckedCreateWithoutBusinessInput> | SquareConnectionCreateWithoutBusinessInput[] | SquareConnectionUncheckedCreateWithoutBusinessInput[]
+    connectOrCreate?: SquareConnectionCreateOrConnectWithoutBusinessInput | SquareConnectionCreateOrConnectWithoutBusinessInput[]
+    createMany?: SquareConnectionCreateManyBusinessInputEnvelope
+    connect?: SquareConnectionWhereUniqueInput | SquareConnectionWhereUniqueInput[]
+  }
+
   export type UserPushDeviceCreateNestedManyWithoutBusinessInput = {
     create?: XOR<UserPushDeviceCreateWithoutBusinessInput, UserPushDeviceUncheckedCreateWithoutBusinessInput> | UserPushDeviceCreateWithoutBusinessInput[] | UserPushDeviceUncheckedCreateWithoutBusinessInput[]
     connectOrCreate?: UserPushDeviceCreateOrConnectWithoutBusinessInput | UserPushDeviceCreateOrConnectWithoutBusinessInput[]
@@ -107767,6 +109946,13 @@ export namespace Prisma {
     connectOrCreate?: ExternalIntegrationConnectionCreateOrConnectWithoutBusinessInput | ExternalIntegrationConnectionCreateOrConnectWithoutBusinessInput[]
     createMany?: ExternalIntegrationConnectionCreateManyBusinessInputEnvelope
     connect?: ExternalIntegrationConnectionWhereUniqueInput | ExternalIntegrationConnectionWhereUniqueInput[]
+  }
+
+  export type SquareConnectionUncheckedCreateNestedManyWithoutBusinessInput = {
+    create?: XOR<SquareConnectionCreateWithoutBusinessInput, SquareConnectionUncheckedCreateWithoutBusinessInput> | SquareConnectionCreateWithoutBusinessInput[] | SquareConnectionUncheckedCreateWithoutBusinessInput[]
+    connectOrCreate?: SquareConnectionCreateOrConnectWithoutBusinessInput | SquareConnectionCreateOrConnectWithoutBusinessInput[]
+    createMany?: SquareConnectionCreateManyBusinessInputEnvelope
+    connect?: SquareConnectionWhereUniqueInput | SquareConnectionWhereUniqueInput[]
   }
 
   export type UserPushDeviceUncheckedCreateNestedManyWithoutBusinessInput = {
@@ -107816,6 +110002,20 @@ export namespace Prisma {
     update?: ExternalIntegrationConnectionUpdateWithWhereUniqueWithoutBusinessInput | ExternalIntegrationConnectionUpdateWithWhereUniqueWithoutBusinessInput[]
     updateMany?: ExternalIntegrationConnectionUpdateManyWithWhereWithoutBusinessInput | ExternalIntegrationConnectionUpdateManyWithWhereWithoutBusinessInput[]
     deleteMany?: ExternalIntegrationConnectionScalarWhereInput | ExternalIntegrationConnectionScalarWhereInput[]
+  }
+
+  export type SquareConnectionUpdateManyWithoutBusinessNestedInput = {
+    create?: XOR<SquareConnectionCreateWithoutBusinessInput, SquareConnectionUncheckedCreateWithoutBusinessInput> | SquareConnectionCreateWithoutBusinessInput[] | SquareConnectionUncheckedCreateWithoutBusinessInput[]
+    connectOrCreate?: SquareConnectionCreateOrConnectWithoutBusinessInput | SquareConnectionCreateOrConnectWithoutBusinessInput[]
+    upsert?: SquareConnectionUpsertWithWhereUniqueWithoutBusinessInput | SquareConnectionUpsertWithWhereUniqueWithoutBusinessInput[]
+    createMany?: SquareConnectionCreateManyBusinessInputEnvelope
+    set?: SquareConnectionWhereUniqueInput | SquareConnectionWhereUniqueInput[]
+    disconnect?: SquareConnectionWhereUniqueInput | SquareConnectionWhereUniqueInput[]
+    delete?: SquareConnectionWhereUniqueInput | SquareConnectionWhereUniqueInput[]
+    connect?: SquareConnectionWhereUniqueInput | SquareConnectionWhereUniqueInput[]
+    update?: SquareConnectionUpdateWithWhereUniqueWithoutBusinessInput | SquareConnectionUpdateWithWhereUniqueWithoutBusinessInput[]
+    updateMany?: SquareConnectionUpdateManyWithWhereWithoutBusinessInput | SquareConnectionUpdateManyWithWhereWithoutBusinessInput[]
+    deleteMany?: SquareConnectionScalarWhereInput | SquareConnectionScalarWhereInput[]
   }
 
   export type UserPushDeviceUpdateManyWithoutBusinessNestedInput = {
@@ -107874,6 +110074,20 @@ export namespace Prisma {
     deleteMany?: ExternalIntegrationConnectionScalarWhereInput | ExternalIntegrationConnectionScalarWhereInput[]
   }
 
+  export type SquareConnectionUncheckedUpdateManyWithoutBusinessNestedInput = {
+    create?: XOR<SquareConnectionCreateWithoutBusinessInput, SquareConnectionUncheckedCreateWithoutBusinessInput> | SquareConnectionCreateWithoutBusinessInput[] | SquareConnectionUncheckedCreateWithoutBusinessInput[]
+    connectOrCreate?: SquareConnectionCreateOrConnectWithoutBusinessInput | SquareConnectionCreateOrConnectWithoutBusinessInput[]
+    upsert?: SquareConnectionUpsertWithWhereUniqueWithoutBusinessInput | SquareConnectionUpsertWithWhereUniqueWithoutBusinessInput[]
+    createMany?: SquareConnectionCreateManyBusinessInputEnvelope
+    set?: SquareConnectionWhereUniqueInput | SquareConnectionWhereUniqueInput[]
+    disconnect?: SquareConnectionWhereUniqueInput | SquareConnectionWhereUniqueInput[]
+    delete?: SquareConnectionWhereUniqueInput | SquareConnectionWhereUniqueInput[]
+    connect?: SquareConnectionWhereUniqueInput | SquareConnectionWhereUniqueInput[]
+    update?: SquareConnectionUpdateWithWhereUniqueWithoutBusinessInput | SquareConnectionUpdateWithWhereUniqueWithoutBusinessInput[]
+    updateMany?: SquareConnectionUpdateManyWithWhereWithoutBusinessInput | SquareConnectionUpdateManyWithWhereWithoutBusinessInput[]
+    deleteMany?: SquareConnectionScalarWhereInput | SquareConnectionScalarWhereInput[]
+  }
+
   export type UserPushDeviceUncheckedUpdateManyWithoutBusinessNestedInput = {
     create?: XOR<UserPushDeviceCreateWithoutBusinessInput, UserPushDeviceUncheckedCreateWithoutBusinessInput> | UserPushDeviceCreateWithoutBusinessInput[] | UserPushDeviceUncheckedCreateWithoutBusinessInput[]
     connectOrCreate?: UserPushDeviceCreateOrConnectWithoutBusinessInput | UserPushDeviceCreateOrConnectWithoutBusinessInput[]
@@ -107902,6 +110116,13 @@ export namespace Prisma {
     connect?: ExternalIntegrationConnectionWhereUniqueInput | ExternalIntegrationConnectionWhereUniqueInput[]
   }
 
+  export type SquareConnectionCreateNestedManyWithoutUserInput = {
+    create?: XOR<SquareConnectionCreateWithoutUserInput, SquareConnectionUncheckedCreateWithoutUserInput> | SquareConnectionCreateWithoutUserInput[] | SquareConnectionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SquareConnectionCreateOrConnectWithoutUserInput | SquareConnectionCreateOrConnectWithoutUserInput[]
+    createMany?: SquareConnectionCreateManyUserInputEnvelope
+    connect?: SquareConnectionWhereUniqueInput | SquareConnectionWhereUniqueInput[]
+  }
+
   export type OwnerOtpChallengeCreateNestedManyWithoutOwnerInput = {
     create?: XOR<OwnerOtpChallengeCreateWithoutOwnerInput, OwnerOtpChallengeUncheckedCreateWithoutOwnerInput> | OwnerOtpChallengeCreateWithoutOwnerInput[] | OwnerOtpChallengeUncheckedCreateWithoutOwnerInput[]
     connectOrCreate?: OwnerOtpChallengeCreateOrConnectWithoutOwnerInput | OwnerOtpChallengeCreateOrConnectWithoutOwnerInput[]
@@ -107928,6 +110149,13 @@ export namespace Prisma {
     connectOrCreate?: ExternalIntegrationConnectionCreateOrConnectWithoutUserInput | ExternalIntegrationConnectionCreateOrConnectWithoutUserInput[]
     createMany?: ExternalIntegrationConnectionCreateManyUserInputEnvelope
     connect?: ExternalIntegrationConnectionWhereUniqueInput | ExternalIntegrationConnectionWhereUniqueInput[]
+  }
+
+  export type SquareConnectionUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<SquareConnectionCreateWithoutUserInput, SquareConnectionUncheckedCreateWithoutUserInput> | SquareConnectionCreateWithoutUserInput[] | SquareConnectionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SquareConnectionCreateOrConnectWithoutUserInput | SquareConnectionCreateOrConnectWithoutUserInput[]
+    createMany?: SquareConnectionCreateManyUserInputEnvelope
+    connect?: SquareConnectionWhereUniqueInput | SquareConnectionWhereUniqueInput[]
   }
 
   export type OwnerOtpChallengeUncheckedCreateNestedManyWithoutOwnerInput = {
@@ -107970,6 +110198,20 @@ export namespace Prisma {
     update?: ExternalIntegrationConnectionUpdateWithWhereUniqueWithoutUserInput | ExternalIntegrationConnectionUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: ExternalIntegrationConnectionUpdateManyWithWhereWithoutUserInput | ExternalIntegrationConnectionUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: ExternalIntegrationConnectionScalarWhereInput | ExternalIntegrationConnectionScalarWhereInput[]
+  }
+
+  export type SquareConnectionUpdateManyWithoutUserNestedInput = {
+    create?: XOR<SquareConnectionCreateWithoutUserInput, SquareConnectionUncheckedCreateWithoutUserInput> | SquareConnectionCreateWithoutUserInput[] | SquareConnectionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SquareConnectionCreateOrConnectWithoutUserInput | SquareConnectionCreateOrConnectWithoutUserInput[]
+    upsert?: SquareConnectionUpsertWithWhereUniqueWithoutUserInput | SquareConnectionUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: SquareConnectionCreateManyUserInputEnvelope
+    set?: SquareConnectionWhereUniqueInput | SquareConnectionWhereUniqueInput[]
+    disconnect?: SquareConnectionWhereUniqueInput | SquareConnectionWhereUniqueInput[]
+    delete?: SquareConnectionWhereUniqueInput | SquareConnectionWhereUniqueInput[]
+    connect?: SquareConnectionWhereUniqueInput | SquareConnectionWhereUniqueInput[]
+    update?: SquareConnectionUpdateWithWhereUniqueWithoutUserInput | SquareConnectionUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: SquareConnectionUpdateManyWithWhereWithoutUserInput | SquareConnectionUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: SquareConnectionScalarWhereInput | SquareConnectionScalarWhereInput[]
   }
 
   export type OwnerOtpChallengeUpdateManyWithoutOwnerNestedInput = {
@@ -108026,6 +110268,20 @@ export namespace Prisma {
     update?: ExternalIntegrationConnectionUpdateWithWhereUniqueWithoutUserInput | ExternalIntegrationConnectionUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: ExternalIntegrationConnectionUpdateManyWithWhereWithoutUserInput | ExternalIntegrationConnectionUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: ExternalIntegrationConnectionScalarWhereInput | ExternalIntegrationConnectionScalarWhereInput[]
+  }
+
+  export type SquareConnectionUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<SquareConnectionCreateWithoutUserInput, SquareConnectionUncheckedCreateWithoutUserInput> | SquareConnectionCreateWithoutUserInput[] | SquareConnectionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SquareConnectionCreateOrConnectWithoutUserInput | SquareConnectionCreateOrConnectWithoutUserInput[]
+    upsert?: SquareConnectionUpsertWithWhereUniqueWithoutUserInput | SquareConnectionUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: SquareConnectionCreateManyUserInputEnvelope
+    set?: SquareConnectionWhereUniqueInput | SquareConnectionWhereUniqueInput[]
+    disconnect?: SquareConnectionWhereUniqueInput | SquareConnectionWhereUniqueInput[]
+    delete?: SquareConnectionWhereUniqueInput | SquareConnectionWhereUniqueInput[]
+    connect?: SquareConnectionWhereUniqueInput | SquareConnectionWhereUniqueInput[]
+    update?: SquareConnectionUpdateWithWhereUniqueWithoutUserInput | SquareConnectionUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: SquareConnectionUpdateManyWithWhereWithoutUserInput | SquareConnectionUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: SquareConnectionScalarWhereInput | SquareConnectionScalarWhereInput[]
   }
 
   export type OwnerOtpChallengeUncheckedUpdateManyWithoutOwnerNestedInput = {
@@ -108224,6 +110480,34 @@ export namespace Prisma {
     update?: ExternalMenuSyncRunUpdateWithWhereUniqueWithoutExternalIntegrationConnectionInput | ExternalMenuSyncRunUpdateWithWhereUniqueWithoutExternalIntegrationConnectionInput[]
     updateMany?: ExternalMenuSyncRunUpdateManyWithWhereWithoutExternalIntegrationConnectionInput | ExternalMenuSyncRunUpdateManyWithWhereWithoutExternalIntegrationConnectionInput[]
     deleteMany?: ExternalMenuSyncRunScalarWhereInput | ExternalMenuSyncRunScalarWhereInput[]
+  }
+
+  export type UserCreateNestedOneWithoutSquareConnectionsInput = {
+    create?: XOR<UserCreateWithoutSquareConnectionsInput, UserUncheckedCreateWithoutSquareConnectionsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSquareConnectionsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type BusinessCreateNestedOneWithoutSquareConnectionsInput = {
+    create?: XOR<BusinessCreateWithoutSquareConnectionsInput, BusinessUncheckedCreateWithoutSquareConnectionsInput>
+    connectOrCreate?: BusinessCreateOrConnectWithoutSquareConnectionsInput
+    connect?: BusinessWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutSquareConnectionsNestedInput = {
+    create?: XOR<UserCreateWithoutSquareConnectionsInput, UserUncheckedCreateWithoutSquareConnectionsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSquareConnectionsInput
+    upsert?: UserUpsertWithoutSquareConnectionsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSquareConnectionsInput, UserUpdateWithoutSquareConnectionsInput>, UserUncheckedUpdateWithoutSquareConnectionsInput>
+  }
+
+  export type BusinessUpdateOneRequiredWithoutSquareConnectionsNestedInput = {
+    create?: XOR<BusinessCreateWithoutSquareConnectionsInput, BusinessUncheckedCreateWithoutSquareConnectionsInput>
+    connectOrCreate?: BusinessCreateOrConnectWithoutSquareConnectionsInput
+    upsert?: BusinessUpsertWithoutSquareConnectionsInput
+    connect?: BusinessWhereUniqueInput
+    update?: XOR<XOR<BusinessUpdateToOneWithWhereWithoutSquareConnectionsInput, BusinessUpdateWithoutSquareConnectionsInput>, BusinessUncheckedUpdateWithoutSquareConnectionsInput>
   }
 
   export type ExternalIntegrationConnectionCreateNestedOneWithoutMenuEntityMapsInput = {
@@ -111185,6 +113469,10 @@ export namespace Prisma {
     set?: $Enums.PaymentProvider | null
   }
 
+  export type NullableEnumOrderSourcePlatformFieldUpdateOperationsInput = {
+    set?: $Enums.OrderSourcePlatform | null
+  }
+
   export type OrderUpdatetagsInput = {
     set?: string[]
     push?: string | string[]
@@ -113035,6 +115323,13 @@ export namespace Prisma {
     not?: NestedEnumPaymentProviderNullableFilter<$PrismaModel> | $Enums.PaymentProvider | null
   }
 
+  export type NestedEnumOrderSourcePlatformNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.OrderSourcePlatform | EnumOrderSourcePlatformFieldRefInput<$PrismaModel> | null
+    in?: $Enums.OrderSourcePlatform[] | ListEnumOrderSourcePlatformFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.OrderSourcePlatform[] | ListEnumOrderSourcePlatformFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumOrderSourcePlatformNullableFilter<$PrismaModel> | $Enums.OrderSourcePlatform | null
+  }
+
   export type NestedEnumOrderStatusWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.OrderStatus | EnumOrderStatusFieldRefInput<$PrismaModel>
     in?: $Enums.OrderStatus[] | ListEnumOrderStatusFieldRefInput<$PrismaModel>
@@ -113073,6 +115368,16 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedEnumPaymentProviderNullableFilter<$PrismaModel>
     _max?: NestedEnumPaymentProviderNullableFilter<$PrismaModel>
+  }
+
+  export type NestedEnumOrderSourcePlatformNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.OrderSourcePlatform | EnumOrderSourcePlatformFieldRefInput<$PrismaModel> | null
+    in?: $Enums.OrderSourcePlatform[] | ListEnumOrderSourcePlatformFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.OrderSourcePlatform[] | ListEnumOrderSourcePlatformFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumOrderSourcePlatformNullableWithAggregatesFilter<$PrismaModel> | $Enums.OrderSourcePlatform | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumOrderSourcePlatformNullableFilter<$PrismaModel>
+    _max?: NestedEnumOrderSourcePlatformNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumOrderTypeNullableFilter<$PrismaModel = never> = {
@@ -113272,6 +115577,10 @@ export namespace Prisma {
     comparedAtPrice?: number | null
     categoryIndex?: number | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: string | null
+    squareItemVersion?: string | null
+    squareVariationId?: string | null
+    squareVariationVersion?: string | null
     photos?: FileCreateNestedManyWithoutProductInput
     modifierGroups?: ModifierGroupCreateNestedManyWithoutProductsInput
     category?: CategoryCreateNestedOneWithoutProductsInput
@@ -113300,6 +115609,10 @@ export namespace Prisma {
     categoryIndex?: number | null
     categoryId?: string | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: string | null
+    squareItemVersion?: string | null
+    squareVariationId?: string | null
+    squareVariationVersion?: string | null
     photos?: FileUncheckedCreateNestedManyWithoutProductInput
     modifierGroups?: ModifierGroupUncheckedCreateNestedManyWithoutProductsInput
     productCategories?: ProductCategoryUncheckedCreateNestedManyWithoutProductInput
@@ -113406,6 +115719,10 @@ export namespace Prisma {
     categoryIndex?: IntNullableFilter<"Product"> | number | null
     categoryId?: StringNullableFilter<"Product"> | string | null
     translations?: JsonNullableFilter<"Product">
+    squareItemId?: StringNullableFilter<"Product"> | string | null
+    squareItemVersion?: StringNullableFilter<"Product"> | string | null
+    squareVariationId?: StringNullableFilter<"Product"> | string | null
+    squareVariationVersion?: StringNullableFilter<"Product"> | string | null
   }
 
   export type StationUpsertWithoutPreparationStepsInput = {
@@ -113530,6 +115847,8 @@ export namespace Prisma {
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     paymentProvider?: $Enums.PaymentProvider | null
+    sourcePlatform?: $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: string | null
     tipAmount?: number | null
     tags?: OrderCreatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -113567,6 +115886,8 @@ export namespace Prisma {
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     paymentProvider?: $Enums.PaymentProvider | null
+    sourcePlatform?: $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: string | null
     tipAmount?: number | null
     tags?: OrderCreatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -113716,6 +116037,8 @@ export namespace Prisma {
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     paymentProvider?: NullableEnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider | null
+    sourcePlatform?: NullableEnumOrderSourcePlatformFieldUpdateOperationsInput | $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     tags?: OrderUpdatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -113753,6 +116076,8 @@ export namespace Prisma {
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     paymentProvider?: NullableEnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider | null
+    sourcePlatform?: NullableEnumOrderSourcePlatformFieldUpdateOperationsInput | $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     tags?: OrderUpdatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -113956,6 +116281,8 @@ export namespace Prisma {
     price: number
     description?: string | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareModifierId?: string | null
+    squareModifierVersion?: string | null
     photo?: FileCreateNestedOneWithoutModifierGroupItemsInput
     modifierGroup?: ModifierGroupCreateNestedOneWithoutItemsInput
     orderProducts?: OrderProductsCreateNestedManyWithoutModifierGroupItemsInput
@@ -113971,6 +116298,8 @@ export namespace Prisma {
     translations?: NullableJsonNullValueInput | InputJsonValue
     modifierGroupId?: string | null
     fileId?: string | null
+    squareModifierId?: string | null
+    squareModifierVersion?: string | null
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutModifierGroupItemsInput
     orderIntentProducts?: OrderIntentProductUncheckedCreateNestedManyWithoutModifierGroupItemsInput
   }
@@ -114031,6 +116360,8 @@ export namespace Prisma {
     price?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareModifierId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareModifierVersion?: NullableStringFieldUpdateOperationsInput | string | null
     photo?: FileUpdateOneWithoutModifierGroupItemsNestedInput
     modifierGroup?: ModifierGroupUpdateOneWithoutItemsNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutModifierGroupItemsNestedInput
@@ -114046,6 +116377,8 @@ export namespace Prisma {
     translations?: NullableJsonNullValueInput | InputJsonValue
     modifierGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     fileId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareModifierId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareModifierVersion?: NullableStringFieldUpdateOperationsInput | string | null
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutModifierGroupItemsNestedInput
     orderIntentProducts?: OrderIntentProductUncheckedUpdateManyWithoutModifierGroupItemsNestedInput
   }
@@ -114381,6 +116714,10 @@ export namespace Prisma {
     comparedAtPrice?: number | null
     categoryIndex?: number | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: string | null
+    squareItemVersion?: string | null
+    squareVariationId?: string | null
+    squareVariationVersion?: string | null
     photos?: FileCreateNestedManyWithoutProductInput
     modifierGroups?: ModifierGroupCreateNestedManyWithoutProductsInput
     category?: CategoryCreateNestedOneWithoutProductsInput
@@ -114409,6 +116746,10 @@ export namespace Prisma {
     categoryIndex?: number | null
     categoryId?: string | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: string | null
+    squareItemVersion?: string | null
+    squareVariationId?: string | null
+    squareVariationVersion?: string | null
     photos?: FileUncheckedCreateNestedManyWithoutProductInput
     modifierGroups?: ModifierGroupUncheckedCreateNestedManyWithoutProductsInput
     productCategories?: ProductCategoryUncheckedCreateNestedManyWithoutProductInput
@@ -114482,6 +116823,10 @@ export namespace Prisma {
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
     categoryIndex?: NullableIntFieldUpdateOperationsInput | number | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareItemVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationVersion?: NullableStringFieldUpdateOperationsInput | string | null
     photos?: FileUpdateManyWithoutProductNestedInput
     modifierGroups?: ModifierGroupUpdateManyWithoutProductsNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
@@ -114510,6 +116855,10 @@ export namespace Prisma {
     categoryIndex?: NullableIntFieldUpdateOperationsInput | number | null
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareItemVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationVersion?: NullableStringFieldUpdateOperationsInput | string | null
     photos?: FileUncheckedUpdateManyWithoutProductNestedInput
     modifierGroups?: ModifierGroupUncheckedUpdateManyWithoutProductsNestedInput
     productCategories?: ProductCategoryUncheckedUpdateManyWithoutProductNestedInput
@@ -114536,6 +116885,10 @@ export namespace Prisma {
     comparedAtPrice?: number | null
     categoryIndex?: number | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: string | null
+    squareItemVersion?: string | null
+    squareVariationId?: string | null
+    squareVariationVersion?: string | null
     modifierGroups?: ModifierGroupCreateNestedManyWithoutProductsInput
     category?: CategoryCreateNestedOneWithoutProductsInput
     productCategories?: ProductCategoryCreateNestedManyWithoutProductInput
@@ -114564,6 +116917,10 @@ export namespace Prisma {
     categoryIndex?: number | null
     categoryId?: string | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: string | null
+    squareItemVersion?: string | null
+    squareVariationId?: string | null
+    squareVariationVersion?: string | null
     modifierGroups?: ModifierGroupUncheckedCreateNestedManyWithoutProductsInput
     productCategories?: ProductCategoryUncheckedCreateNestedManyWithoutProductInput
     comboSlots?: ComboSlotUncheckedCreateNestedManyWithoutComboInput
@@ -114590,6 +116947,8 @@ export namespace Prisma {
     price: number
     description?: string | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareModifierId?: string | null
+    squareModifierVersion?: string | null
     modifierGroup?: ModifierGroupCreateNestedOneWithoutItemsInput
     preparationStepModifierTracks?: PreparationStepModifierTrackCreateNestedManyWithoutModifierGroupItemInput
     orderProducts?: OrderProductsCreateNestedManyWithoutModifierGroupItemsInput
@@ -114604,6 +116963,8 @@ export namespace Prisma {
     description?: string | null
     translations?: NullableJsonNullValueInput | InputJsonValue
     modifierGroupId?: string | null
+    squareModifierId?: string | null
+    squareModifierVersion?: string | null
     preparationStepModifierTracks?: PreparationStepModifierTrackUncheckedCreateNestedManyWithoutModifierGroupItemInput
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutModifierGroupItemsInput
     orderIntentProducts?: OrderIntentProductUncheckedCreateNestedManyWithoutModifierGroupItemsInput
@@ -114642,6 +117003,10 @@ export namespace Prisma {
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
     categoryIndex?: NullableIntFieldUpdateOperationsInput | number | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareItemVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationVersion?: NullableStringFieldUpdateOperationsInput | string | null
     modifierGroups?: ModifierGroupUpdateManyWithoutProductsNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
     productCategories?: ProductCategoryUpdateManyWithoutProductNestedInput
@@ -114670,6 +117035,10 @@ export namespace Prisma {
     categoryIndex?: NullableIntFieldUpdateOperationsInput | number | null
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareItemVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationVersion?: NullableStringFieldUpdateOperationsInput | string | null
     modifierGroups?: ModifierGroupUncheckedUpdateManyWithoutProductsNestedInput
     productCategories?: ProductCategoryUncheckedUpdateManyWithoutProductNestedInput
     comboSlots?: ComboSlotUncheckedUpdateManyWithoutComboNestedInput
@@ -114712,6 +117081,8 @@ export namespace Prisma {
     translations?: JsonNullableFilter<"ModifierGroupItem">
     modifierGroupId?: StringNullableFilter<"ModifierGroupItem"> | string | null
     fileId?: StringNullableFilter<"ModifierGroupItem"> | string | null
+    squareModifierId?: StringNullableFilter<"ModifierGroupItem"> | string | null
+    squareModifierVersion?: StringNullableFilter<"ModifierGroupItem"> | string | null
   }
 
   export type ProductCreateWithoutModifierGroupsInput = {
@@ -114726,6 +117097,10 @@ export namespace Prisma {
     comparedAtPrice?: number | null
     categoryIndex?: number | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: string | null
+    squareItemVersion?: string | null
+    squareVariationId?: string | null
+    squareVariationVersion?: string | null
     photos?: FileCreateNestedManyWithoutProductInput
     category?: CategoryCreateNestedOneWithoutProductsInput
     productCategories?: ProductCategoryCreateNestedManyWithoutProductInput
@@ -114754,6 +117129,10 @@ export namespace Prisma {
     categoryIndex?: number | null
     categoryId?: string | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: string | null
+    squareItemVersion?: string | null
+    squareVariationId?: string | null
+    squareVariationVersion?: string | null
     photos?: FileUncheckedCreateNestedManyWithoutProductInput
     productCategories?: ProductCategoryUncheckedCreateNestedManyWithoutProductInput
     comboSlots?: ComboSlotUncheckedCreateNestedManyWithoutComboInput
@@ -114780,6 +117159,8 @@ export namespace Prisma {
     price: number
     description?: string | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareModifierId?: string | null
+    squareModifierVersion?: string | null
     photo?: FileCreateNestedOneWithoutModifierGroupItemsInput
     preparationStepModifierTracks?: PreparationStepModifierTrackCreateNestedManyWithoutModifierGroupItemInput
     orderProducts?: OrderProductsCreateNestedManyWithoutModifierGroupItemsInput
@@ -114794,6 +117175,8 @@ export namespace Prisma {
     description?: string | null
     translations?: NullableJsonNullValueInput | InputJsonValue
     fileId?: string | null
+    squareModifierId?: string | null
+    squareModifierVersion?: string | null
     preparationStepModifierTracks?: PreparationStepModifierTrackUncheckedCreateNestedManyWithoutModifierGroupItemInput
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutModifierGroupItemsInput
     orderIntentProducts?: OrderIntentProductUncheckedCreateNestedManyWithoutModifierGroupItemsInput
@@ -114873,6 +117256,8 @@ export namespace Prisma {
     type?: $Enums.ModifierGroupType | null
     minSelection?: number | null
     maxSelection?: number | null
+    squareModifierListId?: string | null
+    squareModifierListVersion?: string | null
     products?: ProductCreateNestedManyWithoutModifierGroupsInput
   }
 
@@ -114885,6 +117270,8 @@ export namespace Prisma {
     type?: $Enums.ModifierGroupType | null
     minSelection?: number | null
     maxSelection?: number | null
+    squareModifierListId?: string | null
+    squareModifierListVersion?: string | null
     products?: ProductUncheckedCreateNestedManyWithoutModifierGroupsInput
   }
 
@@ -115020,6 +117407,8 @@ export namespace Prisma {
     type?: NullableEnumModifierGroupTypeFieldUpdateOperationsInput | $Enums.ModifierGroupType | null
     minSelection?: NullableIntFieldUpdateOperationsInput | number | null
     maxSelection?: NullableIntFieldUpdateOperationsInput | number | null
+    squareModifierListId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareModifierListVersion?: NullableStringFieldUpdateOperationsInput | string | null
     products?: ProductUpdateManyWithoutModifierGroupsNestedInput
   }
 
@@ -115032,6 +117421,8 @@ export namespace Prisma {
     type?: NullableEnumModifierGroupTypeFieldUpdateOperationsInput | $Enums.ModifierGroupType | null
     minSelection?: NullableIntFieldUpdateOperationsInput | number | null
     maxSelection?: NullableIntFieldUpdateOperationsInput | number | null
+    squareModifierListId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareModifierListVersion?: NullableStringFieldUpdateOperationsInput | string | null
     products?: ProductUncheckedUpdateManyWithoutModifierGroupsNestedInput
   }
 
@@ -115221,6 +117612,48 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type SquareConnectionCreateWithoutBusinessInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    environment?: $Enums.ExternalIntegrationEnvironment
+    merchantId?: string | null
+    accessToken: string
+    refreshToken?: string | null
+    scope?: string | null
+    tokenType?: string | null
+    expiresAt?: Date | string | null
+    connectedAt?: Date | string
+    rawPayload?: NullableJsonNullValueInput | InputJsonValue
+    user: UserCreateNestedOneWithoutSquareConnectionsInput
+  }
+
+  export type SquareConnectionUncheckedCreateWithoutBusinessInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    environment?: $Enums.ExternalIntegrationEnvironment
+    userId: string
+    merchantId?: string | null
+    accessToken: string
+    refreshToken?: string | null
+    scope?: string | null
+    tokenType?: string | null
+    expiresAt?: Date | string | null
+    connectedAt?: Date | string
+    rawPayload?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SquareConnectionCreateOrConnectWithoutBusinessInput = {
+    where: SquareConnectionWhereUniqueInput
+    create: XOR<SquareConnectionCreateWithoutBusinessInput, SquareConnectionUncheckedCreateWithoutBusinessInput>
+  }
+
+  export type SquareConnectionCreateManyBusinessInputEnvelope = {
+    data: SquareConnectionCreateManyBusinessInput | SquareConnectionCreateManyBusinessInput[]
+    skipDuplicates?: boolean
+  }
+
   export type UserPushDeviceCreateWithoutBusinessInput = {
     id: string
     createdAt?: Date | string
@@ -115354,6 +117787,42 @@ export namespace Prisma {
     rawPayload?: JsonNullableFilter<"ExternalIntegrationConnection">
   }
 
+  export type SquareConnectionUpsertWithWhereUniqueWithoutBusinessInput = {
+    where: SquareConnectionWhereUniqueInput
+    update: XOR<SquareConnectionUpdateWithoutBusinessInput, SquareConnectionUncheckedUpdateWithoutBusinessInput>
+    create: XOR<SquareConnectionCreateWithoutBusinessInput, SquareConnectionUncheckedCreateWithoutBusinessInput>
+  }
+
+  export type SquareConnectionUpdateWithWhereUniqueWithoutBusinessInput = {
+    where: SquareConnectionWhereUniqueInput
+    data: XOR<SquareConnectionUpdateWithoutBusinessInput, SquareConnectionUncheckedUpdateWithoutBusinessInput>
+  }
+
+  export type SquareConnectionUpdateManyWithWhereWithoutBusinessInput = {
+    where: SquareConnectionScalarWhereInput
+    data: XOR<SquareConnectionUpdateManyMutationInput, SquareConnectionUncheckedUpdateManyWithoutBusinessInput>
+  }
+
+  export type SquareConnectionScalarWhereInput = {
+    AND?: SquareConnectionScalarWhereInput | SquareConnectionScalarWhereInput[]
+    OR?: SquareConnectionScalarWhereInput[]
+    NOT?: SquareConnectionScalarWhereInput | SquareConnectionScalarWhereInput[]
+    id?: StringFilter<"SquareConnection"> | string
+    createdAt?: DateTimeFilter<"SquareConnection"> | Date | string
+    updatedAt?: DateTimeFilter<"SquareConnection"> | Date | string
+    environment?: EnumExternalIntegrationEnvironmentFilter<"SquareConnection"> | $Enums.ExternalIntegrationEnvironment
+    userId?: StringFilter<"SquareConnection"> | string
+    businessId?: StringFilter<"SquareConnection"> | string
+    merchantId?: StringNullableFilter<"SquareConnection"> | string | null
+    accessToken?: StringFilter<"SquareConnection"> | string
+    refreshToken?: StringNullableFilter<"SquareConnection"> | string | null
+    scope?: StringNullableFilter<"SquareConnection"> | string | null
+    tokenType?: StringNullableFilter<"SquareConnection"> | string | null
+    expiresAt?: DateTimeNullableFilter<"SquareConnection"> | Date | string | null
+    connectedAt?: DateTimeFilter<"SquareConnection"> | Date | string
+    rawPayload?: JsonNullableFilter<"SquareConnection">
+  }
+
   export type UserPushDeviceUpsertWithWhereUniqueWithoutBusinessInput = {
     where: UserPushDeviceWhereUniqueInput
     update: XOR<UserPushDeviceUpdateWithoutBusinessInput, UserPushDeviceUncheckedUpdateWithoutBusinessInput>
@@ -115461,6 +117930,48 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type SquareConnectionCreateWithoutUserInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    environment?: $Enums.ExternalIntegrationEnvironment
+    merchantId?: string | null
+    accessToken: string
+    refreshToken?: string | null
+    scope?: string | null
+    tokenType?: string | null
+    expiresAt?: Date | string | null
+    connectedAt?: Date | string
+    rawPayload?: NullableJsonNullValueInput | InputJsonValue
+    business: BusinessCreateNestedOneWithoutSquareConnectionsInput
+  }
+
+  export type SquareConnectionUncheckedCreateWithoutUserInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    environment?: $Enums.ExternalIntegrationEnvironment
+    businessId: string
+    merchantId?: string | null
+    accessToken: string
+    refreshToken?: string | null
+    scope?: string | null
+    tokenType?: string | null
+    expiresAt?: Date | string | null
+    connectedAt?: Date | string
+    rawPayload?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SquareConnectionCreateOrConnectWithoutUserInput = {
+    where: SquareConnectionWhereUniqueInput
+    create: XOR<SquareConnectionCreateWithoutUserInput, SquareConnectionUncheckedCreateWithoutUserInput>
+  }
+
+  export type SquareConnectionCreateManyUserInputEnvelope = {
+    data: SquareConnectionCreateManyUserInput | SquareConnectionCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type OwnerOtpChallengeCreateWithoutOwnerInput = {
     id: string
     createdAt?: Date | string
@@ -115565,6 +118076,22 @@ export namespace Prisma {
     data: XOR<ExternalIntegrationConnectionUpdateManyMutationInput, ExternalIntegrationConnectionUncheckedUpdateManyWithoutUserInput>
   }
 
+  export type SquareConnectionUpsertWithWhereUniqueWithoutUserInput = {
+    where: SquareConnectionWhereUniqueInput
+    update: XOR<SquareConnectionUpdateWithoutUserInput, SquareConnectionUncheckedUpdateWithoutUserInput>
+    create: XOR<SquareConnectionCreateWithoutUserInput, SquareConnectionUncheckedCreateWithoutUserInput>
+  }
+
+  export type SquareConnectionUpdateWithWhereUniqueWithoutUserInput = {
+    where: SquareConnectionWhereUniqueInput
+    data: XOR<SquareConnectionUpdateWithoutUserInput, SquareConnectionUncheckedUpdateWithoutUserInput>
+  }
+
+  export type SquareConnectionUpdateManyWithWhereWithoutUserInput = {
+    where: SquareConnectionScalarWhereInput
+    data: XOR<SquareConnectionUpdateManyMutationInput, SquareConnectionUncheckedUpdateManyWithoutUserInput>
+  }
+
   export type OwnerOtpChallengeUpsertWithWhereUniqueWithoutOwnerInput = {
     where: OwnerOtpChallengeWhereUniqueInput
     update: XOR<OwnerOtpChallengeUpdateWithoutOwnerInput, OwnerOtpChallengeUncheckedUpdateWithoutOwnerInput>
@@ -115626,6 +118153,7 @@ export namespace Prisma {
     lastLoginAt?: Date | string | null
     businessMemberships?: BusinessMemberCreateNestedManyWithoutUserInput
     integrations?: ExternalIntegrationConnectionCreateNestedManyWithoutUserInput
+    squareConnections?: SquareConnectionCreateNestedManyWithoutUserInput
     otpChallenges?: OwnerOtpChallengeCreateNestedManyWithoutOwnerInput
   }
 
@@ -115641,6 +118169,7 @@ export namespace Prisma {
     lastLoginAt?: Date | string | null
     businessMemberships?: BusinessMemberUncheckedCreateNestedManyWithoutUserInput
     integrations?: ExternalIntegrationConnectionUncheckedCreateNestedManyWithoutUserInput
+    squareConnections?: SquareConnectionUncheckedCreateNestedManyWithoutUserInput
     otpChallenges?: OwnerOtpChallengeUncheckedCreateNestedManyWithoutOwnerInput
   }
 
@@ -115666,6 +118195,7 @@ export namespace Prisma {
     branches?: BranchCreateNestedManyWithoutBusinessInput
     members?: BusinessMemberCreateNestedManyWithoutBusinessInput
     integrations?: ExternalIntegrationConnectionCreateNestedManyWithoutBusinessInput
+    squareConnections?: SquareConnectionCreateNestedManyWithoutBusinessInput
   }
 
   export type BusinessUncheckedCreateWithoutPushDevicesInput = {
@@ -115685,6 +118215,7 @@ export namespace Prisma {
     branches?: BranchUncheckedCreateNestedManyWithoutBusinessInput
     members?: BusinessMemberUncheckedCreateNestedManyWithoutBusinessInput
     integrations?: ExternalIntegrationConnectionUncheckedCreateNestedManyWithoutBusinessInput
+    squareConnections?: SquareConnectionUncheckedCreateNestedManyWithoutBusinessInput
   }
 
   export type BusinessCreateOrConnectWithoutPushDevicesInput = {
@@ -115715,6 +118246,7 @@ export namespace Prisma {
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     businessMemberships?: BusinessMemberUpdateManyWithoutUserNestedInput
     integrations?: ExternalIntegrationConnectionUpdateManyWithoutUserNestedInput
+    squareConnections?: SquareConnectionUpdateManyWithoutUserNestedInput
     otpChallenges?: OwnerOtpChallengeUpdateManyWithoutOwnerNestedInput
   }
 
@@ -115730,6 +118262,7 @@ export namespace Prisma {
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     businessMemberships?: BusinessMemberUncheckedUpdateManyWithoutUserNestedInput
     integrations?: ExternalIntegrationConnectionUncheckedUpdateManyWithoutUserNestedInput
+    squareConnections?: SquareConnectionUncheckedUpdateManyWithoutUserNestedInput
     otpChallenges?: OwnerOtpChallengeUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
@@ -115761,6 +118294,7 @@ export namespace Prisma {
     branches?: BranchUpdateManyWithoutBusinessNestedInput
     members?: BusinessMemberUpdateManyWithoutBusinessNestedInput
     integrations?: ExternalIntegrationConnectionUpdateManyWithoutBusinessNestedInput
+    squareConnections?: SquareConnectionUpdateManyWithoutBusinessNestedInput
   }
 
   export type BusinessUncheckedUpdateWithoutPushDevicesInput = {
@@ -115780,6 +118314,7 @@ export namespace Prisma {
     branches?: BranchUncheckedUpdateManyWithoutBusinessNestedInput
     members?: BusinessMemberUncheckedUpdateManyWithoutBusinessNestedInput
     integrations?: ExternalIntegrationConnectionUncheckedUpdateManyWithoutBusinessNestedInput
+    squareConnections?: SquareConnectionUncheckedUpdateManyWithoutBusinessNestedInput
   }
 
   export type UserCreateWithoutOtpChallengesInput = {
@@ -115794,6 +118329,7 @@ export namespace Prisma {
     lastLoginAt?: Date | string | null
     businessMemberships?: BusinessMemberCreateNestedManyWithoutUserInput
     integrations?: ExternalIntegrationConnectionCreateNestedManyWithoutUserInput
+    squareConnections?: SquareConnectionCreateNestedManyWithoutUserInput
     pushDevices?: UserPushDeviceCreateNestedManyWithoutUserInput
   }
 
@@ -115809,6 +118345,7 @@ export namespace Prisma {
     lastLoginAt?: Date | string | null
     businessMemberships?: BusinessMemberUncheckedCreateNestedManyWithoutUserInput
     integrations?: ExternalIntegrationConnectionUncheckedCreateNestedManyWithoutUserInput
+    squareConnections?: SquareConnectionUncheckedCreateNestedManyWithoutUserInput
     pushDevices?: UserPushDeviceUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -115840,6 +118377,7 @@ export namespace Prisma {
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     businessMemberships?: BusinessMemberUpdateManyWithoutUserNestedInput
     integrations?: ExternalIntegrationConnectionUpdateManyWithoutUserNestedInput
+    squareConnections?: SquareConnectionUpdateManyWithoutUserNestedInput
     pushDevices?: UserPushDeviceUpdateManyWithoutUserNestedInput
   }
 
@@ -115855,6 +118393,7 @@ export namespace Prisma {
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     businessMemberships?: BusinessMemberUncheckedUpdateManyWithoutUserNestedInput
     integrations?: ExternalIntegrationConnectionUncheckedUpdateManyWithoutUserNestedInput
+    squareConnections?: SquareConnectionUncheckedUpdateManyWithoutUserNestedInput
     pushDevices?: UserPushDeviceUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -115869,6 +118408,7 @@ export namespace Prisma {
     emailVerifiedAt?: Date | string | null
     lastLoginAt?: Date | string | null
     businessMemberships?: BusinessMemberCreateNestedManyWithoutUserInput
+    squareConnections?: SquareConnectionCreateNestedManyWithoutUserInput
     otpChallenges?: OwnerOtpChallengeCreateNestedManyWithoutOwnerInput
     pushDevices?: UserPushDeviceCreateNestedManyWithoutUserInput
   }
@@ -115884,6 +118424,7 @@ export namespace Prisma {
     emailVerifiedAt?: Date | string | null
     lastLoginAt?: Date | string | null
     businessMemberships?: BusinessMemberUncheckedCreateNestedManyWithoutUserInput
+    squareConnections?: SquareConnectionUncheckedCreateNestedManyWithoutUserInput
     otpChallenges?: OwnerOtpChallengeUncheckedCreateNestedManyWithoutOwnerInput
     pushDevices?: UserPushDeviceUncheckedCreateNestedManyWithoutUserInput
   }
@@ -115909,6 +118450,7 @@ export namespace Prisma {
     onboardingCompletedAt?: Date | string | null
     branches?: BranchCreateNestedManyWithoutBusinessInput
     members?: BusinessMemberCreateNestedManyWithoutBusinessInput
+    squareConnections?: SquareConnectionCreateNestedManyWithoutBusinessInput
     pushDevices?: UserPushDeviceCreateNestedManyWithoutBusinessInput
   }
 
@@ -115928,6 +118470,7 @@ export namespace Prisma {
     onboardingCompletedAt?: Date | string | null
     branches?: BranchUncheckedCreateNestedManyWithoutBusinessInput
     members?: BusinessMemberUncheckedCreateNestedManyWithoutBusinessInput
+    squareConnections?: SquareConnectionUncheckedCreateNestedManyWithoutBusinessInput
     pushDevices?: UserPushDeviceUncheckedCreateNestedManyWithoutBusinessInput
   }
 
@@ -116054,6 +118597,7 @@ export namespace Prisma {
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     businessMemberships?: BusinessMemberUpdateManyWithoutUserNestedInput
+    squareConnections?: SquareConnectionUpdateManyWithoutUserNestedInput
     otpChallenges?: OwnerOtpChallengeUpdateManyWithoutOwnerNestedInput
     pushDevices?: UserPushDeviceUpdateManyWithoutUserNestedInput
   }
@@ -116069,6 +118613,7 @@ export namespace Prisma {
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     businessMemberships?: BusinessMemberUncheckedUpdateManyWithoutUserNestedInput
+    squareConnections?: SquareConnectionUncheckedUpdateManyWithoutUserNestedInput
     otpChallenges?: OwnerOtpChallengeUncheckedUpdateManyWithoutOwnerNestedInput
     pushDevices?: UserPushDeviceUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -116100,6 +118645,7 @@ export namespace Prisma {
     onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     branches?: BranchUpdateManyWithoutBusinessNestedInput
     members?: BusinessMemberUpdateManyWithoutBusinessNestedInput
+    squareConnections?: SquareConnectionUpdateManyWithoutBusinessNestedInput
     pushDevices?: UserPushDeviceUpdateManyWithoutBusinessNestedInput
   }
 
@@ -116119,6 +118665,7 @@ export namespace Prisma {
     onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     branches?: BranchUncheckedUpdateManyWithoutBusinessNestedInput
     members?: BusinessMemberUncheckedUpdateManyWithoutBusinessNestedInput
+    squareConnections?: SquareConnectionUncheckedUpdateManyWithoutBusinessNestedInput
     pushDevices?: UserPushDeviceUncheckedUpdateManyWithoutBusinessNestedInput
   }
 
@@ -116198,6 +118745,182 @@ export namespace Prisma {
     requestPayload?: JsonNullableFilter<"ExternalMenuSyncRun">
     responsePayload?: JsonNullableFilter<"ExternalMenuSyncRun">
     connectionId?: StringNullableFilter<"ExternalMenuSyncRun"> | string | null
+  }
+
+  export type UserCreateWithoutSquareConnectionsInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    email: string
+    phone?: string | null
+    name: string
+    passwordHash: string
+    emailVerifiedAt?: Date | string | null
+    lastLoginAt?: Date | string | null
+    businessMemberships?: BusinessMemberCreateNestedManyWithoutUserInput
+    integrations?: ExternalIntegrationConnectionCreateNestedManyWithoutUserInput
+    otpChallenges?: OwnerOtpChallengeCreateNestedManyWithoutOwnerInput
+    pushDevices?: UserPushDeviceCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutSquareConnectionsInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    email: string
+    phone?: string | null
+    name: string
+    passwordHash: string
+    emailVerifiedAt?: Date | string | null
+    lastLoginAt?: Date | string | null
+    businessMemberships?: BusinessMemberUncheckedCreateNestedManyWithoutUserInput
+    integrations?: ExternalIntegrationConnectionUncheckedCreateNestedManyWithoutUserInput
+    otpChallenges?: OwnerOtpChallengeUncheckedCreateNestedManyWithoutOwnerInput
+    pushDevices?: UserPushDeviceUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutSquareConnectionsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutSquareConnectionsInput, UserUncheckedCreateWithoutSquareConnectionsInput>
+  }
+
+  export type BusinessCreateWithoutSquareConnectionsInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    bannerPhotoUrl?: string | null
+    logoUrl?: string | null
+    brandColor?: string
+    stripeAccountId?: string | null
+    stripeDetailsSubmitted?: boolean
+    stripeChargesEnabled?: boolean
+    stripePayoutsEnabled?: boolean
+    stripeOnboardingCompletedAt?: Date | string | null
+    onboardingCompletedAt?: Date | string | null
+    branches?: BranchCreateNestedManyWithoutBusinessInput
+    members?: BusinessMemberCreateNestedManyWithoutBusinessInput
+    integrations?: ExternalIntegrationConnectionCreateNestedManyWithoutBusinessInput
+    pushDevices?: UserPushDeviceCreateNestedManyWithoutBusinessInput
+  }
+
+  export type BusinessUncheckedCreateWithoutSquareConnectionsInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    bannerPhotoUrl?: string | null
+    logoUrl?: string | null
+    brandColor?: string
+    stripeAccountId?: string | null
+    stripeDetailsSubmitted?: boolean
+    stripeChargesEnabled?: boolean
+    stripePayoutsEnabled?: boolean
+    stripeOnboardingCompletedAt?: Date | string | null
+    onboardingCompletedAt?: Date | string | null
+    branches?: BranchUncheckedCreateNestedManyWithoutBusinessInput
+    members?: BusinessMemberUncheckedCreateNestedManyWithoutBusinessInput
+    integrations?: ExternalIntegrationConnectionUncheckedCreateNestedManyWithoutBusinessInput
+    pushDevices?: UserPushDeviceUncheckedCreateNestedManyWithoutBusinessInput
+  }
+
+  export type BusinessCreateOrConnectWithoutSquareConnectionsInput = {
+    where: BusinessWhereUniqueInput
+    create: XOR<BusinessCreateWithoutSquareConnectionsInput, BusinessUncheckedCreateWithoutSquareConnectionsInput>
+  }
+
+  export type UserUpsertWithoutSquareConnectionsInput = {
+    update: XOR<UserUpdateWithoutSquareConnectionsInput, UserUncheckedUpdateWithoutSquareConnectionsInput>
+    create: XOR<UserCreateWithoutSquareConnectionsInput, UserUncheckedCreateWithoutSquareConnectionsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutSquareConnectionsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutSquareConnectionsInput, UserUncheckedUpdateWithoutSquareConnectionsInput>
+  }
+
+  export type UserUpdateWithoutSquareConnectionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    businessMemberships?: BusinessMemberUpdateManyWithoutUserNestedInput
+    integrations?: ExternalIntegrationConnectionUpdateManyWithoutUserNestedInput
+    otpChallenges?: OwnerOtpChallengeUpdateManyWithoutOwnerNestedInput
+    pushDevices?: UserPushDeviceUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutSquareConnectionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    businessMemberships?: BusinessMemberUncheckedUpdateManyWithoutUserNestedInput
+    integrations?: ExternalIntegrationConnectionUncheckedUpdateManyWithoutUserNestedInput
+    otpChallenges?: OwnerOtpChallengeUncheckedUpdateManyWithoutOwnerNestedInput
+    pushDevices?: UserPushDeviceUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type BusinessUpsertWithoutSquareConnectionsInput = {
+    update: XOR<BusinessUpdateWithoutSquareConnectionsInput, BusinessUncheckedUpdateWithoutSquareConnectionsInput>
+    create: XOR<BusinessCreateWithoutSquareConnectionsInput, BusinessUncheckedCreateWithoutSquareConnectionsInput>
+    where?: BusinessWhereInput
+  }
+
+  export type BusinessUpdateToOneWithWhereWithoutSquareConnectionsInput = {
+    where?: BusinessWhereInput
+    data: XOR<BusinessUpdateWithoutSquareConnectionsInput, BusinessUncheckedUpdateWithoutSquareConnectionsInput>
+  }
+
+  export type BusinessUpdateWithoutSquareConnectionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    bannerPhotoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    brandColor?: StringFieldUpdateOperationsInput | string
+    stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeDetailsSubmitted?: BoolFieldUpdateOperationsInput | boolean
+    stripeChargesEnabled?: BoolFieldUpdateOperationsInput | boolean
+    stripePayoutsEnabled?: BoolFieldUpdateOperationsInput | boolean
+    stripeOnboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    branches?: BranchUpdateManyWithoutBusinessNestedInput
+    members?: BusinessMemberUpdateManyWithoutBusinessNestedInput
+    integrations?: ExternalIntegrationConnectionUpdateManyWithoutBusinessNestedInput
+    pushDevices?: UserPushDeviceUpdateManyWithoutBusinessNestedInput
+  }
+
+  export type BusinessUncheckedUpdateWithoutSquareConnectionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    bannerPhotoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    brandColor?: StringFieldUpdateOperationsInput | string
+    stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeDetailsSubmitted?: BoolFieldUpdateOperationsInput | boolean
+    stripeChargesEnabled?: BoolFieldUpdateOperationsInput | boolean
+    stripePayoutsEnabled?: BoolFieldUpdateOperationsInput | boolean
+    stripeOnboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    branches?: BranchUncheckedUpdateManyWithoutBusinessNestedInput
+    members?: BusinessMemberUncheckedUpdateManyWithoutBusinessNestedInput
+    integrations?: ExternalIntegrationConnectionUncheckedUpdateManyWithoutBusinessNestedInput
+    pushDevices?: UserPushDeviceUncheckedUpdateManyWithoutBusinessNestedInput
   }
 
   export type ExternalIntegrationConnectionCreateWithoutMenuEntityMapsInput = {
@@ -116392,6 +119115,7 @@ export namespace Prisma {
     onboardingCompletedAt?: Date | string | null
     branches?: BranchCreateNestedManyWithoutBusinessInput
     integrations?: ExternalIntegrationConnectionCreateNestedManyWithoutBusinessInput
+    squareConnections?: SquareConnectionCreateNestedManyWithoutBusinessInput
     pushDevices?: UserPushDeviceCreateNestedManyWithoutBusinessInput
   }
 
@@ -116411,6 +119135,7 @@ export namespace Prisma {
     onboardingCompletedAt?: Date | string | null
     branches?: BranchUncheckedCreateNestedManyWithoutBusinessInput
     integrations?: ExternalIntegrationConnectionUncheckedCreateNestedManyWithoutBusinessInput
+    squareConnections?: SquareConnectionUncheckedCreateNestedManyWithoutBusinessInput
     pushDevices?: UserPushDeviceUncheckedCreateNestedManyWithoutBusinessInput
   }
 
@@ -116430,6 +119155,7 @@ export namespace Prisma {
     emailVerifiedAt?: Date | string | null
     lastLoginAt?: Date | string | null
     integrations?: ExternalIntegrationConnectionCreateNestedManyWithoutUserInput
+    squareConnections?: SquareConnectionCreateNestedManyWithoutUserInput
     otpChallenges?: OwnerOtpChallengeCreateNestedManyWithoutOwnerInput
     pushDevices?: UserPushDeviceCreateNestedManyWithoutUserInput
   }
@@ -116445,6 +119171,7 @@ export namespace Prisma {
     emailVerifiedAt?: Date | string | null
     lastLoginAt?: Date | string | null
     integrations?: ExternalIntegrationConnectionUncheckedCreateNestedManyWithoutUserInput
+    squareConnections?: SquareConnectionUncheckedCreateNestedManyWithoutUserInput
     otpChallenges?: OwnerOtpChallengeUncheckedCreateNestedManyWithoutOwnerInput
     pushDevices?: UserPushDeviceUncheckedCreateNestedManyWithoutUserInput
   }
@@ -116481,6 +119208,7 @@ export namespace Prisma {
     onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     branches?: BranchUpdateManyWithoutBusinessNestedInput
     integrations?: ExternalIntegrationConnectionUpdateManyWithoutBusinessNestedInput
+    squareConnections?: SquareConnectionUpdateManyWithoutBusinessNestedInput
     pushDevices?: UserPushDeviceUpdateManyWithoutBusinessNestedInput
   }
 
@@ -116500,6 +119228,7 @@ export namespace Prisma {
     onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     branches?: BranchUncheckedUpdateManyWithoutBusinessNestedInput
     integrations?: ExternalIntegrationConnectionUncheckedUpdateManyWithoutBusinessNestedInput
+    squareConnections?: SquareConnectionUncheckedUpdateManyWithoutBusinessNestedInput
     pushDevices?: UserPushDeviceUncheckedUpdateManyWithoutBusinessNestedInput
   }
 
@@ -116525,6 +119254,7 @@ export namespace Prisma {
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     integrations?: ExternalIntegrationConnectionUpdateManyWithoutUserNestedInput
+    squareConnections?: SquareConnectionUpdateManyWithoutUserNestedInput
     otpChallenges?: OwnerOtpChallengeUpdateManyWithoutOwnerNestedInput
     pushDevices?: UserPushDeviceUpdateManyWithoutUserNestedInput
   }
@@ -116540,6 +119270,7 @@ export namespace Prisma {
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     integrations?: ExternalIntegrationConnectionUncheckedUpdateManyWithoutUserNestedInput
+    squareConnections?: SquareConnectionUncheckedUpdateManyWithoutUserNestedInput
     otpChallenges?: OwnerOtpChallengeUncheckedUpdateManyWithoutOwnerNestedInput
     pushDevices?: UserPushDeviceUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -116601,6 +119332,7 @@ export namespace Prisma {
     onboardingCompletedAt?: Date | string | null
     members?: BusinessMemberCreateNestedManyWithoutBusinessInput
     integrations?: ExternalIntegrationConnectionCreateNestedManyWithoutBusinessInput
+    squareConnections?: SquareConnectionCreateNestedManyWithoutBusinessInput
     pushDevices?: UserPushDeviceCreateNestedManyWithoutBusinessInput
   }
 
@@ -116620,6 +119352,7 @@ export namespace Prisma {
     onboardingCompletedAt?: Date | string | null
     members?: BusinessMemberUncheckedCreateNestedManyWithoutBusinessInput
     integrations?: ExternalIntegrationConnectionUncheckedCreateNestedManyWithoutBusinessInput
+    squareConnections?: SquareConnectionUncheckedCreateNestedManyWithoutBusinessInput
     pushDevices?: UserPushDeviceUncheckedCreateNestedManyWithoutBusinessInput
   }
 
@@ -116648,6 +119381,8 @@ export namespace Prisma {
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     paymentProvider?: $Enums.PaymentProvider | null
+    sourcePlatform?: $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: string | null
     tipAmount?: number | null
     tags?: OrderCreatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -116685,6 +119420,8 @@ export namespace Prisma {
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     paymentProvider?: $Enums.PaymentProvider | null
+    sourcePlatform?: $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: string | null
     tipAmount?: number | null
     tags?: OrderCreatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -116786,6 +119523,7 @@ export namespace Prisma {
     onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     members?: BusinessMemberUpdateManyWithoutBusinessNestedInput
     integrations?: ExternalIntegrationConnectionUpdateManyWithoutBusinessNestedInput
+    squareConnections?: SquareConnectionUpdateManyWithoutBusinessNestedInput
     pushDevices?: UserPushDeviceUpdateManyWithoutBusinessNestedInput
   }
 
@@ -116805,6 +119543,7 @@ export namespace Prisma {
     onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     members?: BusinessMemberUncheckedUpdateManyWithoutBusinessNestedInput
     integrations?: ExternalIntegrationConnectionUncheckedUpdateManyWithoutBusinessNestedInput
+    squareConnections?: SquareConnectionUncheckedUpdateManyWithoutBusinessNestedInput
     pushDevices?: UserPushDeviceUncheckedUpdateManyWithoutBusinessNestedInput
   }
 
@@ -116847,6 +119586,8 @@ export namespace Prisma {
     type?: EnumOrderTypeFilter<"Order"> | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFilter<"Order"> | $Enums.PaymentType
     paymentProvider?: EnumPaymentProviderNullableFilter<"Order"> | $Enums.PaymentProvider | null
+    sourcePlatform?: EnumOrderSourcePlatformNullableFilter<"Order"> | $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: StringNullableFilter<"Order"> | string | null
     tipAmount?: IntNullableFilter<"Order"> | number | null
     tags?: StringNullableListFilter<"Order">
     progressiveDiscountSnapshot?: JsonNullableFilter<"Order">
@@ -117271,6 +120012,8 @@ export namespace Prisma {
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     paymentProvider?: $Enums.PaymentProvider | null
+    sourcePlatform?: $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: string | null
     tipAmount?: number | null
     tags?: OrderCreatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -117308,6 +120051,8 @@ export namespace Prisma {
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     paymentProvider?: $Enums.PaymentProvider | null
+    sourcePlatform?: $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: string | null
     tipAmount?: number | null
     tags?: OrderCreatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -118564,6 +121309,8 @@ export namespace Prisma {
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     paymentProvider?: $Enums.PaymentProvider | null
+    sourcePlatform?: $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: string | null
     tipAmount?: number | null
     tags?: OrderCreatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -118601,6 +121348,8 @@ export namespace Prisma {
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     paymentProvider?: $Enums.PaymentProvider | null
+    sourcePlatform?: $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: string | null
     tipAmount?: number | null
     tags?: OrderCreatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -118718,6 +121467,8 @@ export namespace Prisma {
     type?: $Enums.ModifierGroupType | null
     minSelection?: number | null
     maxSelection?: number | null
+    squareModifierListId?: string | null
+    squareModifierListVersion?: string | null
     items?: ModifierGroupItemCreateNestedManyWithoutModifierGroupInput
   }
 
@@ -118730,6 +121481,8 @@ export namespace Prisma {
     type?: $Enums.ModifierGroupType | null
     minSelection?: number | null
     maxSelection?: number | null
+    squareModifierListId?: string | null
+    squareModifierListVersion?: string | null
     items?: ModifierGroupItemUncheckedCreateNestedManyWithoutModifierGroupInput
   }
 
@@ -119140,6 +121893,8 @@ export namespace Prisma {
     type?: EnumModifierGroupTypeNullableFilter<"ModifierGroup"> | $Enums.ModifierGroupType | null
     minSelection?: IntNullableFilter<"ModifierGroup"> | number | null
     maxSelection?: IntNullableFilter<"ModifierGroup"> | number | null
+    squareModifierListId?: StringNullableFilter<"ModifierGroup"> | string | null
+    squareModifierListVersion?: StringNullableFilter<"ModifierGroup"> | string | null
   }
 
   export type CategoryUpsertWithoutProductsInput = {
@@ -119448,6 +122203,10 @@ export namespace Prisma {
     comparedAtPrice?: number | null
     categoryIndex?: number | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: string | null
+    squareItemVersion?: string | null
+    squareVariationId?: string | null
+    squareVariationVersion?: string | null
     photos?: FileCreateNestedManyWithoutProductInput
     modifierGroups?: ModifierGroupCreateNestedManyWithoutProductsInput
     category?: CategoryCreateNestedOneWithoutProductsInput
@@ -119476,6 +122235,10 @@ export namespace Prisma {
     categoryIndex?: number | null
     categoryId?: string | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: string | null
+    squareItemVersion?: string | null
+    squareVariationId?: string | null
+    squareVariationVersion?: string | null
     photos?: FileUncheckedCreateNestedManyWithoutProductInput
     modifierGroups?: ModifierGroupUncheckedCreateNestedManyWithoutProductsInput
     productCategories?: ProductCategoryUncheckedCreateNestedManyWithoutProductInput
@@ -119507,6 +122270,10 @@ export namespace Prisma {
     comparedAtPrice?: number | null
     categoryIndex?: number | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: string | null
+    squareItemVersion?: string | null
+    squareVariationId?: string | null
+    squareVariationVersion?: string | null
     photos?: FileCreateNestedManyWithoutProductInput
     modifierGroups?: ModifierGroupCreateNestedManyWithoutProductsInput
     category?: CategoryCreateNestedOneWithoutProductsInput
@@ -119535,6 +122302,10 @@ export namespace Prisma {
     categoryIndex?: number | null
     categoryId?: string | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: string | null
+    squareItemVersion?: string | null
+    squareVariationId?: string | null
+    squareVariationVersion?: string | null
     photos?: FileUncheckedCreateNestedManyWithoutProductInput
     modifierGroups?: ModifierGroupUncheckedCreateNestedManyWithoutProductsInput
     productCategories?: ProductCategoryUncheckedCreateNestedManyWithoutProductInput
@@ -119577,6 +122348,10 @@ export namespace Prisma {
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
     categoryIndex?: NullableIntFieldUpdateOperationsInput | number | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareItemVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationVersion?: NullableStringFieldUpdateOperationsInput | string | null
     photos?: FileUpdateManyWithoutProductNestedInput
     modifierGroups?: ModifierGroupUpdateManyWithoutProductsNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
@@ -119605,6 +122380,10 @@ export namespace Prisma {
     categoryIndex?: NullableIntFieldUpdateOperationsInput | number | null
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareItemVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationVersion?: NullableStringFieldUpdateOperationsInput | string | null
     photos?: FileUncheckedUpdateManyWithoutProductNestedInput
     modifierGroups?: ModifierGroupUncheckedUpdateManyWithoutProductsNestedInput
     productCategories?: ProductCategoryUncheckedUpdateManyWithoutProductNestedInput
@@ -119642,6 +122421,10 @@ export namespace Prisma {
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
     categoryIndex?: NullableIntFieldUpdateOperationsInput | number | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareItemVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationVersion?: NullableStringFieldUpdateOperationsInput | string | null
     photos?: FileUpdateManyWithoutProductNestedInput
     modifierGroups?: ModifierGroupUpdateManyWithoutProductsNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
@@ -119670,6 +122453,10 @@ export namespace Prisma {
     categoryIndex?: NullableIntFieldUpdateOperationsInput | number | null
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareItemVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationVersion?: NullableStringFieldUpdateOperationsInput | string | null
     photos?: FileUncheckedUpdateManyWithoutProductNestedInput
     modifierGroups?: ModifierGroupUncheckedUpdateManyWithoutProductsNestedInput
     productCategories?: ProductCategoryUncheckedUpdateManyWithoutProductNestedInput
@@ -119828,6 +122615,10 @@ export namespace Prisma {
     comparedAtPrice?: number | null
     categoryIndex?: number | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: string | null
+    squareItemVersion?: string | null
+    squareVariationId?: string | null
+    squareVariationVersion?: string | null
     photos?: FileCreateNestedManyWithoutProductInput
     modifierGroups?: ModifierGroupCreateNestedManyWithoutProductsInput
     category?: CategoryCreateNestedOneWithoutProductsInput
@@ -119856,6 +122647,10 @@ export namespace Prisma {
     categoryIndex?: number | null
     categoryId?: string | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: string | null
+    squareItemVersion?: string | null
+    squareVariationId?: string | null
+    squareVariationVersion?: string | null
     photos?: FileUncheckedCreateNestedManyWithoutProductInput
     modifierGroups?: ModifierGroupUncheckedCreateNestedManyWithoutProductsInput
     productCategories?: ProductCategoryUncheckedCreateNestedManyWithoutProductInput
@@ -119931,6 +122726,10 @@ export namespace Prisma {
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
     categoryIndex?: NullableIntFieldUpdateOperationsInput | number | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareItemVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationVersion?: NullableStringFieldUpdateOperationsInput | string | null
     photos?: FileUpdateManyWithoutProductNestedInput
     modifierGroups?: ModifierGroupUpdateManyWithoutProductsNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
@@ -119959,6 +122758,10 @@ export namespace Prisma {
     categoryIndex?: NullableIntFieldUpdateOperationsInput | number | null
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareItemVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationVersion?: NullableStringFieldUpdateOperationsInput | string | null
     photos?: FileUncheckedUpdateManyWithoutProductNestedInput
     modifierGroups?: ModifierGroupUncheckedUpdateManyWithoutProductsNestedInput
     productCategories?: ProductCategoryUncheckedUpdateManyWithoutProductNestedInput
@@ -120010,6 +122813,10 @@ export namespace Prisma {
   export type MenuCategoryCreateWithoutMenuInput = {
     menuIndex?: number | null
     createdAt?: Date | string
+    squareCategoryId?: string | null
+    squareCategoryVersion?: string | null
+    squareMenuCategoryId?: string | null
+    squareMenuCategoryVersion?: string | null
     category: CategoryCreateNestedOneWithoutMenuCategoriesInput
   }
 
@@ -120017,6 +122824,10 @@ export namespace Prisma {
     categoryId: string
     menuIndex?: number | null
     createdAt?: Date | string
+    squareCategoryId?: string | null
+    squareCategoryVersion?: string | null
+    squareMenuCategoryId?: string | null
+    squareMenuCategoryVersion?: string | null
   }
 
   export type MenuCategoryCreateOrConnectWithoutMenuInput = {
@@ -120117,6 +122928,10 @@ export namespace Prisma {
     categoryId?: StringFilter<"MenuCategory"> | string
     menuIndex?: IntNullableFilter<"MenuCategory"> | number | null
     createdAt?: DateTimeFilter<"MenuCategory"> | Date | string
+    squareCategoryId?: StringNullableFilter<"MenuCategory"> | string | null
+    squareCategoryVersion?: StringNullableFilter<"MenuCategory"> | string | null
+    squareMenuCategoryId?: StringNullableFilter<"MenuCategory"> | string | null
+    squareMenuCategoryVersion?: StringNullableFilter<"MenuCategory"> | string | null
   }
 
   export type MenuVisitUpsertWithWhereUniqueWithoutMenuInput = {
@@ -120142,6 +122957,8 @@ export namespace Prisma {
     name: string
     active?: boolean
     isDefault?: boolean
+    squareMenuId?: string | null
+    squareMenuVersion?: string | null
     categories?: CategoryCreateNestedManyWithoutMenuInput
     menuCategories?: MenuCategoryCreateNestedManyWithoutMenuInput
   }
@@ -120153,6 +122970,8 @@ export namespace Prisma {
     name: string
     active?: boolean
     isDefault?: boolean
+    squareMenuId?: string | null
+    squareMenuVersion?: string | null
     categories?: CategoryUncheckedCreateNestedManyWithoutMenuInput
     menuCategories?: MenuCategoryUncheckedCreateNestedManyWithoutMenuInput
   }
@@ -120207,6 +123026,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     active?: BoolFieldUpdateOperationsInput | boolean
     isDefault?: BoolFieldUpdateOperationsInput | boolean
+    squareMenuId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareMenuVersion?: NullableStringFieldUpdateOperationsInput | string | null
     categories?: CategoryUpdateManyWithoutMenuNestedInput
     menuCategories?: MenuCategoryUpdateManyWithoutMenuNestedInput
   }
@@ -120218,6 +123039,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     active?: BoolFieldUpdateOperationsInput | boolean
     isDefault?: BoolFieldUpdateOperationsInput | boolean
+    squareMenuId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareMenuVersion?: NullableStringFieldUpdateOperationsInput | string | null
     categories?: CategoryUncheckedUpdateManyWithoutMenuNestedInput
     menuCategories?: MenuCategoryUncheckedUpdateManyWithoutMenuNestedInput
   }
@@ -120262,6 +123085,8 @@ export namespace Prisma {
     name: string
     active?: boolean
     isDefault?: boolean
+    squareMenuId?: string | null
+    squareMenuVersion?: string | null
     menuCategories?: MenuCategoryCreateNestedManyWithoutMenuInput
     menuVisits?: MenuVisitCreateNestedManyWithoutMenuInput
   }
@@ -120273,6 +123098,8 @@ export namespace Prisma {
     name: string
     active?: boolean
     isDefault?: boolean
+    squareMenuId?: string | null
+    squareMenuVersion?: string | null
     menuCategories?: MenuCategoryUncheckedCreateNestedManyWithoutMenuInput
     menuVisits?: MenuVisitUncheckedCreateNestedManyWithoutMenuInput
   }
@@ -120294,6 +123121,10 @@ export namespace Prisma {
     comparedAtPrice?: number | null
     categoryIndex?: number | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: string | null
+    squareItemVersion?: string | null
+    squareVariationId?: string | null
+    squareVariationVersion?: string | null
     photos?: FileCreateNestedManyWithoutProductInput
     modifierGroups?: ModifierGroupCreateNestedManyWithoutProductsInput
     productCategories?: ProductCategoryCreateNestedManyWithoutProductInput
@@ -120321,6 +123152,10 @@ export namespace Prisma {
     comparedAtPrice?: number | null
     categoryIndex?: number | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: string | null
+    squareItemVersion?: string | null
+    squareVariationId?: string | null
+    squareVariationVersion?: string | null
     photos?: FileUncheckedCreateNestedManyWithoutProductInput
     modifierGroups?: ModifierGroupUncheckedCreateNestedManyWithoutProductsInput
     productCategories?: ProductCategoryUncheckedCreateNestedManyWithoutProductInput
@@ -120371,6 +123206,10 @@ export namespace Prisma {
   export type MenuCategoryCreateWithoutCategoryInput = {
     menuIndex?: number | null
     createdAt?: Date | string
+    squareCategoryId?: string | null
+    squareCategoryVersion?: string | null
+    squareMenuCategoryId?: string | null
+    squareMenuCategoryVersion?: string | null
     menu: MenuCreateNestedOneWithoutMenuCategoriesInput
   }
 
@@ -120378,6 +123217,10 @@ export namespace Prisma {
     menuId: string
     menuIndex?: number | null
     createdAt?: Date | string
+    squareCategoryId?: string | null
+    squareCategoryVersion?: string | null
+    squareMenuCategoryId?: string | null
+    squareMenuCategoryVersion?: string | null
   }
 
   export type MenuCategoryCreateOrConnectWithoutCategoryInput = {
@@ -120436,6 +123279,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     active?: BoolFieldUpdateOperationsInput | boolean
     isDefault?: BoolFieldUpdateOperationsInput | boolean
+    squareMenuId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareMenuVersion?: NullableStringFieldUpdateOperationsInput | string | null
     menuCategories?: MenuCategoryUpdateManyWithoutMenuNestedInput
     menuVisits?: MenuVisitUpdateManyWithoutMenuNestedInput
   }
@@ -120447,6 +123292,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     active?: BoolFieldUpdateOperationsInput | boolean
     isDefault?: BoolFieldUpdateOperationsInput | boolean
+    squareMenuId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareMenuVersion?: NullableStringFieldUpdateOperationsInput | string | null
     menuCategories?: MenuCategoryUncheckedUpdateManyWithoutMenuNestedInput
     menuVisits?: MenuVisitUncheckedUpdateManyWithoutMenuNestedInput
   }
@@ -120522,6 +123369,8 @@ export namespace Prisma {
     name: string
     active?: boolean
     isDefault?: boolean
+    squareMenuId?: string | null
+    squareMenuVersion?: string | null
     categories?: CategoryCreateNestedManyWithoutMenuInput
     menuVisits?: MenuVisitCreateNestedManyWithoutMenuInput
   }
@@ -120533,6 +123382,8 @@ export namespace Prisma {
     name: string
     active?: boolean
     isDefault?: boolean
+    squareMenuId?: string | null
+    squareMenuVersion?: string | null
     categories?: CategoryUncheckedCreateNestedManyWithoutMenuInput
     menuVisits?: MenuVisitUncheckedCreateNestedManyWithoutMenuInput
   }
@@ -120589,6 +123440,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     active?: BoolFieldUpdateOperationsInput | boolean
     isDefault?: BoolFieldUpdateOperationsInput | boolean
+    squareMenuId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareMenuVersion?: NullableStringFieldUpdateOperationsInput | string | null
     categories?: CategoryUpdateManyWithoutMenuNestedInput
     menuVisits?: MenuVisitUpdateManyWithoutMenuNestedInput
   }
@@ -120600,6 +123453,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     active?: BoolFieldUpdateOperationsInput | boolean
     isDefault?: BoolFieldUpdateOperationsInput | boolean
+    squareMenuId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareMenuVersion?: NullableStringFieldUpdateOperationsInput | string | null
     categories?: CategoryUncheckedUpdateManyWithoutMenuNestedInput
     menuVisits?: MenuVisitUncheckedUpdateManyWithoutMenuNestedInput
   }
@@ -120651,6 +123506,10 @@ export namespace Prisma {
     comparedAtPrice?: number | null
     categoryIndex?: number | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: string | null
+    squareItemVersion?: string | null
+    squareVariationId?: string | null
+    squareVariationVersion?: string | null
     photos?: FileCreateNestedManyWithoutProductInput
     modifierGroups?: ModifierGroupCreateNestedManyWithoutProductsInput
     category?: CategoryCreateNestedOneWithoutProductsInput
@@ -120679,6 +123538,10 @@ export namespace Prisma {
     categoryIndex?: number | null
     categoryId?: string | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: string | null
+    squareItemVersion?: string | null
+    squareVariationId?: string | null
+    squareVariationVersion?: string | null
     photos?: FileUncheckedCreateNestedManyWithoutProductInput
     modifierGroups?: ModifierGroupUncheckedCreateNestedManyWithoutProductsInput
     comboSlots?: ComboSlotUncheckedCreateNestedManyWithoutComboInput
@@ -120750,6 +123613,10 @@ export namespace Prisma {
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
     categoryIndex?: NullableIntFieldUpdateOperationsInput | number | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareItemVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationVersion?: NullableStringFieldUpdateOperationsInput | string | null
     photos?: FileUpdateManyWithoutProductNestedInput
     modifierGroups?: ModifierGroupUpdateManyWithoutProductsNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
@@ -120778,6 +123645,10 @@ export namespace Prisma {
     categoryIndex?: NullableIntFieldUpdateOperationsInput | number | null
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareItemVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationVersion?: NullableStringFieldUpdateOperationsInput | string | null
     photos?: FileUncheckedUpdateManyWithoutProductNestedInput
     modifierGroups?: ModifierGroupUncheckedUpdateManyWithoutProductsNestedInput
     comboSlots?: ComboSlotUncheckedUpdateManyWithoutComboNestedInput
@@ -120839,6 +123710,10 @@ export namespace Prisma {
     comparedAtPrice?: number | null
     categoryIndex?: number | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: string | null
+    squareItemVersion?: string | null
+    squareVariationId?: string | null
+    squareVariationVersion?: string | null
     photos?: FileCreateNestedManyWithoutProductInput
     modifierGroups?: ModifierGroupCreateNestedManyWithoutProductsInput
     category?: CategoryCreateNestedOneWithoutProductsInput
@@ -120867,6 +123742,10 @@ export namespace Prisma {
     categoryIndex?: number | null
     categoryId?: string | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: string | null
+    squareItemVersion?: string | null
+    squareVariationId?: string | null
+    squareVariationVersion?: string | null
     photos?: FileUncheckedCreateNestedManyWithoutProductInput
     modifierGroups?: ModifierGroupUncheckedCreateNestedManyWithoutProductsInput
     productCategories?: ProductCategoryUncheckedCreateNestedManyWithoutProductInput
@@ -120935,6 +123814,10 @@ export namespace Prisma {
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
     categoryIndex?: NullableIntFieldUpdateOperationsInput | number | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareItemVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationVersion?: NullableStringFieldUpdateOperationsInput | string | null
     photos?: FileUpdateManyWithoutProductNestedInput
     modifierGroups?: ModifierGroupUpdateManyWithoutProductsNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
@@ -120963,6 +123846,10 @@ export namespace Prisma {
     categoryIndex?: NullableIntFieldUpdateOperationsInput | number | null
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareItemVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationVersion?: NullableStringFieldUpdateOperationsInput | string | null
     photos?: FileUncheckedUpdateManyWithoutProductNestedInput
     modifierGroups?: ModifierGroupUncheckedUpdateManyWithoutProductsNestedInput
     productCategories?: ProductCategoryUncheckedUpdateManyWithoutProductNestedInput
@@ -121036,6 +123923,10 @@ export namespace Prisma {
     comparedAtPrice?: number | null
     categoryIndex?: number | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: string | null
+    squareItemVersion?: string | null
+    squareVariationId?: string | null
+    squareVariationVersion?: string | null
     photos?: FileCreateNestedManyWithoutProductInput
     modifierGroups?: ModifierGroupCreateNestedManyWithoutProductsInput
     category?: CategoryCreateNestedOneWithoutProductsInput
@@ -121064,6 +123955,10 @@ export namespace Prisma {
     categoryIndex?: number | null
     categoryId?: string | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: string | null
+    squareItemVersion?: string | null
+    squareVariationId?: string | null
+    squareVariationVersion?: string | null
     photos?: FileUncheckedCreateNestedManyWithoutProductInput
     modifierGroups?: ModifierGroupUncheckedCreateNestedManyWithoutProductsInput
     productCategories?: ProductCategoryUncheckedCreateNestedManyWithoutProductInput
@@ -121143,6 +124038,10 @@ export namespace Prisma {
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
     categoryIndex?: NullableIntFieldUpdateOperationsInput | number | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareItemVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationVersion?: NullableStringFieldUpdateOperationsInput | string | null
     photos?: FileUpdateManyWithoutProductNestedInput
     modifierGroups?: ModifierGroupUpdateManyWithoutProductsNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
@@ -121171,6 +124070,10 @@ export namespace Prisma {
     categoryIndex?: NullableIntFieldUpdateOperationsInput | number | null
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareItemVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationVersion?: NullableStringFieldUpdateOperationsInput | string | null
     photos?: FileUncheckedUpdateManyWithoutProductNestedInput
     modifierGroups?: ModifierGroupUncheckedUpdateManyWithoutProductsNestedInput
     productCategories?: ProductCategoryUncheckedUpdateManyWithoutProductNestedInput
@@ -121256,6 +124159,8 @@ export namespace Prisma {
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     paymentProvider?: $Enums.PaymentProvider | null
+    sourcePlatform?: $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: string | null
     tipAmount?: number | null
     tags?: OrderCreatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -121293,6 +124198,8 @@ export namespace Prisma {
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     paymentProvider?: $Enums.PaymentProvider | null
+    sourcePlatform?: $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: string | null
     tipAmount?: number | null
     tags?: OrderCreatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -122317,6 +125224,8 @@ export namespace Prisma {
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     paymentProvider?: $Enums.PaymentProvider | null
+    sourcePlatform?: $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: string | null
     tipAmount?: number | null
     tags?: OrderCreatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -122354,6 +125263,8 @@ export namespace Prisma {
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     paymentProvider?: $Enums.PaymentProvider | null
+    sourcePlatform?: $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: string | null
     tipAmount?: number | null
     tags?: OrderCreatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -122575,6 +125486,8 @@ export namespace Prisma {
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     paymentProvider?: $Enums.PaymentProvider | null
+    sourcePlatform?: $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: string | null
     tipAmount?: number | null
     tags?: OrderCreatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -122612,6 +125525,8 @@ export namespace Prisma {
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     paymentProvider?: $Enums.PaymentProvider | null
+    sourcePlatform?: $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: string | null
     tipAmount?: number | null
     tags?: OrderCreatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -123834,6 +126749,8 @@ export namespace Prisma {
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     paymentProvider?: $Enums.PaymentProvider | null
+    sourcePlatform?: $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: string | null
     tipAmount?: number | null
     tags?: OrderCreatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -123871,6 +126788,8 @@ export namespace Prisma {
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     paymentProvider?: $Enums.PaymentProvider | null
+    sourcePlatform?: $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: string | null
     tipAmount?: number | null
     tags?: OrderCreatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -123924,6 +126843,8 @@ export namespace Prisma {
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     paymentProvider?: NullableEnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider | null
+    sourcePlatform?: NullableEnumOrderSourcePlatformFieldUpdateOperationsInput | $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     tags?: OrderUpdatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -123961,6 +126882,8 @@ export namespace Prisma {
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     paymentProvider?: NullableEnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider | null
+    sourcePlatform?: NullableEnumOrderSourcePlatformFieldUpdateOperationsInput | $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     tags?: OrderUpdatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -124279,6 +127202,8 @@ export namespace Prisma {
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     paymentProvider?: $Enums.PaymentProvider | null
+    sourcePlatform?: $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: string | null
     tipAmount?: number | null
     tags?: OrderCreatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -124316,6 +127241,8 @@ export namespace Prisma {
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     paymentProvider?: $Enums.PaymentProvider | null
+    sourcePlatform?: $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: string | null
     tipAmount?: number | null
     tags?: OrderCreatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -124467,6 +127394,8 @@ export namespace Prisma {
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     paymentProvider?: NullableEnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider | null
+    sourcePlatform?: NullableEnumOrderSourcePlatformFieldUpdateOperationsInput | $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     tags?: OrderUpdatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -124504,6 +127433,8 @@ export namespace Prisma {
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     paymentProvider?: NullableEnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider | null
+    sourcePlatform?: NullableEnumOrderSourcePlatformFieldUpdateOperationsInput | $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     tags?: OrderUpdatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -124631,6 +127562,10 @@ export namespace Prisma {
     comparedAtPrice?: number | null
     categoryIndex?: number | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: string | null
+    squareItemVersion?: string | null
+    squareVariationId?: string | null
+    squareVariationVersion?: string | null
     photos?: FileCreateNestedManyWithoutProductInput
     modifierGroups?: ModifierGroupCreateNestedManyWithoutProductsInput
     category?: CategoryCreateNestedOneWithoutProductsInput
@@ -124659,6 +127594,10 @@ export namespace Prisma {
     categoryIndex?: number | null
     categoryId?: string | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: string | null
+    squareItemVersion?: string | null
+    squareVariationId?: string | null
+    squareVariationVersion?: string | null
     photos?: FileUncheckedCreateNestedManyWithoutProductInput
     modifierGroups?: ModifierGroupUncheckedCreateNestedManyWithoutProductsInput
     productCategories?: ProductCategoryUncheckedCreateNestedManyWithoutProductInput
@@ -124737,6 +127676,8 @@ export namespace Prisma {
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     paymentProvider?: $Enums.PaymentProvider | null
+    sourcePlatform?: $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: string | null
     tipAmount?: number | null
     tags?: OrderCreatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -124774,6 +127715,8 @@ export namespace Prisma {
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     paymentProvider?: $Enums.PaymentProvider | null
+    sourcePlatform?: $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: string | null
     tipAmount?: number | null
     tags?: OrderCreatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -124816,6 +127759,8 @@ export namespace Prisma {
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     paymentProvider?: $Enums.PaymentProvider | null
+    sourcePlatform?: $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: string | null
     tipAmount?: number | null
     tags?: OrderCreatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -124853,6 +127798,8 @@ export namespace Prisma {
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     paymentProvider?: $Enums.PaymentProvider | null
+    sourcePlatform?: $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: string | null
     tipAmount?: number | null
     tags?: OrderCreatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -124949,6 +127896,10 @@ export namespace Prisma {
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
     categoryIndex?: NullableIntFieldUpdateOperationsInput | number | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareItemVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationVersion?: NullableStringFieldUpdateOperationsInput | string | null
     photos?: FileUpdateManyWithoutProductNestedInput
     modifierGroups?: ModifierGroupUpdateManyWithoutProductsNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
@@ -124977,6 +127928,10 @@ export namespace Prisma {
     categoryIndex?: NullableIntFieldUpdateOperationsInput | number | null
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareItemVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationVersion?: NullableStringFieldUpdateOperationsInput | string | null
     photos?: FileUncheckedUpdateManyWithoutProductNestedInput
     modifierGroups?: ModifierGroupUncheckedUpdateManyWithoutProductsNestedInput
     productCategories?: ProductCategoryUncheckedUpdateManyWithoutProductNestedInput
@@ -125067,6 +128022,8 @@ export namespace Prisma {
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     paymentProvider?: NullableEnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider | null
+    sourcePlatform?: NullableEnumOrderSourcePlatformFieldUpdateOperationsInput | $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     tags?: OrderUpdatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -125104,6 +128061,8 @@ export namespace Prisma {
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     paymentProvider?: NullableEnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider | null
+    sourcePlatform?: NullableEnumOrderSourcePlatformFieldUpdateOperationsInput | $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     tags?: OrderUpdatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -125152,6 +128111,8 @@ export namespace Prisma {
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     paymentProvider?: NullableEnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider | null
+    sourcePlatform?: NullableEnumOrderSourcePlatformFieldUpdateOperationsInput | $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     tags?: OrderUpdatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -125189,6 +128150,8 @@ export namespace Prisma {
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     paymentProvider?: NullableEnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider | null
+    sourcePlatform?: NullableEnumOrderSourcePlatformFieldUpdateOperationsInput | $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     tags?: OrderUpdatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -125218,6 +128181,10 @@ export namespace Prisma {
     comparedAtPrice?: number | null
     categoryIndex?: number | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: string | null
+    squareItemVersion?: string | null
+    squareVariationId?: string | null
+    squareVariationVersion?: string | null
     photos?: FileCreateNestedManyWithoutProductInput
     modifierGroups?: ModifierGroupCreateNestedManyWithoutProductsInput
     category?: CategoryCreateNestedOneWithoutProductsInput
@@ -125246,6 +128213,10 @@ export namespace Prisma {
     categoryIndex?: number | null
     categoryId?: string | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: string | null
+    squareItemVersion?: string | null
+    squareVariationId?: string | null
+    squareVariationVersion?: string | null
     photos?: FileUncheckedCreateNestedManyWithoutProductInput
     modifierGroups?: ModifierGroupUncheckedCreateNestedManyWithoutProductsInput
     productCategories?: ProductCategoryUncheckedCreateNestedManyWithoutProductInput
@@ -125272,6 +128243,8 @@ export namespace Prisma {
     price: number
     description?: string | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareModifierId?: string | null
+    squareModifierVersion?: string | null
     photo?: FileCreateNestedOneWithoutModifierGroupItemsInput
     modifierGroup?: ModifierGroupCreateNestedOneWithoutItemsInput
     preparationStepModifierTracks?: PreparationStepModifierTrackCreateNestedManyWithoutModifierGroupItemInput
@@ -125287,6 +128260,8 @@ export namespace Prisma {
     translations?: NullableJsonNullValueInput | InputJsonValue
     modifierGroupId?: string | null
     fileId?: string | null
+    squareModifierId?: string | null
+    squareModifierVersion?: string | null
     preparationStepModifierTracks?: PreparationStepModifierTrackUncheckedCreateNestedManyWithoutModifierGroupItemInput
     orderIntentProducts?: OrderIntentProductUncheckedCreateNestedManyWithoutModifierGroupItemsInput
   }
@@ -125316,6 +128291,8 @@ export namespace Prisma {
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     paymentProvider?: $Enums.PaymentProvider | null
+    sourcePlatform?: $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: string | null
     tipAmount?: number | null
     tags?: OrderCreatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -125353,6 +128330,8 @@ export namespace Prisma {
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     paymentProvider?: $Enums.PaymentProvider | null
+    sourcePlatform?: $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: string | null
     tipAmount?: number | null
     tags?: OrderCreatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -125398,6 +128377,10 @@ export namespace Prisma {
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
     categoryIndex?: NullableIntFieldUpdateOperationsInput | number | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareItemVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationVersion?: NullableStringFieldUpdateOperationsInput | string | null
     photos?: FileUpdateManyWithoutProductNestedInput
     modifierGroups?: ModifierGroupUpdateManyWithoutProductsNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
@@ -125426,6 +128409,10 @@ export namespace Prisma {
     categoryIndex?: NullableIntFieldUpdateOperationsInput | number | null
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareItemVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationVersion?: NullableStringFieldUpdateOperationsInput | string | null
     photos?: FileUncheckedUpdateManyWithoutProductNestedInput
     modifierGroups?: ModifierGroupUncheckedUpdateManyWithoutProductsNestedInput
     productCategories?: ProductCategoryUncheckedUpdateManyWithoutProductNestedInput
@@ -125487,6 +128474,8 @@ export namespace Prisma {
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     paymentProvider?: NullableEnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider | null
+    sourcePlatform?: NullableEnumOrderSourcePlatformFieldUpdateOperationsInput | $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     tags?: OrderUpdatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -125524,6 +128513,8 @@ export namespace Prisma {
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     paymentProvider?: NullableEnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider | null
+    sourcePlatform?: NullableEnumOrderSourcePlatformFieldUpdateOperationsInput | $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     tags?: OrderUpdatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -125594,6 +128585,10 @@ export namespace Prisma {
     comparedAtPrice?: number | null
     categoryIndex?: number | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: string | null
+    squareItemVersion?: string | null
+    squareVariationId?: string | null
+    squareVariationVersion?: string | null
     photos?: FileCreateNestedManyWithoutProductInput
     modifierGroups?: ModifierGroupCreateNestedManyWithoutProductsInput
     category?: CategoryCreateNestedOneWithoutProductsInput
@@ -125622,6 +128617,10 @@ export namespace Prisma {
     categoryIndex?: number | null
     categoryId?: string | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: string | null
+    squareItemVersion?: string | null
+    squareVariationId?: string | null
+    squareVariationVersion?: string | null
     photos?: FileUncheckedCreateNestedManyWithoutProductInput
     modifierGroups?: ModifierGroupUncheckedCreateNestedManyWithoutProductsInput
     productCategories?: ProductCategoryUncheckedCreateNestedManyWithoutProductInput
@@ -125648,6 +128647,8 @@ export namespace Prisma {
     price: number
     description?: string | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareModifierId?: string | null
+    squareModifierVersion?: string | null
     photo?: FileCreateNestedOneWithoutModifierGroupItemsInput
     modifierGroup?: ModifierGroupCreateNestedOneWithoutItemsInput
     preparationStepModifierTracks?: PreparationStepModifierTrackCreateNestedManyWithoutModifierGroupItemInput
@@ -125663,6 +128664,8 @@ export namespace Prisma {
     translations?: NullableJsonNullValueInput | InputJsonValue
     modifierGroupId?: string | null
     fileId?: string | null
+    squareModifierId?: string | null
+    squareModifierVersion?: string | null
     preparationStepModifierTracks?: PreparationStepModifierTrackUncheckedCreateNestedManyWithoutModifierGroupItemInput
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutModifierGroupItemsInput
   }
@@ -125742,6 +128745,10 @@ export namespace Prisma {
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
     categoryIndex?: NullableIntFieldUpdateOperationsInput | number | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareItemVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationVersion?: NullableStringFieldUpdateOperationsInput | string | null
     photos?: FileUpdateManyWithoutProductNestedInput
     modifierGroups?: ModifierGroupUpdateManyWithoutProductsNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
@@ -125770,6 +128777,10 @@ export namespace Prisma {
     categoryIndex?: NullableIntFieldUpdateOperationsInput | number | null
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareItemVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationVersion?: NullableStringFieldUpdateOperationsInput | string | null
     photos?: FileUncheckedUpdateManyWithoutProductNestedInput
     modifierGroups?: ModifierGroupUncheckedUpdateManyWithoutProductsNestedInput
     productCategories?: ProductCategoryUncheckedUpdateManyWithoutProductNestedInput
@@ -127415,6 +130426,10 @@ export namespace Prisma {
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
     categoryIndex?: NullableIntFieldUpdateOperationsInput | number | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareItemVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationVersion?: NullableStringFieldUpdateOperationsInput | string | null
     photos?: FileUpdateManyWithoutProductNestedInput
     modifierGroups?: ModifierGroupUpdateManyWithoutProductsNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
@@ -127443,6 +130458,10 @@ export namespace Prisma {
     categoryIndex?: NullableIntFieldUpdateOperationsInput | number | null
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareItemVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationVersion?: NullableStringFieldUpdateOperationsInput | string | null
     photos?: FileUncheckedUpdateManyWithoutProductNestedInput
     modifierGroups?: ModifierGroupUncheckedUpdateManyWithoutProductsNestedInput
     productCategories?: ProductCategoryUncheckedUpdateManyWithoutProductNestedInput
@@ -127470,6 +130489,10 @@ export namespace Prisma {
     categoryIndex?: NullableIntFieldUpdateOperationsInput | number | null
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareItemVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationVersion?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type PreparationStepTrackUpdateWithoutPreparationStepInput = {
@@ -127699,6 +130722,8 @@ export namespace Prisma {
     description?: string | null
     translations?: NullableJsonNullValueInput | InputJsonValue
     modifierGroupId?: string | null
+    squareModifierId?: string | null
+    squareModifierVersion?: string | null
   }
 
   export type ModifierGroupItemUpdateWithoutPhotoInput = {
@@ -127708,6 +130733,8 @@ export namespace Prisma {
     price?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareModifierId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareModifierVersion?: NullableStringFieldUpdateOperationsInput | string | null
     modifierGroup?: ModifierGroupUpdateOneWithoutItemsNestedInput
     preparationStepModifierTracks?: PreparationStepModifierTrackUpdateManyWithoutModifierGroupItemNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutModifierGroupItemsNestedInput
@@ -127722,6 +130749,8 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     translations?: NullableJsonNullValueInput | InputJsonValue
     modifierGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareModifierId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareModifierVersion?: NullableStringFieldUpdateOperationsInput | string | null
     preparationStepModifierTracks?: PreparationStepModifierTrackUncheckedUpdateManyWithoutModifierGroupItemNestedInput
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutModifierGroupItemsNestedInput
     orderIntentProducts?: OrderIntentProductUncheckedUpdateManyWithoutModifierGroupItemsNestedInput
@@ -127735,6 +130764,8 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     translations?: NullableJsonNullValueInput | InputJsonValue
     modifierGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareModifierId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareModifierVersion?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ModifierGroupItemCreateManyModifierGroupInput = {
@@ -127745,6 +130776,8 @@ export namespace Prisma {
     description?: string | null
     translations?: NullableJsonNullValueInput | InputJsonValue
     fileId?: string | null
+    squareModifierId?: string | null
+    squareModifierVersion?: string | null
   }
 
   export type ProductUpdateWithoutModifierGroupsInput = {
@@ -127759,6 +130792,10 @@ export namespace Prisma {
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
     categoryIndex?: NullableIntFieldUpdateOperationsInput | number | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareItemVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationVersion?: NullableStringFieldUpdateOperationsInput | string | null
     photos?: FileUpdateManyWithoutProductNestedInput
     category?: CategoryUpdateOneWithoutProductsNestedInput
     productCategories?: ProductCategoryUpdateManyWithoutProductNestedInput
@@ -127787,6 +130824,10 @@ export namespace Prisma {
     categoryIndex?: NullableIntFieldUpdateOperationsInput | number | null
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareItemVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationVersion?: NullableStringFieldUpdateOperationsInput | string | null
     photos?: FileUncheckedUpdateManyWithoutProductNestedInput
     productCategories?: ProductCategoryUncheckedUpdateManyWithoutProductNestedInput
     comboSlots?: ComboSlotUncheckedUpdateManyWithoutComboNestedInput
@@ -127814,6 +130855,10 @@ export namespace Prisma {
     categoryIndex?: NullableIntFieldUpdateOperationsInput | number | null
     categoryId?: NullableStringFieldUpdateOperationsInput | string | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareItemVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationVersion?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ModifierGroupItemUpdateWithoutModifierGroupInput = {
@@ -127823,6 +130868,8 @@ export namespace Prisma {
     price?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareModifierId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareModifierVersion?: NullableStringFieldUpdateOperationsInput | string | null
     photo?: FileUpdateOneWithoutModifierGroupItemsNestedInput
     preparationStepModifierTracks?: PreparationStepModifierTrackUpdateManyWithoutModifierGroupItemNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutModifierGroupItemsNestedInput
@@ -127837,6 +130884,8 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     translations?: NullableJsonNullValueInput | InputJsonValue
     fileId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareModifierId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareModifierVersion?: NullableStringFieldUpdateOperationsInput | string | null
     preparationStepModifierTracks?: PreparationStepModifierTrackUncheckedUpdateManyWithoutModifierGroupItemNestedInput
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutModifierGroupItemsNestedInput
     orderIntentProducts?: OrderIntentProductUncheckedUpdateManyWithoutModifierGroupItemsNestedInput
@@ -127850,6 +130899,8 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     translations?: NullableJsonNullValueInput | InputJsonValue
     fileId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareModifierId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareModifierVersion?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type PreparationStepModifierTrackCreateManyModifierGroupItemInput = {
@@ -127974,6 +131025,22 @@ export namespace Prisma {
     provider: $Enums.ExternalIntegrationProvider
     environment?: $Enums.ExternalIntegrationEnvironment
     userId: string
+    accessToken: string
+    refreshToken?: string | null
+    scope?: string | null
+    tokenType?: string | null
+    expiresAt?: Date | string | null
+    connectedAt?: Date | string
+    rawPayload?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SquareConnectionCreateManyBusinessInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    environment?: $Enums.ExternalIntegrationEnvironment
+    userId: string
+    merchantId?: string | null
     accessToken: string
     refreshToken?: string | null
     scope?: string | null
@@ -128113,6 +131180,54 @@ export namespace Prisma {
     rawPayload?: NullableJsonNullValueInput | InputJsonValue
   }
 
+  export type SquareConnectionUpdateWithoutBusinessInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    environment?: EnumExternalIntegrationEnvironmentFieldUpdateOperationsInput | $Enums.ExternalIntegrationEnvironment
+    merchantId?: NullableStringFieldUpdateOperationsInput | string | null
+    accessToken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    scope?: NullableStringFieldUpdateOperationsInput | string | null
+    tokenType?: NullableStringFieldUpdateOperationsInput | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    connectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    rawPayload?: NullableJsonNullValueInput | InputJsonValue
+    user?: UserUpdateOneRequiredWithoutSquareConnectionsNestedInput
+  }
+
+  export type SquareConnectionUncheckedUpdateWithoutBusinessInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    environment?: EnumExternalIntegrationEnvironmentFieldUpdateOperationsInput | $Enums.ExternalIntegrationEnvironment
+    userId?: StringFieldUpdateOperationsInput | string
+    merchantId?: NullableStringFieldUpdateOperationsInput | string | null
+    accessToken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    scope?: NullableStringFieldUpdateOperationsInput | string | null
+    tokenType?: NullableStringFieldUpdateOperationsInput | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    connectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    rawPayload?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SquareConnectionUncheckedUpdateManyWithoutBusinessInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    environment?: EnumExternalIntegrationEnvironmentFieldUpdateOperationsInput | $Enums.ExternalIntegrationEnvironment
+    userId?: StringFieldUpdateOperationsInput | string
+    merchantId?: NullableStringFieldUpdateOperationsInput | string | null
+    accessToken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    scope?: NullableStringFieldUpdateOperationsInput | string | null
+    tokenType?: NullableStringFieldUpdateOperationsInput | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    connectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    rawPayload?: NullableJsonNullValueInput | InputJsonValue
+  }
+
   export type UserPushDeviceUpdateWithoutBusinessInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -128168,6 +131283,22 @@ export namespace Prisma {
     provider: $Enums.ExternalIntegrationProvider
     environment?: $Enums.ExternalIntegrationEnvironment
     businessId?: string | null
+    accessToken: string
+    refreshToken?: string | null
+    scope?: string | null
+    tokenType?: string | null
+    expiresAt?: Date | string | null
+    connectedAt?: Date | string
+    rawPayload?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SquareConnectionCreateManyUserInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    environment?: $Enums.ExternalIntegrationEnvironment
+    businessId: string
+    merchantId?: string | null
     accessToken: string
     refreshToken?: string | null
     scope?: string | null
@@ -128273,6 +131404,54 @@ export namespace Prisma {
     provider?: EnumExternalIntegrationProviderFieldUpdateOperationsInput | $Enums.ExternalIntegrationProvider
     environment?: EnumExternalIntegrationEnvironmentFieldUpdateOperationsInput | $Enums.ExternalIntegrationEnvironment
     businessId?: NullableStringFieldUpdateOperationsInput | string | null
+    accessToken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    scope?: NullableStringFieldUpdateOperationsInput | string | null
+    tokenType?: NullableStringFieldUpdateOperationsInput | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    connectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    rawPayload?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SquareConnectionUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    environment?: EnumExternalIntegrationEnvironmentFieldUpdateOperationsInput | $Enums.ExternalIntegrationEnvironment
+    merchantId?: NullableStringFieldUpdateOperationsInput | string | null
+    accessToken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    scope?: NullableStringFieldUpdateOperationsInput | string | null
+    tokenType?: NullableStringFieldUpdateOperationsInput | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    connectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    rawPayload?: NullableJsonNullValueInput | InputJsonValue
+    business?: BusinessUpdateOneRequiredWithoutSquareConnectionsNestedInput
+  }
+
+  export type SquareConnectionUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    environment?: EnumExternalIntegrationEnvironmentFieldUpdateOperationsInput | $Enums.ExternalIntegrationEnvironment
+    businessId?: StringFieldUpdateOperationsInput | string
+    merchantId?: NullableStringFieldUpdateOperationsInput | string | null
+    accessToken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    scope?: NullableStringFieldUpdateOperationsInput | string | null
+    tokenType?: NullableStringFieldUpdateOperationsInput | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    connectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    rawPayload?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SquareConnectionUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    environment?: EnumExternalIntegrationEnvironmentFieldUpdateOperationsInput | $Enums.ExternalIntegrationEnvironment
+    businessId?: StringFieldUpdateOperationsInput | string
+    merchantId?: NullableStringFieldUpdateOperationsInput | string | null
     accessToken?: StringFieldUpdateOperationsInput | string
     refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
     scope?: NullableStringFieldUpdateOperationsInput | string | null
@@ -128532,6 +131711,8 @@ export namespace Prisma {
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     paymentProvider?: $Enums.PaymentProvider | null
+    sourcePlatform?: $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: string | null
     tipAmount?: number | null
     tags?: OrderCreatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -128563,6 +131744,8 @@ export namespace Prisma {
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     paymentProvider?: NullableEnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider | null
+    sourcePlatform?: NullableEnumOrderSourcePlatformFieldUpdateOperationsInput | $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     tags?: OrderUpdatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -128600,6 +131783,8 @@ export namespace Prisma {
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     paymentProvider?: NullableEnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider | null
+    sourcePlatform?: NullableEnumOrderSourcePlatformFieldUpdateOperationsInput | $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     tags?: OrderUpdatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -128637,6 +131822,8 @@ export namespace Prisma {
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     paymentProvider?: NullableEnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider | null
+    sourcePlatform?: NullableEnumOrderSourcePlatformFieldUpdateOperationsInput | $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     tags?: OrderUpdatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -128886,6 +132073,8 @@ export namespace Prisma {
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     paymentProvider?: $Enums.PaymentProvider | null
+    sourcePlatform?: $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: string | null
     tipAmount?: number | null
     tags?: OrderCreatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -128966,6 +132155,8 @@ export namespace Prisma {
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     paymentProvider?: NullableEnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider | null
+    sourcePlatform?: NullableEnumOrderSourcePlatformFieldUpdateOperationsInput | $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     tags?: OrderUpdatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -129003,6 +132194,8 @@ export namespace Prisma {
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     paymentProvider?: NullableEnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider | null
+    sourcePlatform?: NullableEnumOrderSourcePlatformFieldUpdateOperationsInput | $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     tags?: OrderUpdatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -129040,6 +132233,8 @@ export namespace Prisma {
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     paymentProvider?: NullableEnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider | null
+    sourcePlatform?: NullableEnumOrderSourcePlatformFieldUpdateOperationsInput | $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     tags?: OrderUpdatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -129330,6 +132525,8 @@ export namespace Prisma {
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     paymentProvider?: $Enums.PaymentProvider | null
+    sourcePlatform?: $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: string | null
     tipAmount?: number | null
     tags?: OrderCreatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -129361,6 +132558,8 @@ export namespace Prisma {
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     paymentProvider?: NullableEnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider | null
+    sourcePlatform?: NullableEnumOrderSourcePlatformFieldUpdateOperationsInput | $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     tags?: OrderUpdatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -129398,6 +132597,8 @@ export namespace Prisma {
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     paymentProvider?: NullableEnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider | null
+    sourcePlatform?: NullableEnumOrderSourcePlatformFieldUpdateOperationsInput | $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     tags?: OrderUpdatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -129435,6 +132636,8 @@ export namespace Prisma {
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     paymentProvider?: NullableEnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider | null
+    sourcePlatform?: NullableEnumOrderSourcePlatformFieldUpdateOperationsInput | $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     tags?: OrderUpdatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -129581,6 +132784,8 @@ export namespace Prisma {
     type?: NullableEnumModifierGroupTypeFieldUpdateOperationsInput | $Enums.ModifierGroupType | null
     minSelection?: NullableIntFieldUpdateOperationsInput | number | null
     maxSelection?: NullableIntFieldUpdateOperationsInput | number | null
+    squareModifierListId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareModifierListVersion?: NullableStringFieldUpdateOperationsInput | string | null
     items?: ModifierGroupItemUpdateManyWithoutModifierGroupNestedInput
   }
 
@@ -129593,6 +132798,8 @@ export namespace Prisma {
     type?: NullableEnumModifierGroupTypeFieldUpdateOperationsInput | $Enums.ModifierGroupType | null
     minSelection?: NullableIntFieldUpdateOperationsInput | number | null
     maxSelection?: NullableIntFieldUpdateOperationsInput | number | null
+    squareModifierListId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareModifierListVersion?: NullableStringFieldUpdateOperationsInput | string | null
     items?: ModifierGroupItemUncheckedUpdateManyWithoutModifierGroupNestedInput
   }
 
@@ -129605,6 +132812,8 @@ export namespace Prisma {
     type?: NullableEnumModifierGroupTypeFieldUpdateOperationsInput | $Enums.ModifierGroupType | null
     minSelection?: NullableIntFieldUpdateOperationsInput | number | null
     maxSelection?: NullableIntFieldUpdateOperationsInput | number | null
+    squareModifierListId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareModifierListVersion?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ProductCategoryUpdateWithoutProductInput = {
@@ -130005,6 +133214,10 @@ export namespace Prisma {
     categoryId: string
     menuIndex?: number | null
     createdAt?: Date | string
+    squareCategoryId?: string | null
+    squareCategoryVersion?: string | null
+    squareMenuCategoryId?: string | null
+    squareMenuCategoryVersion?: string | null
   }
 
   export type MenuVisitCreateManyMenuInput = {
@@ -130055,6 +133268,10 @@ export namespace Prisma {
   export type MenuCategoryUpdateWithoutMenuInput = {
     menuIndex?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    squareCategoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareCategoryVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    squareMenuCategoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareMenuCategoryVersion?: NullableStringFieldUpdateOperationsInput | string | null
     category?: CategoryUpdateOneRequiredWithoutMenuCategoriesNestedInput
   }
 
@@ -130062,12 +133279,20 @@ export namespace Prisma {
     categoryId?: StringFieldUpdateOperationsInput | string
     menuIndex?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    squareCategoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareCategoryVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    squareMenuCategoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareMenuCategoryVersion?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type MenuCategoryUncheckedUpdateManyWithoutMenuInput = {
     categoryId?: StringFieldUpdateOperationsInput | string
     menuIndex?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    squareCategoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareCategoryVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    squareMenuCategoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareMenuCategoryVersion?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type MenuVisitUpdateWithoutMenuInput = {
@@ -130121,6 +133346,10 @@ export namespace Prisma {
     comparedAtPrice?: number | null
     categoryIndex?: number | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: string | null
+    squareItemVersion?: string | null
+    squareVariationId?: string | null
+    squareVariationVersion?: string | null
   }
 
   export type ProductCategoryCreateManyCategoryInput = {
@@ -130133,6 +133362,10 @@ export namespace Prisma {
     menuId: string
     menuIndex?: number | null
     createdAt?: Date | string
+    squareCategoryId?: string | null
+    squareCategoryVersion?: string | null
+    squareMenuCategoryId?: string | null
+    squareMenuCategoryVersion?: string | null
   }
 
   export type PreparationStepCategoryCreateManyCategoryInput = {
@@ -130155,6 +133388,10 @@ export namespace Prisma {
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
     categoryIndex?: NullableIntFieldUpdateOperationsInput | number | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareItemVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationVersion?: NullableStringFieldUpdateOperationsInput | string | null
     photos?: FileUpdateManyWithoutProductNestedInput
     modifierGroups?: ModifierGroupUpdateManyWithoutProductsNestedInput
     productCategories?: ProductCategoryUpdateManyWithoutProductNestedInput
@@ -130182,6 +133419,10 @@ export namespace Prisma {
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
     categoryIndex?: NullableIntFieldUpdateOperationsInput | number | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareItemVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationVersion?: NullableStringFieldUpdateOperationsInput | string | null
     photos?: FileUncheckedUpdateManyWithoutProductNestedInput
     modifierGroups?: ModifierGroupUncheckedUpdateManyWithoutProductsNestedInput
     productCategories?: ProductCategoryUncheckedUpdateManyWithoutProductNestedInput
@@ -130209,6 +133450,10 @@ export namespace Prisma {
     comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
     categoryIndex?: NullableIntFieldUpdateOperationsInput | number | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareItemVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationVersion?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ProductCategoryUpdateWithoutCategoryInput = {
@@ -130232,6 +133477,10 @@ export namespace Prisma {
   export type MenuCategoryUpdateWithoutCategoryInput = {
     menuIndex?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    squareCategoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareCategoryVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    squareMenuCategoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareMenuCategoryVersion?: NullableStringFieldUpdateOperationsInput | string | null
     menu?: MenuUpdateOneRequiredWithoutMenuCategoriesNestedInput
   }
 
@@ -130239,12 +133488,20 @@ export namespace Prisma {
     menuId?: StringFieldUpdateOperationsInput | string
     menuIndex?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    squareCategoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareCategoryVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    squareMenuCategoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareMenuCategoryVersion?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type MenuCategoryUncheckedUpdateManyWithoutCategoryInput = {
     menuId?: StringFieldUpdateOperationsInput | string
     menuIndex?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    squareCategoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareCategoryVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    squareMenuCategoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareMenuCategoryVersion?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type PreparationStepCategoryUpdateWithoutCategoryInput = {
@@ -130353,6 +133610,8 @@ export namespace Prisma {
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     paymentProvider?: $Enums.PaymentProvider | null
+    sourcePlatform?: $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: string | null
     tipAmount?: number | null
     tags?: OrderCreatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -130512,6 +133771,8 @@ export namespace Prisma {
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     paymentProvider?: NullableEnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider | null
+    sourcePlatform?: NullableEnumOrderSourcePlatformFieldUpdateOperationsInput | $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     tags?: OrderUpdatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -130549,6 +133810,8 @@ export namespace Prisma {
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     paymentProvider?: NullableEnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider | null
+    sourcePlatform?: NullableEnumOrderSourcePlatformFieldUpdateOperationsInput | $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     tags?: OrderUpdatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -130586,6 +133849,8 @@ export namespace Prisma {
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     paymentProvider?: NullableEnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider | null
+    sourcePlatform?: NullableEnumOrderSourcePlatformFieldUpdateOperationsInput | $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     tags?: OrderUpdatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -131011,6 +134276,8 @@ export namespace Prisma {
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     paymentProvider?: $Enums.PaymentProvider | null
+    sourcePlatform?: $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: string | null
     tipAmount?: number | null
     tags?: OrderCreatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -131059,6 +134326,8 @@ export namespace Prisma {
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     paymentProvider?: NullableEnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider | null
+    sourcePlatform?: NullableEnumOrderSourcePlatformFieldUpdateOperationsInput | $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     tags?: OrderUpdatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -131096,6 +134365,8 @@ export namespace Prisma {
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     paymentProvider?: NullableEnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider | null
+    sourcePlatform?: NullableEnumOrderSourcePlatformFieldUpdateOperationsInput | $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     tags?: OrderUpdatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -131133,6 +134404,8 @@ export namespace Prisma {
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     paymentProvider?: NullableEnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider | null
+    sourcePlatform?: NullableEnumOrderSourcePlatformFieldUpdateOperationsInput | $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     tags?: OrderUpdatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -131217,6 +134490,8 @@ export namespace Prisma {
     type?: $Enums.OrderType
     paymentMethod?: $Enums.PaymentType
     paymentProvider?: $Enums.PaymentProvider | null
+    sourcePlatform?: $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: string | null
     tipAmount?: number | null
     tags?: OrderCreatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -131248,6 +134523,8 @@ export namespace Prisma {
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     paymentProvider?: NullableEnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider | null
+    sourcePlatform?: NullableEnumOrderSourcePlatformFieldUpdateOperationsInput | $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     tags?: OrderUpdatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -131285,6 +134562,8 @@ export namespace Prisma {
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     paymentProvider?: NullableEnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider | null
+    sourcePlatform?: NullableEnumOrderSourcePlatformFieldUpdateOperationsInput | $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     tags?: OrderUpdatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -131322,6 +134601,8 @@ export namespace Prisma {
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     paymentProvider?: NullableEnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider | null
+    sourcePlatform?: NullableEnumOrderSourcePlatformFieldUpdateOperationsInput | $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
     tags?: OrderUpdatetagsInput | string[]
     progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
@@ -131694,6 +134975,8 @@ export namespace Prisma {
     price?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareModifierId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareModifierVersion?: NullableStringFieldUpdateOperationsInput | string | null
     photo?: FileUpdateOneWithoutModifierGroupItemsNestedInput
     modifierGroup?: ModifierGroupUpdateOneWithoutItemsNestedInput
     preparationStepModifierTracks?: PreparationStepModifierTrackUpdateManyWithoutModifierGroupItemNestedInput
@@ -131709,6 +134992,8 @@ export namespace Prisma {
     translations?: NullableJsonNullValueInput | InputJsonValue
     modifierGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     fileId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareModifierId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareModifierVersion?: NullableStringFieldUpdateOperationsInput | string | null
     preparationStepModifierTracks?: PreparationStepModifierTrackUncheckedUpdateManyWithoutModifierGroupItemNestedInput
     orderIntentProducts?: OrderIntentProductUncheckedUpdateManyWithoutModifierGroupItemsNestedInput
   }
@@ -131722,6 +135007,8 @@ export namespace Prisma {
     translations?: NullableJsonNullValueInput | InputJsonValue
     modifierGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     fileId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareModifierId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareModifierVersion?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ModifierGroupItemUpdateWithoutOrderIntentProductsInput = {
@@ -131731,6 +135018,8 @@ export namespace Prisma {
     price?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
     translations?: NullableJsonNullValueInput | InputJsonValue
+    squareModifierId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareModifierVersion?: NullableStringFieldUpdateOperationsInput | string | null
     photo?: FileUpdateOneWithoutModifierGroupItemsNestedInput
     modifierGroup?: ModifierGroupUpdateOneWithoutItemsNestedInput
     preparationStepModifierTracks?: PreparationStepModifierTrackUpdateManyWithoutModifierGroupItemNestedInput
@@ -131746,6 +135035,8 @@ export namespace Prisma {
     translations?: NullableJsonNullValueInput | InputJsonValue
     modifierGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     fileId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareModifierId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareModifierVersion?: NullableStringFieldUpdateOperationsInput | string | null
     preparationStepModifierTracks?: PreparationStepModifierTrackUncheckedUpdateManyWithoutModifierGroupItemNestedInput
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutModifierGroupItemsNestedInput
   }
@@ -131759,6 +135050,8 @@ export namespace Prisma {
     translations?: NullableJsonNullValueInput | InputJsonValue
     modifierGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     fileId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareModifierId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareModifierVersion?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type InventoryStockCreateManyPlaceInput = {

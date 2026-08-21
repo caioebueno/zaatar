@@ -1396,38 +1396,51 @@ export default function ProductSpreadsheet() {
     rows,
   ]);
 
-  const persistCategoryOrder = useCallback(async (categories: LookupOption[]) => {
-    const categoriesWithIndex = categories.map((category, index) => ({
-      ...category,
-      menuIndex: index + 1,
-    }));
+  const persistCategoryOrder = useCallback(
+    async (categories: LookupOption[], movedCategoryId: string) => {
+      const categoriesWithIndex = categories.map((category, index) => ({
+        ...category,
+        menuIndex: index + 1,
+      }));
+      const movedCategory = categoriesWithIndex.find(
+        (category) => category.id === movedCategoryId,
+      );
 
-    setLookup((current) => ({
-      ...current,
-      categories: categoriesWithIndex,
-    }));
+      if (!movedCategory) {
+        return;
+      }
 
-    try {
-      setPersistingReorder(true);
-      await Promise.all(
-        categoriesWithIndex.map((category) =>
-          fetch(`/api/categories/${encodeURIComponent(category.id)}`, {
+      setLookup((current) => ({
+        ...current,
+        categories: categoriesWithIndex,
+      }));
+
+      try {
+        setPersistingReorder(true);
+        const response = await fetch(
+          `/api/categories/${encodeURIComponent(movedCategory.id)}`,
+          {
             method: "PATCH",
             headers: {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              menuIndex: category.menuIndex,
+              menuIndex: movedCategory.menuIndex,
             }),
-          }),
-        ),
-      );
-    } catch (error) {
-      console.error("Failed to persist category order:", error);
-    } finally {
-      setPersistingReorder(false);
-    }
-  }, []);
+          },
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to persist category order");
+        }
+      } catch (error) {
+        console.error("Failed to persist category order:", error);
+      } finally {
+        setPersistingReorder(false);
+      }
+    },
+    [],
+  );
 
   const onCategoryDrop = useCallback(
     (targetCategoryId: string) => {
@@ -1449,35 +1462,46 @@ export default function ProductSpreadsheet() {
         return;
       }
 
-      void persistCategoryOrder(reorderedCategories);
+      void persistCategoryOrder(reorderedCategories, dragCategoryId);
     },
     [dragCategoryId, lookup.categories, persistCategoryOrder, search],
   );
 
-  const persistProductCategoryIndexes = useCallback(async (rowsToPersist: EditableRow[]) => {
-    if (rowsToPersist.length === 0) return;
+  const persistProductCategoryIndexes = useCallback(
+    async (
+      rowsToPersist: EditableRow[],
+      movedProductId: string,
+      categoryId: string,
+    ) => {
+      if (rowsToPersist.length === 0) return;
 
-    try {
-      setPersistingReorder(true);
-      await Promise.all(
-        rowsToPersist.map((row) =>
-          fetch(`/api/products/${encodeURIComponent(row.id)}`, {
-            method: "PATCH",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              categoryIndex: Number(row.categoryIndex),
-            }),
+      const movedRow = rowsToPersist.find((row) => row.id === movedProductId);
+      if (!movedRow) return;
+
+      try {
+        setPersistingReorder(true);
+        const response = await fetch(`/api/products/${encodeURIComponent(movedRow.id)}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            categoryId,
+            categoryIndex: Number(movedRow.categoryIndex),
           }),
-        ),
-      );
-    } catch (error) {
-      console.error("Failed to persist product order:", error);
-    } finally {
-      setPersistingReorder(false);
-    }
-  }, []);
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to persist product order");
+        }
+      } catch (error) {
+        console.error("Failed to persist product order:", error);
+      } finally {
+        setPersistingReorder(false);
+      }
+    },
+    [],
+  );
 
   const onProductDrop = useCallback(
     (categoryId: string, targetProductId: string) => {
@@ -1515,7 +1539,7 @@ export default function ProductSpreadsheet() {
       );
 
       setRows(nextRows);
-      void persistProductCategoryIndexes(reorderedRows);
+      void persistProductCategoryIndexes(reorderedRows, dragProductId, categoryId);
     },
     [dragProductId, persistProductCategoryIndexes, rows, search],
   );

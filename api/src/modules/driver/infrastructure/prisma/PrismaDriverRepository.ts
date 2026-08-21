@@ -112,16 +112,23 @@ export class PrismaDriverRepository implements DriverRepository {
   async list(): Promise<DriverRecord[]> {
     const driverRows = await prisma.$queryRaw<DriverRow[]>`
         SELECT
-          "id",
-          "createdAt",
-          "name",
-          "phone",
-          "active",
-          "activatedAt",
-          "deactivatedAt",
-          "priorityLevel"
-      FROM "Driver"
-      ORDER BY "priorityLevel" ASC, "createdAt" ASC
+          driver."id",
+          driver."createdAt",
+          driver."name",
+          driver."phone",
+          EXISTS (
+            SELECT 1
+            FROM "DispatchRouteSession" session
+            INNER JOIN "DispatchRoutePoint" point
+              ON point."sessionId" = session."id"
+            WHERE session."driverId" = driver."id"
+              AND point."recordedAt" >= CURRENT_TIMESTAMP - INTERVAL '10 minutes'
+          ) AS "active",
+          driver."activatedAt",
+          driver."deactivatedAt",
+          driver."priorityLevel"
+      FROM "Driver" driver
+      ORDER BY driver."priorityLevel" ASC, driver."createdAt" ASC
     `;
 
     return this.buildDriverRecordsWithEvents(driverRows);
@@ -130,16 +137,23 @@ export class PrismaDriverRepository implements DriverRepository {
   async findById(id: string): Promise<DriverRecord | null> {
     const driverRows = await prisma.$queryRaw<DriverRow[]>`
         SELECT
-          "id",
-          "createdAt",
-          "name",
-          "phone",
-          "active",
-          "activatedAt",
-          "deactivatedAt",
-          "priorityLevel"
-      FROM "Driver"
-      WHERE "id" = ${id}
+          driver."id",
+          driver."createdAt",
+          driver."name",
+          driver."phone",
+          EXISTS (
+            SELECT 1
+            FROM "DispatchRouteSession" session
+            INNER JOIN "DispatchRoutePoint" point
+              ON point."sessionId" = session."id"
+            WHERE session."driverId" = driver."id"
+              AND point."recordedAt" >= CURRENT_TIMESTAMP - INTERVAL '10 minutes'
+          ) AS "active",
+          driver."activatedAt",
+          driver."deactivatedAt",
+          driver."priorityLevel"
+      FROM "Driver" driver
+      WHERE driver."id" = ${id}
       LIMIT 1
     `;
 

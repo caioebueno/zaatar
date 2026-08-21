@@ -5,8 +5,18 @@ import { SearchModal } from './components/SearchModal'
 import { docs } from './docs-manifest'
 
 function getInitialDoc() {
-  const hash = window.location.hash.slice(1)
-  return docs.find((d) => d.id === hash) ? hash : 'overview'
+  const { docId } = parseHash(window.location.hash)
+  return docs.find((d) => d.id === docId) ? docId : 'overview'
+}
+
+function parseHash(hash: string): { docId: string; anchor?: string } {
+  const raw = hash.startsWith('#') ? hash.slice(1) : hash
+  if (!raw) return { docId: 'overview' }
+  const [docId, anchor] = raw.split('::')
+  return {
+    docId: docId || 'overview',
+    ...(anchor ? { anchor } : {}),
+  }
 }
 
 export default function App() {
@@ -16,21 +26,35 @@ export default function App() {
 
   const activeDoc = docs.find((d) => d.id === activeId) ?? docs[0]!
 
-  const navigate = useCallback((id: string) => {
+  const navigate = useCallback((id: string, anchor?: string) => {
     setActiveId(id)
-    window.location.hash = id
+    window.location.hash = anchor ? `${id}::${anchor}` : id
     contentRef.current?.scrollTo({ top: 0 })
   }, [])
 
   // Sync hash → state (back/forward)
   useEffect(() => {
     const handler = () => {
-      const id = window.location.hash.slice(1)
-      if (docs.find((d) => d.id === id)) setActiveId(id)
+      const { docId } = parseHash(window.location.hash)
+      if (docs.find((d) => d.id === docId)) setActiveId(docId)
     }
     window.addEventListener('hashchange', handler)
     return () => window.removeEventListener('hashchange', handler)
   }, [])
+
+  useEffect(() => {
+    const { docId, anchor } = parseHash(window.location.hash)
+    if (docId !== activeId || !anchor) return
+
+    const scrollToAnchor = () => {
+      const target = document.getElementById(anchor)
+      if (target) {
+        target.scrollIntoView({ block: 'start' })
+      }
+    }
+
+    window.requestAnimationFrame(scrollToAnchor)
+  }, [activeId])
 
   // ⌘K / Ctrl+K
   useEffect(() => {
@@ -76,7 +100,13 @@ export default function App() {
 
         {/* Doc content */}
         <div className="max-w-3xl mx-auto px-10 pt-10 pb-24">
-          <DocViewer key={activeId} content={activeDoc.content} />
+          <DocViewer
+            key={activeId}
+            content={activeDoc.content}
+            currentDocId={activeDoc.id}
+            currentSourcePath={activeDoc.sourcePath}
+            onNavigate={navigate}
+          />
 
           {/* Bottom navigation */}
           <DocNav activeId={activeId} onNavigate={navigate} />
@@ -94,7 +124,7 @@ export default function App() {
   )
 }
 
-function DocNav({ activeId, onNavigate }: { activeId: string; onNavigate: (id: string) => void }) {
+function DocNav({ activeId, onNavigate }: { activeId: string; onNavigate: (id: string, anchor?: string) => void }) {
   const idx = docs.findIndex((d) => d.id === activeId)
   const prev = idx > 0 ? docs[idx - 1] : null
   const next = idx < docs.length - 1 ? docs[idx + 1] : null

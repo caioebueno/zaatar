@@ -18,7 +18,7 @@ export type DispatchOrder = {
   createdAt: string;
   currentEstimatedDeliveryDurationMinutes?: number | null;
   customer?: {
-    id: string;
+    id?: string;
     name: string | null;
     phone: string | null;
   };
@@ -38,6 +38,7 @@ export type DispatchOrder = {
   orderProducts: unknown[];
   paidAt: string | null;
   paymentMethod: string;
+  sourcePlatform?: string | null;
   payments: OrderPaymentSummary[];
   preparationTaskStation: unknown[];
   progressiveDiscountSnapshot?: unknown;

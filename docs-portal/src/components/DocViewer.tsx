@@ -2,9 +2,13 @@ import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { CodeBlock } from './CodeBlock'
 import type { Components } from 'react-markdown'
+import { docs } from '../docs-manifest'
 
 type Props = {
   content: string
+  currentDocId: string
+  currentSourcePath: string
+  onNavigate: (id: string, anchor?: string) => void
 }
 
 const METHOD_COLORS: Record<string, { bg: string; text: string; border: string; dot: string }> = {
@@ -39,7 +43,17 @@ function InlineEndpoint({ method, path }: { method: string; path: string }) {
   )
 }
 
-function Heading({ level, children }: { level: 2 | 3; children: React.ReactNode }) {
+function Heading({
+  level,
+  children,
+  currentDocId,
+  onNavigate,
+}: {
+  level: 2 | 3
+  children: React.ReactNode
+  currentDocId: string
+  onNavigate: (id: string, anchor?: string) => void
+}) {
   const text = extractText(children)
   const slug = slugify(text)
   const Tag = `h${level}` as 'h2' | 'h3'
@@ -53,9 +67,13 @@ function Heading({ level, children }: { level: 2 | 3; children: React.ReactNode 
     <Tag id={slug} className={`group flex items-center gap-2 text-foreground scroll-mt-8 ${styles[level]}`}>
       {children}
       <a
-        href={`#${slug}`}
+        href={`#${currentDocId}::${slug}`}
         className="opacity-0 group-hover:opacity-40 text-muted text-sm font-normal hover:opacity-70 transition-opacity"
-        onClick={(e) => e.stopPropagation()}
+        onClick={(e) => {
+          e.preventDefault()
+          e.stopPropagation()
+          onNavigate(currentDocId, slug)
+        }}
       >
         #
       </a>
@@ -72,7 +90,36 @@ function extractText(node: React.ReactNode): string {
   return ''
 }
 
-const components: Components = {
+function resolveInternalDocLink(currentSourcePath: string, href: string): { docId: string; anchor?: string } | null {
+  if (!href || href.startsWith('http://') || href.startsWith('https://') || href.startsWith('mailto:')) {
+    return null
+  }
+
+  if (href.startsWith('#')) {
+    return { docId: '', anchor: href.slice(1) }
+  }
+
+  if (!href.includes('.md')) {
+    return null
+  }
+
+  const baseUrl = new URL(currentSourcePath, 'https://docs.local/')
+  const resolvedUrl = new URL(href, baseUrl)
+  const sourcePath = resolvedUrl.pathname.replace(/^\//, '')
+  const targetDoc = docs.find((doc) => doc.sourcePath === sourcePath)
+
+  if (!targetDoc) {
+    return null
+  }
+
+  return {
+    docId: targetDoc.id,
+    ...(resolvedUrl.hash ? { anchor: resolvedUrl.hash.slice(1) } : {}),
+  }
+}
+
+function createComponents(currentDocId: string, currentSourcePath: string, onNavigate: (id: string, anchor?: string) => void): Components {
+  return {
   h1({ children }) {
     return (
       <h1 className="text-3xl font-bold text-foreground mb-3 leading-tight tracking-tight">
@@ -82,11 +129,11 @@ const components: Components = {
   },
 
   h2({ children }) {
-    return <Heading level={2}>{children}</Heading>
+    return <Heading level={2} currentDocId={currentDocId} onNavigate={onNavigate}>{children}</Heading>
   },
 
   h3({ children }) {
-    return <Heading level={3}>{children}</Heading>
+    return <Heading level={3} currentDocId={currentDocId} onNavigate={onNavigate}>{children}</Heading>
   },
 
   // Remove the default <pre> wrapper — our custom code handles it
@@ -133,8 +180,36 @@ const components: Components = {
   },
 
   a({ href, children }) {
+    const sameDocAnchor = href?.startsWith('#') ? href.slice(1) : undefined
+    const internalDocLink = href ? resolveInternalDocLink(currentSourcePath, href) : null
+    const isInternalAnchor = Boolean(sameDocAnchor)
+    const isInternalDoc = Boolean(internalDocLink)
+
     return (
-      <a href={href} className="text-accent underline decoration-accent/30 hover:decoration-accent transition-colors" target={href?.startsWith('http') ? '_blank' : undefined} rel="noreferrer">
+      <a
+        href={
+          isInternalAnchor
+            ? `#${currentDocId}::${sameDocAnchor}`
+            : internalDocLink
+              ? `#${internalDocLink.docId}${internalDocLink.anchor ? `::${internalDocLink.anchor}` : ''}`
+              : href
+        }
+        className="text-accent underline decoration-accent/30 hover:decoration-accent transition-colors"
+        target={href?.startsWith('http') ? '_blank' : undefined}
+        rel="noreferrer"
+        onClick={(e) => {
+          if (sameDocAnchor) {
+            e.preventDefault()
+            onNavigate(currentDocId, sameDocAnchor)
+            return
+          }
+
+          if (internalDocLink) {
+            e.preventDefault()
+            onNavigate(internalDocLink.docId, internalDocLink.anchor)
+          }
+        }}
+      >
         {children}
       </a>
     )
@@ -209,11 +284,15 @@ const components: Components = {
     return <tr className="transition-colors hover:bg-white/[0.015]">{children}</tr>
   },
 }
+}
 
-export function DocViewer({ content }: Props) {
+export function DocViewer({ content, currentDocId, currentSourcePath, onNavigate }: Props) {
   return (
     <div className="doc-content min-h-full">
-      <ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
+        components={createComponents(currentDocId, currentSourcePath, onNavigate)}
+      >
         {content}
       </ReactMarkdown>
     </div>

@@ -222,14 +222,14 @@ Auth: manager access token required.
 Returns dispatches using the same visibility logic as the dispatch board:
 - All today's dispatches, including completed ones
 - Non-today dispatches only when they are not completed
-- Takeaway dispatches are completed when their order has `deliveredAt`
+- Takeaway dispatches are completed when `Dispatch.completedAt` is set
 - Delivery dispatches are completed when every order in the dispatch has `deliveredAt`
 
 Ordered by: `dispatched` → `queueIndex` → dispatch/create time.
 
 Query params:
 
-- `status=active` — returns only active dispatches (driver has `startedDeliveryAt` set, has undelivered orders, and hasn't started a newer dispatch)
+- `status=active` — returns only active dispatches (driver has `startedDeliveryAt` set, has unfinished orders, and hasn't started a newer dispatch)
 
 Examples:
 

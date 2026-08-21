@@ -1,6 +1,5 @@
 import prisma from "../../../../../prisma.js";
 import { Prisma } from "../../../../../../../web/src/generated/prisma/index.js";
-import type { HttpResponse } from "../../../../../shared/http/types.js";
 import { NextResponse } from "../shared/http.js";
 import type { NextRequestLike } from "../shared/http.js";
 
@@ -343,15 +342,35 @@ export async function DELETE(
       );
     }
 
-    await prisma.modifierGroupItem.delete({
+    const updatedItem = await prisma.modifierGroupItem.update({
       where: {
         id: normalizedItemId,
+      },
+      data: {
+        modifierGroup: {
+          disconnect: true,
+        },
+      },
+      select: {
+        id: true,
+        modifierGroupId: true,
+        name: true,
+        description: true,
+        price: true,
+        translations: true,
+        photo: {
+          select: {
+            id: true,
+            url: true,
+          },
+        },
       },
     });
 
     return NextResponse.json({
-      id: normalizedItemId,
+      ...updatedItem,
       deleted: true,
+      disconnected: true,
     });
   } catch (error) {
     if (

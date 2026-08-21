@@ -93,7 +93,14 @@ Request body:
 
 `PATCH /stations/:stationId/steps/:stepId`
 
-Request body (partial):
+Partially updates a preparation step.
+
+Path params:
+
+- `stationId`: station id
+- `stepId`: preparation step id
+
+Request body (all fields optional, but at least one valid field should be sent):
 
 ```json
 {
@@ -104,7 +111,31 @@ Request body (partial):
 }
 ```
 
-- `goalMinutes`: if provided, synchronized to all steps in the station.
+Field behavior:
+
+- `name`: non-empty string when provided
+- `goalMinutes`: integer `>= 0` when provided
+- `includeComments`: boolean when provided
+- `includeModifiers`: boolean when provided
+- `goalMinutes`: if provided, it is synchronized to all steps in the same station
+
+Success (`200`):
+
+```json
+{
+  "id": "step-id",
+  "name": "Cook",
+  "goalMinutes": 18,
+  "includeComments": true,
+  "includeModifiers": true
+}
+```
+
+Errors:
+
+- `400`: invalid payload, for example:
+  - `{ "error": "Invalid payload", "field": "goalMinutes" }`
+- `404`: step not found
 
 ### Delete Step
 

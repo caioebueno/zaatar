@@ -143,6 +143,8 @@ model ModifierGroup {
   items        ModifierGroupItem[]
   minSelection Int?
   maxSelection Int?
+  squareModifierListId String?     @unique
+  squareModifierListVersion String?
 }
 
 model ModifierGroupItem {
@@ -159,6 +161,8 @@ model ModifierGroupItem {
   preparationStepModifierTracks PreparationStepModifierTrack[]
   orderProducts                 OrderProducts[]
   orderIntentProducts           OrderIntentProduct[]
+  squareModifierId              String?                        @unique
+  squareModifierVersion         String?
 }
 
 enum ModifierGroupType {
@@ -183,6 +187,8 @@ model Business {
   branches     Branch[]
   members      BusinessMember[]
   integrations ExternalIntegrationConnection[]
+  squareConnections SquareConnection[]
+  squareCatalogSyncTasks SquareCatalogSyncTask[]
   pushDevices  UserPushDevice[]
 }
 
@@ -198,6 +204,7 @@ model User {
   lastLoginAt     DateTime?
   businessMemberships BusinessMember[]
   integrations    ExternalIntegrationConnection[]
+  squareConnections SquareConnection[]
   otpChallenges   OwnerOtpChallenge[]
   pushDevices     UserPushDevice[]
 }
@@ -253,6 +260,18 @@ enum ExternalIntegrationEnvironment {
   PRODUCTION
 }
 
+enum SquareCatalogSyncTaskStatus {
+  PENDING
+  PROCESSING
+  SUCCESS
+  FAILED
+  SKIPPED
+}
+
+enum SquareCatalogSyncTaskType {
+  PRODUCT_UPDATE
+}
+
 enum ExternalMenuSyncStatus {
   PENDING
   SUCCESS
@@ -291,6 +310,51 @@ model ExternalIntegrationConnection {
   @@unique([provider, userId])
   @@index([userId, provider])
   @@index([businessId])
+}
+
+model SquareConnection {
+  id           String                         @id
+  createdAt    DateTime                       @default(now())
+  updatedAt    DateTime                       @updatedAt
+  environment  ExternalIntegrationEnvironment @default(SANDBOX)
+  user         User                           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       String
+  business     Business                       @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  businessId   String                         @unique
+  merchantId   String?                        @unique
+  accessToken  String
+  refreshToken String?
+  scope        String?
+  tokenType    String?
+  expiresAt    DateTime?
+  connectedAt  DateTime                       @default(now())
+  rawPayload   Json?
+
+  @@index([userId, environment])
+  @@index([merchantId])
+}
+
+model SquareCatalogSyncTask {
+  id                String                    @id
+  createdAt         DateTime                  @default(now())
+  updatedAt         DateTime                  @updatedAt
+  business          Business                  @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  businessId        String
+  product           Product                   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId         String
+  taskType          SquareCatalogSyncTaskType @default(PRODUCT_UPDATE)
+  status            SquareCatalogSyncTaskStatus @default(PENDING)
+  attempts          Int                       @default(0)
+  availableAt       DateTime                  @default(now())
+  processingStartedAt DateTime?
+  finishedAt        DateTime?
+  errorMessage      String?
+  requestPayload    Json?
+  responsePayload   Json?
+
+  @@index([businessId, productId, createdAt])
+  @@index([status, availableAt, createdAt])
+  @@index([productId, createdAt])
 }
 
 model ExternalMenuEntityMap {
@@ -662,6 +726,11 @@ model Product {
   customerRewards   CustomerReward[]
   translations      Json?
   preparationSteps  PreparationStep[]
+  squareCatalogSyncTasks SquareCatalogSyncTask[]
+  squareItemId      String?                           @unique
+  squareItemVersion String?
+  squareVariationId String?                           @unique
+  squareVariationVersion String?
 
   @@index([categoryId, categoryIndex])
 }
@@ -725,6 +794,8 @@ model Menu {
   name           String
   active         Boolean        @default(true)
   isDefault      Boolean        @default(false)
+  squareMenuId   String?        @unique
+  squareMenuVersion String?
   categories     Category[]
   menuCategories MenuCategory[]
   menuVisits     MenuVisit[]
@@ -776,6 +847,10 @@ model MenuCategory {
   categoryId String
   menuIndex  Int?
   createdAt  DateTime @default(now())
+  squareCategoryId String? @unique
+  squareCategoryVersion String?
+  squareMenuCategoryId String? @unique
+  squareMenuCategoryVersion String?
 
   @@id([menuId, categoryId])
   @@index([menuId, menuIndex])
@@ -995,6 +1070,8 @@ model Order {
   type                             OrderType                 @default(DELIVERY)
   paymentMethod                    PaymentType               @default(CARD)
   paymentProvider                  PaymentProvider?
+  sourcePlatform                   OrderSourcePlatform?
+  customerNameSnapshot             String?
   tipAmount                        Int?
   tags                             String[]                  @default([])
   progressiveDiscountSnapshot      Json?
@@ -1019,6 +1096,7 @@ model Order {
 
   @@index([dispatchId, dispatchOrderIndex])
   @@index([branchId])
+  @@index([sourcePlatform])
 }
 
 model OrderPayment {
@@ -1150,6 +1228,14 @@ enum PaymentType {
 
 enum PaymentProvider {
   STRIPE
+}
+
+enum OrderSourcePlatform {
+  FOODY
+  DOORDASH
+  UBER_EATS
+  SQUARE
+  UNKNOWN
 }
 
 enum OrderType {

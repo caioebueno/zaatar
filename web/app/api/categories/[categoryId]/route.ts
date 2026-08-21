@@ -1,4 +1,5 @@
 import prisma from "@/prisma";
+import { Prisma } from "@/src/generated/prisma";
 import { DEFAULT_MENU_ID } from "@/src/constants/menu";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -11,6 +12,11 @@ type RouteContext = {
 type PatchBody = {
   menuIndex?: unknown;
   menuId?: unknown;
+};
+
+type MenuCategoryRow = {
+  categoryId: string;
+  menuIndex: number | null;
 };
 
 function parseMenuIndex(value: unknown): number | null {
@@ -31,6 +37,50 @@ function parseMenuId(value: unknown): string {
   }
 
   return value.trim();
+}
+
+function resolveNextCategoryOrder(input: {
+  categoryId: string;
+  categoryExistsInMenu: boolean;
+  currentIds: string[];
+  menuIndexProvided: boolean;
+  requestedMenuIndex: number | null;
+}): string[] {
+  const remainingIds = input.currentIds.filter((id) => id !== input.categoryId);
+
+  if (!input.menuIndexProvided) {
+    return input.categoryExistsInMenu
+      ? input.currentIds
+      : [...remainingIds, input.categoryId];
+  }
+
+  if (input.requestedMenuIndex === null) {
+    return [...remainingIds, input.categoryId];
+  }
+
+  const desiredPosition = Math.min(
+    Math.max(input.requestedMenuIndex, 1),
+    remainingIds.length + 1,
+  );
+  const nextIds = remainingIds.slice();
+  nextIds.splice(desiredPosition - 1, 0, input.categoryId);
+  return nextIds;
+}
+
+async function normalizeMenuCategoryIndexes(
+  tx: Prisma.TransactionClient,
+  menuId: string,
+  orderedCategoryIds: string[],
+): Promise<void> {
+  for (const [index, categoryId] of orderedCategoryIds.entries()) {
+    const nextIndex = index + 1;
+    await tx.$executeRaw`
+      UPDATE "MenuCategory"
+      SET "menuIndex" = ${nextIndex}
+      WHERE "menuId" = ${menuId}
+        AND "categoryId" = ${categoryId}
+    `;
+  }
 }
 
 export async function PATCH(request: NextRequest, context: RouteContext) {
@@ -89,19 +139,45 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       );
     }
 
-    const rows = await prisma.$queryRaw<{ menuId: string; menuIndex: number | null }[]>`
-      INSERT INTO "MenuCategory" ("menuId", "categoryId", "menuIndex")
-      VALUES (${menuId}, ${normalizedCategoryId}, ${menuIndex})
-      ON CONFLICT ("menuId", "categoryId")
-      DO UPDATE SET "menuIndex" = EXCLUDED."menuIndex"
-      RETURNING "menuId", "menuIndex"
-    `;
+    const updatedCategoryMenu = await prisma.$transaction(async (tx) => {
+      const currentMenuCategories = await tx.$queryRaw<MenuCategoryRow[]>`
+        SELECT
+          mc."categoryId" AS "categoryId",
+          mc."menuIndex" AS "menuIndex"
+        FROM "MenuCategory" mc
+        WHERE mc."menuId" = ${menuId}
+        ORDER BY
+          COALESCE(mc."menuIndex", 2147483647) ASC,
+          mc."createdAt" ASC,
+          mc."categoryId" ASC
+      `;
 
-    const updatedCategoryMenu = rows[0];
+      const currentIds = currentMenuCategories.map((row) => row.categoryId);
+      const categoryExistsInMenu = currentIds.includes(normalizedCategoryId);
+      const orderedCategoryIds = resolveNextCategoryOrder({
+        categoryId: normalizedCategoryId,
+        categoryExistsInMenu,
+        currentIds,
+        menuIndexProvided: body.menuIndex !== undefined,
+        requestedMenuIndex: menuIndex,
+      });
 
-    if (!updatedCategoryMenu) {
-      throw new Error("menuIndex");
-    }
+      if (!categoryExistsInMenu) {
+        await tx.$executeRaw`
+          INSERT INTO "MenuCategory" ("menuId", "categoryId", "menuIndex")
+          VALUES (${menuId}, ${normalizedCategoryId}, NULL)
+          ON CONFLICT ("menuId", "categoryId")
+          DO NOTHING
+        `;
+      }
+
+      await normalizeMenuCategoryIndexes(tx, menuId, orderedCategoryIds);
+
+      return {
+        menuId,
+        menuIndex: orderedCategoryIds.indexOf(normalizedCategoryId) + 1,
+      };
+    });
 
     return NextResponse.json({
       id: normalizedCategoryId,

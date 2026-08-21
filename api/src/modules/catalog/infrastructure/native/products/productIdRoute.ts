@@ -4,6 +4,13 @@ import type { HttpResponse } from "../../../../../shared/http/types.js";
 import { NextResponse } from "../shared/http.js";
 import type { NextRequestLike } from "../shared/http.js";
 import { Prisma } from "../../../../../../../web/src/generated/prisma/index.js";
+import { PrismaSquareCatalogSyncTaskRepository } from "../../../../integrations/infrastructure/prisma/PrismaSquareCatalogSyncTaskRepository.js";
+import { PrismaSquareConnectionRepository } from "../../../../integrations/infrastructure/prisma/PrismaSquareConnectionRepository.js";
+import { triggerSquareCatalogSyncTaskProcessing } from "../../../../integrations/main/runSquareCatalogSyncTasks.js";
+import {
+  mapSquareSyncTask,
+  type ProductSquareSyncTaskResponse,
+} from "./squareSyncTask.js";
 
 type RouteContext = {
   params: Promise<{
@@ -46,6 +53,13 @@ type ProductCategoryEntry = {
   categoryIndex: number | null;
 };
 
+type ProductCategoryOrderRow = {
+  productId: string;
+};
+
+const squareCatalogSyncTaskRepository = new PrismaSquareCatalogSyncTaskRepository();
+const squareConnectionRepository = new PrismaSquareConnectionRepository();
+
 type DirectComboProductResponse = {
   productId: string;
   productName: string;
@@ -74,6 +88,87 @@ type ComboSlotInput = {
   sortIndex: number | null;
   options: ComboSlotOptionInput[];
 };
+
+function resolveNextProductOrder(input: {
+  productId: string;
+  productExistsInCategory: boolean;
+  currentIds: string[];
+  categoryIndexProvided: boolean;
+  requestedCategoryIndex: number | null;
+}): string[] {
+  const remainingIds = input.currentIds.filter((id) => id !== input.productId);
+
+  if (!input.categoryIndexProvided) {
+    return input.productExistsInCategory
+      ? input.currentIds
+      : [...remainingIds, input.productId];
+  }
+
+  if (input.requestedCategoryIndex === null) {
+    return [...remainingIds, input.productId];
+  }
+
+  const desiredPosition = Math.min(
+    Math.max(input.requestedCategoryIndex, 1),
+    remainingIds.length + 1,
+  );
+  const nextIds = remainingIds.slice();
+  nextIds.splice(desiredPosition - 1, 0, input.productId);
+  return nextIds;
+}
+
+async function reorderProductWithinCategory(
+  tx: Prisma.TransactionClient,
+  input: {
+    categoryId: string;
+    productId: string;
+    requestedCategoryIndex: number | null;
+  },
+): Promise<void> {
+  await tx.$executeRaw`
+    INSERT INTO "ProductCategory" ("productId", "categoryId", "categoryIndex")
+    VALUES (${input.productId}, ${input.categoryId}, NULL)
+    ON CONFLICT ("productId", "categoryId")
+    DO NOTHING
+  `;
+
+  const currentRows = await tx.$queryRaw<ProductCategoryOrderRow[]>`
+    SELECT pc."productId" AS "productId"
+    FROM "ProductCategory" pc
+    WHERE pc."categoryId" = ${input.categoryId}
+    ORDER BY
+      COALESCE(pc."categoryIndex", 2147483647) ASC,
+      pc."createdAt" ASC,
+      pc."productId" ASC
+  `;
+
+  const currentIds = currentRows.map((row) => row.productId);
+  const orderedProductIds = resolveNextProductOrder({
+    productId: input.productId,
+    productExistsInCategory: currentIds.includes(input.productId),
+    currentIds,
+    categoryIndexProvided: true,
+    requestedCategoryIndex: input.requestedCategoryIndex,
+  });
+
+  for (const [index, orderedProductId] of orderedProductIds.entries()) {
+    const nextIndex = index + 1;
+
+    await tx.$executeRaw`
+      UPDATE "ProductCategory"
+      SET "categoryIndex" = ${nextIndex}
+      WHERE "categoryId" = ${input.categoryId}
+        AND "productId" = ${orderedProductId}
+    `;
+
+    await tx.$executeRaw`
+      UPDATE "Product"
+      SET "categoryIndex" = ${nextIndex}
+      WHERE "id" = ${orderedProductId}
+        AND "categoryId" = ${input.categoryId}
+    `;
+  }
+}
 
 function mapProductRow(product: {
   id: string;
@@ -131,7 +226,7 @@ function mapProductRow(product: {
       };
     }[];
   }[];
-}, productCategoryEntries: ProductCategoryEntry[], directComboProducts: DirectComboProductResponse[]) {
+}, productCategoryEntries: ProductCategoryEntry[], directComboProducts: DirectComboProductResponse[], squareSyncTask?: ProductSquareSyncTaskResponse | null) {
   return {
     id: product.id,
     createdAt: product.createdAt.toISOString(),
@@ -219,6 +314,7 @@ function mapProductRow(product: {
           item !== null,
       ),
     products: directComboProducts,
+    squareSyncTask: squareSyncTask ?? null,
   };
 }
 
@@ -542,6 +638,7 @@ export async function PATCH(request: NextRequestLike, context: RouteContext) {
 
     const { productId } = await context.params;
     const normalizedProductId = productId.trim();
+    const businessId = request.headers?.["x-business-id"]?.trim() || null;
 
     if (!normalizedProductId) {
       return NextResponse.json(
@@ -649,8 +746,11 @@ export async function PATCH(request: NextRequestLike, context: RouteContext) {
       hasAnyField = true;
     }
 
+    const parsedCategoryIndex =
+      body.categoryIndex === undefined
+        ? undefined
+        : parseNullableInt(body.categoryIndex, "categoryIndex");
     if (body.categoryIndex !== undefined) {
-      data.categoryIndex = parseNullableInt(body.categoryIndex, "categoryIndex");
       hasAnyField = true;
     }
 
@@ -1085,14 +1185,9 @@ export async function PATCH(request: NextRequestLike, context: RouteContext) {
         }
 
         for (const linkedCategoryId of categoryIdsToLink) {
-          const parsedCategoryIndex =
-            body.categoryIndex !== undefined
-              ? parseNullableInt(body.categoryIndex, "categoryIndex")
-              : null;
-
           await tx.$executeRaw`
             INSERT INTO "ProductCategory" ("productId", "categoryId", "categoryIndex")
-            VALUES (${normalizedProductId}, ${linkedCategoryId}, ${parsedCategoryIndex})
+            VALUES (${normalizedProductId}, ${linkedCategoryId}, ${parsedCategoryIndex ?? null})
             ON CONFLICT ("productId", "categoryId")
             DO UPDATE SET
               "categoryIndex" = COALESCE(
@@ -1101,18 +1196,36 @@ export async function PATCH(request: NextRequestLike, context: RouteContext) {
               )
           `;
         }
+
+        if (body.categoryIndex !== undefined) {
+          const reorderCategoryId =
+            typeof body.categoryId === "string" && body.categoryId.trim().length > 0
+              ? body.categoryId.trim()
+              : updatedProduct.categoryId;
+
+          if (
+            reorderCategoryId &&
+            categoryIdsToLink.includes(reorderCategoryId)
+          ) {
+            await reorderProductWithinCategory(tx, {
+              categoryId: reorderCategoryId,
+              productId: normalizedProductId,
+              requestedCategoryIndex: parsedCategoryIndex ?? null,
+            });
+          }
+        }
       });
     } else if (
       body.categoryIndex !== undefined &&
       updatedProduct.categoryId
     ) {
-      const parsedCategoryIndex = parseNullableInt(body.categoryIndex, "categoryIndex");
-      await prisma.$executeRaw`
-        INSERT INTO "ProductCategory" ("productId", "categoryId", "categoryIndex")
-        VALUES (${normalizedProductId}, ${updatedProduct.categoryId}, ${parsedCategoryIndex})
-        ON CONFLICT ("productId", "categoryId")
-        DO UPDATE SET "categoryIndex" = EXCLUDED."categoryIndex"
-      `;
+      await prisma.$transaction(async (tx) => {
+        await reorderProductWithinCategory(tx, {
+          categoryId: updatedProduct.categoryId as string,
+          productId: normalizedProductId,
+          requestedCategoryIndex: parsedCategoryIndex ?? null,
+        });
+      });
     }
 
     if (
@@ -1214,6 +1327,28 @@ export async function PATCH(request: NextRequestLike, context: RouteContext) {
       quantity: row.quantity,
     }));
 
+    let squareSyncTask: ProductSquareSyncTaskResponse | null = null;
+    if (businessId) {
+      const squareConnection = await squareConnectionRepository.findByBusinessId(
+        businessId,
+      );
+
+      if (squareConnection) {
+        const createdTask =
+          await squareCatalogSyncTaskRepository.createProductUpdateTask({
+            businessId,
+            productId: normalizedProductId,
+            requestPayload: {
+              source: "PRODUCT_PATCH",
+              triggeredAt: new Date().toISOString(),
+            },
+          });
+
+        squareSyncTask = mapSquareSyncTask(createdTask);
+        triggerSquareCatalogSyncTaskProcessing(5);
+      }
+    }
+
     return NextResponse.json(
       mapProductRow(
         {
@@ -1229,6 +1364,7 @@ export async function PATCH(request: NextRequestLike, context: RouteContext) {
         },
         productCategoryRows,
         directProducts,
+        squareSyncTask,
       ),
     );
   } catch (error) {
