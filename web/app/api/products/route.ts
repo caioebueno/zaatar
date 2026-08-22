@@ -6,6 +6,7 @@ import {
   type ComboProductInput,
 } from "@/src/comboProductsStore";
 import { Prisma } from "@/src/generated/prisma";
+import { DEFAULT_MENU_ID } from "@/src/constants/menu";
 import { NextRequest, NextResponse } from "next/server";
 
 type ProductVisibleRow = {
@@ -22,6 +23,14 @@ type ProductCategoryEntry = {
   productId: string;
   categoryId: string;
   categoryIndex: number | null;
+};
+
+type LookupCategoryRow = {
+  id: string;
+  name: string;
+  createdAt: Date;
+  menuIndex: number | null;
+  translations: unknown | null;
 };
 
 type DirectComboProductResponse = {
@@ -1268,22 +1277,21 @@ export async function GET() {
           SELECT "id", "alertDriver"
           FROM "Product"
         `,
-        prisma.category.findMany({
-          select: {
-            id: true,
-            name: true,
-            createdAt: true,
-            menuIndex: true,
-          },
-          orderBy: [
-            {
-              menuIndex: "asc",
-            },
-            {
-              createdAt: "asc",
-            },
-          ],
-        }),
+        prisma.$queryRaw<LookupCategoryRow[]>`
+          SELECT
+            c."id",
+            c."name",
+            c."createdAt",
+            mc."menuIndex" AS "menuIndex",
+            c."translations"
+          FROM "MenuCategory" mc
+          INNER JOIN "Category" c ON c."id" = mc."categoryId"
+          WHERE mc."menuId" = ${DEFAULT_MENU_ID}
+          ORDER BY
+            COALESCE(mc."menuIndex", 2147483647) ASC,
+            mc."createdAt" ASC,
+            c."createdAt" ASC
+        `,
         prisma.file.findMany({
           select: {
             id: true,

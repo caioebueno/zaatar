@@ -80,6 +80,7 @@ type DispatchOrderRow = {
   paymentMethod: string;
   progressiveDiscountSnapshot: unknown | null;
   scheduleFor: Date | null;
+  sourcePlatform: string | null;
   tipAmount: number | null;
   type: string;
 };
@@ -160,6 +161,17 @@ type RedeemedRewardOutput = {
   value?: number | null;
 };
 
+const RECENT_DRIVER_ACTIVITY_SQL = Prisma.sql`
+  EXISTS (
+    SELECT 1
+    FROM "DispatchRouteSession" session
+    INNER JOIN "DispatchRoutePoint" point
+      ON point."sessionId" = session."id"
+    WHERE session."driverId" = driver."id"
+      AND point."recordedAt" >= CURRENT_TIMESTAMP - INTERVAL '10 minutes'
+  )
+`;
+
 function mapDriver(row: DispatchRow): DispatchDriver | undefined {
   if (
     !row.driverId ||
@@ -227,76 +239,82 @@ function mapDispatch(
 ): DispatchEntity {
   const dispatchOrderRows = orderRows.filter((orderRow) => orderRow.dispatchId === row.id);
 
-  const orders: DispatchOrder[] = dispatchOrderRows.map((orderRow, index) => ({
-    id: orderRow.id,
-    createdAt: orderRow.createdAt.toISOString(),
-    scheduleFor: orderRow.scheduleFor ? orderRow.scheduleFor.toISOString() : null,
-    language: orderRow.language,
-    paidAt: orderRow.paidAt ? orderRow.paidAt.toISOString() : null,
-    ...(orderRow.progressiveDiscountSnapshot &&
-    typeof orderRow.progressiveDiscountSnapshot === "object"
-      ? { progressiveDiscountSnapshot: orderRow.progressiveDiscountSnapshot }
-      : {}),
-    ...(orderRow.deliveredAt ? { deliveredAt: orderRow.deliveredAt.toISOString() } : {}),
-    ...(orderRow.leftAtDropOffAt
-      ? { leftAtDropOffAt: orderRow.leftAtDropOffAt.toISOString() }
-      : {}),
-    ...(orderRow.leftAtDropOffLat !== null
-      ? { leftAtDropOffLat: orderRow.leftAtDropOffLat }
-      : {}),
-    ...(orderRow.leftAtDropOffLng !== null
-      ? { leftAtDropOffLng: orderRow.leftAtDropOffLng }
-      : {}),
-    estimatedDeliveryDurationMinutes: orderRow.estimatedDeliveryDurationMinutes,
-    currentEstimatedDeliveryDurationMinutes:
-      orderRow.currentEstimatedDeliveryDurationMinutes,
-    dispatchOrderIndex: orderRow.dispatchOrderIndex ?? index + 1,
-    number: orderRow.number || undefined,
-    externalId: orderRow.externalId,
-    delivered: orderRow.delivered,
-    type: orderRow.type,
-    paymentMethod: orderRow.paymentMethod,
-    tip: orderRow.tipAmount ?? undefined,
-    tipAmount: orderRow.tipAmount ?? undefined,
-    dispatchId: orderRow.dispatchIdOnOrder || undefined,
-    costumerId: orderRow.customerId || undefined,
-    ...(orderRow.customerId
-      ? {
-          customer: {
-            id: orderRow.customerId,
-            name: orderRow.customerName,
-            phone: orderRow.customerPhone,
-          },
-        }
-      : {}),
-    redeemedRewards: redeemedRewardsByOrderId.get(orderRow.id) || [],
-    ...(orderRow.deliveryAddressId
-      ? {
-          deliveryAddress: {
-            id: orderRow.deliveryAddressId,
-            createdAt: orderRow.deliveryAddressCreatedAt?.toISOString() || "",
-            description: orderRow.deliveryAddressDescription || "",
-            street: orderRow.deliveryAddressStreet || "",
-            number: orderRow.deliveryAddressNumber || "",
-            city: orderRow.deliveryAddressCity || "",
-            state: orderRow.deliveryAddressState || "",
-            zipCode: orderRow.deliveryAddressZipCode || "",
-            lat: orderRow.deliveryAddressLat || "",
-            lng: orderRow.deliveryAddressLng || "",
-            complement: orderRow.deliveryAddressComplement ?? undefined,
-            numberComplement: orderRow.deliveryAddressNumberComplement ?? undefined,
-            customerId: orderRow.deliveryAddressCustomerId ?? undefined,
-            deliveryFee: orderRow.deliveryAddressFee ?? undefined,
-            expectedHandoffDuration:
-              orderRow.deliveryAddressExpectedHandoffDuration ?? 300,
-          },
-        }
-      : {}),
-    payments: paymentsByOrderId.get(orderRow.id) ?? [],
-    orderProducts: orderProductsByOrderId.get(orderRow.id) || [],
-    preparationTaskStation:
-      preparationStepCategoriesByOrderId.get(orderRow.id) || [],
-  }));
+  const orders: DispatchOrder[] = dispatchOrderRows.map((orderRow, index) => {
+    const delivered =
+      orderRow.type === "TAKEAWAY" ? Boolean(row.completedAt) : orderRow.delivered;
+
+    return {
+      id: orderRow.id,
+      createdAt: orderRow.createdAt.toISOString(),
+      scheduleFor: orderRow.scheduleFor ? orderRow.scheduleFor.toISOString() : null,
+      language: orderRow.language,
+      paidAt: orderRow.paidAt ? orderRow.paidAt.toISOString() : null,
+      ...(orderRow.progressiveDiscountSnapshot &&
+      typeof orderRow.progressiveDiscountSnapshot === "object"
+        ? { progressiveDiscountSnapshot: orderRow.progressiveDiscountSnapshot }
+        : {}),
+      ...(orderRow.deliveredAt ? { deliveredAt: orderRow.deliveredAt.toISOString() } : {}),
+      ...(orderRow.leftAtDropOffAt
+        ? { leftAtDropOffAt: orderRow.leftAtDropOffAt.toISOString() }
+        : {}),
+      ...(orderRow.leftAtDropOffLat !== null
+        ? { leftAtDropOffLat: orderRow.leftAtDropOffLat }
+        : {}),
+      ...(orderRow.leftAtDropOffLng !== null
+        ? { leftAtDropOffLng: orderRow.leftAtDropOffLng }
+        : {}),
+      estimatedDeliveryDurationMinutes: orderRow.estimatedDeliveryDurationMinutes,
+      currentEstimatedDeliveryDurationMinutes:
+        orderRow.currentEstimatedDeliveryDurationMinutes,
+      dispatchOrderIndex: orderRow.dispatchOrderIndex ?? index + 1,
+      number: orderRow.number || undefined,
+      externalId: orderRow.externalId,
+      delivered,
+      type: orderRow.type,
+      sourcePlatform: orderRow.sourcePlatform,
+      paymentMethod: orderRow.paymentMethod,
+      tip: orderRow.tipAmount ?? undefined,
+      tipAmount: orderRow.tipAmount ?? undefined,
+      dispatchId: orderRow.dispatchIdOnOrder || undefined,
+      costumerId: orderRow.customerId || undefined,
+      ...(orderRow.customerId || orderRow.customerName || orderRow.customerPhone
+        ? {
+            customer: {
+              ...(orderRow.customerId ? { id: orderRow.customerId } : {}),
+              name: orderRow.customerName,
+              phone: orderRow.customerPhone,
+            },
+          }
+        : {}),
+      redeemedRewards: redeemedRewardsByOrderId.get(orderRow.id) || [],
+      ...(orderRow.deliveryAddressId
+        ? {
+            deliveryAddress: {
+              id: orderRow.deliveryAddressId,
+              createdAt: orderRow.deliveryAddressCreatedAt?.toISOString() || "",
+              description: orderRow.deliveryAddressDescription || "",
+              street: orderRow.deliveryAddressStreet || "",
+              number: orderRow.deliveryAddressNumber || "",
+              city: orderRow.deliveryAddressCity || "",
+              state: orderRow.deliveryAddressState || "",
+              zipCode: orderRow.deliveryAddressZipCode || "",
+              lat: orderRow.deliveryAddressLat || "",
+              lng: orderRow.deliveryAddressLng || "",
+              complement: orderRow.deliveryAddressComplement ?? undefined,
+              numberComplement: orderRow.deliveryAddressNumberComplement ?? undefined,
+              customerId: orderRow.deliveryAddressCustomerId ?? undefined,
+              deliveryFee: orderRow.deliveryAddressFee ?? undefined,
+              expectedHandoffDuration:
+                orderRow.deliveryAddressExpectedHandoffDuration ?? 300,
+            },
+          }
+        : {}),
+      payments: paymentsByOrderId.get(orderRow.id) ?? [],
+      orderProducts: orderProductsByOrderId.get(orderRow.id) || [],
+      preparationTaskStation:
+        preparationStepCategoriesByOrderId.get(orderRow.id) || [],
+    };
+  });
 
   const driver = mapDriver(row);
   const latestRoutePoint = latestRoutePointByDispatchId.get(row.id);
@@ -392,9 +410,10 @@ async function getDispatchOrders(dispatchIds: string[]): Promise<DispatchOrderRo
       orders."dispatchOrderIndex",
       orders."number",
       orders."externalId",
+      orders."sourcePlatform"::text AS "sourcePlatform",
       (orders."deliveredAt" IS NOT NULL) AS "delivered",
       orders."customerId",
-      customer."name" AS "customerName",
+      COALESCE(customer."name", orders."customerNameSnapshot") AS "customerName",
       customer."phone" AS "customerPhone",
       orders."type"::text AS "type",
       orders."paymentMethod"::text AS "paymentMethod",
@@ -1094,7 +1113,7 @@ export class PrismaDispatchRepository implements DispatchRepository {
         dispatch."driverId",
         driver."createdAt" AS "driverCreatedAt",
         driver."name" AS "driverName",
-        driver."active" AS "driverActive",
+        ${RECENT_DRIVER_ACTIVITY_SQL} AS "driverActive",
         driver."priorityLevel" AS "driverPriorityLevel"
       FROM "Dispatch" dispatch
       LEFT JOIN "Driver" driver ON driver."id" = dispatch."driverId"
@@ -1171,7 +1190,7 @@ export class PrismaDispatchRepository implements DispatchRepository {
         dispatch."driverId",
         driver."createdAt" AS "driverCreatedAt",
         driver."name" AS "driverName",
-        driver."active" AS "driverActive",
+        ${RECENT_DRIVER_ACTIVITY_SQL} AS "driverActive",
         driver."priorityLevel" AS "driverPriorityLevel"
       FROM "Dispatch" dispatch
       LEFT JOIN "Driver" driver ON driver."id" = dispatch."driverId"
@@ -1468,7 +1487,10 @@ export class PrismaDispatchRepository implements DispatchRepository {
               SELECT 1
               FROM "Order" orders
               WHERE orders."dispatchId" = dispatch."id"
-                AND orders."deliveredAt" IS NULL
+                AND (
+                  (orders."type" = 'DELIVERY' AND orders."deliveredAt" IS NULL)
+                  OR (orders."type" = 'TAKEAWAY' AND dispatch."completedAt" IS NULL)
+                )
             )
           )
         )
@@ -1484,7 +1506,13 @@ export class PrismaDispatchRepository implements DispatchRepository {
             SELECT 1
             FROM "Order" activeOrders
             WHERE activeOrders."dispatchId" = dispatch."id"
-              AND activeOrders."deliveredAt" IS NULL
+              AND (
+                (activeOrders."type" = 'DELIVERY' AND activeOrders."deliveredAt" IS NULL)
+                OR (
+                  activeOrders."type" = 'TAKEAWAY'
+                  AND dispatch."completedAt" IS NULL
+                )
+              )
           )
           AND NOT EXISTS (
             SELECT 1
@@ -1495,7 +1523,16 @@ export class PrismaDispatchRepository implements DispatchRepository {
                 SELECT 1
                 FROM "Order" newerActiveOrders
                 WHERE newerActiveOrders."dispatchId" = newerDispatch."id"
-                  AND newerActiveOrders."deliveredAt" IS NULL
+                  AND (
+                    (
+                      newerActiveOrders."type" = 'DELIVERY'
+                      AND newerActiveOrders."deliveredAt" IS NULL
+                    )
+                    OR (
+                      newerActiveOrders."type" = 'TAKEAWAY'
+                      AND newerDispatch."completedAt" IS NULL
+                    )
+                  )
               )
               AND (
                 newerDispatch."startedDeliveryAt" > dispatch."startedDeliveryAt"
@@ -1539,7 +1576,7 @@ export class PrismaDispatchRepository implements DispatchRepository {
         dispatch."driverId",
         driver."createdAt" AS "driverCreatedAt",
         driver."name" AS "driverName",
-        driver."active" AS "driverActive",
+        ${RECENT_DRIVER_ACTIVITY_SQL} AS "driverActive",
         driver."priorityLevel" AS "driverPriorityLevel"
       FROM "Dispatch" dispatch
       LEFT JOIN "Driver" driver ON driver."id" = dispatch."driverId"
@@ -1615,7 +1652,7 @@ export class PrismaDispatchRepository implements DispatchRepository {
         dispatch."driverId",
         driver."createdAt" AS "driverCreatedAt",
         driver."name" AS "driverName",
-        driver."active" AS "driverActive",
+        ${RECENT_DRIVER_ACTIVITY_SQL} AS "driverActive",
         driver."priorityLevel" AS "driverPriorityLevel"
       FROM "Dispatch" dispatch
       LEFT JOIN "Driver" driver ON driver."id" = dispatch."driverId"
@@ -1624,7 +1661,10 @@ export class PrismaDispatchRepository implements DispatchRepository {
           SELECT 1
           FROM "Order" orders
           WHERE orders."dispatchId" = dispatch."id"
-            AND orders."deliveredAt" IS NULL
+            AND (
+              (orders."type" = 'DELIVERY' AND orders."deliveredAt" IS NULL)
+              OR (orders."type" = 'TAKEAWAY' AND dispatch."completedAt" IS NULL)
+            )
         )
       ORDER BY
         dispatch."dispatched" DESC,
@@ -1711,7 +1751,7 @@ export class PrismaDispatchRepository implements DispatchRepository {
         dispatch."driverId",
         driver."createdAt" AS "driverCreatedAt",
         driver."name" AS "driverName",
-        driver."active" AS "driverActive",
+        ${RECENT_DRIVER_ACTIVITY_SQL} AS "driverActive",
         driver."priorityLevel" AS "driverPriorityLevel"
       FROM "Dispatch" dispatch
       LEFT JOIN "Driver" driver ON driver."id" = dispatch."driverId"

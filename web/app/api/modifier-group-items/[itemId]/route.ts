@@ -341,15 +341,35 @@ export async function DELETE(
       );
     }
 
-    await prisma.modifierGroupItem.delete({
+    const updatedItem = await prisma.modifierGroupItem.update({
       where: {
         id: normalizedItemId,
+      },
+      data: {
+        modifierGroup: {
+          disconnect: true,
+        },
+      },
+      select: {
+        id: true,
+        modifierGroupId: true,
+        name: true,
+        description: true,
+        price: true,
+        translations: true,
+        photo: {
+          select: {
+            id: true,
+            url: true,
+          },
+        },
       },
     });
 
     return NextResponse.json({
-      id: normalizedItemId,
+      ...updatedItem,
       deleted: true,
+      disconnected: true,
     });
   } catch (error) {
     if (

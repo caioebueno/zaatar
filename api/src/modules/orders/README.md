@@ -2,6 +2,118 @@
 
 Base URL (local): `http://localhost:4000`
 
+## List Orders V1
+
+Endpoint:
+
+- `GET /v1/order` (manager auth)
+
+Authentication:
+
+- Requires manager owner access token:
+  - `Authorization: Bearer <manager-access-token>`
+
+Query params:
+
+- `page` (optional, default `1`)
+- `pageSize` (optional, default `50`, max `500`)
+- `from` (optional, `YYYY-MM-DD`)
+- `to` (optional, `YYYY-MM-DD`)
+- `timezone` (optional, default `America/New_York`)
+- `includeCanceled=true` (optional)
+
+Behavior:
+
+- Returns paginated order entities with the relevant order properties included directly in each item.
+- Includes customer, items, totals, payments, and delivery metadata in the list payload.
+- Uses the singular entity path for the versioned API.
+
+Success (`200`):
+
+```ts
+type ListOrdersV1Response = {
+  items: Array<{
+    id: string;
+    number: string | null;
+    externalId?: string | null;
+    createdAt: string;
+    scheduleFor?: string | null;
+    language?: string | null;
+    paidAt?: string | null;
+    deliveredAt?: string | null;
+    orderType: "DELIVERY" | "TAKEAWAY";
+    paymentMethod: "CARD" | "CASH" | "ZELLE";
+    paymentProvider?: "STRIPE" | null;
+    payments: Array<{
+      amount: number;
+      paidAt: string | null;
+      paymentType: "CARD" | "CASH" | "ZELLE";
+      paymentProvider: "STRIPE" | null;
+      externalId: string | null;
+    }>;
+    status: string;
+    canceled: boolean;
+    customer: {
+      name: string | null;
+      phone: string | null;
+    };
+    deliveryAddressId?: string | null;
+    deliveryAddress?: {
+      id: string;
+      description: string;
+      street: string;
+      number: string;
+      city: string;
+      state: string;
+      zipCode: string;
+      lat: string;
+      lng: string;
+      complement?: string;
+      numberComplement?: string;
+      deliveryFee?: number;
+      expectedHandoffDuration?: number;
+    } | null;
+    dispatchId?: string | null;
+    branchId?: string | null;
+    tags: string[];
+    progressiveDiscountSnapshot?: unknown;
+    items: Array<{
+      productId: string;
+      productName: string;
+      quantity: number;
+      unitAmountCents: number;
+      lineTotalCents: number;
+      comments?: string;
+      modifierGroupItems: Array<{
+        id: string;
+        name: string;
+        price: number;
+        description?: string;
+      }>;
+    }>;
+    subtotalCents: number;
+    discountedSubtotalCents: number;
+    tipPercent: number;
+    tipAmountCents: number;
+    deliveryFeeCents: number;
+    totalCents: number;
+  }>;
+  page: number;
+  pageSize: number;
+  totalItems: number;
+  totalPages: number;
+  hasPreviousPage: boolean;
+  hasNextPage: boolean;
+};
+```
+
+Common errors:
+
+- `400`: invalid `from`
+- `400`: invalid `to`
+- `400`: invalid `page`
+- `400`: invalid `pageSize`
+
 ## Get Orders By Station
 
 Endpoint:
@@ -15,13 +127,14 @@ Authentication:
 
 Query params:
 
-- `stationId` (required): station id to filter preparation tracks.
+- `stationId` (required): station id used to match the order's stored preparation category snapshot.
 
 Behavior:
 
 - Returns orders that either:
   - have pending preparation tracks for the provided station, or
-  - were created today.
+  - were created within the last 24 hours.
+- Station matching uses `PreparationStepCategory.stationId`, so orders stay visible to the station they were created for even if a preparation step is reassigned later.
 - Keeps the same ordering behavior used by the web route:
   - dispatch queue order first
   - then dispatch creation

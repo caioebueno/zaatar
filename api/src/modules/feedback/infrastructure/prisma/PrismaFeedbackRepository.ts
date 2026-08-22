@@ -1,5 +1,6 @@
 import prisma from "../../../../prisma.js";
 import type {
+  FeedbackAnalyticsRangeQuery,
   FeedbackListItem,
   FeedbackListQuery,
   FeedbackRepository,
@@ -32,6 +33,48 @@ type FeedbackRow = {
 };
 
 export class PrismaFeedbackRepository implements FeedbackRepository {
+  async listByDateTimeRange(
+    query: FeedbackAnalyticsRangeQuery,
+  ): Promise<FeedbackListItem[]> {
+    const rows = await prisma.$queryRaw<FeedbackRow[]>`
+      SELECT
+        cf."id",
+        cf."createdAt",
+        cf."orderId",
+        cf."language",
+        cf."overallRating",
+        cf."sentiment"::text AS "sentiment",
+        cf."productQuality",
+        cf."temperature",
+        cf."deliverySpeed",
+        cf."serviceExperience",
+        cf."comment",
+        o."number" AS "orderNumber",
+        o."status"::text AS "orderStatus",
+        o."type"::text AS "orderType",
+        c."name" AS "customerName",
+        c."phone" AS "customerPhone",
+        cr."id" AS "rewardId",
+        cr."title" AS "rewardTitle",
+        cr."status"::text AS "rewardStatus",
+        cr."quantity" AS "rewardQuantity",
+        cr."productId" AS "rewardProductId",
+        p."name" AS "rewardProductName"
+      FROM "CustomerFeedback" cf
+      INNER JOIN "Order" o ON o."id" = cf."orderId"
+      INNER JOIN "Branch" b ON b."id" = o."branchId"
+      LEFT JOIN "Customer" c ON c."id" = cf."customerId"
+      LEFT JOIN "CustomerReward" cr ON cr."feedbackId" = cf."id"
+      LEFT JOIN "Product" p ON p."id" = cr."productId"
+      WHERE b."businessId" = ${query.businessId}
+        AND cf."createdAt" >= ${query.startDate}::timestamptz
+        AND cf."createdAt" <= ${query.endDate}::timestamptz
+      ORDER BY cf."createdAt" DESC
+    `;
+
+    return rows.map(mapFeedbackRow);
+  }
+
   async list(query: FeedbackListQuery): Promise<FeedbackListItem[]> {
     const rows = await prisma.$queryRaw<FeedbackRow[]>`
       SELECT
@@ -69,35 +112,39 @@ export class PrismaFeedbackRepository implements FeedbackRepository {
       LIMIT ${query.limit}
     `;
 
-    return rows.map((row) => ({
-      id: row.id,
-      createdAt: row.createdAt,
-      orderId: row.orderId,
-      orderNumber: row.orderNumber,
-      orderStatus: row.orderStatus,
-      orderType: row.orderType,
-      customerName: row.customerName,
-      customerPhone: row.customerPhone,
-      language: row.language,
-      overallRating: Number(row.overallRating ?? 0),
-      sentiment: row.sentiment as FeedbackSentiment,
-      productQuality: toNullableNumber(row.productQuality),
-      temperature: toNullableNumber(row.temperature),
-      deliverySpeed: toNullableNumber(row.deliverySpeed),
-      serviceExperience: toNullableNumber(row.serviceExperience),
-      comment: row.comment,
-      reward: row.rewardId
-        ? {
-            id: row.rewardId,
-            title: row.rewardTitle ?? "Reward",
-            status: row.rewardStatus ?? "ACTIVE",
-            quantity: toNullableNumber(row.rewardQuantity),
-            productId: row.rewardProductId,
-            productName: row.rewardProductName,
-          }
-        : null,
-    }));
+    return rows.map(mapFeedbackRow);
   }
+}
+
+function mapFeedbackRow(row: FeedbackRow): FeedbackListItem {
+  return {
+    id: row.id,
+    createdAt: row.createdAt,
+    orderId: row.orderId,
+    orderNumber: row.orderNumber,
+    orderStatus: row.orderStatus,
+    orderType: row.orderType,
+    customerName: row.customerName,
+    customerPhone: row.customerPhone,
+    language: row.language,
+    overallRating: Number(row.overallRating ?? 0),
+    sentiment: row.sentiment as FeedbackSentiment,
+    productQuality: toNullableNumber(row.productQuality),
+    temperature: toNullableNumber(row.temperature),
+    deliverySpeed: toNullableNumber(row.deliverySpeed),
+    serviceExperience: toNullableNumber(row.serviceExperience),
+    comment: row.comment,
+    reward: row.rewardId
+      ? {
+          id: row.rewardId,
+          title: row.rewardTitle ?? "Reward",
+          status: row.rewardStatus ?? "ACTIVE",
+          quantity: toNullableNumber(row.rewardQuantity),
+          productId: row.rewardProductId,
+          productName: row.rewardProductName,
+        }
+      : null,
+  };
 }
 
 function toNullableNumber(value: number | null): number | null {

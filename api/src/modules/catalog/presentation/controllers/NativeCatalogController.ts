@@ -33,7 +33,7 @@ export class NativeCatalogController implements HttpController {
     });
 
     if (request.method === "GET" && pathname === "/products") {
-      return productsRoute.GET();
+      return productsRoute.GET(nextRequest);
     }
 
     if (request.method === "POST" && pathname === "/products") {

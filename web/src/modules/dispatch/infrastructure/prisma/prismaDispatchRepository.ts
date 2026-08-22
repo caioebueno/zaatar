@@ -162,6 +162,17 @@ type DispatchOrderCompositionRow = {
   scheduledOrders: bigint;
 };
 
+const RECENT_DRIVER_ACTIVITY_SQL = Prisma.sql`
+  EXISTS (
+    SELECT 1
+    FROM "DispatchRouteSession" session
+    INNER JOIN "DispatchRoutePoint" point
+      ON point."sessionId" = session."id"
+    WHERE session."driverId" = driver."id"
+      AND point."recordedAt" >= CURRENT_TIMESTAMP - INTERVAL '10 minutes'
+  )
+`;
+
 function mapDriver(row: DispatchRow): Driver | undefined {
   if (
     !row.driverId ||
@@ -816,9 +827,11 @@ async function assertDriverCanBeAssigned(
   driverId: string,
 ): Promise<void> {
   const [driver] = await tx.$queryRaw<{ id: string; active: boolean }[]>`
-    SELECT "id", "active"
-    FROM "Driver"
-    WHERE "id" = ${driverId}
+    SELECT
+      driver."id",
+      ${RECENT_DRIVER_ACTIVITY_SQL} AS "active"
+    FROM "Driver" driver
+    WHERE driver."id" = ${driverId}
     LIMIT 1
   `;
 
@@ -1100,10 +1113,10 @@ class PrismaDispatchRepository implements DispatchRepository {
       }
 
       const activeDrivers = await tx.$queryRaw<ActiveDriverRow[]>`
-        SELECT "id", "createdAt", "priorityLevel"
-        FROM "Driver"
-        WHERE "active" = true
-        ORDER BY "priorityLevel" ASC, "createdAt" ASC
+        SELECT driver."id", driver."createdAt", driver."priorityLevel"
+        FROM "Driver" driver
+        WHERE ${RECENT_DRIVER_ACTIVITY_SQL}
+        ORDER BY driver."priorityLevel" ASC, driver."createdAt" ASC
       `;
 
       if (activeDrivers.length === 0) {
@@ -1118,7 +1131,7 @@ class PrismaDispatchRepository implements DispatchRepository {
           dispatch."estimatedRoundTripDurationMinutes"
         FROM "Driver" driver
         INNER JOIN "Dispatch" dispatch ON dispatch."driverId" = driver."id"
-        WHERE driver."active" = true
+        WHERE ${RECENT_DRIVER_ACTIVITY_SQL}
           AND dispatch."id" != ${dispatchId}
           AND EXISTS (
             SELECT 1
@@ -1425,7 +1438,7 @@ class PrismaDispatchRepository implements DispatchRepository {
         dispatch."driverId",
         driver."createdAt" AS "driverCreatedAt",
         driver."name" AS "driverName",
-        driver."active" AS "driverActive",
+        ${RECENT_DRIVER_ACTIVITY_SQL} AS "driverActive",
         driver."priorityLevel" AS "driverPriorityLevel"
       FROM "Dispatch" dispatch
       LEFT JOIN "Driver" driver ON driver."id" = dispatch."driverId"
@@ -1626,7 +1639,7 @@ class PrismaDispatchRepository implements DispatchRepository {
         dispatch."driverId",
         driver."createdAt" AS "driverCreatedAt",
         driver."name" AS "driverName",
-        driver."active" AS "driverActive",
+        ${RECENT_DRIVER_ACTIVITY_SQL} AS "driverActive",
         driver."priorityLevel" AS "driverPriorityLevel"
       FROM "Dispatch" dispatch
       LEFT JOIN "Driver" driver ON driver."id" = dispatch."driverId"
@@ -1685,7 +1698,7 @@ class PrismaDispatchRepository implements DispatchRepository {
         dispatch."driverId",
         driver."createdAt" AS "driverCreatedAt",
         driver."name" AS "driverName",
-        driver."active" AS "driverActive",
+        ${RECENT_DRIVER_ACTIVITY_SQL} AS "driverActive",
         driver."priorityLevel" AS "driverPriorityLevel"
       FROM "Dispatch" dispatch
       LEFT JOIN "Driver" driver ON driver."id" = dispatch."driverId"
@@ -1868,7 +1881,7 @@ class PrismaDispatchRepository implements DispatchRepository {
         dispatch."driverId",
         driver."createdAt" AS "driverCreatedAt",
         driver."name" AS "driverName",
-        driver."active" AS "driverActive",
+        ${RECENT_DRIVER_ACTIVITY_SQL} AS "driverActive",
         driver."priorityLevel" AS "driverPriorityLevel"
       FROM "Dispatch" dispatch
       LEFT JOIN "Driver" driver ON driver."id" = dispatch."driverId"
@@ -1967,7 +1980,7 @@ class PrismaDispatchRepository implements DispatchRepository {
         dispatch."driverId",
         driver."createdAt" AS "driverCreatedAt",
         driver."name" AS "driverName",
-        driver."active" AS "driverActive",
+        ${RECENT_DRIVER_ACTIVITY_SQL} AS "driverActive",
         driver."priorityLevel" AS "driverPriorityLevel"
       FROM "Dispatch" dispatch
       LEFT JOIN "Driver" driver ON driver."id" = dispatch."driverId"

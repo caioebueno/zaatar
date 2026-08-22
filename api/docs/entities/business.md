@@ -22,6 +22,17 @@ type Business = {
 - `PATCH /businesses/current/settings`
 - `GET /public/order-link/settings` (public)
 
+## Update Fields
+
+`PATCH /businesses/current/settings` currently supports:
+
+- `name`
+- `brandColor`
+- `logoUrl`
+- `bannerPhotoUrl`
+
+Note: the UI label "header image" maps to `bannerPhotoUrl` in the API.
+
 ## Detailed Docs
 
 - [business.md](../business.md)

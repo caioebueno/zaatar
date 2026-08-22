@@ -21,6 +21,8 @@ export type HttpRequest = {
 
 export type HttpResponse = {
   body: unknown;
+  contentType?: string;
+  headers?: Record<string, string>;
   statusCode: number;
 };
 

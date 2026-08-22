@@ -23,6 +23,24 @@ type Branch = {
 - `PATCH /businesses/current/onboarding/branches/:branchId`
 - `DELETE /businesses/current/onboarding/branches/:branchId`
 
+## Update Fields
+
+`PATCH /businesses/current/onboarding/branches/:branchId` currently supports branch profile updates such as:
+
+- `name`
+- `addressDescription`
+- `addressGoogleMapsUrl`
+- `addressStreet`
+- `addressNumber`
+- `addressCity`
+- `addressState`
+- `addressZipCode`
+- `addressComplement`
+- `addressNumberComplement`
+- `operationHours`
+
+Note: if the UI says "opening hours", the API field name is `operationHours`.
+
 ## Detailed Docs
 
 - [business.md](../business.md)

@@ -4,6 +4,194 @@ Base URL (local): `http://localhost:4000`
 
 ---
 
+## List Orders V1
+
+`GET /v1/order`
+
+Auth: manager access token required.
+
+Returns paginated order entities with the relevant order properties included directly in each item, including customer, items, totals, payments, and delivery metadata.
+
+Query params:
+
+- `page` (optional, default `1`)
+- `pageSize` (optional, default `50`, max `500`)
+- `from` (optional, `YYYY-MM-DD`)
+- `to` (optional, `YYYY-MM-DD`)
+- `timezone` (optional, default `America/New_York`)
+- `includeCanceled=true` (optional)
+
+Success (`200`):
+
+```ts
+type ListOrdersV1Response = {
+  items: Array<{
+    id: string;
+    number: string | null;
+    externalId?: string | null;
+    createdAt: string;
+    scheduleFor?: string | null;
+    language?: string | null;
+    paidAt?: string | null;
+    deliveredAt?: string | null;
+    orderType: "DELIVERY" | "TAKEAWAY";
+    paymentMethod: "CARD" | "CASH" | "ZELLE";
+    paymentProvider?: "STRIPE" | null;
+    payments: Array<{
+      amount: number;
+      paidAt: string | null;
+      paymentType: "CARD" | "CASH" | "ZELLE";
+      paymentProvider: "STRIPE" | null;
+      externalId: string | null;
+    }>;
+    status: string;
+    canceled: boolean;
+    customer: {
+      name: string | null;
+      phone: string | null;
+    };
+    deliveryAddressId?: string | null;
+    deliveryAddress?: {
+      id: string;
+      description: string;
+      street: string;
+      number: string;
+      city: string;
+      state: string;
+      zipCode: string;
+      lat: string;
+      lng: string;
+      complement?: string;
+      numberComplement?: string;
+      deliveryFee?: number;
+      expectedHandoffDuration?: number;
+    } | null;
+    dispatchId?: string | null;
+    branchId?: string | null;
+    tags: string[];
+    progressiveDiscountSnapshot?: unknown;
+    items: Array<{
+      productId: string;
+      productName: string;
+      quantity: number;
+      unitAmountCents: number;
+      lineTotalCents: number;
+      comments?: string;
+      modifierGroupItems: Array<{
+        id: string;
+        name: string;
+        price: number;
+        description?: string;
+      }>;
+    }>;
+    subtotalCents: number;
+    discountedSubtotalCents: number;
+    tipPercent: number;
+    tipAmountCents: number;
+    deliveryFeeCents: number;
+    totalCents: number;
+  }>;
+  page: number;
+  pageSize: number;
+  totalItems: number;
+  totalPages: number;
+  hasPreviousPage: boolean;
+  hasNextPage: boolean;
+};
+```
+
+Validation errors:
+
+- `400` invalid `from`
+- `400` invalid `to`
+- `400` invalid `page`
+- `400` invalid `pageSize`
+
+Sample:
+
+```json
+{
+  "items": [
+    {
+      "id": "order-id",
+      "number": "128",
+      "externalId": "ext-128",
+      "createdAt": "2026-08-10T10:25:11.000Z",
+      "scheduleFor": null,
+      "language": "en",
+      "paidAt": "2026-08-10T10:25:12.000Z",
+      "deliveredAt": null,
+      "orderType": "DELIVERY",
+      "paymentMethod": "CARD",
+      "paymentProvider": "STRIPE",
+      "payments": [
+        {
+          "amount": 1798,
+          "paidAt": "2026-08-10T10:25:12.000Z",
+          "paymentType": "CARD",
+          "paymentProvider": "STRIPE",
+          "externalId": "pi_123"
+        }
+      ],
+      "status": "ACCEPTED",
+      "canceled": false,
+      "customer": {
+        "name": "John Doe",
+        "phone": "+14075550123"
+      },
+      "deliveryAddressId": "delivery-address-id",
+      "deliveryAddress": {
+        "id": "delivery-address-id",
+        "description": "Home",
+        "street": "Orange Ave",
+        "number": "10",
+        "city": "Orlando",
+        "state": "FL",
+        "zipCode": "32801",
+        "lat": "28.5383",
+        "lng": "-81.3792",
+        "deliveryFee": 299,
+        "expectedHandoffDuration": 300
+      },
+      "dispatchId": "dispatch-id",
+      "branchId": "branch-id",
+      "tags": ["vip"],
+      "items": [
+        {
+          "productId": "pizza-id",
+          "productName": "Pepperoni Pizza",
+          "quantity": 1,
+          "unitAmountCents": 1499,
+          "lineTotalCents": 1499,
+          "comments": "Extra crispy",
+          "modifierGroupItems": [
+            {
+              "id": "modifier-item-id",
+              "name": "Extra cheese",
+              "price": 300
+            }
+          ]
+        }
+      ],
+      "subtotalCents": 1499,
+      "discountedSubtotalCents": 1499,
+      "tipPercent": 0,
+      "tipAmountCents": 0,
+      "deliveryFeeCents": 299,
+      "totalCents": 1798
+    }
+  ],
+  "page": 1,
+  "pageSize": 50,
+  "totalItems": 1,
+  "totalPages": 1,
+  "hasPreviousPage": false,
+  "hasNextPage": false
+}
+```
+
+---
+
 ## List Orders
 
 `GET /orders`
@@ -438,11 +626,13 @@ Errors:
 
 Auth: manager access token required.
 
-Returns orders that have pending preparation tracks for the given station, or were created today. Used by the kitchen station display.
+Returns orders that have pending preparation tracks for the given station, or were created within the last 24 hours. Used by the kitchen station display.
 
 Query params:
 
 - `stationId` (required)
+
+Station matching uses the stored `PreparationStepCategory.stationId` snapshot on the order, so the order stays attached to the station it was created for even if a preparation step is reassigned later.
 
 Ordering:
 

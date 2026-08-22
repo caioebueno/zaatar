@@ -3,6 +3,8 @@ import {
   Alert,
   Animated,
   AppState,
+  Linking,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -25,34 +27,55 @@ import {
   type TrackingStatus,
 } from '@/lib/route-tracking';
 
-// ─── Design tokens ────────────────────────────────────────────────────────────
-const D = {
-  bg:     '#0a0807',
-  surf:   '#181310',
-  surf2:  '#1e1812',
-  surf3:  '#2a211b',
-  line:   'rgba(250,245,238,0.09)',
-  lineS:  'rgba(250,245,238,0.13)',
-  text:   '#faf5ee',
-  dim:    'rgba(250,245,238,0.68)',
-  faint:  'rgba(250,245,238,0.48)',
-  vfaint: 'rgba(250,245,238,0.28)',
-  zippy:  '#ff3d14',
-  green:  '#34d39a',
-  amber:  '#f2b338',
+// ─── Zappy tokens (dark) ──────────────────────────────────────────────────────
+const Z = {
+  bg:       '#191919',
+  chrome:   '#202020',
+  surface:  '#252525',
+  elevated: '#2F2F2F',
+  border:   'rgba(255,255,255,0.094)',
+  divider:  'rgba(255,255,255,0.055)',
+  fg1:      '#F1F1F1',
+  fg2:      '#9B9B9B',
+  fg3:      '#B4B4B4',
+  brand:    '#FF3D14',
+  volt:     '#FFD600',
+  success:  '#22C55E',
 };
 
 const SANS    = 'Geist_400Regular';
+const SANS_M  = 'Geist_500Medium';
+const SANS_SB = 'Geist_600SemiBold';
 const SANS_B  = 'Geist_700Bold';
-const SANS_EB = 'Geist_800ExtraBold';
 const MONO    = 'GeistMono_400Regular';
-const MONO_B  = 'GeistMono_700Bold';
 
-// ─── Past delivery type ───────────────────────────────────────────────────────
+const money = (cents: number) => 'R$ ' + (cents / 100).toFixed(2).replace('.', ',');
+
+// Tracking counts as "on" only while we're actually sending location to the
+// server — i.e. a location batch was flushed within this window. A registered
+// background task that isn't producing/uploading fixes is treated as off.
+const SENDING_WINDOW_MS = 90_000;
+
+type Addr = NonNullable<DispatchEntity['orders'][number]['deliveryAddress']>;
+
+function openMaps(addr: Addr) {
+  const query = encodeURIComponent(`${addr.street} ${addr.number}, ${addr.city}, ${addr.state}, ${addr.zipCode}`);
+  const url = Platform.OS === 'ios' ? `maps://maps.apple.com/?q=${query}` : `geo:0,0?q=${query}`;
+  Linking.openURL(url).catch(() => Linking.openURL(`https://maps.google.com/?q=${query}`));
+}
+
+function paymentLabel(m: string): string {
+  const map: Record<string, string> = {
+    CREDIT_CARD: 'Cartão', DEBIT_CARD: 'Débito', CASH: 'Dinheiro', PIX: 'Pix', CARD: 'Cartão',
+    cash: 'Dinheiro', card: 'Cartão',
+  };
+  return map[m] ?? m;
+}
+
+// ─── Past delivery type + mappers ─────────────────────────────────────────────
 type PastDelivery = {
   id: string;
   customer: string;
-  extraCount: number;
   address: string;
   etaMin: number | null;
   actualMin: number | null;
@@ -79,10 +102,7 @@ function mapDispatchToPast(d: DispatchEntity): PastDelivery | null {
   return {
     id: d.id,
     customer: first.customer?.name ?? 'Cliente',
-    extraCount: sorted.length - 1,
-    address: first.deliveryAddress
-      ? `${first.deliveryAddress.street}, ${first.deliveryAddress.number}`
-      : '—',
+    address: first.deliveryAddress ? `${first.deliveryAddress.street}, ${first.deliveryAddress.number}` : '—',
     etaMin,
     actualMin,
     at: new Date(d.startedDeliveryAt).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
@@ -94,419 +114,101 @@ function dateRangeFor(filter: 'today' | 'week' | 'month'): { start: string; end:
   const now = new Date();
   const end = now.toISOString().split('T')[0];
   const from = new Date(now);
-  if (filter === 'week')  from.setDate(now.getDate() - 6);
+  if (filter === 'week') from.setDate(now.getDate() - 6);
   if (filter === 'month') from.setDate(now.getDate() - 29);
   return { start: from.toISOString().split('T')[0], end };
 }
 
-// ─── Animated ring dot (pulse) ────────────────────────────────────────────────
-function RingDot({ color = D.green, size = 8 }: { color?: string; size?: number }) {
+// ─── Primitives ───────────────────────────────────────────────────────────────
+function Label({ children, style }: { children: React.ReactNode; style?: object }) {
+  return <Text style={[primStyles.label, style]}>{children}</Text>;
+}
+
+function LiveDot({ color = Z.brand, size = 8 }: { color?: string; size?: number }) {
   const ring = useRef(new Animated.Value(0)).current;
   useEffect(() => {
     Animated.loop(
       Animated.sequence([
         Animated.timing(ring, { toValue: 1, duration: 1800, useNativeDriver: true }),
-        Animated.delay(400),
+        Animated.delay(300),
       ])
     ).start();
   }, []);
-  const scale   = ring.interpolate({ inputRange: [0, 1], outputRange: [1, 2.4] });
-  const opacity = ring.interpolate({ inputRange: [0, 0.7, 1], outputRange: [0.6, 0.1, 0] });
+  const scale = ring.interpolate({ inputRange: [0, 1], outputRange: [1, 2.4] });
+  const opacity = ring.interpolate({ inputRange: [0, 0.7, 1], outputRange: [0.5, 0.1, 0] });
   return (
     <View style={{ width: size, height: size }}>
-      <Animated.View style={{
-        position: 'absolute', inset: 0, borderRadius: size / 2,
-        backgroundColor: color, transform: [{ scale }], opacity,
-      }} />
+      <Animated.View style={{ position: 'absolute', inset: 0, borderRadius: size / 2, backgroundColor: color, transform: [{ scale }], opacity }} />
       <View style={{ position: 'absolute', inset: 0, borderRadius: size / 2, backgroundColor: color }} />
     </View>
   );
 }
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function paymentLabel(m: string) {
-  if (m === 'cash') return 'Dinheiro';
-  if (m === 'card') return 'Cartão';
-  return m;
-}
-
-// ─── ActivateCard ─────────────────────────────────────────────────────────────
-function ActivateCard({ onActivate, loading }: { onActivate: () => void; loading: boolean }) {
-  const now     = new Date();
-  const timeStr = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-
-  return (
-    <View style={activateStyles.card}>
-      {/* Header strip */}
-      <View style={activateStyles.strip}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-          <View style={activateStyles.offlineDot} />
-          <Text style={activateStyles.stripLabel}>Offline · Inativo</Text>
-        </View>
-        <Text style={activateStyles.timeText}>{timeStr}</Text>
-      </View>
-
-      <View style={{ padding: 16, paddingBottom: 18 }}>
-        <Text style={activateStyles.title}>Iniciar turno de entregas</Text>
-        <Text style={activateStyles.subtitle}>
-          Ative sua disponibilidade para começar a receber pedidos de entrega.
-        </Text>
-
-        <TouchableOpacity
-          style={[activateStyles.btn, loading && { opacity: 0.6 }]}
-          onPress={onActivate}
-          disabled={loading}
-          activeOpacity={0.88}
-        >
-          <Text style={activateStyles.btnText}>Ficar disponível</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
-}
-
-const activateStyles = StyleSheet.create({
-  card:       { backgroundColor: D.surf, borderWidth: 1, borderColor: D.line, borderRadius: 18, overflow: 'hidden' },
-  strip:      { backgroundColor: D.surf2, borderBottomWidth: 1, borderBottomColor: D.line, paddingVertical: 10, paddingHorizontal: 16, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  offlineDot: { width: 7, height: 7, borderRadius: 3.5, backgroundColor: 'rgba(250,245,238,0.20)' },
-  stripLabel: { fontFamily: MONO_B, fontSize: 10, color: D.faint, letterSpacing: 1.0, textTransform: 'uppercase' },
-  timeText:   { fontFamily: MONO, fontSize: 10, color: D.vfaint },
-  title:      { fontSize: 16, fontFamily: SANS_EB, color: D.text, letterSpacing: -0.4, marginBottom: 6 },
-  subtitle:   { fontSize: 12.5, fontFamily: SANS, color: D.faint, lineHeight: 20, marginBottom: 18 },
-  btn:        { height: 50, borderRadius: 14, backgroundColor: D.zippy, alignItems: 'center', justifyContent: 'center', shadowColor: D.zippy, shadowOffset: { width: 0, height: 3 }, shadowOpacity: 0.28, shadowRadius: 12, elevation: 5 },
-  btnText:    { fontFamily: SANS_B, fontSize: 14, color: '#fff', letterSpacing: -0.1 },
+const primStyles = StyleSheet.create({
+  label: { fontFamily: SANS_M, fontSize: 12, color: Z.fg3, letterSpacing: 0.6, textTransform: 'uppercase' },
+  card: { backgroundColor: Z.surface, borderWidth: 1, borderColor: Z.border, borderRadius: 12 },
 });
 
-function TrackingGlyph({ active }: { active: boolean }) {
-  if (active) {
-    return (
-      <View style={trackingCardStyles.activeGlyph}>
-        <View style={trackingCardStyles.activeGlyphDot} />
-      </View>
-    );
-  }
-
-  return (
-    <View style={trackingCardStyles.inactiveGlyph}>
-      <Ionicons name="location-outline" size={26} color={D.faint} />
-    </View>
-  );
-}
-
-// ─── LocationTrackingCard ─────────────────────────────────────────────────────
-function LocationTrackingCard({
-  active,
-  busy,
-  mode,
-  onPress,
-}: {
-  active: boolean;
-  busy: boolean;
-  mode: TrackingStatus['mode'];
-  onPress: () => void;
-}) {
-  const title = active ? 'Rastreamento ativado' : 'Rastreamento desativado';
-  const subtitle = active
-    ? mode === 'route'
-      ? 'COMPARTILHANDO POSIÇÃO • ENTREGA EM ROTA'
-      : 'COMPARTILHANDO POSIÇÃO • SEGUNDO PLANO'
-    : null;
-  const ctaLabel = active ? 'Desativar rastreamento' : 'Ativar rastreamento de posição';
-
-  return (
-    <View
-      style={[
-        trackingCardStyles.card,
-        active ? trackingCardStyles.cardActive : trackingCardStyles.cardInactive,
-      ]}
-    >
-      <View style={trackingCardStyles.body}>
-        <TrackingGlyph active={active} />
-        <View style={{ flex: 1 }}>
-          <Text style={trackingCardStyles.title}>{title}</Text>
-          {subtitle ? (
-            <Text
-              style={[
-                trackingCardStyles.subtitle,
-                active ? trackingCardStyles.subtitleActive : trackingCardStyles.subtitleInactive,
-              ]}
-            >
-              {subtitle}
-            </Text>
-          ) : null}
-        </View>
-      </View>
-
-      <TouchableOpacity
-        style={[
-          trackingCardStyles.cta,
-          active ? trackingCardStyles.ctaActive : trackingCardStyles.ctaInactive,
-          busy && { opacity: 0.65 },
-        ]}
-        onPress={onPress}
-        disabled={busy}
-        activeOpacity={0.9}
-      >
-        <View style={trackingCardStyles.ctaInner}>
-          {!active ? <Ionicons name="paper-plane-outline" size={18} color={D.zippy} /> : null}
-          <Text
-            style={[
-              trackingCardStyles.ctaText,
-              active ? trackingCardStyles.ctaTextActive : trackingCardStyles.ctaTextInactive,
-            ]}
-          >
-            {ctaLabel}
-          </Text>
-        </View>
-      </TouchableOpacity>
-    </View>
-  );
-}
-
-const trackingCardStyles = StyleSheet.create({
-  card: {
-    backgroundColor: D.surf,
-    borderRadius: 22,
-    overflow: 'hidden',
-    borderWidth: 1.5,
-  },
-  cardActive: {
-    borderColor: 'rgba(52,211,154,0.46)',
-    shadowColor: D.green,
-    shadowOpacity: 0.12,
-    shadowRadius: 18,
-    shadowOffset: { width: 0, height: 6 },
-    elevation: 4,
-  },
-  cardInactive: {
-    borderColor: 'rgba(250,245,238,0.10)',
-  },
-  body: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 14,
-    paddingHorizontal: 18,
-    paddingTop: 18,
-    paddingBottom: 16,
-  },
-  activeGlyph: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: 'rgba(52,211,154,0.16)',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  activeGlyphDot: {
-    width: 14,
-    height: 14,
-    borderRadius: 7,
-    backgroundColor: D.green,
-  },
-  inactiveGlyph: {
-    width: 58,
-    height: 58,
-    borderRadius: 18,
-    backgroundColor: 'rgba(250,245,238,0.03)',
-    borderWidth: 1,
-    borderColor: 'rgba(250,245,238,0.08)',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 18,
-    fontFamily: SANS_EB,
-    color: D.text,
-    letterSpacing: -0.5,
-    marginBottom: 5,
-  },
-  subtitle: {
-    fontSize: 12.5,
-    lineHeight: 18,
-  },
-  subtitleActive: {
-    fontFamily: MONO_B,
-    color: D.green,
-    letterSpacing: 1.15,
-    textTransform: 'uppercase',
-  },
-  subtitleInactive: {
-    fontFamily: SANS,
-    color: D.faint,
-  },
-  cta: {
-    minHeight: 68,
-    borderTopWidth: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 18,
-    paddingVertical: 18,
-  },
-  ctaActive: {
-    backgroundColor: '#30251d',
-    borderTopColor: 'rgba(52,211,154,0.08)',
-  },
-  ctaInactive: {
-    backgroundColor: 'rgba(95,34,19,0.88)',
-    borderTopColor: 'rgba(255,61,20,0.18)',
-  },
-  ctaInner: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 10,
-  },
-  ctaText: {
-    fontFamily: SANS_B,
-    fontSize: 15,
-    letterSpacing: -0.2,
-  },
-  ctaTextActive: {
-    color: 'rgba(250,245,238,0.70)',
-  },
-  ctaTextInactive: {
-    color: D.zippy,
-  },
-});
-
-// ─── WaitingCard ──────────────────────────────────────────────────────────────
-function WaitingCard() {
-  const r0 = useRef(new Animated.Value(0)).current;
-  const r1 = useRef(new Animated.Value(0)).current;
-  const r2 = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    [[r0, 0], [r1, 700], [r2, 1400]].forEach(([r, delay]) => {
-      Animated.loop(
-        Animated.sequence([
-          Animated.delay(delay as number),
-          Animated.timing(r as Animated.Value, { toValue: 1, duration: 2400, useNativeDriver: true }),
-        ])
-      ).start();
-    });
-  }, []);
-
-  const rings = [r0, r1, r2];
-
-  return (
-    <View style={waitStyles.card}>
-      <View style={{ width: 56, height: 56, alignItems: 'center', justifyContent: 'center' }}>
-        {rings.map((r, i) => {
-          const scale   = r.interpolate({ inputRange: [0, 1], outputRange: [1, 2.2] });
-          const opacity = r.interpolate({ inputRange: [0, 0.7, 1], outputRange: [0.5, 0.08, 0] });
-          return (
-            <Animated.View key={i} style={[StyleSheet.absoluteFillObject, {
-              borderRadius: 28, borderWidth: 1, borderColor: D.lineS,
-              transform: [{ scale }], opacity,
-            }]} />
-          );
-        })}
-        <View style={waitStyles.bagCircle}>
-          <Ionicons name="bag-outline" size={22} color={D.faint} />
-        </View>
-      </View>
-
-      <View style={{ alignItems: 'center', gap: 4 }}>
-        <Text style={waitStyles.title}>Aguardando entregas</Text>
-      </View>
-
-      <View style={waitStyles.statusChip}>
-        <View style={{ width: 6, height: 6, borderRadius: 2, backgroundColor: D.green }} />
-        <Text style={waitStyles.statusText}>Conectado · Em serviço</Text>
-      </View>
-    </View>
-  );
-}
-
-const waitStyles = StyleSheet.create({
-  card:       { backgroundColor: D.surf, borderWidth: 1, borderColor: D.line, borderRadius: 18, paddingVertical: 24, paddingHorizontal: 20, alignItems: 'center', gap: 12 },
-  bagCircle:  { width: 56, height: 56, borderRadius: 28, backgroundColor: D.surf2, borderWidth: 1, borderColor: D.line, alignItems: 'center', justifyContent: 'center' },
-  title:      { fontSize: 15, fontFamily: SANS_B, color: D.dim, letterSpacing: -0.2, textAlign: 'center' },
-  sub:        { fontSize: 12, fontFamily: SANS, color: D.faint, lineHeight: 18, textAlign: 'center' },
-  statusChip: { flexDirection: 'row', alignItems: 'center', gap: 7, backgroundColor: D.surf2, borderWidth: 1, borderColor: D.line, borderRadius: 9, paddingVertical: 7, paddingHorizontal: 14 },
-  statusText: { fontFamily: MONO, fontSize: 10, color: D.dim, letterSpacing: 0.8 },
-});
-
-// ─── ActiveDeliveryCard ───────────────────────────────────────────────────────
+// ─── Active delivery card ─────────────────────────────────────────────────────
 function ActiveDeliveryCard({ dispatch, onNavigate }: { dispatch: DispatchEntity; onNavigate: () => void }) {
   const sorted = [...dispatch.orders].sort((a, b) => a.dispatchOrderIndex - b.dispatchOrderIndex);
-  const order  = sorted[0];
+  const order = sorted.find((o) => !o.deliveredAt) ?? sorted[0];
   if (!order) return null;
 
-  const addr       = order.deliveryAddress;
-  const eta        = dispatch.estimatedDeliveryDurationMinutes ?? order.estimatedDeliveryDurationMinutes ?? '—';
-  const total      = calculateOrderTotal(order);
-  const paid       = !!order.paidAt;
+  const addr = order.deliveryAddress;
+  const eta = dispatch.estimatedDeliveryDurationMinutes ?? order.estimatedDeliveryDurationMinutes ?? null;
+  const total = calculateOrderTotal(order);
+  const paid = !!order.paidAt;
+  const stops = dispatch.orders.length;
 
   return (
-    <View style={activeStyles.card}>
-      {/* Alert strip */}
+    <View style={[primStyles.card, { borderColor: 'rgba(255,61,20,0.30)', overflow: 'hidden' }]}>
       <View style={activeStyles.strip}>
-        <RingDot color={D.zippy} size={8} />
-        <Text style={activeStyles.stripLabel}>{dispatch.startedDeliveryAt ? 'Entrega Ativa' : 'Entrega Pendente'} · #{order.number ?? order.id.slice(0, 6)}</Text>
-        <View style={{ marginLeft: 'auto', flexDirection: 'row', alignItems: 'center', gap: 5 }}>
-          <Ionicons name="time-outline" size={12} color={D.dim} />
-          <Text style={activeStyles.etaText}>{eta} min</Text>
-        </View>
+        <LiveDot />
+        <Text style={{ flex: 1, fontFamily: SANS_SB, fontSize: 14, color: Z.brand }}>Despacho em andamento</Text>
+        <Text style={{ fontFamily: MONO, fontSize: 13, color: Z.fg3 }}>{stops} {stops === 1 ? 'parada' : 'paradas'}</Text>
       </View>
 
-      <View style={{ padding: 14, gap: 12 }}>
-        {/* Customer name */}
-        <Text style={activeStyles.customerName} numberOfLines={1}>
+      <View style={{ padding: 16 }}>
+        <Label style={{ marginBottom: 6 }}>Próxima parada</Label>
+        <Text style={{ fontFamily: SANS_B, fontSize: 26, color: Z.fg1, letterSpacing: -0.65, lineHeight: 31, marginBottom: 12 }}>
           {order.customer?.name ?? 'Cliente'}
         </Text>
 
-        {/* Address */}
         {addr && (
-          <View style={activeStyles.addrRow}>
-            <Ionicons name="location-outline" size={15} color={D.zippy} />
-            <View style={{ flex: 1 }}>
-              <Text style={activeStyles.addrText} numberOfLines={2}>
-                {addr.street}, {addr.number}
-                {addr.complement ? ` — ${addr.complement}` : ''}
+          <TouchableOpacity style={[activeStyles.addr, { marginBottom: 14 }]} onPress={() => openMaps(addr)} activeOpacity={0.85}>
+            <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 10 }}>
+              <Ionicons name="location" size={16} color={Z.brand} style={{ marginTop: 3 }} />
+              <Text style={{ flex: 1, fontFamily: SANS, fontSize: 15, lineHeight: 22, color: Z.fg1 }}>
+                {addr.street}, {addr.number}{addr.complement ? ` — ${addr.complement}` : ''}
               </Text>
-              <Text style={activeStyles.addrSub}>
-                {addr.city}
-                {typeof eta === 'number' ? ` · ${eta} min estimado` : ''}
-              </Text>
+              <Ionicons name="chevron-forward" size={15} color={Z.fg3} style={{ marginTop: 3 }} />
             </View>
-          </View>
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginTop: 12, paddingTop: 12, borderTopWidth: 1, borderTopColor: Z.divider }}>
+              <Text style={{ fontFamily: SANS_M, fontSize: 14, color: Z.brand }}>Abrir no Google Maps</Text>
+              {eta != null && <Text style={{ fontFamily: MONO, fontSize: 13, color: Z.fg3 }}>{eta} min</Text>}
+            </View>
+          </TouchableOpacity>
         )}
 
-        {/* Items */}
-        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
-          {order.orderProducts.slice(0, 3).map((op) => (
-            <View key={op.id} style={activeStyles.itemChip}>
-              <Text style={activeStyles.itemQty}>{op.quantity}×</Text>
-              <Text style={activeStyles.itemName} numberOfLines={1}>{op.product.name}</Text>
-            </View>
-          ))}
-          {order.orderProducts.length > 3 && (
-            <View style={activeStyles.itemChip}>
-              <Text style={activeStyles.itemName}>+{order.orderProducts.length - 3}</Text>
-            </View>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+          {paid ? (
+            <Text style={{ fontFamily: SANS_M, fontSize: 14, color: Z.fg2 }}>
+              Pago em {paymentLabel(order.paymentMethod)} · nada a receber
+            </Text>
+          ) : (
+            <>
+              <Ionicons name="alert-circle" size={15} color={Z.volt} />
+              <Text style={{ fontFamily: SANS_SB, fontSize: 14, color: Z.volt }}>
+                Receber {money(total)} em {paymentLabel(order.paymentMethod)}
+              </Text>
+            </>
           )}
         </View>
 
-        {/* Value + payment */}
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-          <View>
-            <Text style={activeStyles.valueKicker}>Valor · {paymentLabel(order.paymentMethod)}</Text>
-            <Text style={activeStyles.valueAmount}>R$ {(total / 100).toFixed(2).replace('.', ',')}</Text>
-          </View>
-          <View style={[activeStyles.payBadge, paid ? activeStyles.payBadgePaid : activeStyles.payBadgePending]}>
-            <View style={[{ width: 6, height: 6, borderRadius: 2 }, paid ? { backgroundColor: D.green } : { backgroundColor: D.zippy }]} />
-            <Text style={[activeStyles.payBadgeText, { color: paid ? D.green : D.zippy }]}>
-              {paid ? 'PAGO' : paymentLabel(order.paymentMethod).toUpperCase()}
-            </Text>
-          </View>
-        </View>
-
-        {/* Navigate CTA */}
-        <TouchableOpacity style={activeStyles.navBtn} onPress={onNavigate} activeOpacity={0.88}>
-          <Ionicons name="navigate" size={16} color="#fff" />
-          <Text style={activeStyles.navBtnText}>Ver Entrega</Text>
+        <TouchableOpacity style={btnStyles.brand} onPress={onNavigate} activeOpacity={0.88}>
+          <Ionicons name="navigate" size={18} color="#fff" />
+          <Text style={btnStyles.brandText}>Continuar despacho</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -514,327 +216,223 @@ function ActiveDeliveryCard({ dispatch, onNavigate }: { dispatch: DispatchEntity
 }
 
 const activeStyles = StyleSheet.create({
-  card:         { backgroundColor: D.surf, borderWidth: 1.5, borderColor: 'rgba(255,61,20,0.28)', borderRadius: 18, overflow: 'hidden' },
-  strip:        { backgroundColor: 'rgba(255,61,20,0.14)', borderBottomWidth: 1, borderBottomColor: 'rgba(255,61,20,0.15)', paddingVertical: 9, paddingHorizontal: 16, flexDirection: 'row', alignItems: 'center', gap: 8 },
-  stripLabel:   { fontFamily: MONO_B, fontSize: 10, color: D.zippy, letterSpacing: 1.8, textTransform: 'uppercase' },
-  etaText:      { fontFamily: MONO_B, fontSize: 11, color: D.dim },
-  customerName: { fontSize: 22, fontFamily: SANS_EB, color: D.text, letterSpacing: -0.6 },
-  addrRow:      { flexDirection: 'row', alignItems: 'flex-start', gap: 9, backgroundColor: D.surf2, borderRadius: 11, padding: 10 },
-  addrText:     { fontSize: 13, fontFamily: SANS_B, color: D.text, lineHeight: 18, marginBottom: 3 },
-  addrSub:      { fontFamily: MONO, fontSize: 10, color: D.faint, letterSpacing: 0.4 },
-  itemChip:     { flexDirection: 'row', alignItems: 'center', gap: 5, backgroundColor: D.surf3, borderRadius: 8, paddingVertical: 5, paddingHorizontal: 9 },
-  itemQty:      { fontFamily: MONO_B, fontSize: 11, color: D.zippy },
-  itemName:     { fontSize: 12, fontFamily: SANS, color: D.dim, maxWidth: 110 },
-  valueKicker:  { fontFamily: MONO_B, fontSize: 9, letterSpacing: 1.2, textTransform: 'uppercase', color: D.faint, marginBottom: 3 },
-  valueAmount:  { fontSize: 20, fontFamily: SANS_EB, color: D.text, letterSpacing: -0.5 },
-  payBadge:     { flexDirection: 'row', alignItems: 'center', gap: 5, borderRadius: 999, paddingVertical: 5, paddingHorizontal: 12 },
-  payBadgePaid: { backgroundColor: 'rgba(52,211,154,0.09)', borderWidth: 1, borderColor: 'rgba(52,211,154,0.20)' },
-  payBadgePending: { backgroundColor: 'rgba(255,61,20,0.09)', borderWidth: 1, borderColor: 'rgba(255,61,20,0.18)' },
-  payBadgeText: { fontFamily: MONO_B, fontSize: 10, letterSpacing: 0.8 },
-  navBtn:       { height: 50, borderRadius: 14, backgroundColor: D.zippy, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 9 },
-  navBtnText:   { fontFamily: SANS_B, fontSize: 14, color: '#fff', letterSpacing: -0.1 },
+  strip: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 16, paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: Z.divider },
+  addr: { backgroundColor: Z.bg, borderWidth: 1, borderColor: Z.border, borderRadius: 8, padding: 14 },
 });
 
-// ─── PastSummaryCard ──────────────────────────────────────────────────────────
-function PastSummaryCard({ onPress }: { onPress: () => void }) {
+const btnStyles = StyleSheet.create({
+  brand: { height: 50, borderRadius: 8, backgroundColor: Z.brand, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 },
+  brandText: { fontFamily: SANS_SB, fontSize: 16, color: '#fff' },
+});
+
+// ─── Waiting card ─────────────────────────────────────────────────────────────
+function WaitingCard() {
+  return (
+    <View style={[primStyles.card, { padding: 20 }]}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 8 }}>
+        <LiveDot color={Z.success} size={9} />
+        <Text style={{ fontFamily: SANS_SB, fontSize: 16, color: Z.fg1 }}>Aguardando nova entrega</Text>
+      </View>
+      <Text style={{ fontFamily: SANS, fontSize: 15, lineHeight: 22, color: Z.fg3 }}>
+        Você será notificado assim que um despacho for atribuído.
+      </Text>
+    </View>
+  );
+}
+
+// ─── Tracking card ────────────────────────────────────────────────────────────
+function TrackingCard({ active, busy, onToggle }: { active: boolean; busy: boolean; onToggle: () => void }) {
+  return (
+    <View style={[primStyles.card, { padding: 16 }]}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 14 }}>
+        <View style={{ flex: 1, minWidth: 0 }}>
+          <Label style={{ marginBottom: 6 }}>Rastreamento de posição</Label>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+            {active && <LiveDot color={Z.success} size={8} />}
+            <Text style={{ fontFamily: SANS_B, fontSize: 20, color: active ? Z.success : Z.fg2, letterSpacing: -0.4 }}>
+              {active ? 'Ativado' : 'Desativado'}
+            </Text>
+          </View>
+        </View>
+        <TouchableOpacity
+          onPress={onToggle}
+          disabled={busy}
+          activeOpacity={0.85}
+          accessibilityRole="switch"
+          accessibilityState={{ checked: active, busy }}
+          style={{
+            width: 60, height: 34, borderRadius: 999, padding: 3, opacity: busy ? 0.6 : 1,
+            backgroundColor: active ? Z.success : Z.elevated,
+            borderWidth: 1, borderColor: active ? Z.success : Z.border,
+            flexDirection: 'row', alignItems: 'center', justifyContent: active ? 'flex-end' : 'flex-start',
+          }}
+        >
+          <View style={{ width: 26, height: 26, borderRadius: 999, backgroundColor: active ? '#0D0D0D' : Z.fg2 }} />
+        </TouchableOpacity>
+      </View>
+      <View style={{ marginTop: 14, paddingTop: 14, borderTopWidth: 1, borderTopColor: Z.divider }}>
+        <Text style={{ fontFamily: SANS, fontSize: 14, lineHeight: 21, color: Z.fg3 }}>
+          {active
+            ? 'Sua posição é enviada em segundo plano enquanto o app estiver aberto ou minimizado.'
+            : 'Ative para que a operação acompanhe sua rota em tempo real.'}
+        </Text>
+      </View>
+    </View>
+  );
+}
+
+// ─── Today summary ────────────────────────────────────────────────────────────
+function TodayCard({ onOpen }: { onOpen: () => void }) {
   const { token } = useAuth();
-  const [rows,    setRows]    = useState<PastDelivery[]>([]);
+  const [rows, setRows] = useState<PastDelivery[]>([]);
+  const [deliveries, setDeliveries] = useState(0);
+  const [earnings, setEarnings] = useState(0); // cents
   const [fetched, setFetched] = useState(false);
 
   useEffect(() => {
     if (!token) return;
     const { start, end } = dateRangeFor('today');
     listDriverDispatches(token, start, end)
-      .then(dispatches => {
-        const mapped = dispatches
-          .map(mapDispatchToPast)
-          .filter((d): d is PastDelivery => d !== null)
-          .sort((a, b) => b.at.localeCompare(a.at));
+      .then((dispatches) => {
+        const mapped = dispatches.map(mapDispatchToPast).filter((d): d is PastDelivery => d !== null);
         setRows(mapped);
+        const done = dispatches.flatMap((d) => d.orders).filter((o) => !!o.deliveredAt);
+        setDeliveries(done.length);
+        setEarnings(done.reduce((s, o) => s + (o.deliveryAddress?.deliveryFee ?? 0), 0));
       })
       .catch(() => {})
       .finally(() => setFetched(true));
   }, [token]);
 
-  const withTime  = rows.filter(d => d.actualMin !== null && d.etaMin !== null);
-  const avgActual = withTime.length ? Math.round(withTime.reduce((s, d) => s + d.actualMin!, 0) / withTime.length) : null;
-  const avgEta    = withTime.length ? Math.round(withTime.filter(d => d.etaMin !== null).reduce((s, d) => s + d.etaMin!, 0) / withTime.filter(d => d.etaMin !== null).length) : null;
-  const onTimePct = rows.length ? Math.round((rows.filter(d => d.status !== 'late').length / rows.length) * 100) : null;
-  const delta     = avgActual !== null && avgEta !== null ? avgActual - avgEta : null;
+  const total = rows.length;
+  const onTime = rows.filter((d) => d.status !== 'late').length;
+  const onTimePct = total ? Math.round((onTime / total) * 100) : null;
+  const withTime = rows.filter((d) => d.actualMin !== null);
+  const avg = withTime.length ? Math.round(withTime.reduce((s, d) => s + d.actualMin!, 0) / withTime.length) : null;
 
-  const chartRows = rows.slice(0, 6);
-  const maxVal    = Math.max(...chartRows.flatMap(r => [r.etaMin ?? 0, r.actualMin ?? 0]), 1);
-  const CHART_H   = 52;
+  const dash = fetched ? '—' : '…';
+  const stats: [string, string, string][] = [
+    ['Entregas', String(deliveries), Z.fg1],
+    ['No prazo', onTimePct != null ? `${onTimePct}%` : dash, onTimePct != null && onTimePct >= 80 ? Z.success : Z.volt],
+    ['Tempo médio', avg != null ? `${avg} min` : dash, Z.fg1],
+    ['Ganhos', earnings > 0 || fetched ? money(earnings) : dash, Z.success],
+  ];
 
   return (
-    <TouchableOpacity style={summaryStyles.card} onPress={onPress} activeOpacity={0.85}>
-      {/* Header */}
-      <View style={summaryStyles.headerRow}>
-        <View style={{ flex: 1 }}>
-          <Text style={summaryStyles.kicker}>Performance de Hoje</Text>
-          <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 4, flexWrap: 'wrap' }}>
-            <Text style={summaryStyles.heroNum}>{avgActual ?? (fetched ? '—' : '…')}</Text>
-            {avgActual !== null && <Text style={summaryStyles.heroUnit}>min</Text>}
-            {delta !== null && (
-              <View style={[summaryStyles.deltaBadge, delta > 0 ? summaryStyles.deltaBadgeLate : summaryStyles.deltaBadgeGood]}>
-                <Text style={[summaryStyles.deltaText, { color: delta > 0 ? D.amber : D.green }]}>
-                  {delta > 0 ? `+${delta}m acima` : delta < 0 ? `${Math.abs(delta)}m abaixo` : 'no prazo'}
-                </Text>
-              </View>
-            )}
-          </View>
-          {avgEta !== null && (
-            <Text style={summaryStyles.heroSub}>média real vs ETA de {avgEta} min</Text>
-          )}
-        </View>
-        <View style={summaryStyles.verTudoBtn}>
-          <Text style={summaryStyles.verTudoText}>Ver tudo</Text>
-          <Ionicons name="chevron-forward" size={12} color={D.faint} />
-        </View>
+    <TouchableOpacity style={[primStyles.card, { padding: 16 }]} onPress={onOpen} activeOpacity={0.85}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 16 }}>
+        <Text style={{ flex: 1, fontFamily: SANS_B, fontSize: 20, color: Z.fg1, letterSpacing: -0.4 }}>Hoje</Text>
+        <Text style={{ fontFamily: SANS_M, fontSize: 14, color: Z.brand }}>Ver histórico</Text>
+        <Ionicons name="chevron-forward" size={15} color={Z.brand} />
       </View>
-
-      {/* Mini bar chart */}
-      {chartRows.length > 0 && (
-        <View style={{ marginTop: 14 }}>
-          <View style={summaryStyles.chartRow}>
-            {chartRows.map((r) => {
-              const etaH  = r.etaMin    !== null ? Math.max(4, Math.round((r.etaMin    / maxVal) * CHART_H)) : 0;
-              const actH  = r.actualMin !== null ? Math.max(4, Math.round((r.actualMin / maxVal) * CHART_H)) : 0;
-              const barBg = r.status === 'late' ? 'rgba(242,179,56,0.55)' : actH < etaH ? 'rgba(52,211,154,0.55)' : 'rgba(250,245,238,0.18)';
-              return (
-                <View key={r.id} style={{ flex: 1, alignItems: 'center', gap: 4 }}>
-                  <View style={{ width: '100%', height: CHART_H, flexDirection: 'row', alignItems: 'flex-end', gap: 2 }}>
-                    {etaH > 0 && (
-                      <View style={{
-                        flex: 1, height: etaH, borderRadius: 3,
-                        backgroundColor: 'transparent',
-                        borderTopWidth: 1, borderLeftWidth: 1, borderRightWidth: 1, borderBottomWidth: 0,
-                        borderColor: 'rgba(250,245,238,0.20)',
-                      }} />
-                    )}
-                    {actH > 0 && (
-                      <View style={{ flex: 1, height: actH, borderRadius: 3, backgroundColor: barBg }} />
-                    )}
-                  </View>
-                  <Text style={summaryStyles.chartLabel}>{r.at}</Text>
-                </View>
-              );
-            })}
+      <View style={todayStyles.grid}>
+        {stats.map(([label, value, color], i) => (
+          <View
+            key={label}
+            style={[
+              todayStyles.cell,
+              // Left column → right divider; bottom row → top divider.
+              i % 2 === 0 ? { borderRightWidth: 1 } : null,
+              i >= 2 ? { borderTopWidth: 1 } : null,
+            ]}
+          >
+            <Label style={{ marginBottom: 6 }}>{label}</Label>
+            <Text style={{ fontFamily: SANS_B, fontSize: 22, color, letterSpacing: -0.55 }}>{value}</Text>
           </View>
-          {/* Legend */}
-          <View style={{ flexDirection: 'row', gap: 12, marginTop: 6 }}>
-            {[
-              { bg: 'transparent', bc: 'rgba(250,245,238,0.25)', label: 'ETA' },
-              { bg: 'rgba(52,211,154,0.55)',  bc: undefined, label: 'Antes do prazo' },
-              { bg: 'rgba(242,179,56,0.55)',  bc: undefined, label: 'Atrasado' },
-            ].map(({ bg, bc, label }) => (
-              <View key={label} style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-                <View style={{
-                  width: 8, height: 8, borderRadius: 2,
-                  backgroundColor: bg,
-                  borderWidth: bc ? 1 : 0, borderColor: bc,
-                }} />
-                <Text style={summaryStyles.legendText}>{label}</Text>
-              </View>
-            ))}
-          </View>
-        </View>
-      )}
-
-      {/* Empty state */}
-      {fetched && rows.length === 0 && (
-        <View style={{ alignItems: 'center', paddingVertical: 18, gap: 6 }}>
-          <Ionicons name="bag-outline" size={28} color={D.faint} />
-          <Text style={{ fontFamily: MONO, fontSize: 11, color: D.faint }}>Nenhuma entrega hoje</Text>
-        </View>
-      )}
-
-      {/* Bottom stat row */}
-      {rows.length > 0 && (
-        <View style={summaryStyles.statRow}>
-          {[
-            { label: 'No prazo',  value: onTimePct !== null ? `${onTimePct}%` : '—', color: onTimePct !== null ? (onTimePct >= 80 ? D.green : D.amber) : D.faint },
-            { label: 'Entregas',  value: `${rows.length}`, color: D.dim },
-          ].map(({ label, value, color }) => (
-            <View key={label} style={summaryStyles.statCell}>
-              <Text style={summaryStyles.statLabel}>{label}</Text>
-              <Text style={[summaryStyles.statValue, { color }]}>{value}</Text>
-            </View>
-          ))}
-        </View>
-      )}
+        ))}
+      </View>
     </TouchableOpacity>
   );
 }
 
-const summaryStyles = StyleSheet.create({
-  card: {
-    backgroundColor: D.surf,
-    borderWidth: 1.5, borderColor: D.line,
-    borderRadius: 18, padding: 16,
-  },
-  headerRow: { flexDirection: 'row', alignItems: 'flex-start', gap: 12 },
-  kicker: {
-    fontFamily: MONO_B, fontSize: 11, letterSpacing: 1.4,
-    textTransform: 'uppercase', color: D.faint, marginBottom: 5,
-  },
-  heroNum:  { fontFamily: SANS_EB, fontSize: 28, color: D.text, letterSpacing: -1.2 },
-  heroUnit: { fontFamily: SANS_B,  fontSize: 14, color: D.dim },
-  heroSub:  { fontSize: 11.5, fontFamily: SANS, color: D.faint, marginTop: 4 },
-  deltaBadge:     { borderRadius: 6, paddingHorizontal: 7, paddingVertical: 2, borderWidth: 1 },
-  deltaBadgeGood: { backgroundColor: 'rgba(52,211,154,0.10)', borderColor: 'rgba(52,211,154,0.20)' },
-  deltaBadgeLate: { backgroundColor: 'rgba(242,179,56,0.10)', borderColor: 'rgba(242,179,56,0.20)' },
-  deltaText:      { fontFamily: MONO_B, fontSize: 11 },
-  verTudoBtn:  {
-    flexDirection: 'row', alignItems: 'center', gap: 3,
-    backgroundColor: D.surf2, borderRadius: 9,
-    paddingVertical: 7, paddingHorizontal: 10,
-    borderWidth: 1, borderColor: D.line,
-  },
-  verTudoText: { fontFamily: MONO_B, fontSize: 12, color: D.faint, letterSpacing: 0.4 },
-  chartRow:    { flexDirection: 'row', alignItems: 'flex-end', gap: 4 },
-  chartLabel:  { fontFamily: MONO, fontSize: 8, color: 'rgba(250,245,238,0.12)', letterSpacing: 0.4, textAlign: 'center' },
-  legendText:  { fontFamily: MONO, fontSize: 8.5, color: D.faint, letterSpacing: 0.4 },
-  statRow:     { flexDirection: 'row', gap: 8, marginTop: 14 },
-  statCell:    { flex: 1, backgroundColor: D.surf2, borderRadius: 9, padding: 10 },
-  statLabel:   { fontFamily: MONO_B, fontSize: 8.5, letterSpacing: 1.0, textTransform: 'uppercase', color: D.faint, marginBottom: 3 },
-  statValue:   { fontSize: 13, fontFamily: SANS_B, letterSpacing: -0.2 },
+const todayStyles = StyleSheet.create({
+  // Exactly 2 cells per row (width 50%, no gap); 1px dividers via per-cell borders.
+  grid: { flexDirection: 'row', flexWrap: 'wrap', borderWidth: 1, borderColor: Z.divider, borderRadius: 8, overflow: 'hidden' },
+  cell: { width: '50%', backgroundColor: Z.surface, padding: 14, borderColor: Z.divider },
 });
 
-// ─── HomeSkeletonCard ─────────────────────────────────────────────────────────
-function HomeSkeletonCard() {
-  const anim = useRef(new Animated.Value(0)).current;
-  useEffect(() => {
-    Animated.loop(
-      Animated.sequence([
-        Animated.timing(anim, { toValue: 1, duration: 850, useNativeDriver: true }),
-        Animated.timing(anim, { toValue: 0, duration: 850, useNativeDriver: true }),
-      ])
-    ).start();
-  }, []);
-  const opacity = anim.interpolate({ inputRange: [0, 1], outputRange: [0.07, 0.18] });
-
-  const Block = ({ w, h, style }: { w: number | string; h: number; style?: object }) => (
-    <Animated.View style={[{ width: w, height: h, borderRadius: 8, backgroundColor: D.text, opacity }, style]} />
-  );
-
-  return (
-    <View style={{ backgroundColor: D.surf, borderWidth: 1, borderColor: D.line, borderRadius: 18, overflow: 'hidden' }}>
-      <View style={{ backgroundColor: D.surf2, borderBottomWidth: 1, borderBottomColor: D.line, paddingVertical: 10, paddingHorizontal: 16 }}>
-        <Block w="38%" h={9} />
-      </View>
-      <View style={{ padding: 16, gap: 14 }}>
-        <Block w="55%" h={22} />
-        <Block w="80%" h={14} />
-        <Block w="100%" h={44} style={{ borderRadius: 12 }} />
-      </View>
-    </View>
-  );
-}
-
-// ─── HomeScreen ───────────────────────────────────────────────────────────────
+// ─── Home layout ──────────────────────────────────────────────────────────────
 function HomeScreen({
-  dispatch,
-  active,
-  activating,
-  loading,
-  trackingActive,
-  trackingBusy,
-  trackingMode,
-  onActivate,
-  onToggleTracking,
-  onShowHistory,
+  dispatch, loading, trackingActive, trackingBusy, onToggleTracking, onShowHistory,
 }: {
   dispatch: DispatchEntity | null;
-  active: boolean;
-  activating: boolean;
   loading: boolean;
   trackingActive: boolean;
   trackingBusy: boolean;
-  trackingMode: TrackingStatus['mode'];
-  onActivate: () => void;
   onToggleTracking: () => void;
   onShowHistory: () => void;
 }) {
   const { driver } = useAuth();
-  const router     = useRouter();
-  const insets     = useSafeAreaInsets();
-  const hour       = new Date().getHours();
-  const greeting   = hour < 12 ? 'Bom dia' : hour < 18 ? 'Boa tarde' : 'Boa noite';
-  const initial    = driver?.name?.[0]?.toUpperCase() ?? '?';
-  const firstName  = driver?.name?.split(' ')[0] ?? '';
+  const router = useRouter();
+  const insets = useSafeAreaInsets();
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? 'Bom dia' : hour < 18 ? 'Boa tarde' : 'Boa noite';
+  const firstName = driver?.name?.split(' ')[0] ?? '';
 
   return (
-    <View style={{ flex: 1, backgroundColor: D.bg }}>
-      {/* Top nav */}
-      <View style={[homeStyles.topNav, { paddingTop: insets.top + 8 }]}>
-        <View style={{ flex: 1 }}>
-          <Text style={homeStyles.greeting}>{greeting}</Text>
-          <Text style={homeStyles.driverName}>{firstName} 👋</Text>
+    <View style={{ flex: 1, backgroundColor: Z.bg }}>
+      {/* Header */}
+      <View style={[homeStyles.header, { paddingTop: insets.top + 12 }]}>
+        <View style={{ flex: 1, minWidth: 0 }}>
+          <Text style={{ fontFamily: SANS, fontSize: 14, color: Z.fg3, marginBottom: 4 }}>{greeting}</Text>
+          <Text style={{ fontFamily: SANS_B, fontSize: 24, color: Z.fg1, letterSpacing: -0.6, lineHeight: 26 }} numberOfLines={1}>{firstName}</Text>
         </View>
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 9 }}>
-          <TouchableOpacity style={homeStyles.avatar} onPress={() => router.push('/settings')} activeOpacity={0.8}>
-            <Text style={homeStyles.avatarText}>{initial}</Text>
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity style={homeStyles.gear} onPress={() => router.push('/settings')} activeOpacity={0.8}>
+          <Ionicons name="settings-outline" size={18} color={Z.fg1} />
+        </TouchableOpacity>
       </View>
 
-      {/* Scrollable body */}
+      {/* Body */}
       <ScrollView
         style={{ flex: 1 }}
-        contentContainerStyle={{ paddingHorizontal: 18, paddingBottom: insets.bottom + 36, gap: 14 }}
+        contentContainerStyle={{ padding: 16, paddingTop: 20, paddingBottom: insets.bottom + 32, gap: 16 }}
         showsVerticalScrollIndicator={false}
       >
-        <LocationTrackingCard
-          active={trackingActive}
-          busy={trackingBusy}
-          mode={trackingMode}
-          onPress={onToggleTracking}
-        />
-
-        {/* Delivery / Activate section */}
-        <View style={{ marginHorizontal: -6 }}>
-          {loading
-            ? <HomeSkeletonCard />
-            : !active
-              ? <ActivateCard onActivate={onActivate} loading={activating} />
-              : dispatch
-                ? <ActiveDeliveryCard dispatch={dispatch} onNavigate={() => router.push('/delivery')} />
-                : <WaitingCard />
-          }
-        </View>
-
-        <View style={{ gap: 6 }}>
-          <PastSummaryCard onPress={onShowHistory} />
-        </View>
-
+        {loading ? (
+          <View style={[primStyles.card, { padding: 28, alignItems: 'center' }]}>
+            <Text style={{ fontFamily: SANS_M, fontSize: 14, color: Z.fg3 }}>Carregando…</Text>
+          </View>
+        ) : (
+          <>
+            {dispatch ? (
+              <ActiveDeliveryCard dispatch={dispatch} onNavigate={() => router.push('/delivery')} />
+            ) : (
+              <WaitingCard />
+            )}
+            <TrackingCard active={trackingActive} busy={trackingBusy} onToggle={onToggleTracking} />
+          </>
+        )}
+        <TodayCard onOpen={onShowHistory} />
       </ScrollView>
     </View>
   );
 }
 
 const homeStyles = StyleSheet.create({
-  topNav:      { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 18, paddingBottom: 12 },
-  greeting:    { fontFamily: MONO_B, fontSize: 9.5, letterSpacing: 1.8, textTransform: 'uppercase', color: D.faint, marginBottom: 3 },
-  driverName:  { fontSize: 20, fontFamily: SANS_EB, color: D.text, letterSpacing: -0.6 },
-  avatar:      { width: 36, height: 36, borderRadius: 10, backgroundColor: 'rgba(255,61,20,0.12)', borderWidth: 1.5, borderColor: 'rgba(255,61,20,0.24)', alignItems: 'center', justifyContent: 'center' },
-  avatarText:  { fontFamily: SANS_EB, fontSize: 14, color: D.zippy, letterSpacing: -0.3 },
-  sectionKicker:   { fontFamily: MONO_B, fontSize: 11.5, letterSpacing: 1.5, textTransform: 'uppercase', color: D.faint },
+  header: {
+    flexDirection: 'row', alignItems: 'center', gap: 12,
+    paddingHorizontal: 16, paddingBottom: 16,
+    backgroundColor: Z.chrome, borderBottomWidth: 1, borderBottomColor: Z.border,
+  },
+  gear: {
+    width: 40, height: 40, borderRadius: 8, flexShrink: 0,
+    backgroundColor: Z.surface, borderWidth: 1, borderColor: Z.border,
+    alignItems: 'center', justifyContent: 'center',
+  },
 });
 
-// ─── Root export ──────────────────────────────────────────────────────────────
+// ─── Root export (container) ──────────────────────────────────────────────────
 export default function DriverHome() {
-  const { token, driver } = useAuth();
+  const { token } = useAuth();
   const router = useRouter();
-  const [dispatch,      setDispatch]      = useState<DispatchEntity | null>(null);
-  const [active,        setActive]        = useState(driver?.active ?? false);
-  const [activating,    setActivating]    = useState(false);
-  const [loadingInitial, setLoadingInitial] = useState(driver?.active ?? false);
-  const [trackingBusy,  setTrackingBusy]  = useState(false);
+  const [dispatch, setDispatch] = useState<DispatchEntity | null>(null);
+  const [loadingInitial, setLoadingInitial] = useState(true);
+  const [trackingBusy, setTrackingBusy] = useState(false);
   const [trackingStatus, setTrackingStatus] = useState<TrackingStatus>({
     hasBufferedPoints: false,
     isRunning: false,
     mode: 'inactive',
+    lastFlushAt: null,
   });
   const didInitialFetch = useRef(false);
 
@@ -843,12 +441,13 @@ export default function DriverHome() {
       hasBufferedPoints: false,
       isRunning: false,
       mode: 'inactive',
+      lastFlushAt: null,
     }));
     setTrackingStatus(nextStatus);
   }, []);
 
   const fetchDispatch = useCallback(async () => {
-    if (!token || !active) return;
+    if (!token) return;
     try {
       const data = await getNextDispatch(token);
       setDispatch(data);
@@ -860,7 +459,7 @@ export default function DriverHome() {
         setLoadingInitial(false);
       }
     }
-  }, [token, active]);
+  }, [token]);
 
   useEffect(() => {
     fetchDispatch();
@@ -887,20 +486,21 @@ export default function DriverHome() {
     };
   }, [refreshTrackingStatus]);
 
-  // Resume driver-level tracking on mount if already active (e.g. app restarted)
+  // The driver is always available: mark active + resume tracking on mount.
   const didResume = useRef(false);
   useEffect(() => {
-    if (didResume.current || !token || !active) return;
+    if (didResume.current || !token) return;
     didResume.current = true;
+    activateDriver(token).catch((e) => console.log('[home] activate error', e));
     startDriverTracking(token)
       .then(refreshTrackingStatus)
       .catch((e) => console.log('[home] resume tracking error', e));
-  }, [token, active, refreshTrackingStatus]);
+  }, [token, refreshTrackingStatus]);
 
   // Manage route tracking lifecycle from the dispatch polling state
   const prevRouteRef = useRef<{ id: string; started: boolean } | null>(null);
   useEffect(() => {
-    if (!token || !active) return;
+    if (!token) return;
     const cur = dispatch ? { id: dispatch.id, started: !!dispatch.startedDeliveryAt } : null;
     const prev = prevRouteRef.current;
 
@@ -915,31 +515,22 @@ export default function DriverHome() {
     }
 
     prevRouteRef.current = cur;
-  }, [dispatch, token, active, refreshTrackingStatus]);
-
-  const handleActivate = useCallback(async () => {
-    if (!token) return;
-    setActivating(true);
-    try {
-      await activateDriver(token);
-      setActive(true);
-      startDriverTracking(token)
-        .then(refreshTrackingStatus)
-        .catch((e) => console.log('[home] startDriverTracking error', e));
-    } catch (e) {
-      console.log('[home] activate error', e);
-    } finally {
-      setActivating(false);
-    }
-  }, [token, refreshTrackingStatus]);
+  }, [dispatch, token, refreshTrackingStatus]);
 
   const handleToggleTracking = useCallback(async () => {
     if (!token) return;
 
     setTrackingBusy(true);
 
+    // Branch on whether we're actually sending (matches the displayed state):
+    // if a registered task isn't uploading, tapping restarts it rather than stopping.
+    const sending =
+      trackingStatus.isRunning &&
+      trackingStatus.lastFlushAt != null &&
+      Date.now() - trackingStatus.lastFlushAt < SENDING_WINDOW_MS;
+
     try {
-      if (trackingStatus.isRunning) {
+      if (sending) {
         await stopDriverTracking();
       } else if (dispatch?.startedDeliveryAt) {
         await startRouteTracking(token, dispatch.id);
@@ -957,18 +548,21 @@ export default function DriverHome() {
     } finally {
       setTrackingBusy(false);
     }
-  }, [token, trackingStatus.isRunning, dispatch, refreshTrackingStatus]);
+  }, [token, trackingStatus.isRunning, trackingStatus.lastFlushAt, dispatch, refreshTrackingStatus]);
+
+  // On only when a location send actually reached the server recently — a
+  // registered task with no successful flush does not count as tracking.
+  const trackingSending =
+    trackingStatus.isRunning &&
+    trackingStatus.lastFlushAt != null &&
+    Date.now() - trackingStatus.lastFlushAt < SENDING_WINDOW_MS;
 
   return (
     <HomeScreen
       dispatch={dispatch}
-      active={active}
-      activating={activating}
       loading={loadingInitial}
-      trackingActive={trackingStatus.isRunning}
+      trackingActive={trackingSending}
       trackingBusy={trackingBusy}
-      trackingMode={trackingStatus.mode}
-      onActivate={handleActivate}
       onToggleTracking={handleToggleTracking}
       onShowHistory={() => router.push('/entregas')}
     />

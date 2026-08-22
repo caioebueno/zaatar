@@ -13,7 +13,7 @@ Description:
 - Returns dispatches using the same visibility logic as the existing dispatch board:
   - all today's dispatches, including completed ones
   - non-today dispatches only when they are not completed
-  - takeaway dispatches are completed when their order has `deliveredAt`
+  - takeaway dispatches are completed when `Dispatch.completedAt` is set
   - delivery dispatches are completed when every order in the dispatch has `deliveredAt`
 - Ordered by `dispatched`, then `queueIndex`, then dispatch/create time.
 - Supports query filters.

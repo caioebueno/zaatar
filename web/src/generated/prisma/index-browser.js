@@ -215,7 +215,9 @@ exports.Prisma.ModifierGroupScalarFieldEnum = {
   required: 'required',
   type: 'type',
   minSelection: 'minSelection',
-  maxSelection: 'maxSelection'
+  maxSelection: 'maxSelection',
+  squareModifierListId: 'squareModifierListId',
+  squareModifierListVersion: 'squareModifierListVersion'
 };
 
 exports.Prisma.ModifierGroupItemScalarFieldEnum = {
@@ -226,7 +228,9 @@ exports.Prisma.ModifierGroupItemScalarFieldEnum = {
   description: 'description',
   translations: 'translations',
   modifierGroupId: 'modifierGroupId',
-  fileId: 'fileId'
+  fileId: 'fileId',
+  squareModifierId: 'squareModifierId',
+  squareModifierVersion: 'squareModifierVersion'
 };
 
 exports.Prisma.BusinessScalarFieldEnum = {
@@ -293,6 +297,23 @@ exports.Prisma.ExternalIntegrationConnectionScalarFieldEnum = {
   environment: 'environment',
   userId: 'userId',
   businessId: 'businessId',
+  accessToken: 'accessToken',
+  refreshToken: 'refreshToken',
+  scope: 'scope',
+  tokenType: 'tokenType',
+  expiresAt: 'expiresAt',
+  connectedAt: 'connectedAt',
+  rawPayload: 'rawPayload'
+};
+
+exports.Prisma.SquareConnectionScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  environment: 'environment',
+  userId: 'userId',
+  businessId: 'businessId',
+  merchantId: 'merchantId',
   accessToken: 'accessToken',
   refreshToken: 'refreshToken',
   scope: 'scope',
@@ -529,7 +550,11 @@ exports.Prisma.ProductScalarFieldEnum = {
   comparedAtPrice: 'comparedAtPrice',
   categoryIndex: 'categoryIndex',
   categoryId: 'categoryId',
-  translations: 'translations'
+  translations: 'translations',
+  squareItemId: 'squareItemId',
+  squareItemVersion: 'squareItemVersion',
+  squareVariationId: 'squareVariationId',
+  squareVariationVersion: 'squareVariationVersion'
 };
 
 exports.Prisma.ComboProductItemScalarFieldEnum = {
@@ -562,7 +587,9 @@ exports.Prisma.MenuScalarFieldEnum = {
   updatedAt: 'updatedAt',
   name: 'name',
   active: 'active',
-  isDefault: 'isDefault'
+  isDefault: 'isDefault',
+  squareMenuId: 'squareMenuId',
+  squareMenuVersion: 'squareMenuVersion'
 };
 
 exports.Prisma.MenuVisitScalarFieldEnum = {
@@ -592,7 +619,11 @@ exports.Prisma.MenuCategoryScalarFieldEnum = {
   menuId: 'menuId',
   categoryId: 'categoryId',
   menuIndex: 'menuIndex',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  squareCategoryId: 'squareCategoryId',
+  squareCategoryVersion: 'squareCategoryVersion',
+  squareMenuCategoryId: 'squareMenuCategoryId',
+  squareMenuCategoryVersion: 'squareMenuCategoryVersion'
 };
 
 exports.Prisma.ProductCategoryScalarFieldEnum = {
@@ -749,6 +780,8 @@ exports.Prisma.OrderScalarFieldEnum = {
   type: 'type',
   paymentMethod: 'paymentMethod',
   paymentProvider: 'paymentProvider',
+  sourcePlatform: 'sourcePlatform',
+  customerNameSnapshot: 'customerNameSnapshot',
   tipAmount: 'tipAmount',
   tags: 'tags',
   progressiveDiscountSnapshot: 'progressiveDiscountSnapshot',
@@ -1125,6 +1158,14 @@ exports.PaymentProvider = exports.$Enums.PaymentProvider = {
   STRIPE: 'STRIPE'
 };
 
+exports.OrderSourcePlatform = exports.$Enums.OrderSourcePlatform = {
+  FOODY: 'FOODY',
+  DOORDASH: 'DOORDASH',
+  UBER_EATS: 'UBER_EATS',
+  SQUARE: 'SQUARE',
+  UNKNOWN: 'UNKNOWN'
+};
+
 exports.CustomerFeedbackSentiment = exports.$Enums.CustomerFeedbackSentiment = {
   NEGATIVE: 'NEGATIVE',
   NEUTRAL: 'NEUTRAL',
@@ -1163,6 +1204,7 @@ exports.Prisma.ModelName = {
   UserPushDevice: 'UserPushDevice',
   OwnerOtpChallenge: 'OwnerOtpChallenge',
   ExternalIntegrationConnection: 'ExternalIntegrationConnection',
+  SquareConnection: 'SquareConnection',
   ExternalMenuEntityMap: 'ExternalMenuEntityMap',
   ExternalMenuSyncRun: 'ExternalMenuSyncRun',
   BusinessMember: 'BusinessMember',

@@ -33,6 +33,8 @@ export type TrackingStatus = {
   hasBufferedPoints: boolean;
   isRunning: boolean;
   mode: 'inactive' | 'driver' | 'route';
+  /** Epoch ms of the last successful location send to the server, or null. */
+  lastFlushAt: number | null;
 };
 
 function buildPoint(loc: Location.LocationObject): RoutePoint {
@@ -90,7 +92,17 @@ TaskManager.defineTask(ROUTE_TASK, async ({
   data, error,
 }: { data?: { locations: Location.LocationObject[] }; error?: TaskManager.TaskManagerError | null }) => {
   console.log('[route-tracking] task fired at', new Date().toISOString());
-  if (error) { console.log('[route-tracking] task error', error); return; }
+  if (error) {
+    // kCLErrorLocationUnknown (kCLErrorDomain Code=0): iOS couldn't get a fix
+    // *right now*. It's transient — the OS keeps trying and delivers a location
+    // shortly — so ignore it and keep the task running. Any other code is real.
+    if (error.code === 0) {
+      console.log('[route-tracking] location unavailable yet (transient), waiting for next fix');
+    } else {
+      console.log('[route-tracking] task error', error);
+    }
+    return;
+  }
   if (!data?.locations?.length) { console.log('[route-tracking] no location data'); return; }
 
   const raw = await AsyncStorage.getItem(CTX_KEY);
@@ -147,8 +159,9 @@ export async function startDriverTracking(token: string): Promise<void> {
     ...existing,
     token,
     buffer: existing.buffer ?? [],
-    lastFlushAt: existing.lastFlushAt ?? Date.now(),
-
+    // Reset the send clock on (re)start so the "sending" indicator reflects
+    // this session — not a stale timestamp from a previous run.
+    lastFlushAt: Date.now(),
   }));
   await startTask(Location.Accuracy.High, 'Você está disponível para entregas.');
 }
@@ -218,6 +231,7 @@ export async function getTrackingStatus(): Promise<TrackingStatus> {
       hasBufferedPoints: false,
       isRunning: false,
       mode: 'inactive',
+      lastFlushAt: null,
     };
   }
 
@@ -227,5 +241,6 @@ export async function getTrackingStatus(): Promise<TrackingStatus> {
     hasBufferedPoints: (ctx.buffer?.length ?? 0) > 0,
     isRunning: true,
     mode: ctx.dispatchId ? 'route' : 'driver',
+    lastFlushAt: typeof ctx.lastFlushAt === 'number' ? ctx.lastFlushAt : null,
   };
 }

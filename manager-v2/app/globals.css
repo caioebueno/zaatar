@@ -1,0 +1,233 @@
+@import "tailwindcss";
+@import "./design-tokens.css";
+
+/* Wire the design-system font tokens to the next/font families loaded in layout.tsx */
+:root {
+  --font-display: var(--font-space-grotesk), system-ui, sans-serif;
+  --font-body:    var(--font-dm-sans), system-ui, sans-serif;
+  --font-mono:    var(--font-jetbrains-mono), "JetBrains Mono", monospace;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  min-height: 100%;
+  margin: 0;
+  background: var(--bg, #17181C);
+  color: var(--fg-1, #F1F1F2);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ── Login-screen animations & interactions ────────────────── */
+@keyframes zspin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%      { transform: translateX(-6px); }
+  40%      { transform: translateX(6px); }
+  60%      { transform: translateX(-4px); }
+  80%      { transform: translateX(4px); }
+}
+
+/* ── Shell button (analytics header / toolbar) ─────────────── */
+.zp-shell-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: #252525;
+  color: #E8E8E8;
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  cursor: pointer;
+  transition: background 0.1s ease, border-color 0.1s ease;
+}
+.zp-shell-btn:hover { background: #2F2F2F; border-color: rgba(255, 255, 255, 0.14); }
+
+/* ── Slide-in drawer (reviews) ─────────────────────────────── */
+@keyframes zp-drawer-overlay-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes zp-drawer-panel-in {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
+}
+.zp-drawer-overlay { animation: zp-drawer-overlay-in 220ms var(--ease-out-expo, ease); }
+.zp-drawer-panel { animation: zp-drawer-panel-in 260ms var(--ease-out-expo, cubic-bezier(0.16, 1, 0.3, 1)); will-change: transform; }
+
+.zp-country-item,
+.zp-restaurant,
+.zp-primary-btn {
+  transition:
+    background var(--duration-fast) var(--ease-out-expo),
+    border-color var(--duration-fast) var(--ease-out-expo),
+    box-shadow var(--duration-fast) var(--ease-out-expo),
+    transform var(--duration-fast) var(--ease-out-expo);
+}
+
+.zp-country-item:hover    { background: rgba(255, 255, 255, 0.06); }
+.zp-restaurant:hover      { background: #2A2A2F; border-color: rgba(255, 255, 255, 0.16); }
+.zp-primary-btn:not(:disabled):hover  { background: #D93411; }
+.zp-primary-btn:not(:disabled):active { transform: scale(0.98); }
+
+/* ── Integrations page buttons ─────────────────────────────── */
+.zp-ghost:hover { color: #F1F1F1 !important; background: rgba(255, 255, 255, 0.05) !important; }
+.zp-primary:not(:disabled):hover { filter: brightness(0.94); }
+.zp-primary:not(:disabled):active { transform: scale(0.98); }
+
+/* ── App sidebar ───────────────────────────────────────────── */
+.zp-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 0 10px;
+  height: 34px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: #75767C;
+  text-align: left;
+  transition: background 0.1s ease, color 0.1s ease;
+}
+.zp-nav-item:hover { background: rgba(255, 255, 255, 0.04); color: #D0D1D3; }
+.zp-nav-item:active { background: rgba(255, 255, 255, 0.07); }
+.zp-nav-item[data-active="true"] { background: rgba(255, 255, 255, 0.06); color: #F1F1F2; font-weight: 500; }
+
+.zp-key {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: #3D3E42;
+  letter-spacing: 0.02em;
+}
+.zp-nav-item:hover .zp-key { color: #56575C; }
+
+.zp-picker {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  padding: 7px 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.035);
+  cursor: pointer;
+  font-family: var(--font-body);
+  text-align: left;
+  transition: background 0.1s ease, border-color 0.1s ease;
+}
+.zp-picker:hover { background: rgba(255, 255, 255, 0.07); border-color: rgba(255, 255, 255, 0.14); }
+
+.zp-opt {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 7px 9px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 11.5px;
+  color: #9A9BA1;
+  text-align: left;
+  transition: background 0.1s ease, color 0.1s ease;
+}
+.zp-opt:hover { background: rgba(255, 255, 255, 0.05); color: #F1F1F1; }
+.zp-opt[data-active="true"] { color: #F1F1F1; }
+
+/* ── Orders screen ─────────────────────────────────────────── */
+.zp-row:hover { background: rgba(255, 255, 255, 0.035) !important; }
+.zp-quick:hover { background: rgba(255, 255, 255, 0.06); }
+.zp-cal-nav:hover { background: rgba(255, 255, 255, 0.07); }
+.zp-cal-cancel:hover { background: rgba(255, 255, 255, 0.06); }
+.zp-icon-btn:hover { background: rgba(255, 255, 255, 0.07); }
+.zp-maps-link:hover { color: #FF5C1A !important; }
+.zp-dispatch-member:hover { background: rgba(255, 255, 255, 0.05) !important; }
+.zp-task:hover { background: rgba(255, 255, 255, 0.035) !important; }
+
+/* ── Products screen ───────────────────────────────────────── */
+.zp-prow:hover { background: rgba(255, 255, 255, 0.035); }
+.zp-prow button:hover { border-color: currentColor !important; }
+.zp-secbtn:hover { color: #F1F1F1 !important; background: rgba(255, 255, 255, 0.05) !important; }
+.zp-attachrow:hover { background: rgba(255, 255, 255, 0.06) !important; }
+.zp-rowmenu:hover,
+.zp-rowmenu[data-state="open"] { color: #F1F1F1 !important; background: rgba(255, 255, 255, 0.07) !important; }
+
+/* ── Square-sync toasts (products) ─────────────────────────── */
+@keyframes zp-spin { to { transform: rotate(360deg); } }
+@keyframes zp-indet { 0% { transform: translateX(-100%); } 100% { transform: translateX(320%); } }
+@keyframes zp-toast-in { from { opacity: 0; transform: translateY(8px) scale(0.98); } to { opacity: 1; transform: none; } }
+.zp-toast { animation: zp-toast-in 220ms cubic-bezier(0.16, 1, 0.3, 1); }
+.zp-toastx:hover { color: #F1F1F1 !important; background: rgba(255, 255, 255, 0.07) !important; }
+.zp-retry:hover { border-color: #FF5C1A !important; color: #FF5C1A !important; }
+
+/* ── Radix menus / select / popover surfaces ───────────────── */
+@keyframes zp-menu-in {
+  from { opacity: 0; transform: translateY(-4px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.zp-menu {
+  background: #2F2F2F;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  z-index: 80;
+  transform-origin: var(--radix-popper-transform-origin);
+  animation: zp-menu-in 150ms var(--ease-out-expo, cubic-bezier(0.16, 1, 0.3, 1));
+}
+/* Select-style rows (uniform option list) */
+.zp-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 32px;
+  padding: 0 28px 0 10px;
+  border-radius: 6px;
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  color: #F1F1F2;
+  cursor: pointer;
+  outline: none;
+  user-select: none;
+  position: relative;
+}
+.zp-menu-item[data-highlighted] { background: #3A3A3A; }
+.zp-menu-item[data-disabled] { opacity: 0.4; cursor: default; }
+/* Highlight-only helper for bespoke item layouts (keyboard/pointer focus) */
+.zp-menu-hl { outline: none; }
+.zp-menu-hl[data-highlighted] { background: rgba(255, 255, 255, 0.06); }
+
+/* ── Input focus animation (product detail + drawers) ──────── */
+/* `.zp-input` = the field itself; `.zp-field` = a wrapper around a
+   borderless input (price/rate boxes), animated via :focus-within so the
+   accent ring lands on the visible border. */
+.zp-input,
+.zp-field {
+  transition:
+    border-color 150ms var(--ease-out-expo),
+    box-shadow 150ms var(--ease-out-expo),
+    background 150ms var(--ease-out-expo);
+}
+.zp-input:focus,
+.zp-field:focus-within {
+  border-color: #FF5C1A !important;
+  box-shadow: 0 0 0 3px rgba(255, 92, 26, 0.18);
+  outline: none;
+}
