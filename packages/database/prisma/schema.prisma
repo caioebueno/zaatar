@@ -189,6 +189,7 @@ model Business {
   integrations ExternalIntegrationConnection[]
   squareConnections SquareConnection[]
   squareCatalogSyncTasks SquareCatalogSyncTask[]
+  squareWebhookRuns SquareWebhookRun[]
   pushDevices  UserPushDevice[]
 }
 
@@ -270,6 +271,14 @@ enum SquareCatalogSyncTaskStatus {
 
 enum SquareCatalogSyncTaskType {
   PRODUCT_UPDATE
+}
+
+enum SquareWebhookRunStatus {
+  PROCESSING
+  SUCCESS
+  FAILED
+  IGNORED
+  DUPLICATE_SKIPPED
 }
 
 enum ExternalMenuSyncStatus {
@@ -355,6 +364,65 @@ model SquareCatalogSyncTask {
   @@index([businessId, productId, createdAt])
   @@index([status, availableAt, createdAt])
   @@index([productId, createdAt])
+}
+
+model SquareWebhookRun {
+  id                  String                 @id
+  createdAt           DateTime               @default(now())
+  updatedAt           DateTime               @updatedAt
+  business            Business?              @relation(fields: [businessId], references: [id], onDelete: SetNull)
+  businessId          String?
+  eventId             String?                @unique
+  eventType           String?
+  merchantId          String?
+  squareOrderId       String?
+  locationId          String?
+  squareOrderState    String?
+  signatureVerified   Boolean?
+  status              SquareWebhookRunStatus @default(PROCESSING)
+  action              String?
+  reason              String?
+  foodyOrderId        String?
+  firstReceivedAt     DateTime               @default(now())
+  lastReceivedAt      DateTime               @default(now())
+  processedAt         DateTime?
+  processingDurationMs Int?
+  attemptsCount       Int                    @default(0)
+  httpStatusCode      Int?
+  errorMessage        String?
+  webhookPayload      Json?
+  squareOrderPayload  Json?
+  responsePayload     Json?
+  attempts            SquareWebhookRunAttempt[]
+
+  @@index([businessId, createdAt])
+  @@index([businessId, status, createdAt])
+  @@index([eventType, createdAt])
+  @@index([squareOrderId, createdAt])
+}
+
+model SquareWebhookRunAttempt {
+  id                  String                 @id
+  createdAt           DateTime               @default(now())
+  run                 SquareWebhookRun       @relation(fields: [runId], references: [id], onDelete: Cascade)
+  runId               String
+  attemptNumber       Int
+  receivedAt          DateTime               @default(now())
+  finishedAt          DateTime?
+  processingDurationMs Int?
+  httpStatusCode      Int?
+  status              SquareWebhookRunStatus @default(PROCESSING)
+  action              String?
+  reason              String?
+  signatureVerified   Boolean?
+  errorMessage        String?
+  requestHeaders      Json?
+  webhookPayload      Json?
+  squareOrderPayload  Json?
+  responsePayload     Json?
+
+  @@unique([runId, attemptNumber])
+  @@index([runId, receivedAt])
 }
 
 model ExternalMenuEntityMap {

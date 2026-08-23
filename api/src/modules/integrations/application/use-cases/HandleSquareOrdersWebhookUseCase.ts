@@ -141,6 +141,7 @@ export class HandleSquareOrdersWebhookUseCase {
     eventType: string | null;
     foodyOrderId: string | null;
     reason?: string;
+    squareOrderPayload: unknown;
     squareOrderId: string | null;
   }> {
     const normalizedSquareOrderId = input.squareOrderId?.trim() ?? "";
@@ -150,6 +151,7 @@ export class HandleSquareOrdersWebhookUseCase {
         eventType: input.eventType,
         foodyOrderId: null,
         reason: "MISSING_ORDER_ID",
+        squareOrderPayload: null,
         squareOrderId: null,
       };
     }
@@ -160,6 +162,7 @@ export class HandleSquareOrdersWebhookUseCase {
         eventType: input.eventType,
         foodyOrderId: null,
         reason: "UNSUPPORTED_EVENT_TYPE",
+        squareOrderPayload: null,
         squareOrderId: normalizedSquareOrderId,
       };
     }
@@ -174,6 +177,8 @@ export class HandleSquareOrdersWebhookUseCase {
       throw new Error(`SQUARE_ORDER_NOT_FOUND: ${normalizedSquareOrderId}`);
     }
 
+    const squareOrderPayload = retrieved.order ?? null;
+
     const sourceName = normalizeSourceName(
       squareOrder.creation_source?.name ?? squareOrder.source?.name ?? null,
     );
@@ -183,49 +188,95 @@ export class HandleSquareOrdersWebhookUseCase {
         eventType: input.eventType,
         foodyOrderId: null,
         reason: "FOODY_ORIGIN",
+        squareOrderPayload,
         squareOrderId: squareOrder.id,
       };
     }
 
-    const existingOrder = await prisma.order.findUnique({
-      where: {
-        externalId: squareOrder.id,
-      },
-      select: {
-        createdAt: true,
-        id: true,
-        dispatchId: true,
-        type: true,
-      },
-    });
+    try {
+      const existingOrder = await prisma.order.findUnique({
+        where: {
+          externalId: squareOrder.id,
+        },
+        select: {
+          createdAt: true,
+          id: true,
+          dispatchId: true,
+          type: true,
+        },
+      });
 
-    if (existingOrder) {
+      if (existingOrder) {
+        const customerDetails = await resolveImportedOrderCustomerDetails(
+          squareOrder,
+          this.squareOrdersGateway,
+          input.accessToken ?? undefined,
+        );
+        await syncExistingFoodyOrderFromSquare(existingOrder, squareOrder, customerDetails);
+        return {
+          action: "updated",
+          eventType: input.eventType,
+          foodyOrderId: existingOrder.id,
+          squareOrderPayload,
+          squareOrderId: squareOrder.id,
+        };
+      }
+
       const customerDetails = await resolveImportedOrderCustomerDetails(
         squareOrder,
         this.squareOrdersGateway,
         input.accessToken ?? undefined,
       );
-      await syncExistingFoodyOrderFromSquare(existingOrder, squareOrder, customerDetails);
+      const importedOrder = await createFoodyOrderFromSquare(squareOrder, customerDetails);
       return {
-        action: "updated",
+        action: "imported",
         eventType: input.eventType,
-        foodyOrderId: existingOrder.id,
+        foodyOrderId: importedOrder.foodyOrderId,
+        squareOrderPayload,
         squareOrderId: squareOrder.id,
       };
+    } catch (error) {
+      throw SquareOrdersWebhookProcessingError.from(error, {
+        squareOrderId: squareOrder.id,
+        squareOrderPayload,
+      });
+    }
+  }
+}
+
+export class SquareOrdersWebhookProcessingError extends Error {
+  readonly squareOrderId: string | null;
+  readonly squareOrderPayload: unknown;
+
+  constructor(message: string, input: {
+    squareOrderId: string | null;
+    squareOrderPayload: unknown;
+  }) {
+    super(message);
+    this.name = "SquareOrdersWebhookProcessingError";
+    this.squareOrderId = input.squareOrderId;
+    this.squareOrderPayload = input.squareOrderPayload;
+  }
+
+  static from(
+    error: unknown,
+    input: {
+      squareOrderId: string | null;
+      squareOrderPayload: unknown;
+    },
+  ): SquareOrdersWebhookProcessingError {
+    if (error instanceof SquareOrdersWebhookProcessingError) {
+      return error;
     }
 
-    const customerDetails = await resolveImportedOrderCustomerDetails(
-      squareOrder,
-      this.squareOrdersGateway,
-      input.accessToken ?? undefined,
-    );
-    const importedOrder = await createFoodyOrderFromSquare(squareOrder, customerDetails);
-    return {
-      action: "imported",
-      eventType: input.eventType,
-      foodyOrderId: importedOrder.foodyOrderId,
-      squareOrderId: squareOrder.id,
-    };
+    const message =
+      error instanceof Error
+        ? error.message
+        : typeof error === "string"
+          ? error
+          : "SQUARE_ORDER_WEBHOOK_PROCESSING_FAILED";
+
+    return new SquareOrdersWebhookProcessingError(message, input);
   }
 }
 

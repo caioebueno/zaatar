@@ -18,6 +18,7 @@ import { makeSquareCatalogSyncTaskController } from "./modules/integrations/main
 import { makeSquareMenuSyncController } from "./modules/integrations/main/makeSquareMenuSyncController.js";
 import { makeSquareOAuthController } from "./modules/integrations/main/makeSquareOAuthController.js";
 import { makeSquareOrdersWebhookController } from "./modules/integrations/main/makeSquareOrdersWebhookController.js";
+import { makeSquareWebhookRunController } from "./modules/integrations/main/makeSquareWebhookRunController.js";
 import { makeGetOrderSalesAnalyticsController } from "./modules/analytics/main/makeGetOrderSalesAnalyticsController.js";
 import { makeGetOrderQuantityAnalyticsController } from "./modules/analytics/main/makeGetOrderQuantityAnalyticsController.js";
 import { makeGetRevenueAnalyticsController } from "./modules/analytics/main/makeGetRevenueAnalyticsController.js";
@@ -88,6 +89,7 @@ const squareCatalogSyncTaskController = makeSquareCatalogSyncTaskController();
 const squareMenuSyncController = makeSquareMenuSyncController();
 const squareOAuthController = makeSquareOAuthController();
 const squareOrdersWebhookController = makeSquareOrdersWebhookController();
+const squareWebhookRunController = makeSquareWebhookRunController();
 const getOrderSalesAnalyticsController = makeGetOrderSalesAnalyticsController();
 const getOrderQuantityAnalyticsController = makeGetOrderQuantityAnalyticsController();
 const getRevenueAnalyticsController = makeGetRevenueAnalyticsController();
@@ -937,6 +939,18 @@ const routes: Route[] = [
     method: "GET",
     matcher: /^\/integrations\/square\/catalog-sync-tasks\/[^/]+$/,
     controller: squareCatalogSyncTaskController,
+    requiresAuth: true,
+  },
+  {
+    method: "GET",
+    matcher: /^\/integrations\/square\/webhook-runs$/,
+    controller: squareWebhookRunController,
+    requiresAuth: true,
+  },
+  {
+    method: "GET",
+    matcher: /^\/integrations\/square\/webhook-runs\/[^/]+$/,
+    controller: squareWebhookRunController,
     requiresAuth: true,
   },
   {

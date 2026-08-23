@@ -431,6 +431,84 @@ export function listSquareCatalogSyncTasks(token: string, opts: { productId?: st
   return authGet<{ tasks: SquareCatalogSyncTask[]; productId: string | null; limit: number }>(`/integrations/square/catalog-sync-tasks${qs ? `?${qs}` : ""}`, token, businessId);
 }
 
+export type SquareWebhookRunStatus = "PROCESSING" | "SUCCESS" | "FAILED" | "IGNORED" | "DUPLICATE_SKIPPED";
+
+/**
+ * An inbound Square webhook run (one Square event, possibly retried across
+ * attempts). `resultLabel` is a ready-to-render badge label; `payload` is the
+ * best payload to preview (Square order object if available, else webhook body);
+ * `attempts` is the total recorded delivery count.
+ */
+export type SquareWebhookRun = {
+  id: string;
+  eventId: string | null;
+  eventType: string | null;
+  squareOrderId: string | null;
+  locationId: string | null;
+  merchantId: string | null;
+  squareOrderState: string | null;
+  status: SquareWebhookRunStatus;
+  action: string | null;
+  reason: string | null;
+  resultLabel: string;
+  foodyOrderId: string | null;
+  attempts: number;
+  signatureVerified: boolean | null;
+  firstReceivedAt: string;
+  lastReceivedAt: string;
+  processedAt: string | null;
+  processingDurationMs: number | null;
+  httpStatusCode: number | null;
+  errorMessage: string | null;
+  payload: unknown;
+  webhookPayload: unknown;
+  squareOrderPayload: unknown;
+  responsePayload: unknown;
+  createdAt: string;
+  updatedAt: string;
+};
+
+/** One entry in a run's delivery log (`deliveryLog[]`). */
+export type SquareWebhookDeliveryAttempt = {
+  id: string;
+  attemptNumber: number;
+  status: SquareWebhookRunStatus;
+  action: string | null;
+  reason: string | null;
+  message: string | null;
+  receivedAt: string;
+  finishedAt: string | null;
+  processingDurationMs: number | null;
+  httpStatusCode: number | null;
+  signatureVerified: boolean | null;
+  errorMessage: string | null;
+  requestHeaders: unknown;
+  payload: unknown;
+  webhookPayload: unknown;
+  squareOrderPayload: unknown;
+  responsePayload: unknown;
+  createdAt: string;
+};
+
+export type SquareWebhookRunDetail = SquareWebhookRun & {
+  deliveryLog: SquareWebhookDeliveryAttempt[];
+};
+
+/** GET /integrations/square/webhook-runs — recent inbound Square webhook runs. */
+export function listSquareWebhookRuns(token: string, opts: { eventType?: string; status?: SquareWebhookRunStatus; limit?: number } = {}, businessId?: string | null): Promise<{ runs: SquareWebhookRun[]; limit: number; eventType: string | null; status: SquareWebhookRunStatus | null }> {
+  const params = new URLSearchParams();
+  if (opts.eventType) params.set("eventType", opts.eventType);
+  if (opts.status) params.set("status", opts.status);
+  if (opts.limit != null) params.set("limit", String(opts.limit));
+  const qs = params.toString();
+  return authGet<{ runs: SquareWebhookRun[]; limit: number; eventType: string | null; status: SquareWebhookRunStatus | null }>(`/integrations/square/webhook-runs${qs ? `?${qs}` : ""}`, token, businessId);
+}
+
+/** GET /integrations/square/webhook-runs/:runId — one run with its full delivery log. */
+export function getSquareWebhookRun(token: string, runId: string, businessId?: string | null): Promise<{ run: SquareWebhookRunDetail }> {
+  return authGet<{ run: SquareWebhookRunDetail }>(`/integrations/square/webhook-runs/${encodeURIComponent(runId)}`, token, businessId);
+}
+
 export type DriverActivationEvent = {
   createdAt: string;
   status: string;
