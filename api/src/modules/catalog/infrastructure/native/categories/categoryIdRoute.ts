@@ -3,6 +3,7 @@ import { Prisma } from "../../../../../../../web/src/generated/prisma/index.js";
 import { DEFAULT_MENU_ID } from "../constants/menu.js";
 import { NextResponse } from "../shared/http.js";
 import type { NextRequestLike } from "../shared/http.js";
+import { enqueueSquareCategorySync } from "../shared/squareCatalogSync.js";
 
 type RouteContext = {
   params: Promise<{
@@ -88,6 +89,7 @@ export async function PATCH(request: NextRequestLike, context: RouteContext) {
   try {
     const { categoryId } = await context.params;
     const normalizedCategoryId = categoryId.trim();
+    const businessId = request.headers?.["x-business-id"]?.trim() || null;
 
     if (!normalizedCategoryId) {
       return NextResponse.json(
@@ -180,6 +182,17 @@ export async function PATCH(request: NextRequestLike, context: RouteContext) {
       };
     });
 
+    await enqueueSquareCategorySync({
+      businessId,
+      menuIds: [updatedCategoryMenu.menuId],
+      requestPayload: {
+        source: "CATEGORY_MENU_PATCH",
+        categoryId: normalizedCategoryId,
+        menuId: updatedCategoryMenu.menuId,
+        triggeredAt: new Date().toISOString(),
+      },
+    });
+
     return NextResponse.json({
       id: normalizedCategoryId,
       menuId: updatedCategoryMenu.menuId,
@@ -215,6 +228,7 @@ export async function DELETE(request: NextRequestLike, context: RouteContext) {
   try {
     const { categoryId } = await context.params;
     const normalizedCategoryId = categoryId.trim();
+    const businessId = request.headers?.["x-business-id"]?.trim() || null;
 
     if (!normalizedCategoryId) {
       return NextResponse.json(
@@ -285,6 +299,17 @@ export async function DELETE(request: NextRequestLike, context: RouteContext) {
         WHERE mc."menuId" = ranked."menuId"
           AND mc."categoryId" = ranked."categoryId"
       `;
+    });
+
+    await enqueueSquareCategorySync({
+      businessId,
+      menuIds: [menuId],
+      requestPayload: {
+        source: "CATEGORY_MENU_DELETE",
+        categoryId: normalizedCategoryId,
+        menuId,
+        triggeredAt: new Date().toISOString(),
+      },
     });
 
     return NextResponse.json({

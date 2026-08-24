@@ -2,6 +2,12 @@ import prisma from "../../../../../prisma.js";
 import { Prisma } from "../../../../../../../web/src/generated/prisma/index.js";
 import { NextResponse } from "../shared/http.js";
 import type { NextRequestLike } from "../shared/http.js";
+import { enqueueSquareModifierGroupSync } from "../shared/squareCatalogSync.js";
+import {
+  mapSquareSyncTask,
+  mapSquareSyncTasks,
+  type SquareSyncTaskResponse,
+} from "../shared/squareSyncTask.js";
 
 type RouteContext = {
   params: Promise<{
@@ -17,6 +23,21 @@ type PatchBody = {
   modifierGroupId?: unknown;
   fileId?: unknown;
   photoUrl?: unknown;
+};
+
+type ModifierGroupItemResponse = {
+  description: string | null;
+  id: string;
+  modifierGroupId: string | null;
+  name: string;
+  photo: {
+    id: string;
+    url: string;
+  } | null;
+  price: number;
+  squareSyncTask: SquareSyncTaskResponse | null;
+  squareSyncTasks: SquareSyncTaskResponse[];
+  translations: unknown | null;
 };
 
 function parseString(value: unknown, field: string): string {
@@ -84,11 +105,29 @@ export async function PATCH(request: NextRequestLike, context: RouteContext) {
   try {
     const { itemId } = await context.params;
     const normalizedItemId = itemId.trim();
+    const businessId = request.headers?.["x-business-id"]?.trim() || null;
 
     if (!normalizedItemId) {
       return NextResponse.json(
         { error: "Invalid payload", field: "itemId" },
         { status: 400 },
+      );
+    }
+
+    const existingItem = await prisma.modifierGroupItem.findUnique({
+      where: {
+        id: normalizedItemId,
+      },
+      select: {
+        id: true,
+        modifierGroupId: true,
+      },
+    });
+
+    if (!existingItem) {
+      return NextResponse.json(
+        { error: "Modifier group item not found" },
+        { status: 404 },
       );
     }
 
@@ -297,7 +336,24 @@ export async function PATCH(request: NextRequestLike, context: RouteContext) {
       },
     });
 
-    return NextResponse.json(updatedItem);
+    const squareSyncTasks = await enqueueSquareModifierGroupSync({
+      businessId,
+      modifierGroupIds: [
+        existingItem.modifierGroupId ?? "",
+        updatedItem.modifierGroupId ?? "",
+      ],
+      requestPayload: {
+        source: "MODIFIER_GROUP_ITEM_PATCH",
+        modifierGroupItemId: normalizedItemId,
+        previousModifierGroupId: existingItem.modifierGroupId ?? null,
+        nextModifierGroupId: updatedItem.modifierGroupId ?? null,
+        triggeredAt: new Date().toISOString(),
+      },
+    });
+
+    return NextResponse.json(
+      serializeModifierGroupItemResponse(updatedItem, squareSyncTasks),
+    );
   } catch (error) {
     if (error instanceof Error && error.message) {
       return NextResponse.json(
@@ -327,13 +383,38 @@ export async function PATCH(request: NextRequestLike, context: RouteContext) {
   }
 }
 
+function serializeModifierGroupItemResponse(
+  item: {
+    description: string | null;
+    id: string;
+    modifierGroupId: string | null;
+    name: string;
+    photo: {
+      id: string;
+      url: string;
+    } | null;
+    price: number;
+    translations: unknown | null;
+  },
+  squareSyncTasks: Parameters<typeof mapSquareSyncTasks>[0] = [],
+): ModifierGroupItemResponse {
+  const serializedTasks = mapSquareSyncTasks(squareSyncTasks);
+
+  return {
+    ...item,
+    squareSyncTask: serializedTasks[0] ?? null,
+    squareSyncTasks: serializedTasks,
+  };
+}
+
 export async function DELETE(
-  _request: NextRequestLike,
+  request: NextRequestLike,
   context: RouteContext,
 ) {
   try {
     const { itemId } = await context.params;
     const normalizedItemId = itemId.trim();
+    const businessId = request.headers?.["x-business-id"]?.trim() || null;
 
     if (!normalizedItemId) {
       return NextResponse.json(
@@ -341,6 +422,34 @@ export async function DELETE(
         { status: 400 },
       );
     }
+
+    const existingItem = await prisma.modifierGroupItem.findUnique({
+      where: {
+        id: normalizedItemId,
+      },
+      select: {
+        id: true,
+        modifierGroupId: true,
+      },
+    });
+
+    if (!existingItem) {
+      return NextResponse.json(
+        { error: "Modifier group item not found" },
+        { status: 404 },
+      );
+    }
+
+    await enqueueSquareModifierGroupSync({
+      businessId,
+      modifierGroupIds: [existingItem.modifierGroupId ?? ""],
+      requestPayload: {
+        source: "MODIFIER_GROUP_ITEM_DELETE",
+        modifierGroupItemId: normalizedItemId,
+        previousModifierGroupId: existingItem.modifierGroupId ?? null,
+        triggeredAt: new Date().toISOString(),
+      },
+    });
 
     const updatedItem = await prisma.modifierGroupItem.update({
       where: {

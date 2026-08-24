@@ -15,7 +15,7 @@ export const LANGUAGES: [Lang, string, string][] = [
 
 export const STATIONS = ["Grill", "Fry", "Cold prep", "Assembly", "Bar", "Pass"];
 
-export type ModifierOption = { id: string; names: I18n; descriptions: I18n; price: number | string };
+export type ModifierOption = { id: string; names: I18n; descriptions: I18n; price: number | string; thumb?: string | null };
 export type ModifierGroup = {
   id: string;
   names: I18n;
@@ -33,6 +33,7 @@ export type ProductDraft = {
   names: I18n;
   descriptions: I18n;
   active: boolean;
+  alertDriver: boolean;
   type: "single" | "combo";
   media: MediaItem[];
   price: string;
@@ -49,6 +50,7 @@ export type FlatProduct = {
   rawPrice: number;
   rawComparedAt: number;
   rawActive: boolean;
+  rawAlertDriver: boolean;
   rawDescription: string;
   name: string;
   price: number;

@@ -69,10 +69,12 @@ export class SquareCatalogSyncTaskController implements HttpController {
 
     if (request.method === "GET" && pathname === "/integrations/square/catalog-sync-tasks") {
       const limit = parseLimit(url.searchParams.get("limit"));
+      const menuId = url.searchParams.get("menuId")?.trim() || undefined;
       const productId = url.searchParams.get("productId")?.trim() || undefined;
       const tasks = await this.repository.listTasks({
         businessId,
         limit,
+        menuId,
         productId,
       });
 
@@ -80,6 +82,7 @@ export class SquareCatalogSyncTaskController implements HttpController {
         statusCode: 200,
         body: {
           tasks: tasks.map(serializeTask),
+          menuId: menuId ?? null,
           productId: productId ?? null,
           limit,
         },
@@ -106,6 +109,7 @@ function serializeTask(task: SquareCatalogSyncTaskView) {
   return {
     id: task.id,
     productId: task.productId,
+    menuId: task.menuId,
     taskType: task.taskType,
     status: task.status,
     isRunning: task.status === "PENDING" || task.status === "PROCESSING",

@@ -6,12 +6,11 @@ import { DEFAULT_MENU_ID } from "../constants/menu.js";
 import { NextResponse } from "../shared/http.js";
 import type { NextRequestLike } from "../shared/http.js";
 import { PrismaSquareCatalogSyncTaskRepository } from "../../../../integrations/infrastructure/prisma/PrismaSquareCatalogSyncTaskRepository.js";
-import { PrismaSquareConnectionRepository } from "../../../../integrations/infrastructure/prisma/PrismaSquareConnectionRepository.js";
-import { triggerSquareCatalogSyncTaskProcessing } from "../../../../integrations/main/runSquareCatalogSyncTasks.js";
 import {
   mapSquareSyncTask,
   type ProductSquareSyncTaskResponse,
 } from "./squareSyncTask.js";
+import { enqueueSquareProductSyncTask } from "../shared/squareCatalogSync.js";
 
 type ProductVisibleRow = {
   id: string;
@@ -67,7 +66,6 @@ type ComboSlotInput = {
 };
 
 const squareCatalogSyncTaskRepository = new PrismaSquareCatalogSyncTaskRepository();
-const squareConnectionRepository = new PrismaSquareConnectionRepository();
 
 type PostBody = {
   id?: unknown;
@@ -1166,23 +1164,17 @@ export async function POST(request: NextRequestLike) {
 
     let squareSyncTask: ProductSquareSyncTaskResponse | null = null;
     if (businessId) {
-      const squareConnection = await squareConnectionRepository.findByBusinessId(
+      const createdTask = await enqueueSquareProductSyncTask({
         businessId,
-      );
+        productId: createdProduct.id,
+        requestPayload: {
+          source: "PRODUCT_CREATE",
+          triggeredAt: new Date().toISOString(),
+        },
+      });
 
-      if (squareConnection) {
-        const createdTask =
-          await squareCatalogSyncTaskRepository.createProductUpdateTask({
-            businessId,
-            productId: createdProduct.id,
-            requestPayload: {
-              source: "PRODUCT_CREATE",
-              triggeredAt: new Date().toISOString(),
-            },
-          });
-
+      if (createdTask) {
         squareSyncTask = mapSquareSyncTask(createdTask);
-        triggerSquareCatalogSyncTaskProcessing(5);
       }
     }
 

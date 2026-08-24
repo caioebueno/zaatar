@@ -2,6 +2,7 @@ import prisma from "../../../../../prisma.js";
 import type { HttpResponse } from "../../../../../shared/http/types.js";
 import { NextResponse } from "../shared/http.js";
 import type { NextRequestLike } from "../shared/http.js";
+import { enqueueSquareMenuSyncTasks } from "../shared/squareCatalogSync.js";
 
 type RouteContext = {
   params: Promise<{
@@ -42,6 +43,7 @@ export async function PATCH(request: NextRequestLike, context: RouteContext) {
   try {
     const { menuId } = await context.params;
     const normalizedMenuId = menuId.trim();
+    const businessId = request.headers?.["x-business-id"]?.trim() || null;
 
     if (!normalizedMenuId) {
       return NextResponse.json(
@@ -81,6 +83,16 @@ export async function PATCH(request: NextRequestLike, context: RouteContext) {
           ...(isDefault !== undefined ? { isDefault } : {}),
         },
       });
+    });
+
+    await enqueueSquareMenuSyncTasks({
+      businessId,
+      menuIds: [normalizedMenuId],
+      requestPayload: {
+        source: "MENU_PATCH",
+        menuId: normalizedMenuId,
+        triggeredAt: new Date().toISOString(),
+      },
     });
 
     return NextResponse.json(updated);

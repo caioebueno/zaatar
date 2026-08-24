@@ -48,6 +48,7 @@ function mapModifierGroup(mg: ApiModifierGroup): ModifierGroup {
       names: { en: it.name, es: translated(it.translations, "es", "title"), pt: translated(it.translations, "pt", "title") },
       descriptions: { en: it.description ?? "", es: translated(it.translations, "es", "description"), pt: translated(it.translations, "pt", "description") },
       price: centsToDollars(it.price),
+      thumb: it.photo?.url ?? null,
     })),
   };
 }
@@ -90,6 +91,7 @@ export function mapProductToDraft(p: ApiProduct): ProductDraft {
     names: { en: p.name, es: translated(tr, "es", "title"), pt: translated(tr, "pt", "title") },
     descriptions: { en: p.description ?? "", es: translated(tr, "es", "description"), pt: translated(tr, "pt", "description") },
     active: p.visible,
+    alertDriver: p.alertDriver,
     type: p.itemType === "COMBO" ? "combo" : "single",
     media: (p.photos ?? []).map((ph) => ({ id: ph.id, kind: "image" as const, name: ph.name, url: ph.url })),
     price: price.toFixed(2),

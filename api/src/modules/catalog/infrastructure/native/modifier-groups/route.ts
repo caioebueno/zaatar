@@ -3,6 +3,7 @@ import { Prisma } from "../../../../../../../web/src/generated/prisma/index.js";
 import type { HttpResponse } from "../../../../../shared/http/types.js";
 import { NextResponse } from "../shared/http.js";
 import type { NextRequestLike } from "../shared/http.js";
+import { enqueueSquareModifierGroupSync } from "../shared/squareCatalogSync.js";
 
 type PostBody = {
   id?: unknown;
@@ -73,6 +74,7 @@ function createId() {
 
 export async function POST(request: NextRequestLike) {
   try {
+    const businessId = request.headers?.["x-business-id"]?.trim() || null;
     const body = (await request.json()) as PostBody;
     const id = body.id === undefined ? createId() : parseString(body.id, "id");
     const title = parseString(body.title, "title");
@@ -136,6 +138,16 @@ export async function POST(request: NextRequestLike) {
         minSelection: true,
         maxSelection: true,
         translations: true,
+      },
+    });
+
+    await enqueueSquareModifierGroupSync({
+      businessId,
+      modifierGroupIds: [created.id],
+      requestPayload: {
+        source: "MODIFIER_GROUP_CREATE",
+        modifierGroupId: created.id,
+        triggeredAt: new Date().toISOString(),
       },
     });
 

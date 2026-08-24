@@ -31,13 +31,16 @@ export class ProcessSquareCatalogSyncTasksUseCase {
 
     for (const task of tasks) {
       try {
-        const relatedMenuIds = await loadRelatedMenuIds(task.productId);
+        const relatedMenuIds = await loadTaskMenuIds(task);
         if (relatedMenuIds.length === 0) {
           await this.repository.markTaskCompleted({
             taskId: task.id,
             status: "SKIPPED",
             responsePayload: {
-              reason: "PRODUCT_HAS_NO_RELATED_MENU",
+              reason:
+                task.taskType === "MENU_UPDATE"
+                  ? "MENU_TASK_HAS_NO_RELATED_MENU"
+                  : "PRODUCT_HAS_NO_RELATED_MENU",
             },
           });
           skipped += 1;
@@ -103,7 +106,22 @@ export class ProcessSquareCatalogSyncTasksUseCase {
   }
 }
 
-async function loadRelatedMenuIds(productId: string): Promise<string[]> {
+async function loadTaskMenuIds(task: {
+  menuId: string | null;
+  productId: string | null;
+}): Promise<string[]> {
+  if (task.menuId?.trim()) {
+    return [task.menuId.trim()];
+  }
+
+  if (!task.productId?.trim()) {
+    return [];
+  }
+
+  return loadRelatedMenuIdsForProduct(task.productId.trim());
+}
+
+async function loadRelatedMenuIdsForProduct(productId: string): Promise<string[]> {
   const rows = await prisma.$queryRaw<Array<{ menuId: string | null }>>`
     SELECT DISTINCT source."menuId" AS "menuId"
     FROM (

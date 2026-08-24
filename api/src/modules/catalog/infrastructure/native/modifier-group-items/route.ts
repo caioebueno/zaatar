@@ -3,6 +3,7 @@ import { Prisma } from "../../../../../../../web/src/generated/prisma/index.js";
 import type { HttpResponse } from "../../../../../shared/http/types.js";
 import { NextResponse } from "../shared/http.js";
 import type { NextRequestLike } from "../shared/http.js";
+import { enqueueSquareModifierGroupSync } from "../shared/squareCatalogSync.js";
 
 type PostBody = {
   id?: unknown;
@@ -63,6 +64,7 @@ function createUuid() {
 
 export async function POST(request: NextRequestLike) {
   try {
+    const businessId = request.headers?.["x-business-id"]?.trim() || null;
     const body = (await request.json()) as PostBody;
     const modifierGroupId = parseString(body.modifierGroupId, "modifierGroupId");
     const name = parseString(body.name, "name");
@@ -162,6 +164,17 @@ export async function POST(request: NextRequestLike) {
             url: true,
           },
         },
+      },
+    });
+
+    await enqueueSquareModifierGroupSync({
+      businessId,
+      modifierGroupIds: [modifierGroupId],
+      requestPayload: {
+        source: "MODIFIER_GROUP_ITEM_CREATE",
+        modifierGroupId,
+        modifierGroupItemId: createdModifierGroupItem.id,
+        triggeredAt: new Date().toISOString(),
       },
     });
 

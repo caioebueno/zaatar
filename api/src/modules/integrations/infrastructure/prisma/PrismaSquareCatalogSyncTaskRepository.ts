@@ -16,8 +16,9 @@ type SquareCatalogSyncTaskRow = {
   errorMessage: string | null;
   finishedAt: Date | null;
   id: string;
+  menuId: string | null;
   processingStartedAt: Date | null;
-  productId: string;
+  productId: string | null;
   requestPayload: Prisma.JsonValue | null;
   responsePayload: Prisma.JsonValue | null;
   status: string;
@@ -51,6 +52,7 @@ export class PrismaSquareCatalogSyncTaskRepository
         "id",
         "businessId",
         "productId",
+        "menuId",
         "taskType",
         "status",
         "attempts",
@@ -63,6 +65,7 @@ export class PrismaSquareCatalogSyncTaskRepository
         ${randomUUID()},
         ${input.businessId},
         ${input.productId},
+        NULL,
         'PRODUCT_UPDATE'::"SquareCatalogSyncTaskType",
         'PENDING'::"SquareCatalogSyncTaskStatus",
         0,
@@ -75,6 +78,73 @@ export class PrismaSquareCatalogSyncTaskRepository
         "id",
         "businessId",
         "productId",
+        "menuId",
+        "taskType"::text AS "taskType",
+        "status"::text AS "status",
+        "attempts",
+        "availableAt",
+        "processingStartedAt",
+        "finishedAt",
+        "errorMessage",
+        "requestPayload",
+        "responsePayload",
+        "createdAt",
+        "updatedAt"
+    `;
+
+    return mapRow(rows[0]!);
+  }
+
+  async createMenuUpdateTask(input: {
+    businessId: string;
+    menuId: string;
+    requestPayload?: unknown;
+  }): Promise<SquareCatalogSyncTaskView> {
+    await prisma.$executeRaw`
+      UPDATE "SquareCatalogSyncTask"
+      SET
+        "status" = 'SKIPPED'::"SquareCatalogSyncTaskStatus",
+        "finishedAt" = now(),
+        "errorMessage" = 'Superseded by a newer menu update task',
+        "updatedAt" = now()
+      WHERE "businessId" = ${input.businessId}
+        AND "menuId" = ${input.menuId}
+        AND "taskType" = 'MENU_UPDATE'::"SquareCatalogSyncTaskType"
+        AND "status" IN ('PENDING', 'FAILED')
+    `;
+
+    const rows = await prisma.$queryRaw<SquareCatalogSyncTaskRow[]>`
+      INSERT INTO "SquareCatalogSyncTask" (
+        "id",
+        "businessId",
+        "productId",
+        "menuId",
+        "taskType",
+        "status",
+        "attempts",
+        "availableAt",
+        "requestPayload",
+        "createdAt",
+        "updatedAt"
+      )
+      VALUES (
+        ${randomUUID()},
+        ${input.businessId},
+        NULL,
+        ${input.menuId},
+        'MENU_UPDATE'::"SquareCatalogSyncTaskType",
+        'PENDING'::"SquareCatalogSyncTaskStatus",
+        0,
+        now(),
+        CAST(${JSON.stringify(input.requestPayload ?? null)} AS jsonb),
+        now(),
+        now()
+      )
+      RETURNING
+        "id",
+        "businessId",
+        "productId",
+        "menuId",
         "taskType"::text AS "taskType",
         "status"::text AS "status",
         "attempts",
@@ -100,6 +170,7 @@ export class PrismaSquareCatalogSyncTaskRepository
         "id",
         "businessId",
         "productId",
+        "menuId",
         "taskType"::text AS "taskType",
         "status"::text AS "status",
         "attempts",
@@ -148,6 +219,7 @@ export class PrismaSquareCatalogSyncTaskRepository
           task."id",
           task."businessId",
           task."productId",
+          task."menuId",
           task."taskType"::text AS "taskType",
           task."status"::text AS "status",
           task."attempts",
@@ -182,6 +254,7 @@ export class PrismaSquareCatalogSyncTaskRepository
         "id",
         "businessId",
         "productId",
+        "menuId",
         "taskType"::text AS "taskType",
         "status"::text AS "status",
         "attempts",
@@ -199,15 +272,21 @@ export class PrismaSquareCatalogSyncTaskRepository
       ORDER BY "productId" ASC, "createdAt" DESC
     `;
 
-    return new Map(rows.map((row) => [row.productId, mapRow(row)]));
+    return new Map(
+      rows
+        .filter((row): row is SquareCatalogSyncTaskRow & { productId: string } => Boolean(row.productId))
+        .map((row) => [row.productId, mapRow(row)]),
+    );
   }
 
   async listTasks(input: {
     businessId: string;
     limit: number;
+    menuId?: string;
     productId?: string;
   }): Promise<SquareCatalogSyncTaskView[]> {
     const normalizedLimit = Math.max(1, Math.min(100, Math.trunc(input.limit)));
+    const normalizedMenuId = input.menuId?.trim();
     const normalizedProductId = input.productId?.trim();
 
     const rows = normalizedProductId
@@ -216,6 +295,7 @@ export class PrismaSquareCatalogSyncTaskRepository
             "id",
             "businessId",
             "productId",
+            "menuId",
             "taskType"::text AS "taskType",
             "status"::text AS "status",
             "attempts",
@@ -233,11 +313,36 @@ export class PrismaSquareCatalogSyncTaskRepository
           ORDER BY "createdAt" DESC
           LIMIT ${normalizedLimit}
         `
+      : normalizedMenuId
+        ? await prisma.$queryRaw<SquareCatalogSyncTaskRow[]>`
+            SELECT
+              "id",
+              "businessId",
+              "productId",
+              "menuId",
+              "taskType"::text AS "taskType",
+              "status"::text AS "status",
+              "attempts",
+              "availableAt",
+              "processingStartedAt",
+              "finishedAt",
+              "errorMessage",
+              "requestPayload",
+              "responsePayload",
+              "createdAt",
+              "updatedAt"
+            FROM "SquareCatalogSyncTask"
+            WHERE "businessId" = ${input.businessId}
+              AND "menuId" = ${normalizedMenuId}
+            ORDER BY "createdAt" DESC
+            LIMIT ${normalizedLimit}
+          `
       : await prisma.$queryRaw<SquareCatalogSyncTaskRow[]>`
           SELECT
             "id",
             "businessId",
             "productId",
+            "menuId",
             "taskType"::text AS "taskType",
             "status"::text AS "status",
             "attempts",
@@ -302,6 +407,7 @@ function mapRow(row: SquareCatalogSyncTaskRow): SquareCatalogSyncTaskView {
     id: row.id,
     businessId: row.businessId,
     productId: row.productId,
+    menuId: row.menuId,
     taskType: normalizeTaskType(row.taskType),
     status: normalizeStatus(row.status),
     attempts: row.attempts,
@@ -317,7 +423,7 @@ function mapRow(row: SquareCatalogSyncTaskRow): SquareCatalogSyncTaskView {
 }
 
 function normalizeTaskType(value: string): SquareCatalogSyncTaskType {
-  return value === "PRODUCT_UPDATE" ? "PRODUCT_UPDATE" : "PRODUCT_UPDATE";
+  return value === "MENU_UPDATE" ? "MENU_UPDATE" : "PRODUCT_UPDATE";
 }
 
 function normalizeStatus(value: string): SquareCatalogSyncTaskStatus {
