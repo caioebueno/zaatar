@@ -4,8 +4,13 @@ import type {
   HttpRequest,
   HttpResponse,
 } from "../../../../shared/http/types.js";
+import type { SquareConnectionRepository } from "../../application/ports/SquareConnectionRepository.js";
+import type { SquareWebhookRunRepository } from "../../application/ports/SquareWebhookRunRepository.js";
+import {
+  HandleSquareOrdersWebhookUseCase,
+  SquareOrdersWebhookProcessingError,
+} from "../../application/use-cases/HandleSquareOrdersWebhookUseCase.js";
 import type { SquareConnectionAccessTokenResolver } from "../../infrastructure/http/SquareConnectionAccessTokenResolver.js";
-import type { HandleSquareOrdersWebhookUseCase } from "../../application/use-cases/HandleSquareOrdersWebhookUseCase.js";
 
 type SquareWebhookEnvelope = {
   created_at?: string;
@@ -36,6 +41,8 @@ export class SquareOrdersWebhookController implements HttpController {
   constructor(
     private readonly handleSquareOrdersWebhookUseCase: HandleSquareOrdersWebhookUseCase,
     private readonly squareTokenResolver: SquareConnectionAccessTokenResolver,
+    private readonly squareConnectionRepository: SquareConnectionRepository,
+    private readonly squareWebhookRunRepository: SquareWebhookRunRepository,
   ) {}
 
   async handle(request: HttpRequest): Promise<HttpResponse> {
@@ -49,6 +56,15 @@ export class SquareOrdersWebhookController implements HttpController {
     }
 
     const rawBody = request.rawBody ?? Buffer.from("{}");
+    const parsed = parseSquareWebhookBody(rawBody);
+    const orderCreated = parsed?.data?.object?.order_created;
+    const orderUpdated = parsed?.data?.object?.order_updated;
+    const orderDetails = orderCreated ?? orderUpdated ?? null;
+    const merchantId = parsed?.merchant_id?.trim() ?? null;
+    const businessId = merchantId
+      ? (await this.squareConnectionRepository.findByMerchantIdWithSecrets(merchantId))?.businessId ??
+        null
+      : null;
     const signatureHeader = request.headers?.["x-square-hmacsha256-signature"] ?? null;
     const signatureValidation = validateSquareSignature({
       notificationUrl: resolveSquareWebhookNotificationUrl(request, url),
@@ -57,29 +73,99 @@ export class SquareOrdersWebhookController implements HttpController {
       signatureKey: process.env.SQUARE_WEBHOOK_SIGNATURE_KEY?.trim() ?? null,
     });
 
+    const webhookRun = await this.squareWebhookRunRepository.beginAttempt({
+      businessId,
+      eventId: parsed?.event_id ?? null,
+      eventType: parsed?.type ?? null,
+      locationId: orderDetails?.location_id ?? null,
+      merchantId,
+      requestHeaders: buildWebhookRequestHeaders(request.headers),
+      signatureVerified: signatureValidation.verified,
+      squareOrderId: orderDetails?.order_id ?? null,
+      squareOrderState: orderDetails?.state ?? null,
+      webhookPayload: buildStoredWebhookPayload(rawBody, parsed),
+    });
+
     if (!signatureValidation.ok) {
+      const responseBody = {
+        error: "Invalid Square signature",
+      };
+
+      await this.squareWebhookRunRepository.completeAttempt({
+        attemptId: webhookRun.attempt.id,
+        errorMessage: "INVALID_SIGNATURE",
+        httpStatusCode: 403,
+        reason: "INVALID_SIGNATURE",
+        responsePayload: responseBody,
+        runId: webhookRun.run.id,
+        signatureVerified: false,
+        status: "FAILED",
+      });
+
       return {
         statusCode: 403,
-        body: {
-          error: "Invalid Square signature",
-        },
+        body: responseBody,
       };
     }
 
-    const parsed = parseSquareWebhookBody(rawBody);
     if (!parsed) {
+      const responseBody = {
+        error: "Invalid Square webhook payload",
+      };
+
+      await this.squareWebhookRunRepository.completeAttempt({
+        attemptId: webhookRun.attempt.id,
+        errorMessage: "INVALID_WEBHOOK_PAYLOAD",
+        httpStatusCode: 400,
+        reason: "INVALID_WEBHOOK_PAYLOAD",
+        responsePayload: responseBody,
+        runId: webhookRun.run.id,
+        signatureVerified: signatureValidation.verified,
+        status: "FAILED",
+      });
+
       return {
         statusCode: 400,
-        body: {
-          error: "Invalid Square webhook payload",
-        },
+        body: responseBody,
       };
     }
 
-    const orderCreated = parsed.data?.object?.order_created;
-    const orderUpdated = parsed.data?.object?.order_updated;
-    const orderDetails = orderCreated ?? orderUpdated ?? null;
-    const merchantId = parsed.merchant_id?.trim() ?? null;
+    if (webhookRun.shouldSkipProcessing) {
+      const responseBody = {
+        ok: true,
+        action: "ignored",
+        reason: "DUPLICATE_DELIVERY",
+      };
+
+      await this.squareWebhookRunRepository.completeAttempt({
+        action: "ignored",
+        attemptId: webhookRun.attempt.id,
+        httpStatusCode: 200,
+        reason: "DUPLICATE_DELIVERY",
+        responsePayload: responseBody,
+        runId: webhookRun.run.id,
+        signatureVerified: signatureValidation.verified,
+        status: "DUPLICATE_SKIPPED",
+      });
+
+      logSquareOrderWebhook({
+        action: "ignored",
+        eventId: parsed.event_id ?? null,
+        eventType: parsed.type ?? null,
+        foodyOrderId: webhookRun.run.foodyOrderId,
+        locationId: orderDetails?.location_id ?? null,
+        orderId: orderDetails?.order_id ?? null,
+        reason: "DUPLICATE_DELIVERY",
+        signatureVerified: signatureValidation.verified,
+        state: orderDetails?.state ?? null,
+      });
+
+      return {
+        statusCode: 200,
+        body: responseBody,
+      };
+    }
+
     let accessToken: string | null = null;
 
     if (merchantId) {
@@ -87,6 +173,23 @@ export class SquareOrdersWebhookController implements HttpController {
         accessToken = await this.squareTokenResolver.resolveForMerchantId(merchantId);
       } catch (error) {
         if (error instanceof Error && error.message === "SQUARE_NOT_CONNECTED") {
+          const responseBody = {
+            ok: true,
+            action: "ignored",
+            reason: "MERCHANT_NOT_CONNECTED",
+          };
+
+          await this.squareWebhookRunRepository.completeAttempt({
+            action: "ignored",
+            attemptId: webhookRun.attempt.id,
+            httpStatusCode: 202,
+            reason: "MERCHANT_NOT_CONNECTED",
+            responsePayload: responseBody,
+            runId: webhookRun.run.id,
+            signatureVerified: signatureValidation.verified,
+            status: "IGNORED",
+          });
+
           logSquareOrderWebhook({
             action: "ignored",
             eventId: parsed.event_id ?? null,
@@ -101,11 +204,7 @@ export class SquareOrdersWebhookController implements HttpController {
 
           return {
             statusCode: 202,
-            body: {
-              ok: true,
-              action: "ignored",
-              reason: "MERCHANT_NOT_CONNECTED",
-            },
+            body: responseBody,
           };
         }
 
@@ -113,26 +212,14 @@ export class SquareOrdersWebhookController implements HttpController {
       }
     }
 
-    const syncResult = await this.handleSquareOrdersWebhookUseCase.execute({
-      accessToken,
-      eventType: parsed.type ?? null,
-      squareOrderId: orderDetails?.order_id ?? null,
-    });
-    logSquareOrderWebhook({
-      action: syncResult.action,
-      eventId: parsed.event_id ?? null,
-      eventType: parsed.type ?? null,
-      foodyOrderId: syncResult.foodyOrderId,
-      locationId: orderDetails?.location_id ?? null,
-      orderId: orderDetails?.order_id ?? null,
-      reason: syncResult.reason,
-      signatureVerified: signatureValidation.verified,
-      state: orderDetails?.state ?? null,
-    });
+    try {
+      const syncResult = await this.handleSquareOrdersWebhookUseCase.execute({
+        accessToken,
+        eventType: parsed.type ?? null,
+        squareOrderId: orderDetails?.order_id ?? null,
+      });
 
-    return {
-      statusCode: 200,
-      body: {
+      const responseBody = {
         ok: true,
         eventId: parsed.event_id ?? null,
         eventType: parsed.type ?? null,
@@ -143,8 +230,75 @@ export class SquareOrdersWebhookController implements HttpController {
         reason: syncResult.reason ?? null,
         signatureVerified: signatureValidation.verified,
         state: orderDetails?.state ?? null,
-      },
-    };
+      };
+
+      await this.squareWebhookRunRepository.completeAttempt({
+        action: syncResult.action,
+        attemptId: webhookRun.attempt.id,
+        foodyOrderId: syncResult.foodyOrderId,
+        httpStatusCode: 200,
+        reason: syncResult.reason ?? null,
+        responsePayload: responseBody,
+        runId: webhookRun.run.id,
+        signatureVerified: signatureValidation.verified,
+        squareOrderPayload: syncResult.squareOrderPayload,
+        status: syncResult.action === "ignored" ? "IGNORED" : "SUCCESS",
+      });
+
+      logSquareOrderWebhook({
+        action: syncResult.action,
+        eventId: parsed.event_id ?? null,
+        eventType: parsed.type ?? null,
+        foodyOrderId: syncResult.foodyOrderId,
+        locationId: orderDetails?.location_id ?? null,
+        orderId: orderDetails?.order_id ?? null,
+        reason: syncResult.reason,
+        signatureVerified: signatureValidation.verified,
+        state: orderDetails?.state ?? null,
+      });
+
+      return {
+        statusCode: 200,
+        body: responseBody,
+      };
+    } catch (error) {
+      const processingError = SquareOrdersWebhookProcessingError.from(error, {
+        squareOrderId: orderDetails?.order_id ?? null,
+        squareOrderPayload: null,
+      });
+      const responseBody = {
+        error: processingError.message,
+      };
+
+      await this.squareWebhookRunRepository.completeAttempt({
+        attemptId: webhookRun.attempt.id,
+        errorMessage: processingError.message,
+        httpStatusCode: 500,
+        reason: processingError.message,
+        responsePayload: responseBody,
+        runId: webhookRun.run.id,
+        signatureVerified: signatureValidation.verified,
+        squareOrderPayload: processingError.squareOrderPayload,
+        status: "FAILED",
+      });
+
+      logSquareOrderWebhook({
+        action: "ignored",
+        eventId: parsed.event_id ?? null,
+        eventType: parsed.type ?? null,
+        foodyOrderId: null,
+        locationId: orderDetails?.location_id ?? null,
+        orderId: processingError.squareOrderId,
+        reason: processingError.message,
+        signatureVerified: signatureValidation.verified,
+        state: orderDetails?.state ?? null,
+      });
+
+      return {
+        statusCode: 500,
+        body: responseBody,
+      };
+    }
   }
 }
 
@@ -159,6 +313,43 @@ function parseSquareWebhookBody(rawBody: Buffer): SquareWebhookEnvelope | null {
   } catch {
     return null;
   }
+}
+
+function buildStoredWebhookPayload(
+  rawBody: Buffer,
+  parsed: SquareWebhookEnvelope | null,
+): unknown {
+  if (parsed) {
+    return parsed;
+  }
+
+  return {
+    invalidJson: true,
+    rawBodyText: rawBody.toString("utf8"),
+  };
+}
+
+function buildWebhookRequestHeaders(
+  headers: Record<string, string | undefined> | undefined,
+): Record<string, string> {
+  const selectedHeaders = [
+    "content-type",
+    "user-agent",
+    "x-forwarded-for",
+    "x-forwarded-proto",
+    "x-square-hmacsha256-signature",
+  ];
+
+  const output: Record<string, string> = {};
+
+  for (const headerName of selectedHeaders) {
+    const value = headers?.[headerName]?.trim();
+    if (value) {
+      output[headerName] = value;
+    }
+  }
+
+  return output;
 }
 
 function resolveSquareWebhookNotificationUrl(

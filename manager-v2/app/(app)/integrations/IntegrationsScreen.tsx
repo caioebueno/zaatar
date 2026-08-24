@@ -205,6 +205,9 @@ export function IntegrationsScreen() {
                     <span style={monoVal}>{lastSync}</span>
                   </div>
                   <span style={{ flex: 1 }} />
+                  <button type="button" className="zp-ghost" onClick={() => router.push("/integrations/webhooks")} style={{ ...ghostBtn, height: 28, padding: "0 11px", fontSize: 12 }}>
+                    Webhooks
+                  </button>
                   <button type="button" className="zp-ghost" onClick={syncNow} disabled={syncing} style={{ ...ghostBtn, height: 28, padding: "0 11px", fontSize: 12 }}>
                     {syncing ? "Syncing…" : "Sync now"}
                   </button>

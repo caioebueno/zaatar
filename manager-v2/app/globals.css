@@ -170,6 +170,23 @@ body {
 .zp-rowmenu:hover,
 .zp-rowmenu[data-state="open"] { color: #F1F1F1 !important; background: rgba(255, 255, 255, 0.07) !important; }
 
+/* ── Square webhooks screen ────────────────────────────────── */
+@keyframes zp-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
+.zp-tab {
+  height: 26px;
+  padding: 0 10px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #9B9B9B;
+  font-family: var(--font-body);
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.1s ease, color 0.1s ease;
+}
+.zp-tab:hover { background: rgba(255, 255, 255, 0.05); color: #F1F1F1; }
+.zp-tab[data-active="true"] { background: rgba(255, 255, 255, 0.08); color: #F1F1F1; font-weight: 500; }
+
 /* ── Square-sync toasts (products) ─────────────────────────── */
 @keyframes zp-spin { to { transform: rotate(360deg); } }
 @keyframes zp-indet { 0% { transform: translateX(-100%); } 100% { transform: translateX(320%); } }
