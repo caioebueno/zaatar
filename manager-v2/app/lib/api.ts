@@ -759,6 +759,15 @@ export type ModifierGroupItemResult = {
   price: number;
   translations: Record<string, unknown> | null;
   photo: { id: string; url: string } | null;
+  /**
+   * Background Square sync task(s) created when the business is Square-connected.
+   * `squareSyncTask` is the primary/simple entry; `squareSyncTasks` is the full
+   * list — one modifier update can fan out across multiple Square menus. Both are
+   * empty/null when there is no Square connection. Poll each with
+   * `getSquareCatalogSyncTask`.
+   */
+  squareSyncTask?: SquareCatalogSyncTask | null;
+  squareSyncTasks?: SquareCatalogSyncTask[];
 };
 
 export type CreateModifierGroupItemBody = {

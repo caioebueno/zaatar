@@ -20,6 +20,8 @@ export type SyncPhase = "syncing" | "synced" | "skipped" | "error";
 
 /** Re-runs the mutation that created the task (used by Retry); returns the new task. */
 type Retrigger = () => Promise<SquareCatalogSyncTask | null | undefined>;
+/** Retry for a multi-task toast; returns the new set of tasks (one per affected menu). */
+type RetriggerMany = () => Promise<(SquareCatalogSyncTask | null | undefined)[]>;
 
 type SyncToast = {
   id: string;
@@ -28,6 +30,8 @@ type SyncToast = {
   phase: SyncPhase;
   errorMessage?: string;
   canRetry: boolean;
+  /** Noun used in the "synced" detail line, e.g. "Product" or "Modifier". */
+  noun?: string;
 };
 
 const POLL_MS = 2500;
@@ -57,18 +61,25 @@ export function useSquareSync() {
   const [toasts, setToasts] = useState<SyncToast[]>([]);
   const seq = useRef(0);
   const retriggers = useRef<Record<string, Retrigger | undefined>>({});
+  const retriggersMany = useRef<Record<string, RetriggerMany | undefined>>({});
   const timers = useRef<Record<string, ReturnType<typeof setTimeout>>>({});
   // Bumped per toast to invalidate in-flight poll loops (on retry, dismiss, unmount).
   const generation = useRef<Record<string, number>>({});
+  // Multi-task toasts: latest status per task id + the first error message seen.
+  const aggregates = useRef<Record<string, { ids: string[]; statuses: Record<string, SquareSyncStatus> }>>({});
+  const aggErrors = useRef<Record<string, string | undefined>>({});
 
   // Internal functions are plain (not memoized): they close over refs + functional
   // setState only, and nothing depends on their identity. Declaring them as hoisted
   // functions lets `applyTask` ⇄ `pollOnce` reference each other cleanly.
+  // Clears every timer belonging to a toast — the single key `id` and any per-task
+  // `id:taskId` / `id:dismiss` keys used by multi-task toasts.
   function clearTimer(id: string) {
-    const t = timers.current[id];
-    if (t) {
-      clearTimeout(t);
-      delete timers.current[id];
+    for (const key of Object.keys(timers.current)) {
+      if (key === id || key.startsWith(id + ":")) {
+        clearTimeout(timers.current[key]);
+        delete timers.current[key];
+      }
     }
   }
 
@@ -79,6 +90,9 @@ export function useSquareSync() {
   function dismiss(id: string) {
     clearTimer(id);
     delete retriggers.current[id];
+    delete retriggersMany.current[id];
+    delete aggregates.current[id];
+    delete aggErrors.current[id];
     generation.current[id] = (generation.current[id] ?? 0) + 1; // cancel any live poll
     setToasts((prev) => prev.filter((t) => t.id !== id));
   }
@@ -138,7 +152,130 @@ export function useSquareSync() {
     applyTask(id, initialTask, gen);
   }
 
+  // ── Multi-task toasts (one modifier update can fan out across several menus) ──
+  // One toast aggregates N tasks: it stays "syncing" while any task is still
+  // PENDING/PROCESSING, resolves to "synced" when all finish SUCCESS/SKIPPED (or
+  // "skipped" if every task skipped), and "error" if any task FAILS.
+  function evaluateAggregate(id: string, gen: number) {
+    if (generation.current[id] !== gen) return;
+    const agg = aggregates.current[id];
+    if (!agg) return;
+    const statuses = agg.ids.map((tid) => agg.statuses[tid]);
+    const anyRunning = statuses.some((s) => s == null || s === "PENDING" || s === "PROCESSING");
+    if (anyRunning) {
+      setPhase(id, "syncing");
+      return;
+    }
+    if (statuses.some((s) => s === "FAILED")) {
+      setPhase(id, "error", aggErrors.current[id]);
+      return;
+    }
+    if (statuses.every((s) => s === "SKIPPED")) {
+      setPhase(id, "skipped");
+      timers.current[`${id}:dismiss`] = setTimeout(() => dismiss(id), SKIPPED_DISMISS_MS);
+      return;
+    }
+    setPhase(id, "synced");
+    timers.current[`${id}:dismiss`] = setTimeout(() => dismiss(id), AUTO_DISMISS_MS);
+  }
+
+  function applyAggTask(id: string, task: SquareCatalogSyncTask, gen: number) {
+    if (generation.current[id] !== gen) return;
+    const agg = aggregates.current[id];
+    if (!agg) return;
+    agg.statuses[task.id] = task.status;
+    if (task.status === "FAILED" && task.errorMessage && !aggErrors.current[id]) {
+      aggErrors.current[id] = task.errorMessage;
+    }
+    if (!isTerminal(task)) {
+      timers.current[`${id}:${task.id}`] = setTimeout(() => pollAggTask(id, task.id, gen, 0), POLL_MS);
+    }
+    evaluateAggregate(id, gen);
+  }
+
+  function pollAggTask(id: string, taskId: string, gen: number, errCount: number) {
+    if (generation.current[id] !== gen) return;
+    const token = getManagerToken();
+    if (!token) {
+      markAggFailed(id, taskId, gen);
+      return;
+    }
+    getSquareCatalogSyncTask(token, taskId, getManagerBusinessId())
+      .then(({ task }) => applyAggTask(id, task, gen))
+      .catch(() => {
+        if (generation.current[id] !== gen) return;
+        if (errCount + 1 >= MAX_POLL_ERRORS) {
+          markAggFailed(id, taskId, gen);
+          return;
+        }
+        timers.current[`${id}:${taskId}`] = setTimeout(() => pollAggTask(id, taskId, gen, errCount + 1), POLL_MS);
+      });
+  }
+
+  function markAggFailed(id: string, taskId: string, gen: number) {
+    const agg = aggregates.current[id];
+    if (!agg) return;
+    agg.statuses[taskId] = "FAILED";
+    evaluateAggregate(id, gen);
+  }
+
+  function startAggregate(id: string, tasks: SquareCatalogSyncTask[], gen: number) {
+    aggregates.current[id] = { ids: tasks.map((t) => t.id), statuses: {} };
+    aggErrors.current[id] = undefined;
+    tasks.forEach((t) => applyAggTask(id, t, gen));
+  }
+
+  /**
+   * Track a set of sync tasks (e.g. from a modifier update that hit several menus)
+   * as a single toast. `tasks` may contain null/undefined (no Square connection);
+   * if none remain, nothing is shown.
+   */
+  function trackMany(label: string, tasks: (SquareCatalogSyncTask | null | undefined)[], opts?: { noun?: string; retrigger?: RetriggerMany }) {
+    const list = tasks.filter((t): t is SquareCatalogSyncTask => !!t);
+    if (list.length === 0) return;
+    seq.current += 1;
+    const id = "sq" + seq.current;
+    retriggersMany.current[id] = opts?.retrigger;
+    const gen = (generation.current[id] = (generation.current[id] ?? 0) + 1);
+    const fresh: SyncToast = {
+      id,
+      taskId: list.length > 1 ? `${list.length} menus` : "#" + list[0].id,
+      label,
+      phase: "syncing",
+      canRetry: !!opts?.retrigger,
+      noun: opts?.noun,
+    };
+    setToasts((prev) => [fresh, ...prev.filter((t) => t.label !== label)].slice(0, MAX_TOASTS));
+    startAggregate(id, list, gen);
+  }
+
+  function retryMany(id: string) {
+    const retrigger = retriggersMany.current[id];
+    if (!retrigger) return;
+    clearTimer(id);
+    const gen = (generation.current[id] = (generation.current[id] ?? 0) + 1);
+    setPhase(id, "syncing");
+    retrigger()
+      .then((tasks) => {
+        if (generation.current[id] !== gen) return;
+        const list = (tasks ?? []).filter((t): t is SquareCatalogSyncTask => !!t);
+        if (list.length === 0) {
+          dismiss(id);
+          return;
+        }
+        setToasts((prev) => prev.map((t) => (t.id === id ? { ...t, taskId: list.length > 1 ? `${list.length} menus` : "#" + list[0].id } : t)));
+        startAggregate(id, list, gen);
+      })
+      .catch(() => {
+        if (generation.current[id] === gen) setPhase(id, "error");
+      });
+  }
+
   function retry(id: string) {
+    if (retriggersMany.current[id]) {
+      retryMany(id);
+      return;
+    }
     const retrigger = retriggers.current[id];
     if (!retrigger) return;
     clearTimer(id);
@@ -166,7 +303,7 @@ export function useSquareSync() {
     };
   }, []);
 
-  return { toasts, track, retry, dismiss };
+  return { toasts, track, trackMany, retry, dismiss };
 }
 
 const iconWrap: CSSProperties = { flexShrink: 0, width: 22, height: 22, marginTop: 1, borderRadius: 9999, display: "flex", alignItems: "center", justifyContent: "center" };
@@ -184,9 +321,11 @@ export function SquareSyncToasts({
   return (
     <div style={{ position: "fixed", right: 20, bottom: 20, zIndex: 90, display: "flex", flexDirection: "column", gap: 8, pointerEvents: "auto" }}>
       {toasts.map((t) => {
-        const [title, baseDetail] = COPY[t.phase];
+        const [title, copyDetail] = COPY[t.phase];
         const failed = t.phase === "error";
         const synced = t.phase === "synced";
+        // "synced" detail names what was updated (e.g. "Modifier updated").
+        const baseDetail = synced ? `${t.noun ?? "Product"} updated` : copyDetail;
         const detail = (failed && t.errorMessage ? t.errorMessage : baseDetail) + " · " + t.label;
         return (
           <div

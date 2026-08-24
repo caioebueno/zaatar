@@ -301,6 +301,7 @@ async function syncExistingFoodyOrderFromSquare(
   const squareState = normalizeSquareOrderState(squareOrder.state);
   const paidAt = resolveSquarePaidAt(squareOrder);
   const sourcePlatform = resolveSquareSourcePlatform(squareOrder);
+  const importedLineItems = await resolveSquareImportLineItems(squareOrder);
 
   await prisma.$transaction(async (tx) => {
     const orderUpdateData: Prisma.OrderUncheckedUpdateInput = {
@@ -356,6 +357,11 @@ async function syncExistingFoodyOrderFromSquare(
       });
     }
 
+    await syncExistingImportedOrderProductsTx(tx, {
+      importedLineItems,
+      orderId: existingOrder.id,
+    });
+
     await ensurePreparationTasksForSquareOrderTx(tx, {
       orderCreatedAt: existingOrder.createdAt,
       orderId: existingOrder.id,
@@ -388,6 +394,82 @@ async function syncExistingFoodyOrderFromSquare(
       });
     }
   });
+}
+
+async function syncExistingImportedOrderProductsTx(
+  tx: Prisma.TransactionClient,
+  input: {
+    importedLineItems: SquareImportLineItem[];
+    orderId: string;
+  },
+): Promise<void> {
+  if (input.importedLineItems.length === 0) {
+    return;
+  }
+
+  const existingOrderProducts = await tx.orderProducts.findMany({
+    where: {
+      orderId: input.orderId,
+    },
+    select: {
+      id: true,
+      productId: true,
+      quantity: true,
+      modifierGroupItems: {
+        select: {
+          id: true,
+        },
+      },
+    },
+    orderBy: [{ createdAt: "asc" }, { id: "asc" }],
+  });
+
+  const remainingMatches = existingOrderProducts.map((orderProduct) => ({
+    id: orderProduct.id,
+    productId: orderProduct.productId,
+    quantity: orderProduct.quantity,
+    modifierGroupItemIds: orderProduct.modifierGroupItems
+      .map((modifierItem) => modifierItem.id)
+      .sort(),
+  }));
+
+  for (const item of input.importedLineItems) {
+    const sortedModifierIds = [...item.modifierGroupItemIds].sort();
+    const exactMatchIndex = remainingMatches.findIndex(
+      (orderProduct) =>
+        orderProduct.productId === item.productId &&
+        orderProduct.quantity === item.quantity &&
+        areSameStringSets(orderProduct.modifierGroupItemIds, sortedModifierIds),
+    );
+    const fallbackMatchIndex =
+      exactMatchIndex >= 0
+        ? exactMatchIndex
+        : remainingMatches.findIndex(
+            (orderProduct) =>
+              orderProduct.productId === item.productId &&
+              orderProduct.quantity === item.quantity,
+          );
+
+    if (fallbackMatchIndex < 0) {
+      continue;
+    }
+
+    const matched = remainingMatches.splice(fallbackMatchIndex, 1)[0];
+    if (!matched) {
+      continue;
+    }
+
+    await tx.orderProducts.update({
+      where: {
+        id: matched.id,
+      },
+      data: {
+        comments: item.comments,
+        amount: item.unitAmount,
+        fullAmount: item.unitFullAmount,
+      },
+    });
+  }
 }
 
 async function createFoodyOrderFromSquare(
@@ -788,6 +870,14 @@ function resolveSquareUnitBaseAmount(
   }
 
   return 0;
+}
+
+function areSameStringSets(left: string[], right: string[]): boolean {
+  if (left.length !== right.length) {
+    return false;
+  }
+
+  return left.every((value, index) => value === right[index]);
 }
 
 function buildImportedOrderTags(squareOrder: SquareOrderLike): string[] {

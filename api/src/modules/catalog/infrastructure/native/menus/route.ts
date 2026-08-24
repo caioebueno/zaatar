@@ -4,6 +4,7 @@ import { randomUUID } from "crypto";
 import type { HttpResponse } from "../../../../../shared/http/types.js";
 import { NextResponse } from "../shared/http.js";
 import type { NextRequestLike } from "../shared/http.js";
+import { enqueueSquareMenuSyncTasks } from "../shared/squareCatalogSync.js";
 
 type PostBody = {
   id?: unknown;
@@ -67,6 +68,7 @@ export async function GET() {
 
 export async function POST(request: NextRequestLike) {
   try {
+    const businessId = request.headers?.["x-business-id"]?.trim() || null;
     const body = (await request.json()) as PostBody;
     const id = parseOptionalString(body.id, "id") ?? randomUUID();
     const name = parseOptionalString(body.name, "name");
@@ -97,6 +99,16 @@ export async function POST(request: NextRequestLike) {
           isDefault,
         },
       });
+    });
+
+    await enqueueSquareMenuSyncTasks({
+      businessId,
+      menuIds: [created.id],
+      requestPayload: {
+        source: "MENU_CREATE",
+        menuId: created.id,
+        triggeredAt: new Date().toISOString(),
+      },
     });
 
     return NextResponse.json(created, { status: 201 });

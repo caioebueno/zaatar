@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import prisma from "../../../../prisma.js";
 import type { SquareOrdersGateway } from "../ports/SquareOrdersGateway.js";
+import type { SquareConnectionAccessTokenResolver } from "../../infrastructure/http/SquareConnectionAccessTokenResolver.js";
 
 type CreateSquareOrderFromFoodyOrderInput = {
   locationId?: string;
@@ -11,7 +12,10 @@ type CreateSquareOrderFromFoodyOrderInput = {
 type LoadedFoodyOrder = Awaited<ReturnType<typeof loadFoodyOrder>>;
 
 export class CreateSquareOrderFromFoodyOrderUseCase {
-  constructor(private readonly squareOrdersGateway: SquareOrdersGateway) {}
+  constructor(
+    private readonly squareOrdersGateway: SquareOrdersGateway,
+    private readonly squareTokenResolver?: SquareConnectionAccessTokenResolver,
+  ) {}
 
   async execute(input: CreateSquareOrderFromFoodyOrderInput): Promise<{
     environment: "PRODUCTION" | "SANDBOX";
@@ -29,10 +33,19 @@ export class CreateSquareOrderFromFoodyOrderUseCase {
       throw new Error(`FOODY_ORDER_HAS_NO_ITEMS: ${input.orderId}`);
     }
 
-    const locationId = await resolveSquareLocationId(this.squareOrdersGateway, input.locationId);
+    const accessToken = await resolveSquareAccessTokenForOrder(
+      foodyOrder,
+      this.squareTokenResolver,
+    );
+    const locationId = await resolveSquareLocationId(
+      this.squareOrdersGateway,
+      accessToken,
+      input.locationId,
+    );
     const orderState = input.state ?? "DRAFT";
 
     const result = await this.squareOrdersGateway.createOrder({
+      accessToken,
       idempotencyKey: randomUUID(),
       order: buildSquareOrderPayload(foodyOrder, {
         locationId,
@@ -66,6 +79,7 @@ async function loadFoodyOrder(orderId: string) {
         select: {
           id: true,
           name: true,
+          businessId: true,
         },
       },
       customer: {
@@ -137,25 +151,59 @@ function buildSquareOrderPayload(
         ...(item.comments?.trim() ? { note: item.comments.trim() } : {}),
         ...(item.modifierGroupItems.length > 0
           ? {
-              modifiers: item.modifierGroupItems.map((modifierItem) => {
-                const modifierId = modifierItem.squareModifierId?.trim();
-                if (!modifierId) {
-                  throw new Error(
-                    `SQUARE_MODIFIER_ID_MISSING: modifier ${modifierItem.id} (${modifierItem.name})`,
-                  );
-                }
-
-                return {
-                  uid: `${item.id}:${modifierItem.id}`,
-                  catalog_object_id: modifierId,
-                  quantity: "1",
-                };
-              }),
+              modifiers: buildSquareLineItemModifiers(item),
             }
           : {}),
       };
     }),
   };
+}
+
+function buildSquareLineItemModifiers(
+  item: NonNullable<LoadedFoodyOrder>["orderProducts"][number],
+): Array<Record<string, unknown>> {
+  const groupedModifiers = new Map<
+    string,
+    {
+      id: string;
+      name: string;
+      price: number;
+      quantity: number;
+    }
+  >();
+
+  for (const modifierItem of item.modifierGroupItems) {
+    const modifierId = modifierItem.squareModifierId?.trim();
+    if (!modifierId) {
+      throw new Error(
+        `SQUARE_MODIFIER_ID_MISSING: modifier ${modifierItem.id} (${modifierItem.name})`,
+      );
+    }
+
+    const existing = groupedModifiers.get(modifierId);
+    if (existing) {
+      existing.quantity += 1;
+      continue;
+    }
+
+    groupedModifiers.set(modifierId, {
+      id: modifierItem.id,
+      name: modifierItem.name,
+      price: modifierItem.price,
+      quantity: 1,
+    });
+  }
+
+  return Array.from(groupedModifiers.entries()).map(([modifierId, modifier]) => ({
+    uid: `${item.id}:${modifierId}`,
+    catalog_object_id: modifierId,
+    name: modifier.name,
+    quantity: String(modifier.quantity),
+    base_price_money: {
+      amount: modifier.price,
+      currency: "USD",
+    },
+  }));
 }
 
 function buildOrderNote(order: NonNullable<LoadedFoodyOrder>): string | null {
@@ -173,6 +221,7 @@ function buildOrderNote(order: NonNullable<LoadedFoodyOrder>): string | null {
 
 async function resolveSquareLocationId(
   gateway: SquareOrdersGateway,
+  accessToken: string | undefined,
   explicitLocationId?: string,
 ): Promise<string> {
   const normalizedExplicit = explicitLocationId?.trim();
@@ -185,7 +234,7 @@ async function resolveSquareLocationId(
     return envLocationId;
   }
 
-  const locations = await gateway.listLocations();
+  const locations = await gateway.listLocations({ accessToken });
   const activeLocations = locations.filter((location) => location.status === "ACTIVE");
 
   if (activeLocations.length === 1) {
@@ -200,6 +249,18 @@ async function resolveSquareLocationId(
       ? `SQUARE_LOCATION_ID_REQUIRED: multiple locations available (${availableLocationIds})`
       : "SQUARE_LOCATION_ID_REQUIRED: no Square locations available",
   );
+}
+
+async function resolveSquareAccessTokenForOrder(
+  order: NonNullable<LoadedFoodyOrder>,
+  squareTokenResolver: SquareConnectionAccessTokenResolver | undefined,
+): Promise<string | undefined> {
+  const businessId = order.branch?.businessId?.trim();
+  if (!businessId || !squareTokenResolver) {
+    return undefined;
+  }
+
+  return squareTokenResolver.resolveForBusiness(businessId);
 }
 
 function resolveSquareEnvironment(): "PRODUCTION" | "SANDBOX" {

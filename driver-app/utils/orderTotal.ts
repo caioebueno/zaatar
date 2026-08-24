@@ -65,7 +65,12 @@ export function calculateOrderTotal(order: TOrderTotalInput | null | undefined) 
     const fullAmountCents = toValidCents(product.fullAmount);
     const amountCents = toValidCents(product.amount);
     const quantity = toValidQuantity(product.quantity);
-    const lineUnitAmount = fullAmountCents > 0 ? fullAmountCents : amountCents;
+    // Base each line on the price actually charged (`amount` = actualPrice), NOT the
+    // pre-discount `fullAmount` (compared-at price). Using fullAmount ignores any
+    // discount baked into the line and shows the full, undiscounted price. Fall back
+    // to fullAmount only when `amount` is missing (0). The cart-level progressive
+    // discount is still applied on top via `progressiveDiscountSnapshot` below.
+    const lineUnitAmount = amountCents > 0 ? amountCents : fullAmountCents;
     const lineTotal = lineUnitAmount * quantity;
     return { fullAmountCents, amountCents, quantity, lineUnitAmount, lineTotal, excludeFromProgressiveDiscount: product.excludeFromProgressiveDiscount };
   });

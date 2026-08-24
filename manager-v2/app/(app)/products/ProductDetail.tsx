@@ -6,6 +6,7 @@ import {
   ApiError, createModifierGroup, createModifierGroupItem, deleteModifierGroupItem,
   toAbsoluteImageUrl, updateModifierGroup, updateModifierGroupItem, uploadBucketImage,
 } from "../../lib/api";
+import type { ModifierGroupItemResult, SquareCatalogSyncTask, UpdateModifierGroupItemBody } from "../../lib/api";
 import { getManagerBusinessId, getManagerToken } from "../../lib/auth";
 import type { FlatProduct, I18n, Lang, MediaItem, ModifierGroup, ModifierOption, PrepTask, ProductDraft } from "./data";
 import {
@@ -17,6 +18,16 @@ import type { GroupDraft } from "./GroupEditor";
 import { TaskEditor } from "./TaskEditor";
 import type { TaskDraft } from "./TaskEditor";
 import { Menu, MenuItem } from "../_components/Menu";
+
+/**
+ * Square sync tasks from a modifier-item mutation. Prefer `squareSyncTasks` (the
+ * full per-menu list); fall back to the single `squareSyncTask`. Empty when the
+ * business has no Square connection.
+ */
+function tasksOf(r: ModifierGroupItemResult): SquareCatalogSyncTask[] {
+  if (r.squareSyncTasks && r.squareSyncTasks.length) return r.squareSyncTasks;
+  return r.squareSyncTask ? [r.squareSyncTask] : [];
+}
 
 /** Image MIME types the product image upload accepts (must match the bucket's allowed set). */
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/pjpeg", "image/png", "image/x-png", "image/gif"] as const;
@@ -54,7 +65,7 @@ const detachBtn: CSSProperties = { width: 22, height: 22, display: "flex", align
 
 export function ProductDetail({
   product, draft, baseline, lang, modifierLibrary, prepLibrary,
-  setLang, patchDraft, onMediaChange, onSave, onDiscard, onClose, upsertModifierGroup, upsertPrepTask,
+  setLang, patchDraft, onMediaChange, onSave, onDiscard, onClose, upsertModifierGroup, upsertPrepTask, trackModifierSync,
 }: {
   product: FlatProduct;
   draft: ProductDraft;
@@ -70,6 +81,7 @@ export function ProductDetail({
   onClose: () => void;
   upsertModifierGroup: (g: ModifierGroup) => void;
   upsertPrepTask: (t: PrepTask) => void;
+  trackModifierSync: (label: string, tasks: (SquareCatalogSyncTask | null | undefined)[], retrigger?: () => Promise<(SquareCatalogSyncTask | null | undefined)[]>) => void;
 }) {
   const [groupEditor, setGroupEditor] = useState<GroupDraft | null>(null);
   const [taskEditor, setTaskEditor] = useState<TaskDraft | null>(null);
@@ -201,17 +213,38 @@ export function ProductDetail({
     );
 
     const savedOptions: ModifierOption[] = [];
+    // Aggregate every Square sync task the item mutations produce into one toast, and
+    // remember the update operations so Retry can re-issue them.
+    const syncTasks: (SquareCatalogSyncTask | null | undefined)[] = [];
+    const updateOps: { itemId: string; body: UpdateModifierGroupItemBody }[] = [];
     for (const o of g.options) {
       const price = Math.round(parseMoney(o.price) * 100);
       const name = o.names.en || "";
       const description = (o.descriptions.en || "").trim() ? o.descriptions.en! : null;
       const translations = optionTranslations(o);
-      if (baseline.some((b) => b.id === o.id)) {
-        const saved = await updateModifierGroupItem(token, o.id, { name, description, price, translations: translations ?? null }, businessId);
-        savedOptions.push({ id: saved.id, names: o.names, descriptions: o.descriptions, price: price / 100 });
+      const thumb = o.thumb ?? null;
+      const existing = baseline.find((b) => b.id === o.id);
+      if (existing) {
+        const body: UpdateModifierGroupItemBody = { name, description, price, translations: translations ?? null };
+        // Only send the thumbnail when it changed: a URL to set/replace, null to clear.
+        if (thumb !== (existing.thumb ?? null)) {
+          body.photoUrl = thumb ? toAbsoluteImageUrl(thumb) : null;
+        }
+        const saved = await updateModifierGroupItem(token, o.id, body, businessId);
+        savedOptions.push({ id: saved.id, names: o.names, descriptions: o.descriptions, price: price / 100, thumb: saved.photo?.url ?? thumb });
+        syncTasks.push(...tasksOf(saved));
+        updateOps.push({ itemId: o.id, body });
       } else {
-        const saved = await createModifierGroupItem(token, { modifierGroupId: groupId, name, description, price, translations }, businessId);
-        savedOptions.push({ id: saved.id, names: o.names, descriptions: o.descriptions, price: price / 100 });
+        // CREATE has no photoUrl field — create first, then PATCH the thumbnail on.
+        const created = await createModifierGroupItem(token, { modifierGroupId: groupId, name, description, price, translations }, businessId);
+        syncTasks.push(...tasksOf(created));
+        let savedThumb = created.photo?.url ?? null;
+        if (thumb) {
+          const withPhoto = await updateModifierGroupItem(token, created.id, { photoUrl: toAbsoluteImageUrl(thumb) }, businessId);
+          syncTasks.push(...tasksOf(withPhoto));
+          savedThumb = withPhoto.photo?.url ?? thumb;
+        }
+        savedOptions.push({ id: created.id, names: o.names, descriptions: o.descriptions, price: price / 100, thumb: savedThumb });
       }
     }
 
@@ -221,6 +254,21 @@ export function ProductDetail({
     upsertModifierGroup(norm);
     if (!exists) patchDraft({ modifiers: draft.modifiers.concat([groupId]) });
     setGroupEditor(null);
+
+    // 4. Square sync feedback — one toast covering every affected menu.
+    if (syncTasks.some(Boolean)) {
+      const label = g.names.en || "Modifier group";
+      const retrigger = updateOps.length
+        ? async () => {
+            const out: (SquareCatalogSyncTask | null | undefined)[] = [];
+            for (const op of updateOps) {
+              out.push(...tasksOf(await updateModifierGroupItem(token, op.itemId, op.body, businessId)));
+            }
+            return out;
+          }
+        : undefined;
+      trackModifierSync(label, syncTasks, retrigger);
+    }
   };
 
   // The TaskEditor drawer fetches stations and persists the step itself; here we
@@ -232,7 +280,7 @@ export function ProductDetail({
   };
 
   return (
-    <div style={{ width: "40%", minWidth: 330, display: "flex", flexDirection: "column", borderLeft: "1px solid rgba(255,255,255,0.07)", background: "#202020" }}>
+    <div style={{ width: "100%", height: "100%", minWidth: 0, display: "flex", flexDirection: "column" }}>
       {/* Header */}
       <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "14px 20px", borderBottom: "1px solid rgba(255,255,255,0.07)", flexShrink: 0 }}>
         <div style={{ flex: 1, minWidth: 0, display: "flex", alignItems: "center", gap: 10 }}>
@@ -298,6 +346,7 @@ export function ProductDetail({
               <textarea className="zp-input" value={draft.descriptions[lang] || ""} onChange={(e) => setDesc(e.target.value)} placeholder={lang === "en" ? "Product description" : "Translation for " + langRow[2]} rows={3} style={{ ...inputStyle, height: "auto", padding: "9px 11px", fontSize: 12.5, lineHeight: 1.5, resize: "vertical" }} />
             </div>
             <ToggleRow title="Available for sale" note={draft.active ? "Customers can order this item now." : "Hidden from the menu."} on={draft.active} onToggle={() => patchDraft({ active: !draft.active })} />
+            <ToggleRow title="Alert driver on delivery" note={draft.alertDriver ? "Driver gets a handling alert at drop-off." : "No handling alert for this item."} on={draft.alertDriver} onToggle={() => patchDraft({ alertDriver: !draft.alertDriver })} />
           </div>
         </div>
 

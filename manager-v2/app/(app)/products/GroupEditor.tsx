@@ -4,7 +4,12 @@ import { useState } from "react";
 import type { I18n, Lang, ModifierOption } from "./data";
 import { KNOB_STYLE, LANGUAGES, parseMoney, primarySaveStyle, switchStyle, typeOptionStyle } from "./data";
 import { CancelButton, Drawer, LangTabs, fieldLabelStyle, inputStyle } from "./Drawer";
-import { ApiError } from "../../lib/api";
+import { ApiError, toAbsoluteImageUrl, uploadBucketImage } from "../../lib/api";
+import { getManagerBusinessId, getManagerToken } from "../../lib/auth";
+
+/** Image MIME types accepted for option thumbnails (matches the product image set). */
+const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/pjpeg", "image/png", "image/x-png", "image/gif"] as const;
+const ACCEPTED_IMAGE_ACCEPT = ACCEPTED_IMAGE_TYPES.join(",");
 
 export type GroupDraft = {
   mode: "create" | "edit";
@@ -29,6 +34,7 @@ export function GroupEditor({ initial, onCancel, onSave }: { initial: GroupDraft
   const [lang, setLang] = useState<Lang>("en");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const [uploadingId, setUploadingId] = useState<string | null>(null);
 
   const langRow = LANGUAGES.find((l) => l[0] === lang) ?? LANGUAGES[0];
   const canSave = (names.en || "").trim().length > 0;
@@ -53,8 +59,36 @@ export function GroupEditor({ initial, onCancel, onSave }: { initial: GroupDraft
   const patchOption = (i: number, patch: Partial<ModifierOption>) =>
     setOptions((prev) => prev.map((o, j) => (j === i ? { ...o, ...patch } : o)));
 
+  const patchOptionById = (id: string, patch: Partial<ModifierOption>) =>
+    setOptions((prev) => prev.map((o) => (o.id === id ? { ...o, ...patch } : o)));
+
   const addOption = () =>
-    setOptions((prev) => [...prev, { id: "opt-" + prev.length + "-" + (names.en || "opt"), names: { en: "" }, descriptions: { en: "" }, price: 0 }]);
+    setOptions((prev) => [...prev, { id: "opt-" + prev.length + "-" + (names.en || "opt"), names: { en: "" }, descriptions: { en: "" }, price: 0, thumb: null }]);
+
+  // Upload an option thumbnail to the bucket; the stored `thumb` is the returned
+  // proxy path (absolutized when rendered and when sent to the API on save).
+  const uploadThumb = async (optId: string, e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+    if (!ACCEPTED_IMAGE_TYPES.includes(file.type as (typeof ACCEPTED_IMAGE_TYPES)[number])) {
+      setError("Unsupported image type. Use JPEG, PNG, or GIF.");
+      return;
+    }
+    const token = getManagerToken();
+    if (!token) return;
+    const businessId = getManagerBusinessId();
+    setError("");
+    setUploadingId(optId);
+    try {
+      const { url } = await uploadBucketImage(token, file, businessId);
+      patchOptionById(optId, { thumb: url });
+    } catch (err) {
+      setError(err instanceof ApiError && err.status === 0 ? "Can't reach the server." : "Couldn't upload image.");
+    } finally {
+      setUploadingId((cur) => (cur === optId ? null : cur));
+    }
+  };
 
   const save = async () => {
     if (!canSave || busy) return;
@@ -140,40 +174,62 @@ export function GroupEditor({ initial, onCancel, onSave }: { initial: GroupDraft
           </button>
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-          {options.map((o, i) => (
-            <div key={o.id} style={{ padding: 11, background: "#191919", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 7, display: "flex", flexDirection: "column", gap: 8 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <span style={{ fontSize: 10.5, fontWeight: 600, color: "#75767C", fontFamily: "var(--font-mono)" }}>{String(i + 1).padStart(2, "0")}</span>
+          {options.map((o, i) => {
+            const thumbUrl = o.thumb ? toAbsoluteImageUrl(o.thumb) : null;
+            const busyThumb = uploadingId === o.id;
+            return (
+            <div key={o.id} style={{ padding: 11, background: "#191919", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 7, display: "flex", gap: 10 }}>
+              {/* Thumbnail */}
+              <div style={{ width: 56, flexShrink: 0, display: "flex", flexDirection: "column", gap: 5 }}>
+                <div style={{ position: "relative", width: 56, height: 56 }}>
+                  <label title={thumbUrl ? "Replace thumbnail" : "Add thumbnail"} style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 56, height: 56, boxSizing: "border-box", borderRadius: 6, cursor: busyThumb ? "default" : "pointer", overflow: "hidden", background: thumbUrl ? "#111" : "#252525", backgroundImage: thumbUrl ? `url(${thumbUrl})` : undefined, backgroundSize: "cover", backgroundPosition: "center", border: thumbUrl ? "1px solid rgba(255,255,255,0.1)" : "1px dashed rgba(255,255,255,0.16)" }}>
+                    {busyThumb ? (
+                      <span style={{ width: 15, height: 15, borderRadius: "9999px", border: "2px solid rgba(255,255,255,0.18)", borderTopColor: "#FF5C1A", animation: "zspin 0.7s linear infinite" }} />
+                    ) : !thumbUrl && (
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6E6F74" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" /><circle cx="8.5" cy="8.5" r="1.5" /><path d="M21 15l-5-5L5 21" /></svg>
+                    )}
+                    <input type="file" accept={ACCEPTED_IMAGE_ACCEPT} disabled={busyThumb} onChange={(e) => uploadThumb(o.id, e)} style={{ display: "none" }} />
+                  </label>
+                  {thumbUrl && !busyThumb && (
+                    <button type="button" title="Remove thumbnail" onClick={() => patchOption(i, { thumb: null })} style={{ position: "absolute", top: -5, right: -5, width: 18, height: 18, display: "flex", alignItems: "center", justifyContent: "center", background: "#2F2F2F", border: "1px solid rgba(255,255,255,0.16)", borderRadius: "9999px", cursor: "pointer", color: "#C7C8CC", fontSize: 10, lineHeight: 1, padding: 0 }}>×</button>
+                  )}
+                </div>
+                <span style={{ fontSize: 10, color: "#75767C", textAlign: "center", fontFamily: "var(--font-mono)" }}>{String(i + 1).padStart(2, "0")}</span>
+              </div>
+              {/* Fields */}
+              <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: 8 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <input
+                    className="zp-input"
+                    value={o.names[lang] || ""}
+                    onChange={(e) => patchOption(i, { names: { ...o.names, [lang]: e.target.value } })}
+                    placeholder={lang === "en" ? "Option name" : (o.names.en || "Option") + " (" + langRow[1] + ")"}
+                    style={{ ...smallInput, flex: 1, minWidth: 0 }}
+                  />
+                  <div className="zp-field" style={{ display: "flex", alignItems: "center", gap: 5, width: 96, height: 30, padding: "0 9px", background: "#252525", border: "1px solid rgba(255,255,255,0.09)", borderRadius: 6, boxSizing: "border-box" }}>
+                    <span style={{ fontSize: 12, color: "#75767C", fontFamily: "var(--font-mono)" }}>$</span>
+                    <input
+                      value={typeof o.price === "number" ? o.price.toFixed(2) : o.price}
+                      onChange={(e) => patchOption(i, { price: e.target.value })}
+                      onBlur={() => patchOption(i, { price: parseMoney(o.price) })}
+                      inputMode="decimal"
+                      style={{ flex: 1, minWidth: 0, background: "transparent", border: "none", outline: "none", fontFamily: "var(--font-mono)", fontSize: 12.5, color: "#F1F1F1" }}
+                    />
+                  </div>
+                  <button type="button" onClick={() => setOptions((prev) => prev.filter((_, j) => j !== i))} title="Remove" style={{ width: 26, height: 26, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "transparent", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 5, cursor: "pointer", color: "#9B9B9B", fontSize: 11 }}>
+                    ×
+                  </button>
+                </div>
                 <input
                   className="zp-input"
-                  value={o.names[lang] || ""}
-                  onChange={(e) => patchOption(i, { names: { ...o.names, [lang]: e.target.value } })}
-                  placeholder={lang === "en" ? "Option name" : (o.names.en || "Option") + " (" + langRow[1] + ")"}
-                  style={{ ...smallInput, flex: 1, minWidth: 0 }}
+                  value={o.descriptions[lang] || ""}
+                  onChange={(e) => patchOption(i, { descriptions: { ...o.descriptions, [lang]: e.target.value } })}
+                  placeholder={lang === "en" ? "Description (optional)" : "Description (" + langRow[1] + ")"}
+                  style={{ ...smallInput, color: "#C7C8CC" }}
                 />
-                <div className="zp-field" style={{ display: "flex", alignItems: "center", gap: 5, width: 96, height: 30, padding: "0 9px", background: "#252525", border: "1px solid rgba(255,255,255,0.09)", borderRadius: 6, boxSizing: "border-box" }}>
-                  <span style={{ fontSize: 12, color: "#75767C", fontFamily: "var(--font-mono)" }}>$</span>
-                  <input
-                    value={typeof o.price === "number" ? o.price.toFixed(2) : o.price}
-                    onChange={(e) => patchOption(i, { price: e.target.value })}
-                    onBlur={() => patchOption(i, { price: parseMoney(o.price) })}
-                    inputMode="decimal"
-                    style={{ flex: 1, minWidth: 0, background: "transparent", border: "none", outline: "none", fontFamily: "var(--font-mono)", fontSize: 12.5, color: "#F1F1F1" }}
-                  />
-                </div>
-                <button type="button" onClick={() => setOptions((prev) => prev.filter((_, j) => j !== i))} title="Remove" style={{ width: 26, height: 26, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "transparent", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 5, cursor: "pointer", color: "#9B9B9B", fontSize: 11 }}>
-                  ×
-                </button>
               </div>
-              <input
-                className="zp-input"
-                value={o.descriptions[lang] || ""}
-                onChange={(e) => patchOption(i, { descriptions: { ...o.descriptions, [lang]: e.target.value } })}
-                placeholder={lang === "en" ? "Description (optional)" : "Description (" + langRow[1] + ")"}
-                style={{ ...smallInput, color: "#C7C8CC" }}
-              />
             </div>
-          ))}
+          );})}
           {options.length === 0 && <div style={{ padding: "4px 0 2px", fontSize: 11.5, color: "#75767C" }}>No options yet.</div>}
         </div>
       </div>

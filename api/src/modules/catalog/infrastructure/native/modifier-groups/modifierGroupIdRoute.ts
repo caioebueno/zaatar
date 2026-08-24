@@ -3,6 +3,11 @@ import { Prisma } from "../../../../../../../web/src/generated/prisma/index.js";
 import type { HttpResponse } from "../../../../../shared/http/types.js";
 import { NextResponse } from "../shared/http.js";
 import type { NextRequestLike } from "../shared/http.js";
+import { enqueueSquareModifierGroupSync } from "../shared/squareCatalogSync.js";
+import {
+  mapSquareSyncTasks,
+  type SquareSyncTaskResponse,
+} from "../shared/squareSyncTask.js";
 
 type RouteContext = {
   params: Promise<{
@@ -17,6 +22,18 @@ type PatchBody = {
   type?: unknown;
   minSelection?: unknown;
   maxSelection?: unknown;
+};
+
+type ModifierGroupResponse = {
+  id: string;
+  maxSelection: number | null;
+  minSelection: number | null;
+  required: boolean;
+  squareSyncTask: SquareSyncTaskResponse | null;
+  squareSyncTasks: SquareSyncTaskResponse[];
+  title: string;
+  translations: unknown | null;
+  type: "MULTI" | "SINGLE" | null;
 };
 
 function parseString(value: unknown, field: string): string {
@@ -68,6 +85,7 @@ export async function PATCH(request: NextRequestLike, context: RouteContext) {
   try {
     const { modifierGroupId } = await context.params;
     const normalizedModifierGroupId = modifierGroupId.trim();
+    const businessId = request.headers?.["x-business-id"]?.trim() || null;
 
     if (!normalizedModifierGroupId) {
       return NextResponse.json(
@@ -224,15 +242,19 @@ export async function PATCH(request: NextRequestLike, context: RouteContext) {
       LIMIT 1
     `;
 
-    return NextResponse.json({
-      id: updatedModifierGroup.id,
-      title: updatedModifierGroup.title,
-      required: updatedModifierGroup.required,
-      type: updatedModifierGroup.type,
-      minSelection: updatedModifierGroup.minSelection,
-      maxSelection: updatedModifierGroup.maxSelection,
-      translations: updatedModifierGroup.translations ?? null,
+    const squareSyncTasks = await enqueueSquareModifierGroupSync({
+      businessId,
+      modifierGroupIds: [normalizedModifierGroupId],
+      requestPayload: {
+        source: "MODIFIER_GROUP_PATCH",
+        modifierGroupId: normalizedModifierGroupId,
+        triggeredAt: new Date().toISOString(),
+      },
     });
+
+    return NextResponse.json(
+      serializeModifierGroupResponse(updatedModifierGroup, squareSyncTasks),
+    );
   } catch (error) {
     if (error instanceof Error && error.message) {
       return NextResponse.json(
@@ -250,13 +272,41 @@ export async function PATCH(request: NextRequestLike, context: RouteContext) {
   }
 }
 
+function serializeModifierGroupResponse(
+  modifierGroup: {
+    id: string;
+    maxSelection: number | null;
+    minSelection: number | null;
+    required: boolean;
+    title: string;
+    translations: unknown | null;
+    type: "MULTI" | "SINGLE" | null;
+  },
+  squareSyncTasks: Parameters<typeof mapSquareSyncTasks>[0] = [],
+): ModifierGroupResponse {
+  const serializedTasks = mapSquareSyncTasks(squareSyncTasks);
+
+  return {
+    id: modifierGroup.id,
+    title: modifierGroup.title,
+    required: modifierGroup.required,
+    type: modifierGroup.type,
+    minSelection: modifierGroup.minSelection,
+    maxSelection: modifierGroup.maxSelection,
+    translations: modifierGroup.translations ?? null,
+    squareSyncTask: serializedTasks[0] ?? null,
+    squareSyncTasks: serializedTasks,
+  };
+}
+
 export async function DELETE(
-  _request: NextRequestLike,
+  request: NextRequestLike,
   context: RouteContext,
 ) {
   try {
     const { modifierGroupId } = await context.params;
     const normalizedModifierGroupId = modifierGroupId.trim();
+    const businessId = request.headers?.["x-business-id"]?.trim() || null;
 
     if (!normalizedModifierGroupId) {
       return NextResponse.json(
@@ -264,6 +314,16 @@ export async function DELETE(
         { status: 400 },
       );
     }
+
+    await enqueueSquareModifierGroupSync({
+      businessId,
+      modifierGroupIds: [normalizedModifierGroupId],
+      requestPayload: {
+        source: "MODIFIER_GROUP_DELETE",
+        modifierGroupId: normalizedModifierGroupId,
+        triggeredAt: new Date().toISOString(),
+      },
+    });
 
     await prisma.modifierGroup.delete({
       where: {

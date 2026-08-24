@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import { useRouter } from "next/navigation";
 import { ApiError, listProducts, toAbsoluteImageUrl, updateCategory, updateProduct } from "../../lib/api";
-import type { ApiCategory, ApiProduct, UpdateProductBody } from "../../lib/api";
+import type { ApiCategory, ApiProduct, SquareCatalogSyncTask, UpdateProductBody } from "../../lib/api";
 import { clearManagerSession, getManagerBusinessId, getManagerToken } from "../../lib/auth";
 import { INITIAL_MENUS, clone, initials, money, parseMoney, slug, statusChip, thumbStyle } from "./data";
 import type { CustomProduct, FlatProduct, Lang, MediaItem, Menu, ModifierGroup, PrepTask, ProductDraft } from "./data";
@@ -21,6 +21,7 @@ function baseDraftFromFlat(p: FlatProduct): ProductDraft {
     names: { en: p.rawName, es: "", pt: "" },
     descriptions: { en: p.rawDescription, es: "", pt: "" },
     active: p.rawActive,
+    alertDriver: p.rawAlertDriver,
     type: "single",
     media: [],
     price: p.rawPrice.toFixed(2),
@@ -41,6 +42,9 @@ export function ProductsScreen() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const reqId = useRef(0);
+  const panelTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const enterTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const createSeq = useRef(0);
   const sectionReorderDirty = useRef(false);
   const latestSectionOrder = useRef<string[] | null>(null);
   const draggedSectionTitle = useRef<string | null>(null);
@@ -50,6 +54,8 @@ export function ProductsScreen() {
 
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState<string | null>(null);
+  // Detail-panel enter/exit animation: closed → entering → open → exiting → closed.
+  const [panelPhase, setPanelPhase] = useState<"closed" | "entering" | "open" | "exiting">("closed");
   const [edits, setEdits] = useState<Record<string, ProductDraft>>({});
   const [draft, setDraft] = useState<ProductDraft | null>(null);
   const [baseline, setBaseline] = useState<ProductDraft | null>(null);
@@ -78,7 +84,7 @@ export function ProductsScreen() {
   const [prepLibrary, setPrepLibrary] = useState<PrepTask[]>([]);
 
   // ── Square catalog sync (toast-driven, poll-based) ───────
-  const { toasts, track: trackSquareSync, retry: retrySquareSync, dismiss: dismissSquareSync } = useSquareSync();
+  const { toasts, track: trackSquareSync, trackMany: trackSquareSyncMany, retry: retrySquareSync, dismiss: dismissSquareSync } = useSquareSync();
 
   // ── Fetch real products + categories ─────────────────────
   const load = useCallback(() => {
@@ -125,12 +131,12 @@ export function ProductsScreen() {
 
   const flat: FlatProduct[] = useMemo(() => {
     const out: FlatProduct[] = [];
-    const overlay = (id: string, rawName: string, rawPrice: number, rawComparedAt: number, rawActive: boolean, rawDescription: string, section: string, basePhotoUrl: string | null) => {
+    const overlay = (id: string, rawName: string, rawPrice: number, rawComparedAt: number, rawActive: boolean, rawAlertDriver: boolean, rawDescription: string, section: string, basePhotoUrl: string | null) => {
       const e = edits[id];
       out.push({
         id,
         section: sectionMoves[id] || section,
-        rawName, rawPrice, rawComparedAt, rawActive, rawDescription,
+        rawName, rawPrice, rawComparedAt, rawActive, rawAlertDriver, rawDescription,
         name: e ? e.names.en || rawName : rawName,
         price: e ? parseMoney(e.price) : rawPrice,
         comparedAt: e ? (e.comparedAt ? parseMoney(e.comparedAt) : 0) : rawComparedAt,
@@ -139,8 +145,8 @@ export function ProductsScreen() {
         photoUrl: e ? e.media.find((m) => m.url)?.url ?? null : basePhotoUrl,
       });
     };
-    apiProducts.forEach((p) => overlay(p.id, p.name, centsToDollars(p.price), centsToDollars(p.comparedAtPrice), p.visible, p.description ?? "", sectionOf(p, catNames), p.photos?.[0]?.url ?? null));
-    customProducts.forEach((cp) => overlay(cp.id, cp.name, cp.price || 0, cp.comparedAt || 0, !!cp.active, cp.description || "", cp.section, null));
+    apiProducts.forEach((p) => overlay(p.id, p.name, centsToDollars(p.price), centsToDollars(p.comparedAtPrice), p.visible, p.alertDriver, p.description ?? "", sectionOf(p, catNames), p.photos?.[0]?.url ?? null));
+    customProducts.forEach((cp) => overlay(cp.id, cp.name, cp.price || 0, cp.comparedAt || 0, !!cp.active, false, cp.description || "", cp.section, null));
     return out;
   }, [apiProducts, catNames, customProducts, edits, sectionMoves]);
 
@@ -171,15 +177,49 @@ export function ProductsScreen() {
     const real = productById.get(p.id);
     return real ? mapProductToDraft(real) : baseDraftFromFlat(p);
   };
+  // Switching between products while open keeps the panel; a fresh open animates in
+  // (start at width/opacity 0, then promote to "open" next frame so the transition runs).
+  const beginPanelEnter = () => {
+    const wasOpen = panelPhase === "open";
+    if (panelTimer.current) { clearTimeout(panelTimer.current); panelTimer.current = null; }
+    setPanelPhase(wasOpen ? "open" : "entering");
+    if (wasOpen) return;
+    const promote = () => {
+      if (enterTimer.current) { clearTimeout(enterTimer.current); enterTimer.current = null; }
+      setPanelPhase((ph) => (ph === "entering" ? "open" : ph));
+    };
+    enterTimer.current = setTimeout(promote, 40);
+    requestAnimationFrame(() => requestAnimationFrame(promote));
+  };
   const openProduct = (p: FlatProduct) => {
     const d = edits[p.id] ? clone(edits[p.id]) : draftForProduct(p);
     setSelected(p.id);
     setDraft(d);
     setBaseline(clone(d));
     setLang("en");
+    beginPanelEnter();
   };
-  const closeDetail = () => { setSelected(null); setDraft(null); setBaseline(null); };
+  // Animate out, then unmount the panel + clear the draft once the transition finishes.
+  const closeDetail = () => {
+    setPanelPhase((ph) => (ph === "closed" ? ph : "exiting"));
+    if (panelTimer.current) clearTimeout(panelTimer.current);
+    panelTimer.current = setTimeout(() => {
+      panelTimer.current = null;
+      setSelected(null);
+      setDraft(null);
+      setBaseline(null);
+      setPanelPhase("closed");
+    }, 260);
+  };
+  useEffect(() => () => {
+    if (panelTimer.current) clearTimeout(panelTimer.current);
+    if (enterTimer.current) clearTimeout(enterTimer.current);
+  }, []);
   const patchDraft = (patch: Partial<ProductDraft>) => setDraft((d) => (d ? { ...d, ...patch } : d));
+  // Surfaces the Square sync toast for modifier-item updates (see ProductDetail.saveGroup).
+  const trackModifierSync = (label: string, tasks: (SquareCatalogSyncTask | null | undefined)[], retrigger?: () => Promise<(SquareCatalogSyncTask | null | undefined)[]>) => {
+    trackSquareSyncMany(label, tasks, { noun: "Modifier", retrigger });
+  };
   // Images auto-save: adding, removing, or reordering media persists immediately
   // via PATCH `photoUrls` (the whole list is replaced) rather than waiting for
   // the Save button. Draft/baseline/edits and the source photos are updated
@@ -248,6 +288,7 @@ export function ProductsScreen() {
       name: draft.names.en || "",
       description: (draft.descriptions.en || "").trim() ? draft.descriptions.en : null,
       visible: draft.active,
+      alertDriver: draft.alertDriver,
       itemType: draft.type === "combo" ? "COMBO" : "PRODUCT",
       price: Math.round(parseMoney(draft.price) * 100),
       comparedAtPrice: draft.comparedAt ? Math.round(parseMoney(draft.comparedAt) * 100) : null,
@@ -405,7 +446,7 @@ export function ProductsScreen() {
   const createMenu = () => {
     const name = newMenuName.trim();
     if (!name) return;
-    const id = slug(name) + "-" + Date.now().toString(36);
+    const id = slug(name) + "-" + (++createSeq.current).toString(36);
     setMenus((prev) => [...prev, { id, name }]);
     setCurrentMenu(id);
     setNewMenuName("");
@@ -416,10 +457,10 @@ export function ProductsScreen() {
   const submitCreate = (c: CreatorDraft) => {
     const name = (c.names.en || "").trim();
     if (!name) return;
-    const id = slug(name) + "-" + Date.now().toString(36);
+    const id = slug(name) + "-" + (++createSeq.current).toString(36);
     const price = parseMoney(c.price);
     const cmp = c.comparedAt ? parseMoney(c.comparedAt) : 0;
-    const d: ProductDraft = { names: clone(c.names), descriptions: clone(c.descriptions), active: c.active, type: c.type, media: [], price: price.toFixed(2), comparedAt: cmp ? cmp.toFixed(2) : "", modifiers: [], tasks: [], taxes: [] };
+    const d: ProductDraft = { names: clone(c.names), descriptions: clone(c.descriptions), active: c.active, alertDriver: false, type: c.type, media: [], price: price.toFixed(2), comparedAt: cmp ? cmp.toFixed(2) : "", modifiers: [], tasks: [], taxes: [] };
     setCustomProducts((prev) => [...prev, { id, section: c.section, name, price, comparedAt: cmp, active: c.active, description: c.descriptions.en || "" }]);
     setEdits((prev) => ({ ...prev, [id]: d }));
     setProductOrder((prev) => ({ ...prev, [c.section]: [id, ...((prev[c.section] || []).filter((x) => x !== id))] }));
@@ -430,6 +471,7 @@ export function ProductsScreen() {
     setDraft(clone(d));
     setBaseline(clone(d));
     setLang("en");
+    beginPanelEnter();
   };
 
   const currentMenuObj = menus.find((m) => m.id === currentMenu) || menus[0];
@@ -702,22 +744,40 @@ export function ProductsScreen() {
         </div>
 
         {selectedProduct && draft && baseline && (
-          <ProductDetail
-            product={selectedProduct}
-            draft={draft}
-            baseline={baseline}
-            lang={lang}
-            modifierLibrary={modifierLibrary}
-            prepLibrary={prepLibrary}
-            setLang={setLang}
-            patchDraft={patchDraft}
-            onMediaChange={saveMedia}
-            onSave={saveDraft}
-            onDiscard={discardDraft}
-            onClose={closeDetail}
-            upsertModifierGroup={upsertModifierGroup}
-            upsertPrepTask={upsertPrepTask}
-          />
+          <div
+            style={{
+              width: panelPhase === "open" ? "40%" : "0%",
+              minWidth: panelPhase === "open" ? 330 : 0,
+              opacity: panelPhase === "open" ? 1 : 0,
+              flexShrink: 0,
+              display: "flex",
+              flexDirection: "column",
+              overflow: "hidden",
+              borderLeft: "1px solid rgba(255,255,255,0.07)",
+              background: "#202020",
+              transition: "width 300ms cubic-bezier(0.16,1,0.3,1), min-width 300ms cubic-bezier(0.16,1,0.3,1), opacity 200ms cubic-bezier(0.16,1,0.3,1)",
+            }}
+          >
+            <div style={{ width: "100%", minWidth: 330, height: "100%", display: "flex", flexDirection: "column" }}>
+              <ProductDetail
+                product={selectedProduct}
+                draft={draft}
+                baseline={baseline}
+                lang={lang}
+                modifierLibrary={modifierLibrary}
+                prepLibrary={prepLibrary}
+                setLang={setLang}
+                patchDraft={patchDraft}
+                onMediaChange={saveMedia}
+                onSave={saveDraft}
+                onDiscard={discardDraft}
+                onClose={closeDetail}
+                upsertModifierGroup={upsertModifierGroup}
+                upsertPrepTask={upsertPrepTask}
+                trackModifierSync={trackModifierSync}
+              />
+            </div>
+          </div>
         )}
       </div>
 

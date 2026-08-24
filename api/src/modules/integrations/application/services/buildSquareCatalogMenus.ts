@@ -151,6 +151,7 @@ type ModifierItemCollector = {
 };
 
 type SquareModifierListInfo = {
+  allow_quantities: "NO" | "NOT_SET" | "YES";
   max_selected_modifiers: number;
   min_selected_modifiers: number;
   modifier_list_id: string;
@@ -631,7 +632,11 @@ export async function buildSquareCatalogMenus(
         ? { version: parseSquareVersion(modifierGroup.group.squareModifierListVersion) }
         : {}),
       modifier_list_data: {
+        allow_quantities: getSquareModifierAllowQuantities(modifierGroup.group),
+        max_selected_modifiers: getSquareModifierMaxSelection(modifierGroup.group),
+        min_selected_modifiers: getSquareModifierMinSelection(modifierGroup.group),
         name: modifierGroup.group.title,
+        selection_type: getSquareModifierSelectionType(modifierGroup.group),
         modifiers: modifierObjects,
       },
     });
@@ -686,6 +691,7 @@ export async function buildSquareCatalogMenus(
         }
 
         return {
+          allow_quantities: getSquareModifierAllowQuantitiesOverride(group),
           modifier_list_id: trackedGroup.requestObjectId,
           min_selected_modifiers: getSquareModifierMinSelection(group),
           max_selected_modifiers: getSquareModifierMaxSelection(group),
@@ -814,16 +820,24 @@ function dedupeTrackedEntities(
 }
 
 function getSquareModifierMinSelection(group: LoadedModifierGroup): number {
-  if (group.required) {
-    return Math.max(group.minSelection ?? 1, 1);
+  const minSelection = group.required
+    ? Math.max(group.minSelection ?? 1, 1)
+    : Math.max(group.minSelection ?? 0, 0);
+
+  if (group.type === "SINGLE") {
+    return Math.min(minSelection, 1);
   }
 
-  return Math.max(group.minSelection ?? 0, 0);
+  return minSelection;
 }
 
 function getSquareModifierMaxSelection(group: LoadedModifierGroup): number {
+  if (group.type === "SINGLE") {
+    return 1;
+  }
+
   const minSelection = getSquareModifierMinSelection(group);
-  const defaultMaxSelection = group.type === "SINGLE" ? 1 : 0;
+  const defaultMaxSelection = 0;
   const maxSelection = group.maxSelection ?? defaultMaxSelection;
 
   if (maxSelection === 0) {
@@ -831,6 +845,34 @@ function getSquareModifierMaxSelection(group: LoadedModifierGroup): number {
   }
 
   return Math.max(maxSelection, minSelection);
+}
+
+function getSquareModifierAllowQuantities(_group: LoadedModifierGroup): boolean {
+  // Foody stores selected modifier item IDs only once, so repeated quantities of
+  // the same modifier can't be represented safely in orders.
+  return false;
+}
+
+function getSquareModifierAllowQuantitiesOverride(
+  _group: LoadedModifierGroup,
+): "NO" | "NOT_SET" | "YES" {
+  // Foody doesn't support item-specific quantity overrides, so inherit from the
+  // modifier list setting instead of forcing a per-item override in Square.
+  return "NOT_SET";
+}
+
+function getSquareModifierSelectionType(
+  group: LoadedModifierGroup,
+): "MULTIPLE" | "SINGLE" {
+  if (group.type === "SINGLE") {
+    return "SINGLE";
+  }
+
+  if (group.type === "MULTI") {
+    return "MULTIPLE";
+  }
+
+  return getSquareModifierMaxSelection(group) === 1 ? "SINGLE" : "MULTIPLE";
 }
 
 function parseSquareVersion(value: string | null | undefined): number | undefined {

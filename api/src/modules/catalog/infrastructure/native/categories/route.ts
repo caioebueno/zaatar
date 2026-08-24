@@ -9,6 +9,7 @@ import { DEFAULT_MENU_ID, DEFAULT_MENU_NAME } from "../constants/menu.js";
 import type { HttpResponse } from "../../../../../shared/http/types.js";
 import { NextResponse } from "../shared/http.js";
 import type { NextRequestLike } from "../shared/http.js";
+import { enqueueSquareCategorySync } from "../shared/squareCatalogSync.js";
 
 type PostBody = {
   id?: unknown;
@@ -629,6 +630,7 @@ export async function GET(request: NextRequestLike) {
 
 export async function POST(request: NextRequestLike) {
   try {
+    const businessId = request.headers?.["x-business-id"]?.trim() || null;
     const body = (await request.json()) as PostBody;
     const id =
       body.id === undefined ? createId() : parseString(body.id, "id");
@@ -674,6 +676,17 @@ export async function POST(request: NextRequestLike) {
       `;
 
       return category;
+    });
+
+    await enqueueSquareCategorySync({
+      businessId,
+      menuIds: [menuId],
+      requestPayload: {
+        source: "CATEGORY_CREATE",
+        categoryId: createdCategory.id,
+        menuId,
+        triggeredAt: new Date().toISOString(),
+      },
     });
 
     return NextResponse.json(

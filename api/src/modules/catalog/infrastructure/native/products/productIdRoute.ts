@@ -5,12 +5,11 @@ import { NextResponse } from "../shared/http.js";
 import type { NextRequestLike } from "../shared/http.js";
 import { Prisma } from "../../../../../../../web/src/generated/prisma/index.js";
 import { PrismaSquareCatalogSyncTaskRepository } from "../../../../integrations/infrastructure/prisma/PrismaSquareCatalogSyncTaskRepository.js";
-import { PrismaSquareConnectionRepository } from "../../../../integrations/infrastructure/prisma/PrismaSquareConnectionRepository.js";
-import { triggerSquareCatalogSyncTaskProcessing } from "../../../../integrations/main/runSquareCatalogSyncTasks.js";
 import {
   mapSquareSyncTask,
   type ProductSquareSyncTaskResponse,
 } from "./squareSyncTask.js";
+import { enqueueSquareProductSyncTask } from "../shared/squareCatalogSync.js";
 
 type RouteContext = {
   params: Promise<{
@@ -58,7 +57,6 @@ type ProductCategoryOrderRow = {
 };
 
 const squareCatalogSyncTaskRepository = new PrismaSquareCatalogSyncTaskRepository();
-const squareConnectionRepository = new PrismaSquareConnectionRepository();
 
 type DirectComboProductResponse = {
   productId: string;
@@ -1329,23 +1327,17 @@ export async function PATCH(request: NextRequestLike, context: RouteContext) {
 
     let squareSyncTask: ProductSquareSyncTaskResponse | null = null;
     if (businessId) {
-      const squareConnection = await squareConnectionRepository.findByBusinessId(
+      const createdTask = await enqueueSquareProductSyncTask({
         businessId,
-      );
+        productId: normalizedProductId,
+        requestPayload: {
+          source: "PRODUCT_PATCH",
+          triggeredAt: new Date().toISOString(),
+        },
+      });
 
-      if (squareConnection) {
-        const createdTask =
-          await squareCatalogSyncTaskRepository.createProductUpdateTask({
-            businessId,
-            productId: normalizedProductId,
-            requestPayload: {
-              source: "PRODUCT_PATCH",
-              triggeredAt: new Date().toISOString(),
-            },
-          });
-
+      if (createdTask) {
         squareSyncTask = mapSquareSyncTask(createdTask);
-        triggerSquareCatalogSyncTaskProcessing(5);
       }
     }
 

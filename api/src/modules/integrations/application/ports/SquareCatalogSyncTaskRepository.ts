@@ -5,7 +5,7 @@ export type SquareCatalogSyncTaskStatus =
   | "FAILED"
   | "SKIPPED";
 
-export type SquareCatalogSyncTaskType = "PRODUCT_UPDATE";
+export type SquareCatalogSyncTaskType = "PRODUCT_UPDATE" | "MENU_UPDATE";
 
 export type SquareCatalogSyncTaskView = {
   attempts: number;
@@ -15,8 +15,9 @@ export type SquareCatalogSyncTaskView = {
   errorMessage: string | null;
   finishedAt: Date | null;
   id: string;
+  menuId: string | null;
   processingStartedAt: Date | null;
-  productId: string;
+  productId: string | null;
   requestPayload: unknown;
   responsePayload: unknown;
   status: SquareCatalogSyncTaskStatus;
@@ -31,6 +32,11 @@ export interface SquareCatalogSyncTaskRepository {
     productId: string;
     requestPayload?: unknown;
   }): Promise<SquareCatalogSyncTaskView>;
+  createMenuUpdateTask(input: {
+    businessId: string;
+    menuId: string;
+    requestPayload?: unknown;
+  }): Promise<SquareCatalogSyncTaskView>;
   findById(input: {
     businessId: string;
     taskId: string;
@@ -42,6 +48,7 @@ export interface SquareCatalogSyncTaskRepository {
   listTasks(input: {
     businessId: string;
     limit: number;
+    menuId?: string;
     productId?: string;
   }): Promise<SquareCatalogSyncTaskView[]>;
   markTaskCompleted(input: {

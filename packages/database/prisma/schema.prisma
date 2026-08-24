@@ -271,6 +271,7 @@ enum SquareCatalogSyncTaskStatus {
 
 enum SquareCatalogSyncTaskType {
   PRODUCT_UPDATE
+  MENU_UPDATE
 }
 
 enum SquareWebhookRunStatus {
@@ -349,8 +350,10 @@ model SquareCatalogSyncTask {
   updatedAt         DateTime                  @updatedAt
   business          Business                  @relation(fields: [businessId], references: [id], onDelete: Cascade)
   businessId        String
-  product           Product                   @relation(fields: [productId], references: [id], onDelete: Cascade)
-  productId         String
+  product           Product?                  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId         String?
+  menu              Menu?                     @relation(fields: [menuId], references: [id], onDelete: Cascade)
+  menuId            String?
   taskType          SquareCatalogSyncTaskType @default(PRODUCT_UPDATE)
   status            SquareCatalogSyncTaskStatus @default(PENDING)
   attempts          Int                       @default(0)
@@ -362,8 +365,10 @@ model SquareCatalogSyncTask {
   responsePayload   Json?
 
   @@index([businessId, productId, createdAt])
+  @@index([businessId, menuId, createdAt])
   @@index([status, availableAt, createdAt])
   @@index([productId, createdAt])
+  @@index([menuId, createdAt])
 }
 
 model SquareWebhookRun {
@@ -867,6 +872,7 @@ model Menu {
   categories     Category[]
   menuCategories MenuCategory[]
   menuVisits     MenuVisit[]
+  squareCatalogSyncTasks SquareCatalogSyncTask[]
 
   @@index([isDefault])
 }
