@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
+  ActivityIndicator,
   Animated,
   Easing,
   Linking,
@@ -19,6 +20,7 @@ import { useAuth } from '@/context/auth';
 import { getNextDispatch, startDelivery, markOrderDelivered, DispatchEntity, DispatchOrder } from '@/lib/dispatch-api';
 import { startDeliveryActivity, endDeliveryActivity } from '@/lib/live-activity';
 import { calculateOrderTotal } from '@/utils/orderTotal';
+import { orderExtras, prizeAttention } from '@/lib/order-extras';
 
 // ─── Zappy tokens (dark) ──────────────────────────────────────────────────────
 const Z = {
@@ -104,12 +106,18 @@ function OrderTag({ n, tone = 'neutral' }: { n: string; tone?: 'neutral' | 'volt
   );
 }
 
-function ItemRow({ qty, name, alert }: { qty: number; name: string; alert: boolean }) {
+function ItemRow({ qty, name, alert, gift }: { qty: number; name: string; alert?: boolean; gift?: boolean }) {
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-      <Text style={{ fontFamily: MONO, fontSize: 14, color: alert ? Z.volt : Z.fg3, minWidth: 24 }}>{qty}×</Text>
+      <Text style={{ fontFamily: MONO, fontSize: 14, color: gift ? Z.brand : alert ? Z.volt : Z.fg3, minWidth: 24 }}>{qty}×</Text>
       <Text style={{ flex: 1, fontFamily: SANS_M, fontSize: 15, color: Z.fg1 }}>{name}</Text>
-      {alert && <Ionicons name="alert-circle" size={15} color={Z.volt} />}
+      {gift && (
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: 7, paddingVertical: 2, borderRadius: 999, backgroundColor: 'rgba(255,61,20,0.12)' }}>
+          <Ionicons name="gift" size={11} color={Z.brand} />
+          <Text style={{ fontFamily: SANS_SB, fontSize: 10.5, color: Z.brand }}>Brinde</Text>
+        </View>
+      )}
+      {alert && !gift && <Ionicons name="alert-circle" size={15} color={Z.volt} />}
     </View>
   );
 }
@@ -291,8 +299,8 @@ const confirmStyles = StyleSheet.create({
 // ─── Attention list (pickup checklist, grouped by order) ──────────────────────
 function AttentionList({ orders, baseIdx }: { orders: DispatchOrder[]; baseIdx: number }) {
   const groups = orders
-    .map((o, i) => ({ order: o, idx: baseIdx + i, attn: o.orderProducts.filter((op) => op.product.alertDriver) }))
-    .filter((g) => g.attn.length > 0);
+    .map((o, i) => ({ order: o, idx: baseIdx + i, attn: o.orderProducts.filter((op) => op.product.alertDriver), notes: prizeAttention(o) }))
+    .filter((g) => g.attn.length > 0 || g.notes.length > 0);
   if (!groups.length) return null;
 
   return (
@@ -317,6 +325,15 @@ function AttentionList({ orders, baseIdx }: { orders: DispatchOrder[]; baseIdx: 
               <View key={op.id} style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
                 <Text style={{ fontFamily: MONO, fontSize: 14, color: Z.volt, minWidth: 24 }}>{op.quantity}×</Text>
                 <Text style={{ flex: 1, fontFamily: SANS_M, fontSize: 15, color: Z.fg1 }}>{op.product.name}</Text>
+              </View>
+            ))}
+            {g.notes.map((note, ni) => (
+              <View key={`note-${ni}`} style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 10 }}>
+                <Ionicons name="gift" size={15} color={Z.volt} style={{ width: 24, textAlign: 'center', marginTop: 1 }} />
+                <View style={{ flex: 1 }}>
+                  <Text style={{ fontFamily: SANS_M, fontSize: 15, color: Z.fg1 }}>{note.title}</Text>
+                  <Text style={{ fontFamily: SANS, fontSize: 12.5, color: Z.fg2, marginTop: 1 }}>{note.detail}</Text>
+                </View>
               </View>
             ))}
           </View>
@@ -345,6 +362,9 @@ function ItemsList({ order, n }: { order: DispatchOrder; n: string }) {
       <View style={{ gap: 10 }}>
         {order.orderProducts.map((op) => (
           <ItemRow key={op.id} qty={op.quantity} name={op.product.name} alert={!!op.product.alertDriver} />
+        ))}
+        {orderExtras(order).map((it, i) => (
+          <ItemRow key={`extra-${i}`} qty={it.qty} name={it.name} gift />
         ))}
       </View>
       <View style={{ marginTop: 14, paddingTop: 14, borderTopWidth: 1, borderTopColor: Z.divider }}>
@@ -395,7 +415,7 @@ function UpcomingList({ orders, baseIdx }: { orders: DispatchOrder[]; baseIdx: n
       <View style={{ gap: 12 }}>
         {orders.map((o, i) => {
           const addr = o.deliveryAddress;
-          const hasAttn = o.orderProducts.some((op) => op.product.alertDriver);
+          const hasAttn = o.orderProducts.some((op) => op.product.alertDriver) || prizeAttention(o).length > 0;
           return (
             <View key={o.id} style={upStyles.card}>
               <View style={upStyles.header}>
@@ -416,6 +436,9 @@ function UpcomingList({ orders, baseIdx }: { orders: DispatchOrder[]; baseIdx: n
               <View style={{ padding: 16, gap: 10 }}>
                 {o.orderProducts.map((op) => (
                   <ItemRow key={op.id} qty={op.quantity} name={op.product.name} alert={!!op.product.alertDriver} />
+                ))}
+                {orderExtras(o).map((it, xi) => (
+                  <ItemRow key={`extra-${xi}`} qty={it.qty} name={it.name} gift />
                 ))}
                 <View style={{ paddingTop: 14, borderTopWidth: 1, borderTopColor: Z.divider }}>
                   <PayBadge paid={!!o.paidAt} total={calculateOrderTotal(o)} method={paymentLabel(o.paymentMethod)} />
@@ -542,12 +565,21 @@ function NoDispatch({ onRefresh, loading }: { onRefresh: () => void; loading: bo
   );
 }
 
+/**
+ * An order is done when the server's authoritative `delivered` flag is set — for
+ * DELIVERY that means it was delivered, for TAKEAWAY that the dispatch completed.
+ * `deliveredAt` is only an optional timestamp (omitted for TAKEAWAY and possibly
+ * elsewhere), so keying off it alone re-surfaces already-finished stops on refetch.
+ * `deliveredAt` is still honoured for optimistic local updates before a refetch.
+ */
+const isOrderDone = (o: DispatchOrder) => !!o.delivered || !!o.deliveredAt;
+
 // ─── Active delivery content ──────────────────────────────────────────────────
 function DeliveryContent({
   dispatch, onMarkDelivered, onDeliveryConfirmed, onStartDelivery,
 }: {
   dispatch: DispatchEntity;
-  onMarkDelivered: () => Promise<void>;
+  onMarkDelivered: (orderId: string) => Promise<void>;
   onDeliveryConfirmed: () => void;
   onStartDelivery: () => void;
 }) {
@@ -557,7 +589,7 @@ function DeliveryContent({
   const insets = useSafeAreaInsets();
 
   const sorted = [...dispatch.orders].sort((a, b) => a.dispatchOrderIndex - b.dispatchOrderIndex);
-  const activeIdx = sorted.findIndex((o) => !o.deliveredAt);
+  const activeIdx = sorted.findIndex((o) => !isOrderDone(o));
 
   useEffect(() => { setSwipeKey((k) => k + 1); }, [activeIdx]);
 
@@ -574,7 +606,9 @@ function DeliveryContent({
     if (delivering) return;
     setDelivering(true);
     try {
-      await onMarkDelivered();
+      // Mark the exact order shown to the driver (sorted current stop), not the
+      // first-in-array order, so the marked order always matches the display.
+      await onMarkDelivered(order.id);
       setConfirming(true);
     } catch {
       setSwipeKey((k) => k + 1);
@@ -700,9 +734,9 @@ export default function DeliveryScreen() {
 
   const pendingOrderRef = useRef<DispatchOrder | null>(null);
 
-  const handleMarkDelivered = useCallback(async () => {
+  const handleMarkDelivered = useCallback(async (orderId: string) => {
     if (!dispatch || !token) return;
-    const order = dispatch.orders.find((o) => !o.deliveredAt);
+    const order = dispatch.orders.find((o) => o.id === orderId && !isOrderDone(o));
     if (!order) return;
     await markOrderDelivered(token, order.id);
     pendingOrderRef.current = order;
@@ -713,9 +747,11 @@ export default function DeliveryScreen() {
     pendingOrderRef.current = null;
     if (!order || !dispatch) return;
     const deliveredAt = new Date().toISOString();
-    const updatedOrders = dispatch.orders.map((o) => (o.id === order.id ? { ...o, deliveredAt } : o));
+    // Set the authoritative `delivered` flag locally (plus the optimistic
+    // timestamp) so a later refetch can't resurface this stop.
+    const updatedOrders = dispatch.orders.map((o) => (o.id === order.id ? { ...o, delivered: true, deliveredAt } : o));
     setDispatch((prev) => (prev ? { ...prev, orders: updatedOrders } : prev));
-    if (updatedOrders.every((o) => !!o.deliveredAt)) {
+    if (updatedOrders.every(isOrderDone)) {
       endDeliveryActivity();
       setCompletedOrders(updatedOrders);
       setDispatch(null);
@@ -743,13 +779,17 @@ export default function DeliveryScreen() {
     }
   }, [token, dispatch]);
 
+  // A dispatch with every order already done is not an active delivery — guard
+  // against the server handing one back (e.g. right after finishing the last stop).
+  const activeDispatch = dispatch && dispatch.orders.some((o) => !isOrderDone(o)) ? dispatch : null;
+
   // Top-bar center label reflects the current state.
   let center = 'Entrega';
   if (completedOrders) {
     center = 'Rota finalizada';
-  } else if (dispatch) {
-    const total = dispatch.orders.length;
-    const stop = dispatch.orders.filter((o) => !!o.deliveredAt).length + 1;
+  } else if (activeDispatch) {
+    const total = activeDispatch.orders.length;
+    const stop = activeDispatch.orders.filter(isOrderDone).length + 1;
     center = `Parada ${Math.min(stop, total)}/${total}`;
   }
 
@@ -766,15 +806,15 @@ export default function DeliveryScreen() {
       {/* Body */}
       {completedOrders ? (
         <RouteComplete orders={completedOrders} onDismiss={() => { setCompletedOrders(null); fetchDispatch(); }} />
-      ) : loading && !dispatch ? (
+      ) : loading && !activeDispatch ? (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-          <Ionicons name="cube-outline" size={40} color={Z.fg3} />
+          <ActivityIndicator size="large" color={Z.brand} />
         </View>
-      ) : !dispatch ? (
+      ) : !activeDispatch ? (
         <NoDispatch onRefresh={fetchDispatch} loading={loading} />
       ) : (
         <DeliveryContent
-          dispatch={dispatch}
+          dispatch={activeDispatch}
           onMarkDelivered={handleMarkDelivered}
           onDeliveryConfirmed={handleDeliveryConfirmed}
           onStartDelivery={handleStartDelivery}

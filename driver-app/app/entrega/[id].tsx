@@ -14,6 +14,7 @@ import { useRouter } from 'expo-router';
 
 import { getSelectedEntrega } from '@/lib/entrega-store';
 import { calculateOrderTotal } from '@/utils/orderTotal';
+import { orderExtras } from '@/lib/order-extras';
 import type { DispatchEntity, DispatchOrder } from '@/lib/dispatch-api';
 
 /* ── TOKENS (exact match from design) ───────────────────────── */
@@ -100,17 +101,9 @@ function SingleOrderDetail({
   const delta     = actualMin !== null && etaMin !== null ? actualMin - etaMin : null;
   const isLate    = delta !== null && delta > 0;
 
-  const prize = order.progressiveDiscountSnapshot?.selectedPrize ?? null;
-  const prizeRows = prize
-    ? prize.selectedProductCounts.map(pc => ({
-        qty:  pc.quantity,
-        name: prize.availableProducts.find(p => p.id === pc.productId)?.name ?? pc.productId,
-      }))
-    : [];
-
-  const allItems: Array<{ qty: number; name: string }> = [
+  const allItems: Array<{ qty: number; name: string; gift?: boolean }> = [
     ...order.orderProducts.map(op => ({ qty: op.quantity, name: op.product.name })),
-    ...prizeRows,
+    ...orderExtras(order).map(x => ({ qty: x.qty, name: x.name, gift: true })),
   ];
 
   return (
@@ -264,7 +257,13 @@ function SingleOrderDetail({
             <View style={g.qtyBadge}>
               <Text style={g.qtyText}>{item.qty}×</Text>
             </View>
-            <Text style={g.itemName}>{item.name}</Text>
+            <Text style={[g.itemName, { flex: 1 }]} numberOfLines={1}>{item.name}</Text>
+            {item.gift && (
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: 7, paddingVertical: 2, borderRadius: 999, backgroundColor: 'rgba(255,61,20,0.12)' }}>
+                <Ionicons name="gift" size={11} color={D.zippy} />
+                <Text style={{ fontFamily: SANS_B, fontSize: 10, color: D.zippy }}>Brinde</Text>
+              </View>
+            )}
           </View>
         ))}
         <View style={g.totalRow}>
@@ -447,17 +446,9 @@ function MultiOrderCard({
   const deliveredAt = order.deliveredAt ?? null;
   const phone       = order.customer?.phone ?? null;
 
-  const prize = order.progressiveDiscountSnapshot?.selectedPrize ?? null;
-  const prizeRows = prize
-    ? prize.selectedProductCounts.map(pc => ({
-        qty:  pc.quantity,
-        name: prize.availableProducts.find(p => p.id === pc.productId)?.name ?? pc.productId,
-      }))
-    : [];
-
-  const allItems: Array<{ qty: number; name: string }> = [
+  const allItems: Array<{ qty: number; name: string; gift?: boolean }> = [
     ...order.orderProducts.map(op => ({ qty: op.quantity, name: op.product.name })),
-    ...prizeRows,
+    ...orderExtras(order).map(x => ({ qty: x.qty, name: x.name, gift: true })),
   ];
 
   return (
@@ -497,8 +488,9 @@ function MultiOrderCard({
       <View style={{ gap: 5, padding: 14, paddingVertical: 10 }}>
         {allItems.map((item, i) => (
           <View key={i} style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-            <Text style={{ fontFamily: MONO_B, fontSize: 11, color: D.faint, width: 26 }}>{item.qty}×</Text>
+            <Text style={{ fontFamily: MONO_B, fontSize: 11, color: item.gift ? D.zippy : D.faint, width: 26 }}>{item.qty}×</Text>
             <Text style={{ fontSize: 13, fontFamily: SANS_M, color: D.dim, flex: 1 }} numberOfLines={1}>{item.name}</Text>
+            {item.gift && <Ionicons name="gift" size={12} color={D.zippy} />}
           </View>
         ))}
       </View>

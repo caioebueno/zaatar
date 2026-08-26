@@ -170,6 +170,24 @@ body {
 .zp-rowmenu:hover,
 .zp-rowmenu[data-state="open"] { color: #F1F1F1 !important; background: rgba(255, 255, 255, 0.07) !important; }
 
+/* ── Stock / inventory screen ──────────────────────────────── */
+/* Focus ring for every input/select/textarea on the stock screen + its drawer
+   (the drawer is a DOM descendant of the .zp-stock root even though it's fixed). */
+.zp-stock input, .zp-stock select, .zp-stock textarea {
+  transition: border-color 150ms var(--ease-out-expo, ease), box-shadow 150ms var(--ease-out-expo, ease);
+}
+.zp-stock input:focus, .zp-stock select:focus, .zp-stock textarea:focus {
+  border-color: #FF5C1A !important;
+  box-shadow: 0 0 0 3px rgba(255, 92, 26, 0.18);
+  outline: none;
+}
+.zp-srow:hover { background: rgba(255, 255, 255, 0.03); }
+.zp-scell:hover { background: rgba(255, 255, 255, 0.06) !important; border-color: rgba(255, 255, 255, 0.16) !important; }
+.zp-stab:hover { color: #F1F1F1 !important; }
+.zp-histrow:hover { background: rgba(255, 255, 255, 0.05) !important; }
+.zp-btn:hover { filter: brightness(0.92); }
+.zp-sx:hover { color: #F1F1F1 !important; }
+
 /* ── Square webhooks screen ────────────────────────────────── */
 @keyframes zp-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
 .zp-tab {

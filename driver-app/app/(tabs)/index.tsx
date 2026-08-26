@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
+  ActivityIndicator,
   Alert,
   Animated,
   AppState,
@@ -389,8 +390,8 @@ function HomeScreen({
         showsVerticalScrollIndicator={false}
       >
         {loading ? (
-          <View style={[primStyles.card, { padding: 28, alignItems: 'center' }]}>
-            <Text style={{ fontFamily: SANS_M, fontSize: 14, color: Z.fg3 }}>Carregando…</Text>
+          <View style={{ paddingVertical: 40, alignItems: 'center', justifyContent: 'center' }}>
+            <ActivityIndicator size="small" color={Z.brand} />
           </View>
         ) : (
           <>

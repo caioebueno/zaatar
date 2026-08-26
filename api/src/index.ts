@@ -47,6 +47,7 @@ import { makeListDriverDispatchesByDateRangeController } from "./modules/dispatc
 import { makeDispatchRouteController } from "./modules/dispatch-route/main/makeDispatchRouteController.js";
 import { makeStationController } from "./modules/station/main/makeStationController.js";
 import { makePreparationTaskController } from "./modules/preparation-task/main/makePreparationTaskController.js";
+import { makeInventoryController } from "./modules/inventory/main/makeInventoryController.js";
 import { makeChatwootWebhookController } from "./modules/chatwoot-webhook/main/makeChatwootWebhookController.js";
 import { makeOrderIntentController } from "./modules/order-intent/main/makeOrderIntentController.js";
 import { makePaymentsController } from "./modules/payments/main/makePaymentsController.js";
@@ -108,6 +109,7 @@ const onboardingController = makeOnboardingController();
 const branchesController = makeBranchesController();
 const stationController = makeStationController();
 const preparationTaskController = makePreparationTaskController();
+const inventoryController = makeInventoryController();
 const driverAuthController = makeDriverAuthController();
 const driverController = makeDriverController();
 const driverSelfController = makeDriverSelfController();
@@ -216,6 +218,33 @@ const routes: Route[] = [
     matcher: /^\/dispatches$/,
     controller: listDispatchesController,
     requiresAuth: true,
+  },
+  {
+    method: "GET",
+    matcher: /^\/(?:api\/)?inventory(?:\/.*)?$/,
+    controller: inventoryController,
+    requiresAuth: true,
+  },
+  {
+    method: "POST",
+    matcher: /^\/(?:api\/)?inventory(?:\/.*)?$/,
+    controller: inventoryController,
+    requiresAuth: true,
+    bodyMode: "json",
+  },
+  {
+    method: "PATCH",
+    matcher: /^\/(?:api\/)?inventory(?:\/.*)?$/,
+    controller: inventoryController,
+    requiresAuth: true,
+    bodyMode: "json",
+  },
+  {
+    method: "DELETE",
+    matcher: /^\/(?:api\/)?inventory(?:\/.*)?$/,
+    controller: inventoryController,
+    requiresAuth: true,
+    bodyMode: "json",
   },
   {
     method: "PATCH",
@@ -1281,7 +1310,7 @@ const server = createServer(async (request, response) => {
     let formData: FormData | undefined = undefined;
     let rawBody: Buffer | undefined = undefined;
 
-    if (method !== "GET" && method !== "DELETE") {
+    if (method !== "GET") {
       if (bodyMode === "form-data") {
         formData = await readFormDataBody(
           request,
