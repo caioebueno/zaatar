@@ -15,16 +15,17 @@ import {
   setManagerBusinessId,
 } from "../../lib/auth";
 
-type NavId = "orders" | "products" | "drivers" | "analytics" | "integrations";
+type NavId = "orders" | "products" | "stock" | "drivers" | "analytics" | "integrations";
 
 type NavItem = { id: NavId; label: string; href: string; key: string };
 
 const NAV_ITEMS: NavItem[] = [
   { id: "orders", label: "Orders", href: "/orders", key: "1" },
   { id: "products", label: "Products", href: "/products", key: "2" },
-  { id: "drivers", label: "Drivers", href: "/drivers", key: "3" },
-  { id: "analytics", label: "Analytics", href: "/analytics", key: "4" },
-  { id: "integrations", label: "Integrations", href: "/integrations", key: "5" },
+  { id: "stock", label: "Stock", href: "/stock", key: "3" },
+  { id: "drivers", label: "Drivers", href: "/drivers", key: "4" },
+  { id: "analytics", label: "Analytics", href: "/analytics", key: "5" },
+  { id: "integrations", label: "Integrations", href: "/integrations", key: "6" },
 ];
 
 function NavIcon({ id }: { id: NavId }): ReactNode {
@@ -42,6 +43,13 @@ function NavIcon({ id }: { id: NavId }): ReactNode {
         <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
           <rect x="2" y="2.5" width="12" height="11" rx="2" stroke="currentColor" strokeWidth="1.4" />
           <path d="M2 6h12M6.5 6v7.5" stroke="currentColor" strokeWidth="1.4" />
+        </svg>
+      );
+    case "stock":
+      return (
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+          <path d="M2 4.2l6-2.4 6 2.4-6 2.4-6-2.4z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" />
+          <path d="M2 4.2v7.6l6 2.4 6-2.4V4.2M8 6.6V14" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" />
         </svg>
       );
     case "drivers":

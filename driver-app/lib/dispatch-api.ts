@@ -54,6 +54,17 @@ export type DispatchOrder = {
       availableProducts: Array<{ id: string; name: string }>;
     } | null;
   } | null;
+  // Loyalty rewards redeemed on this order. FREE_PRODUCT rewards add a free item
+  // to hand over; other types are discounts (no physical item).
+  redeemedRewards?: Array<{
+    id: string;
+    title: string;
+    type: 'FREE_PRODUCT' | 'PERCENT_DISCOUNT' | 'FIXED_DISCOUNT' | 'CUSTOM';
+    status: 'ACTIVE' | 'REDEEMED' | 'EXPIRED' | 'CANCELED';
+    quantity?: number | null;
+    productId?: string | null;
+    product?: { id: string; name: string } | null;
+  }>;
   orderProducts: Array<{
     id: string;
     productId: string;
