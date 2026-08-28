@@ -1,0 +1,634 @@
+import { useState, useRef, useEffect } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Animated,
+  KeyboardAvoidingView,
+  Platform,
+  ActivityIndicator,
+  Keyboard,
+  Modal,
+  FlatList,
+} from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
+import { Ionicons } from '@expo/vector-icons';
+import { useAuth } from '../context/auth';
+import { sendOtp, verifyOtp, type VerifyOtpResult } from '../lib/api';
+
+const D = {
+  bg: '#050403',
+  surf: '#181310',
+  surf2: '#1e1812',
+  surf3: '#2a211b',
+  line: 'rgba(250,245,238,0.09)',
+  text: '#faf5ee',
+  dim: 'rgba(250,245,238,0.58)',
+  faint: 'rgba(250,245,238,0.28)',
+  zippy: '#ff3d14',
+  green: '#34d39a',
+};
+
+const SANS = 'Geist_400Regular';
+const SANS_M = 'Geist_500Medium';
+const SANS_SB = 'Geist_600SemiBold';
+const SANS_B = 'Geist_700Bold';
+const MONO = 'GeistMono_400Regular';
+const MONO_M = 'GeistMono_500Medium';
+const MONO_SB = 'GeistMono_600SemiBold';
+const MONO_B = 'GeistMono_700Bold';
+
+type Country = { code: string; dialCode: string; flag: string; name: string; mask: string };
+
+const COUNTRIES: Country[] = [
+  { code: 'BR', dialCode: '55',  flag: '🇧🇷', name: 'Brasil',         mask: '(##) #####-####' },
+  { code: 'US', dialCode: '1',   flag: '🇺🇸', name: 'United States',  mask: '(###) ###-####'  },
+  { code: 'CA', dialCode: '1',   flag: '🇨🇦', name: 'Canada',         mask: '(###) ###-####'  },
+  { code: 'MX', dialCode: '52',  flag: '🇲🇽', name: 'México',         mask: '## #### ####'    },
+  { code: 'AR', dialCode: '54',  flag: '🇦🇷', name: 'Argentina',      mask: '(###) ###-####'  },
+  { code: 'CL', dialCode: '56',  flag: '🇨🇱', name: 'Chile',          mask: '# #### ####'     },
+  { code: 'CO', dialCode: '57',  flag: '🇨🇴', name: 'Colombia',       mask: '### ### ####'    },
+  { code: 'PE', dialCode: '51',  flag: '🇵🇪', name: 'Perú',           mask: '### ### ###'     },
+  { code: 'PT', dialCode: '351', flag: '🇵🇹', name: 'Portugal',       mask: '### ### ###'     },
+  { code: 'ES', dialCode: '34',  flag: '🇪🇸', name: 'España',         mask: '### ### ###'     },
+  { code: 'FR', dialCode: '33',  flag: '🇫🇷', name: 'France',         mask: '# ## ## ## ##'   },
+  { code: 'DE', dialCode: '49',  flag: '🇩🇪', name: 'Deutschland',    mask: '### #######'     },
+  { code: 'GB', dialCode: '44',  flag: '🇬🇧', name: 'United Kingdom', mask: '#### ######'     },
+  { code: 'IT', dialCode: '39',  flag: '🇮🇹', name: 'Italia',         mask: '### ### ####'    },
+  { code: 'NL', dialCode: '31',  flag: '🇳🇱', name: 'Netherlands',    mask: '# #### ####'     },
+  { code: 'AU', dialCode: '61',  flag: '🇦🇺', name: 'Australia',      mask: '#### ### ###'    },
+  { code: 'JP', dialCode: '81',  flag: '🇯🇵', name: 'Japan',          mask: '###-####-####'   },
+  { code: 'IN', dialCode: '91',  flag: '🇮🇳', name: 'India',          mask: '##### #####'     },
+];
+
+function applyMask(rawDigits: string, mask: string): string {
+  const digits = rawDigits.replace(/\D/g, '');
+  if (!digits) return '';
+  let result = '';
+  let di = 0;
+  for (let mi = 0; mi < mask.length && di < digits.length; mi++) {
+    result += mask[mi] === '#' ? digits[di++] : mask[mi];
+  }
+  return result;
+}
+
+function maskMaxDigits(mask: string): number {
+  return mask.split('').filter(c => c === '#').length;
+}
+
+function formatPhoneDisplay(apiPhone: string, dialCode: string): string {
+  const local = apiPhone.startsWith(dialCode) ? apiPhone.slice(dialCode.length) : apiPhone;
+  return `+${dialCode} ${local}`;
+}
+
+/* ── PULSING RING ──────────────────────────────────────────── */
+function PulsingRing({ size, borderRadius, delay = 0 }: { size: number; borderRadius: number; delay?: number }) {
+  const scale = useRef(new Animated.Value(1)).current;
+  const opacity = useRef(new Animated.Value(0.55)).current;
+
+  useEffect(() => {
+    let stopped = false;
+    let timeout: ReturnType<typeof setTimeout>;
+    const pulse = () => {
+      if (stopped) return;
+      scale.setValue(1);
+      opacity.setValue(0.55);
+      Animated.parallel([
+        Animated.timing(scale, { toValue: 2.5, duration: 2700, useNativeDriver: true }),
+        Animated.timing(opacity, { toValue: 0, duration: 2700, useNativeDriver: true }),
+      ]).start(({ finished }) => { if (finished && !stopped) pulse(); });
+    };
+    timeout = setTimeout(pulse, delay);
+    return () => { stopped = true; clearTimeout(timeout); };
+  }, []);
+
+  return (
+    <Animated.View
+      pointerEvents="none"
+      style={{
+        position: 'absolute',
+        width: size, height: size,
+        borderRadius,
+        borderWidth: 1,
+        borderColor: 'rgba(255,61,20,0.24)',
+        opacity,
+        transform: [{ scale }],
+      }}
+    />
+  );
+}
+
+/* ── ZIPPY MARK ────────────────────────────────────────────── */
+function ZippyMark({ size = 54 }: { size?: number }) {
+  const s = size / 100;
+  const arcCx = 50 * s, arcCy = 60 * s;
+  const outerR = 32 * s, outerStroke = Math.max(1, 6 * s);
+  const innerR = 22 * s, innerStroke = Math.max(1, 8 * s);
+  const sqSize = 18 * s, sqX = 41 * s, sqY = 51 * s, sqRx = 4 * s;
+
+  return (
+    <View style={{ width: size, height: size, borderRadius: size * 0.22, backgroundColor: D.zippy, overflow: 'hidden' }}>
+      <View style={{ position: 'absolute', width: outerR * 2, height: outerR, overflow: 'hidden', top: arcCy - outerR, left: arcCx - outerR }}>
+        <View style={{ width: outerR * 2, height: outerR * 2, borderRadius: outerR, borderWidth: outerStroke, borderColor: 'rgba(255,255,255,0.25)', backgroundColor: 'transparent' }} />
+      </View>
+      <View style={{ position: 'absolute', width: innerR * 2, height: innerR, overflow: 'hidden', top: arcCy - innerR, left: arcCx - innerR }}>
+        <View style={{ width: innerR * 2, height: innerR * 2, borderRadius: innerR, borderWidth: innerStroke, borderColor: 'rgba(255,255,255,0.55)', backgroundColor: 'transparent' }} />
+      </View>
+      <View style={{ position: 'absolute', width: sqSize, height: sqSize, borderRadius: sqRx, backgroundColor: '#fff', top: sqY, left: sqX }} />
+    </View>
+  );
+}
+
+/* ── COUNTRY PICKER MODAL ──────────────────────────────────── */
+function CountryPickerModal({ visible, selected, onSelect, onClose }: {
+  visible: boolean; selected: Country; onSelect: (c: Country) => void; onClose: () => void;
+}) {
+  const [search, setSearch] = useState('');
+  const insets = useSafeAreaInsets();
+  const filtered = search.trim()
+    ? COUNTRIES.filter(c => c.name.toLowerCase().includes(search.toLowerCase()) || c.dialCode.includes(search.replace('+', '')))
+    : COUNTRIES;
+
+  return (
+    <Modal visible={visible} animationType="slide" onRequestClose={onClose}>
+      <View style={[pickerStyles.container, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
+        <View style={pickerStyles.header}>
+          <Text style={pickerStyles.title}>Select country</Text>
+          <TouchableOpacity onPress={onClose} style={pickerStyles.closeBtn} hitSlop={8}>
+            <Ionicons name="close" size={18} color={D.dim} />
+          </TouchableOpacity>
+        </View>
+        <View style={pickerStyles.searchRow}>
+          <Ionicons name="search-outline" size={16} color={D.faint} />
+          <TextInput
+            style={pickerStyles.searchInput}
+            placeholder="Search country or code…"
+            placeholderTextColor={D.faint}
+            value={search}
+            onChangeText={setSearch}
+            autoCapitalize="none"
+            autoCorrect={false}
+          />
+          {search.length > 0 && (
+            <TouchableOpacity onPress={() => setSearch('')} hitSlop={8}>
+              <Ionicons name="close-circle" size={16} color={D.faint} />
+            </TouchableOpacity>
+          )}
+        </View>
+        <FlatList
+          data={filtered}
+          keyExtractor={c => c.code}
+          keyboardShouldPersistTaps="handled"
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              onPress={() => { onSelect(item); onClose(); }}
+              style={[pickerStyles.row, item.code === selected.code && pickerStyles.rowSelected]}
+              activeOpacity={0.65}
+            >
+              <Text style={pickerStyles.flag}>{item.flag}</Text>
+              <Text style={pickerStyles.countryName}>{item.name}</Text>
+              <Text style={pickerStyles.dialCode}>+{item.dialCode}</Text>
+              {item.code === selected.code && <Ionicons name="checkmark" size={16} color={D.zippy} style={{ marginLeft: 4 }} />}
+            </TouchableOpacity>
+          )}
+          ItemSeparatorComponent={() => <View style={{ height: 1, backgroundColor: D.line, marginLeft: 56 }} />}
+        />
+      </View>
+    </Modal>
+  );
+}
+
+/* ── CTA BUTTON ────────────────────────────────────────────── */
+function CTABtn({ label, onPress, disabled, loading }: { label: string; onPress: () => void; disabled?: boolean; loading?: boolean }) {
+  const active = !disabled && !loading;
+  return (
+    <TouchableOpacity onPress={onPress} disabled={!active} activeOpacity={0.88} style={[styles.ctaBtn, active ? styles.ctaBtnActive : styles.ctaBtnDisabled]}>
+      {loading ? (
+        <ActivityIndicator color="#fff" size="small" />
+      ) : (
+        <>
+          <Text style={[styles.ctaBtnLabel, !active && { color: D.faint }]}>{label}</Text>
+          {active && <Ionicons name="arrow-forward" size={16} color="#fff" />}
+        </>
+      )}
+    </TouchableOpacity>
+  );
+}
+
+/* ── PHONE STEP ────────────────────────────────────────────── */
+function PhoneStep({ onNext }: { onNext: (apiPhone: string, dialCode: string) => void }) {
+  const [phone, setPhone] = useState('');
+  const [country, setCountry] = useState<Country>(COUNTRIES.find(c => c.code === 'US')!);
+  const [pickerVisible, setPickerVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [focused, setFocused] = useState(false);
+  const [error, setError] = useState('');
+  const insets = useSafeAreaInsets();
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(fadeAnim, { toValue: 1, duration: 280, useNativeDriver: true }).start();
+  }, []);
+
+  const maxDigits = maskMaxDigits(country.mask);
+  const ok = phone.length >= maxDigits;
+  const apiPhone = `${country.dialCode}${phone}`;
+
+  const submit = async () => {
+    if (!ok || loading) return;
+    Keyboard.dismiss();
+    setLoading(true);
+    setError('');
+    try {
+      await sendOtp(apiPhone);
+      onNext(apiPhone, country.dialCode);
+    } catch {
+      setError('Could not send code. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+      <Animated.View style={[styles.step, { paddingTop: insets.top + 16, paddingBottom: insets.bottom + 24 }, { opacity: fadeAnim }]}>
+        <View style={styles.logoZone}>
+          <View style={{ position: 'relative', width: 54, height: 54, marginBottom: 18, alignItems: 'center', justifyContent: 'center' }}>
+            <PulsingRing size={54} borderRadius={54 * 0.22} delay={0} />
+            <PulsingRing size={54} borderRadius={54 * 0.22} delay={900} />
+            <ZippyMark size={54} />
+          </View>
+          <Text style={styles.portalLabel}>Chat Portal</Text>
+        </View>
+
+        <View style={{ flex: 1 }}>
+          <Text style={styles.headline}>Welcome back.</Text>
+          <Text style={styles.fieldLabel}>Phone Number</Text>
+
+          <View style={[styles.phoneRow, focused && styles.phoneRowFocused]}>
+            <TouchableOpacity style={styles.countryCode} onPress={() => { Keyboard.dismiss(); setPickerVisible(true); }} activeOpacity={0.7}>
+              <Text style={{ fontSize: 17 }}>{country.flag}</Text>
+              <Text style={styles.ccText}>+{country.dialCode}</Text>
+              <Ionicons name="chevron-down" size={12} color={D.faint} />
+            </TouchableOpacity>
+            <TextInput
+              style={styles.phoneInput}
+              keyboardType="phone-pad"
+              placeholder={country.mask.replace(/#/g, '0')}
+              placeholderTextColor="rgba(250,245,238,0.20)"
+              value={applyMask(phone, country.mask)}
+              onChangeText={v => { setPhone(v.replace(/\D/g, '').slice(0, maxDigits)); setError(''); }}
+              onFocus={() => setFocused(true)}
+              onBlur={() => setFocused(false)}
+              onSubmitEditing={submit}
+              returnKeyType="send"
+            />
+          </View>
+
+          <CountryPickerModal
+            visible={pickerVisible}
+            selected={country}
+            onSelect={c => { setCountry(c); setPhone(''); }}
+            onClose={() => setPickerVisible(false)}
+          />
+
+          {error
+            ? <Text style={styles.errorText}>{error}</Text>
+            : <Text style={styles.hintText}>A 6-digit code will be sent via SMS.</Text>
+          }
+
+          <CTABtn label="Send Code" onPress={submit} disabled={!ok} loading={loading} />
+
+          <View style={styles.noAccountRow}>
+            <View style={{ width: 32, height: 1, backgroundColor: D.line }} />
+            <Text style={styles.noAccountText}>No account? Contact your manager.</Text>
+          </View>
+        </View>
+      </Animated.View>
+    </KeyboardAvoidingView>
+  );
+}
+
+/* ── OTP CURSOR ────────────────────────────────────────────── */
+function OtpCursor() {
+  const opacity = useRef(new Animated.Value(1)).current;
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(opacity, { toValue: 0, duration: 500, useNativeDriver: true }),
+        Animated.timing(opacity, { toValue: 1, duration: 500, useNativeDriver: true }),
+      ])
+    ).start();
+  }, []);
+  return <Animated.View style={{ width: 2, height: 26, borderRadius: 1, backgroundColor: D.zippy, opacity }} />;
+}
+
+/* ── OTP STEP ──────────────────────────────────────────────── */
+function OTPStep({ phone, dialCode, onBack, onVerified }: {
+  phone: string; dialCode: string; onBack: () => void; onVerified: (result: VerifyOtpResult) => Promise<void>;
+}) {
+  const [digits, setDigits] = useState(Array(6).fill(''));
+  const [loading, setLoading] = useState(false);
+  const [errMsg, setErrMsg] = useState('');
+  const [focused, setFocused] = useState(false);
+  const [countdown, setCountdown] = useState(30);
+  const [resending, setResending] = useState(false);
+  const hiddenRef = useRef<TextInput>(null);
+  const shakeAnim = useRef(new Animated.Value(0)).current;
+  const insets = useSafeAreaInsets();
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(fadeAnim, { toValue: 1, duration: 260, useNativeDriver: true }).start();
+    const t = setTimeout(() => hiddenRef.current?.focus(), 120);
+    const timer = setInterval(() => setCountdown(c => (c > 0 ? c - 1 : 0)), 1000);
+    return () => { clearTimeout(t); clearInterval(timer); };
+  }, []);
+
+  const shake = () => {
+    shakeAnim.setValue(0);
+    Animated.sequence([
+      Animated.timing(shakeAnim, { toValue: -9, duration: 55, useNativeDriver: true }),
+      Animated.timing(shakeAnim, { toValue: 9,  duration: 55, useNativeDriver: true }),
+      Animated.timing(shakeAnim, { toValue: -5, duration: 55, useNativeDriver: true }),
+      Animated.timing(shakeAnim, { toValue: 5,  duration: 55, useNativeDriver: true }),
+      Animated.timing(shakeAnim, { toValue: 0,  duration: 55, useNativeDriver: true }),
+    ]).start();
+  };
+
+  const verify = async (d = digits) => {
+    const code = d.join('');
+    if (code.length < 6 || loading) return;
+    Keyboard.dismiss();
+    setLoading(true);
+    setErrMsg('');
+    try {
+      const result = await verifyOtp(phone, code);
+      await onVerified(result);
+    } catch (e: any) {
+      const reason = e?.data?.reason;
+      const remaining = e?.data?.remainingAttempts;
+      if (reason === 'OTP_NOT_FOUND_OR_EXPIRED') {
+        setErrMsg('Code expired — resend the code.');
+      } else if (reason === 'OTP_INVALID') {
+        setErrMsg(`Invalid code${remaining != null ? ` — ${remaining} attempts left` : ''}.`);
+      } else {
+        setErrMsg('Verification failed. Try again.');
+      }
+      shake();
+      setDigits(Array(6).fill(''));
+      setTimeout(() => hiddenRef.current?.focus(), 80);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const onHiddenChange = (val: string) => {
+    const cleaned = val.replace(/\D/g, '').slice(0, 6);
+    const next = Array(6).fill('') as string[];
+    cleaned.split('').forEach((c, i) => { next[i] = c; });
+    setDigits(next);
+    setErrMsg('');
+    if (cleaned.length === 6) verify(next);
+  };
+
+  const resend = async () => {
+    if (resending || countdown > 0) return;
+    setResending(true);
+    try {
+      await sendOtp(phone);
+      setCountdown(30);
+      setErrMsg('');
+    } catch {
+      setErrMsg('Could not resend. Try again.');
+    } finally {
+      setResending(false);
+    }
+  };
+
+  const all = digits.every(d => d !== '');
+  const hasErr = !!errMsg;
+  const activeBox = digits.findIndex(d => d === '');
+  const cursorBox = activeBox === -1 ? 5 : activeBox;
+
+  const boxStyle = (i: number) => [
+    styles.otpBox,
+    hasErr && styles.otpBoxErr,
+    !hasErr && digits[i] ? styles.otpBoxFilled : null,
+    focused && i === cursorBox && !hasErr && styles.otpBoxActive,
+  ];
+
+  return (
+    <Animated.View style={[styles.step, { paddingTop: insets.top + 8, paddingBottom: insets.bottom + 24 }, { opacity: fadeAnim }]}>
+      <TouchableOpacity onPress={onBack} style={styles.backBtn}>
+        <Ionicons name="arrow-back" size={17} color={D.dim} />
+        <Text style={styles.backText}>Back</Text>
+      </TouchableOpacity>
+
+      <View style={{ flex: 1, paddingTop: 10 }}>
+        <View style={styles.smsIconBadge}>
+          <Ionicons name="chatbubble-outline" size={21} color={D.green} />
+        </View>
+
+        <Text style={[styles.headline, { fontSize: 29, marginBottom: 9 }]}>Check your phone.</Text>
+        <Text style={[styles.subline, { marginBottom: 34 }]}>
+          Code sent to{' '}
+          <Text style={styles.phoneDisplay}>{formatPhoneDisplay(phone, dialCode)}</Text>
+        </Text>
+
+        <TouchableOpacity activeOpacity={1} onPress={() => hiddenRef.current?.focus()}>
+          <Animated.View style={[styles.otpRow, { transform: [{ translateX: shakeAnim }] }]}>
+            {[0, 1, 2].map(i => (
+              <View key={i} style={boxStyle(i)}>
+                {digits[i]
+                  ? <Text style={[styles.otpDigit, hasErr && { color: D.zippy }]}>{digits[i]}</Text>
+                  : focused && i === cursorBox ? <OtpCursor /> : null}
+              </View>
+            ))}
+            <View style={styles.otpDash}>
+              <View style={{ width: 7, height: 1.5, borderRadius: 1, backgroundColor: D.faint }} />
+            </View>
+            {[3, 4, 5].map(i => (
+              <View key={i} style={boxStyle(i)}>
+                {digits[i]
+                  ? <Text style={[styles.otpDigit, hasErr && { color: D.zippy }]}>{digits[i]}</Text>
+                  : focused && i === cursorBox ? <OtpCursor /> : null}
+              </View>
+            ))}
+          </Animated.View>
+        </TouchableOpacity>
+
+        <TextInput
+          ref={hiddenRef}
+          style={{ position: 'absolute', width: 1, height: 1, opacity: 0, top: 0, left: 0 }}
+          value={digits.join('')}
+          maxLength={6}
+          keyboardType="number-pad"
+          textContentType="oneTimeCode"
+          onChangeText={onHiddenChange}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
+          caretHidden
+        />
+
+        <Text style={[styles.otpError, { opacity: hasErr ? 1 : 0 }]}>{errMsg || ' '}</Text>
+
+        <View style={styles.resendRow}>
+          {countdown > 0 ? (
+            <Text style={styles.countdownText}>
+              Resend in <Text style={styles.countdownNum}>{countdown}s</Text>
+            </Text>
+          ) : (
+            <TouchableOpacity onPress={resend} disabled={resending}>
+              <Text style={[styles.resendText, resending && { opacity: 0.5 }]}>
+                {resending ? 'Sending…' : 'Resend code →'}
+              </Text>
+            </TouchableOpacity>
+          )}
+        </View>
+
+        <CTABtn label="Verify Code" onPress={() => verify()} disabled={!all} loading={loading} />
+      </View>
+    </Animated.View>
+  );
+}
+
+/* ── SUCCESS STEP ──────────────────────────────────────────── */
+function SuccessStep({ agentName, onDone }: { agentName: string; onDone: () => void }) {
+  const scaleAnim = useRef(new Animated.Value(0.58)).current;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const insets = useSafeAreaInsets();
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.spring(scaleAnim, { toValue: 1, tension: 40, friction: 6, useNativeDriver: true }),
+      Animated.timing(fadeAnim, { toValue: 1, duration: 320, useNativeDriver: true }),
+    ]).start();
+    const t = setTimeout(onDone, 2500);
+    return () => clearTimeout(t);
+  }, []);
+
+  return (
+    <Animated.View style={[styles.successContainer, { paddingBottom: insets.bottom + 24, opacity: fadeAnim }]}>
+      <Animated.View style={{ transform: [{ scale: scaleAnim }], marginBottom: 10, position: 'relative', width: 84, height: 84, alignItems: 'center', justifyContent: 'center' }}>
+        <PulsingRing size={84} borderRadius={42} delay={0} />
+        <PulsingRing size={84} borderRadius={42} delay={780} />
+        <View style={styles.checkCircle}>
+          <Ionicons name="checkmark" size={38} color={D.green} />
+        </View>
+      </Animated.View>
+
+      <Text style={[styles.headline, { textAlign: 'center', fontSize: 34 }]}>You're in.</Text>
+      <Text style={[styles.subline, { textAlign: 'center' }]}>
+        Good to have you back,{' '}
+        <Text style={{ fontFamily: SANS_B, color: D.text }}>{agentName}</Text>.
+      </Text>
+
+      <View style={styles.loadingChip}>
+        <ActivityIndicator color={D.faint} size="small" />
+        <Text style={styles.loadingText}>Loading your workspace…</Text>
+      </View>
+    </Animated.View>
+  );
+}
+
+/* ── LOGIN SCREEN ──────────────────────────────────────────── */
+export default function LoginScreen() {
+  const [step, setStep] = useState<'phone' | 'otp' | 'success'>('phone');
+  const [phone, setPhone] = useState('');
+  const [dialCode, setDialCode] = useState('1');
+  const [agentName, setAgentName] = useState('');
+  const { login } = useAuth();
+  const router = useRouter();
+
+  const handleVerified = async (result: VerifyOtpResult): Promise<void> => {
+    const { accessToken, owner, selectedBusinessId, businesses } = result;
+    const businessId = selectedBusinessId ?? businesses[0]?.id ?? null;
+
+    const branchId = 'f27dacf2-e11d-4cde-9d02-a50431a19fef';
+
+    await login(accessToken, { id: owner.id, name: owner.name, phone: owner.phone }, businessId, branchId);
+    setAgentName(owner.name);
+    setStep('success');
+  };
+
+  const handleDone = () => {
+    router.replace('/(tabs)');
+  };
+
+  return (
+    <View style={styles.screen}>
+      <StatusBar style="light" />
+      {step === 'phone' && (
+        <PhoneStep onNext={(p, dc) => { setPhone(p); setDialCode(dc); setStep('otp'); }} />
+      )}
+      {step === 'otp' && (
+        <OTPStep phone={phone} dialCode={dialCode} onBack={() => setStep('phone')} onVerified={handleVerified}  />
+      )}
+      {step === 'success' && (
+        <SuccessStep agentName={agentName} onDone={handleDone} />
+      )}
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  screen: { flex: 1, backgroundColor: D.bg },
+  step: { flex: 1, paddingHorizontal: 24 },
+  logoZone: { alignItems: 'center', paddingTop: 24, paddingBottom: 52 },
+  portalLabel: { fontFamily: MONO, fontSize: 10, letterSpacing: 2.4, color: D.faint, textTransform: 'uppercase' },
+  headline: { fontSize: 31, fontFamily: SANS_B, color: D.text, letterSpacing: -1.2, lineHeight: 33, marginBottom: 9 },
+  subline: { fontSize: 15, color: D.dim, lineHeight: 24, marginBottom: 24 },
+  fieldLabel: { fontFamily: MONO, fontSize: 10, letterSpacing: 2, color: D.faint, textTransform: 'uppercase', marginBottom: 9 },
+  phoneRow: { flexDirection: 'row', alignItems: 'center', backgroundColor: D.surf, borderWidth: 1.5, borderColor: D.line, borderRadius: 14, overflow: 'hidden', marginBottom: 11 },
+  phoneRowFocused: { borderColor: D.zippy, shadowColor: D.zippy, shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0.11, shadowRadius: 8 },
+  countryCode: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 14, height: 54, borderRightWidth: 1, borderRightColor: D.line },
+  ccText: { fontFamily: MONO_SB, fontSize: 14, color: D.dim },
+  phoneInput: { flex: 1, height: 54, paddingHorizontal: 16, fontFamily: MONO_M, fontSize: 15, color: D.text, letterSpacing: 0.9 },
+  hintText: { fontFamily: MONO, fontSize: 10, color: D.faint, letterSpacing: 0.6, marginBottom: 28 },
+  errorText: { fontFamily: MONO, fontSize: 10, color: D.zippy, letterSpacing: 0.6, marginBottom: 28 },
+  noAccountRow: { marginTop: 'auto', paddingTop: 24, alignItems: 'center', gap: 8 },
+  noAccountText: { fontFamily: MONO, fontSize: 12, color: D.faint, letterSpacing: 0.4, textAlign: 'center' },
+  ctaBtn: { height: 56, borderRadius: 16, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 9 },
+  ctaBtnActive: { backgroundColor: D.zippy, shadowColor: D.zippy, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.26, shadowRadius: 20, elevation: 8 },
+  ctaBtnDisabled: { backgroundColor: D.surf3 },
+  ctaBtnLabel: { color: '#fff', fontSize: 15, fontFamily: SANS_B, letterSpacing: -0.15 },
+  backBtn: { flexDirection: 'row', alignItems: 'center', gap: 8, alignSelf: 'flex-start', paddingVertical: 14 },
+  backText: { fontSize: 14, fontFamily: SANS_SB, color: D.dim },
+  smsIconBadge: { width: 48, height: 48, borderRadius: 14, backgroundColor: 'rgba(52,211,154,0.08)', borderWidth: 1, borderColor: 'rgba(52,211,154,0.18)', alignItems: 'center', justifyContent: 'center', marginBottom: 20 },
+  phoneDisplay: { fontFamily: MONO_SB, fontSize: 13, color: D.text, letterSpacing: 0.5 },
+  otpRow: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 10 },
+  otpBox: { flex: 1, height: 64, borderRadius: 14, borderWidth: 1.5, borderColor: D.line, backgroundColor: D.surf, alignItems: 'center', justifyContent: 'center' },
+  otpBoxFilled: { borderColor: 'rgba(250,245,238,0.15)', backgroundColor: D.surf2 },
+  otpBoxErr: { borderColor: 'rgba(255,61,20,0.45)', backgroundColor: 'rgba(255,61,20,0.06)' },
+  otpBoxActive: { borderColor: D.zippy },
+  otpDigit: { fontFamily: MONO_B, fontSize: 24, color: D.text },
+  otpDash: { width: 14, alignItems: 'center', flexShrink: 0 },
+  otpError: { fontFamily: MONO, fontSize: 10, letterSpacing: 0.5, color: D.zippy, minHeight: 18, marginBottom: 10 } as any,
+  resendRow: { marginBottom: 28 },
+  countdownText: { fontFamily: MONO, fontSize: 11, color: D.faint, letterSpacing: 0.4 },
+  countdownNum: { color: D.dim, fontFamily: MONO_SB },
+  resendText: { fontFamily: MONO_B, fontSize: 11, color: D.zippy, letterSpacing: 0.3 },
+  successContainer: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 28, gap: 11 },
+  checkCircle: { width: 84, height: 84, borderRadius: 42, backgroundColor: 'rgba(52,211,154,0.09)', borderWidth: 1.5, borderColor: 'rgba(52,211,154,0.26)', alignItems: 'center', justifyContent: 'center' },
+  loadingChip: { marginTop: 14, flexDirection: 'row', alignItems: 'center', gap: 10, backgroundColor: D.surf, borderWidth: 1, borderColor: D.line, borderRadius: 12, paddingHorizontal: 18, paddingVertical: 12 },
+  loadingText: { fontFamily: MONO, fontSize: 11, color: D.faint, letterSpacing: 1.4, textTransform: 'uppercase' },
+});
+
+const pickerStyles = StyleSheet.create({
+  container: { flex: 1, backgroundColor: D.surf },
+  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, paddingVertical: 16, borderBottomWidth: 1, borderBottomColor: D.line },
+  title: { fontSize: 17, fontFamily: SANS_B, color: D.text, letterSpacing: -0.3 },
+  closeBtn: { width: 32, height: 32, borderRadius: 16, backgroundColor: D.surf3, alignItems: 'center', justifyContent: 'center' },
+  searchRow: { flexDirection: 'row', alignItems: 'center', gap: 10, margin: 16, paddingHorizontal: 14, paddingVertical: 10, backgroundColor: D.surf2, borderRadius: 12, borderWidth: 1, borderColor: D.line },
+  searchInput: { flex: 1, fontSize: 14, color: D.text, fontFamily: MONO },
+  row: { flexDirection: 'row', alignItems: 'center', paddingVertical: 14, paddingHorizontal: 20, gap: 12 },
+  rowSelected: { backgroundColor: 'rgba(255,61,20,0.06)' },
+  flag: { fontSize: 22, width: 32 },
+  countryName: { flex: 1, fontSize: 15, color: D.text, fontFamily: SANS_M },
+  dialCode: { fontFamily: MONO, fontSize: 13, color: D.dim, letterSpacing: 0.3 },
+});
