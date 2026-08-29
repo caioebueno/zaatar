@@ -22,7 +22,15 @@ export function buildPhoneCandidates(rawPhone: string): string[] {
   const normalized = normalizePhoneDigits(rawPhone);
   if (!normalized) return [];
 
-  return [normalized];
+  const candidates = new Set<string>([normalized]);
+
+  if (normalized.length === 10) {
+    candidates.add(`1${normalized}`);
+  } else if (normalized.length === 11 && normalized.startsWith("1")) {
+    candidates.add(normalized.slice(1));
+  }
+
+  return Array.from(candidates);
 }
 
 export function normalizeOtpCode(value: unknown): string {
