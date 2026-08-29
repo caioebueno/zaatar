@@ -195,7 +195,6 @@ function PhoneStep({ onNext }: { onNext: (apiPhone: string, dialCode: string) =>
   const [country, setCountry] = useState<Country>(COUNTRIES.find((c) => c.code === 'US')!);
   const [phone, setPhone] = useState(''); // raw digits
   const [pickerVisible, setPickerVisible] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [focused, setFocused] = useState(false);
   const [error, setError] = useState('');
   const insets = useSafeAreaInsets();
@@ -209,19 +208,13 @@ function PhoneStep({ onNext }: { onNext: (apiPhone: string, dialCode: string) =>
   const ok = phone.length >= maxDigits;
   const apiPhone = `${country.dialCode}${phone}`;
 
-  const submit = async () => {
-    if (!ok || loading) return;
+  const submit = () => {
+    if (!ok) return;
     Keyboard.dismiss();
-    setLoading(true);
-    setError('');
-    try {
-      await sendOtp(apiPhone);
-      onNext(apiPhone, country.dialCode);
-    } catch {
-      setError('Não foi possível enviar o código. Tente novamente.');
-    } finally {
-      setLoading(false);
-    }
+    // Go to the code screen immediately — the SMS is sent in the background from
+    // the OTP step, so the input appears instantly instead of waiting on the
+    // network round-trip (which is what left the screen blank on TestFlight).
+    onNext(apiPhone, country.dialCode);
   };
 
   return (
@@ -264,7 +257,7 @@ function PhoneStep({ onNext }: { onNext: (apiPhone: string, dialCode: string) =>
           </View>
 
           <View style={{ marginTop: 12 }}>
-            <PrimaryButton label="Enviar código" onPress={submit} disabled={!ok} loading={loading} />
+            <PrimaryButton label="Enviar código" onPress={submit} disabled={!ok} />
           </View>
 
           <View style={{ flex: 1 }} />
@@ -290,6 +283,7 @@ function OTPStep({ phone, dialCode, onBack, onVerified }: {
   const [countdown, setCountdown] = useState(30);
   const [resending, setResending] = useState(false);
   const hiddenRef = useRef<TextInput>(null);
+  const sentRef = useRef(false);
   const insets = useSafeAreaInsets();
   const fade = useRef(new Animated.Value(0)).current;
 
@@ -297,6 +291,12 @@ function OTPStep({ phone, dialCode, onBack, onVerified }: {
     Animated.timing(fade, { toValue: 1, duration: 260, useNativeDriver: true }).start();
     const t = setTimeout(() => hiddenRef.current?.focus(), 140);
     const timer = setInterval(() => setCountdown((c) => (c > 0 ? c - 1 : 0)), 1000);
+    // Send the code in the background so this screen renders instantly. The guard
+    // avoids a double send (e.g. StrictMode remount).
+    if (!sentRef.current) {
+      sentRef.current = true;
+      sendOtp(phone).catch(() => setError('Não foi possível enviar o código. Toque em reenviar.'));
+    }
     return () => { clearTimeout(t); clearInterval(timer); };
   }, []);
 

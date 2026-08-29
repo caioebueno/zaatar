@@ -929,63 +929,12 @@ async function resolveImportedOrderCustomerDetails(
     squareOrdersGateway,
     accessToken,
   );
-  const phone = normalizeOptionalString(
-    recipient?.phone_number ?? squareCustomer?.phone_number ?? null,
-  );
-  const email = normalizeOptionalString(
-    recipient?.email_address ?? squareCustomer?.email_address ?? null,
-  );
   const name = normalizeOptionalString(
     recipient?.display_name ?? resolveSquareCustomerDisplayName(squareCustomer) ?? null,
   );
 
-  if (!name && !phone) {
-    return {
-      customerId: null,
-      customerNameSnapshot: null,
-    };
-  }
-
-  if (!phone) {
-    return {
-      customerId: null,
-      customerNameSnapshot: name ?? null,
-    };
-  }
-
-  const existingCustomer = await prisma.customer.findFirst({
-    where: {
-      OR: [
-        ...(phone ? [{ phone }] : []),
-        ...(email ? [{ email }] : []),
-      ],
-    },
-    select: {
-      id: true,
-    },
-  });
-
-  if (existingCustomer?.id) {
-    return {
-      customerId: existingCustomer.id,
-      customerNameSnapshot: name ?? null,
-    };
-  }
-
-  const createdCustomer = await prisma.customer.create({
-    data: {
-      id: randomUUID(),
-      name: name ?? null,
-      email: email ?? null,
-      phone: phone ?? null,
-    },
-    select: {
-      id: true,
-    },
-  });
-
   return {
-    customerId: createdCustomer.id,
+    customerId: null,
     customerNameSnapshot: name ?? null,
   };
 }

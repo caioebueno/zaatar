@@ -49,7 +49,7 @@ export class SendDriverOtpUseCase {
     const reviewFixedCode = getFixedReviewOtpCode(normalizedPhone);
     const code = reviewFixedCode ?? generateOtpCode();
     const expiresAt = calculateOtpExpiryDate();
-    const channel = normalizeDriverOtpChannel(input.channel);
+    const channel: DriverOtpChannel = "SMS";
 
     await this.driverAuthRepository.createOtpChallenge({
       phone: normalizedPhone,
@@ -59,13 +59,22 @@ export class SendDriverOtpUseCase {
     });
 
     if (!reviewFixedCode) {
+      console.log("[driver-otp] sending OTP", {
+        phone: maskPhoneForLog(normalizedPhone),
+        channel,
+        expiresAt: expiresAt.toISOString(),
+      });
+
       await this.driverOtpSender.send({
         phone: normalizedPhone,
         code,
         channel,
         language: normalizeLanguage(input.language),
-        sendAlsoSms: normalizeOptionalBoolean(input.sendAlsoSms),
-        sendAlsoWhatsApp: normalizeOptionalBoolean(input.sendAlsoWhatsApp),
+      });
+
+      console.log("[driver-otp] OTP sent", {
+        phone: maskPhoneForLog(normalizedPhone),
+        channel,
       });
     }
 
@@ -89,24 +98,10 @@ function normalizeRequiredString(value: unknown, field: string): string {
   return normalized;
 }
 
-function normalizeOptionalBoolean(value: unknown): boolean | undefined {
-  if (value === undefined) return undefined;
-  return value === true;
-}
-
-function normalizeDriverOtpChannel(value: unknown): DriverOtpChannel {
-  if (value === undefined || value === null) {
-    return "WHATSAPP";
+function maskPhoneForLog(phone: string): string {
+  if (phone.length <= 4) {
+    return phone;
   }
 
-  if (typeof value !== "string") {
-    throw new InvalidDriverAuthPayloadError("channel");
-  }
-
-  const normalized = value.trim().toUpperCase();
-  if (normalized !== "WHATSAPP" && normalized !== "SMS") {
-    throw new InvalidDriverAuthPayloadError("channel");
-  }
-
-  return normalized;
+  return `${"*".repeat(Math.max(0, phone.length - 4))}${phone.slice(-4)}`;
 }

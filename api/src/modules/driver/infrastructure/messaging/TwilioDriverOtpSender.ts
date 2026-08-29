@@ -17,6 +17,7 @@ export class TwilioDriverOtpSender implements DriverOtpSender {
       });
     };
 
+    const canSendViaWhatsApp = canSendWhatsAppMessage();
     const sendViaWhatsApp = async () => {
       const contentSid = resolveDriverOtpTemplateSid(input.language);
       await sendWhatsAppTemplateMessage({
@@ -31,7 +32,16 @@ export class TwilioDriverOtpSender implements DriverOtpSender {
     if (input.channel === "SMS") {
       await sendViaSms();
     } else {
-      await sendViaWhatsApp();
+      if (!canSendViaWhatsApp) {
+        await sendViaSms();
+      } else {
+        try {
+          await sendViaWhatsApp();
+        } catch (error) {
+          console.error("Driver OTP WhatsApp primary channel failed, falling back to SMS:", error);
+          await sendViaSms();
+        }
+      }
     }
 
     if (input.sendAlsoSms && input.channel !== "SMS") {
@@ -94,6 +104,21 @@ function resolveDriverOtpTemplateSid(language: string | undefined): string {
 function isWhatsAppMessagingDisabled(): boolean {
   const rawValue = process.env.DISABLE_WHATSAPP_MESSAGING?.trim().toLowerCase();
   return ["1", "true", "yes", "on"].includes(rawValue || "");
+}
+
+function canSendWhatsAppMessage(): boolean {
+  if (isWhatsAppMessagingDisabled()) {
+    return false;
+  }
+
+  const messagingServiceSid = process.env.TWILIO_MESSAGING_SERVICE_SID?.trim() || "";
+  const fromWhatsAppAddress =
+    process.env.TWILIO_WHATSAPP_FROM?.trim() ||
+    process.env.TWILIO_WHATSAPP_NUMBER?.trim() ||
+    process.env.WHATSAPP_FROM?.trim() ||
+    "";
+
+  return Boolean(messagingServiceSid || fromWhatsAppAddress);
 }
 
 function resolveTwilioBaseUrl(): string {
