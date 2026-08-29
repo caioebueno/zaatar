@@ -280,6 +280,15 @@ export class PrismaDispatchRouteRepository implements DispatchRouteRepository {
     }
 
     return prisma.$transaction(async (tx) => {
+      // Serialize sequence allocation per session so concurrent location writes
+      // cannot read the same MAX(sequence) and insert duplicate values.
+      await tx.$queryRaw<Array<{ id: string }>>`
+        SELECT "id"
+        FROM "DispatchRouteSession"
+        WHERE "id" = ${sessionId}
+        FOR UPDATE
+      `;
+
       const [maxSequenceRow] = await tx.$queryRaw<MaxSequenceRow[]>`
         SELECT MAX("sequence")::int AS "maxSequence"
         FROM "DispatchRoutePoint"
