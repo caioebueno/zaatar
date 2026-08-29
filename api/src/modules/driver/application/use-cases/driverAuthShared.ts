@@ -86,6 +86,11 @@ export function buildOtpHash(phone: string, code: string): string {
 }
 
 export function getFixedReviewOtpCode(phone: string): string | null {
+  const nodeEnv = process.env.NODE_ENV?.trim().toLowerCase();
+  if (nodeEnv === "production") {
+    return null;
+  }
+
   const isEnabled = process.env.DRIVER_REVIEW_FIXED_OTP_ENABLED === "1";
   if (!isEnabled) {
     return null;
