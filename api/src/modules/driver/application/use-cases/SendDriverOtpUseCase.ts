@@ -37,12 +37,26 @@ export class SendDriverOtpUseCase {
     const normalizedPhone = normalizePhone(rawPhone);
     const phoneCandidates = buildPhoneCandidates(normalizedPhone);
 
+    console.log("[driver-otp] request received", {
+      phone: maskPhoneForLog(normalizedPhone),
+      phoneCandidates: phoneCandidates.map(maskPhoneForLog),
+    });
+
     const driver = await this.driverAuthRepository.findActiveDriverByPhone(phoneCandidates);
     if (!driver) {
+      console.warn("[driver-otp] driver not found for phone", {
+        phone: maskPhoneForLog(normalizedPhone),
+        phoneCandidates: phoneCandidates.map(maskPhoneForLog),
+      });
       throw new DriverNotFoundError();
     }
 
     if (driver.phone !== normalizedPhone) {
+      console.log("[driver-otp] normalizing stored driver phone", {
+        driverId: driver.id,
+        previousPhone: driver.phone ? maskPhoneForLog(driver.phone) : null,
+        nextPhone: maskPhoneForLog(normalizedPhone),
+      });
       await this.driverAuthRepository.updateDriverPhone(driver.id, normalizedPhone);
     }
 
@@ -60,6 +74,7 @@ export class SendDriverOtpUseCase {
 
     if (!reviewFixedCode) {
       console.log("[driver-otp] sending OTP", {
+        driverId: driver.id,
         phone: maskPhoneForLog(normalizedPhone),
         channel,
         expiresAt: expiresAt.toISOString(),
@@ -73,8 +88,14 @@ export class SendDriverOtpUseCase {
       });
 
       console.log("[driver-otp] OTP sent", {
+        driverId: driver.id,
         phone: maskPhoneForLog(normalizedPhone),
         channel,
+      });
+    } else {
+      console.log("[driver-otp] fixed review OTP enabled; SMS send skipped", {
+        driverId: driver.id,
+        phone: maskPhoneForLog(normalizedPhone),
       });
     }
 
