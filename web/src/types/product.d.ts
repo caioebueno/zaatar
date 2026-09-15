@@ -63,6 +63,7 @@ type TComboSlotOption = {
   productPhotoUrl?: string;
   extraPrice: number;
   sortIndex?: number | null;
+  modifierGroups?: TModifierGroup[];
 };
 
 type TModifierGroup = {

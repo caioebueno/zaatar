@@ -5,6 +5,7 @@ import axios from "axios";
 import { Pool } from "pg";
 import { processDispatchAssignmentJobs as runDispatchAssignmentJobs } from "./dispatchAssignment.js";
 import { processFeedbackWhatsAppJobs as runFeedbackWhatsAppJobs } from "./feedbackWhatsAppQueue.js";
+import { processDispatchWhatsAppJobs as runDispatchWhatsAppJobs } from "./dispatchWhatsAppQueue.js";
 import { processDispatchEtaRecalculationJobs as runDispatchEtaRecalculationJobs } from "./dispatchEtaRecalculationQueue.js";
 import { processDispatchRouteMetricsRefreshJobs as runDispatchRouteMetricsRefreshJobs } from "./dispatchRouteMetricsRefreshQueue.js";
 
@@ -49,6 +50,24 @@ let lastExternalOrderNewCount = 0;
 let lastExternalOrderImportAt = null;
 let lastExternalOrderImportStatus = "idle";
 let lastExternalOrderImportCreatedCount = 0;
+
+async function runQueueStage(name, run) {
+  const startedAt = Date.now();
+  console.log(`[queue-worker] stage-start name=${name}`);
+  try {
+    const result = await run();
+    console.log(
+      `[queue-worker] stage-complete name=${name} durationMs=${Date.now() - startedAt}`,
+    );
+    return result;
+  } catch (error) {
+    console.error(
+      `[queue-worker] stage-failed name=${name} durationMs=${Date.now() - startedAt}`,
+      error,
+    );
+    throw error;
+  }
+}
 
 function buildExternalOrderRequestHeaders() {
   const headers = {
@@ -418,6 +437,7 @@ async function processDispatchAssignmentJobs(limitOverride) {
     return {
       dispatch: { processed: 0, failed: 0 },
       feedback: { processed: 0, failed: 0 },
+      dispatchWhatsApp: { processed: 0, failed: 0 },
       dispatchEta: { processed: 0, failed: 0 },
       dispatchRouteMetrics: { processed: 0, failed: 0 },
       processed: 0,
@@ -437,25 +457,41 @@ async function processDispatchAssignmentJobs(limitOverride) {
       `[queue-worker] Triggering queue processing at ${new Date().toISOString()} with limit=${jobsPerRun}`,
     );
 
-    const dispatchResult = await runDispatchAssignmentJobs(jobsPerRun);
-    const dispatchRouteMetricsResult =
-      await runDispatchRouteMetricsRefreshJobs(jobsPerRun);
-    const feedbackResult = await runFeedbackWhatsAppJobs(jobsPerRun);
-    const dispatchEtaResult = await runDispatchEtaRecalculationJobs(jobsPerRun);
+    // Customer notifications take priority and must not wait for route calculations.
+    const dispatchWhatsAppResult = await runQueueStage(
+      "dispatch-whatsapp",
+      () => runDispatchWhatsAppJobs(jobsPerRun),
+    );
+    const feedbackResult = await runQueueStage("feedback-whatsapp", () =>
+      runFeedbackWhatsAppJobs(jobsPerRun),
+    );
+    const dispatchResult = await runQueueStage("dispatch-assignment", () =>
+      runDispatchAssignmentJobs(jobsPerRun),
+    );
+    const dispatchRouteMetricsResult = await runQueueStage(
+      "dispatch-route-metrics",
+      () => runDispatchRouteMetricsRefreshJobs(jobsPerRun),
+    );
+    const dispatchEtaResult = await runQueueStage("dispatch-eta", () =>
+      runDispatchEtaRecalculationJobs(jobsPerRun),
+    );
     const result = {
       dispatch: dispatchResult,
       dispatchRouteMetrics: dispatchRouteMetricsResult,
       feedback: feedbackResult,
+      dispatchWhatsApp: dispatchWhatsAppResult,
       dispatchEta: dispatchEtaResult,
       processed:
         dispatchResult.processed +
         dispatchRouteMetricsResult.processed +
         feedbackResult.processed +
+        dispatchWhatsAppResult.processed +
         dispatchEtaResult.processed,
       failed:
         dispatchResult.failed +
         dispatchRouteMetricsResult.failed +
         feedbackResult.failed +
+        dispatchWhatsAppResult.failed +
         dispatchEtaResult.failed,
       skipped: false,
     };
@@ -468,6 +504,7 @@ async function processDispatchAssignmentJobs(limitOverride) {
       dispatch: { processed: 0, failed: 0 },
       dispatchRouteMetrics: { processed: 0, failed: 0 },
       feedback: { processed: 0, failed: 0 },
+      dispatchWhatsApp: { processed: 0, failed: 0 },
       dispatchEta: { processed: 0, failed: 0 },
       processed: 0,
       failed: 1,

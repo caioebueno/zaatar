@@ -3,8 +3,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import { useRouter } from "next/navigation";
-import { ApiError, listProducts, toAbsoluteImageUrl, updateCategory, updateProduct } from "../../lib/api";
-import type { ApiCategory, ApiProduct, SquareCatalogSyncTask, UpdateProductBody } from "../../lib/api";
+import { ApiError, createProgressiveDiscount, listProducts, listProgressiveDiscounts, toAbsoluteImageUrl, updateCategory, updateProduct, updateProgressiveDiscount } from "../../lib/api";
+import type { ApiCategory, ApiProduct, ProgressiveDiscount, SquareCatalogSyncTask, UpdateProductBody } from "../../lib/api";
 import { clearManagerSession, getManagerBusinessId, getManagerToken } from "../../lib/auth";
 import { INITIAL_MENUS, clone, initials, money, parseMoney, slug, statusChip, thumbStyle } from "./data";
 import type { CustomProduct, FlatProduct, Lang, MediaItem, Menu, ModifierGroup, PrepTask, ProductDraft } from "./data";
@@ -15,6 +15,9 @@ import type { CreatorDraft } from "./ProductCreator";
 import { Popover } from "../_components/Popover";
 import { Menu as ActionMenu, MenuItem } from "../_components/Menu";
 import { SquareSyncToasts, useSquareSync } from "./SyncToast";
+import { ProgressiveDiscountPanel, draftFromDiscount, pdSummary, stepsToInput } from "./ProgressiveDiscountPanel";
+import { ProgressiveDiscountPicker } from "./ProgressiveDiscountPicker";
+import type { DiscountDraft } from "./ProgressiveDiscountPanel";
 
 function baseDraftFromFlat(p: FlatProduct): ProductDraft {
   return {
@@ -199,6 +202,157 @@ export function ProductsScreen() {
     setLang("en");
     beginPanelEnter();
   };
+  // ── Progressive discount ───────────────────────────────────────────────────
+  // The ladder the storefront serves is the newest one with `completed: false`
+  // (see `web/src/getProgressiveDiscount.ts`), so "active" is a state on the
+  // discount, not a per-menu attachment: activating one completes the others.
+  const [pdPickerOpen, setPdPickerOpen] = useState(false);
+  const [pdCatalog, setPdCatalog] = useState<ProgressiveDiscount[]>([]);
+  const [pdOpenId, setPdOpenId] = useState<string | null>(null);
+  const [pdDraft, setPdDraft] = useState<DiscountDraft>({ completed: false, steps: [] });
+  const [pdLoading, setPdLoading] = useState(false);
+  const [pdError, setPdError] = useState("");
+  const [pdBusy, setPdBusy] = useState(false);
+  const [pdSaving, setPdSaving] = useState(false);
+  const [pdSaveError, setPdSaveError] = useState("");
+  const [pdReload, setPdReload] = useState(0);
+
+  // Mirrors the server's pick: the newest open ladder, or none at all when every
+  // ladder is completed — a menu is allowed to have no discount attached.
+  const pdActive = pdCatalog.find((d) => !d.completed) ?? null;
+  const pdEditing = pdOpenId ? pdCatalog.find((d) => d.id === pdOpenId) ?? null : null;
+
+  const pdAuth = (): { businessId: string | null; token: string } | null => {
+    const token = getManagerToken();
+    if (!token) {
+      router.replace("/login");
+      return null;
+    }
+    return { token, businessId: getManagerBusinessId() };
+  };
+
+  const pdOnError = (err: unknown, fallback: string): string => {
+    if (err instanceof ApiError && err.status === 401) {
+      clearManagerSession();
+      router.replace("/login");
+      return "";
+    }
+    if (err instanceof ApiError && err.status === 0) return "Can't reach the server.";
+    const field = err instanceof ApiError ? err.field : undefined;
+    return field ? `The API rejected ${field}.` : fallback;
+  };
+
+  // The catalog loads once the ladder is actually asked for, and again on retry.
+  useEffect(() => {
+    if (!pdPickerOpen && pdReload === 0) return;
+    const token = getManagerToken();
+    if (!token) {
+      router.replace("/login");
+      return;
+    }
+    /* eslint-disable react-hooks/set-state-in-effect */
+    setPdLoading(true);
+    setPdError("");
+    /* eslint-enable react-hooks/set-state-in-effect */
+    let alive = true;
+    listProgressiveDiscounts(token, getManagerBusinessId())
+      .then((res) => { if (alive) setPdCatalog(res); })
+      .catch((err) => { if (alive) setPdError(pdOnError(err, "Couldn't load progressive discounts.")); })
+      .finally(() => { if (alive) setPdLoading(false); });
+    return () => { alive = false; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pdPickerOpen, pdReload, router]);
+
+  const openPd = (id: string) => {
+    const found = pdCatalog.find((d) => d.id === id);
+    if (!found) return;
+    closeDetail();
+    setPdOpenId(id);
+    setPdDraft(draftFromDiscount(found));
+    setPdSaveError("");
+    setPdPickerOpen(false);
+  };
+
+  /** Make one ladder the live one: open it, and close every other open ladder. */
+  const activatePd = (id: string) => {
+    const auth = pdAuth();
+    if (!auth) return;
+    setPdBusy(true);
+    setPdError("");
+    const others = pdCatalog.filter((d) => d.id !== id && !d.completed);
+    Promise.all([
+      updateProgressiveDiscount(auth.token, id, { completed: false }, auth.businessId),
+      ...others.map((d) => updateProgressiveDiscount(auth.token, d.id, { completed: true }, auth.businessId)),
+    ])
+      .then(() => listProgressiveDiscounts(auth.token, auth.businessId))
+      .then((res) => {
+        setPdCatalog(res);
+        const refreshed = res.find((d) => d.id === pdOpenId);
+        if (refreshed) setPdDraft(draftFromDiscount(refreshed));
+      })
+      .catch((err) => setPdError(pdOnError(err, "Couldn't activate that discount.")))
+      .finally(() => setPdBusy(false));
+  };
+
+  /** Stop offering a ladder. Note the storefront falls back to the newest record
+   *  when nothing is open, so completing the only ladder does not disable it. */
+  const deactivatePd = (id: string) => {
+    const auth = pdAuth();
+    if (!auth) return;
+    setPdBusy(true);
+    setPdError("");
+    updateProgressiveDiscount(auth.token, id, { completed: true }, auth.businessId)
+      .then(() => listProgressiveDiscounts(auth.token, auth.businessId))
+      .then((res) => {
+        setPdCatalog(res);
+        const refreshed = res.find((d) => d.id === pdOpenId);
+        if (refreshed) setPdDraft(draftFromDiscount(refreshed));
+      })
+      .catch((err) => setPdError(pdOnError(err, "Couldn't deactivate that discount.")))
+      .finally(() => setPdBusy(false));
+  };
+
+  const createPd = () => {
+    const auth = pdAuth();
+    if (!auth) return;
+    setPdBusy(true);
+    setPdError("");
+    // Same starting ladder the design seeds a new discount with ($25 → 5% off).
+    createProgressiveDiscount(auth.token, { completed: false, steps: [{ type: "PERCENTAGEDISCOUNT", amount: 2500, discount: 5 }] }, auth.businessId)
+      .then((created) =>
+        listProgressiveDiscounts(auth.token, auth.businessId).then((res) => {
+          setPdCatalog(res);
+          closeDetail();
+          setPdOpenId(created.id);
+          setPdDraft(draftFromDiscount(res.find((d) => d.id === created.id) ?? created));
+          setPdPickerOpen(false);
+        }),
+      )
+      .catch((err) => setPdError(pdOnError(err, "Couldn't create a progressive discount.")))
+      .finally(() => setPdBusy(false));
+  };
+
+  const saveProgressiveDiscount = () => {
+    const auth = pdAuth();
+    if (!auth || !pdEditing) return;
+    const steps = stepsToInput(pdDraft.steps);
+    // The API requires at least one step, so a ladder emptied to nothing can only
+    // be expressed by completing it — say so instead of failing with a 400.
+    if (steps.length === 0) {
+      setPdSaveError("Add at least one step — the API can't store an empty ladder.");
+      return;
+    }
+    setPdSaving(true);
+    setPdSaveError("");
+    updateProgressiveDiscount(auth.token, pdEditing.id, { completed: pdDraft.completed, steps }, auth.businessId)
+      .then((saved) => {
+        setPdCatalog((prev) => prev.map((d) => (d.id === saved.id ? saved : d)));
+        setPdDraft(draftFromDiscount(saved));
+      })
+      .catch((err) => setPdSaveError(pdOnError(err, "Couldn't save the progressive discount.")))
+      .finally(() => setPdSaving(false));
+  };
+
   // Animate out, then unmount the panel + clear the draft once the transition finishes.
   const closeDetail = () => {
     setPanelPhase((ph) => (ph === "closed" ? ph : "exiting"));
@@ -324,16 +478,37 @@ export function ProductsScreen() {
   };
   const discardDraft = () => setBaseline((bl) => { if (bl) setDraft(clone(bl)); return bl; });
 
+  // Availability toggle from the list row. Optimistic: flip locally, PATCH
+  // `visible`, and roll back if the write fails — an item left on sale after the
+  // manager switched it off is worse than a chip that visibly snaps back.
+  // Baseline moves with the draft so the open panel doesn't show a stale Save.
   const commitActive = (p: FlatProduct, next: boolean) => {
-    setEdits((prev) => {
-      const d = prev[p.id] ? clone(prev[p.id]) : draftForProduct(p);
-      d.active = next;
-      return { ...prev, [p.id]: d };
-    });
-    if (selected === p.id) {
-      setDraft((d) => (d ? { ...d, active: next } : d));
-      setBaseline((b) => (b ? { ...b, active: next } : b));
+    const applyActive = (value: boolean) => {
+      setEdits((prev) => {
+        const d = prev[p.id] ? clone(prev[p.id]) : draftForProduct(p);
+        d.active = value;
+        return { ...prev, [p.id]: d };
+      });
+      if (selected === p.id) {
+        setDraft((d) => (d ? { ...d, active: value } : d));
+        setBaseline((b) => (b ? { ...b, active: value } : b));
+      }
+    };
+    applyActive(next);
+    const token = getManagerToken();
+    if (!token) {
+      router.replace("/login");
+      return;
     }
+    const businessId = getManagerBusinessId();
+    updateProduct(token, p.id, { visible: next }, businessId).catch((err) => {
+      if (err instanceof ApiError && err.status === 401) {
+        clearManagerSession();
+        router.replace("/login");
+        return;
+      }
+      applyActive(p.active);
+    });
   };
 
   // Removes a product from its section list (still re-attachable via "Add product").
@@ -532,6 +707,49 @@ export function ProductsScreen() {
               <input value={newMenuName} onChange={(e) => setNewMenuName(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") createMenu(); }} placeholder="New menu name" style={{ flex: 1, minWidth: 0, height: 30, padding: "0 10px", background: "#252525", border: "1px solid rgba(255,255,255,0.09)", borderRadius: 6, fontFamily: "var(--font-body)", fontSize: 12.5, color: "#E8E8E8", outline: "none" }} />
               <button type="button" onClick={createMenu} style={{ flexShrink: 0, height: 30, padding: "0 12px", borderRadius: 6, border: "none", cursor: "pointer", fontFamily: "var(--font-body)", fontSize: 12.5, fontWeight: 600, background: newMenuName.trim() ? "#FF5C1A" : "rgba(255,255,255,0.07)", color: newMenuName.trim() ? "#171717" : "#75767C" }}>Create</button>
             </div>
+          </Popover>
+        </div>
+
+        <div style={{ flexShrink: 0 }}>
+          <Popover
+            open={pdPickerOpen}
+            onOpenChange={setPdPickerOpen}
+            align="end"
+            sideOffset={8}
+            contentStyle={{ width: 326, padding: 8 }}
+            trigger={
+              <button
+                type="button"
+                title={pdActive ? `Progressive discount ${pdActive.id} · ${pdSummary(pdActive)}` : "No progressive discount attached to this menu"}
+                style={{
+                  height: 30, maxWidth: 200, display: "inline-flex", alignItems: "center", gap: 7, padding: "0 10px", borderRadius: 6, cursor: "pointer",
+                  border: "1px solid " + (pdActive ? "rgba(255,92,26,0.4)" : "rgba(255,255,255,0.09)"),
+                  background: pdActive ? "rgba(255,92,26,0.12)" : "#252525",
+                  color: pdActive ? "#FF5C1A" : "#C7C8CC",
+                  fontFamily: "var(--font-body)", fontSize: 12.5, whiteSpace: "nowrap",
+                }}
+              >
+                <svg width="12" height="13" viewBox="0 0 12 13" fill="none" style={{ flexShrink: 0 }}><path d="M7 1L2 7.4h3L4.6 12 10 5.4H6.7L7 1z" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                {!pdActive && <span>{pdCatalog.length > 0 ? "No discount" : "Add discount"}</span>}
+                {pdActive && (
+                  <span style={{ padding: "1px 7px", borderRadius: 9999, background: "rgba(255,92,26,0.18)", color: "#FF5C1A", fontSize: 10.5, fontWeight: 600, fontFamily: "var(--font-mono)" }}>{pdActive.steps.length}</span>
+                )}
+                <svg width="10" height="6" viewBox="0 0 10 6" fill="none" style={{ flexShrink: 0 }}><path d="M1 1l4 4 4-4" stroke="#9B9B9B" strokeWidth="1.4" strokeLinecap="round" /></svg>
+              </button>
+            }
+          >
+            <ProgressiveDiscountPicker
+              catalog={pdCatalog}
+              active={pdActive}
+              loading={pdLoading}
+              error={pdError}
+              busy={pdBusy}
+              onEdit={openPd}
+              onActivate={activatePd}
+              onDeactivate={deactivatePd}
+              onCreate={createPd}
+              onRetry={() => setPdReload((x) => x + 1)}
+            />
           </Popover>
         </div>
 
@@ -742,6 +960,29 @@ export function ProductsScreen() {
             )}
           </div>
         </div>
+
+        {pdEditing && (
+          <div
+            style={{
+              width: "40%", minWidth: 360, flexShrink: 0, display: "flex", flexDirection: "column", overflow: "hidden",
+              borderLeft: "1px solid rgba(255,255,255,0.07)", background: "#202020",
+            }}
+          >
+            <ProgressiveDiscountPanel
+              discount={pdEditing}
+              draft={pdDraft}
+              loading={false}
+              error=""
+              saving={pdSaving}
+              saveError={pdSaveError}
+              onPatch={(next) => { setPdDraft(next); setPdSaveError(""); }}
+              onSave={saveProgressiveDiscount}
+              onDiscard={() => { setPdDraft(draftFromDiscount(pdEditing)); setPdSaveError(""); }}
+              onClose={() => setPdOpenId(null)}
+              onRetry={() => setPdReload((x) => x + 1)}
+            />
+          </div>
+        )}
 
         {selectedProduct && draft && baseline && (
           <div

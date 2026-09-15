@@ -14,15 +14,71 @@ Returns the current progressive discount configuration used by ordering flows.
 
 Selection behavior:
 
-1. API first tries to return the most recent discount where `completed = false`.
-2. If none is open, API falls back to the most recent discount record.
-3. If no discount exists, API returns `null`.
+1. API returns the most recent discount where `completed = false`.
+2. If no discount is open, API returns `null` — a menu can have no discount
+   attached, so completing every discount switches the promotion off. (There is
+   no fallback to the most recent completed record; that behavior was removed
+   because it made "no discount" unreachable.)
+
+## List Progressive Discounts
+
+`GET /progressive-discount/all`
+
+Returns every progressive discount, newest first, each with the same shape as
+`GET /progressive-discount`. Use it for management UIs that let an operator pick
+which ladder runs; ordering flows should keep using `GET /progressive-discount`,
+which applies the selection behavior above.
+
+Returns `[]` when no discount exists (never `null`).
+
+## Create Progressive Discount
+
+`POST /progressive-discount`
+
+Creates a progressive discount and all of its steps. `completed` defaults to `false`.
+
+```json
+{
+  "completed": false,
+  "steps": [
+    { "type": "PERCENTAGEDISCOUNT", "amount": 3000, "discount": 10 },
+    { "type": "GIFT", "amount": 5000 }
+  ]
+}
+```
+
+`amount` is in cents. A `PERCENTAGEDISCOUNT` step requires an integer `discount`; a `GIFT` step must omit it. Returns the created configuration (`201`).
+
+## Update Progressive Discount
+
+`PATCH /progressive-discount/:id`
+
+Updates `completed`, replaces all steps, or does both.
+
+```json
+{
+  "completed": false,
+  "steps": [
+    { "type": "PERCENTAGEDISCOUNT", "amount": 4000, "discount": 15 }
+  ]
+}
+```
+
+When `steps` is provided, the API replaces the full step list atomically. This also removes prizes attached to the replaced steps. Returns the updated configuration (`200`).
+
+## Delete Progressive Discount
+
+`DELETE /progressive-discount/:id`
+
+Deletes the configuration, its steps, and prizes. Returns `204`.
 
 ### Success (`200`) schema
 
 ```ts
 type ProgressiveDiscountResponse = {
   id: string;
+  createdAt: string; // ISO datetime
+  completed: boolean;
   steps: Array<{
     id: string;
     type: string; // step.discountType
@@ -57,10 +113,12 @@ type ProgressiveDiscountResponse = {
 ```json
 {
   "id": "pd-01",
+  "createdAt": "2026-05-20T09:00:00.000Z",
+  "completed": false,
   "steps": [
     {
       "id": "step-01",
-      "type": "PERCENT",
+      "type": "PERCENTAGEDISCOUNT",
       "amount": 3000,
       "discount": 10,
       "prizes": [

@@ -104,6 +104,21 @@ export type ExternalIntegrationConnection = $Result.DefaultSelection<Prisma.$Ext
  */
 export type SquareConnection = $Result.DefaultSelection<Prisma.$SquareConnectionPayload>
 /**
+ * Model SquareCatalogSyncTask
+ * 
+ */
+export type SquareCatalogSyncTask = $Result.DefaultSelection<Prisma.$SquareCatalogSyncTaskPayload>
+/**
+ * Model SquareWebhookRun
+ * 
+ */
+export type SquareWebhookRun = $Result.DefaultSelection<Prisma.$SquareWebhookRunPayload>
+/**
+ * Model SquareWebhookRunAttempt
+ * 
+ */
+export type SquareWebhookRunAttempt = $Result.DefaultSelection<Prisma.$SquareWebhookRunAttemptPayload>
+/**
  * Model ExternalMenuEntityMap
  * 
  */
@@ -173,6 +188,11 @@ export type DispatchEtaRecalculationJob = $Result.DefaultSelection<Prisma.$Dispa
  * 
  */
 export type FeedbackWhatsAppJob = $Result.DefaultSelection<Prisma.$FeedbackWhatsAppJobPayload>
+/**
+ * Model DispatchWhatsAppJob
+ * 
+ */
+export type DispatchWhatsAppJob = $Result.DefaultSelection<Prisma.$DispatchWhatsAppJobPayload>
 /**
  * Model Address
  * 
@@ -396,6 +416,36 @@ export const ExternalIntegrationEnvironment: {
 export type ExternalIntegrationEnvironment = (typeof ExternalIntegrationEnvironment)[keyof typeof ExternalIntegrationEnvironment]
 
 
+export const SquareCatalogSyncTaskStatus: {
+  PENDING: 'PENDING',
+  PROCESSING: 'PROCESSING',
+  SUCCESS: 'SUCCESS',
+  FAILED: 'FAILED',
+  SKIPPED: 'SKIPPED'
+};
+
+export type SquareCatalogSyncTaskStatus = (typeof SquareCatalogSyncTaskStatus)[keyof typeof SquareCatalogSyncTaskStatus]
+
+
+export const SquareCatalogSyncTaskType: {
+  PRODUCT_UPDATE: 'PRODUCT_UPDATE',
+  MENU_UPDATE: 'MENU_UPDATE'
+};
+
+export type SquareCatalogSyncTaskType = (typeof SquareCatalogSyncTaskType)[keyof typeof SquareCatalogSyncTaskType]
+
+
+export const SquareWebhookRunStatus: {
+  PROCESSING: 'PROCESSING',
+  SUCCESS: 'SUCCESS',
+  FAILED: 'FAILED',
+  IGNORED: 'IGNORED',
+  DUPLICATE_SKIPPED: 'DUPLICATE_SKIPPED'
+};
+
+export type SquareWebhookRunStatus = (typeof SquareWebhookRunStatus)[keyof typeof SquareWebhookRunStatus]
+
+
 export const ExternalMenuSyncStatus: {
   PENDING: 'PENDING',
   SUCCESS: 'SUCCESS',
@@ -508,6 +558,16 @@ export const FeedbackWhatsAppJobStatus: {
 };
 
 export type FeedbackWhatsAppJobStatus = (typeof FeedbackWhatsAppJobStatus)[keyof typeof FeedbackWhatsAppJobStatus]
+
+
+export const DispatchWhatsAppJobStatus: {
+  PENDING: 'PENDING',
+  PROCESSING: 'PROCESSING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED'
+};
+
+export type DispatchWhatsAppJobStatus = (typeof DispatchWhatsAppJobStatus)[keyof typeof DispatchWhatsAppJobStatus]
 
 
 export const ExclusivePromotionWeekday: {
@@ -693,6 +753,18 @@ export type ExternalIntegrationEnvironment = $Enums.ExternalIntegrationEnvironme
 
 export const ExternalIntegrationEnvironment: typeof $Enums.ExternalIntegrationEnvironment
 
+export type SquareCatalogSyncTaskStatus = $Enums.SquareCatalogSyncTaskStatus
+
+export const SquareCatalogSyncTaskStatus: typeof $Enums.SquareCatalogSyncTaskStatus
+
+export type SquareCatalogSyncTaskType = $Enums.SquareCatalogSyncTaskType
+
+export const SquareCatalogSyncTaskType: typeof $Enums.SquareCatalogSyncTaskType
+
+export type SquareWebhookRunStatus = $Enums.SquareWebhookRunStatus
+
+export const SquareWebhookRunStatus: typeof $Enums.SquareWebhookRunStatus
+
 export type ExternalMenuSyncStatus = $Enums.ExternalMenuSyncStatus
 
 export const ExternalMenuSyncStatus: typeof $Enums.ExternalMenuSyncStatus
@@ -740,6 +812,10 @@ export const DispatchEtaRecalculationJobStatus: typeof $Enums.DispatchEtaRecalcu
 export type FeedbackWhatsAppJobStatus = $Enums.FeedbackWhatsAppJobStatus
 
 export const FeedbackWhatsAppJobStatus: typeof $Enums.FeedbackWhatsAppJobStatus
+
+export type DispatchWhatsAppJobStatus = $Enums.DispatchWhatsAppJobStatus
+
+export const DispatchWhatsAppJobStatus: typeof $Enums.DispatchWhatsAppJobStatus
 
 export type ExclusivePromotionWeekday = $Enums.ExclusivePromotionWeekday
 
@@ -1111,6 +1187,36 @@ export class PrismaClient<
   get squareConnection(): Prisma.SquareConnectionDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.squareCatalogSyncTask`: Exposes CRUD operations for the **SquareCatalogSyncTask** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SquareCatalogSyncTasks
+    * const squareCatalogSyncTasks = await prisma.squareCatalogSyncTask.findMany()
+    * ```
+    */
+  get squareCatalogSyncTask(): Prisma.SquareCatalogSyncTaskDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.squareWebhookRun`: Exposes CRUD operations for the **SquareWebhookRun** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SquareWebhookRuns
+    * const squareWebhookRuns = await prisma.squareWebhookRun.findMany()
+    * ```
+    */
+  get squareWebhookRun(): Prisma.SquareWebhookRunDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.squareWebhookRunAttempt`: Exposes CRUD operations for the **SquareWebhookRunAttempt** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SquareWebhookRunAttempts
+    * const squareWebhookRunAttempts = await prisma.squareWebhookRunAttempt.findMany()
+    * ```
+    */
+  get squareWebhookRunAttempt(): Prisma.SquareWebhookRunAttemptDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.externalMenuEntityMap`: Exposes CRUD operations for the **ExternalMenuEntityMap** model.
     * Example usage:
     * ```ts
@@ -1249,6 +1355,16 @@ export class PrismaClient<
     * ```
     */
   get feedbackWhatsAppJob(): Prisma.FeedbackWhatsAppJobDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.dispatchWhatsAppJob`: Exposes CRUD operations for the **DispatchWhatsAppJob** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more DispatchWhatsAppJobs
+    * const dispatchWhatsAppJobs = await prisma.dispatchWhatsAppJob.findMany()
+    * ```
+    */
+  get dispatchWhatsAppJob(): Prisma.DispatchWhatsAppJobDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.address`: Exposes CRUD operations for the **Address** model.
@@ -2061,6 +2177,9 @@ export namespace Prisma {
     OwnerOtpChallenge: 'OwnerOtpChallenge',
     ExternalIntegrationConnection: 'ExternalIntegrationConnection',
     SquareConnection: 'SquareConnection',
+    SquareCatalogSyncTask: 'SquareCatalogSyncTask',
+    SquareWebhookRun: 'SquareWebhookRun',
+    SquareWebhookRunAttempt: 'SquareWebhookRunAttempt',
     ExternalMenuEntityMap: 'ExternalMenuEntityMap',
     ExternalMenuSyncRun: 'ExternalMenuSyncRun',
     BusinessMember: 'BusinessMember',
@@ -2075,6 +2194,7 @@ export namespace Prisma {
     DispatchRouteMetricsRefreshJob: 'DispatchRouteMetricsRefreshJob',
     DispatchEtaRecalculationJob: 'DispatchEtaRecalculationJob',
     FeedbackWhatsAppJob: 'FeedbackWhatsAppJob',
+    DispatchWhatsAppJob: 'DispatchWhatsAppJob',
     Address: 'Address',
     Product: 'Product',
     ComboProductItem: 'ComboProductItem',
@@ -2126,7 +2246,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "station" | "preparationStep" | "preparationStepCategory" | "preparationStepTrack" | "preparationStepModifierTrack" | "progressiveDiscount" | "progressiveDiscountStep" | "progressiveDiscountPrize" | "progressiveDiscountPrizeProduct" | "file" | "modifierGroup" | "modifierGroupItem" | "business" | "user" | "userPushDevice" | "ownerOtpChallenge" | "externalIntegrationConnection" | "squareConnection" | "externalMenuEntityMap" | "externalMenuSyncRun" | "businessMember" | "branch" | "driver" | "driverActivationEvent" | "dispatch" | "dispatchRouteSession" | "dispatchRoutePoint" | "dispatchRouteMilestone" | "dispatchAssignmentJob" | "dispatchRouteMetricsRefreshJob" | "dispatchEtaRecalculationJob" | "feedbackWhatsAppJob" | "address" | "product" | "comboProductItem" | "exclusivePromotion" | "exclusivePromotionProduct" | "menu" | "menuVisit" | "category" | "menuCategory" | "productCategory" | "comboSlot" | "comboSlotOption" | "campaign" | "customer" | "customerCard" | "customerOtpChallenge" | "customerAccessToken" | "deliveryAddress" | "externalAddress" | "message" | "promotialMessage" | "order" | "orderPayment" | "orderIntent" | "customerFeedback" | "customerReward" | "orderProducts" | "orderIntentProduct" | "inventoryPlace" | "inventoryProduct" | "inventoryStock" | "inventoryChecklist" | "inventoryChecklistItem" | "inventoryAlert" | "inventoryStockEvent" | "feedbackSettings"
+      modelProps: "station" | "preparationStep" | "preparationStepCategory" | "preparationStepTrack" | "preparationStepModifierTrack" | "progressiveDiscount" | "progressiveDiscountStep" | "progressiveDiscountPrize" | "progressiveDiscountPrizeProduct" | "file" | "modifierGroup" | "modifierGroupItem" | "business" | "user" | "userPushDevice" | "ownerOtpChallenge" | "externalIntegrationConnection" | "squareConnection" | "squareCatalogSyncTask" | "squareWebhookRun" | "squareWebhookRunAttempt" | "externalMenuEntityMap" | "externalMenuSyncRun" | "businessMember" | "branch" | "driver" | "driverActivationEvent" | "dispatch" | "dispatchRouteSession" | "dispatchRoutePoint" | "dispatchRouteMilestone" | "dispatchAssignmentJob" | "dispatchRouteMetricsRefreshJob" | "dispatchEtaRecalculationJob" | "feedbackWhatsAppJob" | "dispatchWhatsAppJob" | "address" | "product" | "comboProductItem" | "exclusivePromotion" | "exclusivePromotionProduct" | "menu" | "menuVisit" | "category" | "menuCategory" | "productCategory" | "comboSlot" | "comboSlotOption" | "campaign" | "customer" | "customerCard" | "customerOtpChallenge" | "customerAccessToken" | "deliveryAddress" | "externalAddress" | "message" | "promotialMessage" | "order" | "orderPayment" | "orderIntent" | "customerFeedback" | "customerReward" | "orderProducts" | "orderIntentProduct" | "inventoryPlace" | "inventoryProduct" | "inventoryStock" | "inventoryChecklist" | "inventoryChecklistItem" | "inventoryAlert" | "inventoryStockEvent" | "feedbackSettings"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3462,6 +3582,228 @@ export namespace Prisma {
           }
         }
       }
+      SquareCatalogSyncTask: {
+        payload: Prisma.$SquareCatalogSyncTaskPayload<ExtArgs>
+        fields: Prisma.SquareCatalogSyncTaskFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SquareCatalogSyncTaskFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SquareCatalogSyncTaskPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SquareCatalogSyncTaskFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SquareCatalogSyncTaskPayload>
+          }
+          findFirst: {
+            args: Prisma.SquareCatalogSyncTaskFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SquareCatalogSyncTaskPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SquareCatalogSyncTaskFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SquareCatalogSyncTaskPayload>
+          }
+          findMany: {
+            args: Prisma.SquareCatalogSyncTaskFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SquareCatalogSyncTaskPayload>[]
+          }
+          create: {
+            args: Prisma.SquareCatalogSyncTaskCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SquareCatalogSyncTaskPayload>
+          }
+          createMany: {
+            args: Prisma.SquareCatalogSyncTaskCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SquareCatalogSyncTaskCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SquareCatalogSyncTaskPayload>[]
+          }
+          delete: {
+            args: Prisma.SquareCatalogSyncTaskDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SquareCatalogSyncTaskPayload>
+          }
+          update: {
+            args: Prisma.SquareCatalogSyncTaskUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SquareCatalogSyncTaskPayload>
+          }
+          deleteMany: {
+            args: Prisma.SquareCatalogSyncTaskDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SquareCatalogSyncTaskUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.SquareCatalogSyncTaskUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SquareCatalogSyncTaskPayload>[]
+          }
+          upsert: {
+            args: Prisma.SquareCatalogSyncTaskUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SquareCatalogSyncTaskPayload>
+          }
+          aggregate: {
+            args: Prisma.SquareCatalogSyncTaskAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSquareCatalogSyncTask>
+          }
+          groupBy: {
+            args: Prisma.SquareCatalogSyncTaskGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SquareCatalogSyncTaskGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SquareCatalogSyncTaskCountArgs<ExtArgs>
+            result: $Utils.Optional<SquareCatalogSyncTaskCountAggregateOutputType> | number
+          }
+        }
+      }
+      SquareWebhookRun: {
+        payload: Prisma.$SquareWebhookRunPayload<ExtArgs>
+        fields: Prisma.SquareWebhookRunFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SquareWebhookRunFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SquareWebhookRunPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SquareWebhookRunFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SquareWebhookRunPayload>
+          }
+          findFirst: {
+            args: Prisma.SquareWebhookRunFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SquareWebhookRunPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SquareWebhookRunFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SquareWebhookRunPayload>
+          }
+          findMany: {
+            args: Prisma.SquareWebhookRunFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SquareWebhookRunPayload>[]
+          }
+          create: {
+            args: Prisma.SquareWebhookRunCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SquareWebhookRunPayload>
+          }
+          createMany: {
+            args: Prisma.SquareWebhookRunCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SquareWebhookRunCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SquareWebhookRunPayload>[]
+          }
+          delete: {
+            args: Prisma.SquareWebhookRunDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SquareWebhookRunPayload>
+          }
+          update: {
+            args: Prisma.SquareWebhookRunUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SquareWebhookRunPayload>
+          }
+          deleteMany: {
+            args: Prisma.SquareWebhookRunDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SquareWebhookRunUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.SquareWebhookRunUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SquareWebhookRunPayload>[]
+          }
+          upsert: {
+            args: Prisma.SquareWebhookRunUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SquareWebhookRunPayload>
+          }
+          aggregate: {
+            args: Prisma.SquareWebhookRunAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSquareWebhookRun>
+          }
+          groupBy: {
+            args: Prisma.SquareWebhookRunGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SquareWebhookRunGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SquareWebhookRunCountArgs<ExtArgs>
+            result: $Utils.Optional<SquareWebhookRunCountAggregateOutputType> | number
+          }
+        }
+      }
+      SquareWebhookRunAttempt: {
+        payload: Prisma.$SquareWebhookRunAttemptPayload<ExtArgs>
+        fields: Prisma.SquareWebhookRunAttemptFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SquareWebhookRunAttemptFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SquareWebhookRunAttemptPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SquareWebhookRunAttemptFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SquareWebhookRunAttemptPayload>
+          }
+          findFirst: {
+            args: Prisma.SquareWebhookRunAttemptFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SquareWebhookRunAttemptPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SquareWebhookRunAttemptFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SquareWebhookRunAttemptPayload>
+          }
+          findMany: {
+            args: Prisma.SquareWebhookRunAttemptFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SquareWebhookRunAttemptPayload>[]
+          }
+          create: {
+            args: Prisma.SquareWebhookRunAttemptCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SquareWebhookRunAttemptPayload>
+          }
+          createMany: {
+            args: Prisma.SquareWebhookRunAttemptCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SquareWebhookRunAttemptCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SquareWebhookRunAttemptPayload>[]
+          }
+          delete: {
+            args: Prisma.SquareWebhookRunAttemptDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SquareWebhookRunAttemptPayload>
+          }
+          update: {
+            args: Prisma.SquareWebhookRunAttemptUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SquareWebhookRunAttemptPayload>
+          }
+          deleteMany: {
+            args: Prisma.SquareWebhookRunAttemptDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SquareWebhookRunAttemptUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.SquareWebhookRunAttemptUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SquareWebhookRunAttemptPayload>[]
+          }
+          upsert: {
+            args: Prisma.SquareWebhookRunAttemptUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SquareWebhookRunAttemptPayload>
+          }
+          aggregate: {
+            args: Prisma.SquareWebhookRunAttemptAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSquareWebhookRunAttempt>
+          }
+          groupBy: {
+            args: Prisma.SquareWebhookRunAttemptGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SquareWebhookRunAttemptGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SquareWebhookRunAttemptCountArgs<ExtArgs>
+            result: $Utils.Optional<SquareWebhookRunAttemptCountAggregateOutputType> | number
+          }
+        }
+      }
       ExternalMenuEntityMap: {
         payload: Prisma.$ExternalMenuEntityMapPayload<ExtArgs>
         fields: Prisma.ExternalMenuEntityMapFieldRefs
@@ -4495,6 +4837,80 @@ export namespace Prisma {
           count: {
             args: Prisma.FeedbackWhatsAppJobCountArgs<ExtArgs>
             result: $Utils.Optional<FeedbackWhatsAppJobCountAggregateOutputType> | number
+          }
+        }
+      }
+      DispatchWhatsAppJob: {
+        payload: Prisma.$DispatchWhatsAppJobPayload<ExtArgs>
+        fields: Prisma.DispatchWhatsAppJobFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.DispatchWhatsAppJobFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DispatchWhatsAppJobPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DispatchWhatsAppJobFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DispatchWhatsAppJobPayload>
+          }
+          findFirst: {
+            args: Prisma.DispatchWhatsAppJobFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DispatchWhatsAppJobPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.DispatchWhatsAppJobFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DispatchWhatsAppJobPayload>
+          }
+          findMany: {
+            args: Prisma.DispatchWhatsAppJobFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DispatchWhatsAppJobPayload>[]
+          }
+          create: {
+            args: Prisma.DispatchWhatsAppJobCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DispatchWhatsAppJobPayload>
+          }
+          createMany: {
+            args: Prisma.DispatchWhatsAppJobCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.DispatchWhatsAppJobCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DispatchWhatsAppJobPayload>[]
+          }
+          delete: {
+            args: Prisma.DispatchWhatsAppJobDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DispatchWhatsAppJobPayload>
+          }
+          update: {
+            args: Prisma.DispatchWhatsAppJobUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DispatchWhatsAppJobPayload>
+          }
+          deleteMany: {
+            args: Prisma.DispatchWhatsAppJobDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.DispatchWhatsAppJobUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.DispatchWhatsAppJobUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DispatchWhatsAppJobPayload>[]
+          }
+          upsert: {
+            args: Prisma.DispatchWhatsAppJobUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DispatchWhatsAppJobPayload>
+          }
+          aggregate: {
+            args: Prisma.DispatchWhatsAppJobAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDispatchWhatsAppJob>
+          }
+          groupBy: {
+            args: Prisma.DispatchWhatsAppJobGroupByArgs<ExtArgs>
+            result: $Utils.Optional<DispatchWhatsAppJobGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.DispatchWhatsAppJobCountArgs<ExtArgs>
+            result: $Utils.Optional<DispatchWhatsAppJobCountAggregateOutputType> | number
           }
         }
       }
@@ -7288,6 +7704,9 @@ export namespace Prisma {
     ownerOtpChallenge?: OwnerOtpChallengeOmit
     externalIntegrationConnection?: ExternalIntegrationConnectionOmit
     squareConnection?: SquareConnectionOmit
+    squareCatalogSyncTask?: SquareCatalogSyncTaskOmit
+    squareWebhookRun?: SquareWebhookRunOmit
+    squareWebhookRunAttempt?: SquareWebhookRunAttemptOmit
     externalMenuEntityMap?: ExternalMenuEntityMapOmit
     externalMenuSyncRun?: ExternalMenuSyncRunOmit
     businessMember?: BusinessMemberOmit
@@ -7302,6 +7721,7 @@ export namespace Prisma {
     dispatchRouteMetricsRefreshJob?: DispatchRouteMetricsRefreshJobOmit
     dispatchEtaRecalculationJob?: DispatchEtaRecalculationJobOmit
     feedbackWhatsAppJob?: FeedbackWhatsAppJobOmit
+    dispatchWhatsAppJob?: DispatchWhatsAppJobOmit
     address?: AddressOmit
     product?: ProductOmit
     comboProductItem?: ComboProductItemOmit
@@ -7777,6 +8197,8 @@ export namespace Prisma {
     members: number
     integrations: number
     squareConnections: number
+    squareCatalogSyncTasks: number
+    squareWebhookRuns: number
     pushDevices: number
   }
 
@@ -7785,6 +8207,8 @@ export namespace Prisma {
     members?: boolean | BusinessCountOutputTypeCountMembersArgs
     integrations?: boolean | BusinessCountOutputTypeCountIntegrationsArgs
     squareConnections?: boolean | BusinessCountOutputTypeCountSquareConnectionsArgs
+    squareCatalogSyncTasks?: boolean | BusinessCountOutputTypeCountSquareCatalogSyncTasksArgs
+    squareWebhookRuns?: boolean | BusinessCountOutputTypeCountSquareWebhookRunsArgs
     pushDevices?: boolean | BusinessCountOutputTypeCountPushDevicesArgs
   }
 
@@ -7825,6 +8249,20 @@ export namespace Prisma {
    */
   export type BusinessCountOutputTypeCountSquareConnectionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: SquareConnectionWhereInput
+  }
+
+  /**
+   * BusinessCountOutputType without action
+   */
+  export type BusinessCountOutputTypeCountSquareCatalogSyncTasksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SquareCatalogSyncTaskWhereInput
+  }
+
+  /**
+   * BusinessCountOutputType without action
+   */
+  export type BusinessCountOutputTypeCountSquareWebhookRunsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SquareWebhookRunWhereInput
   }
 
   /**
@@ -7939,6 +8377,37 @@ export namespace Prisma {
    */
   export type ExternalIntegrationConnectionCountOutputTypeCountMenuSyncRunsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ExternalMenuSyncRunWhereInput
+  }
+
+
+  /**
+   * Count Type SquareWebhookRunCountOutputType
+   */
+
+  export type SquareWebhookRunCountOutputType = {
+    attempts: number
+  }
+
+  export type SquareWebhookRunCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    attempts?: boolean | SquareWebhookRunCountOutputTypeCountAttemptsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * SquareWebhookRunCountOutputType without action
+   */
+  export type SquareWebhookRunCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareWebhookRunCountOutputType
+     */
+    select?: SquareWebhookRunCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * SquareWebhookRunCountOutputType without action
+   */
+  export type SquareWebhookRunCountOutputTypeCountAttemptsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SquareWebhookRunAttemptWhereInput
   }
 
 
@@ -8187,6 +8656,7 @@ export namespace Prisma {
     prizeProducts: number
     customerRewards: number
     preparationSteps: number
+    squareCatalogSyncTasks: number
   }
 
   export type ProductCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -8203,6 +8673,7 @@ export namespace Prisma {
     prizeProducts?: boolean | ProductCountOutputTypeCountPrizeProductsArgs
     customerRewards?: boolean | ProductCountOutputTypeCountCustomerRewardsArgs
     preparationSteps?: boolean | ProductCountOutputTypeCountPreparationStepsArgs
+    squareCatalogSyncTasks?: boolean | ProductCountOutputTypeCountSquareCatalogSyncTasksArgs
   }
 
   // Custom InputTypes
@@ -8307,6 +8778,13 @@ export namespace Prisma {
     where?: PreparationStepWhereInput
   }
 
+  /**
+   * ProductCountOutputType without action
+   */
+  export type ProductCountOutputTypeCountSquareCatalogSyncTasksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SquareCatalogSyncTaskWhereInput
+  }
+
 
   /**
    * Count Type ExclusivePromotionCountOutputType
@@ -8356,12 +8834,14 @@ export namespace Prisma {
     categories: number
     menuCategories: number
     menuVisits: number
+    squareCatalogSyncTasks: number
   }
 
   export type MenuCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     categories?: boolean | MenuCountOutputTypeCountCategoriesArgs
     menuCategories?: boolean | MenuCountOutputTypeCountMenuCategoriesArgs
     menuVisits?: boolean | MenuCountOutputTypeCountMenuVisitsArgs
+    squareCatalogSyncTasks?: boolean | MenuCountOutputTypeCountSquareCatalogSyncTasksArgs
   }
 
   // Custom InputTypes
@@ -8394,6 +8874,13 @@ export namespace Prisma {
    */
   export type MenuCountOutputTypeCountMenuVisitsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: MenuVisitWhereInput
+  }
+
+  /**
+   * MenuCountOutputType without action
+   */
+  export type MenuCountOutputTypeCountSquareCatalogSyncTasksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SquareCatalogSyncTaskWhereInput
   }
 
 
@@ -23058,6 +23545,8 @@ export namespace Prisma {
     members?: boolean | Business$membersArgs<ExtArgs>
     integrations?: boolean | Business$integrationsArgs<ExtArgs>
     squareConnections?: boolean | Business$squareConnectionsArgs<ExtArgs>
+    squareCatalogSyncTasks?: boolean | Business$squareCatalogSyncTasksArgs<ExtArgs>
+    squareWebhookRuns?: boolean | Business$squareWebhookRunsArgs<ExtArgs>
     pushDevices?: boolean | Business$pushDevicesArgs<ExtArgs>
     _count?: boolean | BusinessCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["business"]>
@@ -23116,6 +23605,8 @@ export namespace Prisma {
     members?: boolean | Business$membersArgs<ExtArgs>
     integrations?: boolean | Business$integrationsArgs<ExtArgs>
     squareConnections?: boolean | Business$squareConnectionsArgs<ExtArgs>
+    squareCatalogSyncTasks?: boolean | Business$squareCatalogSyncTasksArgs<ExtArgs>
+    squareWebhookRuns?: boolean | Business$squareWebhookRunsArgs<ExtArgs>
     pushDevices?: boolean | Business$pushDevicesArgs<ExtArgs>
     _count?: boolean | BusinessCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -23129,6 +23620,8 @@ export namespace Prisma {
       members: Prisma.$BusinessMemberPayload<ExtArgs>[]
       integrations: Prisma.$ExternalIntegrationConnectionPayload<ExtArgs>[]
       squareConnections: Prisma.$SquareConnectionPayload<ExtArgs>[]
+      squareCatalogSyncTasks: Prisma.$SquareCatalogSyncTaskPayload<ExtArgs>[]
+      squareWebhookRuns: Prisma.$SquareWebhookRunPayload<ExtArgs>[]
       pushDevices: Prisma.$UserPushDevicePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -23543,6 +24036,8 @@ export namespace Prisma {
     members<T extends Business$membersArgs<ExtArgs> = {}>(args?: Subset<T, Business$membersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BusinessMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     integrations<T extends Business$integrationsArgs<ExtArgs> = {}>(args?: Subset<T, Business$integrationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExternalIntegrationConnectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     squareConnections<T extends Business$squareConnectionsArgs<ExtArgs> = {}>(args?: Subset<T, Business$squareConnectionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SquareConnectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    squareCatalogSyncTasks<T extends Business$squareCatalogSyncTasksArgs<ExtArgs> = {}>(args?: Subset<T, Business$squareCatalogSyncTasksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SquareCatalogSyncTaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    squareWebhookRuns<T extends Business$squareWebhookRunsArgs<ExtArgs> = {}>(args?: Subset<T, Business$squareWebhookRunsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SquareWebhookRunPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     pushDevices<T extends Business$pushDevicesArgs<ExtArgs> = {}>(args?: Subset<T, Business$pushDevicesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPushDevicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -24072,6 +24567,54 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: SquareConnectionScalarFieldEnum | SquareConnectionScalarFieldEnum[]
+  }
+
+  /**
+   * Business.squareCatalogSyncTasks
+   */
+  export type Business$squareCatalogSyncTasksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareCatalogSyncTask
+     */
+    select?: SquareCatalogSyncTaskSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquareCatalogSyncTask
+     */
+    omit?: SquareCatalogSyncTaskOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SquareCatalogSyncTaskInclude<ExtArgs> | null
+    where?: SquareCatalogSyncTaskWhereInput
+    orderBy?: SquareCatalogSyncTaskOrderByWithRelationInput | SquareCatalogSyncTaskOrderByWithRelationInput[]
+    cursor?: SquareCatalogSyncTaskWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SquareCatalogSyncTaskScalarFieldEnum | SquareCatalogSyncTaskScalarFieldEnum[]
+  }
+
+  /**
+   * Business.squareWebhookRuns
+   */
+  export type Business$squareWebhookRunsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareWebhookRun
+     */
+    select?: SquareWebhookRunSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquareWebhookRun
+     */
+    omit?: SquareWebhookRunOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SquareWebhookRunInclude<ExtArgs> | null
+    where?: SquareWebhookRunWhereInput
+    orderBy?: SquareWebhookRunOrderByWithRelationInput | SquareWebhookRunOrderByWithRelationInput[]
+    cursor?: SquareWebhookRunWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SquareWebhookRunScalarFieldEnum | SquareWebhookRunScalarFieldEnum[]
   }
 
   /**
@@ -30179,6 +30722,3926 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: SquareConnectionInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model SquareCatalogSyncTask
+   */
+
+  export type AggregateSquareCatalogSyncTask = {
+    _count: SquareCatalogSyncTaskCountAggregateOutputType | null
+    _avg: SquareCatalogSyncTaskAvgAggregateOutputType | null
+    _sum: SquareCatalogSyncTaskSumAggregateOutputType | null
+    _min: SquareCatalogSyncTaskMinAggregateOutputType | null
+    _max: SquareCatalogSyncTaskMaxAggregateOutputType | null
+  }
+
+  export type SquareCatalogSyncTaskAvgAggregateOutputType = {
+    attempts: number | null
+  }
+
+  export type SquareCatalogSyncTaskSumAggregateOutputType = {
+    attempts: number | null
+  }
+
+  export type SquareCatalogSyncTaskMinAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    businessId: string | null
+    productId: string | null
+    menuId: string | null
+    taskType: $Enums.SquareCatalogSyncTaskType | null
+    status: $Enums.SquareCatalogSyncTaskStatus | null
+    attempts: number | null
+    availableAt: Date | null
+    processingStartedAt: Date | null
+    finishedAt: Date | null
+    errorMessage: string | null
+  }
+
+  export type SquareCatalogSyncTaskMaxAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    businessId: string | null
+    productId: string | null
+    menuId: string | null
+    taskType: $Enums.SquareCatalogSyncTaskType | null
+    status: $Enums.SquareCatalogSyncTaskStatus | null
+    attempts: number | null
+    availableAt: Date | null
+    processingStartedAt: Date | null
+    finishedAt: Date | null
+    errorMessage: string | null
+  }
+
+  export type SquareCatalogSyncTaskCountAggregateOutputType = {
+    id: number
+    createdAt: number
+    updatedAt: number
+    businessId: number
+    productId: number
+    menuId: number
+    taskType: number
+    status: number
+    attempts: number
+    availableAt: number
+    processingStartedAt: number
+    finishedAt: number
+    errorMessage: number
+    requestPayload: number
+    responsePayload: number
+    _all: number
+  }
+
+
+  export type SquareCatalogSyncTaskAvgAggregateInputType = {
+    attempts?: true
+  }
+
+  export type SquareCatalogSyncTaskSumAggregateInputType = {
+    attempts?: true
+  }
+
+  export type SquareCatalogSyncTaskMinAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    businessId?: true
+    productId?: true
+    menuId?: true
+    taskType?: true
+    status?: true
+    attempts?: true
+    availableAt?: true
+    processingStartedAt?: true
+    finishedAt?: true
+    errorMessage?: true
+  }
+
+  export type SquareCatalogSyncTaskMaxAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    businessId?: true
+    productId?: true
+    menuId?: true
+    taskType?: true
+    status?: true
+    attempts?: true
+    availableAt?: true
+    processingStartedAt?: true
+    finishedAt?: true
+    errorMessage?: true
+  }
+
+  export type SquareCatalogSyncTaskCountAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    businessId?: true
+    productId?: true
+    menuId?: true
+    taskType?: true
+    status?: true
+    attempts?: true
+    availableAt?: true
+    processingStartedAt?: true
+    finishedAt?: true
+    errorMessage?: true
+    requestPayload?: true
+    responsePayload?: true
+    _all?: true
+  }
+
+  export type SquareCatalogSyncTaskAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SquareCatalogSyncTask to aggregate.
+     */
+    where?: SquareCatalogSyncTaskWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SquareCatalogSyncTasks to fetch.
+     */
+    orderBy?: SquareCatalogSyncTaskOrderByWithRelationInput | SquareCatalogSyncTaskOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SquareCatalogSyncTaskWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SquareCatalogSyncTasks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SquareCatalogSyncTasks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SquareCatalogSyncTasks
+    **/
+    _count?: true | SquareCatalogSyncTaskCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: SquareCatalogSyncTaskAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: SquareCatalogSyncTaskSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SquareCatalogSyncTaskMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SquareCatalogSyncTaskMaxAggregateInputType
+  }
+
+  export type GetSquareCatalogSyncTaskAggregateType<T extends SquareCatalogSyncTaskAggregateArgs> = {
+        [P in keyof T & keyof AggregateSquareCatalogSyncTask]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSquareCatalogSyncTask[P]>
+      : GetScalarType<T[P], AggregateSquareCatalogSyncTask[P]>
+  }
+
+
+
+
+  export type SquareCatalogSyncTaskGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SquareCatalogSyncTaskWhereInput
+    orderBy?: SquareCatalogSyncTaskOrderByWithAggregationInput | SquareCatalogSyncTaskOrderByWithAggregationInput[]
+    by: SquareCatalogSyncTaskScalarFieldEnum[] | SquareCatalogSyncTaskScalarFieldEnum
+    having?: SquareCatalogSyncTaskScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SquareCatalogSyncTaskCountAggregateInputType | true
+    _avg?: SquareCatalogSyncTaskAvgAggregateInputType
+    _sum?: SquareCatalogSyncTaskSumAggregateInputType
+    _min?: SquareCatalogSyncTaskMinAggregateInputType
+    _max?: SquareCatalogSyncTaskMaxAggregateInputType
+  }
+
+  export type SquareCatalogSyncTaskGroupByOutputType = {
+    id: string
+    createdAt: Date
+    updatedAt: Date
+    businessId: string
+    productId: string | null
+    menuId: string | null
+    taskType: $Enums.SquareCatalogSyncTaskType
+    status: $Enums.SquareCatalogSyncTaskStatus
+    attempts: number
+    availableAt: Date
+    processingStartedAt: Date | null
+    finishedAt: Date | null
+    errorMessage: string | null
+    requestPayload: JsonValue | null
+    responsePayload: JsonValue | null
+    _count: SquareCatalogSyncTaskCountAggregateOutputType | null
+    _avg: SquareCatalogSyncTaskAvgAggregateOutputType | null
+    _sum: SquareCatalogSyncTaskSumAggregateOutputType | null
+    _min: SquareCatalogSyncTaskMinAggregateOutputType | null
+    _max: SquareCatalogSyncTaskMaxAggregateOutputType | null
+  }
+
+  type GetSquareCatalogSyncTaskGroupByPayload<T extends SquareCatalogSyncTaskGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SquareCatalogSyncTaskGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SquareCatalogSyncTaskGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SquareCatalogSyncTaskGroupByOutputType[P]>
+            : GetScalarType<T[P], SquareCatalogSyncTaskGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SquareCatalogSyncTaskSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    businessId?: boolean
+    productId?: boolean
+    menuId?: boolean
+    taskType?: boolean
+    status?: boolean
+    attempts?: boolean
+    availableAt?: boolean
+    processingStartedAt?: boolean
+    finishedAt?: boolean
+    errorMessage?: boolean
+    requestPayload?: boolean
+    responsePayload?: boolean
+    business?: boolean | BusinessDefaultArgs<ExtArgs>
+    product?: boolean | SquareCatalogSyncTask$productArgs<ExtArgs>
+    menu?: boolean | SquareCatalogSyncTask$menuArgs<ExtArgs>
+  }, ExtArgs["result"]["squareCatalogSyncTask"]>
+
+  export type SquareCatalogSyncTaskSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    businessId?: boolean
+    productId?: boolean
+    menuId?: boolean
+    taskType?: boolean
+    status?: boolean
+    attempts?: boolean
+    availableAt?: boolean
+    processingStartedAt?: boolean
+    finishedAt?: boolean
+    errorMessage?: boolean
+    requestPayload?: boolean
+    responsePayload?: boolean
+    business?: boolean | BusinessDefaultArgs<ExtArgs>
+    product?: boolean | SquareCatalogSyncTask$productArgs<ExtArgs>
+    menu?: boolean | SquareCatalogSyncTask$menuArgs<ExtArgs>
+  }, ExtArgs["result"]["squareCatalogSyncTask"]>
+
+  export type SquareCatalogSyncTaskSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    businessId?: boolean
+    productId?: boolean
+    menuId?: boolean
+    taskType?: boolean
+    status?: boolean
+    attempts?: boolean
+    availableAt?: boolean
+    processingStartedAt?: boolean
+    finishedAt?: boolean
+    errorMessage?: boolean
+    requestPayload?: boolean
+    responsePayload?: boolean
+    business?: boolean | BusinessDefaultArgs<ExtArgs>
+    product?: boolean | SquareCatalogSyncTask$productArgs<ExtArgs>
+    menu?: boolean | SquareCatalogSyncTask$menuArgs<ExtArgs>
+  }, ExtArgs["result"]["squareCatalogSyncTask"]>
+
+  export type SquareCatalogSyncTaskSelectScalar = {
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    businessId?: boolean
+    productId?: boolean
+    menuId?: boolean
+    taskType?: boolean
+    status?: boolean
+    attempts?: boolean
+    availableAt?: boolean
+    processingStartedAt?: boolean
+    finishedAt?: boolean
+    errorMessage?: boolean
+    requestPayload?: boolean
+    responsePayload?: boolean
+  }
+
+  export type SquareCatalogSyncTaskOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "businessId" | "productId" | "menuId" | "taskType" | "status" | "attempts" | "availableAt" | "processingStartedAt" | "finishedAt" | "errorMessage" | "requestPayload" | "responsePayload", ExtArgs["result"]["squareCatalogSyncTask"]>
+  export type SquareCatalogSyncTaskInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    business?: boolean | BusinessDefaultArgs<ExtArgs>
+    product?: boolean | SquareCatalogSyncTask$productArgs<ExtArgs>
+    menu?: boolean | SquareCatalogSyncTask$menuArgs<ExtArgs>
+  }
+  export type SquareCatalogSyncTaskIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    business?: boolean | BusinessDefaultArgs<ExtArgs>
+    product?: boolean | SquareCatalogSyncTask$productArgs<ExtArgs>
+    menu?: boolean | SquareCatalogSyncTask$menuArgs<ExtArgs>
+  }
+  export type SquareCatalogSyncTaskIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    business?: boolean | BusinessDefaultArgs<ExtArgs>
+    product?: boolean | SquareCatalogSyncTask$productArgs<ExtArgs>
+    menu?: boolean | SquareCatalogSyncTask$menuArgs<ExtArgs>
+  }
+
+  export type $SquareCatalogSyncTaskPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SquareCatalogSyncTask"
+    objects: {
+      business: Prisma.$BusinessPayload<ExtArgs>
+      product: Prisma.$ProductPayload<ExtArgs> | null
+      menu: Prisma.$MenuPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      createdAt: Date
+      updatedAt: Date
+      businessId: string
+      productId: string | null
+      menuId: string | null
+      taskType: $Enums.SquareCatalogSyncTaskType
+      status: $Enums.SquareCatalogSyncTaskStatus
+      attempts: number
+      availableAt: Date
+      processingStartedAt: Date | null
+      finishedAt: Date | null
+      errorMessage: string | null
+      requestPayload: Prisma.JsonValue | null
+      responsePayload: Prisma.JsonValue | null
+    }, ExtArgs["result"]["squareCatalogSyncTask"]>
+    composites: {}
+  }
+
+  type SquareCatalogSyncTaskGetPayload<S extends boolean | null | undefined | SquareCatalogSyncTaskDefaultArgs> = $Result.GetResult<Prisma.$SquareCatalogSyncTaskPayload, S>
+
+  type SquareCatalogSyncTaskCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SquareCatalogSyncTaskFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SquareCatalogSyncTaskCountAggregateInputType | true
+    }
+
+  export interface SquareCatalogSyncTaskDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SquareCatalogSyncTask'], meta: { name: 'SquareCatalogSyncTask' } }
+    /**
+     * Find zero or one SquareCatalogSyncTask that matches the filter.
+     * @param {SquareCatalogSyncTaskFindUniqueArgs} args - Arguments to find a SquareCatalogSyncTask
+     * @example
+     * // Get one SquareCatalogSyncTask
+     * const squareCatalogSyncTask = await prisma.squareCatalogSyncTask.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SquareCatalogSyncTaskFindUniqueArgs>(args: SelectSubset<T, SquareCatalogSyncTaskFindUniqueArgs<ExtArgs>>): Prisma__SquareCatalogSyncTaskClient<$Result.GetResult<Prisma.$SquareCatalogSyncTaskPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one SquareCatalogSyncTask that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SquareCatalogSyncTaskFindUniqueOrThrowArgs} args - Arguments to find a SquareCatalogSyncTask
+     * @example
+     * // Get one SquareCatalogSyncTask
+     * const squareCatalogSyncTask = await prisma.squareCatalogSyncTask.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SquareCatalogSyncTaskFindUniqueOrThrowArgs>(args: SelectSubset<T, SquareCatalogSyncTaskFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SquareCatalogSyncTaskClient<$Result.GetResult<Prisma.$SquareCatalogSyncTaskPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SquareCatalogSyncTask that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SquareCatalogSyncTaskFindFirstArgs} args - Arguments to find a SquareCatalogSyncTask
+     * @example
+     * // Get one SquareCatalogSyncTask
+     * const squareCatalogSyncTask = await prisma.squareCatalogSyncTask.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SquareCatalogSyncTaskFindFirstArgs>(args?: SelectSubset<T, SquareCatalogSyncTaskFindFirstArgs<ExtArgs>>): Prisma__SquareCatalogSyncTaskClient<$Result.GetResult<Prisma.$SquareCatalogSyncTaskPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SquareCatalogSyncTask that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SquareCatalogSyncTaskFindFirstOrThrowArgs} args - Arguments to find a SquareCatalogSyncTask
+     * @example
+     * // Get one SquareCatalogSyncTask
+     * const squareCatalogSyncTask = await prisma.squareCatalogSyncTask.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SquareCatalogSyncTaskFindFirstOrThrowArgs>(args?: SelectSubset<T, SquareCatalogSyncTaskFindFirstOrThrowArgs<ExtArgs>>): Prisma__SquareCatalogSyncTaskClient<$Result.GetResult<Prisma.$SquareCatalogSyncTaskPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more SquareCatalogSyncTasks that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SquareCatalogSyncTaskFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SquareCatalogSyncTasks
+     * const squareCatalogSyncTasks = await prisma.squareCatalogSyncTask.findMany()
+     * 
+     * // Get first 10 SquareCatalogSyncTasks
+     * const squareCatalogSyncTasks = await prisma.squareCatalogSyncTask.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const squareCatalogSyncTaskWithIdOnly = await prisma.squareCatalogSyncTask.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SquareCatalogSyncTaskFindManyArgs>(args?: SelectSubset<T, SquareCatalogSyncTaskFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SquareCatalogSyncTaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a SquareCatalogSyncTask.
+     * @param {SquareCatalogSyncTaskCreateArgs} args - Arguments to create a SquareCatalogSyncTask.
+     * @example
+     * // Create one SquareCatalogSyncTask
+     * const SquareCatalogSyncTask = await prisma.squareCatalogSyncTask.create({
+     *   data: {
+     *     // ... data to create a SquareCatalogSyncTask
+     *   }
+     * })
+     * 
+     */
+    create<T extends SquareCatalogSyncTaskCreateArgs>(args: SelectSubset<T, SquareCatalogSyncTaskCreateArgs<ExtArgs>>): Prisma__SquareCatalogSyncTaskClient<$Result.GetResult<Prisma.$SquareCatalogSyncTaskPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many SquareCatalogSyncTasks.
+     * @param {SquareCatalogSyncTaskCreateManyArgs} args - Arguments to create many SquareCatalogSyncTasks.
+     * @example
+     * // Create many SquareCatalogSyncTasks
+     * const squareCatalogSyncTask = await prisma.squareCatalogSyncTask.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SquareCatalogSyncTaskCreateManyArgs>(args?: SelectSubset<T, SquareCatalogSyncTaskCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many SquareCatalogSyncTasks and returns the data saved in the database.
+     * @param {SquareCatalogSyncTaskCreateManyAndReturnArgs} args - Arguments to create many SquareCatalogSyncTasks.
+     * @example
+     * // Create many SquareCatalogSyncTasks
+     * const squareCatalogSyncTask = await prisma.squareCatalogSyncTask.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many SquareCatalogSyncTasks and only return the `id`
+     * const squareCatalogSyncTaskWithIdOnly = await prisma.squareCatalogSyncTask.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SquareCatalogSyncTaskCreateManyAndReturnArgs>(args?: SelectSubset<T, SquareCatalogSyncTaskCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SquareCatalogSyncTaskPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a SquareCatalogSyncTask.
+     * @param {SquareCatalogSyncTaskDeleteArgs} args - Arguments to delete one SquareCatalogSyncTask.
+     * @example
+     * // Delete one SquareCatalogSyncTask
+     * const SquareCatalogSyncTask = await prisma.squareCatalogSyncTask.delete({
+     *   where: {
+     *     // ... filter to delete one SquareCatalogSyncTask
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SquareCatalogSyncTaskDeleteArgs>(args: SelectSubset<T, SquareCatalogSyncTaskDeleteArgs<ExtArgs>>): Prisma__SquareCatalogSyncTaskClient<$Result.GetResult<Prisma.$SquareCatalogSyncTaskPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one SquareCatalogSyncTask.
+     * @param {SquareCatalogSyncTaskUpdateArgs} args - Arguments to update one SquareCatalogSyncTask.
+     * @example
+     * // Update one SquareCatalogSyncTask
+     * const squareCatalogSyncTask = await prisma.squareCatalogSyncTask.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SquareCatalogSyncTaskUpdateArgs>(args: SelectSubset<T, SquareCatalogSyncTaskUpdateArgs<ExtArgs>>): Prisma__SquareCatalogSyncTaskClient<$Result.GetResult<Prisma.$SquareCatalogSyncTaskPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more SquareCatalogSyncTasks.
+     * @param {SquareCatalogSyncTaskDeleteManyArgs} args - Arguments to filter SquareCatalogSyncTasks to delete.
+     * @example
+     * // Delete a few SquareCatalogSyncTasks
+     * const { count } = await prisma.squareCatalogSyncTask.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SquareCatalogSyncTaskDeleteManyArgs>(args?: SelectSubset<T, SquareCatalogSyncTaskDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SquareCatalogSyncTasks.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SquareCatalogSyncTaskUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SquareCatalogSyncTasks
+     * const squareCatalogSyncTask = await prisma.squareCatalogSyncTask.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SquareCatalogSyncTaskUpdateManyArgs>(args: SelectSubset<T, SquareCatalogSyncTaskUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SquareCatalogSyncTasks and returns the data updated in the database.
+     * @param {SquareCatalogSyncTaskUpdateManyAndReturnArgs} args - Arguments to update many SquareCatalogSyncTasks.
+     * @example
+     * // Update many SquareCatalogSyncTasks
+     * const squareCatalogSyncTask = await prisma.squareCatalogSyncTask.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more SquareCatalogSyncTasks and only return the `id`
+     * const squareCatalogSyncTaskWithIdOnly = await prisma.squareCatalogSyncTask.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends SquareCatalogSyncTaskUpdateManyAndReturnArgs>(args: SelectSubset<T, SquareCatalogSyncTaskUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SquareCatalogSyncTaskPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one SquareCatalogSyncTask.
+     * @param {SquareCatalogSyncTaskUpsertArgs} args - Arguments to update or create a SquareCatalogSyncTask.
+     * @example
+     * // Update or create a SquareCatalogSyncTask
+     * const squareCatalogSyncTask = await prisma.squareCatalogSyncTask.upsert({
+     *   create: {
+     *     // ... data to create a SquareCatalogSyncTask
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SquareCatalogSyncTask we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SquareCatalogSyncTaskUpsertArgs>(args: SelectSubset<T, SquareCatalogSyncTaskUpsertArgs<ExtArgs>>): Prisma__SquareCatalogSyncTaskClient<$Result.GetResult<Prisma.$SquareCatalogSyncTaskPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of SquareCatalogSyncTasks.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SquareCatalogSyncTaskCountArgs} args - Arguments to filter SquareCatalogSyncTasks to count.
+     * @example
+     * // Count the number of SquareCatalogSyncTasks
+     * const count = await prisma.squareCatalogSyncTask.count({
+     *   where: {
+     *     // ... the filter for the SquareCatalogSyncTasks we want to count
+     *   }
+     * })
+    **/
+    count<T extends SquareCatalogSyncTaskCountArgs>(
+      args?: Subset<T, SquareCatalogSyncTaskCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SquareCatalogSyncTaskCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SquareCatalogSyncTask.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SquareCatalogSyncTaskAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SquareCatalogSyncTaskAggregateArgs>(args: Subset<T, SquareCatalogSyncTaskAggregateArgs>): Prisma.PrismaPromise<GetSquareCatalogSyncTaskAggregateType<T>>
+
+    /**
+     * Group by SquareCatalogSyncTask.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SquareCatalogSyncTaskGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SquareCatalogSyncTaskGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SquareCatalogSyncTaskGroupByArgs['orderBy'] }
+        : { orderBy?: SquareCatalogSyncTaskGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SquareCatalogSyncTaskGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSquareCatalogSyncTaskGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SquareCatalogSyncTask model
+   */
+  readonly fields: SquareCatalogSyncTaskFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SquareCatalogSyncTask.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SquareCatalogSyncTaskClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    business<T extends BusinessDefaultArgs<ExtArgs> = {}>(args?: Subset<T, BusinessDefaultArgs<ExtArgs>>): Prisma__BusinessClient<$Result.GetResult<Prisma.$BusinessPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    product<T extends SquareCatalogSyncTask$productArgs<ExtArgs> = {}>(args?: Subset<T, SquareCatalogSyncTask$productArgs<ExtArgs>>): Prisma__ProductClient<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    menu<T extends SquareCatalogSyncTask$menuArgs<ExtArgs> = {}>(args?: Subset<T, SquareCatalogSyncTask$menuArgs<ExtArgs>>): Prisma__MenuClient<$Result.GetResult<Prisma.$MenuPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SquareCatalogSyncTask model
+   */
+  interface SquareCatalogSyncTaskFieldRefs {
+    readonly id: FieldRef<"SquareCatalogSyncTask", 'String'>
+    readonly createdAt: FieldRef<"SquareCatalogSyncTask", 'DateTime'>
+    readonly updatedAt: FieldRef<"SquareCatalogSyncTask", 'DateTime'>
+    readonly businessId: FieldRef<"SquareCatalogSyncTask", 'String'>
+    readonly productId: FieldRef<"SquareCatalogSyncTask", 'String'>
+    readonly menuId: FieldRef<"SquareCatalogSyncTask", 'String'>
+    readonly taskType: FieldRef<"SquareCatalogSyncTask", 'SquareCatalogSyncTaskType'>
+    readonly status: FieldRef<"SquareCatalogSyncTask", 'SquareCatalogSyncTaskStatus'>
+    readonly attempts: FieldRef<"SquareCatalogSyncTask", 'Int'>
+    readonly availableAt: FieldRef<"SquareCatalogSyncTask", 'DateTime'>
+    readonly processingStartedAt: FieldRef<"SquareCatalogSyncTask", 'DateTime'>
+    readonly finishedAt: FieldRef<"SquareCatalogSyncTask", 'DateTime'>
+    readonly errorMessage: FieldRef<"SquareCatalogSyncTask", 'String'>
+    readonly requestPayload: FieldRef<"SquareCatalogSyncTask", 'Json'>
+    readonly responsePayload: FieldRef<"SquareCatalogSyncTask", 'Json'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SquareCatalogSyncTask findUnique
+   */
+  export type SquareCatalogSyncTaskFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareCatalogSyncTask
+     */
+    select?: SquareCatalogSyncTaskSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquareCatalogSyncTask
+     */
+    omit?: SquareCatalogSyncTaskOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SquareCatalogSyncTaskInclude<ExtArgs> | null
+    /**
+     * Filter, which SquareCatalogSyncTask to fetch.
+     */
+    where: SquareCatalogSyncTaskWhereUniqueInput
+  }
+
+  /**
+   * SquareCatalogSyncTask findUniqueOrThrow
+   */
+  export type SquareCatalogSyncTaskFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareCatalogSyncTask
+     */
+    select?: SquareCatalogSyncTaskSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquareCatalogSyncTask
+     */
+    omit?: SquareCatalogSyncTaskOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SquareCatalogSyncTaskInclude<ExtArgs> | null
+    /**
+     * Filter, which SquareCatalogSyncTask to fetch.
+     */
+    where: SquareCatalogSyncTaskWhereUniqueInput
+  }
+
+  /**
+   * SquareCatalogSyncTask findFirst
+   */
+  export type SquareCatalogSyncTaskFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareCatalogSyncTask
+     */
+    select?: SquareCatalogSyncTaskSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquareCatalogSyncTask
+     */
+    omit?: SquareCatalogSyncTaskOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SquareCatalogSyncTaskInclude<ExtArgs> | null
+    /**
+     * Filter, which SquareCatalogSyncTask to fetch.
+     */
+    where?: SquareCatalogSyncTaskWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SquareCatalogSyncTasks to fetch.
+     */
+    orderBy?: SquareCatalogSyncTaskOrderByWithRelationInput | SquareCatalogSyncTaskOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SquareCatalogSyncTasks.
+     */
+    cursor?: SquareCatalogSyncTaskWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SquareCatalogSyncTasks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SquareCatalogSyncTasks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SquareCatalogSyncTasks.
+     */
+    distinct?: SquareCatalogSyncTaskScalarFieldEnum | SquareCatalogSyncTaskScalarFieldEnum[]
+  }
+
+  /**
+   * SquareCatalogSyncTask findFirstOrThrow
+   */
+  export type SquareCatalogSyncTaskFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareCatalogSyncTask
+     */
+    select?: SquareCatalogSyncTaskSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquareCatalogSyncTask
+     */
+    omit?: SquareCatalogSyncTaskOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SquareCatalogSyncTaskInclude<ExtArgs> | null
+    /**
+     * Filter, which SquareCatalogSyncTask to fetch.
+     */
+    where?: SquareCatalogSyncTaskWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SquareCatalogSyncTasks to fetch.
+     */
+    orderBy?: SquareCatalogSyncTaskOrderByWithRelationInput | SquareCatalogSyncTaskOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SquareCatalogSyncTasks.
+     */
+    cursor?: SquareCatalogSyncTaskWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SquareCatalogSyncTasks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SquareCatalogSyncTasks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SquareCatalogSyncTasks.
+     */
+    distinct?: SquareCatalogSyncTaskScalarFieldEnum | SquareCatalogSyncTaskScalarFieldEnum[]
+  }
+
+  /**
+   * SquareCatalogSyncTask findMany
+   */
+  export type SquareCatalogSyncTaskFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareCatalogSyncTask
+     */
+    select?: SquareCatalogSyncTaskSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquareCatalogSyncTask
+     */
+    omit?: SquareCatalogSyncTaskOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SquareCatalogSyncTaskInclude<ExtArgs> | null
+    /**
+     * Filter, which SquareCatalogSyncTasks to fetch.
+     */
+    where?: SquareCatalogSyncTaskWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SquareCatalogSyncTasks to fetch.
+     */
+    orderBy?: SquareCatalogSyncTaskOrderByWithRelationInput | SquareCatalogSyncTaskOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SquareCatalogSyncTasks.
+     */
+    cursor?: SquareCatalogSyncTaskWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SquareCatalogSyncTasks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SquareCatalogSyncTasks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SquareCatalogSyncTasks.
+     */
+    distinct?: SquareCatalogSyncTaskScalarFieldEnum | SquareCatalogSyncTaskScalarFieldEnum[]
+  }
+
+  /**
+   * SquareCatalogSyncTask create
+   */
+  export type SquareCatalogSyncTaskCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareCatalogSyncTask
+     */
+    select?: SquareCatalogSyncTaskSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquareCatalogSyncTask
+     */
+    omit?: SquareCatalogSyncTaskOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SquareCatalogSyncTaskInclude<ExtArgs> | null
+    /**
+     * The data needed to create a SquareCatalogSyncTask.
+     */
+    data: XOR<SquareCatalogSyncTaskCreateInput, SquareCatalogSyncTaskUncheckedCreateInput>
+  }
+
+  /**
+   * SquareCatalogSyncTask createMany
+   */
+  export type SquareCatalogSyncTaskCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SquareCatalogSyncTasks.
+     */
+    data: SquareCatalogSyncTaskCreateManyInput | SquareCatalogSyncTaskCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SquareCatalogSyncTask createManyAndReturn
+   */
+  export type SquareCatalogSyncTaskCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareCatalogSyncTask
+     */
+    select?: SquareCatalogSyncTaskSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquareCatalogSyncTask
+     */
+    omit?: SquareCatalogSyncTaskOmit<ExtArgs> | null
+    /**
+     * The data used to create many SquareCatalogSyncTasks.
+     */
+    data: SquareCatalogSyncTaskCreateManyInput | SquareCatalogSyncTaskCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SquareCatalogSyncTaskIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SquareCatalogSyncTask update
+   */
+  export type SquareCatalogSyncTaskUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareCatalogSyncTask
+     */
+    select?: SquareCatalogSyncTaskSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquareCatalogSyncTask
+     */
+    omit?: SquareCatalogSyncTaskOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SquareCatalogSyncTaskInclude<ExtArgs> | null
+    /**
+     * The data needed to update a SquareCatalogSyncTask.
+     */
+    data: XOR<SquareCatalogSyncTaskUpdateInput, SquareCatalogSyncTaskUncheckedUpdateInput>
+    /**
+     * Choose, which SquareCatalogSyncTask to update.
+     */
+    where: SquareCatalogSyncTaskWhereUniqueInput
+  }
+
+  /**
+   * SquareCatalogSyncTask updateMany
+   */
+  export type SquareCatalogSyncTaskUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SquareCatalogSyncTasks.
+     */
+    data: XOR<SquareCatalogSyncTaskUpdateManyMutationInput, SquareCatalogSyncTaskUncheckedUpdateManyInput>
+    /**
+     * Filter which SquareCatalogSyncTasks to update
+     */
+    where?: SquareCatalogSyncTaskWhereInput
+    /**
+     * Limit how many SquareCatalogSyncTasks to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SquareCatalogSyncTask updateManyAndReturn
+   */
+  export type SquareCatalogSyncTaskUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareCatalogSyncTask
+     */
+    select?: SquareCatalogSyncTaskSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquareCatalogSyncTask
+     */
+    omit?: SquareCatalogSyncTaskOmit<ExtArgs> | null
+    /**
+     * The data used to update SquareCatalogSyncTasks.
+     */
+    data: XOR<SquareCatalogSyncTaskUpdateManyMutationInput, SquareCatalogSyncTaskUncheckedUpdateManyInput>
+    /**
+     * Filter which SquareCatalogSyncTasks to update
+     */
+    where?: SquareCatalogSyncTaskWhereInput
+    /**
+     * Limit how many SquareCatalogSyncTasks to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SquareCatalogSyncTaskIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SquareCatalogSyncTask upsert
+   */
+  export type SquareCatalogSyncTaskUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareCatalogSyncTask
+     */
+    select?: SquareCatalogSyncTaskSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquareCatalogSyncTask
+     */
+    omit?: SquareCatalogSyncTaskOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SquareCatalogSyncTaskInclude<ExtArgs> | null
+    /**
+     * The filter to search for the SquareCatalogSyncTask to update in case it exists.
+     */
+    where: SquareCatalogSyncTaskWhereUniqueInput
+    /**
+     * In case the SquareCatalogSyncTask found by the `where` argument doesn't exist, create a new SquareCatalogSyncTask with this data.
+     */
+    create: XOR<SquareCatalogSyncTaskCreateInput, SquareCatalogSyncTaskUncheckedCreateInput>
+    /**
+     * In case the SquareCatalogSyncTask was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SquareCatalogSyncTaskUpdateInput, SquareCatalogSyncTaskUncheckedUpdateInput>
+  }
+
+  /**
+   * SquareCatalogSyncTask delete
+   */
+  export type SquareCatalogSyncTaskDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareCatalogSyncTask
+     */
+    select?: SquareCatalogSyncTaskSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquareCatalogSyncTask
+     */
+    omit?: SquareCatalogSyncTaskOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SquareCatalogSyncTaskInclude<ExtArgs> | null
+    /**
+     * Filter which SquareCatalogSyncTask to delete.
+     */
+    where: SquareCatalogSyncTaskWhereUniqueInput
+  }
+
+  /**
+   * SquareCatalogSyncTask deleteMany
+   */
+  export type SquareCatalogSyncTaskDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SquareCatalogSyncTasks to delete
+     */
+    where?: SquareCatalogSyncTaskWhereInput
+    /**
+     * Limit how many SquareCatalogSyncTasks to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * SquareCatalogSyncTask.product
+   */
+  export type SquareCatalogSyncTask$productArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Product
+     */
+    select?: ProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Product
+     */
+    omit?: ProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductInclude<ExtArgs> | null
+    where?: ProductWhereInput
+  }
+
+  /**
+   * SquareCatalogSyncTask.menu
+   */
+  export type SquareCatalogSyncTask$menuArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Menu
+     */
+    select?: MenuSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Menu
+     */
+    omit?: MenuOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MenuInclude<ExtArgs> | null
+    where?: MenuWhereInput
+  }
+
+  /**
+   * SquareCatalogSyncTask without action
+   */
+  export type SquareCatalogSyncTaskDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareCatalogSyncTask
+     */
+    select?: SquareCatalogSyncTaskSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquareCatalogSyncTask
+     */
+    omit?: SquareCatalogSyncTaskOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SquareCatalogSyncTaskInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model SquareWebhookRun
+   */
+
+  export type AggregateSquareWebhookRun = {
+    _count: SquareWebhookRunCountAggregateOutputType | null
+    _avg: SquareWebhookRunAvgAggregateOutputType | null
+    _sum: SquareWebhookRunSumAggregateOutputType | null
+    _min: SquareWebhookRunMinAggregateOutputType | null
+    _max: SquareWebhookRunMaxAggregateOutputType | null
+  }
+
+  export type SquareWebhookRunAvgAggregateOutputType = {
+    processingDurationMs: number | null
+    attemptsCount: number | null
+    httpStatusCode: number | null
+  }
+
+  export type SquareWebhookRunSumAggregateOutputType = {
+    processingDurationMs: number | null
+    attemptsCount: number | null
+    httpStatusCode: number | null
+  }
+
+  export type SquareWebhookRunMinAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    businessId: string | null
+    eventId: string | null
+    eventType: string | null
+    merchantId: string | null
+    squareOrderId: string | null
+    locationId: string | null
+    squareOrderState: string | null
+    signatureVerified: boolean | null
+    status: $Enums.SquareWebhookRunStatus | null
+    action: string | null
+    reason: string | null
+    foodyOrderId: string | null
+    firstReceivedAt: Date | null
+    lastReceivedAt: Date | null
+    processedAt: Date | null
+    processingDurationMs: number | null
+    attemptsCount: number | null
+    httpStatusCode: number | null
+    errorMessage: string | null
+  }
+
+  export type SquareWebhookRunMaxAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    businessId: string | null
+    eventId: string | null
+    eventType: string | null
+    merchantId: string | null
+    squareOrderId: string | null
+    locationId: string | null
+    squareOrderState: string | null
+    signatureVerified: boolean | null
+    status: $Enums.SquareWebhookRunStatus | null
+    action: string | null
+    reason: string | null
+    foodyOrderId: string | null
+    firstReceivedAt: Date | null
+    lastReceivedAt: Date | null
+    processedAt: Date | null
+    processingDurationMs: number | null
+    attemptsCount: number | null
+    httpStatusCode: number | null
+    errorMessage: string | null
+  }
+
+  export type SquareWebhookRunCountAggregateOutputType = {
+    id: number
+    createdAt: number
+    updatedAt: number
+    businessId: number
+    eventId: number
+    eventType: number
+    merchantId: number
+    squareOrderId: number
+    locationId: number
+    squareOrderState: number
+    signatureVerified: number
+    status: number
+    action: number
+    reason: number
+    foodyOrderId: number
+    firstReceivedAt: number
+    lastReceivedAt: number
+    processedAt: number
+    processingDurationMs: number
+    attemptsCount: number
+    httpStatusCode: number
+    errorMessage: number
+    webhookPayload: number
+    squareOrderPayload: number
+    responsePayload: number
+    _all: number
+  }
+
+
+  export type SquareWebhookRunAvgAggregateInputType = {
+    processingDurationMs?: true
+    attemptsCount?: true
+    httpStatusCode?: true
+  }
+
+  export type SquareWebhookRunSumAggregateInputType = {
+    processingDurationMs?: true
+    attemptsCount?: true
+    httpStatusCode?: true
+  }
+
+  export type SquareWebhookRunMinAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    businessId?: true
+    eventId?: true
+    eventType?: true
+    merchantId?: true
+    squareOrderId?: true
+    locationId?: true
+    squareOrderState?: true
+    signatureVerified?: true
+    status?: true
+    action?: true
+    reason?: true
+    foodyOrderId?: true
+    firstReceivedAt?: true
+    lastReceivedAt?: true
+    processedAt?: true
+    processingDurationMs?: true
+    attemptsCount?: true
+    httpStatusCode?: true
+    errorMessage?: true
+  }
+
+  export type SquareWebhookRunMaxAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    businessId?: true
+    eventId?: true
+    eventType?: true
+    merchantId?: true
+    squareOrderId?: true
+    locationId?: true
+    squareOrderState?: true
+    signatureVerified?: true
+    status?: true
+    action?: true
+    reason?: true
+    foodyOrderId?: true
+    firstReceivedAt?: true
+    lastReceivedAt?: true
+    processedAt?: true
+    processingDurationMs?: true
+    attemptsCount?: true
+    httpStatusCode?: true
+    errorMessage?: true
+  }
+
+  export type SquareWebhookRunCountAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    businessId?: true
+    eventId?: true
+    eventType?: true
+    merchantId?: true
+    squareOrderId?: true
+    locationId?: true
+    squareOrderState?: true
+    signatureVerified?: true
+    status?: true
+    action?: true
+    reason?: true
+    foodyOrderId?: true
+    firstReceivedAt?: true
+    lastReceivedAt?: true
+    processedAt?: true
+    processingDurationMs?: true
+    attemptsCount?: true
+    httpStatusCode?: true
+    errorMessage?: true
+    webhookPayload?: true
+    squareOrderPayload?: true
+    responsePayload?: true
+    _all?: true
+  }
+
+  export type SquareWebhookRunAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SquareWebhookRun to aggregate.
+     */
+    where?: SquareWebhookRunWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SquareWebhookRuns to fetch.
+     */
+    orderBy?: SquareWebhookRunOrderByWithRelationInput | SquareWebhookRunOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SquareWebhookRunWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SquareWebhookRuns from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SquareWebhookRuns.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SquareWebhookRuns
+    **/
+    _count?: true | SquareWebhookRunCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: SquareWebhookRunAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: SquareWebhookRunSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SquareWebhookRunMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SquareWebhookRunMaxAggregateInputType
+  }
+
+  export type GetSquareWebhookRunAggregateType<T extends SquareWebhookRunAggregateArgs> = {
+        [P in keyof T & keyof AggregateSquareWebhookRun]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSquareWebhookRun[P]>
+      : GetScalarType<T[P], AggregateSquareWebhookRun[P]>
+  }
+
+
+
+
+  export type SquareWebhookRunGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SquareWebhookRunWhereInput
+    orderBy?: SquareWebhookRunOrderByWithAggregationInput | SquareWebhookRunOrderByWithAggregationInput[]
+    by: SquareWebhookRunScalarFieldEnum[] | SquareWebhookRunScalarFieldEnum
+    having?: SquareWebhookRunScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SquareWebhookRunCountAggregateInputType | true
+    _avg?: SquareWebhookRunAvgAggregateInputType
+    _sum?: SquareWebhookRunSumAggregateInputType
+    _min?: SquareWebhookRunMinAggregateInputType
+    _max?: SquareWebhookRunMaxAggregateInputType
+  }
+
+  export type SquareWebhookRunGroupByOutputType = {
+    id: string
+    createdAt: Date
+    updatedAt: Date
+    businessId: string | null
+    eventId: string | null
+    eventType: string | null
+    merchantId: string | null
+    squareOrderId: string | null
+    locationId: string | null
+    squareOrderState: string | null
+    signatureVerified: boolean | null
+    status: $Enums.SquareWebhookRunStatus
+    action: string | null
+    reason: string | null
+    foodyOrderId: string | null
+    firstReceivedAt: Date
+    lastReceivedAt: Date
+    processedAt: Date | null
+    processingDurationMs: number | null
+    attemptsCount: number
+    httpStatusCode: number | null
+    errorMessage: string | null
+    webhookPayload: JsonValue | null
+    squareOrderPayload: JsonValue | null
+    responsePayload: JsonValue | null
+    _count: SquareWebhookRunCountAggregateOutputType | null
+    _avg: SquareWebhookRunAvgAggregateOutputType | null
+    _sum: SquareWebhookRunSumAggregateOutputType | null
+    _min: SquareWebhookRunMinAggregateOutputType | null
+    _max: SquareWebhookRunMaxAggregateOutputType | null
+  }
+
+  type GetSquareWebhookRunGroupByPayload<T extends SquareWebhookRunGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SquareWebhookRunGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SquareWebhookRunGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SquareWebhookRunGroupByOutputType[P]>
+            : GetScalarType<T[P], SquareWebhookRunGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SquareWebhookRunSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    businessId?: boolean
+    eventId?: boolean
+    eventType?: boolean
+    merchantId?: boolean
+    squareOrderId?: boolean
+    locationId?: boolean
+    squareOrderState?: boolean
+    signatureVerified?: boolean
+    status?: boolean
+    action?: boolean
+    reason?: boolean
+    foodyOrderId?: boolean
+    firstReceivedAt?: boolean
+    lastReceivedAt?: boolean
+    processedAt?: boolean
+    processingDurationMs?: boolean
+    attemptsCount?: boolean
+    httpStatusCode?: boolean
+    errorMessage?: boolean
+    webhookPayload?: boolean
+    squareOrderPayload?: boolean
+    responsePayload?: boolean
+    business?: boolean | SquareWebhookRun$businessArgs<ExtArgs>
+    attempts?: boolean | SquareWebhookRun$attemptsArgs<ExtArgs>
+    _count?: boolean | SquareWebhookRunCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["squareWebhookRun"]>
+
+  export type SquareWebhookRunSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    businessId?: boolean
+    eventId?: boolean
+    eventType?: boolean
+    merchantId?: boolean
+    squareOrderId?: boolean
+    locationId?: boolean
+    squareOrderState?: boolean
+    signatureVerified?: boolean
+    status?: boolean
+    action?: boolean
+    reason?: boolean
+    foodyOrderId?: boolean
+    firstReceivedAt?: boolean
+    lastReceivedAt?: boolean
+    processedAt?: boolean
+    processingDurationMs?: boolean
+    attemptsCount?: boolean
+    httpStatusCode?: boolean
+    errorMessage?: boolean
+    webhookPayload?: boolean
+    squareOrderPayload?: boolean
+    responsePayload?: boolean
+    business?: boolean | SquareWebhookRun$businessArgs<ExtArgs>
+  }, ExtArgs["result"]["squareWebhookRun"]>
+
+  export type SquareWebhookRunSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    businessId?: boolean
+    eventId?: boolean
+    eventType?: boolean
+    merchantId?: boolean
+    squareOrderId?: boolean
+    locationId?: boolean
+    squareOrderState?: boolean
+    signatureVerified?: boolean
+    status?: boolean
+    action?: boolean
+    reason?: boolean
+    foodyOrderId?: boolean
+    firstReceivedAt?: boolean
+    lastReceivedAt?: boolean
+    processedAt?: boolean
+    processingDurationMs?: boolean
+    attemptsCount?: boolean
+    httpStatusCode?: boolean
+    errorMessage?: boolean
+    webhookPayload?: boolean
+    squareOrderPayload?: boolean
+    responsePayload?: boolean
+    business?: boolean | SquareWebhookRun$businessArgs<ExtArgs>
+  }, ExtArgs["result"]["squareWebhookRun"]>
+
+  export type SquareWebhookRunSelectScalar = {
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    businessId?: boolean
+    eventId?: boolean
+    eventType?: boolean
+    merchantId?: boolean
+    squareOrderId?: boolean
+    locationId?: boolean
+    squareOrderState?: boolean
+    signatureVerified?: boolean
+    status?: boolean
+    action?: boolean
+    reason?: boolean
+    foodyOrderId?: boolean
+    firstReceivedAt?: boolean
+    lastReceivedAt?: boolean
+    processedAt?: boolean
+    processingDurationMs?: boolean
+    attemptsCount?: boolean
+    httpStatusCode?: boolean
+    errorMessage?: boolean
+    webhookPayload?: boolean
+    squareOrderPayload?: boolean
+    responsePayload?: boolean
+  }
+
+  export type SquareWebhookRunOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "businessId" | "eventId" | "eventType" | "merchantId" | "squareOrderId" | "locationId" | "squareOrderState" | "signatureVerified" | "status" | "action" | "reason" | "foodyOrderId" | "firstReceivedAt" | "lastReceivedAt" | "processedAt" | "processingDurationMs" | "attemptsCount" | "httpStatusCode" | "errorMessage" | "webhookPayload" | "squareOrderPayload" | "responsePayload", ExtArgs["result"]["squareWebhookRun"]>
+  export type SquareWebhookRunInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    business?: boolean | SquareWebhookRun$businessArgs<ExtArgs>
+    attempts?: boolean | SquareWebhookRun$attemptsArgs<ExtArgs>
+    _count?: boolean | SquareWebhookRunCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type SquareWebhookRunIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    business?: boolean | SquareWebhookRun$businessArgs<ExtArgs>
+  }
+  export type SquareWebhookRunIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    business?: boolean | SquareWebhookRun$businessArgs<ExtArgs>
+  }
+
+  export type $SquareWebhookRunPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SquareWebhookRun"
+    objects: {
+      business: Prisma.$BusinessPayload<ExtArgs> | null
+      attempts: Prisma.$SquareWebhookRunAttemptPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      createdAt: Date
+      updatedAt: Date
+      businessId: string | null
+      eventId: string | null
+      eventType: string | null
+      merchantId: string | null
+      squareOrderId: string | null
+      locationId: string | null
+      squareOrderState: string | null
+      signatureVerified: boolean | null
+      status: $Enums.SquareWebhookRunStatus
+      action: string | null
+      reason: string | null
+      foodyOrderId: string | null
+      firstReceivedAt: Date
+      lastReceivedAt: Date
+      processedAt: Date | null
+      processingDurationMs: number | null
+      attemptsCount: number
+      httpStatusCode: number | null
+      errorMessage: string | null
+      webhookPayload: Prisma.JsonValue | null
+      squareOrderPayload: Prisma.JsonValue | null
+      responsePayload: Prisma.JsonValue | null
+    }, ExtArgs["result"]["squareWebhookRun"]>
+    composites: {}
+  }
+
+  type SquareWebhookRunGetPayload<S extends boolean | null | undefined | SquareWebhookRunDefaultArgs> = $Result.GetResult<Prisma.$SquareWebhookRunPayload, S>
+
+  type SquareWebhookRunCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SquareWebhookRunFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SquareWebhookRunCountAggregateInputType | true
+    }
+
+  export interface SquareWebhookRunDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SquareWebhookRun'], meta: { name: 'SquareWebhookRun' } }
+    /**
+     * Find zero or one SquareWebhookRun that matches the filter.
+     * @param {SquareWebhookRunFindUniqueArgs} args - Arguments to find a SquareWebhookRun
+     * @example
+     * // Get one SquareWebhookRun
+     * const squareWebhookRun = await prisma.squareWebhookRun.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SquareWebhookRunFindUniqueArgs>(args: SelectSubset<T, SquareWebhookRunFindUniqueArgs<ExtArgs>>): Prisma__SquareWebhookRunClient<$Result.GetResult<Prisma.$SquareWebhookRunPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one SquareWebhookRun that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SquareWebhookRunFindUniqueOrThrowArgs} args - Arguments to find a SquareWebhookRun
+     * @example
+     * // Get one SquareWebhookRun
+     * const squareWebhookRun = await prisma.squareWebhookRun.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SquareWebhookRunFindUniqueOrThrowArgs>(args: SelectSubset<T, SquareWebhookRunFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SquareWebhookRunClient<$Result.GetResult<Prisma.$SquareWebhookRunPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SquareWebhookRun that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SquareWebhookRunFindFirstArgs} args - Arguments to find a SquareWebhookRun
+     * @example
+     * // Get one SquareWebhookRun
+     * const squareWebhookRun = await prisma.squareWebhookRun.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SquareWebhookRunFindFirstArgs>(args?: SelectSubset<T, SquareWebhookRunFindFirstArgs<ExtArgs>>): Prisma__SquareWebhookRunClient<$Result.GetResult<Prisma.$SquareWebhookRunPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SquareWebhookRun that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SquareWebhookRunFindFirstOrThrowArgs} args - Arguments to find a SquareWebhookRun
+     * @example
+     * // Get one SquareWebhookRun
+     * const squareWebhookRun = await prisma.squareWebhookRun.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SquareWebhookRunFindFirstOrThrowArgs>(args?: SelectSubset<T, SquareWebhookRunFindFirstOrThrowArgs<ExtArgs>>): Prisma__SquareWebhookRunClient<$Result.GetResult<Prisma.$SquareWebhookRunPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more SquareWebhookRuns that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SquareWebhookRunFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SquareWebhookRuns
+     * const squareWebhookRuns = await prisma.squareWebhookRun.findMany()
+     * 
+     * // Get first 10 SquareWebhookRuns
+     * const squareWebhookRuns = await prisma.squareWebhookRun.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const squareWebhookRunWithIdOnly = await prisma.squareWebhookRun.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SquareWebhookRunFindManyArgs>(args?: SelectSubset<T, SquareWebhookRunFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SquareWebhookRunPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a SquareWebhookRun.
+     * @param {SquareWebhookRunCreateArgs} args - Arguments to create a SquareWebhookRun.
+     * @example
+     * // Create one SquareWebhookRun
+     * const SquareWebhookRun = await prisma.squareWebhookRun.create({
+     *   data: {
+     *     // ... data to create a SquareWebhookRun
+     *   }
+     * })
+     * 
+     */
+    create<T extends SquareWebhookRunCreateArgs>(args: SelectSubset<T, SquareWebhookRunCreateArgs<ExtArgs>>): Prisma__SquareWebhookRunClient<$Result.GetResult<Prisma.$SquareWebhookRunPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many SquareWebhookRuns.
+     * @param {SquareWebhookRunCreateManyArgs} args - Arguments to create many SquareWebhookRuns.
+     * @example
+     * // Create many SquareWebhookRuns
+     * const squareWebhookRun = await prisma.squareWebhookRun.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SquareWebhookRunCreateManyArgs>(args?: SelectSubset<T, SquareWebhookRunCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many SquareWebhookRuns and returns the data saved in the database.
+     * @param {SquareWebhookRunCreateManyAndReturnArgs} args - Arguments to create many SquareWebhookRuns.
+     * @example
+     * // Create many SquareWebhookRuns
+     * const squareWebhookRun = await prisma.squareWebhookRun.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many SquareWebhookRuns and only return the `id`
+     * const squareWebhookRunWithIdOnly = await prisma.squareWebhookRun.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SquareWebhookRunCreateManyAndReturnArgs>(args?: SelectSubset<T, SquareWebhookRunCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SquareWebhookRunPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a SquareWebhookRun.
+     * @param {SquareWebhookRunDeleteArgs} args - Arguments to delete one SquareWebhookRun.
+     * @example
+     * // Delete one SquareWebhookRun
+     * const SquareWebhookRun = await prisma.squareWebhookRun.delete({
+     *   where: {
+     *     // ... filter to delete one SquareWebhookRun
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SquareWebhookRunDeleteArgs>(args: SelectSubset<T, SquareWebhookRunDeleteArgs<ExtArgs>>): Prisma__SquareWebhookRunClient<$Result.GetResult<Prisma.$SquareWebhookRunPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one SquareWebhookRun.
+     * @param {SquareWebhookRunUpdateArgs} args - Arguments to update one SquareWebhookRun.
+     * @example
+     * // Update one SquareWebhookRun
+     * const squareWebhookRun = await prisma.squareWebhookRun.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SquareWebhookRunUpdateArgs>(args: SelectSubset<T, SquareWebhookRunUpdateArgs<ExtArgs>>): Prisma__SquareWebhookRunClient<$Result.GetResult<Prisma.$SquareWebhookRunPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more SquareWebhookRuns.
+     * @param {SquareWebhookRunDeleteManyArgs} args - Arguments to filter SquareWebhookRuns to delete.
+     * @example
+     * // Delete a few SquareWebhookRuns
+     * const { count } = await prisma.squareWebhookRun.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SquareWebhookRunDeleteManyArgs>(args?: SelectSubset<T, SquareWebhookRunDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SquareWebhookRuns.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SquareWebhookRunUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SquareWebhookRuns
+     * const squareWebhookRun = await prisma.squareWebhookRun.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SquareWebhookRunUpdateManyArgs>(args: SelectSubset<T, SquareWebhookRunUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SquareWebhookRuns and returns the data updated in the database.
+     * @param {SquareWebhookRunUpdateManyAndReturnArgs} args - Arguments to update many SquareWebhookRuns.
+     * @example
+     * // Update many SquareWebhookRuns
+     * const squareWebhookRun = await prisma.squareWebhookRun.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more SquareWebhookRuns and only return the `id`
+     * const squareWebhookRunWithIdOnly = await prisma.squareWebhookRun.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends SquareWebhookRunUpdateManyAndReturnArgs>(args: SelectSubset<T, SquareWebhookRunUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SquareWebhookRunPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one SquareWebhookRun.
+     * @param {SquareWebhookRunUpsertArgs} args - Arguments to update or create a SquareWebhookRun.
+     * @example
+     * // Update or create a SquareWebhookRun
+     * const squareWebhookRun = await prisma.squareWebhookRun.upsert({
+     *   create: {
+     *     // ... data to create a SquareWebhookRun
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SquareWebhookRun we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SquareWebhookRunUpsertArgs>(args: SelectSubset<T, SquareWebhookRunUpsertArgs<ExtArgs>>): Prisma__SquareWebhookRunClient<$Result.GetResult<Prisma.$SquareWebhookRunPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of SquareWebhookRuns.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SquareWebhookRunCountArgs} args - Arguments to filter SquareWebhookRuns to count.
+     * @example
+     * // Count the number of SquareWebhookRuns
+     * const count = await prisma.squareWebhookRun.count({
+     *   where: {
+     *     // ... the filter for the SquareWebhookRuns we want to count
+     *   }
+     * })
+    **/
+    count<T extends SquareWebhookRunCountArgs>(
+      args?: Subset<T, SquareWebhookRunCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SquareWebhookRunCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SquareWebhookRun.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SquareWebhookRunAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SquareWebhookRunAggregateArgs>(args: Subset<T, SquareWebhookRunAggregateArgs>): Prisma.PrismaPromise<GetSquareWebhookRunAggregateType<T>>
+
+    /**
+     * Group by SquareWebhookRun.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SquareWebhookRunGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SquareWebhookRunGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SquareWebhookRunGroupByArgs['orderBy'] }
+        : { orderBy?: SquareWebhookRunGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SquareWebhookRunGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSquareWebhookRunGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SquareWebhookRun model
+   */
+  readonly fields: SquareWebhookRunFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SquareWebhookRun.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SquareWebhookRunClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    business<T extends SquareWebhookRun$businessArgs<ExtArgs> = {}>(args?: Subset<T, SquareWebhookRun$businessArgs<ExtArgs>>): Prisma__BusinessClient<$Result.GetResult<Prisma.$BusinessPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    attempts<T extends SquareWebhookRun$attemptsArgs<ExtArgs> = {}>(args?: Subset<T, SquareWebhookRun$attemptsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SquareWebhookRunAttemptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SquareWebhookRun model
+   */
+  interface SquareWebhookRunFieldRefs {
+    readonly id: FieldRef<"SquareWebhookRun", 'String'>
+    readonly createdAt: FieldRef<"SquareWebhookRun", 'DateTime'>
+    readonly updatedAt: FieldRef<"SquareWebhookRun", 'DateTime'>
+    readonly businessId: FieldRef<"SquareWebhookRun", 'String'>
+    readonly eventId: FieldRef<"SquareWebhookRun", 'String'>
+    readonly eventType: FieldRef<"SquareWebhookRun", 'String'>
+    readonly merchantId: FieldRef<"SquareWebhookRun", 'String'>
+    readonly squareOrderId: FieldRef<"SquareWebhookRun", 'String'>
+    readonly locationId: FieldRef<"SquareWebhookRun", 'String'>
+    readonly squareOrderState: FieldRef<"SquareWebhookRun", 'String'>
+    readonly signatureVerified: FieldRef<"SquareWebhookRun", 'Boolean'>
+    readonly status: FieldRef<"SquareWebhookRun", 'SquareWebhookRunStatus'>
+    readonly action: FieldRef<"SquareWebhookRun", 'String'>
+    readonly reason: FieldRef<"SquareWebhookRun", 'String'>
+    readonly foodyOrderId: FieldRef<"SquareWebhookRun", 'String'>
+    readonly firstReceivedAt: FieldRef<"SquareWebhookRun", 'DateTime'>
+    readonly lastReceivedAt: FieldRef<"SquareWebhookRun", 'DateTime'>
+    readonly processedAt: FieldRef<"SquareWebhookRun", 'DateTime'>
+    readonly processingDurationMs: FieldRef<"SquareWebhookRun", 'Int'>
+    readonly attemptsCount: FieldRef<"SquareWebhookRun", 'Int'>
+    readonly httpStatusCode: FieldRef<"SquareWebhookRun", 'Int'>
+    readonly errorMessage: FieldRef<"SquareWebhookRun", 'String'>
+    readonly webhookPayload: FieldRef<"SquareWebhookRun", 'Json'>
+    readonly squareOrderPayload: FieldRef<"SquareWebhookRun", 'Json'>
+    readonly responsePayload: FieldRef<"SquareWebhookRun", 'Json'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SquareWebhookRun findUnique
+   */
+  export type SquareWebhookRunFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareWebhookRun
+     */
+    select?: SquareWebhookRunSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquareWebhookRun
+     */
+    omit?: SquareWebhookRunOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SquareWebhookRunInclude<ExtArgs> | null
+    /**
+     * Filter, which SquareWebhookRun to fetch.
+     */
+    where: SquareWebhookRunWhereUniqueInput
+  }
+
+  /**
+   * SquareWebhookRun findUniqueOrThrow
+   */
+  export type SquareWebhookRunFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareWebhookRun
+     */
+    select?: SquareWebhookRunSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquareWebhookRun
+     */
+    omit?: SquareWebhookRunOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SquareWebhookRunInclude<ExtArgs> | null
+    /**
+     * Filter, which SquareWebhookRun to fetch.
+     */
+    where: SquareWebhookRunWhereUniqueInput
+  }
+
+  /**
+   * SquareWebhookRun findFirst
+   */
+  export type SquareWebhookRunFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareWebhookRun
+     */
+    select?: SquareWebhookRunSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquareWebhookRun
+     */
+    omit?: SquareWebhookRunOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SquareWebhookRunInclude<ExtArgs> | null
+    /**
+     * Filter, which SquareWebhookRun to fetch.
+     */
+    where?: SquareWebhookRunWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SquareWebhookRuns to fetch.
+     */
+    orderBy?: SquareWebhookRunOrderByWithRelationInput | SquareWebhookRunOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SquareWebhookRuns.
+     */
+    cursor?: SquareWebhookRunWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SquareWebhookRuns from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SquareWebhookRuns.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SquareWebhookRuns.
+     */
+    distinct?: SquareWebhookRunScalarFieldEnum | SquareWebhookRunScalarFieldEnum[]
+  }
+
+  /**
+   * SquareWebhookRun findFirstOrThrow
+   */
+  export type SquareWebhookRunFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareWebhookRun
+     */
+    select?: SquareWebhookRunSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquareWebhookRun
+     */
+    omit?: SquareWebhookRunOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SquareWebhookRunInclude<ExtArgs> | null
+    /**
+     * Filter, which SquareWebhookRun to fetch.
+     */
+    where?: SquareWebhookRunWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SquareWebhookRuns to fetch.
+     */
+    orderBy?: SquareWebhookRunOrderByWithRelationInput | SquareWebhookRunOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SquareWebhookRuns.
+     */
+    cursor?: SquareWebhookRunWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SquareWebhookRuns from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SquareWebhookRuns.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SquareWebhookRuns.
+     */
+    distinct?: SquareWebhookRunScalarFieldEnum | SquareWebhookRunScalarFieldEnum[]
+  }
+
+  /**
+   * SquareWebhookRun findMany
+   */
+  export type SquareWebhookRunFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareWebhookRun
+     */
+    select?: SquareWebhookRunSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquareWebhookRun
+     */
+    omit?: SquareWebhookRunOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SquareWebhookRunInclude<ExtArgs> | null
+    /**
+     * Filter, which SquareWebhookRuns to fetch.
+     */
+    where?: SquareWebhookRunWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SquareWebhookRuns to fetch.
+     */
+    orderBy?: SquareWebhookRunOrderByWithRelationInput | SquareWebhookRunOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SquareWebhookRuns.
+     */
+    cursor?: SquareWebhookRunWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SquareWebhookRuns from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SquareWebhookRuns.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SquareWebhookRuns.
+     */
+    distinct?: SquareWebhookRunScalarFieldEnum | SquareWebhookRunScalarFieldEnum[]
+  }
+
+  /**
+   * SquareWebhookRun create
+   */
+  export type SquareWebhookRunCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareWebhookRun
+     */
+    select?: SquareWebhookRunSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquareWebhookRun
+     */
+    omit?: SquareWebhookRunOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SquareWebhookRunInclude<ExtArgs> | null
+    /**
+     * The data needed to create a SquareWebhookRun.
+     */
+    data: XOR<SquareWebhookRunCreateInput, SquareWebhookRunUncheckedCreateInput>
+  }
+
+  /**
+   * SquareWebhookRun createMany
+   */
+  export type SquareWebhookRunCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SquareWebhookRuns.
+     */
+    data: SquareWebhookRunCreateManyInput | SquareWebhookRunCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SquareWebhookRun createManyAndReturn
+   */
+  export type SquareWebhookRunCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareWebhookRun
+     */
+    select?: SquareWebhookRunSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquareWebhookRun
+     */
+    omit?: SquareWebhookRunOmit<ExtArgs> | null
+    /**
+     * The data used to create many SquareWebhookRuns.
+     */
+    data: SquareWebhookRunCreateManyInput | SquareWebhookRunCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SquareWebhookRunIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SquareWebhookRun update
+   */
+  export type SquareWebhookRunUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareWebhookRun
+     */
+    select?: SquareWebhookRunSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquareWebhookRun
+     */
+    omit?: SquareWebhookRunOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SquareWebhookRunInclude<ExtArgs> | null
+    /**
+     * The data needed to update a SquareWebhookRun.
+     */
+    data: XOR<SquareWebhookRunUpdateInput, SquareWebhookRunUncheckedUpdateInput>
+    /**
+     * Choose, which SquareWebhookRun to update.
+     */
+    where: SquareWebhookRunWhereUniqueInput
+  }
+
+  /**
+   * SquareWebhookRun updateMany
+   */
+  export type SquareWebhookRunUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SquareWebhookRuns.
+     */
+    data: XOR<SquareWebhookRunUpdateManyMutationInput, SquareWebhookRunUncheckedUpdateManyInput>
+    /**
+     * Filter which SquareWebhookRuns to update
+     */
+    where?: SquareWebhookRunWhereInput
+    /**
+     * Limit how many SquareWebhookRuns to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SquareWebhookRun updateManyAndReturn
+   */
+  export type SquareWebhookRunUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareWebhookRun
+     */
+    select?: SquareWebhookRunSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquareWebhookRun
+     */
+    omit?: SquareWebhookRunOmit<ExtArgs> | null
+    /**
+     * The data used to update SquareWebhookRuns.
+     */
+    data: XOR<SquareWebhookRunUpdateManyMutationInput, SquareWebhookRunUncheckedUpdateManyInput>
+    /**
+     * Filter which SquareWebhookRuns to update
+     */
+    where?: SquareWebhookRunWhereInput
+    /**
+     * Limit how many SquareWebhookRuns to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SquareWebhookRunIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SquareWebhookRun upsert
+   */
+  export type SquareWebhookRunUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareWebhookRun
+     */
+    select?: SquareWebhookRunSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquareWebhookRun
+     */
+    omit?: SquareWebhookRunOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SquareWebhookRunInclude<ExtArgs> | null
+    /**
+     * The filter to search for the SquareWebhookRun to update in case it exists.
+     */
+    where: SquareWebhookRunWhereUniqueInput
+    /**
+     * In case the SquareWebhookRun found by the `where` argument doesn't exist, create a new SquareWebhookRun with this data.
+     */
+    create: XOR<SquareWebhookRunCreateInput, SquareWebhookRunUncheckedCreateInput>
+    /**
+     * In case the SquareWebhookRun was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SquareWebhookRunUpdateInput, SquareWebhookRunUncheckedUpdateInput>
+  }
+
+  /**
+   * SquareWebhookRun delete
+   */
+  export type SquareWebhookRunDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareWebhookRun
+     */
+    select?: SquareWebhookRunSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquareWebhookRun
+     */
+    omit?: SquareWebhookRunOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SquareWebhookRunInclude<ExtArgs> | null
+    /**
+     * Filter which SquareWebhookRun to delete.
+     */
+    where: SquareWebhookRunWhereUniqueInput
+  }
+
+  /**
+   * SquareWebhookRun deleteMany
+   */
+  export type SquareWebhookRunDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SquareWebhookRuns to delete
+     */
+    where?: SquareWebhookRunWhereInput
+    /**
+     * Limit how many SquareWebhookRuns to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * SquareWebhookRun.business
+   */
+  export type SquareWebhookRun$businessArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Business
+     */
+    select?: BusinessSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Business
+     */
+    omit?: BusinessOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BusinessInclude<ExtArgs> | null
+    where?: BusinessWhereInput
+  }
+
+  /**
+   * SquareWebhookRun.attempts
+   */
+  export type SquareWebhookRun$attemptsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareWebhookRunAttempt
+     */
+    select?: SquareWebhookRunAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquareWebhookRunAttempt
+     */
+    omit?: SquareWebhookRunAttemptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SquareWebhookRunAttemptInclude<ExtArgs> | null
+    where?: SquareWebhookRunAttemptWhereInput
+    orderBy?: SquareWebhookRunAttemptOrderByWithRelationInput | SquareWebhookRunAttemptOrderByWithRelationInput[]
+    cursor?: SquareWebhookRunAttemptWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SquareWebhookRunAttemptScalarFieldEnum | SquareWebhookRunAttemptScalarFieldEnum[]
+  }
+
+  /**
+   * SquareWebhookRun without action
+   */
+  export type SquareWebhookRunDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareWebhookRun
+     */
+    select?: SquareWebhookRunSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquareWebhookRun
+     */
+    omit?: SquareWebhookRunOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SquareWebhookRunInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model SquareWebhookRunAttempt
+   */
+
+  export type AggregateSquareWebhookRunAttempt = {
+    _count: SquareWebhookRunAttemptCountAggregateOutputType | null
+    _avg: SquareWebhookRunAttemptAvgAggregateOutputType | null
+    _sum: SquareWebhookRunAttemptSumAggregateOutputType | null
+    _min: SquareWebhookRunAttemptMinAggregateOutputType | null
+    _max: SquareWebhookRunAttemptMaxAggregateOutputType | null
+  }
+
+  export type SquareWebhookRunAttemptAvgAggregateOutputType = {
+    attemptNumber: number | null
+    processingDurationMs: number | null
+    httpStatusCode: number | null
+  }
+
+  export type SquareWebhookRunAttemptSumAggregateOutputType = {
+    attemptNumber: number | null
+    processingDurationMs: number | null
+    httpStatusCode: number | null
+  }
+
+  export type SquareWebhookRunAttemptMinAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    runId: string | null
+    attemptNumber: number | null
+    receivedAt: Date | null
+    finishedAt: Date | null
+    processingDurationMs: number | null
+    httpStatusCode: number | null
+    status: $Enums.SquareWebhookRunStatus | null
+    action: string | null
+    reason: string | null
+    signatureVerified: boolean | null
+    errorMessage: string | null
+  }
+
+  export type SquareWebhookRunAttemptMaxAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    runId: string | null
+    attemptNumber: number | null
+    receivedAt: Date | null
+    finishedAt: Date | null
+    processingDurationMs: number | null
+    httpStatusCode: number | null
+    status: $Enums.SquareWebhookRunStatus | null
+    action: string | null
+    reason: string | null
+    signatureVerified: boolean | null
+    errorMessage: string | null
+  }
+
+  export type SquareWebhookRunAttemptCountAggregateOutputType = {
+    id: number
+    createdAt: number
+    runId: number
+    attemptNumber: number
+    receivedAt: number
+    finishedAt: number
+    processingDurationMs: number
+    httpStatusCode: number
+    status: number
+    action: number
+    reason: number
+    signatureVerified: number
+    errorMessage: number
+    requestHeaders: number
+    webhookPayload: number
+    squareOrderPayload: number
+    responsePayload: number
+    _all: number
+  }
+
+
+  export type SquareWebhookRunAttemptAvgAggregateInputType = {
+    attemptNumber?: true
+    processingDurationMs?: true
+    httpStatusCode?: true
+  }
+
+  export type SquareWebhookRunAttemptSumAggregateInputType = {
+    attemptNumber?: true
+    processingDurationMs?: true
+    httpStatusCode?: true
+  }
+
+  export type SquareWebhookRunAttemptMinAggregateInputType = {
+    id?: true
+    createdAt?: true
+    runId?: true
+    attemptNumber?: true
+    receivedAt?: true
+    finishedAt?: true
+    processingDurationMs?: true
+    httpStatusCode?: true
+    status?: true
+    action?: true
+    reason?: true
+    signatureVerified?: true
+    errorMessage?: true
+  }
+
+  export type SquareWebhookRunAttemptMaxAggregateInputType = {
+    id?: true
+    createdAt?: true
+    runId?: true
+    attemptNumber?: true
+    receivedAt?: true
+    finishedAt?: true
+    processingDurationMs?: true
+    httpStatusCode?: true
+    status?: true
+    action?: true
+    reason?: true
+    signatureVerified?: true
+    errorMessage?: true
+  }
+
+  export type SquareWebhookRunAttemptCountAggregateInputType = {
+    id?: true
+    createdAt?: true
+    runId?: true
+    attemptNumber?: true
+    receivedAt?: true
+    finishedAt?: true
+    processingDurationMs?: true
+    httpStatusCode?: true
+    status?: true
+    action?: true
+    reason?: true
+    signatureVerified?: true
+    errorMessage?: true
+    requestHeaders?: true
+    webhookPayload?: true
+    squareOrderPayload?: true
+    responsePayload?: true
+    _all?: true
+  }
+
+  export type SquareWebhookRunAttemptAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SquareWebhookRunAttempt to aggregate.
+     */
+    where?: SquareWebhookRunAttemptWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SquareWebhookRunAttempts to fetch.
+     */
+    orderBy?: SquareWebhookRunAttemptOrderByWithRelationInput | SquareWebhookRunAttemptOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SquareWebhookRunAttemptWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SquareWebhookRunAttempts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SquareWebhookRunAttempts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SquareWebhookRunAttempts
+    **/
+    _count?: true | SquareWebhookRunAttemptCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: SquareWebhookRunAttemptAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: SquareWebhookRunAttemptSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SquareWebhookRunAttemptMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SquareWebhookRunAttemptMaxAggregateInputType
+  }
+
+  export type GetSquareWebhookRunAttemptAggregateType<T extends SquareWebhookRunAttemptAggregateArgs> = {
+        [P in keyof T & keyof AggregateSquareWebhookRunAttempt]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSquareWebhookRunAttempt[P]>
+      : GetScalarType<T[P], AggregateSquareWebhookRunAttempt[P]>
+  }
+
+
+
+
+  export type SquareWebhookRunAttemptGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SquareWebhookRunAttemptWhereInput
+    orderBy?: SquareWebhookRunAttemptOrderByWithAggregationInput | SquareWebhookRunAttemptOrderByWithAggregationInput[]
+    by: SquareWebhookRunAttemptScalarFieldEnum[] | SquareWebhookRunAttemptScalarFieldEnum
+    having?: SquareWebhookRunAttemptScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SquareWebhookRunAttemptCountAggregateInputType | true
+    _avg?: SquareWebhookRunAttemptAvgAggregateInputType
+    _sum?: SquareWebhookRunAttemptSumAggregateInputType
+    _min?: SquareWebhookRunAttemptMinAggregateInputType
+    _max?: SquareWebhookRunAttemptMaxAggregateInputType
+  }
+
+  export type SquareWebhookRunAttemptGroupByOutputType = {
+    id: string
+    createdAt: Date
+    runId: string
+    attemptNumber: number
+    receivedAt: Date
+    finishedAt: Date | null
+    processingDurationMs: number | null
+    httpStatusCode: number | null
+    status: $Enums.SquareWebhookRunStatus
+    action: string | null
+    reason: string | null
+    signatureVerified: boolean | null
+    errorMessage: string | null
+    requestHeaders: JsonValue | null
+    webhookPayload: JsonValue | null
+    squareOrderPayload: JsonValue | null
+    responsePayload: JsonValue | null
+    _count: SquareWebhookRunAttemptCountAggregateOutputType | null
+    _avg: SquareWebhookRunAttemptAvgAggregateOutputType | null
+    _sum: SquareWebhookRunAttemptSumAggregateOutputType | null
+    _min: SquareWebhookRunAttemptMinAggregateOutputType | null
+    _max: SquareWebhookRunAttemptMaxAggregateOutputType | null
+  }
+
+  type GetSquareWebhookRunAttemptGroupByPayload<T extends SquareWebhookRunAttemptGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SquareWebhookRunAttemptGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SquareWebhookRunAttemptGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SquareWebhookRunAttemptGroupByOutputType[P]>
+            : GetScalarType<T[P], SquareWebhookRunAttemptGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SquareWebhookRunAttemptSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    runId?: boolean
+    attemptNumber?: boolean
+    receivedAt?: boolean
+    finishedAt?: boolean
+    processingDurationMs?: boolean
+    httpStatusCode?: boolean
+    status?: boolean
+    action?: boolean
+    reason?: boolean
+    signatureVerified?: boolean
+    errorMessage?: boolean
+    requestHeaders?: boolean
+    webhookPayload?: boolean
+    squareOrderPayload?: boolean
+    responsePayload?: boolean
+    run?: boolean | SquareWebhookRunDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["squareWebhookRunAttempt"]>
+
+  export type SquareWebhookRunAttemptSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    runId?: boolean
+    attemptNumber?: boolean
+    receivedAt?: boolean
+    finishedAt?: boolean
+    processingDurationMs?: boolean
+    httpStatusCode?: boolean
+    status?: boolean
+    action?: boolean
+    reason?: boolean
+    signatureVerified?: boolean
+    errorMessage?: boolean
+    requestHeaders?: boolean
+    webhookPayload?: boolean
+    squareOrderPayload?: boolean
+    responsePayload?: boolean
+    run?: boolean | SquareWebhookRunDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["squareWebhookRunAttempt"]>
+
+  export type SquareWebhookRunAttemptSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    runId?: boolean
+    attemptNumber?: boolean
+    receivedAt?: boolean
+    finishedAt?: boolean
+    processingDurationMs?: boolean
+    httpStatusCode?: boolean
+    status?: boolean
+    action?: boolean
+    reason?: boolean
+    signatureVerified?: boolean
+    errorMessage?: boolean
+    requestHeaders?: boolean
+    webhookPayload?: boolean
+    squareOrderPayload?: boolean
+    responsePayload?: boolean
+    run?: boolean | SquareWebhookRunDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["squareWebhookRunAttempt"]>
+
+  export type SquareWebhookRunAttemptSelectScalar = {
+    id?: boolean
+    createdAt?: boolean
+    runId?: boolean
+    attemptNumber?: boolean
+    receivedAt?: boolean
+    finishedAt?: boolean
+    processingDurationMs?: boolean
+    httpStatusCode?: boolean
+    status?: boolean
+    action?: boolean
+    reason?: boolean
+    signatureVerified?: boolean
+    errorMessage?: boolean
+    requestHeaders?: boolean
+    webhookPayload?: boolean
+    squareOrderPayload?: boolean
+    responsePayload?: boolean
+  }
+
+  export type SquareWebhookRunAttemptOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "runId" | "attemptNumber" | "receivedAt" | "finishedAt" | "processingDurationMs" | "httpStatusCode" | "status" | "action" | "reason" | "signatureVerified" | "errorMessage" | "requestHeaders" | "webhookPayload" | "squareOrderPayload" | "responsePayload", ExtArgs["result"]["squareWebhookRunAttempt"]>
+  export type SquareWebhookRunAttemptInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    run?: boolean | SquareWebhookRunDefaultArgs<ExtArgs>
+  }
+  export type SquareWebhookRunAttemptIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    run?: boolean | SquareWebhookRunDefaultArgs<ExtArgs>
+  }
+  export type SquareWebhookRunAttemptIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    run?: boolean | SquareWebhookRunDefaultArgs<ExtArgs>
+  }
+
+  export type $SquareWebhookRunAttemptPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SquareWebhookRunAttempt"
+    objects: {
+      run: Prisma.$SquareWebhookRunPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      createdAt: Date
+      runId: string
+      attemptNumber: number
+      receivedAt: Date
+      finishedAt: Date | null
+      processingDurationMs: number | null
+      httpStatusCode: number | null
+      status: $Enums.SquareWebhookRunStatus
+      action: string | null
+      reason: string | null
+      signatureVerified: boolean | null
+      errorMessage: string | null
+      requestHeaders: Prisma.JsonValue | null
+      webhookPayload: Prisma.JsonValue | null
+      squareOrderPayload: Prisma.JsonValue | null
+      responsePayload: Prisma.JsonValue | null
+    }, ExtArgs["result"]["squareWebhookRunAttempt"]>
+    composites: {}
+  }
+
+  type SquareWebhookRunAttemptGetPayload<S extends boolean | null | undefined | SquareWebhookRunAttemptDefaultArgs> = $Result.GetResult<Prisma.$SquareWebhookRunAttemptPayload, S>
+
+  type SquareWebhookRunAttemptCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SquareWebhookRunAttemptFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SquareWebhookRunAttemptCountAggregateInputType | true
+    }
+
+  export interface SquareWebhookRunAttemptDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SquareWebhookRunAttempt'], meta: { name: 'SquareWebhookRunAttempt' } }
+    /**
+     * Find zero or one SquareWebhookRunAttempt that matches the filter.
+     * @param {SquareWebhookRunAttemptFindUniqueArgs} args - Arguments to find a SquareWebhookRunAttempt
+     * @example
+     * // Get one SquareWebhookRunAttempt
+     * const squareWebhookRunAttempt = await prisma.squareWebhookRunAttempt.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SquareWebhookRunAttemptFindUniqueArgs>(args: SelectSubset<T, SquareWebhookRunAttemptFindUniqueArgs<ExtArgs>>): Prisma__SquareWebhookRunAttemptClient<$Result.GetResult<Prisma.$SquareWebhookRunAttemptPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one SquareWebhookRunAttempt that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SquareWebhookRunAttemptFindUniqueOrThrowArgs} args - Arguments to find a SquareWebhookRunAttempt
+     * @example
+     * // Get one SquareWebhookRunAttempt
+     * const squareWebhookRunAttempt = await prisma.squareWebhookRunAttempt.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SquareWebhookRunAttemptFindUniqueOrThrowArgs>(args: SelectSubset<T, SquareWebhookRunAttemptFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SquareWebhookRunAttemptClient<$Result.GetResult<Prisma.$SquareWebhookRunAttemptPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SquareWebhookRunAttempt that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SquareWebhookRunAttemptFindFirstArgs} args - Arguments to find a SquareWebhookRunAttempt
+     * @example
+     * // Get one SquareWebhookRunAttempt
+     * const squareWebhookRunAttempt = await prisma.squareWebhookRunAttempt.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SquareWebhookRunAttemptFindFirstArgs>(args?: SelectSubset<T, SquareWebhookRunAttemptFindFirstArgs<ExtArgs>>): Prisma__SquareWebhookRunAttemptClient<$Result.GetResult<Prisma.$SquareWebhookRunAttemptPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SquareWebhookRunAttempt that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SquareWebhookRunAttemptFindFirstOrThrowArgs} args - Arguments to find a SquareWebhookRunAttempt
+     * @example
+     * // Get one SquareWebhookRunAttempt
+     * const squareWebhookRunAttempt = await prisma.squareWebhookRunAttempt.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SquareWebhookRunAttemptFindFirstOrThrowArgs>(args?: SelectSubset<T, SquareWebhookRunAttemptFindFirstOrThrowArgs<ExtArgs>>): Prisma__SquareWebhookRunAttemptClient<$Result.GetResult<Prisma.$SquareWebhookRunAttemptPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more SquareWebhookRunAttempts that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SquareWebhookRunAttemptFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SquareWebhookRunAttempts
+     * const squareWebhookRunAttempts = await prisma.squareWebhookRunAttempt.findMany()
+     * 
+     * // Get first 10 SquareWebhookRunAttempts
+     * const squareWebhookRunAttempts = await prisma.squareWebhookRunAttempt.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const squareWebhookRunAttemptWithIdOnly = await prisma.squareWebhookRunAttempt.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SquareWebhookRunAttemptFindManyArgs>(args?: SelectSubset<T, SquareWebhookRunAttemptFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SquareWebhookRunAttemptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a SquareWebhookRunAttempt.
+     * @param {SquareWebhookRunAttemptCreateArgs} args - Arguments to create a SquareWebhookRunAttempt.
+     * @example
+     * // Create one SquareWebhookRunAttempt
+     * const SquareWebhookRunAttempt = await prisma.squareWebhookRunAttempt.create({
+     *   data: {
+     *     // ... data to create a SquareWebhookRunAttempt
+     *   }
+     * })
+     * 
+     */
+    create<T extends SquareWebhookRunAttemptCreateArgs>(args: SelectSubset<T, SquareWebhookRunAttemptCreateArgs<ExtArgs>>): Prisma__SquareWebhookRunAttemptClient<$Result.GetResult<Prisma.$SquareWebhookRunAttemptPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many SquareWebhookRunAttempts.
+     * @param {SquareWebhookRunAttemptCreateManyArgs} args - Arguments to create many SquareWebhookRunAttempts.
+     * @example
+     * // Create many SquareWebhookRunAttempts
+     * const squareWebhookRunAttempt = await prisma.squareWebhookRunAttempt.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SquareWebhookRunAttemptCreateManyArgs>(args?: SelectSubset<T, SquareWebhookRunAttemptCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many SquareWebhookRunAttempts and returns the data saved in the database.
+     * @param {SquareWebhookRunAttemptCreateManyAndReturnArgs} args - Arguments to create many SquareWebhookRunAttempts.
+     * @example
+     * // Create many SquareWebhookRunAttempts
+     * const squareWebhookRunAttempt = await prisma.squareWebhookRunAttempt.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many SquareWebhookRunAttempts and only return the `id`
+     * const squareWebhookRunAttemptWithIdOnly = await prisma.squareWebhookRunAttempt.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SquareWebhookRunAttemptCreateManyAndReturnArgs>(args?: SelectSubset<T, SquareWebhookRunAttemptCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SquareWebhookRunAttemptPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a SquareWebhookRunAttempt.
+     * @param {SquareWebhookRunAttemptDeleteArgs} args - Arguments to delete one SquareWebhookRunAttempt.
+     * @example
+     * // Delete one SquareWebhookRunAttempt
+     * const SquareWebhookRunAttempt = await prisma.squareWebhookRunAttempt.delete({
+     *   where: {
+     *     // ... filter to delete one SquareWebhookRunAttempt
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SquareWebhookRunAttemptDeleteArgs>(args: SelectSubset<T, SquareWebhookRunAttemptDeleteArgs<ExtArgs>>): Prisma__SquareWebhookRunAttemptClient<$Result.GetResult<Prisma.$SquareWebhookRunAttemptPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one SquareWebhookRunAttempt.
+     * @param {SquareWebhookRunAttemptUpdateArgs} args - Arguments to update one SquareWebhookRunAttempt.
+     * @example
+     * // Update one SquareWebhookRunAttempt
+     * const squareWebhookRunAttempt = await prisma.squareWebhookRunAttempt.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SquareWebhookRunAttemptUpdateArgs>(args: SelectSubset<T, SquareWebhookRunAttemptUpdateArgs<ExtArgs>>): Prisma__SquareWebhookRunAttemptClient<$Result.GetResult<Prisma.$SquareWebhookRunAttemptPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more SquareWebhookRunAttempts.
+     * @param {SquareWebhookRunAttemptDeleteManyArgs} args - Arguments to filter SquareWebhookRunAttempts to delete.
+     * @example
+     * // Delete a few SquareWebhookRunAttempts
+     * const { count } = await prisma.squareWebhookRunAttempt.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SquareWebhookRunAttemptDeleteManyArgs>(args?: SelectSubset<T, SquareWebhookRunAttemptDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SquareWebhookRunAttempts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SquareWebhookRunAttemptUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SquareWebhookRunAttempts
+     * const squareWebhookRunAttempt = await prisma.squareWebhookRunAttempt.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SquareWebhookRunAttemptUpdateManyArgs>(args: SelectSubset<T, SquareWebhookRunAttemptUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SquareWebhookRunAttempts and returns the data updated in the database.
+     * @param {SquareWebhookRunAttemptUpdateManyAndReturnArgs} args - Arguments to update many SquareWebhookRunAttempts.
+     * @example
+     * // Update many SquareWebhookRunAttempts
+     * const squareWebhookRunAttempt = await prisma.squareWebhookRunAttempt.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more SquareWebhookRunAttempts and only return the `id`
+     * const squareWebhookRunAttemptWithIdOnly = await prisma.squareWebhookRunAttempt.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends SquareWebhookRunAttemptUpdateManyAndReturnArgs>(args: SelectSubset<T, SquareWebhookRunAttemptUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SquareWebhookRunAttemptPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one SquareWebhookRunAttempt.
+     * @param {SquareWebhookRunAttemptUpsertArgs} args - Arguments to update or create a SquareWebhookRunAttempt.
+     * @example
+     * // Update or create a SquareWebhookRunAttempt
+     * const squareWebhookRunAttempt = await prisma.squareWebhookRunAttempt.upsert({
+     *   create: {
+     *     // ... data to create a SquareWebhookRunAttempt
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SquareWebhookRunAttempt we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SquareWebhookRunAttemptUpsertArgs>(args: SelectSubset<T, SquareWebhookRunAttemptUpsertArgs<ExtArgs>>): Prisma__SquareWebhookRunAttemptClient<$Result.GetResult<Prisma.$SquareWebhookRunAttemptPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of SquareWebhookRunAttempts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SquareWebhookRunAttemptCountArgs} args - Arguments to filter SquareWebhookRunAttempts to count.
+     * @example
+     * // Count the number of SquareWebhookRunAttempts
+     * const count = await prisma.squareWebhookRunAttempt.count({
+     *   where: {
+     *     // ... the filter for the SquareWebhookRunAttempts we want to count
+     *   }
+     * })
+    **/
+    count<T extends SquareWebhookRunAttemptCountArgs>(
+      args?: Subset<T, SquareWebhookRunAttemptCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SquareWebhookRunAttemptCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SquareWebhookRunAttempt.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SquareWebhookRunAttemptAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SquareWebhookRunAttemptAggregateArgs>(args: Subset<T, SquareWebhookRunAttemptAggregateArgs>): Prisma.PrismaPromise<GetSquareWebhookRunAttemptAggregateType<T>>
+
+    /**
+     * Group by SquareWebhookRunAttempt.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SquareWebhookRunAttemptGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SquareWebhookRunAttemptGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SquareWebhookRunAttemptGroupByArgs['orderBy'] }
+        : { orderBy?: SquareWebhookRunAttemptGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SquareWebhookRunAttemptGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSquareWebhookRunAttemptGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SquareWebhookRunAttempt model
+   */
+  readonly fields: SquareWebhookRunAttemptFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SquareWebhookRunAttempt.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SquareWebhookRunAttemptClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    run<T extends SquareWebhookRunDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SquareWebhookRunDefaultArgs<ExtArgs>>): Prisma__SquareWebhookRunClient<$Result.GetResult<Prisma.$SquareWebhookRunPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SquareWebhookRunAttempt model
+   */
+  interface SquareWebhookRunAttemptFieldRefs {
+    readonly id: FieldRef<"SquareWebhookRunAttempt", 'String'>
+    readonly createdAt: FieldRef<"SquareWebhookRunAttempt", 'DateTime'>
+    readonly runId: FieldRef<"SquareWebhookRunAttempt", 'String'>
+    readonly attemptNumber: FieldRef<"SquareWebhookRunAttempt", 'Int'>
+    readonly receivedAt: FieldRef<"SquareWebhookRunAttempt", 'DateTime'>
+    readonly finishedAt: FieldRef<"SquareWebhookRunAttempt", 'DateTime'>
+    readonly processingDurationMs: FieldRef<"SquareWebhookRunAttempt", 'Int'>
+    readonly httpStatusCode: FieldRef<"SquareWebhookRunAttempt", 'Int'>
+    readonly status: FieldRef<"SquareWebhookRunAttempt", 'SquareWebhookRunStatus'>
+    readonly action: FieldRef<"SquareWebhookRunAttempt", 'String'>
+    readonly reason: FieldRef<"SquareWebhookRunAttempt", 'String'>
+    readonly signatureVerified: FieldRef<"SquareWebhookRunAttempt", 'Boolean'>
+    readonly errorMessage: FieldRef<"SquareWebhookRunAttempt", 'String'>
+    readonly requestHeaders: FieldRef<"SquareWebhookRunAttempt", 'Json'>
+    readonly webhookPayload: FieldRef<"SquareWebhookRunAttempt", 'Json'>
+    readonly squareOrderPayload: FieldRef<"SquareWebhookRunAttempt", 'Json'>
+    readonly responsePayload: FieldRef<"SquareWebhookRunAttempt", 'Json'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SquareWebhookRunAttempt findUnique
+   */
+  export type SquareWebhookRunAttemptFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareWebhookRunAttempt
+     */
+    select?: SquareWebhookRunAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquareWebhookRunAttempt
+     */
+    omit?: SquareWebhookRunAttemptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SquareWebhookRunAttemptInclude<ExtArgs> | null
+    /**
+     * Filter, which SquareWebhookRunAttempt to fetch.
+     */
+    where: SquareWebhookRunAttemptWhereUniqueInput
+  }
+
+  /**
+   * SquareWebhookRunAttempt findUniqueOrThrow
+   */
+  export type SquareWebhookRunAttemptFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareWebhookRunAttempt
+     */
+    select?: SquareWebhookRunAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquareWebhookRunAttempt
+     */
+    omit?: SquareWebhookRunAttemptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SquareWebhookRunAttemptInclude<ExtArgs> | null
+    /**
+     * Filter, which SquareWebhookRunAttempt to fetch.
+     */
+    where: SquareWebhookRunAttemptWhereUniqueInput
+  }
+
+  /**
+   * SquareWebhookRunAttempt findFirst
+   */
+  export type SquareWebhookRunAttemptFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareWebhookRunAttempt
+     */
+    select?: SquareWebhookRunAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquareWebhookRunAttempt
+     */
+    omit?: SquareWebhookRunAttemptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SquareWebhookRunAttemptInclude<ExtArgs> | null
+    /**
+     * Filter, which SquareWebhookRunAttempt to fetch.
+     */
+    where?: SquareWebhookRunAttemptWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SquareWebhookRunAttempts to fetch.
+     */
+    orderBy?: SquareWebhookRunAttemptOrderByWithRelationInput | SquareWebhookRunAttemptOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SquareWebhookRunAttempts.
+     */
+    cursor?: SquareWebhookRunAttemptWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SquareWebhookRunAttempts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SquareWebhookRunAttempts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SquareWebhookRunAttempts.
+     */
+    distinct?: SquareWebhookRunAttemptScalarFieldEnum | SquareWebhookRunAttemptScalarFieldEnum[]
+  }
+
+  /**
+   * SquareWebhookRunAttempt findFirstOrThrow
+   */
+  export type SquareWebhookRunAttemptFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareWebhookRunAttempt
+     */
+    select?: SquareWebhookRunAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquareWebhookRunAttempt
+     */
+    omit?: SquareWebhookRunAttemptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SquareWebhookRunAttemptInclude<ExtArgs> | null
+    /**
+     * Filter, which SquareWebhookRunAttempt to fetch.
+     */
+    where?: SquareWebhookRunAttemptWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SquareWebhookRunAttempts to fetch.
+     */
+    orderBy?: SquareWebhookRunAttemptOrderByWithRelationInput | SquareWebhookRunAttemptOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SquareWebhookRunAttempts.
+     */
+    cursor?: SquareWebhookRunAttemptWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SquareWebhookRunAttempts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SquareWebhookRunAttempts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SquareWebhookRunAttempts.
+     */
+    distinct?: SquareWebhookRunAttemptScalarFieldEnum | SquareWebhookRunAttemptScalarFieldEnum[]
+  }
+
+  /**
+   * SquareWebhookRunAttempt findMany
+   */
+  export type SquareWebhookRunAttemptFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareWebhookRunAttempt
+     */
+    select?: SquareWebhookRunAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquareWebhookRunAttempt
+     */
+    omit?: SquareWebhookRunAttemptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SquareWebhookRunAttemptInclude<ExtArgs> | null
+    /**
+     * Filter, which SquareWebhookRunAttempts to fetch.
+     */
+    where?: SquareWebhookRunAttemptWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SquareWebhookRunAttempts to fetch.
+     */
+    orderBy?: SquareWebhookRunAttemptOrderByWithRelationInput | SquareWebhookRunAttemptOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SquareWebhookRunAttempts.
+     */
+    cursor?: SquareWebhookRunAttemptWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SquareWebhookRunAttempts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SquareWebhookRunAttempts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SquareWebhookRunAttempts.
+     */
+    distinct?: SquareWebhookRunAttemptScalarFieldEnum | SquareWebhookRunAttemptScalarFieldEnum[]
+  }
+
+  /**
+   * SquareWebhookRunAttempt create
+   */
+  export type SquareWebhookRunAttemptCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareWebhookRunAttempt
+     */
+    select?: SquareWebhookRunAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquareWebhookRunAttempt
+     */
+    omit?: SquareWebhookRunAttemptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SquareWebhookRunAttemptInclude<ExtArgs> | null
+    /**
+     * The data needed to create a SquareWebhookRunAttempt.
+     */
+    data: XOR<SquareWebhookRunAttemptCreateInput, SquareWebhookRunAttemptUncheckedCreateInput>
+  }
+
+  /**
+   * SquareWebhookRunAttempt createMany
+   */
+  export type SquareWebhookRunAttemptCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SquareWebhookRunAttempts.
+     */
+    data: SquareWebhookRunAttemptCreateManyInput | SquareWebhookRunAttemptCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SquareWebhookRunAttempt createManyAndReturn
+   */
+  export type SquareWebhookRunAttemptCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareWebhookRunAttempt
+     */
+    select?: SquareWebhookRunAttemptSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquareWebhookRunAttempt
+     */
+    omit?: SquareWebhookRunAttemptOmit<ExtArgs> | null
+    /**
+     * The data used to create many SquareWebhookRunAttempts.
+     */
+    data: SquareWebhookRunAttemptCreateManyInput | SquareWebhookRunAttemptCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SquareWebhookRunAttemptIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SquareWebhookRunAttempt update
+   */
+  export type SquareWebhookRunAttemptUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareWebhookRunAttempt
+     */
+    select?: SquareWebhookRunAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquareWebhookRunAttempt
+     */
+    omit?: SquareWebhookRunAttemptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SquareWebhookRunAttemptInclude<ExtArgs> | null
+    /**
+     * The data needed to update a SquareWebhookRunAttempt.
+     */
+    data: XOR<SquareWebhookRunAttemptUpdateInput, SquareWebhookRunAttemptUncheckedUpdateInput>
+    /**
+     * Choose, which SquareWebhookRunAttempt to update.
+     */
+    where: SquareWebhookRunAttemptWhereUniqueInput
+  }
+
+  /**
+   * SquareWebhookRunAttempt updateMany
+   */
+  export type SquareWebhookRunAttemptUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SquareWebhookRunAttempts.
+     */
+    data: XOR<SquareWebhookRunAttemptUpdateManyMutationInput, SquareWebhookRunAttemptUncheckedUpdateManyInput>
+    /**
+     * Filter which SquareWebhookRunAttempts to update
+     */
+    where?: SquareWebhookRunAttemptWhereInput
+    /**
+     * Limit how many SquareWebhookRunAttempts to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SquareWebhookRunAttempt updateManyAndReturn
+   */
+  export type SquareWebhookRunAttemptUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareWebhookRunAttempt
+     */
+    select?: SquareWebhookRunAttemptSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquareWebhookRunAttempt
+     */
+    omit?: SquareWebhookRunAttemptOmit<ExtArgs> | null
+    /**
+     * The data used to update SquareWebhookRunAttempts.
+     */
+    data: XOR<SquareWebhookRunAttemptUpdateManyMutationInput, SquareWebhookRunAttemptUncheckedUpdateManyInput>
+    /**
+     * Filter which SquareWebhookRunAttempts to update
+     */
+    where?: SquareWebhookRunAttemptWhereInput
+    /**
+     * Limit how many SquareWebhookRunAttempts to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SquareWebhookRunAttemptIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SquareWebhookRunAttempt upsert
+   */
+  export type SquareWebhookRunAttemptUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareWebhookRunAttempt
+     */
+    select?: SquareWebhookRunAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquareWebhookRunAttempt
+     */
+    omit?: SquareWebhookRunAttemptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SquareWebhookRunAttemptInclude<ExtArgs> | null
+    /**
+     * The filter to search for the SquareWebhookRunAttempt to update in case it exists.
+     */
+    where: SquareWebhookRunAttemptWhereUniqueInput
+    /**
+     * In case the SquareWebhookRunAttempt found by the `where` argument doesn't exist, create a new SquareWebhookRunAttempt with this data.
+     */
+    create: XOR<SquareWebhookRunAttemptCreateInput, SquareWebhookRunAttemptUncheckedCreateInput>
+    /**
+     * In case the SquareWebhookRunAttempt was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SquareWebhookRunAttemptUpdateInput, SquareWebhookRunAttemptUncheckedUpdateInput>
+  }
+
+  /**
+   * SquareWebhookRunAttempt delete
+   */
+  export type SquareWebhookRunAttemptDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareWebhookRunAttempt
+     */
+    select?: SquareWebhookRunAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquareWebhookRunAttempt
+     */
+    omit?: SquareWebhookRunAttemptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SquareWebhookRunAttemptInclude<ExtArgs> | null
+    /**
+     * Filter which SquareWebhookRunAttempt to delete.
+     */
+    where: SquareWebhookRunAttemptWhereUniqueInput
+  }
+
+  /**
+   * SquareWebhookRunAttempt deleteMany
+   */
+  export type SquareWebhookRunAttemptDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SquareWebhookRunAttempts to delete
+     */
+    where?: SquareWebhookRunAttemptWhereInput
+    /**
+     * Limit how many SquareWebhookRunAttempts to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * SquareWebhookRunAttempt without action
+   */
+  export type SquareWebhookRunAttemptDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareWebhookRunAttempt
+     */
+    select?: SquareWebhookRunAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquareWebhookRunAttempt
+     */
+    omit?: SquareWebhookRunAttemptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SquareWebhookRunAttemptInclude<ExtArgs> | null
   }
 
 
@@ -46918,6 +51381,1105 @@ export namespace Prisma {
 
 
   /**
+   * Model DispatchWhatsAppJob
+   */
+
+  export type AggregateDispatchWhatsAppJob = {
+    _count: DispatchWhatsAppJobCountAggregateOutputType | null
+    _avg: DispatchWhatsAppJobAvgAggregateOutputType | null
+    _sum: DispatchWhatsAppJobSumAggregateOutputType | null
+    _min: DispatchWhatsAppJobMinAggregateOutputType | null
+    _max: DispatchWhatsAppJobMaxAggregateOutputType | null
+  }
+
+  export type DispatchWhatsAppJobAvgAggregateOutputType = {
+    attempts: number | null
+  }
+
+  export type DispatchWhatsAppJobSumAggregateOutputType = {
+    attempts: number | null
+  }
+
+  export type DispatchWhatsAppJobMinAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    status: $Enums.DispatchWhatsAppJobStatus | null
+    attempts: number | null
+    availableAt: Date | null
+    processingStartedAt: Date | null
+    completedAt: Date | null
+    lastError: string | null
+    orderId: string | null
+    kind: string | null
+  }
+
+  export type DispatchWhatsAppJobMaxAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    status: $Enums.DispatchWhatsAppJobStatus | null
+    attempts: number | null
+    availableAt: Date | null
+    processingStartedAt: Date | null
+    completedAt: Date | null
+    lastError: string | null
+    orderId: string | null
+    kind: string | null
+  }
+
+  export type DispatchWhatsAppJobCountAggregateOutputType = {
+    id: number
+    createdAt: number
+    status: number
+    attempts: number
+    availableAt: number
+    processingStartedAt: number
+    completedAt: number
+    lastError: number
+    orderId: number
+    kind: number
+    _all: number
+  }
+
+
+  export type DispatchWhatsAppJobAvgAggregateInputType = {
+    attempts?: true
+  }
+
+  export type DispatchWhatsAppJobSumAggregateInputType = {
+    attempts?: true
+  }
+
+  export type DispatchWhatsAppJobMinAggregateInputType = {
+    id?: true
+    createdAt?: true
+    status?: true
+    attempts?: true
+    availableAt?: true
+    processingStartedAt?: true
+    completedAt?: true
+    lastError?: true
+    orderId?: true
+    kind?: true
+  }
+
+  export type DispatchWhatsAppJobMaxAggregateInputType = {
+    id?: true
+    createdAt?: true
+    status?: true
+    attempts?: true
+    availableAt?: true
+    processingStartedAt?: true
+    completedAt?: true
+    lastError?: true
+    orderId?: true
+    kind?: true
+  }
+
+  export type DispatchWhatsAppJobCountAggregateInputType = {
+    id?: true
+    createdAt?: true
+    status?: true
+    attempts?: true
+    availableAt?: true
+    processingStartedAt?: true
+    completedAt?: true
+    lastError?: true
+    orderId?: true
+    kind?: true
+    _all?: true
+  }
+
+  export type DispatchWhatsAppJobAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DispatchWhatsAppJob to aggregate.
+     */
+    where?: DispatchWhatsAppJobWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DispatchWhatsAppJobs to fetch.
+     */
+    orderBy?: DispatchWhatsAppJobOrderByWithRelationInput | DispatchWhatsAppJobOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: DispatchWhatsAppJobWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DispatchWhatsAppJobs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DispatchWhatsAppJobs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned DispatchWhatsAppJobs
+    **/
+    _count?: true | DispatchWhatsAppJobCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: DispatchWhatsAppJobAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: DispatchWhatsAppJobSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: DispatchWhatsAppJobMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: DispatchWhatsAppJobMaxAggregateInputType
+  }
+
+  export type GetDispatchWhatsAppJobAggregateType<T extends DispatchWhatsAppJobAggregateArgs> = {
+        [P in keyof T & keyof AggregateDispatchWhatsAppJob]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDispatchWhatsAppJob[P]>
+      : GetScalarType<T[P], AggregateDispatchWhatsAppJob[P]>
+  }
+
+
+
+
+  export type DispatchWhatsAppJobGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DispatchWhatsAppJobWhereInput
+    orderBy?: DispatchWhatsAppJobOrderByWithAggregationInput | DispatchWhatsAppJobOrderByWithAggregationInput[]
+    by: DispatchWhatsAppJobScalarFieldEnum[] | DispatchWhatsAppJobScalarFieldEnum
+    having?: DispatchWhatsAppJobScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DispatchWhatsAppJobCountAggregateInputType | true
+    _avg?: DispatchWhatsAppJobAvgAggregateInputType
+    _sum?: DispatchWhatsAppJobSumAggregateInputType
+    _min?: DispatchWhatsAppJobMinAggregateInputType
+    _max?: DispatchWhatsAppJobMaxAggregateInputType
+  }
+
+  export type DispatchWhatsAppJobGroupByOutputType = {
+    id: string
+    createdAt: Date
+    status: $Enums.DispatchWhatsAppJobStatus
+    attempts: number
+    availableAt: Date
+    processingStartedAt: Date | null
+    completedAt: Date | null
+    lastError: string | null
+    orderId: string
+    kind: string
+    _count: DispatchWhatsAppJobCountAggregateOutputType | null
+    _avg: DispatchWhatsAppJobAvgAggregateOutputType | null
+    _sum: DispatchWhatsAppJobSumAggregateOutputType | null
+    _min: DispatchWhatsAppJobMinAggregateOutputType | null
+    _max: DispatchWhatsAppJobMaxAggregateOutputType | null
+  }
+
+  type GetDispatchWhatsAppJobGroupByPayload<T extends DispatchWhatsAppJobGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<DispatchWhatsAppJobGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DispatchWhatsAppJobGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DispatchWhatsAppJobGroupByOutputType[P]>
+            : GetScalarType<T[P], DispatchWhatsAppJobGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DispatchWhatsAppJobSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    status?: boolean
+    attempts?: boolean
+    availableAt?: boolean
+    processingStartedAt?: boolean
+    completedAt?: boolean
+    lastError?: boolean
+    orderId?: boolean
+    kind?: boolean
+  }, ExtArgs["result"]["dispatchWhatsAppJob"]>
+
+  export type DispatchWhatsAppJobSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    status?: boolean
+    attempts?: boolean
+    availableAt?: boolean
+    processingStartedAt?: boolean
+    completedAt?: boolean
+    lastError?: boolean
+    orderId?: boolean
+    kind?: boolean
+  }, ExtArgs["result"]["dispatchWhatsAppJob"]>
+
+  export type DispatchWhatsAppJobSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    status?: boolean
+    attempts?: boolean
+    availableAt?: boolean
+    processingStartedAt?: boolean
+    completedAt?: boolean
+    lastError?: boolean
+    orderId?: boolean
+    kind?: boolean
+  }, ExtArgs["result"]["dispatchWhatsAppJob"]>
+
+  export type DispatchWhatsAppJobSelectScalar = {
+    id?: boolean
+    createdAt?: boolean
+    status?: boolean
+    attempts?: boolean
+    availableAt?: boolean
+    processingStartedAt?: boolean
+    completedAt?: boolean
+    lastError?: boolean
+    orderId?: boolean
+    kind?: boolean
+  }
+
+  export type DispatchWhatsAppJobOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "status" | "attempts" | "availableAt" | "processingStartedAt" | "completedAt" | "lastError" | "orderId" | "kind", ExtArgs["result"]["dispatchWhatsAppJob"]>
+
+  export type $DispatchWhatsAppJobPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "DispatchWhatsAppJob"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      createdAt: Date
+      status: $Enums.DispatchWhatsAppJobStatus
+      attempts: number
+      availableAt: Date
+      processingStartedAt: Date | null
+      completedAt: Date | null
+      lastError: string | null
+      orderId: string
+      kind: string
+    }, ExtArgs["result"]["dispatchWhatsAppJob"]>
+    composites: {}
+  }
+
+  type DispatchWhatsAppJobGetPayload<S extends boolean | null | undefined | DispatchWhatsAppJobDefaultArgs> = $Result.GetResult<Prisma.$DispatchWhatsAppJobPayload, S>
+
+  type DispatchWhatsAppJobCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<DispatchWhatsAppJobFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: DispatchWhatsAppJobCountAggregateInputType | true
+    }
+
+  export interface DispatchWhatsAppJobDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['DispatchWhatsAppJob'], meta: { name: 'DispatchWhatsAppJob' } }
+    /**
+     * Find zero or one DispatchWhatsAppJob that matches the filter.
+     * @param {DispatchWhatsAppJobFindUniqueArgs} args - Arguments to find a DispatchWhatsAppJob
+     * @example
+     * // Get one DispatchWhatsAppJob
+     * const dispatchWhatsAppJob = await prisma.dispatchWhatsAppJob.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends DispatchWhatsAppJobFindUniqueArgs>(args: SelectSubset<T, DispatchWhatsAppJobFindUniqueArgs<ExtArgs>>): Prisma__DispatchWhatsAppJobClient<$Result.GetResult<Prisma.$DispatchWhatsAppJobPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one DispatchWhatsAppJob that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {DispatchWhatsAppJobFindUniqueOrThrowArgs} args - Arguments to find a DispatchWhatsAppJob
+     * @example
+     * // Get one DispatchWhatsAppJob
+     * const dispatchWhatsAppJob = await prisma.dispatchWhatsAppJob.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends DispatchWhatsAppJobFindUniqueOrThrowArgs>(args: SelectSubset<T, DispatchWhatsAppJobFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DispatchWhatsAppJobClient<$Result.GetResult<Prisma.$DispatchWhatsAppJobPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DispatchWhatsAppJob that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DispatchWhatsAppJobFindFirstArgs} args - Arguments to find a DispatchWhatsAppJob
+     * @example
+     * // Get one DispatchWhatsAppJob
+     * const dispatchWhatsAppJob = await prisma.dispatchWhatsAppJob.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends DispatchWhatsAppJobFindFirstArgs>(args?: SelectSubset<T, DispatchWhatsAppJobFindFirstArgs<ExtArgs>>): Prisma__DispatchWhatsAppJobClient<$Result.GetResult<Prisma.$DispatchWhatsAppJobPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DispatchWhatsAppJob that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DispatchWhatsAppJobFindFirstOrThrowArgs} args - Arguments to find a DispatchWhatsAppJob
+     * @example
+     * // Get one DispatchWhatsAppJob
+     * const dispatchWhatsAppJob = await prisma.dispatchWhatsAppJob.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends DispatchWhatsAppJobFindFirstOrThrowArgs>(args?: SelectSubset<T, DispatchWhatsAppJobFindFirstOrThrowArgs<ExtArgs>>): Prisma__DispatchWhatsAppJobClient<$Result.GetResult<Prisma.$DispatchWhatsAppJobPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more DispatchWhatsAppJobs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DispatchWhatsAppJobFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all DispatchWhatsAppJobs
+     * const dispatchWhatsAppJobs = await prisma.dispatchWhatsAppJob.findMany()
+     * 
+     * // Get first 10 DispatchWhatsAppJobs
+     * const dispatchWhatsAppJobs = await prisma.dispatchWhatsAppJob.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const dispatchWhatsAppJobWithIdOnly = await prisma.dispatchWhatsAppJob.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends DispatchWhatsAppJobFindManyArgs>(args?: SelectSubset<T, DispatchWhatsAppJobFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DispatchWhatsAppJobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a DispatchWhatsAppJob.
+     * @param {DispatchWhatsAppJobCreateArgs} args - Arguments to create a DispatchWhatsAppJob.
+     * @example
+     * // Create one DispatchWhatsAppJob
+     * const DispatchWhatsAppJob = await prisma.dispatchWhatsAppJob.create({
+     *   data: {
+     *     // ... data to create a DispatchWhatsAppJob
+     *   }
+     * })
+     * 
+     */
+    create<T extends DispatchWhatsAppJobCreateArgs>(args: SelectSubset<T, DispatchWhatsAppJobCreateArgs<ExtArgs>>): Prisma__DispatchWhatsAppJobClient<$Result.GetResult<Prisma.$DispatchWhatsAppJobPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many DispatchWhatsAppJobs.
+     * @param {DispatchWhatsAppJobCreateManyArgs} args - Arguments to create many DispatchWhatsAppJobs.
+     * @example
+     * // Create many DispatchWhatsAppJobs
+     * const dispatchWhatsAppJob = await prisma.dispatchWhatsAppJob.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends DispatchWhatsAppJobCreateManyArgs>(args?: SelectSubset<T, DispatchWhatsAppJobCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many DispatchWhatsAppJobs and returns the data saved in the database.
+     * @param {DispatchWhatsAppJobCreateManyAndReturnArgs} args - Arguments to create many DispatchWhatsAppJobs.
+     * @example
+     * // Create many DispatchWhatsAppJobs
+     * const dispatchWhatsAppJob = await prisma.dispatchWhatsAppJob.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many DispatchWhatsAppJobs and only return the `id`
+     * const dispatchWhatsAppJobWithIdOnly = await prisma.dispatchWhatsAppJob.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends DispatchWhatsAppJobCreateManyAndReturnArgs>(args?: SelectSubset<T, DispatchWhatsAppJobCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DispatchWhatsAppJobPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a DispatchWhatsAppJob.
+     * @param {DispatchWhatsAppJobDeleteArgs} args - Arguments to delete one DispatchWhatsAppJob.
+     * @example
+     * // Delete one DispatchWhatsAppJob
+     * const DispatchWhatsAppJob = await prisma.dispatchWhatsAppJob.delete({
+     *   where: {
+     *     // ... filter to delete one DispatchWhatsAppJob
+     *   }
+     * })
+     * 
+     */
+    delete<T extends DispatchWhatsAppJobDeleteArgs>(args: SelectSubset<T, DispatchWhatsAppJobDeleteArgs<ExtArgs>>): Prisma__DispatchWhatsAppJobClient<$Result.GetResult<Prisma.$DispatchWhatsAppJobPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one DispatchWhatsAppJob.
+     * @param {DispatchWhatsAppJobUpdateArgs} args - Arguments to update one DispatchWhatsAppJob.
+     * @example
+     * // Update one DispatchWhatsAppJob
+     * const dispatchWhatsAppJob = await prisma.dispatchWhatsAppJob.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends DispatchWhatsAppJobUpdateArgs>(args: SelectSubset<T, DispatchWhatsAppJobUpdateArgs<ExtArgs>>): Prisma__DispatchWhatsAppJobClient<$Result.GetResult<Prisma.$DispatchWhatsAppJobPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more DispatchWhatsAppJobs.
+     * @param {DispatchWhatsAppJobDeleteManyArgs} args - Arguments to filter DispatchWhatsAppJobs to delete.
+     * @example
+     * // Delete a few DispatchWhatsAppJobs
+     * const { count } = await prisma.dispatchWhatsAppJob.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends DispatchWhatsAppJobDeleteManyArgs>(args?: SelectSubset<T, DispatchWhatsAppJobDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DispatchWhatsAppJobs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DispatchWhatsAppJobUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many DispatchWhatsAppJobs
+     * const dispatchWhatsAppJob = await prisma.dispatchWhatsAppJob.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends DispatchWhatsAppJobUpdateManyArgs>(args: SelectSubset<T, DispatchWhatsAppJobUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DispatchWhatsAppJobs and returns the data updated in the database.
+     * @param {DispatchWhatsAppJobUpdateManyAndReturnArgs} args - Arguments to update many DispatchWhatsAppJobs.
+     * @example
+     * // Update many DispatchWhatsAppJobs
+     * const dispatchWhatsAppJob = await prisma.dispatchWhatsAppJob.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more DispatchWhatsAppJobs and only return the `id`
+     * const dispatchWhatsAppJobWithIdOnly = await prisma.dispatchWhatsAppJob.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends DispatchWhatsAppJobUpdateManyAndReturnArgs>(args: SelectSubset<T, DispatchWhatsAppJobUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DispatchWhatsAppJobPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one DispatchWhatsAppJob.
+     * @param {DispatchWhatsAppJobUpsertArgs} args - Arguments to update or create a DispatchWhatsAppJob.
+     * @example
+     * // Update or create a DispatchWhatsAppJob
+     * const dispatchWhatsAppJob = await prisma.dispatchWhatsAppJob.upsert({
+     *   create: {
+     *     // ... data to create a DispatchWhatsAppJob
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the DispatchWhatsAppJob we want to update
+     *   }
+     * })
+     */
+    upsert<T extends DispatchWhatsAppJobUpsertArgs>(args: SelectSubset<T, DispatchWhatsAppJobUpsertArgs<ExtArgs>>): Prisma__DispatchWhatsAppJobClient<$Result.GetResult<Prisma.$DispatchWhatsAppJobPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of DispatchWhatsAppJobs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DispatchWhatsAppJobCountArgs} args - Arguments to filter DispatchWhatsAppJobs to count.
+     * @example
+     * // Count the number of DispatchWhatsAppJobs
+     * const count = await prisma.dispatchWhatsAppJob.count({
+     *   where: {
+     *     // ... the filter for the DispatchWhatsAppJobs we want to count
+     *   }
+     * })
+    **/
+    count<T extends DispatchWhatsAppJobCountArgs>(
+      args?: Subset<T, DispatchWhatsAppJobCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DispatchWhatsAppJobCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a DispatchWhatsAppJob.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DispatchWhatsAppJobAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DispatchWhatsAppJobAggregateArgs>(args: Subset<T, DispatchWhatsAppJobAggregateArgs>): Prisma.PrismaPromise<GetDispatchWhatsAppJobAggregateType<T>>
+
+    /**
+     * Group by DispatchWhatsAppJob.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DispatchWhatsAppJobGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends DispatchWhatsAppJobGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DispatchWhatsAppJobGroupByArgs['orderBy'] }
+        : { orderBy?: DispatchWhatsAppJobGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DispatchWhatsAppJobGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDispatchWhatsAppJobGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the DispatchWhatsAppJob model
+   */
+  readonly fields: DispatchWhatsAppJobFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for DispatchWhatsAppJob.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__DispatchWhatsAppJobClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the DispatchWhatsAppJob model
+   */
+  interface DispatchWhatsAppJobFieldRefs {
+    readonly id: FieldRef<"DispatchWhatsAppJob", 'String'>
+    readonly createdAt: FieldRef<"DispatchWhatsAppJob", 'DateTime'>
+    readonly status: FieldRef<"DispatchWhatsAppJob", 'DispatchWhatsAppJobStatus'>
+    readonly attempts: FieldRef<"DispatchWhatsAppJob", 'Int'>
+    readonly availableAt: FieldRef<"DispatchWhatsAppJob", 'DateTime'>
+    readonly processingStartedAt: FieldRef<"DispatchWhatsAppJob", 'DateTime'>
+    readonly completedAt: FieldRef<"DispatchWhatsAppJob", 'DateTime'>
+    readonly lastError: FieldRef<"DispatchWhatsAppJob", 'String'>
+    readonly orderId: FieldRef<"DispatchWhatsAppJob", 'String'>
+    readonly kind: FieldRef<"DispatchWhatsAppJob", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * DispatchWhatsAppJob findUnique
+   */
+  export type DispatchWhatsAppJobFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DispatchWhatsAppJob
+     */
+    select?: DispatchWhatsAppJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DispatchWhatsAppJob
+     */
+    omit?: DispatchWhatsAppJobOmit<ExtArgs> | null
+    /**
+     * Filter, which DispatchWhatsAppJob to fetch.
+     */
+    where: DispatchWhatsAppJobWhereUniqueInput
+  }
+
+  /**
+   * DispatchWhatsAppJob findUniqueOrThrow
+   */
+  export type DispatchWhatsAppJobFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DispatchWhatsAppJob
+     */
+    select?: DispatchWhatsAppJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DispatchWhatsAppJob
+     */
+    omit?: DispatchWhatsAppJobOmit<ExtArgs> | null
+    /**
+     * Filter, which DispatchWhatsAppJob to fetch.
+     */
+    where: DispatchWhatsAppJobWhereUniqueInput
+  }
+
+  /**
+   * DispatchWhatsAppJob findFirst
+   */
+  export type DispatchWhatsAppJobFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DispatchWhatsAppJob
+     */
+    select?: DispatchWhatsAppJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DispatchWhatsAppJob
+     */
+    omit?: DispatchWhatsAppJobOmit<ExtArgs> | null
+    /**
+     * Filter, which DispatchWhatsAppJob to fetch.
+     */
+    where?: DispatchWhatsAppJobWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DispatchWhatsAppJobs to fetch.
+     */
+    orderBy?: DispatchWhatsAppJobOrderByWithRelationInput | DispatchWhatsAppJobOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DispatchWhatsAppJobs.
+     */
+    cursor?: DispatchWhatsAppJobWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DispatchWhatsAppJobs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DispatchWhatsAppJobs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DispatchWhatsAppJobs.
+     */
+    distinct?: DispatchWhatsAppJobScalarFieldEnum | DispatchWhatsAppJobScalarFieldEnum[]
+  }
+
+  /**
+   * DispatchWhatsAppJob findFirstOrThrow
+   */
+  export type DispatchWhatsAppJobFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DispatchWhatsAppJob
+     */
+    select?: DispatchWhatsAppJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DispatchWhatsAppJob
+     */
+    omit?: DispatchWhatsAppJobOmit<ExtArgs> | null
+    /**
+     * Filter, which DispatchWhatsAppJob to fetch.
+     */
+    where?: DispatchWhatsAppJobWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DispatchWhatsAppJobs to fetch.
+     */
+    orderBy?: DispatchWhatsAppJobOrderByWithRelationInput | DispatchWhatsAppJobOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DispatchWhatsAppJobs.
+     */
+    cursor?: DispatchWhatsAppJobWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DispatchWhatsAppJobs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DispatchWhatsAppJobs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DispatchWhatsAppJobs.
+     */
+    distinct?: DispatchWhatsAppJobScalarFieldEnum | DispatchWhatsAppJobScalarFieldEnum[]
+  }
+
+  /**
+   * DispatchWhatsAppJob findMany
+   */
+  export type DispatchWhatsAppJobFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DispatchWhatsAppJob
+     */
+    select?: DispatchWhatsAppJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DispatchWhatsAppJob
+     */
+    omit?: DispatchWhatsAppJobOmit<ExtArgs> | null
+    /**
+     * Filter, which DispatchWhatsAppJobs to fetch.
+     */
+    where?: DispatchWhatsAppJobWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DispatchWhatsAppJobs to fetch.
+     */
+    orderBy?: DispatchWhatsAppJobOrderByWithRelationInput | DispatchWhatsAppJobOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing DispatchWhatsAppJobs.
+     */
+    cursor?: DispatchWhatsAppJobWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DispatchWhatsAppJobs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DispatchWhatsAppJobs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DispatchWhatsAppJobs.
+     */
+    distinct?: DispatchWhatsAppJobScalarFieldEnum | DispatchWhatsAppJobScalarFieldEnum[]
+  }
+
+  /**
+   * DispatchWhatsAppJob create
+   */
+  export type DispatchWhatsAppJobCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DispatchWhatsAppJob
+     */
+    select?: DispatchWhatsAppJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DispatchWhatsAppJob
+     */
+    omit?: DispatchWhatsAppJobOmit<ExtArgs> | null
+    /**
+     * The data needed to create a DispatchWhatsAppJob.
+     */
+    data: XOR<DispatchWhatsAppJobCreateInput, DispatchWhatsAppJobUncheckedCreateInput>
+  }
+
+  /**
+   * DispatchWhatsAppJob createMany
+   */
+  export type DispatchWhatsAppJobCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many DispatchWhatsAppJobs.
+     */
+    data: DispatchWhatsAppJobCreateManyInput | DispatchWhatsAppJobCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * DispatchWhatsAppJob createManyAndReturn
+   */
+  export type DispatchWhatsAppJobCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DispatchWhatsAppJob
+     */
+    select?: DispatchWhatsAppJobSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DispatchWhatsAppJob
+     */
+    omit?: DispatchWhatsAppJobOmit<ExtArgs> | null
+    /**
+     * The data used to create many DispatchWhatsAppJobs.
+     */
+    data: DispatchWhatsAppJobCreateManyInput | DispatchWhatsAppJobCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * DispatchWhatsAppJob update
+   */
+  export type DispatchWhatsAppJobUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DispatchWhatsAppJob
+     */
+    select?: DispatchWhatsAppJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DispatchWhatsAppJob
+     */
+    omit?: DispatchWhatsAppJobOmit<ExtArgs> | null
+    /**
+     * The data needed to update a DispatchWhatsAppJob.
+     */
+    data: XOR<DispatchWhatsAppJobUpdateInput, DispatchWhatsAppJobUncheckedUpdateInput>
+    /**
+     * Choose, which DispatchWhatsAppJob to update.
+     */
+    where: DispatchWhatsAppJobWhereUniqueInput
+  }
+
+  /**
+   * DispatchWhatsAppJob updateMany
+   */
+  export type DispatchWhatsAppJobUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update DispatchWhatsAppJobs.
+     */
+    data: XOR<DispatchWhatsAppJobUpdateManyMutationInput, DispatchWhatsAppJobUncheckedUpdateManyInput>
+    /**
+     * Filter which DispatchWhatsAppJobs to update
+     */
+    where?: DispatchWhatsAppJobWhereInput
+    /**
+     * Limit how many DispatchWhatsAppJobs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * DispatchWhatsAppJob updateManyAndReturn
+   */
+  export type DispatchWhatsAppJobUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DispatchWhatsAppJob
+     */
+    select?: DispatchWhatsAppJobSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DispatchWhatsAppJob
+     */
+    omit?: DispatchWhatsAppJobOmit<ExtArgs> | null
+    /**
+     * The data used to update DispatchWhatsAppJobs.
+     */
+    data: XOR<DispatchWhatsAppJobUpdateManyMutationInput, DispatchWhatsAppJobUncheckedUpdateManyInput>
+    /**
+     * Filter which DispatchWhatsAppJobs to update
+     */
+    where?: DispatchWhatsAppJobWhereInput
+    /**
+     * Limit how many DispatchWhatsAppJobs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * DispatchWhatsAppJob upsert
+   */
+  export type DispatchWhatsAppJobUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DispatchWhatsAppJob
+     */
+    select?: DispatchWhatsAppJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DispatchWhatsAppJob
+     */
+    omit?: DispatchWhatsAppJobOmit<ExtArgs> | null
+    /**
+     * The filter to search for the DispatchWhatsAppJob to update in case it exists.
+     */
+    where: DispatchWhatsAppJobWhereUniqueInput
+    /**
+     * In case the DispatchWhatsAppJob found by the `where` argument doesn't exist, create a new DispatchWhatsAppJob with this data.
+     */
+    create: XOR<DispatchWhatsAppJobCreateInput, DispatchWhatsAppJobUncheckedCreateInput>
+    /**
+     * In case the DispatchWhatsAppJob was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DispatchWhatsAppJobUpdateInput, DispatchWhatsAppJobUncheckedUpdateInput>
+  }
+
+  /**
+   * DispatchWhatsAppJob delete
+   */
+  export type DispatchWhatsAppJobDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DispatchWhatsAppJob
+     */
+    select?: DispatchWhatsAppJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DispatchWhatsAppJob
+     */
+    omit?: DispatchWhatsAppJobOmit<ExtArgs> | null
+    /**
+     * Filter which DispatchWhatsAppJob to delete.
+     */
+    where: DispatchWhatsAppJobWhereUniqueInput
+  }
+
+  /**
+   * DispatchWhatsAppJob deleteMany
+   */
+  export type DispatchWhatsAppJobDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DispatchWhatsAppJobs to delete
+     */
+    where?: DispatchWhatsAppJobWhereInput
+    /**
+     * Limit how many DispatchWhatsAppJobs to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * DispatchWhatsAppJob without action
+   */
+  export type DispatchWhatsAppJobDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DispatchWhatsAppJob
+     */
+    select?: DispatchWhatsAppJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DispatchWhatsAppJob
+     */
+    omit?: DispatchWhatsAppJobOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Model Address
    */
 
@@ -48436,6 +53998,7 @@ export namespace Prisma {
     prizeProducts?: boolean | Product$prizeProductsArgs<ExtArgs>
     customerRewards?: boolean | Product$customerRewardsArgs<ExtArgs>
     preparationSteps?: boolean | Product$preparationStepsArgs<ExtArgs>
+    squareCatalogSyncTasks?: boolean | Product$squareCatalogSyncTasksArgs<ExtArgs>
     _count?: boolean | ProductCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["product"]>
 
@@ -48514,6 +54077,7 @@ export namespace Prisma {
     prizeProducts?: boolean | Product$prizeProductsArgs<ExtArgs>
     customerRewards?: boolean | Product$customerRewardsArgs<ExtArgs>
     preparationSteps?: boolean | Product$preparationStepsArgs<ExtArgs>
+    squareCatalogSyncTasks?: boolean | Product$squareCatalogSyncTasksArgs<ExtArgs>
     _count?: boolean | ProductCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ProductIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -48540,6 +54104,7 @@ export namespace Prisma {
       prizeProducts: Prisma.$ProgressiveDiscountPrizeProductPayload<ExtArgs>[]
       customerRewards: Prisma.$CustomerRewardPayload<ExtArgs>[]
       preparationSteps: Prisma.$PreparationStepPayload<ExtArgs>[]
+      squareCatalogSyncTasks: Prisma.$SquareCatalogSyncTaskPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -48966,6 +54531,7 @@ export namespace Prisma {
     prizeProducts<T extends Product$prizeProductsArgs<ExtArgs> = {}>(args?: Subset<T, Product$prizeProductsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProgressiveDiscountPrizeProductPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     customerRewards<T extends Product$customerRewardsArgs<ExtArgs> = {}>(args?: Subset<T, Product$customerRewardsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomerRewardPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     preparationSteps<T extends Product$preparationStepsArgs<ExtArgs> = {}>(args?: Subset<T, Product$preparationStepsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PreparationStepPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    squareCatalogSyncTasks<T extends Product$squareCatalogSyncTasksArgs<ExtArgs> = {}>(args?: Subset<T, Product$squareCatalogSyncTasksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SquareCatalogSyncTaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -49740,6 +55306,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: PreparationStepScalarFieldEnum | PreparationStepScalarFieldEnum[]
+  }
+
+  /**
+   * Product.squareCatalogSyncTasks
+   */
+  export type Product$squareCatalogSyncTasksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareCatalogSyncTask
+     */
+    select?: SquareCatalogSyncTaskSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquareCatalogSyncTask
+     */
+    omit?: SquareCatalogSyncTaskOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SquareCatalogSyncTaskInclude<ExtArgs> | null
+    where?: SquareCatalogSyncTaskWhereInput
+    orderBy?: SquareCatalogSyncTaskOrderByWithRelationInput | SquareCatalogSyncTaskOrderByWithRelationInput[]
+    cursor?: SquareCatalogSyncTaskWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SquareCatalogSyncTaskScalarFieldEnum | SquareCatalogSyncTaskScalarFieldEnum[]
   }
 
   /**
@@ -53231,6 +58821,7 @@ export namespace Prisma {
     categories?: boolean | Menu$categoriesArgs<ExtArgs>
     menuCategories?: boolean | Menu$menuCategoriesArgs<ExtArgs>
     menuVisits?: boolean | Menu$menuVisitsArgs<ExtArgs>
+    squareCatalogSyncTasks?: boolean | Menu$squareCatalogSyncTasksArgs<ExtArgs>
     _count?: boolean | MenuCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["menu"]>
 
@@ -53272,6 +58863,7 @@ export namespace Prisma {
     categories?: boolean | Menu$categoriesArgs<ExtArgs>
     menuCategories?: boolean | Menu$menuCategoriesArgs<ExtArgs>
     menuVisits?: boolean | Menu$menuVisitsArgs<ExtArgs>
+    squareCatalogSyncTasks?: boolean | Menu$squareCatalogSyncTasksArgs<ExtArgs>
     _count?: boolean | MenuCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type MenuIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -53283,6 +58875,7 @@ export namespace Prisma {
       categories: Prisma.$CategoryPayload<ExtArgs>[]
       menuCategories: Prisma.$MenuCategoryPayload<ExtArgs>[]
       menuVisits: Prisma.$MenuVisitPayload<ExtArgs>[]
+      squareCatalogSyncTasks: Prisma.$SquareCatalogSyncTaskPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -53690,6 +59283,7 @@ export namespace Prisma {
     categories<T extends Menu$categoriesArgs<ExtArgs> = {}>(args?: Subset<T, Menu$categoriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     menuCategories<T extends Menu$menuCategoriesArgs<ExtArgs> = {}>(args?: Subset<T, Menu$menuCategoriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MenuCategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     menuVisits<T extends Menu$menuVisitsArgs<ExtArgs> = {}>(args?: Subset<T, Menu$menuVisitsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MenuVisitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    squareCatalogSyncTasks<T extends Menu$squareCatalogSyncTasksArgs<ExtArgs> = {}>(args?: Subset<T, Menu$squareCatalogSyncTasksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SquareCatalogSyncTaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -54189,6 +59783,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: MenuVisitScalarFieldEnum | MenuVisitScalarFieldEnum[]
+  }
+
+  /**
+   * Menu.squareCatalogSyncTasks
+   */
+  export type Menu$squareCatalogSyncTasksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SquareCatalogSyncTask
+     */
+    select?: SquareCatalogSyncTaskSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquareCatalogSyncTask
+     */
+    omit?: SquareCatalogSyncTaskOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SquareCatalogSyncTaskInclude<ExtArgs> | null
+    where?: SquareCatalogSyncTaskWhereInput
+    orderBy?: SquareCatalogSyncTaskOrderByWithRelationInput | SquareCatalogSyncTaskOrderByWithRelationInput[]
+    cursor?: SquareCatalogSyncTaskWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SquareCatalogSyncTaskScalarFieldEnum | SquareCatalogSyncTaskScalarFieldEnum[]
   }
 
   /**
@@ -90815,6 +96433,81 @@ export namespace Prisma {
   export type SquareConnectionScalarFieldEnum = (typeof SquareConnectionScalarFieldEnum)[keyof typeof SquareConnectionScalarFieldEnum]
 
 
+  export const SquareCatalogSyncTaskScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    businessId: 'businessId',
+    productId: 'productId',
+    menuId: 'menuId',
+    taskType: 'taskType',
+    status: 'status',
+    attempts: 'attempts',
+    availableAt: 'availableAt',
+    processingStartedAt: 'processingStartedAt',
+    finishedAt: 'finishedAt',
+    errorMessage: 'errorMessage',
+    requestPayload: 'requestPayload',
+    responsePayload: 'responsePayload'
+  };
+
+  export type SquareCatalogSyncTaskScalarFieldEnum = (typeof SquareCatalogSyncTaskScalarFieldEnum)[keyof typeof SquareCatalogSyncTaskScalarFieldEnum]
+
+
+  export const SquareWebhookRunScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    businessId: 'businessId',
+    eventId: 'eventId',
+    eventType: 'eventType',
+    merchantId: 'merchantId',
+    squareOrderId: 'squareOrderId',
+    locationId: 'locationId',
+    squareOrderState: 'squareOrderState',
+    signatureVerified: 'signatureVerified',
+    status: 'status',
+    action: 'action',
+    reason: 'reason',
+    foodyOrderId: 'foodyOrderId',
+    firstReceivedAt: 'firstReceivedAt',
+    lastReceivedAt: 'lastReceivedAt',
+    processedAt: 'processedAt',
+    processingDurationMs: 'processingDurationMs',
+    attemptsCount: 'attemptsCount',
+    httpStatusCode: 'httpStatusCode',
+    errorMessage: 'errorMessage',
+    webhookPayload: 'webhookPayload',
+    squareOrderPayload: 'squareOrderPayload',
+    responsePayload: 'responsePayload'
+  };
+
+  export type SquareWebhookRunScalarFieldEnum = (typeof SquareWebhookRunScalarFieldEnum)[keyof typeof SquareWebhookRunScalarFieldEnum]
+
+
+  export const SquareWebhookRunAttemptScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    runId: 'runId',
+    attemptNumber: 'attemptNumber',
+    receivedAt: 'receivedAt',
+    finishedAt: 'finishedAt',
+    processingDurationMs: 'processingDurationMs',
+    httpStatusCode: 'httpStatusCode',
+    status: 'status',
+    action: 'action',
+    reason: 'reason',
+    signatureVerified: 'signatureVerified',
+    errorMessage: 'errorMessage',
+    requestHeaders: 'requestHeaders',
+    webhookPayload: 'webhookPayload',
+    squareOrderPayload: 'squareOrderPayload',
+    responsePayload: 'responsePayload'
+  };
+
+  export type SquareWebhookRunAttemptScalarFieldEnum = (typeof SquareWebhookRunAttemptScalarFieldEnum)[keyof typeof SquareWebhookRunAttemptScalarFieldEnum]
+
+
   export const ExternalMenuEntityMapScalarFieldEnum: {
     id: 'id',
     createdAt: 'createdAt',
@@ -91053,6 +96746,22 @@ export namespace Prisma {
   };
 
   export type FeedbackWhatsAppJobScalarFieldEnum = (typeof FeedbackWhatsAppJobScalarFieldEnum)[keyof typeof FeedbackWhatsAppJobScalarFieldEnum]
+
+
+  export const DispatchWhatsAppJobScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    status: 'status',
+    attempts: 'attempts',
+    availableAt: 'availableAt',
+    processingStartedAt: 'processingStartedAt',
+    completedAt: 'completedAt',
+    lastError: 'lastError',
+    orderId: 'orderId',
+    kind: 'kind'
+  };
+
+  export type DispatchWhatsAppJobScalarFieldEnum = (typeof DispatchWhatsAppJobScalarFieldEnum)[keyof typeof DispatchWhatsAppJobScalarFieldEnum]
 
 
   export const AddressScalarFieldEnum: {
@@ -91812,6 +97521,48 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'SquareCatalogSyncTaskType'
+   */
+  export type EnumSquareCatalogSyncTaskTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SquareCatalogSyncTaskType'>
+    
+
+
+  /**
+   * Reference to a field of type 'SquareCatalogSyncTaskType[]'
+   */
+  export type ListEnumSquareCatalogSyncTaskTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SquareCatalogSyncTaskType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'SquareCatalogSyncTaskStatus'
+   */
+  export type EnumSquareCatalogSyncTaskStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SquareCatalogSyncTaskStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'SquareCatalogSyncTaskStatus[]'
+   */
+  export type ListEnumSquareCatalogSyncTaskStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SquareCatalogSyncTaskStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'SquareWebhookRunStatus'
+   */
+  export type EnumSquareWebhookRunStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SquareWebhookRunStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'SquareWebhookRunStatus[]'
+   */
+  export type ListEnumSquareWebhookRunStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SquareWebhookRunStatus[]'>
+    
+
+
+  /**
    * Reference to a field of type 'ExternalMenuEntityType'
    */
   export type EnumExternalMenuEntityTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ExternalMenuEntityType'>
@@ -91990,6 +97741,20 @@ export namespace Prisma {
    * Reference to a field of type 'FeedbackWhatsAppJobStatus[]'
    */
   export type ListEnumFeedbackWhatsAppJobStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FeedbackWhatsAppJobStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'DispatchWhatsAppJobStatus'
+   */
+  export type EnumDispatchWhatsAppJobStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DispatchWhatsAppJobStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'DispatchWhatsAppJobStatus[]'
+   */
+  export type ListEnumDispatchWhatsAppJobStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DispatchWhatsAppJobStatus[]'>
     
 
 
@@ -92985,6 +98750,8 @@ export namespace Prisma {
     members?: BusinessMemberListRelationFilter
     integrations?: ExternalIntegrationConnectionListRelationFilter
     squareConnections?: SquareConnectionListRelationFilter
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskListRelationFilter
+    squareWebhookRuns?: SquareWebhookRunListRelationFilter
     pushDevices?: UserPushDeviceListRelationFilter
   }
 
@@ -93006,6 +98773,8 @@ export namespace Prisma {
     members?: BusinessMemberOrderByRelationAggregateInput
     integrations?: ExternalIntegrationConnectionOrderByRelationAggregateInput
     squareConnections?: SquareConnectionOrderByRelationAggregateInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskOrderByRelationAggregateInput
+    squareWebhookRuns?: SquareWebhookRunOrderByRelationAggregateInput
     pushDevices?: UserPushDeviceOrderByRelationAggregateInput
   }
 
@@ -93030,6 +98799,8 @@ export namespace Prisma {
     members?: BusinessMemberListRelationFilter
     integrations?: ExternalIntegrationConnectionListRelationFilter
     squareConnections?: SquareConnectionListRelationFilter
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskListRelationFilter
+    squareWebhookRuns?: SquareWebhookRunListRelationFilter
     pushDevices?: UserPushDeviceListRelationFilter
   }, "id" | "stripeAccountId">
 
@@ -93546,6 +99317,397 @@ export namespace Prisma {
     expiresAt?: DateTimeNullableWithAggregatesFilter<"SquareConnection"> | Date | string | null
     connectedAt?: DateTimeWithAggregatesFilter<"SquareConnection"> | Date | string
     rawPayload?: JsonNullableWithAggregatesFilter<"SquareConnection">
+  }
+
+  export type SquareCatalogSyncTaskWhereInput = {
+    AND?: SquareCatalogSyncTaskWhereInput | SquareCatalogSyncTaskWhereInput[]
+    OR?: SquareCatalogSyncTaskWhereInput[]
+    NOT?: SquareCatalogSyncTaskWhereInput | SquareCatalogSyncTaskWhereInput[]
+    id?: StringFilter<"SquareCatalogSyncTask"> | string
+    createdAt?: DateTimeFilter<"SquareCatalogSyncTask"> | Date | string
+    updatedAt?: DateTimeFilter<"SquareCatalogSyncTask"> | Date | string
+    businessId?: StringFilter<"SquareCatalogSyncTask"> | string
+    productId?: StringNullableFilter<"SquareCatalogSyncTask"> | string | null
+    menuId?: StringNullableFilter<"SquareCatalogSyncTask"> | string | null
+    taskType?: EnumSquareCatalogSyncTaskTypeFilter<"SquareCatalogSyncTask"> | $Enums.SquareCatalogSyncTaskType
+    status?: EnumSquareCatalogSyncTaskStatusFilter<"SquareCatalogSyncTask"> | $Enums.SquareCatalogSyncTaskStatus
+    attempts?: IntFilter<"SquareCatalogSyncTask"> | number
+    availableAt?: DateTimeFilter<"SquareCatalogSyncTask"> | Date | string
+    processingStartedAt?: DateTimeNullableFilter<"SquareCatalogSyncTask"> | Date | string | null
+    finishedAt?: DateTimeNullableFilter<"SquareCatalogSyncTask"> | Date | string | null
+    errorMessage?: StringNullableFilter<"SquareCatalogSyncTask"> | string | null
+    requestPayload?: JsonNullableFilter<"SquareCatalogSyncTask">
+    responsePayload?: JsonNullableFilter<"SquareCatalogSyncTask">
+    business?: XOR<BusinessScalarRelationFilter, BusinessWhereInput>
+    product?: XOR<ProductNullableScalarRelationFilter, ProductWhereInput> | null
+    menu?: XOR<MenuNullableScalarRelationFilter, MenuWhereInput> | null
+  }
+
+  export type SquareCatalogSyncTaskOrderByWithRelationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    businessId?: SortOrder
+    productId?: SortOrderInput | SortOrder
+    menuId?: SortOrderInput | SortOrder
+    taskType?: SortOrder
+    status?: SortOrder
+    attempts?: SortOrder
+    availableAt?: SortOrder
+    processingStartedAt?: SortOrderInput | SortOrder
+    finishedAt?: SortOrderInput | SortOrder
+    errorMessage?: SortOrderInput | SortOrder
+    requestPayload?: SortOrderInput | SortOrder
+    responsePayload?: SortOrderInput | SortOrder
+    business?: BusinessOrderByWithRelationInput
+    product?: ProductOrderByWithRelationInput
+    menu?: MenuOrderByWithRelationInput
+  }
+
+  export type SquareCatalogSyncTaskWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: SquareCatalogSyncTaskWhereInput | SquareCatalogSyncTaskWhereInput[]
+    OR?: SquareCatalogSyncTaskWhereInput[]
+    NOT?: SquareCatalogSyncTaskWhereInput | SquareCatalogSyncTaskWhereInput[]
+    createdAt?: DateTimeFilter<"SquareCatalogSyncTask"> | Date | string
+    updatedAt?: DateTimeFilter<"SquareCatalogSyncTask"> | Date | string
+    businessId?: StringFilter<"SquareCatalogSyncTask"> | string
+    productId?: StringNullableFilter<"SquareCatalogSyncTask"> | string | null
+    menuId?: StringNullableFilter<"SquareCatalogSyncTask"> | string | null
+    taskType?: EnumSquareCatalogSyncTaskTypeFilter<"SquareCatalogSyncTask"> | $Enums.SquareCatalogSyncTaskType
+    status?: EnumSquareCatalogSyncTaskStatusFilter<"SquareCatalogSyncTask"> | $Enums.SquareCatalogSyncTaskStatus
+    attempts?: IntFilter<"SquareCatalogSyncTask"> | number
+    availableAt?: DateTimeFilter<"SquareCatalogSyncTask"> | Date | string
+    processingStartedAt?: DateTimeNullableFilter<"SquareCatalogSyncTask"> | Date | string | null
+    finishedAt?: DateTimeNullableFilter<"SquareCatalogSyncTask"> | Date | string | null
+    errorMessage?: StringNullableFilter<"SquareCatalogSyncTask"> | string | null
+    requestPayload?: JsonNullableFilter<"SquareCatalogSyncTask">
+    responsePayload?: JsonNullableFilter<"SquareCatalogSyncTask">
+    business?: XOR<BusinessScalarRelationFilter, BusinessWhereInput>
+    product?: XOR<ProductNullableScalarRelationFilter, ProductWhereInput> | null
+    menu?: XOR<MenuNullableScalarRelationFilter, MenuWhereInput> | null
+  }, "id">
+
+  export type SquareCatalogSyncTaskOrderByWithAggregationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    businessId?: SortOrder
+    productId?: SortOrderInput | SortOrder
+    menuId?: SortOrderInput | SortOrder
+    taskType?: SortOrder
+    status?: SortOrder
+    attempts?: SortOrder
+    availableAt?: SortOrder
+    processingStartedAt?: SortOrderInput | SortOrder
+    finishedAt?: SortOrderInput | SortOrder
+    errorMessage?: SortOrderInput | SortOrder
+    requestPayload?: SortOrderInput | SortOrder
+    responsePayload?: SortOrderInput | SortOrder
+    _count?: SquareCatalogSyncTaskCountOrderByAggregateInput
+    _avg?: SquareCatalogSyncTaskAvgOrderByAggregateInput
+    _max?: SquareCatalogSyncTaskMaxOrderByAggregateInput
+    _min?: SquareCatalogSyncTaskMinOrderByAggregateInput
+    _sum?: SquareCatalogSyncTaskSumOrderByAggregateInput
+  }
+
+  export type SquareCatalogSyncTaskScalarWhereWithAggregatesInput = {
+    AND?: SquareCatalogSyncTaskScalarWhereWithAggregatesInput | SquareCatalogSyncTaskScalarWhereWithAggregatesInput[]
+    OR?: SquareCatalogSyncTaskScalarWhereWithAggregatesInput[]
+    NOT?: SquareCatalogSyncTaskScalarWhereWithAggregatesInput | SquareCatalogSyncTaskScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"SquareCatalogSyncTask"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"SquareCatalogSyncTask"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"SquareCatalogSyncTask"> | Date | string
+    businessId?: StringWithAggregatesFilter<"SquareCatalogSyncTask"> | string
+    productId?: StringNullableWithAggregatesFilter<"SquareCatalogSyncTask"> | string | null
+    menuId?: StringNullableWithAggregatesFilter<"SquareCatalogSyncTask"> | string | null
+    taskType?: EnumSquareCatalogSyncTaskTypeWithAggregatesFilter<"SquareCatalogSyncTask"> | $Enums.SquareCatalogSyncTaskType
+    status?: EnumSquareCatalogSyncTaskStatusWithAggregatesFilter<"SquareCatalogSyncTask"> | $Enums.SquareCatalogSyncTaskStatus
+    attempts?: IntWithAggregatesFilter<"SquareCatalogSyncTask"> | number
+    availableAt?: DateTimeWithAggregatesFilter<"SquareCatalogSyncTask"> | Date | string
+    processingStartedAt?: DateTimeNullableWithAggregatesFilter<"SquareCatalogSyncTask"> | Date | string | null
+    finishedAt?: DateTimeNullableWithAggregatesFilter<"SquareCatalogSyncTask"> | Date | string | null
+    errorMessage?: StringNullableWithAggregatesFilter<"SquareCatalogSyncTask"> | string | null
+    requestPayload?: JsonNullableWithAggregatesFilter<"SquareCatalogSyncTask">
+    responsePayload?: JsonNullableWithAggregatesFilter<"SquareCatalogSyncTask">
+  }
+
+  export type SquareWebhookRunWhereInput = {
+    AND?: SquareWebhookRunWhereInput | SquareWebhookRunWhereInput[]
+    OR?: SquareWebhookRunWhereInput[]
+    NOT?: SquareWebhookRunWhereInput | SquareWebhookRunWhereInput[]
+    id?: StringFilter<"SquareWebhookRun"> | string
+    createdAt?: DateTimeFilter<"SquareWebhookRun"> | Date | string
+    updatedAt?: DateTimeFilter<"SquareWebhookRun"> | Date | string
+    businessId?: StringNullableFilter<"SquareWebhookRun"> | string | null
+    eventId?: StringNullableFilter<"SquareWebhookRun"> | string | null
+    eventType?: StringNullableFilter<"SquareWebhookRun"> | string | null
+    merchantId?: StringNullableFilter<"SquareWebhookRun"> | string | null
+    squareOrderId?: StringNullableFilter<"SquareWebhookRun"> | string | null
+    locationId?: StringNullableFilter<"SquareWebhookRun"> | string | null
+    squareOrderState?: StringNullableFilter<"SquareWebhookRun"> | string | null
+    signatureVerified?: BoolNullableFilter<"SquareWebhookRun"> | boolean | null
+    status?: EnumSquareWebhookRunStatusFilter<"SquareWebhookRun"> | $Enums.SquareWebhookRunStatus
+    action?: StringNullableFilter<"SquareWebhookRun"> | string | null
+    reason?: StringNullableFilter<"SquareWebhookRun"> | string | null
+    foodyOrderId?: StringNullableFilter<"SquareWebhookRun"> | string | null
+    firstReceivedAt?: DateTimeFilter<"SquareWebhookRun"> | Date | string
+    lastReceivedAt?: DateTimeFilter<"SquareWebhookRun"> | Date | string
+    processedAt?: DateTimeNullableFilter<"SquareWebhookRun"> | Date | string | null
+    processingDurationMs?: IntNullableFilter<"SquareWebhookRun"> | number | null
+    attemptsCount?: IntFilter<"SquareWebhookRun"> | number
+    httpStatusCode?: IntNullableFilter<"SquareWebhookRun"> | number | null
+    errorMessage?: StringNullableFilter<"SquareWebhookRun"> | string | null
+    webhookPayload?: JsonNullableFilter<"SquareWebhookRun">
+    squareOrderPayload?: JsonNullableFilter<"SquareWebhookRun">
+    responsePayload?: JsonNullableFilter<"SquareWebhookRun">
+    business?: XOR<BusinessNullableScalarRelationFilter, BusinessWhereInput> | null
+    attempts?: SquareWebhookRunAttemptListRelationFilter
+  }
+
+  export type SquareWebhookRunOrderByWithRelationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    businessId?: SortOrderInput | SortOrder
+    eventId?: SortOrderInput | SortOrder
+    eventType?: SortOrderInput | SortOrder
+    merchantId?: SortOrderInput | SortOrder
+    squareOrderId?: SortOrderInput | SortOrder
+    locationId?: SortOrderInput | SortOrder
+    squareOrderState?: SortOrderInput | SortOrder
+    signatureVerified?: SortOrderInput | SortOrder
+    status?: SortOrder
+    action?: SortOrderInput | SortOrder
+    reason?: SortOrderInput | SortOrder
+    foodyOrderId?: SortOrderInput | SortOrder
+    firstReceivedAt?: SortOrder
+    lastReceivedAt?: SortOrder
+    processedAt?: SortOrderInput | SortOrder
+    processingDurationMs?: SortOrderInput | SortOrder
+    attemptsCount?: SortOrder
+    httpStatusCode?: SortOrderInput | SortOrder
+    errorMessage?: SortOrderInput | SortOrder
+    webhookPayload?: SortOrderInput | SortOrder
+    squareOrderPayload?: SortOrderInput | SortOrder
+    responsePayload?: SortOrderInput | SortOrder
+    business?: BusinessOrderByWithRelationInput
+    attempts?: SquareWebhookRunAttemptOrderByRelationAggregateInput
+  }
+
+  export type SquareWebhookRunWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    eventId?: string
+    AND?: SquareWebhookRunWhereInput | SquareWebhookRunWhereInput[]
+    OR?: SquareWebhookRunWhereInput[]
+    NOT?: SquareWebhookRunWhereInput | SquareWebhookRunWhereInput[]
+    createdAt?: DateTimeFilter<"SquareWebhookRun"> | Date | string
+    updatedAt?: DateTimeFilter<"SquareWebhookRun"> | Date | string
+    businessId?: StringNullableFilter<"SquareWebhookRun"> | string | null
+    eventType?: StringNullableFilter<"SquareWebhookRun"> | string | null
+    merchantId?: StringNullableFilter<"SquareWebhookRun"> | string | null
+    squareOrderId?: StringNullableFilter<"SquareWebhookRun"> | string | null
+    locationId?: StringNullableFilter<"SquareWebhookRun"> | string | null
+    squareOrderState?: StringNullableFilter<"SquareWebhookRun"> | string | null
+    signatureVerified?: BoolNullableFilter<"SquareWebhookRun"> | boolean | null
+    status?: EnumSquareWebhookRunStatusFilter<"SquareWebhookRun"> | $Enums.SquareWebhookRunStatus
+    action?: StringNullableFilter<"SquareWebhookRun"> | string | null
+    reason?: StringNullableFilter<"SquareWebhookRun"> | string | null
+    foodyOrderId?: StringNullableFilter<"SquareWebhookRun"> | string | null
+    firstReceivedAt?: DateTimeFilter<"SquareWebhookRun"> | Date | string
+    lastReceivedAt?: DateTimeFilter<"SquareWebhookRun"> | Date | string
+    processedAt?: DateTimeNullableFilter<"SquareWebhookRun"> | Date | string | null
+    processingDurationMs?: IntNullableFilter<"SquareWebhookRun"> | number | null
+    attemptsCount?: IntFilter<"SquareWebhookRun"> | number
+    httpStatusCode?: IntNullableFilter<"SquareWebhookRun"> | number | null
+    errorMessage?: StringNullableFilter<"SquareWebhookRun"> | string | null
+    webhookPayload?: JsonNullableFilter<"SquareWebhookRun">
+    squareOrderPayload?: JsonNullableFilter<"SquareWebhookRun">
+    responsePayload?: JsonNullableFilter<"SquareWebhookRun">
+    business?: XOR<BusinessNullableScalarRelationFilter, BusinessWhereInput> | null
+    attempts?: SquareWebhookRunAttemptListRelationFilter
+  }, "id" | "eventId">
+
+  export type SquareWebhookRunOrderByWithAggregationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    businessId?: SortOrderInput | SortOrder
+    eventId?: SortOrderInput | SortOrder
+    eventType?: SortOrderInput | SortOrder
+    merchantId?: SortOrderInput | SortOrder
+    squareOrderId?: SortOrderInput | SortOrder
+    locationId?: SortOrderInput | SortOrder
+    squareOrderState?: SortOrderInput | SortOrder
+    signatureVerified?: SortOrderInput | SortOrder
+    status?: SortOrder
+    action?: SortOrderInput | SortOrder
+    reason?: SortOrderInput | SortOrder
+    foodyOrderId?: SortOrderInput | SortOrder
+    firstReceivedAt?: SortOrder
+    lastReceivedAt?: SortOrder
+    processedAt?: SortOrderInput | SortOrder
+    processingDurationMs?: SortOrderInput | SortOrder
+    attemptsCount?: SortOrder
+    httpStatusCode?: SortOrderInput | SortOrder
+    errorMessage?: SortOrderInput | SortOrder
+    webhookPayload?: SortOrderInput | SortOrder
+    squareOrderPayload?: SortOrderInput | SortOrder
+    responsePayload?: SortOrderInput | SortOrder
+    _count?: SquareWebhookRunCountOrderByAggregateInput
+    _avg?: SquareWebhookRunAvgOrderByAggregateInput
+    _max?: SquareWebhookRunMaxOrderByAggregateInput
+    _min?: SquareWebhookRunMinOrderByAggregateInput
+    _sum?: SquareWebhookRunSumOrderByAggregateInput
+  }
+
+  export type SquareWebhookRunScalarWhereWithAggregatesInput = {
+    AND?: SquareWebhookRunScalarWhereWithAggregatesInput | SquareWebhookRunScalarWhereWithAggregatesInput[]
+    OR?: SquareWebhookRunScalarWhereWithAggregatesInput[]
+    NOT?: SquareWebhookRunScalarWhereWithAggregatesInput | SquareWebhookRunScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"SquareWebhookRun"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"SquareWebhookRun"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"SquareWebhookRun"> | Date | string
+    businessId?: StringNullableWithAggregatesFilter<"SquareWebhookRun"> | string | null
+    eventId?: StringNullableWithAggregatesFilter<"SquareWebhookRun"> | string | null
+    eventType?: StringNullableWithAggregatesFilter<"SquareWebhookRun"> | string | null
+    merchantId?: StringNullableWithAggregatesFilter<"SquareWebhookRun"> | string | null
+    squareOrderId?: StringNullableWithAggregatesFilter<"SquareWebhookRun"> | string | null
+    locationId?: StringNullableWithAggregatesFilter<"SquareWebhookRun"> | string | null
+    squareOrderState?: StringNullableWithAggregatesFilter<"SquareWebhookRun"> | string | null
+    signatureVerified?: BoolNullableWithAggregatesFilter<"SquareWebhookRun"> | boolean | null
+    status?: EnumSquareWebhookRunStatusWithAggregatesFilter<"SquareWebhookRun"> | $Enums.SquareWebhookRunStatus
+    action?: StringNullableWithAggregatesFilter<"SquareWebhookRun"> | string | null
+    reason?: StringNullableWithAggregatesFilter<"SquareWebhookRun"> | string | null
+    foodyOrderId?: StringNullableWithAggregatesFilter<"SquareWebhookRun"> | string | null
+    firstReceivedAt?: DateTimeWithAggregatesFilter<"SquareWebhookRun"> | Date | string
+    lastReceivedAt?: DateTimeWithAggregatesFilter<"SquareWebhookRun"> | Date | string
+    processedAt?: DateTimeNullableWithAggregatesFilter<"SquareWebhookRun"> | Date | string | null
+    processingDurationMs?: IntNullableWithAggregatesFilter<"SquareWebhookRun"> | number | null
+    attemptsCount?: IntWithAggregatesFilter<"SquareWebhookRun"> | number
+    httpStatusCode?: IntNullableWithAggregatesFilter<"SquareWebhookRun"> | number | null
+    errorMessage?: StringNullableWithAggregatesFilter<"SquareWebhookRun"> | string | null
+    webhookPayload?: JsonNullableWithAggregatesFilter<"SquareWebhookRun">
+    squareOrderPayload?: JsonNullableWithAggregatesFilter<"SquareWebhookRun">
+    responsePayload?: JsonNullableWithAggregatesFilter<"SquareWebhookRun">
+  }
+
+  export type SquareWebhookRunAttemptWhereInput = {
+    AND?: SquareWebhookRunAttemptWhereInput | SquareWebhookRunAttemptWhereInput[]
+    OR?: SquareWebhookRunAttemptWhereInput[]
+    NOT?: SquareWebhookRunAttemptWhereInput | SquareWebhookRunAttemptWhereInput[]
+    id?: StringFilter<"SquareWebhookRunAttempt"> | string
+    createdAt?: DateTimeFilter<"SquareWebhookRunAttempt"> | Date | string
+    runId?: StringFilter<"SquareWebhookRunAttempt"> | string
+    attemptNumber?: IntFilter<"SquareWebhookRunAttempt"> | number
+    receivedAt?: DateTimeFilter<"SquareWebhookRunAttempt"> | Date | string
+    finishedAt?: DateTimeNullableFilter<"SquareWebhookRunAttempt"> | Date | string | null
+    processingDurationMs?: IntNullableFilter<"SquareWebhookRunAttempt"> | number | null
+    httpStatusCode?: IntNullableFilter<"SquareWebhookRunAttempt"> | number | null
+    status?: EnumSquareWebhookRunStatusFilter<"SquareWebhookRunAttempt"> | $Enums.SquareWebhookRunStatus
+    action?: StringNullableFilter<"SquareWebhookRunAttempt"> | string | null
+    reason?: StringNullableFilter<"SquareWebhookRunAttempt"> | string | null
+    signatureVerified?: BoolNullableFilter<"SquareWebhookRunAttempt"> | boolean | null
+    errorMessage?: StringNullableFilter<"SquareWebhookRunAttempt"> | string | null
+    requestHeaders?: JsonNullableFilter<"SquareWebhookRunAttempt">
+    webhookPayload?: JsonNullableFilter<"SquareWebhookRunAttempt">
+    squareOrderPayload?: JsonNullableFilter<"SquareWebhookRunAttempt">
+    responsePayload?: JsonNullableFilter<"SquareWebhookRunAttempt">
+    run?: XOR<SquareWebhookRunScalarRelationFilter, SquareWebhookRunWhereInput>
+  }
+
+  export type SquareWebhookRunAttemptOrderByWithRelationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    runId?: SortOrder
+    attemptNumber?: SortOrder
+    receivedAt?: SortOrder
+    finishedAt?: SortOrderInput | SortOrder
+    processingDurationMs?: SortOrderInput | SortOrder
+    httpStatusCode?: SortOrderInput | SortOrder
+    status?: SortOrder
+    action?: SortOrderInput | SortOrder
+    reason?: SortOrderInput | SortOrder
+    signatureVerified?: SortOrderInput | SortOrder
+    errorMessage?: SortOrderInput | SortOrder
+    requestHeaders?: SortOrderInput | SortOrder
+    webhookPayload?: SortOrderInput | SortOrder
+    squareOrderPayload?: SortOrderInput | SortOrder
+    responsePayload?: SortOrderInput | SortOrder
+    run?: SquareWebhookRunOrderByWithRelationInput
+  }
+
+  export type SquareWebhookRunAttemptWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    runId_attemptNumber?: SquareWebhookRunAttemptRunIdAttemptNumberCompoundUniqueInput
+    AND?: SquareWebhookRunAttemptWhereInput | SquareWebhookRunAttemptWhereInput[]
+    OR?: SquareWebhookRunAttemptWhereInput[]
+    NOT?: SquareWebhookRunAttemptWhereInput | SquareWebhookRunAttemptWhereInput[]
+    createdAt?: DateTimeFilter<"SquareWebhookRunAttempt"> | Date | string
+    runId?: StringFilter<"SquareWebhookRunAttempt"> | string
+    attemptNumber?: IntFilter<"SquareWebhookRunAttempt"> | number
+    receivedAt?: DateTimeFilter<"SquareWebhookRunAttempt"> | Date | string
+    finishedAt?: DateTimeNullableFilter<"SquareWebhookRunAttempt"> | Date | string | null
+    processingDurationMs?: IntNullableFilter<"SquareWebhookRunAttempt"> | number | null
+    httpStatusCode?: IntNullableFilter<"SquareWebhookRunAttempt"> | number | null
+    status?: EnumSquareWebhookRunStatusFilter<"SquareWebhookRunAttempt"> | $Enums.SquareWebhookRunStatus
+    action?: StringNullableFilter<"SquareWebhookRunAttempt"> | string | null
+    reason?: StringNullableFilter<"SquareWebhookRunAttempt"> | string | null
+    signatureVerified?: BoolNullableFilter<"SquareWebhookRunAttempt"> | boolean | null
+    errorMessage?: StringNullableFilter<"SquareWebhookRunAttempt"> | string | null
+    requestHeaders?: JsonNullableFilter<"SquareWebhookRunAttempt">
+    webhookPayload?: JsonNullableFilter<"SquareWebhookRunAttempt">
+    squareOrderPayload?: JsonNullableFilter<"SquareWebhookRunAttempt">
+    responsePayload?: JsonNullableFilter<"SquareWebhookRunAttempt">
+    run?: XOR<SquareWebhookRunScalarRelationFilter, SquareWebhookRunWhereInput>
+  }, "id" | "runId_attemptNumber">
+
+  export type SquareWebhookRunAttemptOrderByWithAggregationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    runId?: SortOrder
+    attemptNumber?: SortOrder
+    receivedAt?: SortOrder
+    finishedAt?: SortOrderInput | SortOrder
+    processingDurationMs?: SortOrderInput | SortOrder
+    httpStatusCode?: SortOrderInput | SortOrder
+    status?: SortOrder
+    action?: SortOrderInput | SortOrder
+    reason?: SortOrderInput | SortOrder
+    signatureVerified?: SortOrderInput | SortOrder
+    errorMessage?: SortOrderInput | SortOrder
+    requestHeaders?: SortOrderInput | SortOrder
+    webhookPayload?: SortOrderInput | SortOrder
+    squareOrderPayload?: SortOrderInput | SortOrder
+    responsePayload?: SortOrderInput | SortOrder
+    _count?: SquareWebhookRunAttemptCountOrderByAggregateInput
+    _avg?: SquareWebhookRunAttemptAvgOrderByAggregateInput
+    _max?: SquareWebhookRunAttemptMaxOrderByAggregateInput
+    _min?: SquareWebhookRunAttemptMinOrderByAggregateInput
+    _sum?: SquareWebhookRunAttemptSumOrderByAggregateInput
+  }
+
+  export type SquareWebhookRunAttemptScalarWhereWithAggregatesInput = {
+    AND?: SquareWebhookRunAttemptScalarWhereWithAggregatesInput | SquareWebhookRunAttemptScalarWhereWithAggregatesInput[]
+    OR?: SquareWebhookRunAttemptScalarWhereWithAggregatesInput[]
+    NOT?: SquareWebhookRunAttemptScalarWhereWithAggregatesInput | SquareWebhookRunAttemptScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"SquareWebhookRunAttempt"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"SquareWebhookRunAttempt"> | Date | string
+    runId?: StringWithAggregatesFilter<"SquareWebhookRunAttempt"> | string
+    attemptNumber?: IntWithAggregatesFilter<"SquareWebhookRunAttempt"> | number
+    receivedAt?: DateTimeWithAggregatesFilter<"SquareWebhookRunAttempt"> | Date | string
+    finishedAt?: DateTimeNullableWithAggregatesFilter<"SquareWebhookRunAttempt"> | Date | string | null
+    processingDurationMs?: IntNullableWithAggregatesFilter<"SquareWebhookRunAttempt"> | number | null
+    httpStatusCode?: IntNullableWithAggregatesFilter<"SquareWebhookRunAttempt"> | number | null
+    status?: EnumSquareWebhookRunStatusWithAggregatesFilter<"SquareWebhookRunAttempt"> | $Enums.SquareWebhookRunStatus
+    action?: StringNullableWithAggregatesFilter<"SquareWebhookRunAttempt"> | string | null
+    reason?: StringNullableWithAggregatesFilter<"SquareWebhookRunAttempt"> | string | null
+    signatureVerified?: BoolNullableWithAggregatesFilter<"SquareWebhookRunAttempt"> | boolean | null
+    errorMessage?: StringNullableWithAggregatesFilter<"SquareWebhookRunAttempt"> | string | null
+    requestHeaders?: JsonNullableWithAggregatesFilter<"SquareWebhookRunAttempt">
+    webhookPayload?: JsonNullableWithAggregatesFilter<"SquareWebhookRunAttempt">
+    squareOrderPayload?: JsonNullableWithAggregatesFilter<"SquareWebhookRunAttempt">
+    responsePayload?: JsonNullableWithAggregatesFilter<"SquareWebhookRunAttempt">
   }
 
   export type ExternalMenuEntityMapWhereInput = {
@@ -94814,6 +100976,86 @@ export namespace Prisma {
     language?: StringNullableWithAggregatesFilter<"FeedbackWhatsAppJob"> | string | null
   }
 
+  export type DispatchWhatsAppJobWhereInput = {
+    AND?: DispatchWhatsAppJobWhereInput | DispatchWhatsAppJobWhereInput[]
+    OR?: DispatchWhatsAppJobWhereInput[]
+    NOT?: DispatchWhatsAppJobWhereInput | DispatchWhatsAppJobWhereInput[]
+    id?: StringFilter<"DispatchWhatsAppJob"> | string
+    createdAt?: DateTimeFilter<"DispatchWhatsAppJob"> | Date | string
+    status?: EnumDispatchWhatsAppJobStatusFilter<"DispatchWhatsAppJob"> | $Enums.DispatchWhatsAppJobStatus
+    attempts?: IntFilter<"DispatchWhatsAppJob"> | number
+    availableAt?: DateTimeFilter<"DispatchWhatsAppJob"> | Date | string
+    processingStartedAt?: DateTimeNullableFilter<"DispatchWhatsAppJob"> | Date | string | null
+    completedAt?: DateTimeNullableFilter<"DispatchWhatsAppJob"> | Date | string | null
+    lastError?: StringNullableFilter<"DispatchWhatsAppJob"> | string | null
+    orderId?: StringFilter<"DispatchWhatsAppJob"> | string
+    kind?: StringFilter<"DispatchWhatsAppJob"> | string
+  }
+
+  export type DispatchWhatsAppJobOrderByWithRelationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    status?: SortOrder
+    attempts?: SortOrder
+    availableAt?: SortOrder
+    processingStartedAt?: SortOrderInput | SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    lastError?: SortOrderInput | SortOrder
+    orderId?: SortOrder
+    kind?: SortOrder
+  }
+
+  export type DispatchWhatsAppJobWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    orderId_kind?: DispatchWhatsAppJobOrderIdKindCompoundUniqueInput
+    AND?: DispatchWhatsAppJobWhereInput | DispatchWhatsAppJobWhereInput[]
+    OR?: DispatchWhatsAppJobWhereInput[]
+    NOT?: DispatchWhatsAppJobWhereInput | DispatchWhatsAppJobWhereInput[]
+    createdAt?: DateTimeFilter<"DispatchWhatsAppJob"> | Date | string
+    status?: EnumDispatchWhatsAppJobStatusFilter<"DispatchWhatsAppJob"> | $Enums.DispatchWhatsAppJobStatus
+    attempts?: IntFilter<"DispatchWhatsAppJob"> | number
+    availableAt?: DateTimeFilter<"DispatchWhatsAppJob"> | Date | string
+    processingStartedAt?: DateTimeNullableFilter<"DispatchWhatsAppJob"> | Date | string | null
+    completedAt?: DateTimeNullableFilter<"DispatchWhatsAppJob"> | Date | string | null
+    lastError?: StringNullableFilter<"DispatchWhatsAppJob"> | string | null
+    orderId?: StringFilter<"DispatchWhatsAppJob"> | string
+    kind?: StringFilter<"DispatchWhatsAppJob"> | string
+  }, "id" | "orderId_kind">
+
+  export type DispatchWhatsAppJobOrderByWithAggregationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    status?: SortOrder
+    attempts?: SortOrder
+    availableAt?: SortOrder
+    processingStartedAt?: SortOrderInput | SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    lastError?: SortOrderInput | SortOrder
+    orderId?: SortOrder
+    kind?: SortOrder
+    _count?: DispatchWhatsAppJobCountOrderByAggregateInput
+    _avg?: DispatchWhatsAppJobAvgOrderByAggregateInput
+    _max?: DispatchWhatsAppJobMaxOrderByAggregateInput
+    _min?: DispatchWhatsAppJobMinOrderByAggregateInput
+    _sum?: DispatchWhatsAppJobSumOrderByAggregateInput
+  }
+
+  export type DispatchWhatsAppJobScalarWhereWithAggregatesInput = {
+    AND?: DispatchWhatsAppJobScalarWhereWithAggregatesInput | DispatchWhatsAppJobScalarWhereWithAggregatesInput[]
+    OR?: DispatchWhatsAppJobScalarWhereWithAggregatesInput[]
+    NOT?: DispatchWhatsAppJobScalarWhereWithAggregatesInput | DispatchWhatsAppJobScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"DispatchWhatsAppJob"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"DispatchWhatsAppJob"> | Date | string
+    status?: EnumDispatchWhatsAppJobStatusWithAggregatesFilter<"DispatchWhatsAppJob"> | $Enums.DispatchWhatsAppJobStatus
+    attempts?: IntWithAggregatesFilter<"DispatchWhatsAppJob"> | number
+    availableAt?: DateTimeWithAggregatesFilter<"DispatchWhatsAppJob"> | Date | string
+    processingStartedAt?: DateTimeNullableWithAggregatesFilter<"DispatchWhatsAppJob"> | Date | string | null
+    completedAt?: DateTimeNullableWithAggregatesFilter<"DispatchWhatsAppJob"> | Date | string | null
+    lastError?: StringNullableWithAggregatesFilter<"DispatchWhatsAppJob"> | string | null
+    orderId?: StringWithAggregatesFilter<"DispatchWhatsAppJob"> | string
+    kind?: StringWithAggregatesFilter<"DispatchWhatsAppJob"> | string
+  }
+
   export type AddressWhereInput = {
     AND?: AddressWhereInput | AddressWhereInput[]
     OR?: AddressWhereInput[]
@@ -94951,6 +101193,7 @@ export namespace Prisma {
     prizeProducts?: ProgressiveDiscountPrizeProductListRelationFilter
     customerRewards?: CustomerRewardListRelationFilter
     preparationSteps?: PreparationStepListRelationFilter
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskListRelationFilter
   }
 
   export type ProductOrderByWithRelationInput = {
@@ -94984,6 +101227,7 @@ export namespace Prisma {
     prizeProducts?: ProgressiveDiscountPrizeProductOrderByRelationAggregateInput
     customerRewards?: CustomerRewardOrderByRelationAggregateInput
     preparationSteps?: PreparationStepOrderByRelationAggregateInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskOrderByRelationAggregateInput
   }
 
   export type ProductWhereUniqueInput = Prisma.AtLeast<{
@@ -95020,6 +101264,7 @@ export namespace Prisma {
     prizeProducts?: ProgressiveDiscountPrizeProductListRelationFilter
     customerRewards?: CustomerRewardListRelationFilter
     preparationSteps?: PreparationStepListRelationFilter
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskListRelationFilter
   }, "id" | "squareItemId" | "squareVariationId">
 
   export type ProductOrderByWithAggregationInput = {
@@ -95261,6 +101506,7 @@ export namespace Prisma {
     categories?: CategoryListRelationFilter
     menuCategories?: MenuCategoryListRelationFilter
     menuVisits?: MenuVisitListRelationFilter
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskListRelationFilter
   }
 
   export type MenuOrderByWithRelationInput = {
@@ -95275,6 +101521,7 @@ export namespace Prisma {
     categories?: CategoryOrderByRelationAggregateInput
     menuCategories?: MenuCategoryOrderByRelationAggregateInput
     menuVisits?: MenuVisitOrderByRelationAggregateInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskOrderByRelationAggregateInput
   }
 
   export type MenuWhereUniqueInput = Prisma.AtLeast<{
@@ -95292,6 +101539,7 @@ export namespace Prisma {
     categories?: CategoryListRelationFilter
     menuCategories?: MenuCategoryListRelationFilter
     menuVisits?: MenuVisitListRelationFilter
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskListRelationFilter
   }, "id" | "squareMenuId">
 
   export type MenuOrderByWithAggregationInput = {
@@ -98844,6 +105092,8 @@ export namespace Prisma {
     members?: BusinessMemberCreateNestedManyWithoutBusinessInput
     integrations?: ExternalIntegrationConnectionCreateNestedManyWithoutBusinessInput
     squareConnections?: SquareConnectionCreateNestedManyWithoutBusinessInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskCreateNestedManyWithoutBusinessInput
+    squareWebhookRuns?: SquareWebhookRunCreateNestedManyWithoutBusinessInput
     pushDevices?: UserPushDeviceCreateNestedManyWithoutBusinessInput
   }
 
@@ -98865,6 +105115,8 @@ export namespace Prisma {
     members?: BusinessMemberUncheckedCreateNestedManyWithoutBusinessInput
     integrations?: ExternalIntegrationConnectionUncheckedCreateNestedManyWithoutBusinessInput
     squareConnections?: SquareConnectionUncheckedCreateNestedManyWithoutBusinessInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedCreateNestedManyWithoutBusinessInput
+    squareWebhookRuns?: SquareWebhookRunUncheckedCreateNestedManyWithoutBusinessInput
     pushDevices?: UserPushDeviceUncheckedCreateNestedManyWithoutBusinessInput
   }
 
@@ -98886,6 +105138,8 @@ export namespace Prisma {
     members?: BusinessMemberUpdateManyWithoutBusinessNestedInput
     integrations?: ExternalIntegrationConnectionUpdateManyWithoutBusinessNestedInput
     squareConnections?: SquareConnectionUpdateManyWithoutBusinessNestedInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUpdateManyWithoutBusinessNestedInput
+    squareWebhookRuns?: SquareWebhookRunUpdateManyWithoutBusinessNestedInput
     pushDevices?: UserPushDeviceUpdateManyWithoutBusinessNestedInput
   }
 
@@ -98907,6 +105161,8 @@ export namespace Prisma {
     members?: BusinessMemberUncheckedUpdateManyWithoutBusinessNestedInput
     integrations?: ExternalIntegrationConnectionUncheckedUpdateManyWithoutBusinessNestedInput
     squareConnections?: SquareConnectionUncheckedUpdateManyWithoutBusinessNestedInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedUpdateManyWithoutBusinessNestedInput
+    squareWebhookRuns?: SquareWebhookRunUncheckedUpdateManyWithoutBusinessNestedInput
     pushDevices?: UserPushDeviceUncheckedUpdateManyWithoutBusinessNestedInput
   }
 
@@ -99495,6 +105751,467 @@ export namespace Prisma {
     expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     connectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     rawPayload?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SquareCatalogSyncTaskCreateInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    taskType?: $Enums.SquareCatalogSyncTaskType
+    status?: $Enums.SquareCatalogSyncTaskStatus
+    attempts?: number
+    availableAt?: Date | string
+    processingStartedAt?: Date | string | null
+    finishedAt?: Date | string | null
+    errorMessage?: string | null
+    requestPayload?: NullableJsonNullValueInput | InputJsonValue
+    responsePayload?: NullableJsonNullValueInput | InputJsonValue
+    business: BusinessCreateNestedOneWithoutSquareCatalogSyncTasksInput
+    product?: ProductCreateNestedOneWithoutSquareCatalogSyncTasksInput
+    menu?: MenuCreateNestedOneWithoutSquareCatalogSyncTasksInput
+  }
+
+  export type SquareCatalogSyncTaskUncheckedCreateInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    businessId: string
+    productId?: string | null
+    menuId?: string | null
+    taskType?: $Enums.SquareCatalogSyncTaskType
+    status?: $Enums.SquareCatalogSyncTaskStatus
+    attempts?: number
+    availableAt?: Date | string
+    processingStartedAt?: Date | string | null
+    finishedAt?: Date | string | null
+    errorMessage?: string | null
+    requestPayload?: NullableJsonNullValueInput | InputJsonValue
+    responsePayload?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SquareCatalogSyncTaskUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    taskType?: EnumSquareCatalogSyncTaskTypeFieldUpdateOperationsInput | $Enums.SquareCatalogSyncTaskType
+    status?: EnumSquareCatalogSyncTaskStatusFieldUpdateOperationsInput | $Enums.SquareCatalogSyncTaskStatus
+    attempts?: IntFieldUpdateOperationsInput | number
+    availableAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processingStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    requestPayload?: NullableJsonNullValueInput | InputJsonValue
+    responsePayload?: NullableJsonNullValueInput | InputJsonValue
+    business?: BusinessUpdateOneRequiredWithoutSquareCatalogSyncTasksNestedInput
+    product?: ProductUpdateOneWithoutSquareCatalogSyncTasksNestedInput
+    menu?: MenuUpdateOneWithoutSquareCatalogSyncTasksNestedInput
+  }
+
+  export type SquareCatalogSyncTaskUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessId?: StringFieldUpdateOperationsInput | string
+    productId?: NullableStringFieldUpdateOperationsInput | string | null
+    menuId?: NullableStringFieldUpdateOperationsInput | string | null
+    taskType?: EnumSquareCatalogSyncTaskTypeFieldUpdateOperationsInput | $Enums.SquareCatalogSyncTaskType
+    status?: EnumSquareCatalogSyncTaskStatusFieldUpdateOperationsInput | $Enums.SquareCatalogSyncTaskStatus
+    attempts?: IntFieldUpdateOperationsInput | number
+    availableAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processingStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    requestPayload?: NullableJsonNullValueInput | InputJsonValue
+    responsePayload?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SquareCatalogSyncTaskCreateManyInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    businessId: string
+    productId?: string | null
+    menuId?: string | null
+    taskType?: $Enums.SquareCatalogSyncTaskType
+    status?: $Enums.SquareCatalogSyncTaskStatus
+    attempts?: number
+    availableAt?: Date | string
+    processingStartedAt?: Date | string | null
+    finishedAt?: Date | string | null
+    errorMessage?: string | null
+    requestPayload?: NullableJsonNullValueInput | InputJsonValue
+    responsePayload?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SquareCatalogSyncTaskUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    taskType?: EnumSquareCatalogSyncTaskTypeFieldUpdateOperationsInput | $Enums.SquareCatalogSyncTaskType
+    status?: EnumSquareCatalogSyncTaskStatusFieldUpdateOperationsInput | $Enums.SquareCatalogSyncTaskStatus
+    attempts?: IntFieldUpdateOperationsInput | number
+    availableAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processingStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    requestPayload?: NullableJsonNullValueInput | InputJsonValue
+    responsePayload?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SquareCatalogSyncTaskUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessId?: StringFieldUpdateOperationsInput | string
+    productId?: NullableStringFieldUpdateOperationsInput | string | null
+    menuId?: NullableStringFieldUpdateOperationsInput | string | null
+    taskType?: EnumSquareCatalogSyncTaskTypeFieldUpdateOperationsInput | $Enums.SquareCatalogSyncTaskType
+    status?: EnumSquareCatalogSyncTaskStatusFieldUpdateOperationsInput | $Enums.SquareCatalogSyncTaskStatus
+    attempts?: IntFieldUpdateOperationsInput | number
+    availableAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processingStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    requestPayload?: NullableJsonNullValueInput | InputJsonValue
+    responsePayload?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SquareWebhookRunCreateInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    eventId?: string | null
+    eventType?: string | null
+    merchantId?: string | null
+    squareOrderId?: string | null
+    locationId?: string | null
+    squareOrderState?: string | null
+    signatureVerified?: boolean | null
+    status?: $Enums.SquareWebhookRunStatus
+    action?: string | null
+    reason?: string | null
+    foodyOrderId?: string | null
+    firstReceivedAt?: Date | string
+    lastReceivedAt?: Date | string
+    processedAt?: Date | string | null
+    processingDurationMs?: number | null
+    attemptsCount?: number
+    httpStatusCode?: number | null
+    errorMessage?: string | null
+    webhookPayload?: NullableJsonNullValueInput | InputJsonValue
+    squareOrderPayload?: NullableJsonNullValueInput | InputJsonValue
+    responsePayload?: NullableJsonNullValueInput | InputJsonValue
+    business?: BusinessCreateNestedOneWithoutSquareWebhookRunsInput
+    attempts?: SquareWebhookRunAttemptCreateNestedManyWithoutRunInput
+  }
+
+  export type SquareWebhookRunUncheckedCreateInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    businessId?: string | null
+    eventId?: string | null
+    eventType?: string | null
+    merchantId?: string | null
+    squareOrderId?: string | null
+    locationId?: string | null
+    squareOrderState?: string | null
+    signatureVerified?: boolean | null
+    status?: $Enums.SquareWebhookRunStatus
+    action?: string | null
+    reason?: string | null
+    foodyOrderId?: string | null
+    firstReceivedAt?: Date | string
+    lastReceivedAt?: Date | string
+    processedAt?: Date | string | null
+    processingDurationMs?: number | null
+    attemptsCount?: number
+    httpStatusCode?: number | null
+    errorMessage?: string | null
+    webhookPayload?: NullableJsonNullValueInput | InputJsonValue
+    squareOrderPayload?: NullableJsonNullValueInput | InputJsonValue
+    responsePayload?: NullableJsonNullValueInput | InputJsonValue
+    attempts?: SquareWebhookRunAttemptUncheckedCreateNestedManyWithoutRunInput
+  }
+
+  export type SquareWebhookRunUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    eventId?: NullableStringFieldUpdateOperationsInput | string | null
+    eventType?: NullableStringFieldUpdateOperationsInput | string | null
+    merchantId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    locationId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareOrderState?: NullableStringFieldUpdateOperationsInput | string | null
+    signatureVerified?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    status?: EnumSquareWebhookRunStatusFieldUpdateOperationsInput | $Enums.SquareWebhookRunStatus
+    action?: NullableStringFieldUpdateOperationsInput | string | null
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    foodyOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    firstReceivedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastReceivedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    processingDurationMs?: NullableIntFieldUpdateOperationsInput | number | null
+    attemptsCount?: IntFieldUpdateOperationsInput | number
+    httpStatusCode?: NullableIntFieldUpdateOperationsInput | number | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    webhookPayload?: NullableJsonNullValueInput | InputJsonValue
+    squareOrderPayload?: NullableJsonNullValueInput | InputJsonValue
+    responsePayload?: NullableJsonNullValueInput | InputJsonValue
+    business?: BusinessUpdateOneWithoutSquareWebhookRunsNestedInput
+    attempts?: SquareWebhookRunAttemptUpdateManyWithoutRunNestedInput
+  }
+
+  export type SquareWebhookRunUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessId?: NullableStringFieldUpdateOperationsInput | string | null
+    eventId?: NullableStringFieldUpdateOperationsInput | string | null
+    eventType?: NullableStringFieldUpdateOperationsInput | string | null
+    merchantId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    locationId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareOrderState?: NullableStringFieldUpdateOperationsInput | string | null
+    signatureVerified?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    status?: EnumSquareWebhookRunStatusFieldUpdateOperationsInput | $Enums.SquareWebhookRunStatus
+    action?: NullableStringFieldUpdateOperationsInput | string | null
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    foodyOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    firstReceivedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastReceivedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    processingDurationMs?: NullableIntFieldUpdateOperationsInput | number | null
+    attemptsCount?: IntFieldUpdateOperationsInput | number
+    httpStatusCode?: NullableIntFieldUpdateOperationsInput | number | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    webhookPayload?: NullableJsonNullValueInput | InputJsonValue
+    squareOrderPayload?: NullableJsonNullValueInput | InputJsonValue
+    responsePayload?: NullableJsonNullValueInput | InputJsonValue
+    attempts?: SquareWebhookRunAttemptUncheckedUpdateManyWithoutRunNestedInput
+  }
+
+  export type SquareWebhookRunCreateManyInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    businessId?: string | null
+    eventId?: string | null
+    eventType?: string | null
+    merchantId?: string | null
+    squareOrderId?: string | null
+    locationId?: string | null
+    squareOrderState?: string | null
+    signatureVerified?: boolean | null
+    status?: $Enums.SquareWebhookRunStatus
+    action?: string | null
+    reason?: string | null
+    foodyOrderId?: string | null
+    firstReceivedAt?: Date | string
+    lastReceivedAt?: Date | string
+    processedAt?: Date | string | null
+    processingDurationMs?: number | null
+    attemptsCount?: number
+    httpStatusCode?: number | null
+    errorMessage?: string | null
+    webhookPayload?: NullableJsonNullValueInput | InputJsonValue
+    squareOrderPayload?: NullableJsonNullValueInput | InputJsonValue
+    responsePayload?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SquareWebhookRunUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    eventId?: NullableStringFieldUpdateOperationsInput | string | null
+    eventType?: NullableStringFieldUpdateOperationsInput | string | null
+    merchantId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    locationId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareOrderState?: NullableStringFieldUpdateOperationsInput | string | null
+    signatureVerified?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    status?: EnumSquareWebhookRunStatusFieldUpdateOperationsInput | $Enums.SquareWebhookRunStatus
+    action?: NullableStringFieldUpdateOperationsInput | string | null
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    foodyOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    firstReceivedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastReceivedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    processingDurationMs?: NullableIntFieldUpdateOperationsInput | number | null
+    attemptsCount?: IntFieldUpdateOperationsInput | number
+    httpStatusCode?: NullableIntFieldUpdateOperationsInput | number | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    webhookPayload?: NullableJsonNullValueInput | InputJsonValue
+    squareOrderPayload?: NullableJsonNullValueInput | InputJsonValue
+    responsePayload?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SquareWebhookRunUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessId?: NullableStringFieldUpdateOperationsInput | string | null
+    eventId?: NullableStringFieldUpdateOperationsInput | string | null
+    eventType?: NullableStringFieldUpdateOperationsInput | string | null
+    merchantId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    locationId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareOrderState?: NullableStringFieldUpdateOperationsInput | string | null
+    signatureVerified?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    status?: EnumSquareWebhookRunStatusFieldUpdateOperationsInput | $Enums.SquareWebhookRunStatus
+    action?: NullableStringFieldUpdateOperationsInput | string | null
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    foodyOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    firstReceivedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastReceivedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    processingDurationMs?: NullableIntFieldUpdateOperationsInput | number | null
+    attemptsCount?: IntFieldUpdateOperationsInput | number
+    httpStatusCode?: NullableIntFieldUpdateOperationsInput | number | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    webhookPayload?: NullableJsonNullValueInput | InputJsonValue
+    squareOrderPayload?: NullableJsonNullValueInput | InputJsonValue
+    responsePayload?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SquareWebhookRunAttemptCreateInput = {
+    id: string
+    createdAt?: Date | string
+    attemptNumber: number
+    receivedAt?: Date | string
+    finishedAt?: Date | string | null
+    processingDurationMs?: number | null
+    httpStatusCode?: number | null
+    status?: $Enums.SquareWebhookRunStatus
+    action?: string | null
+    reason?: string | null
+    signatureVerified?: boolean | null
+    errorMessage?: string | null
+    requestHeaders?: NullableJsonNullValueInput | InputJsonValue
+    webhookPayload?: NullableJsonNullValueInput | InputJsonValue
+    squareOrderPayload?: NullableJsonNullValueInput | InputJsonValue
+    responsePayload?: NullableJsonNullValueInput | InputJsonValue
+    run: SquareWebhookRunCreateNestedOneWithoutAttemptsInput
+  }
+
+  export type SquareWebhookRunAttemptUncheckedCreateInput = {
+    id: string
+    createdAt?: Date | string
+    runId: string
+    attemptNumber: number
+    receivedAt?: Date | string
+    finishedAt?: Date | string | null
+    processingDurationMs?: number | null
+    httpStatusCode?: number | null
+    status?: $Enums.SquareWebhookRunStatus
+    action?: string | null
+    reason?: string | null
+    signatureVerified?: boolean | null
+    errorMessage?: string | null
+    requestHeaders?: NullableJsonNullValueInput | InputJsonValue
+    webhookPayload?: NullableJsonNullValueInput | InputJsonValue
+    squareOrderPayload?: NullableJsonNullValueInput | InputJsonValue
+    responsePayload?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SquareWebhookRunAttemptUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    attemptNumber?: IntFieldUpdateOperationsInput | number
+    receivedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    processingDurationMs?: NullableIntFieldUpdateOperationsInput | number | null
+    httpStatusCode?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumSquareWebhookRunStatusFieldUpdateOperationsInput | $Enums.SquareWebhookRunStatus
+    action?: NullableStringFieldUpdateOperationsInput | string | null
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    signatureVerified?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    requestHeaders?: NullableJsonNullValueInput | InputJsonValue
+    webhookPayload?: NullableJsonNullValueInput | InputJsonValue
+    squareOrderPayload?: NullableJsonNullValueInput | InputJsonValue
+    responsePayload?: NullableJsonNullValueInput | InputJsonValue
+    run?: SquareWebhookRunUpdateOneRequiredWithoutAttemptsNestedInput
+  }
+
+  export type SquareWebhookRunAttemptUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    runId?: StringFieldUpdateOperationsInput | string
+    attemptNumber?: IntFieldUpdateOperationsInput | number
+    receivedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    processingDurationMs?: NullableIntFieldUpdateOperationsInput | number | null
+    httpStatusCode?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumSquareWebhookRunStatusFieldUpdateOperationsInput | $Enums.SquareWebhookRunStatus
+    action?: NullableStringFieldUpdateOperationsInput | string | null
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    signatureVerified?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    requestHeaders?: NullableJsonNullValueInput | InputJsonValue
+    webhookPayload?: NullableJsonNullValueInput | InputJsonValue
+    squareOrderPayload?: NullableJsonNullValueInput | InputJsonValue
+    responsePayload?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SquareWebhookRunAttemptCreateManyInput = {
+    id: string
+    createdAt?: Date | string
+    runId: string
+    attemptNumber: number
+    receivedAt?: Date | string
+    finishedAt?: Date | string | null
+    processingDurationMs?: number | null
+    httpStatusCode?: number | null
+    status?: $Enums.SquareWebhookRunStatus
+    action?: string | null
+    reason?: string | null
+    signatureVerified?: boolean | null
+    errorMessage?: string | null
+    requestHeaders?: NullableJsonNullValueInput | InputJsonValue
+    webhookPayload?: NullableJsonNullValueInput | InputJsonValue
+    squareOrderPayload?: NullableJsonNullValueInput | InputJsonValue
+    responsePayload?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SquareWebhookRunAttemptUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    attemptNumber?: IntFieldUpdateOperationsInput | number
+    receivedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    processingDurationMs?: NullableIntFieldUpdateOperationsInput | number | null
+    httpStatusCode?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumSquareWebhookRunStatusFieldUpdateOperationsInput | $Enums.SquareWebhookRunStatus
+    action?: NullableStringFieldUpdateOperationsInput | string | null
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    signatureVerified?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    requestHeaders?: NullableJsonNullValueInput | InputJsonValue
+    webhookPayload?: NullableJsonNullValueInput | InputJsonValue
+    squareOrderPayload?: NullableJsonNullValueInput | InputJsonValue
+    responsePayload?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SquareWebhookRunAttemptUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    runId?: StringFieldUpdateOperationsInput | string
+    attemptNumber?: IntFieldUpdateOperationsInput | number
+    receivedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    processingDurationMs?: NullableIntFieldUpdateOperationsInput | number | null
+    httpStatusCode?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumSquareWebhookRunStatusFieldUpdateOperationsInput | $Enums.SquareWebhookRunStatus
+    action?: NullableStringFieldUpdateOperationsInput | string | null
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    signatureVerified?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    requestHeaders?: NullableJsonNullValueInput | InputJsonValue
+    webhookPayload?: NullableJsonNullValueInput | InputJsonValue
+    squareOrderPayload?: NullableJsonNullValueInput | InputJsonValue
+    responsePayload?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type ExternalMenuEntityMapCreateInput = {
@@ -100915,6 +107632,97 @@ export namespace Prisma {
     language?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type DispatchWhatsAppJobCreateInput = {
+    id: string
+    createdAt?: Date | string
+    status?: $Enums.DispatchWhatsAppJobStatus
+    attempts?: number
+    availableAt?: Date | string
+    processingStartedAt?: Date | string | null
+    completedAt?: Date | string | null
+    lastError?: string | null
+    orderId: string
+    kind: string
+  }
+
+  export type DispatchWhatsAppJobUncheckedCreateInput = {
+    id: string
+    createdAt?: Date | string
+    status?: $Enums.DispatchWhatsAppJobStatus
+    attempts?: number
+    availableAt?: Date | string
+    processingStartedAt?: Date | string | null
+    completedAt?: Date | string | null
+    lastError?: string | null
+    orderId: string
+    kind: string
+  }
+
+  export type DispatchWhatsAppJobUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumDispatchWhatsAppJobStatusFieldUpdateOperationsInput | $Enums.DispatchWhatsAppJobStatus
+    attempts?: IntFieldUpdateOperationsInput | number
+    availableAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processingStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastError?: NullableStringFieldUpdateOperationsInput | string | null
+    orderId?: StringFieldUpdateOperationsInput | string
+    kind?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type DispatchWhatsAppJobUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumDispatchWhatsAppJobStatusFieldUpdateOperationsInput | $Enums.DispatchWhatsAppJobStatus
+    attempts?: IntFieldUpdateOperationsInput | number
+    availableAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processingStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastError?: NullableStringFieldUpdateOperationsInput | string | null
+    orderId?: StringFieldUpdateOperationsInput | string
+    kind?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type DispatchWhatsAppJobCreateManyInput = {
+    id: string
+    createdAt?: Date | string
+    status?: $Enums.DispatchWhatsAppJobStatus
+    attempts?: number
+    availableAt?: Date | string
+    processingStartedAt?: Date | string | null
+    completedAt?: Date | string | null
+    lastError?: string | null
+    orderId: string
+    kind: string
+  }
+
+  export type DispatchWhatsAppJobUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumDispatchWhatsAppJobStatusFieldUpdateOperationsInput | $Enums.DispatchWhatsAppJobStatus
+    attempts?: IntFieldUpdateOperationsInput | number
+    availableAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processingStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastError?: NullableStringFieldUpdateOperationsInput | string | null
+    orderId?: StringFieldUpdateOperationsInput | string
+    kind?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type DispatchWhatsAppJobUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumDispatchWhatsAppJobStatusFieldUpdateOperationsInput | $Enums.DispatchWhatsAppJobStatus
+    attempts?: IntFieldUpdateOperationsInput | number
+    availableAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processingStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastError?: NullableStringFieldUpdateOperationsInput | string | null
+    orderId?: StringFieldUpdateOperationsInput | string
+    kind?: StringFieldUpdateOperationsInput | string
+  }
+
   export type AddressCreateInput = {
     id: string
     createdAt?: Date | string
@@ -101072,6 +107880,7 @@ export namespace Prisma {
     prizeProducts?: ProgressiveDiscountPrizeProductCreateNestedManyWithoutProductInput
     customerRewards?: CustomerRewardCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepCreateNestedManyWithoutProductsInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateInput = {
@@ -101104,6 +107913,7 @@ export namespace Prisma {
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedCreateNestedManyWithoutProductInput
     customerRewards?: CustomerRewardUncheckedCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepUncheckedCreateNestedManyWithoutProductsInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductUpdateInput = {
@@ -101136,6 +107946,7 @@ export namespace Prisma {
     prizeProducts?: ProgressiveDiscountPrizeProductUpdateManyWithoutProductNestedInput
     customerRewards?: CustomerRewardUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUpdateManyWithoutProductsNestedInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateInput = {
@@ -101168,6 +107979,7 @@ export namespace Prisma {
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutProductNestedInput
     customerRewards?: CustomerRewardUncheckedUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUncheckedUpdateManyWithoutProductsNestedInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductCreateManyInput = {
@@ -101410,6 +108222,7 @@ export namespace Prisma {
     categories?: CategoryCreateNestedManyWithoutMenuInput
     menuCategories?: MenuCategoryCreateNestedManyWithoutMenuInput
     menuVisits?: MenuVisitCreateNestedManyWithoutMenuInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskCreateNestedManyWithoutMenuInput
   }
 
   export type MenuUncheckedCreateInput = {
@@ -101424,6 +108237,7 @@ export namespace Prisma {
     categories?: CategoryUncheckedCreateNestedManyWithoutMenuInput
     menuCategories?: MenuCategoryUncheckedCreateNestedManyWithoutMenuInput
     menuVisits?: MenuVisitUncheckedCreateNestedManyWithoutMenuInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedCreateNestedManyWithoutMenuInput
   }
 
   export type MenuUpdateInput = {
@@ -101438,6 +108252,7 @@ export namespace Prisma {
     categories?: CategoryUpdateManyWithoutMenuNestedInput
     menuCategories?: MenuCategoryUpdateManyWithoutMenuNestedInput
     menuVisits?: MenuVisitUpdateManyWithoutMenuNestedInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUpdateManyWithoutMenuNestedInput
   }
 
   export type MenuUncheckedUpdateInput = {
@@ -101452,6 +108267,7 @@ export namespace Prisma {
     categories?: CategoryUncheckedUpdateManyWithoutMenuNestedInput
     menuCategories?: MenuCategoryUncheckedUpdateManyWithoutMenuNestedInput
     menuVisits?: MenuVisitUncheckedUpdateManyWithoutMenuNestedInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedUpdateManyWithoutMenuNestedInput
   }
 
   export type MenuCreateManyInput = {
@@ -105268,6 +112084,18 @@ export namespace Prisma {
     none?: SquareConnectionWhereInput
   }
 
+  export type SquareCatalogSyncTaskListRelationFilter = {
+    every?: SquareCatalogSyncTaskWhereInput
+    some?: SquareCatalogSyncTaskWhereInput
+    none?: SquareCatalogSyncTaskWhereInput
+  }
+
+  export type SquareWebhookRunListRelationFilter = {
+    every?: SquareWebhookRunWhereInput
+    some?: SquareWebhookRunWhereInput
+    none?: SquareWebhookRunWhereInput
+  }
+
   export type UserPushDeviceListRelationFilter = {
     every?: UserPushDeviceWhereInput
     some?: UserPushDeviceWhereInput
@@ -105287,6 +112115,14 @@ export namespace Prisma {
   }
 
   export type SquareConnectionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type SquareCatalogSyncTaskOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type SquareWebhookRunOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -105677,6 +112513,307 @@ export namespace Prisma {
     tokenType?: SortOrder
     expiresAt?: SortOrder
     connectedAt?: SortOrder
+  }
+
+  export type EnumSquareCatalogSyncTaskTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.SquareCatalogSyncTaskType | EnumSquareCatalogSyncTaskTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.SquareCatalogSyncTaskType[] | ListEnumSquareCatalogSyncTaskTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SquareCatalogSyncTaskType[] | ListEnumSquareCatalogSyncTaskTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumSquareCatalogSyncTaskTypeFilter<$PrismaModel> | $Enums.SquareCatalogSyncTaskType
+  }
+
+  export type EnumSquareCatalogSyncTaskStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.SquareCatalogSyncTaskStatus | EnumSquareCatalogSyncTaskStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.SquareCatalogSyncTaskStatus[] | ListEnumSquareCatalogSyncTaskStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SquareCatalogSyncTaskStatus[] | ListEnumSquareCatalogSyncTaskStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumSquareCatalogSyncTaskStatusFilter<$PrismaModel> | $Enums.SquareCatalogSyncTaskStatus
+  }
+
+  export type MenuNullableScalarRelationFilter = {
+    is?: MenuWhereInput | null
+    isNot?: MenuWhereInput | null
+  }
+
+  export type SquareCatalogSyncTaskCountOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    businessId?: SortOrder
+    productId?: SortOrder
+    menuId?: SortOrder
+    taskType?: SortOrder
+    status?: SortOrder
+    attempts?: SortOrder
+    availableAt?: SortOrder
+    processingStartedAt?: SortOrder
+    finishedAt?: SortOrder
+    errorMessage?: SortOrder
+    requestPayload?: SortOrder
+    responsePayload?: SortOrder
+  }
+
+  export type SquareCatalogSyncTaskAvgOrderByAggregateInput = {
+    attempts?: SortOrder
+  }
+
+  export type SquareCatalogSyncTaskMaxOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    businessId?: SortOrder
+    productId?: SortOrder
+    menuId?: SortOrder
+    taskType?: SortOrder
+    status?: SortOrder
+    attempts?: SortOrder
+    availableAt?: SortOrder
+    processingStartedAt?: SortOrder
+    finishedAt?: SortOrder
+    errorMessage?: SortOrder
+  }
+
+  export type SquareCatalogSyncTaskMinOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    businessId?: SortOrder
+    productId?: SortOrder
+    menuId?: SortOrder
+    taskType?: SortOrder
+    status?: SortOrder
+    attempts?: SortOrder
+    availableAt?: SortOrder
+    processingStartedAt?: SortOrder
+    finishedAt?: SortOrder
+    errorMessage?: SortOrder
+  }
+
+  export type SquareCatalogSyncTaskSumOrderByAggregateInput = {
+    attempts?: SortOrder
+  }
+
+  export type EnumSquareCatalogSyncTaskTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SquareCatalogSyncTaskType | EnumSquareCatalogSyncTaskTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.SquareCatalogSyncTaskType[] | ListEnumSquareCatalogSyncTaskTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SquareCatalogSyncTaskType[] | ListEnumSquareCatalogSyncTaskTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumSquareCatalogSyncTaskTypeWithAggregatesFilter<$PrismaModel> | $Enums.SquareCatalogSyncTaskType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumSquareCatalogSyncTaskTypeFilter<$PrismaModel>
+    _max?: NestedEnumSquareCatalogSyncTaskTypeFilter<$PrismaModel>
+  }
+
+  export type EnumSquareCatalogSyncTaskStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SquareCatalogSyncTaskStatus | EnumSquareCatalogSyncTaskStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.SquareCatalogSyncTaskStatus[] | ListEnumSquareCatalogSyncTaskStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SquareCatalogSyncTaskStatus[] | ListEnumSquareCatalogSyncTaskStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumSquareCatalogSyncTaskStatusWithAggregatesFilter<$PrismaModel> | $Enums.SquareCatalogSyncTaskStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumSquareCatalogSyncTaskStatusFilter<$PrismaModel>
+    _max?: NestedEnumSquareCatalogSyncTaskStatusFilter<$PrismaModel>
+  }
+
+  export type BoolNullableFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
+  }
+
+  export type EnumSquareWebhookRunStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.SquareWebhookRunStatus | EnumSquareWebhookRunStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.SquareWebhookRunStatus[] | ListEnumSquareWebhookRunStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SquareWebhookRunStatus[] | ListEnumSquareWebhookRunStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumSquareWebhookRunStatusFilter<$PrismaModel> | $Enums.SquareWebhookRunStatus
+  }
+
+  export type SquareWebhookRunAttemptListRelationFilter = {
+    every?: SquareWebhookRunAttemptWhereInput
+    some?: SquareWebhookRunAttemptWhereInput
+    none?: SquareWebhookRunAttemptWhereInput
+  }
+
+  export type SquareWebhookRunAttemptOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type SquareWebhookRunCountOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    businessId?: SortOrder
+    eventId?: SortOrder
+    eventType?: SortOrder
+    merchantId?: SortOrder
+    squareOrderId?: SortOrder
+    locationId?: SortOrder
+    squareOrderState?: SortOrder
+    signatureVerified?: SortOrder
+    status?: SortOrder
+    action?: SortOrder
+    reason?: SortOrder
+    foodyOrderId?: SortOrder
+    firstReceivedAt?: SortOrder
+    lastReceivedAt?: SortOrder
+    processedAt?: SortOrder
+    processingDurationMs?: SortOrder
+    attemptsCount?: SortOrder
+    httpStatusCode?: SortOrder
+    errorMessage?: SortOrder
+    webhookPayload?: SortOrder
+    squareOrderPayload?: SortOrder
+    responsePayload?: SortOrder
+  }
+
+  export type SquareWebhookRunAvgOrderByAggregateInput = {
+    processingDurationMs?: SortOrder
+    attemptsCount?: SortOrder
+    httpStatusCode?: SortOrder
+  }
+
+  export type SquareWebhookRunMaxOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    businessId?: SortOrder
+    eventId?: SortOrder
+    eventType?: SortOrder
+    merchantId?: SortOrder
+    squareOrderId?: SortOrder
+    locationId?: SortOrder
+    squareOrderState?: SortOrder
+    signatureVerified?: SortOrder
+    status?: SortOrder
+    action?: SortOrder
+    reason?: SortOrder
+    foodyOrderId?: SortOrder
+    firstReceivedAt?: SortOrder
+    lastReceivedAt?: SortOrder
+    processedAt?: SortOrder
+    processingDurationMs?: SortOrder
+    attemptsCount?: SortOrder
+    httpStatusCode?: SortOrder
+    errorMessage?: SortOrder
+  }
+
+  export type SquareWebhookRunMinOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    businessId?: SortOrder
+    eventId?: SortOrder
+    eventType?: SortOrder
+    merchantId?: SortOrder
+    squareOrderId?: SortOrder
+    locationId?: SortOrder
+    squareOrderState?: SortOrder
+    signatureVerified?: SortOrder
+    status?: SortOrder
+    action?: SortOrder
+    reason?: SortOrder
+    foodyOrderId?: SortOrder
+    firstReceivedAt?: SortOrder
+    lastReceivedAt?: SortOrder
+    processedAt?: SortOrder
+    processingDurationMs?: SortOrder
+    attemptsCount?: SortOrder
+    httpStatusCode?: SortOrder
+    errorMessage?: SortOrder
+  }
+
+  export type SquareWebhookRunSumOrderByAggregateInput = {
+    processingDurationMs?: SortOrder
+    attemptsCount?: SortOrder
+    httpStatusCode?: SortOrder
+  }
+
+  export type BoolNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableWithAggregatesFilter<$PrismaModel> | boolean | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedBoolNullableFilter<$PrismaModel>
+    _max?: NestedBoolNullableFilter<$PrismaModel>
+  }
+
+  export type EnumSquareWebhookRunStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SquareWebhookRunStatus | EnumSquareWebhookRunStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.SquareWebhookRunStatus[] | ListEnumSquareWebhookRunStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SquareWebhookRunStatus[] | ListEnumSquareWebhookRunStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumSquareWebhookRunStatusWithAggregatesFilter<$PrismaModel> | $Enums.SquareWebhookRunStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumSquareWebhookRunStatusFilter<$PrismaModel>
+    _max?: NestedEnumSquareWebhookRunStatusFilter<$PrismaModel>
+  }
+
+  export type SquareWebhookRunScalarRelationFilter = {
+    is?: SquareWebhookRunWhereInput
+    isNot?: SquareWebhookRunWhereInput
+  }
+
+  export type SquareWebhookRunAttemptRunIdAttemptNumberCompoundUniqueInput = {
+    runId: string
+    attemptNumber: number
+  }
+
+  export type SquareWebhookRunAttemptCountOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    runId?: SortOrder
+    attemptNumber?: SortOrder
+    receivedAt?: SortOrder
+    finishedAt?: SortOrder
+    processingDurationMs?: SortOrder
+    httpStatusCode?: SortOrder
+    status?: SortOrder
+    action?: SortOrder
+    reason?: SortOrder
+    signatureVerified?: SortOrder
+    errorMessage?: SortOrder
+    requestHeaders?: SortOrder
+    webhookPayload?: SortOrder
+    squareOrderPayload?: SortOrder
+    responsePayload?: SortOrder
+  }
+
+  export type SquareWebhookRunAttemptAvgOrderByAggregateInput = {
+    attemptNumber?: SortOrder
+    processingDurationMs?: SortOrder
+    httpStatusCode?: SortOrder
+  }
+
+  export type SquareWebhookRunAttemptMaxOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    runId?: SortOrder
+    attemptNumber?: SortOrder
+    receivedAt?: SortOrder
+    finishedAt?: SortOrder
+    processingDurationMs?: SortOrder
+    httpStatusCode?: SortOrder
+    status?: SortOrder
+    action?: SortOrder
+    reason?: SortOrder
+    signatureVerified?: SortOrder
+    errorMessage?: SortOrder
+  }
+
+  export type SquareWebhookRunAttemptMinOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    runId?: SortOrder
+    attemptNumber?: SortOrder
+    receivedAt?: SortOrder
+    finishedAt?: SortOrder
+    processingDurationMs?: SortOrder
+    httpStatusCode?: SortOrder
+    status?: SortOrder
+    action?: SortOrder
+    reason?: SortOrder
+    signatureVerified?: SortOrder
+    errorMessage?: SortOrder
+  }
+
+  export type SquareWebhookRunAttemptSumOrderByAggregateInput = {
+    attemptNumber?: SortOrder
+    processingDurationMs?: SortOrder
+    httpStatusCode?: SortOrder
   }
 
   export type EnumExternalMenuEntityTypeFilter<$PrismaModel = never> = {
@@ -106339,11 +113476,6 @@ export namespace Prisma {
     not?: NestedEnumDispatchRoutePointSourceFilter<$PrismaModel> | $Enums.DispatchRoutePointSource
   }
 
-  export type BoolNullableFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
-    not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
-  }
-
   export type DispatchRouteSessionScalarRelationFilter = {
     is?: DispatchRouteSessionWhereInput
     isNot?: DispatchRouteSessionWhereInput
@@ -106446,14 +113578,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumDispatchRoutePointSourceFilter<$PrismaModel>
     _max?: NestedEnumDispatchRoutePointSourceFilter<$PrismaModel>
-  }
-
-  export type BoolNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
-    not?: NestedBoolNullableWithAggregatesFilter<$PrismaModel> | boolean | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedBoolNullableFilter<$PrismaModel>
-    _max?: NestedBoolNullableFilter<$PrismaModel>
   }
 
   export type EnumDispatchRouteMilestoneTypeFilter<$PrismaModel = never> = {
@@ -106784,6 +113908,75 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumFeedbackWhatsAppJobStatusFilter<$PrismaModel>
     _max?: NestedEnumFeedbackWhatsAppJobStatusFilter<$PrismaModel>
+  }
+
+  export type EnumDispatchWhatsAppJobStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.DispatchWhatsAppJobStatus | EnumDispatchWhatsAppJobStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.DispatchWhatsAppJobStatus[] | ListEnumDispatchWhatsAppJobStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DispatchWhatsAppJobStatus[] | ListEnumDispatchWhatsAppJobStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumDispatchWhatsAppJobStatusFilter<$PrismaModel> | $Enums.DispatchWhatsAppJobStatus
+  }
+
+  export type DispatchWhatsAppJobOrderIdKindCompoundUniqueInput = {
+    orderId: string
+    kind: string
+  }
+
+  export type DispatchWhatsAppJobCountOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    status?: SortOrder
+    attempts?: SortOrder
+    availableAt?: SortOrder
+    processingStartedAt?: SortOrder
+    completedAt?: SortOrder
+    lastError?: SortOrder
+    orderId?: SortOrder
+    kind?: SortOrder
+  }
+
+  export type DispatchWhatsAppJobAvgOrderByAggregateInput = {
+    attempts?: SortOrder
+  }
+
+  export type DispatchWhatsAppJobMaxOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    status?: SortOrder
+    attempts?: SortOrder
+    availableAt?: SortOrder
+    processingStartedAt?: SortOrder
+    completedAt?: SortOrder
+    lastError?: SortOrder
+    orderId?: SortOrder
+    kind?: SortOrder
+  }
+
+  export type DispatchWhatsAppJobMinOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    status?: SortOrder
+    attempts?: SortOrder
+    availableAt?: SortOrder
+    processingStartedAt?: SortOrder
+    completedAt?: SortOrder
+    lastError?: SortOrder
+    orderId?: SortOrder
+    kind?: SortOrder
+  }
+
+  export type DispatchWhatsAppJobSumOrderByAggregateInput = {
+    attempts?: SortOrder
+  }
+
+  export type EnumDispatchWhatsAppJobStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.DispatchWhatsAppJobStatus | EnumDispatchWhatsAppJobStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.DispatchWhatsAppJobStatus[] | ListEnumDispatchWhatsAppJobStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DispatchWhatsAppJobStatus[] | ListEnumDispatchWhatsAppJobStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumDispatchWhatsAppJobStatusWithAggregatesFilter<$PrismaModel> | $Enums.DispatchWhatsAppJobStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumDispatchWhatsAppJobStatusFilter<$PrismaModel>
+    _max?: NestedEnumDispatchWhatsAppJobStatusFilter<$PrismaModel>
   }
 
   export type BranchNullableScalarRelationFilter = {
@@ -107170,11 +114363,6 @@ export namespace Prisma {
     isDefault?: SortOrder
     squareMenuId?: SortOrder
     squareMenuVersion?: SortOrder
-  }
-
-  export type MenuNullableScalarRelationFilter = {
-    is?: MenuWhereInput | null
-    isNot?: MenuWhereInput | null
   }
 
   export type ExclusivePromotionNullableScalarRelationFilter = {
@@ -109920,6 +117108,20 @@ export namespace Prisma {
     connect?: SquareConnectionWhereUniqueInput | SquareConnectionWhereUniqueInput[]
   }
 
+  export type SquareCatalogSyncTaskCreateNestedManyWithoutBusinessInput = {
+    create?: XOR<SquareCatalogSyncTaskCreateWithoutBusinessInput, SquareCatalogSyncTaskUncheckedCreateWithoutBusinessInput> | SquareCatalogSyncTaskCreateWithoutBusinessInput[] | SquareCatalogSyncTaskUncheckedCreateWithoutBusinessInput[]
+    connectOrCreate?: SquareCatalogSyncTaskCreateOrConnectWithoutBusinessInput | SquareCatalogSyncTaskCreateOrConnectWithoutBusinessInput[]
+    createMany?: SquareCatalogSyncTaskCreateManyBusinessInputEnvelope
+    connect?: SquareCatalogSyncTaskWhereUniqueInput | SquareCatalogSyncTaskWhereUniqueInput[]
+  }
+
+  export type SquareWebhookRunCreateNestedManyWithoutBusinessInput = {
+    create?: XOR<SquareWebhookRunCreateWithoutBusinessInput, SquareWebhookRunUncheckedCreateWithoutBusinessInput> | SquareWebhookRunCreateWithoutBusinessInput[] | SquareWebhookRunUncheckedCreateWithoutBusinessInput[]
+    connectOrCreate?: SquareWebhookRunCreateOrConnectWithoutBusinessInput | SquareWebhookRunCreateOrConnectWithoutBusinessInput[]
+    createMany?: SquareWebhookRunCreateManyBusinessInputEnvelope
+    connect?: SquareWebhookRunWhereUniqueInput | SquareWebhookRunWhereUniqueInput[]
+  }
+
   export type UserPushDeviceCreateNestedManyWithoutBusinessInput = {
     create?: XOR<UserPushDeviceCreateWithoutBusinessInput, UserPushDeviceUncheckedCreateWithoutBusinessInput> | UserPushDeviceCreateWithoutBusinessInput[] | UserPushDeviceUncheckedCreateWithoutBusinessInput[]
     connectOrCreate?: UserPushDeviceCreateOrConnectWithoutBusinessInput | UserPushDeviceCreateOrConnectWithoutBusinessInput[]
@@ -109953,6 +117155,20 @@ export namespace Prisma {
     connectOrCreate?: SquareConnectionCreateOrConnectWithoutBusinessInput | SquareConnectionCreateOrConnectWithoutBusinessInput[]
     createMany?: SquareConnectionCreateManyBusinessInputEnvelope
     connect?: SquareConnectionWhereUniqueInput | SquareConnectionWhereUniqueInput[]
+  }
+
+  export type SquareCatalogSyncTaskUncheckedCreateNestedManyWithoutBusinessInput = {
+    create?: XOR<SquareCatalogSyncTaskCreateWithoutBusinessInput, SquareCatalogSyncTaskUncheckedCreateWithoutBusinessInput> | SquareCatalogSyncTaskCreateWithoutBusinessInput[] | SquareCatalogSyncTaskUncheckedCreateWithoutBusinessInput[]
+    connectOrCreate?: SquareCatalogSyncTaskCreateOrConnectWithoutBusinessInput | SquareCatalogSyncTaskCreateOrConnectWithoutBusinessInput[]
+    createMany?: SquareCatalogSyncTaskCreateManyBusinessInputEnvelope
+    connect?: SquareCatalogSyncTaskWhereUniqueInput | SquareCatalogSyncTaskWhereUniqueInput[]
+  }
+
+  export type SquareWebhookRunUncheckedCreateNestedManyWithoutBusinessInput = {
+    create?: XOR<SquareWebhookRunCreateWithoutBusinessInput, SquareWebhookRunUncheckedCreateWithoutBusinessInput> | SquareWebhookRunCreateWithoutBusinessInput[] | SquareWebhookRunUncheckedCreateWithoutBusinessInput[]
+    connectOrCreate?: SquareWebhookRunCreateOrConnectWithoutBusinessInput | SquareWebhookRunCreateOrConnectWithoutBusinessInput[]
+    createMany?: SquareWebhookRunCreateManyBusinessInputEnvelope
+    connect?: SquareWebhookRunWhereUniqueInput | SquareWebhookRunWhereUniqueInput[]
   }
 
   export type UserPushDeviceUncheckedCreateNestedManyWithoutBusinessInput = {
@@ -110016,6 +117232,34 @@ export namespace Prisma {
     update?: SquareConnectionUpdateWithWhereUniqueWithoutBusinessInput | SquareConnectionUpdateWithWhereUniqueWithoutBusinessInput[]
     updateMany?: SquareConnectionUpdateManyWithWhereWithoutBusinessInput | SquareConnectionUpdateManyWithWhereWithoutBusinessInput[]
     deleteMany?: SquareConnectionScalarWhereInput | SquareConnectionScalarWhereInput[]
+  }
+
+  export type SquareCatalogSyncTaskUpdateManyWithoutBusinessNestedInput = {
+    create?: XOR<SquareCatalogSyncTaskCreateWithoutBusinessInput, SquareCatalogSyncTaskUncheckedCreateWithoutBusinessInput> | SquareCatalogSyncTaskCreateWithoutBusinessInput[] | SquareCatalogSyncTaskUncheckedCreateWithoutBusinessInput[]
+    connectOrCreate?: SquareCatalogSyncTaskCreateOrConnectWithoutBusinessInput | SquareCatalogSyncTaskCreateOrConnectWithoutBusinessInput[]
+    upsert?: SquareCatalogSyncTaskUpsertWithWhereUniqueWithoutBusinessInput | SquareCatalogSyncTaskUpsertWithWhereUniqueWithoutBusinessInput[]
+    createMany?: SquareCatalogSyncTaskCreateManyBusinessInputEnvelope
+    set?: SquareCatalogSyncTaskWhereUniqueInput | SquareCatalogSyncTaskWhereUniqueInput[]
+    disconnect?: SquareCatalogSyncTaskWhereUniqueInput | SquareCatalogSyncTaskWhereUniqueInput[]
+    delete?: SquareCatalogSyncTaskWhereUniqueInput | SquareCatalogSyncTaskWhereUniqueInput[]
+    connect?: SquareCatalogSyncTaskWhereUniqueInput | SquareCatalogSyncTaskWhereUniqueInput[]
+    update?: SquareCatalogSyncTaskUpdateWithWhereUniqueWithoutBusinessInput | SquareCatalogSyncTaskUpdateWithWhereUniqueWithoutBusinessInput[]
+    updateMany?: SquareCatalogSyncTaskUpdateManyWithWhereWithoutBusinessInput | SquareCatalogSyncTaskUpdateManyWithWhereWithoutBusinessInput[]
+    deleteMany?: SquareCatalogSyncTaskScalarWhereInput | SquareCatalogSyncTaskScalarWhereInput[]
+  }
+
+  export type SquareWebhookRunUpdateManyWithoutBusinessNestedInput = {
+    create?: XOR<SquareWebhookRunCreateWithoutBusinessInput, SquareWebhookRunUncheckedCreateWithoutBusinessInput> | SquareWebhookRunCreateWithoutBusinessInput[] | SquareWebhookRunUncheckedCreateWithoutBusinessInput[]
+    connectOrCreate?: SquareWebhookRunCreateOrConnectWithoutBusinessInput | SquareWebhookRunCreateOrConnectWithoutBusinessInput[]
+    upsert?: SquareWebhookRunUpsertWithWhereUniqueWithoutBusinessInput | SquareWebhookRunUpsertWithWhereUniqueWithoutBusinessInput[]
+    createMany?: SquareWebhookRunCreateManyBusinessInputEnvelope
+    set?: SquareWebhookRunWhereUniqueInput | SquareWebhookRunWhereUniqueInput[]
+    disconnect?: SquareWebhookRunWhereUniqueInput | SquareWebhookRunWhereUniqueInput[]
+    delete?: SquareWebhookRunWhereUniqueInput | SquareWebhookRunWhereUniqueInput[]
+    connect?: SquareWebhookRunWhereUniqueInput | SquareWebhookRunWhereUniqueInput[]
+    update?: SquareWebhookRunUpdateWithWhereUniqueWithoutBusinessInput | SquareWebhookRunUpdateWithWhereUniqueWithoutBusinessInput[]
+    updateMany?: SquareWebhookRunUpdateManyWithWhereWithoutBusinessInput | SquareWebhookRunUpdateManyWithWhereWithoutBusinessInput[]
+    deleteMany?: SquareWebhookRunScalarWhereInput | SquareWebhookRunScalarWhereInput[]
   }
 
   export type UserPushDeviceUpdateManyWithoutBusinessNestedInput = {
@@ -110086,6 +117330,34 @@ export namespace Prisma {
     update?: SquareConnectionUpdateWithWhereUniqueWithoutBusinessInput | SquareConnectionUpdateWithWhereUniqueWithoutBusinessInput[]
     updateMany?: SquareConnectionUpdateManyWithWhereWithoutBusinessInput | SquareConnectionUpdateManyWithWhereWithoutBusinessInput[]
     deleteMany?: SquareConnectionScalarWhereInput | SquareConnectionScalarWhereInput[]
+  }
+
+  export type SquareCatalogSyncTaskUncheckedUpdateManyWithoutBusinessNestedInput = {
+    create?: XOR<SquareCatalogSyncTaskCreateWithoutBusinessInput, SquareCatalogSyncTaskUncheckedCreateWithoutBusinessInput> | SquareCatalogSyncTaskCreateWithoutBusinessInput[] | SquareCatalogSyncTaskUncheckedCreateWithoutBusinessInput[]
+    connectOrCreate?: SquareCatalogSyncTaskCreateOrConnectWithoutBusinessInput | SquareCatalogSyncTaskCreateOrConnectWithoutBusinessInput[]
+    upsert?: SquareCatalogSyncTaskUpsertWithWhereUniqueWithoutBusinessInput | SquareCatalogSyncTaskUpsertWithWhereUniqueWithoutBusinessInput[]
+    createMany?: SquareCatalogSyncTaskCreateManyBusinessInputEnvelope
+    set?: SquareCatalogSyncTaskWhereUniqueInput | SquareCatalogSyncTaskWhereUniqueInput[]
+    disconnect?: SquareCatalogSyncTaskWhereUniqueInput | SquareCatalogSyncTaskWhereUniqueInput[]
+    delete?: SquareCatalogSyncTaskWhereUniqueInput | SquareCatalogSyncTaskWhereUniqueInput[]
+    connect?: SquareCatalogSyncTaskWhereUniqueInput | SquareCatalogSyncTaskWhereUniqueInput[]
+    update?: SquareCatalogSyncTaskUpdateWithWhereUniqueWithoutBusinessInput | SquareCatalogSyncTaskUpdateWithWhereUniqueWithoutBusinessInput[]
+    updateMany?: SquareCatalogSyncTaskUpdateManyWithWhereWithoutBusinessInput | SquareCatalogSyncTaskUpdateManyWithWhereWithoutBusinessInput[]
+    deleteMany?: SquareCatalogSyncTaskScalarWhereInput | SquareCatalogSyncTaskScalarWhereInput[]
+  }
+
+  export type SquareWebhookRunUncheckedUpdateManyWithoutBusinessNestedInput = {
+    create?: XOR<SquareWebhookRunCreateWithoutBusinessInput, SquareWebhookRunUncheckedCreateWithoutBusinessInput> | SquareWebhookRunCreateWithoutBusinessInput[] | SquareWebhookRunUncheckedCreateWithoutBusinessInput[]
+    connectOrCreate?: SquareWebhookRunCreateOrConnectWithoutBusinessInput | SquareWebhookRunCreateOrConnectWithoutBusinessInput[]
+    upsert?: SquareWebhookRunUpsertWithWhereUniqueWithoutBusinessInput | SquareWebhookRunUpsertWithWhereUniqueWithoutBusinessInput[]
+    createMany?: SquareWebhookRunCreateManyBusinessInputEnvelope
+    set?: SquareWebhookRunWhereUniqueInput | SquareWebhookRunWhereUniqueInput[]
+    disconnect?: SquareWebhookRunWhereUniqueInput | SquareWebhookRunWhereUniqueInput[]
+    delete?: SquareWebhookRunWhereUniqueInput | SquareWebhookRunWhereUniqueInput[]
+    connect?: SquareWebhookRunWhereUniqueInput | SquareWebhookRunWhereUniqueInput[]
+    update?: SquareWebhookRunUpdateWithWhereUniqueWithoutBusinessInput | SquareWebhookRunUpdateWithWhereUniqueWithoutBusinessInput[]
+    updateMany?: SquareWebhookRunUpdateManyWithWhereWithoutBusinessInput | SquareWebhookRunUpdateManyWithWhereWithoutBusinessInput[]
+    deleteMany?: SquareWebhookRunScalarWhereInput | SquareWebhookRunScalarWhereInput[]
   }
 
   export type UserPushDeviceUncheckedUpdateManyWithoutBusinessNestedInput = {
@@ -110508,6 +117780,140 @@ export namespace Prisma {
     upsert?: BusinessUpsertWithoutSquareConnectionsInput
     connect?: BusinessWhereUniqueInput
     update?: XOR<XOR<BusinessUpdateToOneWithWhereWithoutSquareConnectionsInput, BusinessUpdateWithoutSquareConnectionsInput>, BusinessUncheckedUpdateWithoutSquareConnectionsInput>
+  }
+
+  export type BusinessCreateNestedOneWithoutSquareCatalogSyncTasksInput = {
+    create?: XOR<BusinessCreateWithoutSquareCatalogSyncTasksInput, BusinessUncheckedCreateWithoutSquareCatalogSyncTasksInput>
+    connectOrCreate?: BusinessCreateOrConnectWithoutSquareCatalogSyncTasksInput
+    connect?: BusinessWhereUniqueInput
+  }
+
+  export type ProductCreateNestedOneWithoutSquareCatalogSyncTasksInput = {
+    create?: XOR<ProductCreateWithoutSquareCatalogSyncTasksInput, ProductUncheckedCreateWithoutSquareCatalogSyncTasksInput>
+    connectOrCreate?: ProductCreateOrConnectWithoutSquareCatalogSyncTasksInput
+    connect?: ProductWhereUniqueInput
+  }
+
+  export type MenuCreateNestedOneWithoutSquareCatalogSyncTasksInput = {
+    create?: XOR<MenuCreateWithoutSquareCatalogSyncTasksInput, MenuUncheckedCreateWithoutSquareCatalogSyncTasksInput>
+    connectOrCreate?: MenuCreateOrConnectWithoutSquareCatalogSyncTasksInput
+    connect?: MenuWhereUniqueInput
+  }
+
+  export type EnumSquareCatalogSyncTaskTypeFieldUpdateOperationsInput = {
+    set?: $Enums.SquareCatalogSyncTaskType
+  }
+
+  export type EnumSquareCatalogSyncTaskStatusFieldUpdateOperationsInput = {
+    set?: $Enums.SquareCatalogSyncTaskStatus
+  }
+
+  export type BusinessUpdateOneRequiredWithoutSquareCatalogSyncTasksNestedInput = {
+    create?: XOR<BusinessCreateWithoutSquareCatalogSyncTasksInput, BusinessUncheckedCreateWithoutSquareCatalogSyncTasksInput>
+    connectOrCreate?: BusinessCreateOrConnectWithoutSquareCatalogSyncTasksInput
+    upsert?: BusinessUpsertWithoutSquareCatalogSyncTasksInput
+    connect?: BusinessWhereUniqueInput
+    update?: XOR<XOR<BusinessUpdateToOneWithWhereWithoutSquareCatalogSyncTasksInput, BusinessUpdateWithoutSquareCatalogSyncTasksInput>, BusinessUncheckedUpdateWithoutSquareCatalogSyncTasksInput>
+  }
+
+  export type ProductUpdateOneWithoutSquareCatalogSyncTasksNestedInput = {
+    create?: XOR<ProductCreateWithoutSquareCatalogSyncTasksInput, ProductUncheckedCreateWithoutSquareCatalogSyncTasksInput>
+    connectOrCreate?: ProductCreateOrConnectWithoutSquareCatalogSyncTasksInput
+    upsert?: ProductUpsertWithoutSquareCatalogSyncTasksInput
+    disconnect?: ProductWhereInput | boolean
+    delete?: ProductWhereInput | boolean
+    connect?: ProductWhereUniqueInput
+    update?: XOR<XOR<ProductUpdateToOneWithWhereWithoutSquareCatalogSyncTasksInput, ProductUpdateWithoutSquareCatalogSyncTasksInput>, ProductUncheckedUpdateWithoutSquareCatalogSyncTasksInput>
+  }
+
+  export type MenuUpdateOneWithoutSquareCatalogSyncTasksNestedInput = {
+    create?: XOR<MenuCreateWithoutSquareCatalogSyncTasksInput, MenuUncheckedCreateWithoutSquareCatalogSyncTasksInput>
+    connectOrCreate?: MenuCreateOrConnectWithoutSquareCatalogSyncTasksInput
+    upsert?: MenuUpsertWithoutSquareCatalogSyncTasksInput
+    disconnect?: MenuWhereInput | boolean
+    delete?: MenuWhereInput | boolean
+    connect?: MenuWhereUniqueInput
+    update?: XOR<XOR<MenuUpdateToOneWithWhereWithoutSquareCatalogSyncTasksInput, MenuUpdateWithoutSquareCatalogSyncTasksInput>, MenuUncheckedUpdateWithoutSquareCatalogSyncTasksInput>
+  }
+
+  export type BusinessCreateNestedOneWithoutSquareWebhookRunsInput = {
+    create?: XOR<BusinessCreateWithoutSquareWebhookRunsInput, BusinessUncheckedCreateWithoutSquareWebhookRunsInput>
+    connectOrCreate?: BusinessCreateOrConnectWithoutSquareWebhookRunsInput
+    connect?: BusinessWhereUniqueInput
+  }
+
+  export type SquareWebhookRunAttemptCreateNestedManyWithoutRunInput = {
+    create?: XOR<SquareWebhookRunAttemptCreateWithoutRunInput, SquareWebhookRunAttemptUncheckedCreateWithoutRunInput> | SquareWebhookRunAttemptCreateWithoutRunInput[] | SquareWebhookRunAttemptUncheckedCreateWithoutRunInput[]
+    connectOrCreate?: SquareWebhookRunAttemptCreateOrConnectWithoutRunInput | SquareWebhookRunAttemptCreateOrConnectWithoutRunInput[]
+    createMany?: SquareWebhookRunAttemptCreateManyRunInputEnvelope
+    connect?: SquareWebhookRunAttemptWhereUniqueInput | SquareWebhookRunAttemptWhereUniqueInput[]
+  }
+
+  export type SquareWebhookRunAttemptUncheckedCreateNestedManyWithoutRunInput = {
+    create?: XOR<SquareWebhookRunAttemptCreateWithoutRunInput, SquareWebhookRunAttemptUncheckedCreateWithoutRunInput> | SquareWebhookRunAttemptCreateWithoutRunInput[] | SquareWebhookRunAttemptUncheckedCreateWithoutRunInput[]
+    connectOrCreate?: SquareWebhookRunAttemptCreateOrConnectWithoutRunInput | SquareWebhookRunAttemptCreateOrConnectWithoutRunInput[]
+    createMany?: SquareWebhookRunAttemptCreateManyRunInputEnvelope
+    connect?: SquareWebhookRunAttemptWhereUniqueInput | SquareWebhookRunAttemptWhereUniqueInput[]
+  }
+
+  export type NullableBoolFieldUpdateOperationsInput = {
+    set?: boolean | null
+  }
+
+  export type EnumSquareWebhookRunStatusFieldUpdateOperationsInput = {
+    set?: $Enums.SquareWebhookRunStatus
+  }
+
+  export type BusinessUpdateOneWithoutSquareWebhookRunsNestedInput = {
+    create?: XOR<BusinessCreateWithoutSquareWebhookRunsInput, BusinessUncheckedCreateWithoutSquareWebhookRunsInput>
+    connectOrCreate?: BusinessCreateOrConnectWithoutSquareWebhookRunsInput
+    upsert?: BusinessUpsertWithoutSquareWebhookRunsInput
+    disconnect?: BusinessWhereInput | boolean
+    delete?: BusinessWhereInput | boolean
+    connect?: BusinessWhereUniqueInput
+    update?: XOR<XOR<BusinessUpdateToOneWithWhereWithoutSquareWebhookRunsInput, BusinessUpdateWithoutSquareWebhookRunsInput>, BusinessUncheckedUpdateWithoutSquareWebhookRunsInput>
+  }
+
+  export type SquareWebhookRunAttemptUpdateManyWithoutRunNestedInput = {
+    create?: XOR<SquareWebhookRunAttemptCreateWithoutRunInput, SquareWebhookRunAttemptUncheckedCreateWithoutRunInput> | SquareWebhookRunAttemptCreateWithoutRunInput[] | SquareWebhookRunAttemptUncheckedCreateWithoutRunInput[]
+    connectOrCreate?: SquareWebhookRunAttemptCreateOrConnectWithoutRunInput | SquareWebhookRunAttemptCreateOrConnectWithoutRunInput[]
+    upsert?: SquareWebhookRunAttemptUpsertWithWhereUniqueWithoutRunInput | SquareWebhookRunAttemptUpsertWithWhereUniqueWithoutRunInput[]
+    createMany?: SquareWebhookRunAttemptCreateManyRunInputEnvelope
+    set?: SquareWebhookRunAttemptWhereUniqueInput | SquareWebhookRunAttemptWhereUniqueInput[]
+    disconnect?: SquareWebhookRunAttemptWhereUniqueInput | SquareWebhookRunAttemptWhereUniqueInput[]
+    delete?: SquareWebhookRunAttemptWhereUniqueInput | SquareWebhookRunAttemptWhereUniqueInput[]
+    connect?: SquareWebhookRunAttemptWhereUniqueInput | SquareWebhookRunAttemptWhereUniqueInput[]
+    update?: SquareWebhookRunAttemptUpdateWithWhereUniqueWithoutRunInput | SquareWebhookRunAttemptUpdateWithWhereUniqueWithoutRunInput[]
+    updateMany?: SquareWebhookRunAttemptUpdateManyWithWhereWithoutRunInput | SquareWebhookRunAttemptUpdateManyWithWhereWithoutRunInput[]
+    deleteMany?: SquareWebhookRunAttemptScalarWhereInput | SquareWebhookRunAttemptScalarWhereInput[]
+  }
+
+  export type SquareWebhookRunAttemptUncheckedUpdateManyWithoutRunNestedInput = {
+    create?: XOR<SquareWebhookRunAttemptCreateWithoutRunInput, SquareWebhookRunAttemptUncheckedCreateWithoutRunInput> | SquareWebhookRunAttemptCreateWithoutRunInput[] | SquareWebhookRunAttemptUncheckedCreateWithoutRunInput[]
+    connectOrCreate?: SquareWebhookRunAttemptCreateOrConnectWithoutRunInput | SquareWebhookRunAttemptCreateOrConnectWithoutRunInput[]
+    upsert?: SquareWebhookRunAttemptUpsertWithWhereUniqueWithoutRunInput | SquareWebhookRunAttemptUpsertWithWhereUniqueWithoutRunInput[]
+    createMany?: SquareWebhookRunAttemptCreateManyRunInputEnvelope
+    set?: SquareWebhookRunAttemptWhereUniqueInput | SquareWebhookRunAttemptWhereUniqueInput[]
+    disconnect?: SquareWebhookRunAttemptWhereUniqueInput | SquareWebhookRunAttemptWhereUniqueInput[]
+    delete?: SquareWebhookRunAttemptWhereUniqueInput | SquareWebhookRunAttemptWhereUniqueInput[]
+    connect?: SquareWebhookRunAttemptWhereUniqueInput | SquareWebhookRunAttemptWhereUniqueInput[]
+    update?: SquareWebhookRunAttemptUpdateWithWhereUniqueWithoutRunInput | SquareWebhookRunAttemptUpdateWithWhereUniqueWithoutRunInput[]
+    updateMany?: SquareWebhookRunAttemptUpdateManyWithWhereWithoutRunInput | SquareWebhookRunAttemptUpdateManyWithWhereWithoutRunInput[]
+    deleteMany?: SquareWebhookRunAttemptScalarWhereInput | SquareWebhookRunAttemptScalarWhereInput[]
+  }
+
+  export type SquareWebhookRunCreateNestedOneWithoutAttemptsInput = {
+    create?: XOR<SquareWebhookRunCreateWithoutAttemptsInput, SquareWebhookRunUncheckedCreateWithoutAttemptsInput>
+    connectOrCreate?: SquareWebhookRunCreateOrConnectWithoutAttemptsInput
+    connect?: SquareWebhookRunWhereUniqueInput
+  }
+
+  export type SquareWebhookRunUpdateOneRequiredWithoutAttemptsNestedInput = {
+    create?: XOR<SquareWebhookRunCreateWithoutAttemptsInput, SquareWebhookRunUncheckedCreateWithoutAttemptsInput>
+    connectOrCreate?: SquareWebhookRunCreateOrConnectWithoutAttemptsInput
+    upsert?: SquareWebhookRunUpsertWithoutAttemptsInput
+    connect?: SquareWebhookRunWhereUniqueInput
+    update?: XOR<XOR<SquareWebhookRunUpdateToOneWithWhereWithoutAttemptsInput, SquareWebhookRunUpdateWithoutAttemptsInput>, SquareWebhookRunUncheckedUpdateWithoutAttemptsInput>
   }
 
   export type ExternalIntegrationConnectionCreateNestedOneWithoutMenuEntityMapsInput = {
@@ -111214,10 +118620,6 @@ export namespace Prisma {
     set?: $Enums.DispatchRoutePointSource
   }
 
-  export type NullableBoolFieldUpdateOperationsInput = {
-    set?: boolean | null
-  }
-
   export type DispatchRouteSessionUpdateOneRequiredWithoutPointsNestedInput = {
     create?: XOR<DispatchRouteSessionCreateWithoutPointsInput, DispatchRouteSessionUncheckedCreateWithoutPointsInput>
     connectOrCreate?: DispatchRouteSessionCreateOrConnectWithoutPointsInput
@@ -111314,6 +118716,10 @@ export namespace Prisma {
 
   export type EnumFeedbackWhatsAppJobStatusFieldUpdateOperationsInput = {
     set?: $Enums.FeedbackWhatsAppJobStatus
+  }
+
+  export type EnumDispatchWhatsAppJobStatusFieldUpdateOperationsInput = {
+    set?: $Enums.DispatchWhatsAppJobStatus
   }
 
   export type BranchCreateNestedOneWithoutAddressInput = {
@@ -111485,6 +118891,13 @@ export namespace Prisma {
     connect?: PreparationStepWhereUniqueInput | PreparationStepWhereUniqueInput[]
   }
 
+  export type SquareCatalogSyncTaskCreateNestedManyWithoutProductInput = {
+    create?: XOR<SquareCatalogSyncTaskCreateWithoutProductInput, SquareCatalogSyncTaskUncheckedCreateWithoutProductInput> | SquareCatalogSyncTaskCreateWithoutProductInput[] | SquareCatalogSyncTaskUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: SquareCatalogSyncTaskCreateOrConnectWithoutProductInput | SquareCatalogSyncTaskCreateOrConnectWithoutProductInput[]
+    createMany?: SquareCatalogSyncTaskCreateManyProductInputEnvelope
+    connect?: SquareCatalogSyncTaskWhereUniqueInput | SquareCatalogSyncTaskWhereUniqueInput[]
+  }
+
   export type FileUncheckedCreateNestedManyWithoutProductInput = {
     create?: XOR<FileCreateWithoutProductInput, FileUncheckedCreateWithoutProductInput> | FileCreateWithoutProductInput[] | FileUncheckedCreateWithoutProductInput[]
     connectOrCreate?: FileCreateOrConnectWithoutProductInput | FileCreateOrConnectWithoutProductInput[]
@@ -111572,6 +118985,13 @@ export namespace Prisma {
     create?: XOR<PreparationStepCreateWithoutProductsInput, PreparationStepUncheckedCreateWithoutProductsInput> | PreparationStepCreateWithoutProductsInput[] | PreparationStepUncheckedCreateWithoutProductsInput[]
     connectOrCreate?: PreparationStepCreateOrConnectWithoutProductsInput | PreparationStepCreateOrConnectWithoutProductsInput[]
     connect?: PreparationStepWhereUniqueInput | PreparationStepWhereUniqueInput[]
+  }
+
+  export type SquareCatalogSyncTaskUncheckedCreateNestedManyWithoutProductInput = {
+    create?: XOR<SquareCatalogSyncTaskCreateWithoutProductInput, SquareCatalogSyncTaskUncheckedCreateWithoutProductInput> | SquareCatalogSyncTaskCreateWithoutProductInput[] | SquareCatalogSyncTaskUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: SquareCatalogSyncTaskCreateOrConnectWithoutProductInput | SquareCatalogSyncTaskCreateOrConnectWithoutProductInput[]
+    createMany?: SquareCatalogSyncTaskCreateManyProductInputEnvelope
+    connect?: SquareCatalogSyncTaskWhereUniqueInput | SquareCatalogSyncTaskWhereUniqueInput[]
   }
 
   export type EnumProductItemTypeFieldUpdateOperationsInput = {
@@ -111768,6 +119188,20 @@ export namespace Prisma {
     deleteMany?: PreparationStepScalarWhereInput | PreparationStepScalarWhereInput[]
   }
 
+  export type SquareCatalogSyncTaskUpdateManyWithoutProductNestedInput = {
+    create?: XOR<SquareCatalogSyncTaskCreateWithoutProductInput, SquareCatalogSyncTaskUncheckedCreateWithoutProductInput> | SquareCatalogSyncTaskCreateWithoutProductInput[] | SquareCatalogSyncTaskUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: SquareCatalogSyncTaskCreateOrConnectWithoutProductInput | SquareCatalogSyncTaskCreateOrConnectWithoutProductInput[]
+    upsert?: SquareCatalogSyncTaskUpsertWithWhereUniqueWithoutProductInput | SquareCatalogSyncTaskUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: SquareCatalogSyncTaskCreateManyProductInputEnvelope
+    set?: SquareCatalogSyncTaskWhereUniqueInput | SquareCatalogSyncTaskWhereUniqueInput[]
+    disconnect?: SquareCatalogSyncTaskWhereUniqueInput | SquareCatalogSyncTaskWhereUniqueInput[]
+    delete?: SquareCatalogSyncTaskWhereUniqueInput | SquareCatalogSyncTaskWhereUniqueInput[]
+    connect?: SquareCatalogSyncTaskWhereUniqueInput | SquareCatalogSyncTaskWhereUniqueInput[]
+    update?: SquareCatalogSyncTaskUpdateWithWhereUniqueWithoutProductInput | SquareCatalogSyncTaskUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: SquareCatalogSyncTaskUpdateManyWithWhereWithoutProductInput | SquareCatalogSyncTaskUpdateManyWithWhereWithoutProductInput[]
+    deleteMany?: SquareCatalogSyncTaskScalarWhereInput | SquareCatalogSyncTaskScalarWhereInput[]
+  }
+
   export type FileUncheckedUpdateManyWithoutProductNestedInput = {
     create?: XOR<FileCreateWithoutProductInput, FileUncheckedCreateWithoutProductInput> | FileCreateWithoutProductInput[] | FileUncheckedCreateWithoutProductInput[]
     connectOrCreate?: FileCreateOrConnectWithoutProductInput | FileCreateOrConnectWithoutProductInput[]
@@ -111948,6 +119382,20 @@ export namespace Prisma {
     deleteMany?: PreparationStepScalarWhereInput | PreparationStepScalarWhereInput[]
   }
 
+  export type SquareCatalogSyncTaskUncheckedUpdateManyWithoutProductNestedInput = {
+    create?: XOR<SquareCatalogSyncTaskCreateWithoutProductInput, SquareCatalogSyncTaskUncheckedCreateWithoutProductInput> | SquareCatalogSyncTaskCreateWithoutProductInput[] | SquareCatalogSyncTaskUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: SquareCatalogSyncTaskCreateOrConnectWithoutProductInput | SquareCatalogSyncTaskCreateOrConnectWithoutProductInput[]
+    upsert?: SquareCatalogSyncTaskUpsertWithWhereUniqueWithoutProductInput | SquareCatalogSyncTaskUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: SquareCatalogSyncTaskCreateManyProductInputEnvelope
+    set?: SquareCatalogSyncTaskWhereUniqueInput | SquareCatalogSyncTaskWhereUniqueInput[]
+    disconnect?: SquareCatalogSyncTaskWhereUniqueInput | SquareCatalogSyncTaskWhereUniqueInput[]
+    delete?: SquareCatalogSyncTaskWhereUniqueInput | SquareCatalogSyncTaskWhereUniqueInput[]
+    connect?: SquareCatalogSyncTaskWhereUniqueInput | SquareCatalogSyncTaskWhereUniqueInput[]
+    update?: SquareCatalogSyncTaskUpdateWithWhereUniqueWithoutProductInput | SquareCatalogSyncTaskUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: SquareCatalogSyncTaskUpdateManyWithWhereWithoutProductInput | SquareCatalogSyncTaskUpdateManyWithWhereWithoutProductInput[]
+    deleteMany?: SquareCatalogSyncTaskScalarWhereInput | SquareCatalogSyncTaskScalarWhereInput[]
+  }
+
   export type ProductCreateNestedOneWithoutComboProductItemsInput = {
     create?: XOR<ProductCreateWithoutComboProductItemsInput, ProductUncheckedCreateWithoutComboProductItemsInput>
     connectOrCreate?: ProductCreateOrConnectWithoutComboProductItemsInput
@@ -112118,6 +119566,13 @@ export namespace Prisma {
     connect?: MenuVisitWhereUniqueInput | MenuVisitWhereUniqueInput[]
   }
 
+  export type SquareCatalogSyncTaskCreateNestedManyWithoutMenuInput = {
+    create?: XOR<SquareCatalogSyncTaskCreateWithoutMenuInput, SquareCatalogSyncTaskUncheckedCreateWithoutMenuInput> | SquareCatalogSyncTaskCreateWithoutMenuInput[] | SquareCatalogSyncTaskUncheckedCreateWithoutMenuInput[]
+    connectOrCreate?: SquareCatalogSyncTaskCreateOrConnectWithoutMenuInput | SquareCatalogSyncTaskCreateOrConnectWithoutMenuInput[]
+    createMany?: SquareCatalogSyncTaskCreateManyMenuInputEnvelope
+    connect?: SquareCatalogSyncTaskWhereUniqueInput | SquareCatalogSyncTaskWhereUniqueInput[]
+  }
+
   export type CategoryUncheckedCreateNestedManyWithoutMenuInput = {
     create?: XOR<CategoryCreateWithoutMenuInput, CategoryUncheckedCreateWithoutMenuInput> | CategoryCreateWithoutMenuInput[] | CategoryUncheckedCreateWithoutMenuInput[]
     connectOrCreate?: CategoryCreateOrConnectWithoutMenuInput | CategoryCreateOrConnectWithoutMenuInput[]
@@ -112137,6 +119592,13 @@ export namespace Prisma {
     connectOrCreate?: MenuVisitCreateOrConnectWithoutMenuInput | MenuVisitCreateOrConnectWithoutMenuInput[]
     createMany?: MenuVisitCreateManyMenuInputEnvelope
     connect?: MenuVisitWhereUniqueInput | MenuVisitWhereUniqueInput[]
+  }
+
+  export type SquareCatalogSyncTaskUncheckedCreateNestedManyWithoutMenuInput = {
+    create?: XOR<SquareCatalogSyncTaskCreateWithoutMenuInput, SquareCatalogSyncTaskUncheckedCreateWithoutMenuInput> | SquareCatalogSyncTaskCreateWithoutMenuInput[] | SquareCatalogSyncTaskUncheckedCreateWithoutMenuInput[]
+    connectOrCreate?: SquareCatalogSyncTaskCreateOrConnectWithoutMenuInput | SquareCatalogSyncTaskCreateOrConnectWithoutMenuInput[]
+    createMany?: SquareCatalogSyncTaskCreateManyMenuInputEnvelope
+    connect?: SquareCatalogSyncTaskWhereUniqueInput | SquareCatalogSyncTaskWhereUniqueInput[]
   }
 
   export type CategoryUpdateManyWithoutMenuNestedInput = {
@@ -112181,6 +119643,20 @@ export namespace Prisma {
     deleteMany?: MenuVisitScalarWhereInput | MenuVisitScalarWhereInput[]
   }
 
+  export type SquareCatalogSyncTaskUpdateManyWithoutMenuNestedInput = {
+    create?: XOR<SquareCatalogSyncTaskCreateWithoutMenuInput, SquareCatalogSyncTaskUncheckedCreateWithoutMenuInput> | SquareCatalogSyncTaskCreateWithoutMenuInput[] | SquareCatalogSyncTaskUncheckedCreateWithoutMenuInput[]
+    connectOrCreate?: SquareCatalogSyncTaskCreateOrConnectWithoutMenuInput | SquareCatalogSyncTaskCreateOrConnectWithoutMenuInput[]
+    upsert?: SquareCatalogSyncTaskUpsertWithWhereUniqueWithoutMenuInput | SquareCatalogSyncTaskUpsertWithWhereUniqueWithoutMenuInput[]
+    createMany?: SquareCatalogSyncTaskCreateManyMenuInputEnvelope
+    set?: SquareCatalogSyncTaskWhereUniqueInput | SquareCatalogSyncTaskWhereUniqueInput[]
+    disconnect?: SquareCatalogSyncTaskWhereUniqueInput | SquareCatalogSyncTaskWhereUniqueInput[]
+    delete?: SquareCatalogSyncTaskWhereUniqueInput | SquareCatalogSyncTaskWhereUniqueInput[]
+    connect?: SquareCatalogSyncTaskWhereUniqueInput | SquareCatalogSyncTaskWhereUniqueInput[]
+    update?: SquareCatalogSyncTaskUpdateWithWhereUniqueWithoutMenuInput | SquareCatalogSyncTaskUpdateWithWhereUniqueWithoutMenuInput[]
+    updateMany?: SquareCatalogSyncTaskUpdateManyWithWhereWithoutMenuInput | SquareCatalogSyncTaskUpdateManyWithWhereWithoutMenuInput[]
+    deleteMany?: SquareCatalogSyncTaskScalarWhereInput | SquareCatalogSyncTaskScalarWhereInput[]
+  }
+
   export type CategoryUncheckedUpdateManyWithoutMenuNestedInput = {
     create?: XOR<CategoryCreateWithoutMenuInput, CategoryUncheckedCreateWithoutMenuInput> | CategoryCreateWithoutMenuInput[] | CategoryUncheckedCreateWithoutMenuInput[]
     connectOrCreate?: CategoryCreateOrConnectWithoutMenuInput | CategoryCreateOrConnectWithoutMenuInput[]
@@ -112221,6 +119697,20 @@ export namespace Prisma {
     update?: MenuVisitUpdateWithWhereUniqueWithoutMenuInput | MenuVisitUpdateWithWhereUniqueWithoutMenuInput[]
     updateMany?: MenuVisitUpdateManyWithWhereWithoutMenuInput | MenuVisitUpdateManyWithWhereWithoutMenuInput[]
     deleteMany?: MenuVisitScalarWhereInput | MenuVisitScalarWhereInput[]
+  }
+
+  export type SquareCatalogSyncTaskUncheckedUpdateManyWithoutMenuNestedInput = {
+    create?: XOR<SquareCatalogSyncTaskCreateWithoutMenuInput, SquareCatalogSyncTaskUncheckedCreateWithoutMenuInput> | SquareCatalogSyncTaskCreateWithoutMenuInput[] | SquareCatalogSyncTaskUncheckedCreateWithoutMenuInput[]
+    connectOrCreate?: SquareCatalogSyncTaskCreateOrConnectWithoutMenuInput | SquareCatalogSyncTaskCreateOrConnectWithoutMenuInput[]
+    upsert?: SquareCatalogSyncTaskUpsertWithWhereUniqueWithoutMenuInput | SquareCatalogSyncTaskUpsertWithWhereUniqueWithoutMenuInput[]
+    createMany?: SquareCatalogSyncTaskCreateManyMenuInputEnvelope
+    set?: SquareCatalogSyncTaskWhereUniqueInput | SquareCatalogSyncTaskWhereUniqueInput[]
+    disconnect?: SquareCatalogSyncTaskWhereUniqueInput | SquareCatalogSyncTaskWhereUniqueInput[]
+    delete?: SquareCatalogSyncTaskWhereUniqueInput | SquareCatalogSyncTaskWhereUniqueInput[]
+    connect?: SquareCatalogSyncTaskWhereUniqueInput | SquareCatalogSyncTaskWhereUniqueInput[]
+    update?: SquareCatalogSyncTaskUpdateWithWhereUniqueWithoutMenuInput | SquareCatalogSyncTaskUpdateWithWhereUniqueWithoutMenuInput[]
+    updateMany?: SquareCatalogSyncTaskUpdateManyWithWhereWithoutMenuInput | SquareCatalogSyncTaskUpdateManyWithWhereWithoutMenuInput[]
+    deleteMany?: SquareCatalogSyncTaskScalarWhereInput | SquareCatalogSyncTaskScalarWhereInput[]
   }
 
   export type MenuCreateNestedOneWithoutMenuVisitsInput = {
@@ -115012,6 +122502,70 @@ export namespace Prisma {
     _max?: NestedEnumExternalIntegrationEnvironmentFilter<$PrismaModel>
   }
 
+  export type NestedEnumSquareCatalogSyncTaskTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.SquareCatalogSyncTaskType | EnumSquareCatalogSyncTaskTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.SquareCatalogSyncTaskType[] | ListEnumSquareCatalogSyncTaskTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SquareCatalogSyncTaskType[] | ListEnumSquareCatalogSyncTaskTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumSquareCatalogSyncTaskTypeFilter<$PrismaModel> | $Enums.SquareCatalogSyncTaskType
+  }
+
+  export type NestedEnumSquareCatalogSyncTaskStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.SquareCatalogSyncTaskStatus | EnumSquareCatalogSyncTaskStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.SquareCatalogSyncTaskStatus[] | ListEnumSquareCatalogSyncTaskStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SquareCatalogSyncTaskStatus[] | ListEnumSquareCatalogSyncTaskStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumSquareCatalogSyncTaskStatusFilter<$PrismaModel> | $Enums.SquareCatalogSyncTaskStatus
+  }
+
+  export type NestedEnumSquareCatalogSyncTaskTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SquareCatalogSyncTaskType | EnumSquareCatalogSyncTaskTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.SquareCatalogSyncTaskType[] | ListEnumSquareCatalogSyncTaskTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SquareCatalogSyncTaskType[] | ListEnumSquareCatalogSyncTaskTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumSquareCatalogSyncTaskTypeWithAggregatesFilter<$PrismaModel> | $Enums.SquareCatalogSyncTaskType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumSquareCatalogSyncTaskTypeFilter<$PrismaModel>
+    _max?: NestedEnumSquareCatalogSyncTaskTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumSquareCatalogSyncTaskStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SquareCatalogSyncTaskStatus | EnumSquareCatalogSyncTaskStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.SquareCatalogSyncTaskStatus[] | ListEnumSquareCatalogSyncTaskStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SquareCatalogSyncTaskStatus[] | ListEnumSquareCatalogSyncTaskStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumSquareCatalogSyncTaskStatusWithAggregatesFilter<$PrismaModel> | $Enums.SquareCatalogSyncTaskStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumSquareCatalogSyncTaskStatusFilter<$PrismaModel>
+    _max?: NestedEnumSquareCatalogSyncTaskStatusFilter<$PrismaModel>
+  }
+
+  export type NestedBoolNullableFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
+  }
+
+  export type NestedEnumSquareWebhookRunStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.SquareWebhookRunStatus | EnumSquareWebhookRunStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.SquareWebhookRunStatus[] | ListEnumSquareWebhookRunStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SquareWebhookRunStatus[] | ListEnumSquareWebhookRunStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumSquareWebhookRunStatusFilter<$PrismaModel> | $Enums.SquareWebhookRunStatus
+  }
+
+  export type NestedBoolNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableWithAggregatesFilter<$PrismaModel> | boolean | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedBoolNullableFilter<$PrismaModel>
+    _max?: NestedBoolNullableFilter<$PrismaModel>
+  }
+
+  export type NestedEnumSquareWebhookRunStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SquareWebhookRunStatus | EnumSquareWebhookRunStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.SquareWebhookRunStatus[] | ListEnumSquareWebhookRunStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SquareWebhookRunStatus[] | ListEnumSquareWebhookRunStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumSquareWebhookRunStatusWithAggregatesFilter<$PrismaModel> | $Enums.SquareWebhookRunStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumSquareWebhookRunStatusFilter<$PrismaModel>
+    _max?: NestedEnumSquareWebhookRunStatusFilter<$PrismaModel>
+  }
+
   export type NestedEnumExternalMenuEntityTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.ExternalMenuEntityType | EnumExternalMenuEntityTypeFieldRefInput<$PrismaModel>
     in?: $Enums.ExternalMenuEntityType[] | ListEnumExternalMenuEntityTypeFieldRefInput<$PrismaModel>
@@ -115137,11 +122691,6 @@ export namespace Prisma {
     not?: NestedEnumDispatchRoutePointSourceFilter<$PrismaModel> | $Enums.DispatchRoutePointSource
   }
 
-  export type NestedBoolNullableFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
-    not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
-  }
-
   export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel>
     in?: number[] | ListFloatFieldRefInput<$PrismaModel>
@@ -115166,14 +122715,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumDispatchRoutePointSourceFilter<$PrismaModel>
     _max?: NestedEnumDispatchRoutePointSourceFilter<$PrismaModel>
-  }
-
-  export type NestedBoolNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
-    not?: NestedBoolNullableWithAggregatesFilter<$PrismaModel> | boolean | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedBoolNullableFilter<$PrismaModel>
-    _max?: NestedBoolNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumDispatchRouteMilestoneTypeFilter<$PrismaModel = never> = {
@@ -115259,6 +122800,23 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumFeedbackWhatsAppJobStatusFilter<$PrismaModel>
     _max?: NestedEnumFeedbackWhatsAppJobStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumDispatchWhatsAppJobStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.DispatchWhatsAppJobStatus | EnumDispatchWhatsAppJobStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.DispatchWhatsAppJobStatus[] | ListEnumDispatchWhatsAppJobStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DispatchWhatsAppJobStatus[] | ListEnumDispatchWhatsAppJobStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumDispatchWhatsAppJobStatusFilter<$PrismaModel> | $Enums.DispatchWhatsAppJobStatus
+  }
+
+  export type NestedEnumDispatchWhatsAppJobStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.DispatchWhatsAppJobStatus | EnumDispatchWhatsAppJobStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.DispatchWhatsAppJobStatus[] | ListEnumDispatchWhatsAppJobStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DispatchWhatsAppJobStatus[] | ListEnumDispatchWhatsAppJobStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumDispatchWhatsAppJobStatusWithAggregatesFilter<$PrismaModel> | $Enums.DispatchWhatsAppJobStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumDispatchWhatsAppJobStatusFilter<$PrismaModel>
+    _max?: NestedEnumDispatchWhatsAppJobStatusFilter<$PrismaModel>
   }
 
   export type NestedEnumProductItemTypeFilter<$PrismaModel = never> = {
@@ -115594,6 +123152,7 @@ export namespace Prisma {
     orderIntentProducts?: OrderIntentProductCreateNestedManyWithoutProductInput
     prizeProducts?: ProgressiveDiscountPrizeProductCreateNestedManyWithoutProductInput
     customerRewards?: CustomerRewardCreateNestedManyWithoutProductInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutPreparationStepsInput = {
@@ -115625,6 +123184,7 @@ export namespace Prisma {
     orderIntentProducts?: OrderIntentProductUncheckedCreateNestedManyWithoutProductInput
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedCreateNestedManyWithoutProductInput
     customerRewards?: CustomerRewardUncheckedCreateNestedManyWithoutProductInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutPreparationStepsInput = {
@@ -116731,6 +124291,7 @@ export namespace Prisma {
     orderIntentProducts?: OrderIntentProductCreateNestedManyWithoutProductInput
     customerRewards?: CustomerRewardCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepCreateNestedManyWithoutProductsInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutPrizeProductsInput = {
@@ -116762,6 +124323,7 @@ export namespace Prisma {
     orderIntentProducts?: OrderIntentProductUncheckedCreateNestedManyWithoutProductInput
     customerRewards?: CustomerRewardUncheckedCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepUncheckedCreateNestedManyWithoutProductsInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutPrizeProductsInput = {
@@ -116840,6 +124402,7 @@ export namespace Prisma {
     orderIntentProducts?: OrderIntentProductUpdateManyWithoutProductNestedInput
     customerRewards?: CustomerRewardUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUpdateManyWithoutProductsNestedInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutPrizeProductsInput = {
@@ -116871,6 +124434,7 @@ export namespace Prisma {
     orderIntentProducts?: OrderIntentProductUncheckedUpdateManyWithoutProductNestedInput
     customerRewards?: CustomerRewardUncheckedUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUncheckedUpdateManyWithoutProductsNestedInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductCreateWithoutPhotosInput = {
@@ -116902,6 +124466,7 @@ export namespace Prisma {
     prizeProducts?: ProgressiveDiscountPrizeProductCreateNestedManyWithoutProductInput
     customerRewards?: CustomerRewardCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepCreateNestedManyWithoutProductsInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutPhotosInput = {
@@ -116933,6 +124498,7 @@ export namespace Prisma {
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedCreateNestedManyWithoutProductInput
     customerRewards?: CustomerRewardUncheckedCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepUncheckedCreateNestedManyWithoutProductsInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutPhotosInput = {
@@ -117020,6 +124586,7 @@ export namespace Prisma {
     prizeProducts?: ProgressiveDiscountPrizeProductUpdateManyWithoutProductNestedInput
     customerRewards?: CustomerRewardUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUpdateManyWithoutProductsNestedInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutPhotosInput = {
@@ -117051,6 +124618,7 @@ export namespace Prisma {
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutProductNestedInput
     customerRewards?: CustomerRewardUncheckedUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUncheckedUpdateManyWithoutProductsNestedInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ModifierGroupItemUpsertWithWhereUniqueWithoutPhotoInput = {
@@ -117114,6 +124682,7 @@ export namespace Prisma {
     prizeProducts?: ProgressiveDiscountPrizeProductCreateNestedManyWithoutProductInput
     customerRewards?: CustomerRewardCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepCreateNestedManyWithoutProductsInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutModifierGroupsInput = {
@@ -117145,6 +124714,7 @@ export namespace Prisma {
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedCreateNestedManyWithoutProductInput
     customerRewards?: CustomerRewardUncheckedCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepUncheckedCreateNestedManyWithoutProductsInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutModifierGroupsInput = {
@@ -117654,6 +125224,116 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type SquareCatalogSyncTaskCreateWithoutBusinessInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    taskType?: $Enums.SquareCatalogSyncTaskType
+    status?: $Enums.SquareCatalogSyncTaskStatus
+    attempts?: number
+    availableAt?: Date | string
+    processingStartedAt?: Date | string | null
+    finishedAt?: Date | string | null
+    errorMessage?: string | null
+    requestPayload?: NullableJsonNullValueInput | InputJsonValue
+    responsePayload?: NullableJsonNullValueInput | InputJsonValue
+    product?: ProductCreateNestedOneWithoutSquareCatalogSyncTasksInput
+    menu?: MenuCreateNestedOneWithoutSquareCatalogSyncTasksInput
+  }
+
+  export type SquareCatalogSyncTaskUncheckedCreateWithoutBusinessInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    productId?: string | null
+    menuId?: string | null
+    taskType?: $Enums.SquareCatalogSyncTaskType
+    status?: $Enums.SquareCatalogSyncTaskStatus
+    attempts?: number
+    availableAt?: Date | string
+    processingStartedAt?: Date | string | null
+    finishedAt?: Date | string | null
+    errorMessage?: string | null
+    requestPayload?: NullableJsonNullValueInput | InputJsonValue
+    responsePayload?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SquareCatalogSyncTaskCreateOrConnectWithoutBusinessInput = {
+    where: SquareCatalogSyncTaskWhereUniqueInput
+    create: XOR<SquareCatalogSyncTaskCreateWithoutBusinessInput, SquareCatalogSyncTaskUncheckedCreateWithoutBusinessInput>
+  }
+
+  export type SquareCatalogSyncTaskCreateManyBusinessInputEnvelope = {
+    data: SquareCatalogSyncTaskCreateManyBusinessInput | SquareCatalogSyncTaskCreateManyBusinessInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type SquareWebhookRunCreateWithoutBusinessInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    eventId?: string | null
+    eventType?: string | null
+    merchantId?: string | null
+    squareOrderId?: string | null
+    locationId?: string | null
+    squareOrderState?: string | null
+    signatureVerified?: boolean | null
+    status?: $Enums.SquareWebhookRunStatus
+    action?: string | null
+    reason?: string | null
+    foodyOrderId?: string | null
+    firstReceivedAt?: Date | string
+    lastReceivedAt?: Date | string
+    processedAt?: Date | string | null
+    processingDurationMs?: number | null
+    attemptsCount?: number
+    httpStatusCode?: number | null
+    errorMessage?: string | null
+    webhookPayload?: NullableJsonNullValueInput | InputJsonValue
+    squareOrderPayload?: NullableJsonNullValueInput | InputJsonValue
+    responsePayload?: NullableJsonNullValueInput | InputJsonValue
+    attempts?: SquareWebhookRunAttemptCreateNestedManyWithoutRunInput
+  }
+
+  export type SquareWebhookRunUncheckedCreateWithoutBusinessInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    eventId?: string | null
+    eventType?: string | null
+    merchantId?: string | null
+    squareOrderId?: string | null
+    locationId?: string | null
+    squareOrderState?: string | null
+    signatureVerified?: boolean | null
+    status?: $Enums.SquareWebhookRunStatus
+    action?: string | null
+    reason?: string | null
+    foodyOrderId?: string | null
+    firstReceivedAt?: Date | string
+    lastReceivedAt?: Date | string
+    processedAt?: Date | string | null
+    processingDurationMs?: number | null
+    attemptsCount?: number
+    httpStatusCode?: number | null
+    errorMessage?: string | null
+    webhookPayload?: NullableJsonNullValueInput | InputJsonValue
+    squareOrderPayload?: NullableJsonNullValueInput | InputJsonValue
+    responsePayload?: NullableJsonNullValueInput | InputJsonValue
+    attempts?: SquareWebhookRunAttemptUncheckedCreateNestedManyWithoutRunInput
+  }
+
+  export type SquareWebhookRunCreateOrConnectWithoutBusinessInput = {
+    where: SquareWebhookRunWhereUniqueInput
+    create: XOR<SquareWebhookRunCreateWithoutBusinessInput, SquareWebhookRunUncheckedCreateWithoutBusinessInput>
+  }
+
+  export type SquareWebhookRunCreateManyBusinessInputEnvelope = {
+    data: SquareWebhookRunCreateManyBusinessInput | SquareWebhookRunCreateManyBusinessInput[]
+    skipDuplicates?: boolean
+  }
+
   export type UserPushDeviceCreateWithoutBusinessInput = {
     id: string
     createdAt?: Date | string
@@ -117821,6 +125501,90 @@ export namespace Prisma {
     expiresAt?: DateTimeNullableFilter<"SquareConnection"> | Date | string | null
     connectedAt?: DateTimeFilter<"SquareConnection"> | Date | string
     rawPayload?: JsonNullableFilter<"SquareConnection">
+  }
+
+  export type SquareCatalogSyncTaskUpsertWithWhereUniqueWithoutBusinessInput = {
+    where: SquareCatalogSyncTaskWhereUniqueInput
+    update: XOR<SquareCatalogSyncTaskUpdateWithoutBusinessInput, SquareCatalogSyncTaskUncheckedUpdateWithoutBusinessInput>
+    create: XOR<SquareCatalogSyncTaskCreateWithoutBusinessInput, SquareCatalogSyncTaskUncheckedCreateWithoutBusinessInput>
+  }
+
+  export type SquareCatalogSyncTaskUpdateWithWhereUniqueWithoutBusinessInput = {
+    where: SquareCatalogSyncTaskWhereUniqueInput
+    data: XOR<SquareCatalogSyncTaskUpdateWithoutBusinessInput, SquareCatalogSyncTaskUncheckedUpdateWithoutBusinessInput>
+  }
+
+  export type SquareCatalogSyncTaskUpdateManyWithWhereWithoutBusinessInput = {
+    where: SquareCatalogSyncTaskScalarWhereInput
+    data: XOR<SquareCatalogSyncTaskUpdateManyMutationInput, SquareCatalogSyncTaskUncheckedUpdateManyWithoutBusinessInput>
+  }
+
+  export type SquareCatalogSyncTaskScalarWhereInput = {
+    AND?: SquareCatalogSyncTaskScalarWhereInput | SquareCatalogSyncTaskScalarWhereInput[]
+    OR?: SquareCatalogSyncTaskScalarWhereInput[]
+    NOT?: SquareCatalogSyncTaskScalarWhereInput | SquareCatalogSyncTaskScalarWhereInput[]
+    id?: StringFilter<"SquareCatalogSyncTask"> | string
+    createdAt?: DateTimeFilter<"SquareCatalogSyncTask"> | Date | string
+    updatedAt?: DateTimeFilter<"SquareCatalogSyncTask"> | Date | string
+    businessId?: StringFilter<"SquareCatalogSyncTask"> | string
+    productId?: StringNullableFilter<"SquareCatalogSyncTask"> | string | null
+    menuId?: StringNullableFilter<"SquareCatalogSyncTask"> | string | null
+    taskType?: EnumSquareCatalogSyncTaskTypeFilter<"SquareCatalogSyncTask"> | $Enums.SquareCatalogSyncTaskType
+    status?: EnumSquareCatalogSyncTaskStatusFilter<"SquareCatalogSyncTask"> | $Enums.SquareCatalogSyncTaskStatus
+    attempts?: IntFilter<"SquareCatalogSyncTask"> | number
+    availableAt?: DateTimeFilter<"SquareCatalogSyncTask"> | Date | string
+    processingStartedAt?: DateTimeNullableFilter<"SquareCatalogSyncTask"> | Date | string | null
+    finishedAt?: DateTimeNullableFilter<"SquareCatalogSyncTask"> | Date | string | null
+    errorMessage?: StringNullableFilter<"SquareCatalogSyncTask"> | string | null
+    requestPayload?: JsonNullableFilter<"SquareCatalogSyncTask">
+    responsePayload?: JsonNullableFilter<"SquareCatalogSyncTask">
+  }
+
+  export type SquareWebhookRunUpsertWithWhereUniqueWithoutBusinessInput = {
+    where: SquareWebhookRunWhereUniqueInput
+    update: XOR<SquareWebhookRunUpdateWithoutBusinessInput, SquareWebhookRunUncheckedUpdateWithoutBusinessInput>
+    create: XOR<SquareWebhookRunCreateWithoutBusinessInput, SquareWebhookRunUncheckedCreateWithoutBusinessInput>
+  }
+
+  export type SquareWebhookRunUpdateWithWhereUniqueWithoutBusinessInput = {
+    where: SquareWebhookRunWhereUniqueInput
+    data: XOR<SquareWebhookRunUpdateWithoutBusinessInput, SquareWebhookRunUncheckedUpdateWithoutBusinessInput>
+  }
+
+  export type SquareWebhookRunUpdateManyWithWhereWithoutBusinessInput = {
+    where: SquareWebhookRunScalarWhereInput
+    data: XOR<SquareWebhookRunUpdateManyMutationInput, SquareWebhookRunUncheckedUpdateManyWithoutBusinessInput>
+  }
+
+  export type SquareWebhookRunScalarWhereInput = {
+    AND?: SquareWebhookRunScalarWhereInput | SquareWebhookRunScalarWhereInput[]
+    OR?: SquareWebhookRunScalarWhereInput[]
+    NOT?: SquareWebhookRunScalarWhereInput | SquareWebhookRunScalarWhereInput[]
+    id?: StringFilter<"SquareWebhookRun"> | string
+    createdAt?: DateTimeFilter<"SquareWebhookRun"> | Date | string
+    updatedAt?: DateTimeFilter<"SquareWebhookRun"> | Date | string
+    businessId?: StringNullableFilter<"SquareWebhookRun"> | string | null
+    eventId?: StringNullableFilter<"SquareWebhookRun"> | string | null
+    eventType?: StringNullableFilter<"SquareWebhookRun"> | string | null
+    merchantId?: StringNullableFilter<"SquareWebhookRun"> | string | null
+    squareOrderId?: StringNullableFilter<"SquareWebhookRun"> | string | null
+    locationId?: StringNullableFilter<"SquareWebhookRun"> | string | null
+    squareOrderState?: StringNullableFilter<"SquareWebhookRun"> | string | null
+    signatureVerified?: BoolNullableFilter<"SquareWebhookRun"> | boolean | null
+    status?: EnumSquareWebhookRunStatusFilter<"SquareWebhookRun"> | $Enums.SquareWebhookRunStatus
+    action?: StringNullableFilter<"SquareWebhookRun"> | string | null
+    reason?: StringNullableFilter<"SquareWebhookRun"> | string | null
+    foodyOrderId?: StringNullableFilter<"SquareWebhookRun"> | string | null
+    firstReceivedAt?: DateTimeFilter<"SquareWebhookRun"> | Date | string
+    lastReceivedAt?: DateTimeFilter<"SquareWebhookRun"> | Date | string
+    processedAt?: DateTimeNullableFilter<"SquareWebhookRun"> | Date | string | null
+    processingDurationMs?: IntNullableFilter<"SquareWebhookRun"> | number | null
+    attemptsCount?: IntFilter<"SquareWebhookRun"> | number
+    httpStatusCode?: IntNullableFilter<"SquareWebhookRun"> | number | null
+    errorMessage?: StringNullableFilter<"SquareWebhookRun"> | string | null
+    webhookPayload?: JsonNullableFilter<"SquareWebhookRun">
+    squareOrderPayload?: JsonNullableFilter<"SquareWebhookRun">
+    responsePayload?: JsonNullableFilter<"SquareWebhookRun">
   }
 
   export type UserPushDeviceUpsertWithWhereUniqueWithoutBusinessInput = {
@@ -118196,6 +125960,8 @@ export namespace Prisma {
     members?: BusinessMemberCreateNestedManyWithoutBusinessInput
     integrations?: ExternalIntegrationConnectionCreateNestedManyWithoutBusinessInput
     squareConnections?: SquareConnectionCreateNestedManyWithoutBusinessInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskCreateNestedManyWithoutBusinessInput
+    squareWebhookRuns?: SquareWebhookRunCreateNestedManyWithoutBusinessInput
   }
 
   export type BusinessUncheckedCreateWithoutPushDevicesInput = {
@@ -118216,6 +125982,8 @@ export namespace Prisma {
     members?: BusinessMemberUncheckedCreateNestedManyWithoutBusinessInput
     integrations?: ExternalIntegrationConnectionUncheckedCreateNestedManyWithoutBusinessInput
     squareConnections?: SquareConnectionUncheckedCreateNestedManyWithoutBusinessInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedCreateNestedManyWithoutBusinessInput
+    squareWebhookRuns?: SquareWebhookRunUncheckedCreateNestedManyWithoutBusinessInput
   }
 
   export type BusinessCreateOrConnectWithoutPushDevicesInput = {
@@ -118295,6 +126063,8 @@ export namespace Prisma {
     members?: BusinessMemberUpdateManyWithoutBusinessNestedInput
     integrations?: ExternalIntegrationConnectionUpdateManyWithoutBusinessNestedInput
     squareConnections?: SquareConnectionUpdateManyWithoutBusinessNestedInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUpdateManyWithoutBusinessNestedInput
+    squareWebhookRuns?: SquareWebhookRunUpdateManyWithoutBusinessNestedInput
   }
 
   export type BusinessUncheckedUpdateWithoutPushDevicesInput = {
@@ -118315,6 +126085,8 @@ export namespace Prisma {
     members?: BusinessMemberUncheckedUpdateManyWithoutBusinessNestedInput
     integrations?: ExternalIntegrationConnectionUncheckedUpdateManyWithoutBusinessNestedInput
     squareConnections?: SquareConnectionUncheckedUpdateManyWithoutBusinessNestedInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedUpdateManyWithoutBusinessNestedInput
+    squareWebhookRuns?: SquareWebhookRunUncheckedUpdateManyWithoutBusinessNestedInput
   }
 
   export type UserCreateWithoutOtpChallengesInput = {
@@ -118451,6 +126223,8 @@ export namespace Prisma {
     branches?: BranchCreateNestedManyWithoutBusinessInput
     members?: BusinessMemberCreateNestedManyWithoutBusinessInput
     squareConnections?: SquareConnectionCreateNestedManyWithoutBusinessInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskCreateNestedManyWithoutBusinessInput
+    squareWebhookRuns?: SquareWebhookRunCreateNestedManyWithoutBusinessInput
     pushDevices?: UserPushDeviceCreateNestedManyWithoutBusinessInput
   }
 
@@ -118471,6 +126245,8 @@ export namespace Prisma {
     branches?: BranchUncheckedCreateNestedManyWithoutBusinessInput
     members?: BusinessMemberUncheckedCreateNestedManyWithoutBusinessInput
     squareConnections?: SquareConnectionUncheckedCreateNestedManyWithoutBusinessInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedCreateNestedManyWithoutBusinessInput
+    squareWebhookRuns?: SquareWebhookRunUncheckedCreateNestedManyWithoutBusinessInput
     pushDevices?: UserPushDeviceUncheckedCreateNestedManyWithoutBusinessInput
   }
 
@@ -118646,6 +126422,8 @@ export namespace Prisma {
     branches?: BranchUpdateManyWithoutBusinessNestedInput
     members?: BusinessMemberUpdateManyWithoutBusinessNestedInput
     squareConnections?: SquareConnectionUpdateManyWithoutBusinessNestedInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUpdateManyWithoutBusinessNestedInput
+    squareWebhookRuns?: SquareWebhookRunUpdateManyWithoutBusinessNestedInput
     pushDevices?: UserPushDeviceUpdateManyWithoutBusinessNestedInput
   }
 
@@ -118666,6 +126444,8 @@ export namespace Prisma {
     branches?: BranchUncheckedUpdateManyWithoutBusinessNestedInput
     members?: BusinessMemberUncheckedUpdateManyWithoutBusinessNestedInput
     squareConnections?: SquareConnectionUncheckedUpdateManyWithoutBusinessNestedInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedUpdateManyWithoutBusinessNestedInput
+    squareWebhookRuns?: SquareWebhookRunUncheckedUpdateManyWithoutBusinessNestedInput
     pushDevices?: UserPushDeviceUncheckedUpdateManyWithoutBusinessNestedInput
   }
 
@@ -118801,6 +126581,8 @@ export namespace Prisma {
     branches?: BranchCreateNestedManyWithoutBusinessInput
     members?: BusinessMemberCreateNestedManyWithoutBusinessInput
     integrations?: ExternalIntegrationConnectionCreateNestedManyWithoutBusinessInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskCreateNestedManyWithoutBusinessInput
+    squareWebhookRuns?: SquareWebhookRunCreateNestedManyWithoutBusinessInput
     pushDevices?: UserPushDeviceCreateNestedManyWithoutBusinessInput
   }
 
@@ -118821,6 +126603,8 @@ export namespace Prisma {
     branches?: BranchUncheckedCreateNestedManyWithoutBusinessInput
     members?: BusinessMemberUncheckedCreateNestedManyWithoutBusinessInput
     integrations?: ExternalIntegrationConnectionUncheckedCreateNestedManyWithoutBusinessInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedCreateNestedManyWithoutBusinessInput
+    squareWebhookRuns?: SquareWebhookRunUncheckedCreateNestedManyWithoutBusinessInput
     pushDevices?: UserPushDeviceUncheckedCreateNestedManyWithoutBusinessInput
   }
 
@@ -118900,6 +126684,8 @@ export namespace Prisma {
     branches?: BranchUpdateManyWithoutBusinessNestedInput
     members?: BusinessMemberUpdateManyWithoutBusinessNestedInput
     integrations?: ExternalIntegrationConnectionUpdateManyWithoutBusinessNestedInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUpdateManyWithoutBusinessNestedInput
+    squareWebhookRuns?: SquareWebhookRunUpdateManyWithoutBusinessNestedInput
     pushDevices?: UserPushDeviceUpdateManyWithoutBusinessNestedInput
   }
 
@@ -118920,7 +126706,648 @@ export namespace Prisma {
     branches?: BranchUncheckedUpdateManyWithoutBusinessNestedInput
     members?: BusinessMemberUncheckedUpdateManyWithoutBusinessNestedInput
     integrations?: ExternalIntegrationConnectionUncheckedUpdateManyWithoutBusinessNestedInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedUpdateManyWithoutBusinessNestedInput
+    squareWebhookRuns?: SquareWebhookRunUncheckedUpdateManyWithoutBusinessNestedInput
     pushDevices?: UserPushDeviceUncheckedUpdateManyWithoutBusinessNestedInput
+  }
+
+  export type BusinessCreateWithoutSquareCatalogSyncTasksInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    bannerPhotoUrl?: string | null
+    logoUrl?: string | null
+    brandColor?: string
+    stripeAccountId?: string | null
+    stripeDetailsSubmitted?: boolean
+    stripeChargesEnabled?: boolean
+    stripePayoutsEnabled?: boolean
+    stripeOnboardingCompletedAt?: Date | string | null
+    onboardingCompletedAt?: Date | string | null
+    branches?: BranchCreateNestedManyWithoutBusinessInput
+    members?: BusinessMemberCreateNestedManyWithoutBusinessInput
+    integrations?: ExternalIntegrationConnectionCreateNestedManyWithoutBusinessInput
+    squareConnections?: SquareConnectionCreateNestedManyWithoutBusinessInput
+    squareWebhookRuns?: SquareWebhookRunCreateNestedManyWithoutBusinessInput
+    pushDevices?: UserPushDeviceCreateNestedManyWithoutBusinessInput
+  }
+
+  export type BusinessUncheckedCreateWithoutSquareCatalogSyncTasksInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    bannerPhotoUrl?: string | null
+    logoUrl?: string | null
+    brandColor?: string
+    stripeAccountId?: string | null
+    stripeDetailsSubmitted?: boolean
+    stripeChargesEnabled?: boolean
+    stripePayoutsEnabled?: boolean
+    stripeOnboardingCompletedAt?: Date | string | null
+    onboardingCompletedAt?: Date | string | null
+    branches?: BranchUncheckedCreateNestedManyWithoutBusinessInput
+    members?: BusinessMemberUncheckedCreateNestedManyWithoutBusinessInput
+    integrations?: ExternalIntegrationConnectionUncheckedCreateNestedManyWithoutBusinessInput
+    squareConnections?: SquareConnectionUncheckedCreateNestedManyWithoutBusinessInput
+    squareWebhookRuns?: SquareWebhookRunUncheckedCreateNestedManyWithoutBusinessInput
+    pushDevices?: UserPushDeviceUncheckedCreateNestedManyWithoutBusinessInput
+  }
+
+  export type BusinessCreateOrConnectWithoutSquareCatalogSyncTasksInput = {
+    where: BusinessWhereUniqueInput
+    create: XOR<BusinessCreateWithoutSquareCatalogSyncTasksInput, BusinessUncheckedCreateWithoutSquareCatalogSyncTasksInput>
+  }
+
+  export type ProductCreateWithoutSquareCatalogSyncTasksInput = {
+    id: string
+    createdAt?: Date | string
+    itemType?: $Enums.ProductItemType
+    name: string
+    visible?: boolean
+    alertDriver?: boolean
+    description?: string | null
+    price?: number | null
+    comparedAtPrice?: number | null
+    categoryIndex?: number | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: string | null
+    squareItemVersion?: string | null
+    squareVariationId?: string | null
+    squareVariationVersion?: string | null
+    photos?: FileCreateNestedManyWithoutProductInput
+    modifierGroups?: ModifierGroupCreateNestedManyWithoutProductsInput
+    category?: CategoryCreateNestedOneWithoutProductsInput
+    productCategories?: ProductCategoryCreateNestedManyWithoutProductInput
+    comboSlots?: ComboSlotCreateNestedManyWithoutComboInput
+    comboSlotOptions?: ComboSlotOptionCreateNestedManyWithoutProductInput
+    comboProductItems?: ComboProductItemCreateNestedManyWithoutComboInput
+    comboUsedInItems?: ComboProductItemCreateNestedManyWithoutProductInput
+    exclusivePromotionProducts?: ExclusivePromotionProductCreateNestedManyWithoutProductInput
+    OrderProducts?: OrderProductsCreateNestedManyWithoutProductInput
+    orderIntentProducts?: OrderIntentProductCreateNestedManyWithoutProductInput
+    prizeProducts?: ProgressiveDiscountPrizeProductCreateNestedManyWithoutProductInput
+    customerRewards?: CustomerRewardCreateNestedManyWithoutProductInput
+    preparationSteps?: PreparationStepCreateNestedManyWithoutProductsInput
+  }
+
+  export type ProductUncheckedCreateWithoutSquareCatalogSyncTasksInput = {
+    id: string
+    createdAt?: Date | string
+    itemType?: $Enums.ProductItemType
+    name: string
+    visible?: boolean
+    alertDriver?: boolean
+    description?: string | null
+    price?: number | null
+    comparedAtPrice?: number | null
+    categoryIndex?: number | null
+    categoryId?: string | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: string | null
+    squareItemVersion?: string | null
+    squareVariationId?: string | null
+    squareVariationVersion?: string | null
+    photos?: FileUncheckedCreateNestedManyWithoutProductInput
+    modifierGroups?: ModifierGroupUncheckedCreateNestedManyWithoutProductsInput
+    productCategories?: ProductCategoryUncheckedCreateNestedManyWithoutProductInput
+    comboSlots?: ComboSlotUncheckedCreateNestedManyWithoutComboInput
+    comboSlotOptions?: ComboSlotOptionUncheckedCreateNestedManyWithoutProductInput
+    comboProductItems?: ComboProductItemUncheckedCreateNestedManyWithoutComboInput
+    comboUsedInItems?: ComboProductItemUncheckedCreateNestedManyWithoutProductInput
+    exclusivePromotionProducts?: ExclusivePromotionProductUncheckedCreateNestedManyWithoutProductInput
+    OrderProducts?: OrderProductsUncheckedCreateNestedManyWithoutProductInput
+    orderIntentProducts?: OrderIntentProductUncheckedCreateNestedManyWithoutProductInput
+    prizeProducts?: ProgressiveDiscountPrizeProductUncheckedCreateNestedManyWithoutProductInput
+    customerRewards?: CustomerRewardUncheckedCreateNestedManyWithoutProductInput
+    preparationSteps?: PreparationStepUncheckedCreateNestedManyWithoutProductsInput
+  }
+
+  export type ProductCreateOrConnectWithoutSquareCatalogSyncTasksInput = {
+    where: ProductWhereUniqueInput
+    create: XOR<ProductCreateWithoutSquareCatalogSyncTasksInput, ProductUncheckedCreateWithoutSquareCatalogSyncTasksInput>
+  }
+
+  export type MenuCreateWithoutSquareCatalogSyncTasksInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    active?: boolean
+    isDefault?: boolean
+    squareMenuId?: string | null
+    squareMenuVersion?: string | null
+    categories?: CategoryCreateNestedManyWithoutMenuInput
+    menuCategories?: MenuCategoryCreateNestedManyWithoutMenuInput
+    menuVisits?: MenuVisitCreateNestedManyWithoutMenuInput
+  }
+
+  export type MenuUncheckedCreateWithoutSquareCatalogSyncTasksInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    active?: boolean
+    isDefault?: boolean
+    squareMenuId?: string | null
+    squareMenuVersion?: string | null
+    categories?: CategoryUncheckedCreateNestedManyWithoutMenuInput
+    menuCategories?: MenuCategoryUncheckedCreateNestedManyWithoutMenuInput
+    menuVisits?: MenuVisitUncheckedCreateNestedManyWithoutMenuInput
+  }
+
+  export type MenuCreateOrConnectWithoutSquareCatalogSyncTasksInput = {
+    where: MenuWhereUniqueInput
+    create: XOR<MenuCreateWithoutSquareCatalogSyncTasksInput, MenuUncheckedCreateWithoutSquareCatalogSyncTasksInput>
+  }
+
+  export type BusinessUpsertWithoutSquareCatalogSyncTasksInput = {
+    update: XOR<BusinessUpdateWithoutSquareCatalogSyncTasksInput, BusinessUncheckedUpdateWithoutSquareCatalogSyncTasksInput>
+    create: XOR<BusinessCreateWithoutSquareCatalogSyncTasksInput, BusinessUncheckedCreateWithoutSquareCatalogSyncTasksInput>
+    where?: BusinessWhereInput
+  }
+
+  export type BusinessUpdateToOneWithWhereWithoutSquareCatalogSyncTasksInput = {
+    where?: BusinessWhereInput
+    data: XOR<BusinessUpdateWithoutSquareCatalogSyncTasksInput, BusinessUncheckedUpdateWithoutSquareCatalogSyncTasksInput>
+  }
+
+  export type BusinessUpdateWithoutSquareCatalogSyncTasksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    bannerPhotoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    brandColor?: StringFieldUpdateOperationsInput | string
+    stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeDetailsSubmitted?: BoolFieldUpdateOperationsInput | boolean
+    stripeChargesEnabled?: BoolFieldUpdateOperationsInput | boolean
+    stripePayoutsEnabled?: BoolFieldUpdateOperationsInput | boolean
+    stripeOnboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    branches?: BranchUpdateManyWithoutBusinessNestedInput
+    members?: BusinessMemberUpdateManyWithoutBusinessNestedInput
+    integrations?: ExternalIntegrationConnectionUpdateManyWithoutBusinessNestedInput
+    squareConnections?: SquareConnectionUpdateManyWithoutBusinessNestedInput
+    squareWebhookRuns?: SquareWebhookRunUpdateManyWithoutBusinessNestedInput
+    pushDevices?: UserPushDeviceUpdateManyWithoutBusinessNestedInput
+  }
+
+  export type BusinessUncheckedUpdateWithoutSquareCatalogSyncTasksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    bannerPhotoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    brandColor?: StringFieldUpdateOperationsInput | string
+    stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeDetailsSubmitted?: BoolFieldUpdateOperationsInput | boolean
+    stripeChargesEnabled?: BoolFieldUpdateOperationsInput | boolean
+    stripePayoutsEnabled?: BoolFieldUpdateOperationsInput | boolean
+    stripeOnboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    branches?: BranchUncheckedUpdateManyWithoutBusinessNestedInput
+    members?: BusinessMemberUncheckedUpdateManyWithoutBusinessNestedInput
+    integrations?: ExternalIntegrationConnectionUncheckedUpdateManyWithoutBusinessNestedInput
+    squareConnections?: SquareConnectionUncheckedUpdateManyWithoutBusinessNestedInput
+    squareWebhookRuns?: SquareWebhookRunUncheckedUpdateManyWithoutBusinessNestedInput
+    pushDevices?: UserPushDeviceUncheckedUpdateManyWithoutBusinessNestedInput
+  }
+
+  export type ProductUpsertWithoutSquareCatalogSyncTasksInput = {
+    update: XOR<ProductUpdateWithoutSquareCatalogSyncTasksInput, ProductUncheckedUpdateWithoutSquareCatalogSyncTasksInput>
+    create: XOR<ProductCreateWithoutSquareCatalogSyncTasksInput, ProductUncheckedCreateWithoutSquareCatalogSyncTasksInput>
+    where?: ProductWhereInput
+  }
+
+  export type ProductUpdateToOneWithWhereWithoutSquareCatalogSyncTasksInput = {
+    where?: ProductWhereInput
+    data: XOR<ProductUpdateWithoutSquareCatalogSyncTasksInput, ProductUncheckedUpdateWithoutSquareCatalogSyncTasksInput>
+  }
+
+  export type ProductUpdateWithoutSquareCatalogSyncTasksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    itemType?: EnumProductItemTypeFieldUpdateOperationsInput | $Enums.ProductItemType
+    name?: StringFieldUpdateOperationsInput | string
+    visible?: BoolFieldUpdateOperationsInput | boolean
+    alertDriver?: BoolFieldUpdateOperationsInput | boolean
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: NullableIntFieldUpdateOperationsInput | number | null
+    comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
+    categoryIndex?: NullableIntFieldUpdateOperationsInput | number | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareItemVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    photos?: FileUpdateManyWithoutProductNestedInput
+    modifierGroups?: ModifierGroupUpdateManyWithoutProductsNestedInput
+    category?: CategoryUpdateOneWithoutProductsNestedInput
+    productCategories?: ProductCategoryUpdateManyWithoutProductNestedInput
+    comboSlots?: ComboSlotUpdateManyWithoutComboNestedInput
+    comboSlotOptions?: ComboSlotOptionUpdateManyWithoutProductNestedInput
+    comboProductItems?: ComboProductItemUpdateManyWithoutComboNestedInput
+    comboUsedInItems?: ComboProductItemUpdateManyWithoutProductNestedInput
+    exclusivePromotionProducts?: ExclusivePromotionProductUpdateManyWithoutProductNestedInput
+    OrderProducts?: OrderProductsUpdateManyWithoutProductNestedInput
+    orderIntentProducts?: OrderIntentProductUpdateManyWithoutProductNestedInput
+    prizeProducts?: ProgressiveDiscountPrizeProductUpdateManyWithoutProductNestedInput
+    customerRewards?: CustomerRewardUpdateManyWithoutProductNestedInput
+    preparationSteps?: PreparationStepUpdateManyWithoutProductsNestedInput
+  }
+
+  export type ProductUncheckedUpdateWithoutSquareCatalogSyncTasksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    itemType?: EnumProductItemTypeFieldUpdateOperationsInput | $Enums.ProductItemType
+    name?: StringFieldUpdateOperationsInput | string
+    visible?: BoolFieldUpdateOperationsInput | boolean
+    alertDriver?: BoolFieldUpdateOperationsInput | boolean
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: NullableIntFieldUpdateOperationsInput | number | null
+    comparedAtPrice?: NullableIntFieldUpdateOperationsInput | number | null
+    categoryIndex?: NullableIntFieldUpdateOperationsInput | number | null
+    categoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    translations?: NullableJsonNullValueInput | InputJsonValue
+    squareItemId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareItemVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareVariationVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    photos?: FileUncheckedUpdateManyWithoutProductNestedInput
+    modifierGroups?: ModifierGroupUncheckedUpdateManyWithoutProductsNestedInput
+    productCategories?: ProductCategoryUncheckedUpdateManyWithoutProductNestedInput
+    comboSlots?: ComboSlotUncheckedUpdateManyWithoutComboNestedInput
+    comboSlotOptions?: ComboSlotOptionUncheckedUpdateManyWithoutProductNestedInput
+    comboProductItems?: ComboProductItemUncheckedUpdateManyWithoutComboNestedInput
+    comboUsedInItems?: ComboProductItemUncheckedUpdateManyWithoutProductNestedInput
+    exclusivePromotionProducts?: ExclusivePromotionProductUncheckedUpdateManyWithoutProductNestedInput
+    OrderProducts?: OrderProductsUncheckedUpdateManyWithoutProductNestedInput
+    orderIntentProducts?: OrderIntentProductUncheckedUpdateManyWithoutProductNestedInput
+    prizeProducts?: ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutProductNestedInput
+    customerRewards?: CustomerRewardUncheckedUpdateManyWithoutProductNestedInput
+    preparationSteps?: PreparationStepUncheckedUpdateManyWithoutProductsNestedInput
+  }
+
+  export type MenuUpsertWithoutSquareCatalogSyncTasksInput = {
+    update: XOR<MenuUpdateWithoutSquareCatalogSyncTasksInput, MenuUncheckedUpdateWithoutSquareCatalogSyncTasksInput>
+    create: XOR<MenuCreateWithoutSquareCatalogSyncTasksInput, MenuUncheckedCreateWithoutSquareCatalogSyncTasksInput>
+    where?: MenuWhereInput
+  }
+
+  export type MenuUpdateToOneWithWhereWithoutSquareCatalogSyncTasksInput = {
+    where?: MenuWhereInput
+    data: XOR<MenuUpdateWithoutSquareCatalogSyncTasksInput, MenuUncheckedUpdateWithoutSquareCatalogSyncTasksInput>
+  }
+
+  export type MenuUpdateWithoutSquareCatalogSyncTasksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    squareMenuId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareMenuVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    categories?: CategoryUpdateManyWithoutMenuNestedInput
+    menuCategories?: MenuCategoryUpdateManyWithoutMenuNestedInput
+    menuVisits?: MenuVisitUpdateManyWithoutMenuNestedInput
+  }
+
+  export type MenuUncheckedUpdateWithoutSquareCatalogSyncTasksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    squareMenuId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareMenuVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    categories?: CategoryUncheckedUpdateManyWithoutMenuNestedInput
+    menuCategories?: MenuCategoryUncheckedUpdateManyWithoutMenuNestedInput
+    menuVisits?: MenuVisitUncheckedUpdateManyWithoutMenuNestedInput
+  }
+
+  export type BusinessCreateWithoutSquareWebhookRunsInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    bannerPhotoUrl?: string | null
+    logoUrl?: string | null
+    brandColor?: string
+    stripeAccountId?: string | null
+    stripeDetailsSubmitted?: boolean
+    stripeChargesEnabled?: boolean
+    stripePayoutsEnabled?: boolean
+    stripeOnboardingCompletedAt?: Date | string | null
+    onboardingCompletedAt?: Date | string | null
+    branches?: BranchCreateNestedManyWithoutBusinessInput
+    members?: BusinessMemberCreateNestedManyWithoutBusinessInput
+    integrations?: ExternalIntegrationConnectionCreateNestedManyWithoutBusinessInput
+    squareConnections?: SquareConnectionCreateNestedManyWithoutBusinessInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskCreateNestedManyWithoutBusinessInput
+    pushDevices?: UserPushDeviceCreateNestedManyWithoutBusinessInput
+  }
+
+  export type BusinessUncheckedCreateWithoutSquareWebhookRunsInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    bannerPhotoUrl?: string | null
+    logoUrl?: string | null
+    brandColor?: string
+    stripeAccountId?: string | null
+    stripeDetailsSubmitted?: boolean
+    stripeChargesEnabled?: boolean
+    stripePayoutsEnabled?: boolean
+    stripeOnboardingCompletedAt?: Date | string | null
+    onboardingCompletedAt?: Date | string | null
+    branches?: BranchUncheckedCreateNestedManyWithoutBusinessInput
+    members?: BusinessMemberUncheckedCreateNestedManyWithoutBusinessInput
+    integrations?: ExternalIntegrationConnectionUncheckedCreateNestedManyWithoutBusinessInput
+    squareConnections?: SquareConnectionUncheckedCreateNestedManyWithoutBusinessInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedCreateNestedManyWithoutBusinessInput
+    pushDevices?: UserPushDeviceUncheckedCreateNestedManyWithoutBusinessInput
+  }
+
+  export type BusinessCreateOrConnectWithoutSquareWebhookRunsInput = {
+    where: BusinessWhereUniqueInput
+    create: XOR<BusinessCreateWithoutSquareWebhookRunsInput, BusinessUncheckedCreateWithoutSquareWebhookRunsInput>
+  }
+
+  export type SquareWebhookRunAttemptCreateWithoutRunInput = {
+    id: string
+    createdAt?: Date | string
+    attemptNumber: number
+    receivedAt?: Date | string
+    finishedAt?: Date | string | null
+    processingDurationMs?: number | null
+    httpStatusCode?: number | null
+    status?: $Enums.SquareWebhookRunStatus
+    action?: string | null
+    reason?: string | null
+    signatureVerified?: boolean | null
+    errorMessage?: string | null
+    requestHeaders?: NullableJsonNullValueInput | InputJsonValue
+    webhookPayload?: NullableJsonNullValueInput | InputJsonValue
+    squareOrderPayload?: NullableJsonNullValueInput | InputJsonValue
+    responsePayload?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SquareWebhookRunAttemptUncheckedCreateWithoutRunInput = {
+    id: string
+    createdAt?: Date | string
+    attemptNumber: number
+    receivedAt?: Date | string
+    finishedAt?: Date | string | null
+    processingDurationMs?: number | null
+    httpStatusCode?: number | null
+    status?: $Enums.SquareWebhookRunStatus
+    action?: string | null
+    reason?: string | null
+    signatureVerified?: boolean | null
+    errorMessage?: string | null
+    requestHeaders?: NullableJsonNullValueInput | InputJsonValue
+    webhookPayload?: NullableJsonNullValueInput | InputJsonValue
+    squareOrderPayload?: NullableJsonNullValueInput | InputJsonValue
+    responsePayload?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SquareWebhookRunAttemptCreateOrConnectWithoutRunInput = {
+    where: SquareWebhookRunAttemptWhereUniqueInput
+    create: XOR<SquareWebhookRunAttemptCreateWithoutRunInput, SquareWebhookRunAttemptUncheckedCreateWithoutRunInput>
+  }
+
+  export type SquareWebhookRunAttemptCreateManyRunInputEnvelope = {
+    data: SquareWebhookRunAttemptCreateManyRunInput | SquareWebhookRunAttemptCreateManyRunInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type BusinessUpsertWithoutSquareWebhookRunsInput = {
+    update: XOR<BusinessUpdateWithoutSquareWebhookRunsInput, BusinessUncheckedUpdateWithoutSquareWebhookRunsInput>
+    create: XOR<BusinessCreateWithoutSquareWebhookRunsInput, BusinessUncheckedCreateWithoutSquareWebhookRunsInput>
+    where?: BusinessWhereInput
+  }
+
+  export type BusinessUpdateToOneWithWhereWithoutSquareWebhookRunsInput = {
+    where?: BusinessWhereInput
+    data: XOR<BusinessUpdateWithoutSquareWebhookRunsInput, BusinessUncheckedUpdateWithoutSquareWebhookRunsInput>
+  }
+
+  export type BusinessUpdateWithoutSquareWebhookRunsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    bannerPhotoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    brandColor?: StringFieldUpdateOperationsInput | string
+    stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeDetailsSubmitted?: BoolFieldUpdateOperationsInput | boolean
+    stripeChargesEnabled?: BoolFieldUpdateOperationsInput | boolean
+    stripePayoutsEnabled?: BoolFieldUpdateOperationsInput | boolean
+    stripeOnboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    branches?: BranchUpdateManyWithoutBusinessNestedInput
+    members?: BusinessMemberUpdateManyWithoutBusinessNestedInput
+    integrations?: ExternalIntegrationConnectionUpdateManyWithoutBusinessNestedInput
+    squareConnections?: SquareConnectionUpdateManyWithoutBusinessNestedInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUpdateManyWithoutBusinessNestedInput
+    pushDevices?: UserPushDeviceUpdateManyWithoutBusinessNestedInput
+  }
+
+  export type BusinessUncheckedUpdateWithoutSquareWebhookRunsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    bannerPhotoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    brandColor?: StringFieldUpdateOperationsInput | string
+    stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeDetailsSubmitted?: BoolFieldUpdateOperationsInput | boolean
+    stripeChargesEnabled?: BoolFieldUpdateOperationsInput | boolean
+    stripePayoutsEnabled?: BoolFieldUpdateOperationsInput | boolean
+    stripeOnboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    onboardingCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    branches?: BranchUncheckedUpdateManyWithoutBusinessNestedInput
+    members?: BusinessMemberUncheckedUpdateManyWithoutBusinessNestedInput
+    integrations?: ExternalIntegrationConnectionUncheckedUpdateManyWithoutBusinessNestedInput
+    squareConnections?: SquareConnectionUncheckedUpdateManyWithoutBusinessNestedInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedUpdateManyWithoutBusinessNestedInput
+    pushDevices?: UserPushDeviceUncheckedUpdateManyWithoutBusinessNestedInput
+  }
+
+  export type SquareWebhookRunAttemptUpsertWithWhereUniqueWithoutRunInput = {
+    where: SquareWebhookRunAttemptWhereUniqueInput
+    update: XOR<SquareWebhookRunAttemptUpdateWithoutRunInput, SquareWebhookRunAttemptUncheckedUpdateWithoutRunInput>
+    create: XOR<SquareWebhookRunAttemptCreateWithoutRunInput, SquareWebhookRunAttemptUncheckedCreateWithoutRunInput>
+  }
+
+  export type SquareWebhookRunAttemptUpdateWithWhereUniqueWithoutRunInput = {
+    where: SquareWebhookRunAttemptWhereUniqueInput
+    data: XOR<SquareWebhookRunAttemptUpdateWithoutRunInput, SquareWebhookRunAttemptUncheckedUpdateWithoutRunInput>
+  }
+
+  export type SquareWebhookRunAttemptUpdateManyWithWhereWithoutRunInput = {
+    where: SquareWebhookRunAttemptScalarWhereInput
+    data: XOR<SquareWebhookRunAttemptUpdateManyMutationInput, SquareWebhookRunAttemptUncheckedUpdateManyWithoutRunInput>
+  }
+
+  export type SquareWebhookRunAttemptScalarWhereInput = {
+    AND?: SquareWebhookRunAttemptScalarWhereInput | SquareWebhookRunAttemptScalarWhereInput[]
+    OR?: SquareWebhookRunAttemptScalarWhereInput[]
+    NOT?: SquareWebhookRunAttemptScalarWhereInput | SquareWebhookRunAttemptScalarWhereInput[]
+    id?: StringFilter<"SquareWebhookRunAttempt"> | string
+    createdAt?: DateTimeFilter<"SquareWebhookRunAttempt"> | Date | string
+    runId?: StringFilter<"SquareWebhookRunAttempt"> | string
+    attemptNumber?: IntFilter<"SquareWebhookRunAttempt"> | number
+    receivedAt?: DateTimeFilter<"SquareWebhookRunAttempt"> | Date | string
+    finishedAt?: DateTimeNullableFilter<"SquareWebhookRunAttempt"> | Date | string | null
+    processingDurationMs?: IntNullableFilter<"SquareWebhookRunAttempt"> | number | null
+    httpStatusCode?: IntNullableFilter<"SquareWebhookRunAttempt"> | number | null
+    status?: EnumSquareWebhookRunStatusFilter<"SquareWebhookRunAttempt"> | $Enums.SquareWebhookRunStatus
+    action?: StringNullableFilter<"SquareWebhookRunAttempt"> | string | null
+    reason?: StringNullableFilter<"SquareWebhookRunAttempt"> | string | null
+    signatureVerified?: BoolNullableFilter<"SquareWebhookRunAttempt"> | boolean | null
+    errorMessage?: StringNullableFilter<"SquareWebhookRunAttempt"> | string | null
+    requestHeaders?: JsonNullableFilter<"SquareWebhookRunAttempt">
+    webhookPayload?: JsonNullableFilter<"SquareWebhookRunAttempt">
+    squareOrderPayload?: JsonNullableFilter<"SquareWebhookRunAttempt">
+    responsePayload?: JsonNullableFilter<"SquareWebhookRunAttempt">
+  }
+
+  export type SquareWebhookRunCreateWithoutAttemptsInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    eventId?: string | null
+    eventType?: string | null
+    merchantId?: string | null
+    squareOrderId?: string | null
+    locationId?: string | null
+    squareOrderState?: string | null
+    signatureVerified?: boolean | null
+    status?: $Enums.SquareWebhookRunStatus
+    action?: string | null
+    reason?: string | null
+    foodyOrderId?: string | null
+    firstReceivedAt?: Date | string
+    lastReceivedAt?: Date | string
+    processedAt?: Date | string | null
+    processingDurationMs?: number | null
+    attemptsCount?: number
+    httpStatusCode?: number | null
+    errorMessage?: string | null
+    webhookPayload?: NullableJsonNullValueInput | InputJsonValue
+    squareOrderPayload?: NullableJsonNullValueInput | InputJsonValue
+    responsePayload?: NullableJsonNullValueInput | InputJsonValue
+    business?: BusinessCreateNestedOneWithoutSquareWebhookRunsInput
+  }
+
+  export type SquareWebhookRunUncheckedCreateWithoutAttemptsInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    businessId?: string | null
+    eventId?: string | null
+    eventType?: string | null
+    merchantId?: string | null
+    squareOrderId?: string | null
+    locationId?: string | null
+    squareOrderState?: string | null
+    signatureVerified?: boolean | null
+    status?: $Enums.SquareWebhookRunStatus
+    action?: string | null
+    reason?: string | null
+    foodyOrderId?: string | null
+    firstReceivedAt?: Date | string
+    lastReceivedAt?: Date | string
+    processedAt?: Date | string | null
+    processingDurationMs?: number | null
+    attemptsCount?: number
+    httpStatusCode?: number | null
+    errorMessage?: string | null
+    webhookPayload?: NullableJsonNullValueInput | InputJsonValue
+    squareOrderPayload?: NullableJsonNullValueInput | InputJsonValue
+    responsePayload?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SquareWebhookRunCreateOrConnectWithoutAttemptsInput = {
+    where: SquareWebhookRunWhereUniqueInput
+    create: XOR<SquareWebhookRunCreateWithoutAttemptsInput, SquareWebhookRunUncheckedCreateWithoutAttemptsInput>
+  }
+
+  export type SquareWebhookRunUpsertWithoutAttemptsInput = {
+    update: XOR<SquareWebhookRunUpdateWithoutAttemptsInput, SquareWebhookRunUncheckedUpdateWithoutAttemptsInput>
+    create: XOR<SquareWebhookRunCreateWithoutAttemptsInput, SquareWebhookRunUncheckedCreateWithoutAttemptsInput>
+    where?: SquareWebhookRunWhereInput
+  }
+
+  export type SquareWebhookRunUpdateToOneWithWhereWithoutAttemptsInput = {
+    where?: SquareWebhookRunWhereInput
+    data: XOR<SquareWebhookRunUpdateWithoutAttemptsInput, SquareWebhookRunUncheckedUpdateWithoutAttemptsInput>
+  }
+
+  export type SquareWebhookRunUpdateWithoutAttemptsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    eventId?: NullableStringFieldUpdateOperationsInput | string | null
+    eventType?: NullableStringFieldUpdateOperationsInput | string | null
+    merchantId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    locationId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareOrderState?: NullableStringFieldUpdateOperationsInput | string | null
+    signatureVerified?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    status?: EnumSquareWebhookRunStatusFieldUpdateOperationsInput | $Enums.SquareWebhookRunStatus
+    action?: NullableStringFieldUpdateOperationsInput | string | null
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    foodyOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    firstReceivedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastReceivedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    processingDurationMs?: NullableIntFieldUpdateOperationsInput | number | null
+    attemptsCount?: IntFieldUpdateOperationsInput | number
+    httpStatusCode?: NullableIntFieldUpdateOperationsInput | number | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    webhookPayload?: NullableJsonNullValueInput | InputJsonValue
+    squareOrderPayload?: NullableJsonNullValueInput | InputJsonValue
+    responsePayload?: NullableJsonNullValueInput | InputJsonValue
+    business?: BusinessUpdateOneWithoutSquareWebhookRunsNestedInput
+  }
+
+  export type SquareWebhookRunUncheckedUpdateWithoutAttemptsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessId?: NullableStringFieldUpdateOperationsInput | string | null
+    eventId?: NullableStringFieldUpdateOperationsInput | string | null
+    eventType?: NullableStringFieldUpdateOperationsInput | string | null
+    merchantId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    locationId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareOrderState?: NullableStringFieldUpdateOperationsInput | string | null
+    signatureVerified?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    status?: EnumSquareWebhookRunStatusFieldUpdateOperationsInput | $Enums.SquareWebhookRunStatus
+    action?: NullableStringFieldUpdateOperationsInput | string | null
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    foodyOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    firstReceivedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastReceivedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    processingDurationMs?: NullableIntFieldUpdateOperationsInput | number | null
+    attemptsCount?: IntFieldUpdateOperationsInput | number
+    httpStatusCode?: NullableIntFieldUpdateOperationsInput | number | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    webhookPayload?: NullableJsonNullValueInput | InputJsonValue
+    squareOrderPayload?: NullableJsonNullValueInput | InputJsonValue
+    responsePayload?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type ExternalIntegrationConnectionCreateWithoutMenuEntityMapsInput = {
@@ -119116,6 +127543,8 @@ export namespace Prisma {
     branches?: BranchCreateNestedManyWithoutBusinessInput
     integrations?: ExternalIntegrationConnectionCreateNestedManyWithoutBusinessInput
     squareConnections?: SquareConnectionCreateNestedManyWithoutBusinessInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskCreateNestedManyWithoutBusinessInput
+    squareWebhookRuns?: SquareWebhookRunCreateNestedManyWithoutBusinessInput
     pushDevices?: UserPushDeviceCreateNestedManyWithoutBusinessInput
   }
 
@@ -119136,6 +127565,8 @@ export namespace Prisma {
     branches?: BranchUncheckedCreateNestedManyWithoutBusinessInput
     integrations?: ExternalIntegrationConnectionUncheckedCreateNestedManyWithoutBusinessInput
     squareConnections?: SquareConnectionUncheckedCreateNestedManyWithoutBusinessInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedCreateNestedManyWithoutBusinessInput
+    squareWebhookRuns?: SquareWebhookRunUncheckedCreateNestedManyWithoutBusinessInput
     pushDevices?: UserPushDeviceUncheckedCreateNestedManyWithoutBusinessInput
   }
 
@@ -119209,6 +127640,8 @@ export namespace Prisma {
     branches?: BranchUpdateManyWithoutBusinessNestedInput
     integrations?: ExternalIntegrationConnectionUpdateManyWithoutBusinessNestedInput
     squareConnections?: SquareConnectionUpdateManyWithoutBusinessNestedInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUpdateManyWithoutBusinessNestedInput
+    squareWebhookRuns?: SquareWebhookRunUpdateManyWithoutBusinessNestedInput
     pushDevices?: UserPushDeviceUpdateManyWithoutBusinessNestedInput
   }
 
@@ -119229,6 +127662,8 @@ export namespace Prisma {
     branches?: BranchUncheckedUpdateManyWithoutBusinessNestedInput
     integrations?: ExternalIntegrationConnectionUncheckedUpdateManyWithoutBusinessNestedInput
     squareConnections?: SquareConnectionUncheckedUpdateManyWithoutBusinessNestedInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedUpdateManyWithoutBusinessNestedInput
+    squareWebhookRuns?: SquareWebhookRunUncheckedUpdateManyWithoutBusinessNestedInput
     pushDevices?: UserPushDeviceUncheckedUpdateManyWithoutBusinessNestedInput
   }
 
@@ -119333,6 +127768,8 @@ export namespace Prisma {
     members?: BusinessMemberCreateNestedManyWithoutBusinessInput
     integrations?: ExternalIntegrationConnectionCreateNestedManyWithoutBusinessInput
     squareConnections?: SquareConnectionCreateNestedManyWithoutBusinessInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskCreateNestedManyWithoutBusinessInput
+    squareWebhookRuns?: SquareWebhookRunCreateNestedManyWithoutBusinessInput
     pushDevices?: UserPushDeviceCreateNestedManyWithoutBusinessInput
   }
 
@@ -119353,6 +127790,8 @@ export namespace Prisma {
     members?: BusinessMemberUncheckedCreateNestedManyWithoutBusinessInput
     integrations?: ExternalIntegrationConnectionUncheckedCreateNestedManyWithoutBusinessInput
     squareConnections?: SquareConnectionUncheckedCreateNestedManyWithoutBusinessInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedCreateNestedManyWithoutBusinessInput
+    squareWebhookRuns?: SquareWebhookRunUncheckedCreateNestedManyWithoutBusinessInput
     pushDevices?: UserPushDeviceUncheckedCreateNestedManyWithoutBusinessInput
   }
 
@@ -119524,6 +127963,8 @@ export namespace Prisma {
     members?: BusinessMemberUpdateManyWithoutBusinessNestedInput
     integrations?: ExternalIntegrationConnectionUpdateManyWithoutBusinessNestedInput
     squareConnections?: SquareConnectionUpdateManyWithoutBusinessNestedInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUpdateManyWithoutBusinessNestedInput
+    squareWebhookRuns?: SquareWebhookRunUpdateManyWithoutBusinessNestedInput
     pushDevices?: UserPushDeviceUpdateManyWithoutBusinessNestedInput
   }
 
@@ -119544,6 +127985,8 @@ export namespace Prisma {
     members?: BusinessMemberUncheckedUpdateManyWithoutBusinessNestedInput
     integrations?: ExternalIntegrationConnectionUncheckedUpdateManyWithoutBusinessNestedInput
     squareConnections?: SquareConnectionUncheckedUpdateManyWithoutBusinessNestedInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedUpdateManyWithoutBusinessNestedInput
+    squareWebhookRuns?: SquareWebhookRunUncheckedUpdateManyWithoutBusinessNestedInput
     pushDevices?: UserPushDeviceUncheckedUpdateManyWithoutBusinessNestedInput
   }
 
@@ -121837,6 +130280,50 @@ export namespace Prisma {
     create: XOR<PreparationStepCreateWithoutProductsInput, PreparationStepUncheckedCreateWithoutProductsInput>
   }
 
+  export type SquareCatalogSyncTaskCreateWithoutProductInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    taskType?: $Enums.SquareCatalogSyncTaskType
+    status?: $Enums.SquareCatalogSyncTaskStatus
+    attempts?: number
+    availableAt?: Date | string
+    processingStartedAt?: Date | string | null
+    finishedAt?: Date | string | null
+    errorMessage?: string | null
+    requestPayload?: NullableJsonNullValueInput | InputJsonValue
+    responsePayload?: NullableJsonNullValueInput | InputJsonValue
+    business: BusinessCreateNestedOneWithoutSquareCatalogSyncTasksInput
+    menu?: MenuCreateNestedOneWithoutSquareCatalogSyncTasksInput
+  }
+
+  export type SquareCatalogSyncTaskUncheckedCreateWithoutProductInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    businessId: string
+    menuId?: string | null
+    taskType?: $Enums.SquareCatalogSyncTaskType
+    status?: $Enums.SquareCatalogSyncTaskStatus
+    attempts?: number
+    availableAt?: Date | string
+    processingStartedAt?: Date | string | null
+    finishedAt?: Date | string | null
+    errorMessage?: string | null
+    requestPayload?: NullableJsonNullValueInput | InputJsonValue
+    responsePayload?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SquareCatalogSyncTaskCreateOrConnectWithoutProductInput = {
+    where: SquareCatalogSyncTaskWhereUniqueInput
+    create: XOR<SquareCatalogSyncTaskCreateWithoutProductInput, SquareCatalogSyncTaskUncheckedCreateWithoutProductInput>
+  }
+
+  export type SquareCatalogSyncTaskCreateManyProductInputEnvelope = {
+    data: SquareCatalogSyncTaskCreateManyProductInput | SquareCatalogSyncTaskCreateManyProductInput[]
+    skipDuplicates?: boolean
+  }
+
   export type FileUpsertWithWhereUniqueWithoutProductInput = {
     where: FileWhereUniqueInput
     update: XOR<FileUpdateWithoutProductInput, FileUncheckedUpdateWithoutProductInput>
@@ -122191,6 +130678,22 @@ export namespace Prisma {
     data: XOR<PreparationStepUpdateManyMutationInput, PreparationStepUncheckedUpdateManyWithoutProductsInput>
   }
 
+  export type SquareCatalogSyncTaskUpsertWithWhereUniqueWithoutProductInput = {
+    where: SquareCatalogSyncTaskWhereUniqueInput
+    update: XOR<SquareCatalogSyncTaskUpdateWithoutProductInput, SquareCatalogSyncTaskUncheckedUpdateWithoutProductInput>
+    create: XOR<SquareCatalogSyncTaskCreateWithoutProductInput, SquareCatalogSyncTaskUncheckedCreateWithoutProductInput>
+  }
+
+  export type SquareCatalogSyncTaskUpdateWithWhereUniqueWithoutProductInput = {
+    where: SquareCatalogSyncTaskWhereUniqueInput
+    data: XOR<SquareCatalogSyncTaskUpdateWithoutProductInput, SquareCatalogSyncTaskUncheckedUpdateWithoutProductInput>
+  }
+
+  export type SquareCatalogSyncTaskUpdateManyWithWhereWithoutProductInput = {
+    where: SquareCatalogSyncTaskScalarWhereInput
+    data: XOR<SquareCatalogSyncTaskUpdateManyMutationInput, SquareCatalogSyncTaskUncheckedUpdateManyWithoutProductInput>
+  }
+
   export type ProductCreateWithoutComboProductItemsInput = {
     id: string
     createdAt?: Date | string
@@ -122220,6 +130723,7 @@ export namespace Prisma {
     prizeProducts?: ProgressiveDiscountPrizeProductCreateNestedManyWithoutProductInput
     customerRewards?: CustomerRewardCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepCreateNestedManyWithoutProductsInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutComboProductItemsInput = {
@@ -122251,6 +130755,7 @@ export namespace Prisma {
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedCreateNestedManyWithoutProductInput
     customerRewards?: CustomerRewardUncheckedCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepUncheckedCreateNestedManyWithoutProductsInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutComboProductItemsInput = {
@@ -122287,6 +130792,7 @@ export namespace Prisma {
     prizeProducts?: ProgressiveDiscountPrizeProductCreateNestedManyWithoutProductInput
     customerRewards?: CustomerRewardCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepCreateNestedManyWithoutProductsInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutComboUsedInItemsInput = {
@@ -122318,6 +130824,7 @@ export namespace Prisma {
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedCreateNestedManyWithoutProductInput
     customerRewards?: CustomerRewardUncheckedCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepUncheckedCreateNestedManyWithoutProductsInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutComboUsedInItemsInput = {
@@ -122365,6 +130872,7 @@ export namespace Prisma {
     prizeProducts?: ProgressiveDiscountPrizeProductUpdateManyWithoutProductNestedInput
     customerRewards?: CustomerRewardUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUpdateManyWithoutProductsNestedInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutComboProductItemsInput = {
@@ -122396,6 +130904,7 @@ export namespace Prisma {
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutProductNestedInput
     customerRewards?: CustomerRewardUncheckedUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUncheckedUpdateManyWithoutProductsNestedInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUpsertWithoutComboUsedInItemsInput = {
@@ -122438,6 +130947,7 @@ export namespace Prisma {
     prizeProducts?: ProgressiveDiscountPrizeProductUpdateManyWithoutProductNestedInput
     customerRewards?: CustomerRewardUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUpdateManyWithoutProductsNestedInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutComboUsedInItemsInput = {
@@ -122469,6 +130979,7 @@ export namespace Prisma {
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutProductNestedInput
     customerRewards?: CustomerRewardUncheckedUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUncheckedUpdateManyWithoutProductsNestedInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ExclusivePromotionProductCreateWithoutPromotionInput = {
@@ -122632,6 +131143,7 @@ export namespace Prisma {
     prizeProducts?: ProgressiveDiscountPrizeProductCreateNestedManyWithoutProductInput
     customerRewards?: CustomerRewardCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepCreateNestedManyWithoutProductsInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutExclusivePromotionProductsInput = {
@@ -122663,6 +131175,7 @@ export namespace Prisma {
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedCreateNestedManyWithoutProductInput
     customerRewards?: CustomerRewardUncheckedCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepUncheckedCreateNestedManyWithoutProductsInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutExclusivePromotionProductsInput = {
@@ -122743,6 +131256,7 @@ export namespace Prisma {
     prizeProducts?: ProgressiveDiscountPrizeProductUpdateManyWithoutProductNestedInput
     customerRewards?: CustomerRewardUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUpdateManyWithoutProductsNestedInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutExclusivePromotionProductsInput = {
@@ -122774,6 +131288,7 @@ export namespace Prisma {
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutProductNestedInput
     customerRewards?: CustomerRewardUncheckedUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUncheckedUpdateManyWithoutProductsNestedInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type CategoryCreateWithoutMenuInput = {
@@ -122876,6 +131391,50 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type SquareCatalogSyncTaskCreateWithoutMenuInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    taskType?: $Enums.SquareCatalogSyncTaskType
+    status?: $Enums.SquareCatalogSyncTaskStatus
+    attempts?: number
+    availableAt?: Date | string
+    processingStartedAt?: Date | string | null
+    finishedAt?: Date | string | null
+    errorMessage?: string | null
+    requestPayload?: NullableJsonNullValueInput | InputJsonValue
+    responsePayload?: NullableJsonNullValueInput | InputJsonValue
+    business: BusinessCreateNestedOneWithoutSquareCatalogSyncTasksInput
+    product?: ProductCreateNestedOneWithoutSquareCatalogSyncTasksInput
+  }
+
+  export type SquareCatalogSyncTaskUncheckedCreateWithoutMenuInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    businessId: string
+    productId?: string | null
+    taskType?: $Enums.SquareCatalogSyncTaskType
+    status?: $Enums.SquareCatalogSyncTaskStatus
+    attempts?: number
+    availableAt?: Date | string
+    processingStartedAt?: Date | string | null
+    finishedAt?: Date | string | null
+    errorMessage?: string | null
+    requestPayload?: NullableJsonNullValueInput | InputJsonValue
+    responsePayload?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SquareCatalogSyncTaskCreateOrConnectWithoutMenuInput = {
+    where: SquareCatalogSyncTaskWhereUniqueInput
+    create: XOR<SquareCatalogSyncTaskCreateWithoutMenuInput, SquareCatalogSyncTaskUncheckedCreateWithoutMenuInput>
+  }
+
+  export type SquareCatalogSyncTaskCreateManyMenuInputEnvelope = {
+    data: SquareCatalogSyncTaskCreateManyMenuInput | SquareCatalogSyncTaskCreateManyMenuInput[]
+    skipDuplicates?: boolean
+  }
+
   export type CategoryUpsertWithWhereUniqueWithoutMenuInput = {
     where: CategoryWhereUniqueInput
     update: XOR<CategoryUpdateWithoutMenuInput, CategoryUncheckedUpdateWithoutMenuInput>
@@ -122950,6 +131509,22 @@ export namespace Prisma {
     data: XOR<MenuVisitUpdateManyMutationInput, MenuVisitUncheckedUpdateManyWithoutMenuInput>
   }
 
+  export type SquareCatalogSyncTaskUpsertWithWhereUniqueWithoutMenuInput = {
+    where: SquareCatalogSyncTaskWhereUniqueInput
+    update: XOR<SquareCatalogSyncTaskUpdateWithoutMenuInput, SquareCatalogSyncTaskUncheckedUpdateWithoutMenuInput>
+    create: XOR<SquareCatalogSyncTaskCreateWithoutMenuInput, SquareCatalogSyncTaskUncheckedCreateWithoutMenuInput>
+  }
+
+  export type SquareCatalogSyncTaskUpdateWithWhereUniqueWithoutMenuInput = {
+    where: SquareCatalogSyncTaskWhereUniqueInput
+    data: XOR<SquareCatalogSyncTaskUpdateWithoutMenuInput, SquareCatalogSyncTaskUncheckedUpdateWithoutMenuInput>
+  }
+
+  export type SquareCatalogSyncTaskUpdateManyWithWhereWithoutMenuInput = {
+    where: SquareCatalogSyncTaskScalarWhereInput
+    data: XOR<SquareCatalogSyncTaskUpdateManyMutationInput, SquareCatalogSyncTaskUncheckedUpdateManyWithoutMenuInput>
+  }
+
   export type MenuCreateWithoutMenuVisitsInput = {
     id: string
     createdAt?: Date | string
@@ -122961,6 +131536,7 @@ export namespace Prisma {
     squareMenuVersion?: string | null
     categories?: CategoryCreateNestedManyWithoutMenuInput
     menuCategories?: MenuCategoryCreateNestedManyWithoutMenuInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskCreateNestedManyWithoutMenuInput
   }
 
   export type MenuUncheckedCreateWithoutMenuVisitsInput = {
@@ -122974,6 +131550,7 @@ export namespace Prisma {
     squareMenuVersion?: string | null
     categories?: CategoryUncheckedCreateNestedManyWithoutMenuInput
     menuCategories?: MenuCategoryUncheckedCreateNestedManyWithoutMenuInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedCreateNestedManyWithoutMenuInput
   }
 
   export type MenuCreateOrConnectWithoutMenuVisitsInput = {
@@ -123030,6 +131607,7 @@ export namespace Prisma {
     squareMenuVersion?: NullableStringFieldUpdateOperationsInput | string | null
     categories?: CategoryUpdateManyWithoutMenuNestedInput
     menuCategories?: MenuCategoryUpdateManyWithoutMenuNestedInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUpdateManyWithoutMenuNestedInput
   }
 
   export type MenuUncheckedUpdateWithoutMenuVisitsInput = {
@@ -123043,6 +131621,7 @@ export namespace Prisma {
     squareMenuVersion?: NullableStringFieldUpdateOperationsInput | string | null
     categories?: CategoryUncheckedUpdateManyWithoutMenuNestedInput
     menuCategories?: MenuCategoryUncheckedUpdateManyWithoutMenuNestedInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedUpdateManyWithoutMenuNestedInput
   }
 
   export type ExclusivePromotionUpsertWithoutMenuVisitsInput = {
@@ -123089,6 +131668,7 @@ export namespace Prisma {
     squareMenuVersion?: string | null
     menuCategories?: MenuCategoryCreateNestedManyWithoutMenuInput
     menuVisits?: MenuVisitCreateNestedManyWithoutMenuInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskCreateNestedManyWithoutMenuInput
   }
 
   export type MenuUncheckedCreateWithoutCategoriesInput = {
@@ -123102,6 +131682,7 @@ export namespace Prisma {
     squareMenuVersion?: string | null
     menuCategories?: MenuCategoryUncheckedCreateNestedManyWithoutMenuInput
     menuVisits?: MenuVisitUncheckedCreateNestedManyWithoutMenuInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedCreateNestedManyWithoutMenuInput
   }
 
   export type MenuCreateOrConnectWithoutCategoriesInput = {
@@ -123138,6 +131719,7 @@ export namespace Prisma {
     prizeProducts?: ProgressiveDiscountPrizeProductCreateNestedManyWithoutProductInput
     customerRewards?: CustomerRewardCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepCreateNestedManyWithoutProductsInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutCategoryInput = {
@@ -123169,6 +131751,7 @@ export namespace Prisma {
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedCreateNestedManyWithoutProductInput
     customerRewards?: CustomerRewardUncheckedCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepUncheckedCreateNestedManyWithoutProductsInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutCategoryInput = {
@@ -123283,6 +131866,7 @@ export namespace Prisma {
     squareMenuVersion?: NullableStringFieldUpdateOperationsInput | string | null
     menuCategories?: MenuCategoryUpdateManyWithoutMenuNestedInput
     menuVisits?: MenuVisitUpdateManyWithoutMenuNestedInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUpdateManyWithoutMenuNestedInput
   }
 
   export type MenuUncheckedUpdateWithoutCategoriesInput = {
@@ -123296,6 +131880,7 @@ export namespace Prisma {
     squareMenuVersion?: NullableStringFieldUpdateOperationsInput | string | null
     menuCategories?: MenuCategoryUncheckedUpdateManyWithoutMenuNestedInput
     menuVisits?: MenuVisitUncheckedUpdateManyWithoutMenuNestedInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedUpdateManyWithoutMenuNestedInput
   }
 
   export type ProductUpsertWithWhereUniqueWithoutCategoryInput = {
@@ -123373,6 +131958,7 @@ export namespace Prisma {
     squareMenuVersion?: string | null
     categories?: CategoryCreateNestedManyWithoutMenuInput
     menuVisits?: MenuVisitCreateNestedManyWithoutMenuInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskCreateNestedManyWithoutMenuInput
   }
 
   export type MenuUncheckedCreateWithoutMenuCategoriesInput = {
@@ -123386,6 +131972,7 @@ export namespace Prisma {
     squareMenuVersion?: string | null
     categories?: CategoryUncheckedCreateNestedManyWithoutMenuInput
     menuVisits?: MenuVisitUncheckedCreateNestedManyWithoutMenuInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedCreateNestedManyWithoutMenuInput
   }
 
   export type MenuCreateOrConnectWithoutMenuCategoriesInput = {
@@ -123444,6 +132031,7 @@ export namespace Prisma {
     squareMenuVersion?: NullableStringFieldUpdateOperationsInput | string | null
     categories?: CategoryUpdateManyWithoutMenuNestedInput
     menuVisits?: MenuVisitUpdateManyWithoutMenuNestedInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUpdateManyWithoutMenuNestedInput
   }
 
   export type MenuUncheckedUpdateWithoutMenuCategoriesInput = {
@@ -123457,6 +132045,7 @@ export namespace Prisma {
     squareMenuVersion?: NullableStringFieldUpdateOperationsInput | string | null
     categories?: CategoryUncheckedUpdateManyWithoutMenuNestedInput
     menuVisits?: MenuVisitUncheckedUpdateManyWithoutMenuNestedInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedUpdateManyWithoutMenuNestedInput
   }
 
   export type CategoryUpsertWithoutMenuCategoriesInput = {
@@ -123523,6 +132112,7 @@ export namespace Prisma {
     prizeProducts?: ProgressiveDiscountPrizeProductCreateNestedManyWithoutProductInput
     customerRewards?: CustomerRewardCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepCreateNestedManyWithoutProductsInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutProductCategoriesInput = {
@@ -123554,6 +132144,7 @@ export namespace Prisma {
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedCreateNestedManyWithoutProductInput
     customerRewards?: CustomerRewardUncheckedCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepUncheckedCreateNestedManyWithoutProductsInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutProductCategoriesInput = {
@@ -123630,6 +132221,7 @@ export namespace Prisma {
     prizeProducts?: ProgressiveDiscountPrizeProductUpdateManyWithoutProductNestedInput
     customerRewards?: CustomerRewardUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUpdateManyWithoutProductsNestedInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutProductCategoriesInput = {
@@ -123661,6 +132253,7 @@ export namespace Prisma {
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutProductNestedInput
     customerRewards?: CustomerRewardUncheckedUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUncheckedUpdateManyWithoutProductsNestedInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type CategoryUpsertWithoutProductCategoriesInput = {
@@ -123727,6 +132320,7 @@ export namespace Prisma {
     prizeProducts?: ProgressiveDiscountPrizeProductCreateNestedManyWithoutProductInput
     customerRewards?: CustomerRewardCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepCreateNestedManyWithoutProductsInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutComboSlotsInput = {
@@ -123758,6 +132352,7 @@ export namespace Prisma {
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedCreateNestedManyWithoutProductInput
     customerRewards?: CustomerRewardUncheckedCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepUncheckedCreateNestedManyWithoutProductsInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutComboSlotsInput = {
@@ -123831,6 +132426,7 @@ export namespace Prisma {
     prizeProducts?: ProgressiveDiscountPrizeProductUpdateManyWithoutProductNestedInput
     customerRewards?: CustomerRewardUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUpdateManyWithoutProductsNestedInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutComboSlotsInput = {
@@ -123862,6 +132458,7 @@ export namespace Prisma {
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutProductNestedInput
     customerRewards?: CustomerRewardUncheckedUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUncheckedUpdateManyWithoutProductsNestedInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ComboSlotOptionUpsertWithWhereUniqueWithoutSlotInput = {
@@ -123940,6 +132537,7 @@ export namespace Prisma {
     prizeProducts?: ProgressiveDiscountPrizeProductCreateNestedManyWithoutProductInput
     customerRewards?: CustomerRewardCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepCreateNestedManyWithoutProductsInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutComboSlotOptionsInput = {
@@ -123971,6 +132569,7 @@ export namespace Prisma {
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedCreateNestedManyWithoutProductInput
     customerRewards?: CustomerRewardUncheckedCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepUncheckedCreateNestedManyWithoutProductsInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutComboSlotOptionsInput = {
@@ -124055,6 +132654,7 @@ export namespace Prisma {
     prizeProducts?: ProgressiveDiscountPrizeProductUpdateManyWithoutProductNestedInput
     customerRewards?: CustomerRewardUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUpdateManyWithoutProductsNestedInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutComboSlotOptionsInput = {
@@ -124086,6 +132686,7 @@ export namespace Prisma {
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutProductNestedInput
     customerRewards?: CustomerRewardUncheckedUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUncheckedUpdateManyWithoutProductsNestedInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type PromotialMessageCreateWithoutCampaignInput = {
@@ -127579,6 +136180,7 @@ export namespace Prisma {
     orderIntentProducts?: OrderIntentProductCreateNestedManyWithoutProductInput
     prizeProducts?: ProgressiveDiscountPrizeProductCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepCreateNestedManyWithoutProductsInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutCustomerRewardsInput = {
@@ -127610,6 +136212,7 @@ export namespace Prisma {
     orderIntentProducts?: OrderIntentProductUncheckedCreateNestedManyWithoutProductInput
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepUncheckedCreateNestedManyWithoutProductsInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutCustomerRewardsInput = {
@@ -127913,6 +136516,7 @@ export namespace Prisma {
     orderIntentProducts?: OrderIntentProductUpdateManyWithoutProductNestedInput
     prizeProducts?: ProgressiveDiscountPrizeProductUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUpdateManyWithoutProductsNestedInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutCustomerRewardsInput = {
@@ -127944,6 +136548,7 @@ export namespace Prisma {
     orderIntentProducts?: OrderIntentProductUncheckedUpdateManyWithoutProductNestedInput
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUncheckedUpdateManyWithoutProductsNestedInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type CustomerFeedbackUpsertWithoutIssuedRewardInput = {
@@ -128198,6 +136803,7 @@ export namespace Prisma {
     prizeProducts?: ProgressiveDiscountPrizeProductCreateNestedManyWithoutProductInput
     customerRewards?: CustomerRewardCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepCreateNestedManyWithoutProductsInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutOrderProductsInput = {
@@ -128229,6 +136835,7 @@ export namespace Prisma {
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedCreateNestedManyWithoutProductInput
     customerRewards?: CustomerRewardUncheckedCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepUncheckedCreateNestedManyWithoutProductsInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutOrderProductsInput = {
@@ -128394,6 +137001,7 @@ export namespace Prisma {
     prizeProducts?: ProgressiveDiscountPrizeProductUpdateManyWithoutProductNestedInput
     customerRewards?: CustomerRewardUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUpdateManyWithoutProductsNestedInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutOrderProductsInput = {
@@ -128425,6 +137033,7 @@ export namespace Prisma {
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutProductNestedInput
     customerRewards?: CustomerRewardUncheckedUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUncheckedUpdateManyWithoutProductsNestedInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ModifierGroupItemUpsertWithWhereUniqueWithoutOrderProductsInput = {
@@ -128602,6 +137211,7 @@ export namespace Prisma {
     prizeProducts?: ProgressiveDiscountPrizeProductCreateNestedManyWithoutProductInput
     customerRewards?: CustomerRewardCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepCreateNestedManyWithoutProductsInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutOrderIntentProductsInput = {
@@ -128633,6 +137243,7 @@ export namespace Prisma {
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedCreateNestedManyWithoutProductInput
     customerRewards?: CustomerRewardUncheckedCreateNestedManyWithoutProductInput
     preparationSteps?: PreparationStepUncheckedCreateNestedManyWithoutProductsInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutOrderIntentProductsInput = {
@@ -128762,6 +137373,7 @@ export namespace Prisma {
     prizeProducts?: ProgressiveDiscountPrizeProductUpdateManyWithoutProductNestedInput
     customerRewards?: CustomerRewardUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUpdateManyWithoutProductsNestedInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutOrderIntentProductsInput = {
@@ -128793,6 +137405,7 @@ export namespace Prisma {
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutProductNestedInput
     customerRewards?: CustomerRewardUncheckedUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUncheckedUpdateManyWithoutProductsNestedInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ModifierGroupItemUpsertWithWhereUniqueWithoutOrderIntentProductsInput = {
@@ -130443,6 +139056,7 @@ export namespace Prisma {
     orderIntentProducts?: OrderIntentProductUpdateManyWithoutProductNestedInput
     prizeProducts?: ProgressiveDiscountPrizeProductUpdateManyWithoutProductNestedInput
     customerRewards?: CustomerRewardUpdateManyWithoutProductNestedInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutPreparationStepsInput = {
@@ -130474,6 +139088,7 @@ export namespace Prisma {
     orderIntentProducts?: OrderIntentProductUncheckedUpdateManyWithoutProductNestedInput
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutProductNestedInput
     customerRewards?: CustomerRewardUncheckedUpdateManyWithoutProductNestedInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateManyWithoutPreparationStepsInput = {
@@ -130809,6 +139424,7 @@ export namespace Prisma {
     prizeProducts?: ProgressiveDiscountPrizeProductUpdateManyWithoutProductNestedInput
     customerRewards?: CustomerRewardUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUpdateManyWithoutProductsNestedInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutModifierGroupsInput = {
@@ -130840,6 +139456,7 @@ export namespace Prisma {
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutProductNestedInput
     customerRewards?: CustomerRewardUncheckedUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUncheckedUpdateManyWithoutProductsNestedInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateManyWithoutModifierGroupsInput = {
@@ -131050,6 +139667,50 @@ export namespace Prisma {
     rawPayload?: NullableJsonNullValueInput | InputJsonValue
   }
 
+  export type SquareCatalogSyncTaskCreateManyBusinessInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    productId?: string | null
+    menuId?: string | null
+    taskType?: $Enums.SquareCatalogSyncTaskType
+    status?: $Enums.SquareCatalogSyncTaskStatus
+    attempts?: number
+    availableAt?: Date | string
+    processingStartedAt?: Date | string | null
+    finishedAt?: Date | string | null
+    errorMessage?: string | null
+    requestPayload?: NullableJsonNullValueInput | InputJsonValue
+    responsePayload?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SquareWebhookRunCreateManyBusinessInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    eventId?: string | null
+    eventType?: string | null
+    merchantId?: string | null
+    squareOrderId?: string | null
+    locationId?: string | null
+    squareOrderState?: string | null
+    signatureVerified?: boolean | null
+    status?: $Enums.SquareWebhookRunStatus
+    action?: string | null
+    reason?: string | null
+    foodyOrderId?: string | null
+    firstReceivedAt?: Date | string
+    lastReceivedAt?: Date | string
+    processedAt?: Date | string | null
+    processingDurationMs?: number | null
+    attemptsCount?: number
+    httpStatusCode?: number | null
+    errorMessage?: string | null
+    webhookPayload?: NullableJsonNullValueInput | InputJsonValue
+    squareOrderPayload?: NullableJsonNullValueInput | InputJsonValue
+    responsePayload?: NullableJsonNullValueInput | InputJsonValue
+  }
+
   export type UserPushDeviceCreateManyBusinessInput = {
     id: string
     createdAt?: Date | string
@@ -131226,6 +139887,140 @@ export namespace Prisma {
     expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     connectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     rawPayload?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SquareCatalogSyncTaskUpdateWithoutBusinessInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    taskType?: EnumSquareCatalogSyncTaskTypeFieldUpdateOperationsInput | $Enums.SquareCatalogSyncTaskType
+    status?: EnumSquareCatalogSyncTaskStatusFieldUpdateOperationsInput | $Enums.SquareCatalogSyncTaskStatus
+    attempts?: IntFieldUpdateOperationsInput | number
+    availableAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processingStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    requestPayload?: NullableJsonNullValueInput | InputJsonValue
+    responsePayload?: NullableJsonNullValueInput | InputJsonValue
+    product?: ProductUpdateOneWithoutSquareCatalogSyncTasksNestedInput
+    menu?: MenuUpdateOneWithoutSquareCatalogSyncTasksNestedInput
+  }
+
+  export type SquareCatalogSyncTaskUncheckedUpdateWithoutBusinessInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    productId?: NullableStringFieldUpdateOperationsInput | string | null
+    menuId?: NullableStringFieldUpdateOperationsInput | string | null
+    taskType?: EnumSquareCatalogSyncTaskTypeFieldUpdateOperationsInput | $Enums.SquareCatalogSyncTaskType
+    status?: EnumSquareCatalogSyncTaskStatusFieldUpdateOperationsInput | $Enums.SquareCatalogSyncTaskStatus
+    attempts?: IntFieldUpdateOperationsInput | number
+    availableAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processingStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    requestPayload?: NullableJsonNullValueInput | InputJsonValue
+    responsePayload?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SquareCatalogSyncTaskUncheckedUpdateManyWithoutBusinessInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    productId?: NullableStringFieldUpdateOperationsInput | string | null
+    menuId?: NullableStringFieldUpdateOperationsInput | string | null
+    taskType?: EnumSquareCatalogSyncTaskTypeFieldUpdateOperationsInput | $Enums.SquareCatalogSyncTaskType
+    status?: EnumSquareCatalogSyncTaskStatusFieldUpdateOperationsInput | $Enums.SquareCatalogSyncTaskStatus
+    attempts?: IntFieldUpdateOperationsInput | number
+    availableAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processingStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    requestPayload?: NullableJsonNullValueInput | InputJsonValue
+    responsePayload?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SquareWebhookRunUpdateWithoutBusinessInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    eventId?: NullableStringFieldUpdateOperationsInput | string | null
+    eventType?: NullableStringFieldUpdateOperationsInput | string | null
+    merchantId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    locationId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareOrderState?: NullableStringFieldUpdateOperationsInput | string | null
+    signatureVerified?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    status?: EnumSquareWebhookRunStatusFieldUpdateOperationsInput | $Enums.SquareWebhookRunStatus
+    action?: NullableStringFieldUpdateOperationsInput | string | null
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    foodyOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    firstReceivedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastReceivedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    processingDurationMs?: NullableIntFieldUpdateOperationsInput | number | null
+    attemptsCount?: IntFieldUpdateOperationsInput | number
+    httpStatusCode?: NullableIntFieldUpdateOperationsInput | number | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    webhookPayload?: NullableJsonNullValueInput | InputJsonValue
+    squareOrderPayload?: NullableJsonNullValueInput | InputJsonValue
+    responsePayload?: NullableJsonNullValueInput | InputJsonValue
+    attempts?: SquareWebhookRunAttemptUpdateManyWithoutRunNestedInput
+  }
+
+  export type SquareWebhookRunUncheckedUpdateWithoutBusinessInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    eventId?: NullableStringFieldUpdateOperationsInput | string | null
+    eventType?: NullableStringFieldUpdateOperationsInput | string | null
+    merchantId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    locationId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareOrderState?: NullableStringFieldUpdateOperationsInput | string | null
+    signatureVerified?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    status?: EnumSquareWebhookRunStatusFieldUpdateOperationsInput | $Enums.SquareWebhookRunStatus
+    action?: NullableStringFieldUpdateOperationsInput | string | null
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    foodyOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    firstReceivedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastReceivedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    processingDurationMs?: NullableIntFieldUpdateOperationsInput | number | null
+    attemptsCount?: IntFieldUpdateOperationsInput | number
+    httpStatusCode?: NullableIntFieldUpdateOperationsInput | number | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    webhookPayload?: NullableJsonNullValueInput | InputJsonValue
+    squareOrderPayload?: NullableJsonNullValueInput | InputJsonValue
+    responsePayload?: NullableJsonNullValueInput | InputJsonValue
+    attempts?: SquareWebhookRunAttemptUncheckedUpdateManyWithoutRunNestedInput
+  }
+
+  export type SquareWebhookRunUncheckedUpdateManyWithoutBusinessInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    eventId?: NullableStringFieldUpdateOperationsInput | string | null
+    eventType?: NullableStringFieldUpdateOperationsInput | string | null
+    merchantId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    locationId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareOrderState?: NullableStringFieldUpdateOperationsInput | string | null
+    signatureVerified?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    status?: EnumSquareWebhookRunStatusFieldUpdateOperationsInput | $Enums.SquareWebhookRunStatus
+    action?: NullableStringFieldUpdateOperationsInput | string | null
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    foodyOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    firstReceivedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastReceivedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    processingDurationMs?: NullableIntFieldUpdateOperationsInput | number | null
+    attemptsCount?: IntFieldUpdateOperationsInput | number
+    httpStatusCode?: NullableIntFieldUpdateOperationsInput | number | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    webhookPayload?: NullableJsonNullValueInput | InputJsonValue
+    squareOrderPayload?: NullableJsonNullValueInput | InputJsonValue
+    responsePayload?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type UserPushDeviceUpdateWithoutBusinessInput = {
@@ -131688,6 +140483,82 @@ export namespace Prisma {
     finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
     requestPayload?: NullableJsonNullValueInput | InputJsonValue
+    responsePayload?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SquareWebhookRunAttemptCreateManyRunInput = {
+    id: string
+    createdAt?: Date | string
+    attemptNumber: number
+    receivedAt?: Date | string
+    finishedAt?: Date | string | null
+    processingDurationMs?: number | null
+    httpStatusCode?: number | null
+    status?: $Enums.SquareWebhookRunStatus
+    action?: string | null
+    reason?: string | null
+    signatureVerified?: boolean | null
+    errorMessage?: string | null
+    requestHeaders?: NullableJsonNullValueInput | InputJsonValue
+    webhookPayload?: NullableJsonNullValueInput | InputJsonValue
+    squareOrderPayload?: NullableJsonNullValueInput | InputJsonValue
+    responsePayload?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SquareWebhookRunAttemptUpdateWithoutRunInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    attemptNumber?: IntFieldUpdateOperationsInput | number
+    receivedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    processingDurationMs?: NullableIntFieldUpdateOperationsInput | number | null
+    httpStatusCode?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumSquareWebhookRunStatusFieldUpdateOperationsInput | $Enums.SquareWebhookRunStatus
+    action?: NullableStringFieldUpdateOperationsInput | string | null
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    signatureVerified?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    requestHeaders?: NullableJsonNullValueInput | InputJsonValue
+    webhookPayload?: NullableJsonNullValueInput | InputJsonValue
+    squareOrderPayload?: NullableJsonNullValueInput | InputJsonValue
+    responsePayload?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SquareWebhookRunAttemptUncheckedUpdateWithoutRunInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    attemptNumber?: IntFieldUpdateOperationsInput | number
+    receivedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    processingDurationMs?: NullableIntFieldUpdateOperationsInput | number | null
+    httpStatusCode?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumSquareWebhookRunStatusFieldUpdateOperationsInput | $Enums.SquareWebhookRunStatus
+    action?: NullableStringFieldUpdateOperationsInput | string | null
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    signatureVerified?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    requestHeaders?: NullableJsonNullValueInput | InputJsonValue
+    webhookPayload?: NullableJsonNullValueInput | InputJsonValue
+    squareOrderPayload?: NullableJsonNullValueInput | InputJsonValue
+    responsePayload?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SquareWebhookRunAttemptUncheckedUpdateManyWithoutRunInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    attemptNumber?: IntFieldUpdateOperationsInput | number
+    receivedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    processingDurationMs?: NullableIntFieldUpdateOperationsInput | number | null
+    httpStatusCode?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumSquareWebhookRunStatusFieldUpdateOperationsInput | $Enums.SquareWebhookRunStatus
+    action?: NullableStringFieldUpdateOperationsInput | string | null
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    signatureVerified?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    requestHeaders?: NullableJsonNullValueInput | InputJsonValue
+    webhookPayload?: NullableJsonNullValueInput | InputJsonValue
+    squareOrderPayload?: NullableJsonNullValueInput | InputJsonValue
     responsePayload?: NullableJsonNullValueInput | InputJsonValue
   }
 
@@ -132749,6 +141620,23 @@ export namespace Prisma {
     metadata?: NullableJsonNullValueInput | InputJsonValue
   }
 
+  export type SquareCatalogSyncTaskCreateManyProductInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    businessId: string
+    menuId?: string | null
+    taskType?: $Enums.SquareCatalogSyncTaskType
+    status?: $Enums.SquareCatalogSyncTaskStatus
+    attempts?: number
+    availableAt?: Date | string
+    processingStartedAt?: Date | string | null
+    finishedAt?: Date | string | null
+    errorMessage?: string | null
+    requestPayload?: NullableJsonNullValueInput | InputJsonValue
+    responsePayload?: NullableJsonNullValueInput | InputJsonValue
+  }
+
   export type FileUpdateWithoutProductInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -133130,6 +142018,57 @@ export namespace Prisma {
     stationId?: StringFieldUpdateOperationsInput | string
   }
 
+  export type SquareCatalogSyncTaskUpdateWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    taskType?: EnumSquareCatalogSyncTaskTypeFieldUpdateOperationsInput | $Enums.SquareCatalogSyncTaskType
+    status?: EnumSquareCatalogSyncTaskStatusFieldUpdateOperationsInput | $Enums.SquareCatalogSyncTaskStatus
+    attempts?: IntFieldUpdateOperationsInput | number
+    availableAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processingStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    requestPayload?: NullableJsonNullValueInput | InputJsonValue
+    responsePayload?: NullableJsonNullValueInput | InputJsonValue
+    business?: BusinessUpdateOneRequiredWithoutSquareCatalogSyncTasksNestedInput
+    menu?: MenuUpdateOneWithoutSquareCatalogSyncTasksNestedInput
+  }
+
+  export type SquareCatalogSyncTaskUncheckedUpdateWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessId?: StringFieldUpdateOperationsInput | string
+    menuId?: NullableStringFieldUpdateOperationsInput | string | null
+    taskType?: EnumSquareCatalogSyncTaskTypeFieldUpdateOperationsInput | $Enums.SquareCatalogSyncTaskType
+    status?: EnumSquareCatalogSyncTaskStatusFieldUpdateOperationsInput | $Enums.SquareCatalogSyncTaskStatus
+    attempts?: IntFieldUpdateOperationsInput | number
+    availableAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processingStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    requestPayload?: NullableJsonNullValueInput | InputJsonValue
+    responsePayload?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SquareCatalogSyncTaskUncheckedUpdateManyWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessId?: StringFieldUpdateOperationsInput | string
+    menuId?: NullableStringFieldUpdateOperationsInput | string | null
+    taskType?: EnumSquareCatalogSyncTaskTypeFieldUpdateOperationsInput | $Enums.SquareCatalogSyncTaskType
+    status?: EnumSquareCatalogSyncTaskStatusFieldUpdateOperationsInput | $Enums.SquareCatalogSyncTaskStatus
+    attempts?: IntFieldUpdateOperationsInput | number
+    availableAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processingStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    requestPayload?: NullableJsonNullValueInput | InputJsonValue
+    responsePayload?: NullableJsonNullValueInput | InputJsonValue
+  }
+
   export type ExclusivePromotionProductCreateManyPromotionInput = {
     productId: string
     createdAt?: Date | string
@@ -133233,6 +142172,23 @@ export namespace Prisma {
     ipAddress?: string | null
   }
 
+  export type SquareCatalogSyncTaskCreateManyMenuInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    businessId: string
+    productId?: string | null
+    taskType?: $Enums.SquareCatalogSyncTaskType
+    status?: $Enums.SquareCatalogSyncTaskStatus
+    attempts?: number
+    availableAt?: Date | string
+    processingStartedAt?: Date | string | null
+    finishedAt?: Date | string | null
+    errorMessage?: string | null
+    requestPayload?: NullableJsonNullValueInput | InputJsonValue
+    responsePayload?: NullableJsonNullValueInput | InputJsonValue
+  }
+
   export type CategoryUpdateWithoutMenuInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -133334,6 +142290,57 @@ export namespace Prisma {
     ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type SquareCatalogSyncTaskUpdateWithoutMenuInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    taskType?: EnumSquareCatalogSyncTaskTypeFieldUpdateOperationsInput | $Enums.SquareCatalogSyncTaskType
+    status?: EnumSquareCatalogSyncTaskStatusFieldUpdateOperationsInput | $Enums.SquareCatalogSyncTaskStatus
+    attempts?: IntFieldUpdateOperationsInput | number
+    availableAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processingStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    requestPayload?: NullableJsonNullValueInput | InputJsonValue
+    responsePayload?: NullableJsonNullValueInput | InputJsonValue
+    business?: BusinessUpdateOneRequiredWithoutSquareCatalogSyncTasksNestedInput
+    product?: ProductUpdateOneWithoutSquareCatalogSyncTasksNestedInput
+  }
+
+  export type SquareCatalogSyncTaskUncheckedUpdateWithoutMenuInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessId?: StringFieldUpdateOperationsInput | string
+    productId?: NullableStringFieldUpdateOperationsInput | string | null
+    taskType?: EnumSquareCatalogSyncTaskTypeFieldUpdateOperationsInput | $Enums.SquareCatalogSyncTaskType
+    status?: EnumSquareCatalogSyncTaskStatusFieldUpdateOperationsInput | $Enums.SquareCatalogSyncTaskStatus
+    attempts?: IntFieldUpdateOperationsInput | number
+    availableAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processingStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    requestPayload?: NullableJsonNullValueInput | InputJsonValue
+    responsePayload?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SquareCatalogSyncTaskUncheckedUpdateManyWithoutMenuInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessId?: StringFieldUpdateOperationsInput | string
+    productId?: NullableStringFieldUpdateOperationsInput | string | null
+    taskType?: EnumSquareCatalogSyncTaskTypeFieldUpdateOperationsInput | $Enums.SquareCatalogSyncTaskType
+    status?: EnumSquareCatalogSyncTaskStatusFieldUpdateOperationsInput | $Enums.SquareCatalogSyncTaskStatus
+    attempts?: IntFieldUpdateOperationsInput | number
+    availableAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processingStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    requestPayload?: NullableJsonNullValueInput | InputJsonValue
+    responsePayload?: NullableJsonNullValueInput | InputJsonValue
+  }
+
   export type ProductCreateManyCategoryInput = {
     id: string
     createdAt?: Date | string
@@ -133405,6 +142412,7 @@ export namespace Prisma {
     prizeProducts?: ProgressiveDiscountPrizeProductUpdateManyWithoutProductNestedInput
     customerRewards?: CustomerRewardUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUpdateManyWithoutProductsNestedInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutCategoryInput = {
@@ -133436,6 +142444,7 @@ export namespace Prisma {
     prizeProducts?: ProgressiveDiscountPrizeProductUncheckedUpdateManyWithoutProductNestedInput
     customerRewards?: CustomerRewardUncheckedUpdateManyWithoutProductNestedInput
     preparationSteps?: PreparationStepUncheckedUpdateManyWithoutProductsNestedInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateManyWithoutCategoryInput = {

@@ -20,7 +20,7 @@ import { useAuth } from '@/context/auth';
 import { getNextDispatch, startDelivery, markOrderDelivered, DispatchEntity, DispatchOrder } from '@/lib/dispatch-api';
 import { startDeliveryActivity, endDeliveryActivity } from '@/lib/live-activity';
 import { calculateOrderTotal } from '@/utils/orderTotal';
-import { orderExtras, prizeAttention } from '@/lib/order-extras';
+import { alertItems, hasAlertItems, orderExtras, prizeAttention } from '@/lib/order-extras';
 
 // ─── Zappy tokens (dark) ──────────────────────────────────────────────────────
 const Z = {
@@ -117,7 +117,7 @@ function ItemRow({ qty, name, alert, gift }: { qty: number; name: string; alert?
           <Text style={{ fontFamily: SANS_SB, fontSize: 10.5, color: Z.brand }}>Brinde</Text>
         </View>
       )}
-      {alert && !gift && <Ionicons name="alert-circle" size={15} color={Z.volt} />}
+      {alert && <Ionicons name="alert-circle" size={15} color={Z.volt} />}
     </View>
   );
 }
@@ -299,7 +299,7 @@ const confirmStyles = StyleSheet.create({
 // ─── Attention list (pickup checklist, grouped by order) ──────────────────────
 function AttentionList({ orders, baseIdx }: { orders: DispatchOrder[]; baseIdx: number }) {
   const groups = orders
-    .map((o, i) => ({ order: o, idx: baseIdx + i, attn: o.orderProducts.filter((op) => op.product.alertDriver), notes: prizeAttention(o) }))
+    .map((o, i) => ({ order: o, idx: baseIdx + i, attn: alertItems(o), notes: prizeAttention(o) }))
     .filter((g) => g.attn.length > 0 || g.notes.length > 0);
   if (!groups.length) return null;
 
@@ -321,10 +321,16 @@ function AttentionList({ orders, baseIdx }: { orders: DispatchOrder[]; baseIdx: 
                 {g.order.customer?.name ?? 'Cliente'}
               </Text>
             </View>
-            {g.attn.map((op) => (
-              <View key={op.id} style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-                <Text style={{ fontFamily: MONO, fontSize: 14, color: Z.volt, minWidth: 24 }}>{op.quantity}×</Text>
-                <Text style={{ flex: 1, fontFamily: SANS_M, fontSize: 15, color: Z.fg1 }}>{op.product.name}</Text>
+            {g.attn.map((item) => (
+              <View key={item.key} style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                <Text style={{ fontFamily: MONO, fontSize: 14, color: Z.volt, minWidth: 24 }}>{item.qty}×</Text>
+                <Text style={{ flex: 1, fontFamily: SANS_M, fontSize: 15, color: Z.fg1 }}>{item.name}</Text>
+                {item.kind === 'prize' && (
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: 7, paddingVertical: 2, borderRadius: 999, backgroundColor: 'rgba(255,61,20,0.12)' }}>
+                    <Ionicons name="gift" size={11} color={Z.brand} />
+                    <Text style={{ fontFamily: SANS_SB, fontSize: 10.5, color: Z.brand }}>Brinde</Text>
+                  </View>
+                )}
               </View>
             ))}
             {g.notes.map((note, ni) => (
@@ -364,7 +370,7 @@ function ItemsList({ order, n }: { order: DispatchOrder; n: string }) {
           <ItemRow key={op.id} qty={op.quantity} name={op.product.name} alert={!!op.product.alertDriver} />
         ))}
         {orderExtras(order).map((it, i) => (
-          <ItemRow key={`extra-${i}`} qty={it.qty} name={it.name} gift />
+          <ItemRow key={`extra-${i}`} qty={it.qty} name={it.name} gift alert={it.alert} />
         ))}
       </View>
       <View style={{ marginTop: 14, paddingTop: 14, borderTopWidth: 1, borderTopColor: Z.divider }}>
@@ -415,7 +421,7 @@ function UpcomingList({ orders, baseIdx }: { orders: DispatchOrder[]; baseIdx: n
       <View style={{ gap: 12 }}>
         {orders.map((o, i) => {
           const addr = o.deliveryAddress;
-          const hasAttn = o.orderProducts.some((op) => op.product.alertDriver) || prizeAttention(o).length > 0;
+          const hasAttn = hasAlertItems(o) || prizeAttention(o).length > 0;
           return (
             <View key={o.id} style={upStyles.card}>
               <View style={upStyles.header}>
@@ -438,7 +444,7 @@ function UpcomingList({ orders, baseIdx }: { orders: DispatchOrder[]; baseIdx: n
                   <ItemRow key={op.id} qty={op.quantity} name={op.product.name} alert={!!op.product.alertDriver} />
                 ))}
                 {orderExtras(o).map((it, xi) => (
-                  <ItemRow key={`extra-${xi}`} qty={it.qty} name={it.name} gift />
+                  <ItemRow key={`extra-${xi}`} qty={it.qty} name={it.name} gift alert={it.alert} />
                 ))}
                 <View style={{ paddingTop: 14, borderTopWidth: 1, borderTopColor: Z.divider }}>
                   <PayBadge paid={!!o.paidAt} total={calculateOrderTotal(o)} method={paymentLabel(o.paymentMethod)} />

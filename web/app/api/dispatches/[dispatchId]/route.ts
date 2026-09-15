@@ -1,7 +1,5 @@
 import updateDispatchStatus from "@/src/updateDispatchStatus";
-import sendDispatchDispatchedDeliveryWhatsAppMessages from "@/src/sendDispatchDispatchedDeliveryWhatsAppMessages";
-import prisma from "@/prisma";
-import { after, NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 type RouteContext = {
   params: Promise<{
@@ -132,9 +130,6 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     const hasDispatched = body.dispatched !== undefined;
     const hasDriverId = body.driverId !== undefined;
     const hasQueueIndex = body.queueIndex !== undefined;
-    const shouldNotifyDispatchedOrders =
-      hasDispatched && body.dispatched === true;
-    let wasDispatchedBeforeUpdate = false;
 
     if (!hasDispatched && !hasDriverId && !hasQueueIndex) {
       return NextResponse.json(
@@ -160,19 +155,6 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       );
     }
 
-    if (shouldNotifyDispatchedOrders) {
-      const existingDispatch = await prisma.dispatch.findUnique({
-        where: {
-          id: dispatchId,
-        },
-        select: {
-          dispatched: true,
-        },
-      });
-
-      wasDispatchedBeforeUpdate = existingDispatch?.dispatched ?? false;
-    }
-
     const dispatch = await updateDispatchStatus({
       dispatchId,
       dispatched: hasDispatched ? (body.dispatched as boolean) : undefined,
@@ -180,23 +162,6 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       driverId: parseDriverId(body),
       queueIndex: parseQueueIndex(body),
     });
-
-    if (
-      shouldNotifyDispatchedOrders &&
-      !wasDispatchedBeforeUpdate &&
-      dispatch.dispatched
-    ) {
-      after(async () => {
-        await sendDispatchDispatchedDeliveryWhatsAppMessages(dispatch).catch(
-          (error) => {
-            console.error(
-              "Failed to send dispatched delivery WhatsApp notifications:",
-              error,
-            );
-          },
-        );
-      });
-    }
 
     return NextResponse.json(dispatch);
   } catch (error) {

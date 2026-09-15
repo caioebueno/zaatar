@@ -82,7 +82,7 @@ async function getMapboxRouteDurationInMinutes(origin, destination) {
 
   const response = await fetch(
     `https://api.mapbox.com/directions/v5/mapbox/driving/${origin.lng},${origin.lat};${destination.lng},${destination.lat}?${params.toString()}`,
-    { cache: "no-store" },
+    { cache: "no-store", signal: AbortSignal.timeout(15_000) },
   );
 
   if (!response.ok) {

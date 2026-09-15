@@ -323,6 +323,72 @@ exports.Prisma.SquareConnectionScalarFieldEnum = {
   rawPayload: 'rawPayload'
 };
 
+exports.Prisma.SquareCatalogSyncTaskScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  businessId: 'businessId',
+  productId: 'productId',
+  menuId: 'menuId',
+  taskType: 'taskType',
+  status: 'status',
+  attempts: 'attempts',
+  availableAt: 'availableAt',
+  processingStartedAt: 'processingStartedAt',
+  finishedAt: 'finishedAt',
+  errorMessage: 'errorMessage',
+  requestPayload: 'requestPayload',
+  responsePayload: 'responsePayload'
+};
+
+exports.Prisma.SquareWebhookRunScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  businessId: 'businessId',
+  eventId: 'eventId',
+  eventType: 'eventType',
+  merchantId: 'merchantId',
+  squareOrderId: 'squareOrderId',
+  locationId: 'locationId',
+  squareOrderState: 'squareOrderState',
+  signatureVerified: 'signatureVerified',
+  status: 'status',
+  action: 'action',
+  reason: 'reason',
+  foodyOrderId: 'foodyOrderId',
+  firstReceivedAt: 'firstReceivedAt',
+  lastReceivedAt: 'lastReceivedAt',
+  processedAt: 'processedAt',
+  processingDurationMs: 'processingDurationMs',
+  attemptsCount: 'attemptsCount',
+  httpStatusCode: 'httpStatusCode',
+  errorMessage: 'errorMessage',
+  webhookPayload: 'webhookPayload',
+  squareOrderPayload: 'squareOrderPayload',
+  responsePayload: 'responsePayload'
+};
+
+exports.Prisma.SquareWebhookRunAttemptScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  runId: 'runId',
+  attemptNumber: 'attemptNumber',
+  receivedAt: 'receivedAt',
+  finishedAt: 'finishedAt',
+  processingDurationMs: 'processingDurationMs',
+  httpStatusCode: 'httpStatusCode',
+  status: 'status',
+  action: 'action',
+  reason: 'reason',
+  signatureVerified: 'signatureVerified',
+  errorMessage: 'errorMessage',
+  requestHeaders: 'requestHeaders',
+  webhookPayload: 'webhookPayload',
+  squareOrderPayload: 'squareOrderPayload',
+  responsePayload: 'responsePayload'
+};
+
 exports.Prisma.ExternalMenuEntityMapScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
@@ -519,6 +585,19 @@ exports.Prisma.FeedbackWhatsAppJobScalarFieldEnum = {
   orderId: 'orderId',
   customerPhone: 'customerPhone',
   language: 'language'
+};
+
+exports.Prisma.DispatchWhatsAppJobScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  status: 'status',
+  attempts: 'attempts',
+  availableAt: 'availableAt',
+  processingStartedAt: 'processingStartedAt',
+  completedAt: 'completedAt',
+  lastError: 'lastError',
+  orderId: 'orderId',
+  kind: 'kind'
 };
 
 exports.Prisma.AddressScalarFieldEnum = {
@@ -1038,6 +1117,27 @@ exports.ExternalIntegrationEnvironment = exports.$Enums.ExternalIntegrationEnvir
   PRODUCTION: 'PRODUCTION'
 };
 
+exports.SquareCatalogSyncTaskType = exports.$Enums.SquareCatalogSyncTaskType = {
+  PRODUCT_UPDATE: 'PRODUCT_UPDATE',
+  MENU_UPDATE: 'MENU_UPDATE'
+};
+
+exports.SquareCatalogSyncTaskStatus = exports.$Enums.SquareCatalogSyncTaskStatus = {
+  PENDING: 'PENDING',
+  PROCESSING: 'PROCESSING',
+  SUCCESS: 'SUCCESS',
+  FAILED: 'FAILED',
+  SKIPPED: 'SKIPPED'
+};
+
+exports.SquareWebhookRunStatus = exports.$Enums.SquareWebhookRunStatus = {
+  PROCESSING: 'PROCESSING',
+  SUCCESS: 'SUCCESS',
+  FAILED: 'FAILED',
+  IGNORED: 'IGNORED',
+  DUPLICATE_SKIPPED: 'DUPLICATE_SKIPPED'
+};
+
 exports.ExternalMenuEntityType = exports.$Enums.ExternalMenuEntityType = {
   MENU: 'MENU',
   CATEGORY: 'CATEGORY',
@@ -1110,6 +1210,13 @@ exports.DispatchEtaRecalculationJobStatus = exports.$Enums.DispatchEtaRecalculat
 };
 
 exports.FeedbackWhatsAppJobStatus = exports.$Enums.FeedbackWhatsAppJobStatus = {
+  PENDING: 'PENDING',
+  PROCESSING: 'PROCESSING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED'
+};
+
+exports.DispatchWhatsAppJobStatus = exports.$Enums.DispatchWhatsAppJobStatus = {
   PENDING: 'PENDING',
   PROCESSING: 'PROCESSING',
   COMPLETED: 'COMPLETED',
@@ -1205,6 +1312,9 @@ exports.Prisma.ModelName = {
   OwnerOtpChallenge: 'OwnerOtpChallenge',
   ExternalIntegrationConnection: 'ExternalIntegrationConnection',
   SquareConnection: 'SquareConnection',
+  SquareCatalogSyncTask: 'SquareCatalogSyncTask',
+  SquareWebhookRun: 'SquareWebhookRun',
+  SquareWebhookRunAttempt: 'SquareWebhookRunAttempt',
   ExternalMenuEntityMap: 'ExternalMenuEntityMap',
   ExternalMenuSyncRun: 'ExternalMenuSyncRun',
   BusinessMember: 'BusinessMember',
@@ -1219,6 +1329,7 @@ exports.Prisma.ModelName = {
   DispatchRouteMetricsRefreshJob: 'DispatchRouteMetricsRefreshJob',
   DispatchEtaRecalculationJob: 'DispatchEtaRecalculationJob',
   FeedbackWhatsAppJob: 'FeedbackWhatsAppJob',
+  DispatchWhatsAppJob: 'DispatchWhatsAppJob',
   Address: 'Address',
   Product: 'Product',
   ComboProductItem: 'ComboProductItem',

@@ -296,6 +296,39 @@ function parseCart(value: unknown): TCart {
             details: { field: "cart.items.comboSelections.quantity" },
           };
         }
+
+        const selectionModifiers = (selection as { modifiers?: unknown }).modifiers;
+
+        if (selectionModifiers !== undefined) {
+          if (!Array.isArray(selectionModifiers)) {
+            throw {
+              code: "INVALID_PARAMS",
+              details: { field: "cart.items.comboSelections.modifiers" },
+            };
+          }
+
+          for (const modifier of selectionModifiers) {
+            if (
+              typeof modifier !== "object" ||
+              modifier === null ||
+              Array.isArray(modifier)
+            ) {
+              throw {
+                code: "INVALID_PARAMS",
+                details: { field: "cart.items.comboSelections.modifiers" },
+              };
+            }
+
+            parseRequiredString(
+              (modifier as { modifierId?: unknown }).modifierId,
+              "cart.items.comboSelections.modifiers.modifierId",
+            );
+            parseRequiredString(
+              (modifier as { modifierItemId?: unknown }).modifierItemId,
+              "cart.items.comboSelections.modifiers.modifierItemId",
+            );
+          }
+        }
       }
     }
   }

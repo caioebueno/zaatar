@@ -4,6 +4,11 @@ node_modules
 .wwebjs_auth
 .wwebjs_cache
 assets
+# `assets` above is meant for the root media dir, but it matches any directory
+# with that name — driver-app's app icons/splash are real source assets and must
+# stay in version control (EAS Build filters uploads through .gitignore).
+!driver-app/assets
+!driver-app/assets/**
 /src/generated/prisma
 
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.

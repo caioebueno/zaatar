@@ -18,7 +18,6 @@ import { calculateProductPriceWithProgressiveDiscount } from "../utils/calculate
 import { calculateCartWithProgressiveDiscount } from "../utils/calculatePrice";
 import { getProductsFresh } from "./getProducts";
 import { getRedeemedRewardsByOrderIds } from "@/src/getRedeemedRewardsByOrderIds";
-import { getOrderConfirmedWhatsAppMessage } from "./constants/whatsappMessages";
 import { buildPreparationStepCategories } from "@/src/modules/station/domain/buildPreparationStepCategories";
 import {
   processDispatchAssignmentJobs,
@@ -32,17 +31,13 @@ import {
   getComboProductsByComboIds,
 } from "./comboProductsStore";
 import {
-  sendWhatsAppTemplateMessage,
-  sendWhatsAppTextMessage,
-} from "@/src/whatsappApi";
-import sendOrderConfirmationChatwootMessage from "@/src/sendOrderConfirmationChatwootMessage";
-import {
   MENU_ID_COOKIE_NAME,
   MENU_TAGS_COOKIE_NAME,
   PROMOTION_ID_COOKIE_NAME,
 } from "@/src/constants/menu";
 import { getStripeClient } from "@/src/stripe";
 import { getConfiguredBusinessId } from "@/src/constants/business";
+import { calculateComboSelectionsUnitPrice } from "../utils/comboSelectionPricing";
 
 type TCreateOrder = {
   cart: TCart;
@@ -65,11 +60,6 @@ type TCreateOrder = {
   branchId?: string;
   cupom?: string;
   source?: "MENU" | "POS";
-};
-
-type CustomerContactRow = {
-  name: string | null;
-  phone: string | null;
 };
 
 type RedeemedRewardsByOrderId = Awaited<
@@ -102,12 +92,6 @@ const MAX_ORDER_CREATION_TRANSACTION_RETRIES = 3;
 const MAX_ORDER_TAGS_PER_ORDER = 30;
 const ORDER_CREATION_TRANSACTION_MAX_WAIT_MS = 10_000;
 const ORDER_CREATION_TRANSACTION_TIMEOUT_MS = 20_000;
-const DEFAULT_TWILIO_ORDER_CONFIRMATION_TEMPLATE_SID_EN =
-  "HXb4649c3b598a13c6564a9f6e41dc1e33";
-const DEFAULT_TWILIO_ORDER_CONFIRMATION_TEMPLATE_SID_PT =
-  "HX161c27eae7de72fd28fb0f3f917c12d8";
-const DEFAULT_TWILIO_ORDER_CONFIRMATION_TEMPLATE_SID_ES =
-  "HX1f76ad9c09bd8558376b138aa825c29d";
 
 function calculatePosItemUnitPrice(input: {
   product: {
@@ -124,6 +108,12 @@ function calculatePosItemUnitPrice(input: {
       options: Array<{
         productId: string;
         extraPrice: number;
+        modifierGroups?: Array<{
+          items: Array<{
+            id: string;
+            price: number;
+          }>;
+        }>;
       }>;
     }>;
   };
@@ -140,28 +130,9 @@ function calculatePosItemUnitPrice(input: {
     return sum + (modifierPriceMap.get(selected.modifierItemId) ?? 0);
   }, 0);
 
-  const comboExtraPriceByKey = new Map<string, number>();
-  for (const slot of input.product.comboSlots) {
-    for (const option of slot.options) {
-      comboExtraPriceByKey.set(`${slot.id}:${option.productId}`, option.extraPrice);
-    }
-  }
-
-  const comboSelectionUnitPrice = (input.cartItem.comboSelections ?? []).reduce(
-    (sum, selection) => {
-      const key = `${selection.slotId}:${selection.optionProductId}`;
-      const resolvedExtraPrice =
-        comboExtraPriceByKey.get(key) ?? selection.extraPrice ?? 0;
-      const quantity =
-        typeof selection.quantity === "number" &&
-        Number.isInteger(selection.quantity) &&
-        selection.quantity > 0
-          ? selection.quantity
-          : 1;
-
-      return sum + resolvedExtraPrice * quantity;
-    },
-    0,
+  const comboSelectionUnitPrice = calculateComboSelectionsUnitPrice(
+    input.product.comboSlots,
+    input.cartItem.comboSelections,
   );
 
   const basePrice = input.product.price ?? 0;
@@ -309,58 +280,6 @@ function parseOrderTagsFromCookie(value: string | undefined): string[] {
   return normalizeOrderTags(value.split("|"));
 }
 
-function normalizeOrderLanguageForTemplate(
-  value: string | null | undefined,
-): "en" | "pt" | "es" {
-  const normalizedValue = (value || "").trim().toLowerCase();
-  const baseLanguage = normalizedValue.split("-")[0];
-
-  if (baseLanguage === "pt" || baseLanguage === "es") {
-    return baseLanguage;
-  }
-
-  return "en";
-}
-
-function getLocalizedOrderTypeLabel(
-  language: "en" | "pt" | "es",
-  orderType: TOrderType,
-): string {
-  if (language === "pt") {
-    return orderType === "DELIVERY" ? "Entrega" : "Retirada";
-  }
-
-  if (language === "es") {
-    return orderType === "DELIVERY" ? "Entrega" : "Recogida";
-  }
-
-  return orderType === "DELIVERY" ? "Delivery" : "Pickup";
-}
-
-function resolveOrderConfirmationTemplateSid(
-  language: "en" | "pt" | "es",
-): string {
-  if (language === "pt") {
-    return (
-      process.env.TWILIO_ORDER_CONFIRMATION_TEMPLATE_SID_PT?.trim() ||
-      DEFAULT_TWILIO_ORDER_CONFIRMATION_TEMPLATE_SID_PT
-    );
-  }
-
-  if (language === "es") {
-    return (
-      process.env.TWILIO_ORDER_CONFIRMATION_TEMPLATE_SID_ES?.trim() ||
-      DEFAULT_TWILIO_ORDER_CONFIRMATION_TEMPLATE_SID_ES
-    );
-  }
-
-  return (
-    process.env.TWILIO_ORDER_CONFIRMATION_TEMPLATE_SID_EN?.trim() ||
-    process.env.TWILIO_ORDER_CONFIRMATION_TEMPLATE_SID?.trim() ||
-    DEFAULT_TWILIO_ORDER_CONFIRMATION_TEMPLATE_SID_EN
-  );
-}
-
 function resolvePrizeNameForLanguage(
   prize: {
     name: string;
@@ -383,68 +302,6 @@ function resolvePrizeNameForLanguage(
   if (englishTitle) return englishTitle;
 
   return prize.name;
-}
-
-async function sendOrderConfirmationWhatsAppMessage(input: {
-  language?: string | null;
-  branchId: string | null;
-  customerName?: string | null;
-  customerPhone: string;
-  orderNumber?: string | null;
-  totalInCents: number;
-  orderType: TOrderType;
-}) {
-  const templateLanguage = normalizeOrderLanguageForTemplate(input.language);
-  const message = getOrderConfirmedWhatsAppMessage({
-    language: input.language,
-    customerName: input.customerName,
-    orderNumber: input.orderNumber,
-    totalInCents: input.totalInCents,
-    orderType: input.orderType,
-  });
-  const templateSid = resolveOrderConfirmationTemplateSid(templateLanguage);
-
-  try {
-    const sentViaChatwoot = await sendOrderConfirmationChatwootMessage({
-      branchId: input.branchId,
-      customerPhone: input.customerPhone,
-      customerName: input.customerName,
-      content: message,
-      metadata: {
-        order_number: input.orderNumber ?? null,
-        order_type: input.orderType,
-        total_in_cents: Math.max(input.totalInCents, 0),
-      },
-    });
-
-    if (sentViaChatwoot) {
-      return;
-    }
-
-    if (templateSid) {
-      await sendWhatsAppTemplateMessage({
-        customerPhone: input.customerPhone,
-        contentSid: templateSid,
-        contentVariables: {
-          "1": input.customerName?.trim() || "there",
-          "2": input.orderNumber?.trim() || "-",
-          "3": (Math.max(input.totalInCents, 0) / 100).toFixed(2),
-          "4": getLocalizedOrderTypeLabel(templateLanguage, input.orderType),
-        },
-      });
-      return;
-    }
-
-    await sendWhatsAppTextMessage({
-      customerPhone: input.customerPhone,
-      content: message,
-    });
-  } catch (error) {
-    console.error(
-      "Failed to send order confirmation WhatsApp message:",
-      error,
-    );
-  }
 }
 
 async function enqueueDispatchAssignmentJobTx(
@@ -474,6 +331,33 @@ async function enqueueDispatchAssignmentJobTx(
       "completedAt" = NULL,
       "processingStartedAt" = NULL
   `;
+}
+
+/** The queue worker, not the web process, sends customer confirmation templates. */
+async function enqueueOrderConfirmationWhatsAppJobTx(
+  tx: Prisma.TransactionClient,
+  input: {
+    branchId: string | null;
+    customerPhone: string | null;
+    orderId: string;
+  },
+): Promise<void> {
+  if (!input.branchId || !input.customerPhone?.trim()) {
+    console.info(
+      `[order-confirmation] skipped web enqueue order=${input.orderId} reason=${!input.customerPhone?.trim() ? "MISSING_CUSTOMER_PHONE" : "MISSING_BRANCH"}`,
+    );
+    return;
+  }
+
+  const inserted = await tx.$executeRaw`
+    INSERT INTO "DispatchWhatsAppJob" ("id", "orderId", "kind")
+    VALUES (${randomUUID()}, ${input.orderId}, ${"order_confirmation"})
+    ON CONFLICT ("orderId", "kind") DO NOTHING
+  `;
+
+  console.info(
+    `[order-confirmation] web enqueue-complete order=${input.orderId} inserted=${inserted === 1}`,
+  );
 }
 
 function hasErrorCode(error: unknown, targetCode: string): boolean {
@@ -941,6 +825,14 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
     return branch.id;
   };
   const resolvedBranchId = await resolveBranchIdForOrder();
+  const customerPhone = resolvedCustomerId
+    ? (
+        await prisma.customer.findUnique({
+          where: { id: resolvedCustomerId },
+          select: { phone: true },
+        })
+      )?.phone ?? null
+    : null;
   const scheduleFor = ensureValidScheduleFor(data.scheduleFor);
   const getCatalogProductById = (productId: string) => {
     for (const category of productData.categories) {
@@ -988,10 +880,25 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
             selection.optionProductName ||
             option?.productName ||
             "Selected option";
+          const label =
+            selection.quantity > 1
+              ? `${optionName} x${selection.quantity}`
+              : optionName;
 
-          return selection.quantity > 1
-            ? `${optionName} x${selection.quantity}`
-            : optionName;
+          const modifierNameById = new Map<string, string>();
+          for (const modifierGroup of option?.modifierGroups ?? []) {
+            for (const modifierItem of modifierGroup.items) {
+              modifierNameById.set(modifierItem.id, modifierItem.name);
+            }
+          }
+
+          const modifierNames = (selection.modifiers ?? [])
+            .map((modifier) => modifierNameById.get(modifier.modifierItemId))
+            .filter((name): name is string => Boolean(name));
+
+          return modifierNames.length > 0
+            ? `${label} (${modifierNames.join(", ")})`
+            : label;
         });
 
       if (slotSelections.length === 0) continue;
@@ -1050,6 +957,12 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
       options: Array<{
         productId: string;
         extraPrice: number;
+        modifierGroups?: Array<{
+          items: Array<{
+            id: string;
+            price: number;
+          }>;
+        }>;
       }>;
     }>;
   };
@@ -1108,6 +1021,20 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
                   select: {
                     productId: true,
                     extraPrice: true,
+                    product: {
+                      select: {
+                        modifierGroups: {
+                          select: {
+                            items: {
+                              select: {
+                                id: true,
+                                price: true,
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
                   },
                 },
               },
@@ -1116,7 +1043,21 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
         })
       : [];
   const posPricingProductsById = new Map<string, PosPricingProduct>(
-    posPricingProducts.map((product) => [product.id, product as PosPricingProduct]),
+    posPricingProducts.map((product) => [
+      product.id,
+      {
+        ...product,
+        // Lift each combo option's modifier prices up beside its extraPrice.
+        comboSlots: product.comboSlots.map((slot) => ({
+          id: slot.id,
+          options: slot.options.map((option) => ({
+            productId: option.productId,
+            extraPrice: option.extraPrice,
+            modifierGroups: option.product.modifierGroups,
+          })),
+        })),
+      } as PosPricingProduct,
+    ]),
   );
 
   const preparedOrderProducts = resolvedCartItemPrices.map(
@@ -1451,7 +1392,8 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
       async (tx) => {
         const orderCreateData = {
           id: createdOrderId,
-          amount: 0,
+          // This is the authoritative order total used by receipts and WhatsApp templates.
+          amount: orderTotalInCents,
           number: nextOrderNumber,
           scheduleFor,
           deliveryAddressId:
@@ -1476,6 +1418,12 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
             WHERE "id" = ${createdOrder.id}
           `;
         }
+
+        await enqueueOrderConfirmationWhatsAppJobTx(tx, {
+          branchId: resolvedBranchId,
+          customerPhone,
+          orderId: createdOrder.id,
+        });
 
         if (paymentProvider) {
           await tx.$executeRaw`
@@ -2050,21 +1998,6 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
     throw new Error("ORDER_CREATION_TRANSACTION_FAILED");
   }
 
-  let customerContact: CustomerContactRow | null = null;
-  if (transactionResult.customerId) {
-    try {
-      const [resolvedCustomerContact] = await prisma.$queryRaw<CustomerContactRow[]>`
-          SELECT "name", "phone"
-          FROM "Customer"
-          WHERE "id" = ${transactionResult.customerId}
-          LIMIT 1
-        `;
-      customerContact = resolvedCustomerContact ?? null;
-    } catch (error) {
-      console.error("Failed to resolve order customer contact:", error);
-    }
-  }
-
   if (data.orderType === "DELIVERY" && data.addressId) {
     after(async () => {
       await triggerDispatchQueueRun({
@@ -2085,23 +2018,6 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
     });
   }
   markCheckoutTimingStep("dispatch-post-processing-queued");
-
-  const customerName = customerContact?.name ?? null;
-  const customerPhone = customerContact?.phone;
-
-  if (customerPhone) {
-    after(async () => {
-      await sendOrderConfirmationWhatsAppMessage({
-        language: language ?? null,
-        branchId: resolvedBranchId,
-        customerName,
-        customerPhone,
-        orderNumber: transactionResult.orderNumber,
-        totalInCents: orderTotalInCents,
-        orderType: data.orderType,
-      });
-    });
-  }
 
   let redeemedRewardsByOrderId: RedeemedRewardsByOrderId = new Map();
   try {

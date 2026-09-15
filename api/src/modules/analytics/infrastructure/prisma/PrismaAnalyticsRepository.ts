@@ -28,9 +28,13 @@ type OrderQuantityRow = {
 type RevenueRow = {
   bucketEndAt: Date;
   bucketStartAt: Date;
+  deliveryFee: string;
   key: string;
   orders: number;
   sales: string;
+  tax: string;
+  tip: string;
+  total: string;
 };
 
 type NewCustomersRow = {
@@ -297,7 +301,7 @@ export class PrismaAnalyticsRepository implements AnalyticsRepository {
           interval '1 day'
         )::date AS local_day
       ),
-      order_totals AS (
+      order_totals_base AS (
         SELECT
           orders."id" AS "orderId",
           timezone(${query.timezone}, orders."createdAt")::date AS local_day,
@@ -314,7 +318,8 @@ export class PrismaAnalyticsRepository implements AnalyticsRepository {
             THEN
               (orders."progressiveDiscountSnapshot"::jsonb ->> 'discountedPrice')::numeric
             ELSE COALESCE(SUM(op."amount" * op."quantity"), 0)::numeric
-          END AS discounted_subtotal_cents
+          END AS discounted_subtotal_cents,
+          COALESCE(orders."tipAmount", 0)::numeric AS tip_percentage
         FROM "Order" orders
         INNER JOIN "Branch" branch
           ON branch."id" = orders."branchId"
@@ -329,19 +334,27 @@ export class PrismaAnalyticsRepository implements AnalyticsRepository {
         GROUP BY
           orders."id",
           timezone(${query.timezone}, orders."createdAt")::date,
-          orders."progressiveDiscountSnapshot"
+          orders."progressiveDiscountSnapshot",
+          orders."tipAmount"
+      ),
+      order_totals AS (
+        SELECT
+          local_day,
+          GREATEST(0, discounted_subtotal_cents) AS sales_cents,
+          GREATEST(0, delivery_fee_cents) AS delivery_fee_cents,
+          ROUND(GREATEST(0, discounted_subtotal_cents) * 0.065)::numeric AS tax_cents,
+          ROUND(GREATEST(0, discounted_subtotal_cents) * GREATEST(0, tip_percentage) / 100)::numeric AS tip_cents
+        FROM order_totals_base
       ),
       orders_agg AS (
         SELECT
           order_totals.local_day,
           COUNT(*)::int AS orders,
-          COALESCE(
-            SUM(
-              GREATEST(0, order_totals.discounted_subtotal_cents)
-              + GREATEST(0, order_totals.delivery_fee_cents)
-            ),
-            0
-          )::bigint::text AS sales
+          COALESCE(SUM(order_totals.sales_cents), 0)::bigint::text AS sales,
+          COALESCE(SUM(order_totals.tax_cents), 0)::bigint::text AS tax,
+          COALESCE(SUM(order_totals.tip_cents), 0)::bigint::text AS tip,
+          COALESCE(SUM(order_totals.delivery_fee_cents), 0)::bigint::text AS "deliveryFee",
+          COALESCE(SUM(order_totals.sales_cents + order_totals.tax_cents + order_totals.tip_cents + order_totals.delivery_fee_cents), 0)::bigint::text AS total
         FROM order_totals
         GROUP BY order_totals.local_day
       )
@@ -350,7 +363,11 @@ export class PrismaAnalyticsRepository implements AnalyticsRepository {
         (days.local_day::timestamp AT TIME ZONE ${query.timezone}) AS "bucketStartAt",
         (((days.local_day + 1)::timestamp - interval '1 millisecond') AT TIME ZONE ${query.timezone}) AS "bucketEndAt",
         COALESCE(orders_agg.orders, 0)::int AS orders,
-        COALESCE(orders_agg.sales, '0') AS sales
+        COALESCE(orders_agg.sales, '0') AS sales,
+        COALESCE(orders_agg.tax, '0') AS tax,
+        COALESCE(orders_agg.tip, '0') AS tip,
+        COALESCE(orders_agg."deliveryFee", '0') AS "deliveryFee",
+        COALESCE(orders_agg.total, '0') AS total
       FROM days
       LEFT JOIN orders_agg
         ON orders_agg.local_day = days.local_day
@@ -363,6 +380,10 @@ export class PrismaAnalyticsRepository implements AnalyticsRepository {
       bucketEndAt: row.bucketEndAt,
       orders: Number(row.orders || 0),
       sales: Number(row.sales || "0"),
+      tax: Number(row.tax || "0"),
+      tip: Number(row.tip || "0"),
+      deliveryFee: Number(row.deliveryFee || "0"),
+      total: Number(row.total || "0"),
     }));
   }
 

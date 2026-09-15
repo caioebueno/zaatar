@@ -285,10 +285,8 @@ function OTPStep({ phone, dialCode, onBack, onVerified }: {
   const hiddenRef = useRef<TextInput>(null);
   const sentRef = useRef(false);
   const insets = useSafeAreaInsets();
-  const fade = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    Animated.timing(fade, { toValue: 1, duration: 260, useNativeDriver: true }).start();
     const t = setTimeout(() => hiddenRef.current?.focus(), 140);
     const timer = setInterval(() => setCountdown((c) => (c > 0 ? c - 1 : 0)), 1000);
     // Send the code in the background so this screen renders instantly. The guard
@@ -347,7 +345,7 @@ function OTPStep({ phone, dialCode, onBack, onVerified }: {
 
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-      <Animated.View style={[styles.screen, { paddingTop: insets.top + 12, paddingBottom: insets.bottom + 24, opacity: fade }]}>
+      <View style={[styles.screen, { paddingTop: insets.top + 12, paddingBottom: insets.bottom + 24 }]}>
         <TouchableOpacity onPress={onBack} style={styles.backBtn} activeOpacity={0.7}>
           <Ionicons name="arrow-back" size={18} color={Z.fg2} />
           <Text style={{ fontFamily: SANS_M, fontSize: 14, color: Z.fg2 }}>Voltar</Text>
@@ -411,7 +409,7 @@ function OTPStep({ phone, dialCode, onBack, onVerified }: {
 
           <View style={{ flex: 1 }} />
         </View>
-      </Animated.View>
+      </View>
     </KeyboardAvoidingView>
   );
 }

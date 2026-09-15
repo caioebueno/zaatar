@@ -775,6 +775,32 @@ const routes: Route[] = [
   },
   {
     method: "GET",
+    matcher: /^\/progressive-discount\/all$/,
+    controller: nativeCatalogController,
+    requiresAuth: true,
+  },
+  {
+    method: "POST",
+    matcher: /^\/progressive-discount$/,
+    controller: nativeCatalogController,
+    requiresAuth: true,
+    bodyMode: "json",
+  },
+  {
+    method: "PATCH",
+    matcher: /^\/progressive-discount\/[^/]+$/,
+    controller: nativeCatalogController,
+    requiresAuth: true,
+    bodyMode: "json",
+  },
+  {
+    method: "DELETE",
+    matcher: /^\/progressive-discount\/[^/]+$/,
+    controller: nativeCatalogController,
+    requiresAuth: true,
+  },
+  {
+    method: "GET",
     matcher: /^\/customers\/search$/,
     controller: nativeCatalogController,
     requiresAuth: true,

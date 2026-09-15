@@ -1,5 +1,6 @@
 import prisma from "../../../../prisma.js";
 import { Prisma } from "../../../../../../web/src/generated/prisma/index.js";
+import { enqueueFeedbackWhatsAppJob } from "./enqueueFeedbackWhatsAppJob.js";
 import type {
   DayWindow,
   OrderDetail,
@@ -465,6 +466,13 @@ export class PrismaOrdersRepository implements OrdersRepository {
   async updateDelivery(
     input: UpdateOrderDeliveryInput,
   ): Promise<UpdateOrderDeliveryResult | null> {
+    const [existing] = await prisma.$queryRaw<Array<{ deliveredAt: Date | null }>>`
+      SELECT "deliveredAt"
+      FROM "Order"
+      WHERE "id" = ${input.orderId}
+      LIMIT 1
+    `;
+
     const [row] = await prisma.$queryRaw<Array<{ deliveredAt: Date | null; id: string }>>`
       UPDATE "Order"
       SET
@@ -477,6 +485,13 @@ export class PrismaOrdersRepository implements OrdersRepository {
 
     if (!row) {
       return null;
+    }
+
+    if (existing?.deliveredAt === null && row.deliveredAt) {
+      await enqueueFeedbackWhatsAppJob({
+        orderId: row.id,
+        deliveredAt: row.deliveredAt,
+      });
     }
 
     return {

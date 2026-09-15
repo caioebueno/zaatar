@@ -392,7 +392,7 @@ async function getDispatchOrders(dispatchIds: string[]): Promise<DispatchOrderRo
     return [];
   }
 
-  return prisma.$queryRaw<DispatchOrderRow[]>`
+  const orderRows = await prisma.$queryRaw<DispatchOrderRow[]>`
     SELECT
       orders."dispatchId",
       orders."id",
@@ -444,6 +444,90 @@ async function getDispatchOrders(dispatchIds: string[]): Promise<DispatchOrderRo
       orders."dispatchOrderIndex" ASC NULLS LAST,
       orders."createdAt" ASC
   `;
+
+  await attachPrizeProductDriverAlerts(orderRows);
+
+  return orderRows;
+}
+
+type PrizeSnapshotProduct = {
+  alertDriver?: boolean;
+  id?: unknown;
+};
+
+function getPrizeSnapshotProducts(snapshot: unknown): PrizeSnapshotProduct[] {
+  if (!snapshot || typeof snapshot !== "object") {
+    return [];
+  }
+
+  const selectedPrize = (snapshot as { selectedPrize?: unknown }).selectedPrize;
+
+  if (!selectedPrize || typeof selectedPrize !== "object") {
+    return [];
+  }
+
+  const availableProducts = (selectedPrize as { availableProducts?: unknown })
+    .availableProducts;
+
+  if (!Array.isArray(availableProducts)) {
+    return [];
+  }
+
+  return availableProducts.filter(
+    (product): product is PrizeSnapshotProduct =>
+      Boolean(product) && typeof product === "object",
+  );
+}
+
+/**
+ * `progressiveDiscountSnapshot` is frozen at checkout and its prize products
+ * carry no `alertDriver` flag, so drivers would miss the handling alert on free
+ * prize items. Resolve the flag from the catalog at read time.
+ */
+async function attachPrizeProductDriverAlerts(
+  orderRows: DispatchOrderRow[],
+): Promise<void> {
+  const prizeProductsByOrder = orderRows.map((orderRow) =>
+    getPrizeSnapshotProducts(orderRow.progressiveDiscountSnapshot),
+  );
+
+  const productIds = new Set<string>();
+
+  for (const prizeProducts of prizeProductsByOrder) {
+    for (const prizeProduct of prizeProducts) {
+      if (typeof prizeProduct.id === "string" && prizeProduct.id.length > 0) {
+        productIds.add(prizeProduct.id);
+      }
+    }
+  }
+
+  if (productIds.size === 0) {
+    return;
+  }
+
+  const products = await prisma.product.findMany({
+    where: {
+      id: {
+        in: Array.from(productIds),
+      },
+    },
+    select: {
+      alertDriver: true,
+      id: true,
+    },
+  });
+
+  const alertDriverByProductId = new Map(
+    products.map((product) => [product.id, product.alertDriver]),
+  );
+
+  for (const prizeProducts of prizeProductsByOrder) {
+    for (const prizeProduct of prizeProducts) {
+      if (typeof prizeProduct.id !== "string") continue;
+
+      prizeProduct.alertDriver = alertDriverByProductId.get(prizeProduct.id) ?? false;
+    }
+  }
 }
 
 async function getDispatchOrderProducts(

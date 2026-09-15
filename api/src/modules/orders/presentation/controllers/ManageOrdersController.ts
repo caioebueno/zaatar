@@ -1,7 +1,8 @@
 import { randomUUID } from "node:crypto";
 import { Prisma } from "../../../../../../web/src/generated/prisma/index.js";
 import prisma from "../../../../prisma.js";
-import { sendOrderConfirmationChatwootMessage } from "../../infrastructure/messaging/sendOrderConfirmationChatwootMessage.js";
+import { enqueueFeedbackWhatsAppJob } from "../../infrastructure/prisma/enqueueFeedbackWhatsAppJob.js";
+import { enqueueOrderConfirmationWhatsAppJob } from "../../infrastructure/prisma/enqueueOrderConfirmationWhatsAppJob.js";
 import { enqueueDispatchRouteMetricsRefresh } from "../../../dispatch/infrastructure/prisma/enqueueDispatchRouteMetricsRefresh.js";
 import type {
   HttpController,
@@ -88,14 +89,15 @@ export class ManageOrdersController implements HttpController {
         throw invalidField("addressId");
       }
 
-      if (customerId !== null && customerId !== undefined) {
-        const customer = await prisma.customer.findUnique({
+      const customer =
+        customerId !== null && customerId !== undefined
+          ? await prisma.customer.findUnique({
           where: { id: customerId },
-          select: { id: true },
-        });
-        if (!customer) {
-          throw invalidField("customerId");
-        }
+              select: { id: true, phone: true },
+            })
+          : null;
+      if (customerId !== null && customerId !== undefined && !customer) {
+        throw invalidField("customerId");
       }
 
       if (deliveryAddressId !== null && deliveryAddressId !== undefined) {
@@ -246,6 +248,12 @@ export class ManageOrdersController implements HttpController {
           `;
         }
 
+        await enqueueOrderConfirmationWhatsAppJob(tx, {
+          branchId,
+          customerPhone: customer?.phone,
+          orderId,
+        });
+
         for (const item of createdOrderProducts) {
           await tx.orderProducts.create({
             data: {
@@ -352,37 +360,6 @@ export class ManageOrdersController implements HttpController {
         });
       }
 
-      let customerContact: { name: string | null; phone: string | null } | null =
-        null;
-      if (customerId !== null && customerId !== undefined) {
-        customerContact = await prisma.customer.findUnique({
-          where: { id: customerId },
-          select: {
-            name: true,
-            phone: true,
-          },
-        });
-      }
-
-      const customerPhone = customerContact?.phone?.trim() || null;
-      if (customerPhone) {
-        void sendOrderConfirmationChatwootMessage({
-          branchId: branchId ?? null,
-          customerName: customerContact?.name ?? null,
-          customerPhone,
-          language: language ?? null,
-          orderId,
-          orderNumber,
-          orderType,
-          totalAmountInCents: orderAmount,
-        }).catch((error: unknown) => {
-          console.error(
-            "Failed to send order confirmation WhatsApp message:",
-            error,
-          );
-        });
-      }
-
       const order = await loadOrderWithRelations(orderId);
       return { statusCode: 201, body: order };
     } catch (error) {
@@ -407,6 +384,7 @@ export class ManageOrdersController implements HttpController {
         select: {
           id: true,
           createdAt: true,
+          deliveredAt: true,
           type: true,
           dispatchId: true,
           deliveryAddressId: true,
@@ -598,6 +576,16 @@ export class ManageOrdersController implements HttpController {
           );
         }
       });
+
+      if (
+        existingOrder.deliveredAt === null &&
+        parsedDeliveredAt instanceof Date
+      ) {
+        await enqueueFeedbackWhatsAppJob({
+          orderId,
+          deliveredAt: parsedDeliveredAt,
+        });
+      }
 
       const order = await loadOrderWithRelations(orderId);
       return { statusCode: 200, body: order };

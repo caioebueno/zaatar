@@ -19,56 +19,102 @@ type EnsureConversationInput = {
   baseUrl: string;
   customerName?: string | null;
   customerPhone: string;
+  notificationKind: DispatchNotificationKind;
+  orderId: string;
   sourceId: string;
   token: string;
 };
 
 type NormalizedTemplateLanguage = "en" | "pt" | "es";
+type DispatchNotificationKind = "out_for_delivery" | "ready_for_pickup";
 
 const DEFAULT_CHATWOOT_BASE_URL =
   "https://chatwoot-production-487ab.up.railway.app";
 const ORDER_MESSAGE_MAX_AGE_MS = 5 * 60 * 60 * 1000;
+const CHATWOOT_REQUEST_TIMEOUT_MS = 15_000;
 
 export class ChatwootOutForDeliveryNotifier implements OutForDeliveryNotifier {
   async sendForDispatch(dispatch: DispatchEntity): Promise<void> {
-    if (isWhatsAppMessagingDisabled()) return;
+    if (isWhatsAppMessagingDisabled()) {
+      console.info(`[dispatch-notification] skipped dispatch=${dispatch.id} reason=WHATSAPP_DISABLED`);
+      return;
+    }
 
     const token = resolveChatwootApiToken();
-    if (!token) return;
+    if (!token) {
+      console.warn(`[dispatch-notification] skipped dispatch=${dispatch.id} reason=MISSING_CHATWOOT_TOKEN`);
+      return;
+    }
 
-    const deliveryOrders = dispatch.orders.filter(
+    // A takeaway dispatch is a pickup-ready event, not an out-for-delivery event.
+    // Keep the notification scoped to its matching order type in case old mixed
+    // dispatch data exists.
+    const notificationKind: DispatchNotificationKind = dispatch.orders.some(
+      (order) => order.type === "TAKEAWAY",
+    )
+      ? "ready_for_pickup"
+      : "out_for_delivery";
+    const targetOrderType =
+      notificationKind === "ready_for_pickup" ? "TAKEAWAY" : "DELIVERY";
+    console.info(
+      `[dispatch-notification] evaluating dispatch=${dispatch.id} dispatchAt=${dispatch.dispatchAt ?? "null"} kind=${notificationKind} orders=${dispatch.orders.length}`,
+    );
+    const targetOrders = dispatch.orders.filter(
       (order) =>
-        order.type === "DELIVERY" &&
+        order.type === targetOrderType &&
         !order.delivered &&
         Boolean(order.customer?.phone?.trim()),
     );
-    if (deliveryOrders.length === 0) return;
+    if (targetOrders.length === 0) {
+      console.info(
+        `[dispatch-notification] skipped dispatch=${dispatch.id} kind=${notificationKind} reason=NO_ELIGIBLE_${targetOrderType}_ORDER`,
+      );
+      return;
+    }
 
-    const orderIds = deliveryOrders.map((order) => order.id);
+    const orderIds = targetOrders.map((order) => order.id);
+    console.info(
+      `[dispatch-notification] loading-branch-config dispatch=${dispatch.id} orderCount=${orderIds.length}`,
+    );
     const branchConfigByOrderId = await loadOrderBranchConfigs(orderIds);
+    console.info(
+      `[dispatch-notification] loaded-branch-config dispatch=${dispatch.id} matchedOrderCount=${branchConfigByOrderId.size}`,
+    );
     const baseUrl = resolveChatwootBaseUrl();
 
     const results = await Promise.allSettled(
-      deliveryOrders.map(async (order) => {
+      targetOrders.map(async (order) => {
+        console.info(`[${notificationKind}] processing order=${order.id}`);
         if (isOrderOlderThanMessageWindow(order.createdAt)) {
           console.info(
-            `[out-for-delivery] skipped stale order=${order.id} createdAt=${order.createdAt}`,
+            `[${notificationKind}] skipped stale order=${order.id} createdAt=${order.createdAt}`,
           );
           return;
         }
 
         const orderBranchConfig = branchConfigByOrderId.get(order.id);
-        if (!orderBranchConfig) return;
+        if (!orderBranchConfig) {
+          console.warn(`[${notificationKind}] skipped order=${order.id} reason=MISSING_BRANCH`);
+          return;
+        }
 
         const accountId = orderBranchConfig.chatwootAccountId?.trim();
         const sourceId = orderBranchConfig.chatwootSourceId?.trim();
         const customerPhone = order.customer?.phone?.trim() || null;
 
-        if (!accountId || !sourceId || !customerPhone) return;
+        if (!accountId || !sourceId || !customerPhone) {
+          const reason = !customerPhone
+            ? "MISSING_CUSTOMER_PHONE"
+            : !accountId
+              ? "MISSING_CHATWOOT_ACCOUNT"
+              : "MISSING_CHATWOOT_SOURCE";
+          console.warn(`[${notificationKind}] skipped order=${order.id} reason=${reason}`);
+          return;
+        }
 
         const templateLanguage = normalizeTemplateLanguage(order.language);
-        const templateName = resolveOutForDeliveryTemplateName(templateLanguage);
-        const templateCategory = resolveOutForDeliveryTemplateCategory();
+        const templateName = resolveTemplateName(notificationKind, templateLanguage);
+        const templateCategory = resolveTemplateCategory(notificationKind);
         const etaRangeLabel = toEtaRangeLabel(
           order.currentEstimatedDeliveryDurationMinutes ??
             order.estimatedDeliveryDurationMinutes ??
@@ -76,15 +122,17 @@ export class ChatwootOutForDeliveryNotifier implements OutForDeliveryNotifier {
             dispatch.estimatedDeliveryDurationMinutes ??
             null,
         );
-        const configuredPreview = resolveOutForDeliveryTemplatePreview(
+        const configuredPreview = resolveTemplatePreview(
+          notificationKind,
           templateLanguage,
         );
         const content = configuredPreview
           ? configuredPreview
               .replaceAll("\\n", "\n")
               .replaceAll("{{1}}", etaRangeLabel)
-          : buildOutForDeliveryFallbackMessage(templateLanguage, etaRangeLabel);
+          : buildFallbackMessage(notificationKind, templateLanguage, etaRangeLabel);
 
+        console.info(`[${notificationKind}] finding-conversation order=${order.id}`);
         const existingConversationId = await findConversationIdByPhone({
           accountId,
           sourceId,
@@ -92,18 +140,31 @@ export class ChatwootOutForDeliveryNotifier implements OutForDeliveryNotifier {
           baseUrl,
           token,
         });
+        console.info(
+          `[${notificationKind}] conversation-lookup-complete order=${order.id} found=${Boolean(existingConversationId)}`,
+        );
 
-        const conversationId =
-          existingConversationId ??
-          (await ensureConversationForPhone({
+        let conversationId = existingConversationId;
+        if (!conversationId) {
+          console.info(`[${notificationKind}] creating-conversation order=${order.id}`);
+          conversationId = await ensureConversationForPhone({
             accountId,
             sourceId,
             customerPhone,
             customerName: order.customer?.name ?? null,
+            notificationKind,
+            orderId: order.id,
             baseUrl,
             token,
-          }));
-        if (!conversationId) return;
+          });
+          console.info(
+            `[${notificationKind}] conversation-create-complete order=${order.id} created=${Boolean(conversationId)}`,
+          );
+        }
+        if (!conversationId) {
+          console.warn(`[${notificationKind}] skipped order=${order.id} reason=CONVERSATION_UNAVAILABLE`);
+          return;
+        }
 
         const endpoint = `${baseUrl}/api/v1/accounts/${encodeURIComponent(
           accountId,
@@ -118,7 +179,7 @@ export class ChatwootOutForDeliveryNotifier implements OutForDeliveryNotifier {
             sent_by: "ai",
             dispatch_id: dispatch.id,
             order_id: order.id,
-            template: "out_for_delivery",
+            template: notificationKind,
           },
           template_params: {
             name: templateName,
@@ -132,13 +193,23 @@ export class ChatwootOutForDeliveryNotifier implements OutForDeliveryNotifier {
           },
         };
 
+        console.info(`[${notificationKind}] sending-template order=${order.id} template=${templateName}`);
         const templateResponse = await requestChatwootJson({
           method: "POST",
           endpoint,
           token,
           body: templatePayload,
         });
-        if (templateResponse.ok) return;
+        if (templateResponse.ok) {
+          console.info(
+            `[${notificationKind}] sent order=${order.id} mode=template template=${templateName} language=${templateLanguage}`,
+          );
+          return;
+        }
+
+        console.warn(
+          `[${notificationKind}] template-failed order=${order.id} status=${templateResponse.status}; trying outgoing fallback`,
+        );
 
         const fallbackResponse = await requestChatwootJson({
           method: "POST",
@@ -151,17 +222,19 @@ export class ChatwootOutForDeliveryNotifier implements OutForDeliveryNotifier {
         });
 
         if (!fallbackResponse.ok) {
-          throw new Error(
-            `Failed to send out_for_delivery message for order=${order.id} status=${fallbackResponse.status}`,
-          );
+          throw new Error(`Failed to send ${notificationKind} message for order=${order.id} status=${fallbackResponse.status}`);
         }
+
+        console.info(
+          `[${notificationKind}] sent order=${order.id} mode=outgoing-fallback language=${templateLanguage}`,
+        );
       }),
     );
 
     for (const result of results) {
       if (result.status === "rejected") {
         console.error(
-          "Failed to send out_for_delivery notification for one order:",
+          `Failed to send ${notificationKind} notification for one order:`,
           result.reason,
         );
       }
@@ -217,9 +290,20 @@ function normalizeTemplateLanguage(
   return "en";
 }
 
-function resolveOutForDeliveryTemplateName(
+function resolveTemplateName(
+  notificationKind: DispatchNotificationKind,
   language: NormalizedTemplateLanguage,
 ): string {
+  if (notificationKind === "ready_for_pickup") {
+    if (language === "pt") {
+      return process.env.CHATWOOT_READY_FOR_PICKUP_TEMPLATE_NAME_PT?.trim() || process.env.CHATWOOT_READY_FOR_PICKUP_TEMPLATE_NAME?.trim() || "ready_for_pickup";
+    }
+    if (language === "es") {
+      return process.env.CHATWOOT_READY_FOR_PICKUP_TEMPLATE_NAME_ES?.trim() || process.env.CHATWOOT_READY_FOR_PICKUP_TEMPLATE_NAME?.trim() || "ready_for_pickup";
+    }
+    return process.env.CHATWOOT_READY_FOR_PICKUP_TEMPLATE_NAME_EN?.trim() || process.env.CHATWOOT_READY_FOR_PICKUP_TEMPLATE_NAME?.trim() || "ready_for_pickup";
+  }
+
   if (language === "pt") {
     return (
       process.env.CHATWOOT_OUT_FOR_DELIVERY_TEMPLATE_NAME_PT?.trim() ||
@@ -243,13 +327,23 @@ function resolveOutForDeliveryTemplateName(
   );
 }
 
-function resolveOutForDeliveryTemplateCategory(): string {
+function resolveTemplateCategory(notificationKind: DispatchNotificationKind): string {
+  if (notificationKind === "ready_for_pickup") {
+    return process.env.CHATWOOT_READY_FOR_PICKUP_TEMPLATE_CATEGORY?.trim() || "UTILITY";
+  }
   return process.env.CHATWOOT_OUT_FOR_DELIVERY_TEMPLATE_CATEGORY?.trim() || "UTILITY";
 }
 
-function resolveOutForDeliveryTemplatePreview(
+function resolveTemplatePreview(
+  notificationKind: DispatchNotificationKind,
   language: NormalizedTemplateLanguage,
 ): string | null {
+  if (notificationKind === "ready_for_pickup") {
+    if (language === "pt") return process.env.CHATWOOT_READY_FOR_PICKUP_TEMPLATE_PREVIEW_PT?.trim() || null;
+    if (language === "es") return process.env.CHATWOOT_READY_FOR_PICKUP_TEMPLATE_PREVIEW_ES?.trim() || null;
+    return process.env.CHATWOOT_READY_FOR_PICKUP_TEMPLATE_PREVIEW_EN?.trim() || null;
+  }
+
   if (language === "pt") {
     return process.env.CHATWOOT_OUT_FOR_DELIVERY_TEMPLATE_PREVIEW_PT?.trim() || null;
   }
@@ -276,10 +370,17 @@ function toEtaRangeLabel(
   return `${etaFromMinutes}-${etaToMinutes} min`;
 }
 
-function buildOutForDeliveryFallbackMessage(
+function buildFallbackMessage(
+  notificationKind: DispatchNotificationKind,
   language: NormalizedTemplateLanguage,
   etaRangeLabel: string,
 ): string {
+  if (notificationKind === "ready_for_pickup") {
+    if (language === "pt") return "Seu pedido está pronto para retirada.";
+    if (language === "es") return "Tu pedido está listo para recoger.";
+    return "Your order is ready for pickup.";
+  }
+
   if (language === "pt") {
     return `Seu pedido está a caminho. ETA: ${etaRangeLabel}.`;
   }
@@ -393,6 +494,17 @@ function parseConversationRows(payload: unknown): ConversationRow[] {
     .filter((item): item is ConversationRow => item !== null);
 }
 
+function summarizeChatwootError(payload: unknown): string {
+  const raw = typeof payload === "string" ? payload : JSON.stringify(payload);
+  if (!raw) return "NO_RESPONSE_BODY";
+
+  // Keep validation details useful while excluding phone-like values from logs.
+  return raw
+    .replace(/\+?\d[\d\s().-]{6,}\d/g, "[redacted-phone]")
+    .replace(/\s+/g, " ")
+    .slice(0, 300);
+}
+
 async function requestChatwootJson(input: {
   method: "GET" | "POST";
   endpoint: string;
@@ -408,6 +520,7 @@ async function requestChatwootJson(input: {
     },
     ...(input.body !== undefined ? { body: JSON.stringify(input.body) } : {}),
     cache: "no-store",
+    signal: AbortSignal.timeout(CHATWOOT_REQUEST_TIMEOUT_MS),
   });
 
   const text = await response.text();
@@ -491,10 +604,16 @@ async function ensureConversationForPhone(
   const normalizedPhone =
     normalizePhoneWithCountryCode(input.customerPhone) ||
     normalizePhoneDigits(input.customerPhone);
-  if (!normalizedPhone) return null;
+  if (!normalizedPhone) {
+    console.warn(`[${input.notificationKind}] conversation-create-failed order=${input.orderId} reason=INVALID_PHONE`);
+    return null;
+  }
 
   const inboxId = getNumber(input.sourceId);
-  if (!inboxId) return null;
+  if (!inboxId) {
+    console.warn(`[${input.notificationKind}] conversation-create-failed order=${input.orderId} reason=INVALID_INBOX_ID`);
+    return null;
+  }
 
   const contactResponse = await requestChatwootJson({
     method: "POST",
@@ -509,19 +628,41 @@ async function ensureConversationForPhone(
       identifier: normalizedPhone,
     },
   });
-  if (!contactResponse.ok) return null;
+  let contactPayload = contactResponse.payload;
+  let contactId: number | null = null;
+  let contactSourceId: string | null = null;
 
-  const contactPayload = asRecord(contactResponse.payload);
-  const contactRow = Array.isArray(contactPayload?.payload)
-    ? asRecord(contactPayload?.payload[0])
-    : null;
-  const contactId = getNumber(contactRow?.id) ?? getNumber(contactPayload?.id);
-  if (!contactId) return null;
+  if (contactResponse.ok) {
+    const contactRecord = asRecord(contactPayload);
+    const contactRow = Array.isArray(contactRecord?.payload)
+      ? asRecord(contactRecord?.payload[0])
+      : null;
+    contactId = getNumber(contactRow?.id) ?? getNumber(contactRecord?.id);
+    const contactInboxes = Array.isArray(contactRow?.contact_inboxes)
+      ? contactRow.contact_inboxes
+      : [];
+    contactSourceId = getSourceIdForInbox(contactInboxes, inboxId);
+  } else if (contactResponse.status === 422) {
+    const existingContact = await findContactByPhone({
+      accountId: input.accountId,
+      baseUrl: input.baseUrl,
+      normalizedPhone,
+      token: input.token,
+      inboxId,
+    });
+    contactId = existingContact?.id ?? null;
+    contactSourceId = existingContact?.sourceId ?? null;
+    if (contactId) {
+      console.info(`[${input.notificationKind}] reusing-contact order=${input.orderId} contactId=${contactId}`);
+    }
+  }
 
-  const contactInboxes = Array.isArray(contactRow?.contact_inboxes)
-    ? contactRow?.contact_inboxes
-    : [];
-  let contactSourceId = getString(asRecord(contactInboxes[0])?.source_id);
+  if (!contactId) {
+    console.warn(
+      `[${input.notificationKind}] conversation-create-failed order=${input.orderId} step=CREATE_CONTACT status=${contactResponse.status} reason=${summarizeChatwootError(contactResponse.payload)}`,
+    );
+    return null;
+  }
 
   if (!contactSourceId) {
     const contactInboxResponse = await requestChatwootJson({
@@ -535,12 +676,18 @@ async function ensureConversationForPhone(
         source_id: normalizedPhone,
       },
     });
-    if (!contactInboxResponse.ok) return null;
+    if (!contactInboxResponse.ok) {
+      console.warn(`[${input.notificationKind}] conversation-create-failed order=${input.orderId} step=CREATE_CONTACT_INBOX status=${contactInboxResponse.status}`);
+      return null;
+    }
 
     contactSourceId = getString(asRecord(contactInboxResponse.payload)?.source_id);
   }
 
-  if (!contactSourceId) return null;
+  if (!contactSourceId) {
+    console.warn(`[${input.notificationKind}] conversation-create-failed order=${input.orderId} reason=MISSING_CONTACT_SOURCE_ID`);
+    return null;
+  }
 
   const conversationResponse = await requestChatwootJson({
     method: "POST",
@@ -555,9 +702,55 @@ async function ensureConversationForPhone(
       status: "open",
     },
   });
-  if (!conversationResponse.ok) return null;
+  if (!conversationResponse.ok) {
+    console.warn(`[${input.notificationKind}] conversation-create-failed order=${input.orderId} step=CREATE_CONVERSATION status=${conversationResponse.status}`);
+    return null;
+  }
 
   const conversationRecord = asRecord(conversationResponse.payload);
   const conversationId = getNumber(conversationRecord?.id);
+  if (!conversationId) {
+    console.warn(`[${input.notificationKind}] conversation-create-failed order=${input.orderId} reason=MISSING_CONVERSATION_ID`);
+  }
   return conversationId ? String(conversationId) : null;
+}
+
+function getSourceIdForInbox(contactInboxes: unknown[], inboxId: number): string | null {
+  for (const item of contactInboxes) {
+    const row = asRecord(item);
+    if (getNumber(asRecord(row?.inbox)?.id) !== inboxId) continue;
+    const sourceId = getString(row?.source_id);
+    if (sourceId) return sourceId;
+  }
+  return null;
+}
+
+async function findContactByPhone(input: {
+  accountId: string;
+  baseUrl: string;
+  inboxId: number;
+  normalizedPhone: string;
+  token: string;
+}): Promise<{ id: number; sourceId: string | null } | null> {
+  const params = new URLSearchParams({ q: `+${input.normalizedPhone}` });
+  const response = await requestChatwootJson({
+    method: "GET",
+    endpoint: `${input.baseUrl}/api/v1/accounts/${encodeURIComponent(input.accountId)}/contacts/search?${params.toString()}`,
+    token: input.token,
+  });
+  if (!response.ok) return null;
+
+  const payload = asRecord(response.payload);
+  const contacts = Array.isArray(payload?.payload) ? payload.payload : [];
+  for (const item of contacts) {
+    const contact = asRecord(item);
+    const id = getNumber(contact?.id);
+    const phone = getString(contact?.phone_number);
+    if (!id || normalizePhoneDigits(phone ?? "") !== input.normalizedPhone) continue;
+    const contactInboxes = Array.isArray(contact?.contact_inboxes)
+      ? contact.contact_inboxes
+      : [];
+    return { id, sourceId: getSourceIdForInbox(contactInboxes, input.inboxId) };
+  }
+  return null;
 }

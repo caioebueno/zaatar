@@ -101,9 +101,9 @@ function SingleOrderDetail({
   const delta     = actualMin !== null && etaMin !== null ? actualMin - etaMin : null;
   const isLate    = delta !== null && delta > 0;
 
-  const allItems: Array<{ qty: number; name: string; gift?: boolean }> = [
-    ...order.orderProducts.map(op => ({ qty: op.quantity, name: op.product.name })),
-    ...orderExtras(order).map(x => ({ qty: x.qty, name: x.name, gift: true })),
+  const allItems: Array<{ qty: number; name: string; gift?: boolean; alert?: boolean }> = [
+    ...order.orderProducts.map(op => ({ qty: op.quantity, name: op.product.name, alert: !!op.product.alertDriver })),
+    ...orderExtras(order).map(x => ({ qty: x.qty, name: x.name, gift: true, alert: x.alert })),
   ];
 
   return (
@@ -264,6 +264,7 @@ function SingleOrderDetail({
                 <Text style={{ fontFamily: SANS_B, fontSize: 10, color: D.zippy }}>Brinde</Text>
               </View>
             )}
+            {item.alert && <Ionicons name="alert-circle" size={14} color={D.amber} />}
           </View>
         ))}
         <View style={g.totalRow}>
@@ -446,9 +447,9 @@ function MultiOrderCard({
   const deliveredAt = order.deliveredAt ?? null;
   const phone       = order.customer?.phone ?? null;
 
-  const allItems: Array<{ qty: number; name: string; gift?: boolean }> = [
-    ...order.orderProducts.map(op => ({ qty: op.quantity, name: op.product.name })),
-    ...orderExtras(order).map(x => ({ qty: x.qty, name: x.name, gift: true })),
+  const allItems: Array<{ qty: number; name: string; gift?: boolean; alert?: boolean }> = [
+    ...order.orderProducts.map(op => ({ qty: op.quantity, name: op.product.name, alert: !!op.product.alertDriver })),
+    ...orderExtras(order).map(x => ({ qty: x.qty, name: x.name, gift: true, alert: x.alert })),
   ];
 
   return (
@@ -488,9 +489,10 @@ function MultiOrderCard({
       <View style={{ gap: 5, padding: 14, paddingVertical: 10 }}>
         {allItems.map((item, i) => (
           <View key={i} style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-            <Text style={{ fontFamily: MONO_B, fontSize: 11, color: item.gift ? D.zippy : D.faint, width: 26 }}>{item.qty}×</Text>
+            <Text style={{ fontFamily: MONO_B, fontSize: 11, color: item.gift ? D.zippy : item.alert ? D.amber : D.faint, width: 26 }}>{item.qty}×</Text>
             <Text style={{ fontSize: 13, fontFamily: SANS_M, color: D.dim, flex: 1 }} numberOfLines={1}>{item.name}</Text>
             {item.gift && <Ionicons name="gift" size={12} color={D.zippy} />}
+            {item.alert && <Ionicons name="alert-circle" size={12} color={D.amber} />}
           </View>
         ))}
       </View>

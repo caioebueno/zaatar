@@ -5,7 +5,10 @@ import type { DispatchOrder } from './dispatch-api';
  * - discount-bar prizes (`progressiveDiscountSnapshot.selectedPrize`)
  * - redeemed FREE_PRODUCT loyalty rewards (`redeemedRewards`)
  */
-export type ExtraItem = { qty: number; name: string; kind: 'prize' | 'reward' };
+export type ExtraItem = { qty: number; name: string; kind: 'prize' | 'reward'; alert: boolean };
+
+/** An item the driver must double-check before leaving the store (`alertDriver` products). */
+export type AlertItem = { key: string; qty: number; name: string; kind: 'product' | 'prize' };
 
 /** Prize/reward attention the driver must resolve at handoff (e.g. customer still picks a free item). */
 export type AttentionNote = { title: string; detail: string };
@@ -20,22 +23,45 @@ export function orderExtras(order: DispatchOrder): ExtraItem[] {
   if (prize) {
     for (const pc of prize.selectedProductCounts) {
       if (pc.quantity <= 0) continue;
+      const product = prize.availableProducts.find((p) => p.id === pc.productId);
       out.push({
         qty: pc.quantity,
-        name: prize.availableProducts.find((p) => p.id === pc.productId)?.name ?? prize.prizeName ?? 'Brinde',
+        name: product?.name ?? prize.prizeName ?? 'Brinde',
         kind: 'prize',
+        alert: !!product?.alertDriver,
       });
     }
   }
 
   for (const r of order.redeemedRewards ?? []) {
     if (r.type === 'FREE_PRODUCT' && r.product && rewardIsLive(r.status)) {
-      out.push({ qty: r.quantity ?? 1, name: r.product.name, kind: 'reward' });
+      out.push({ qty: r.quantity ?? 1, name: r.product.name, kind: 'reward', alert: false });
     }
   }
 
   return out;
 }
+
+/**
+ * Every item on the order flagged `alertDriver` — paid products and the chosen
+ * progressive-discount prizes alike, since a prize item can need the same
+ * careful handling as a paid one.
+ */
+export function alertItems(order: DispatchOrder): AlertItem[] {
+  const out: AlertItem[] = order.orderProducts
+    .filter((op) => op.product.alertDriver)
+    .map((op) => ({ key: op.id, qty: op.quantity, name: op.product.name, kind: 'product' as const }));
+
+  orderExtras(order).forEach((extra, i) => {
+    if (extra.kind === 'prize' && extra.alert) {
+      out.push({ key: `prize-${i}`, qty: extra.qty, name: extra.name, kind: 'prize' });
+    }
+  });
+
+  return out;
+}
+
+export const hasAlertItems = (order: DispatchOrder): boolean => alertItems(order).length > 0;
 
 /**
  * Prizes/rewards that need the driver's attention at delivery — the customer

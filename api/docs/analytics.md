@@ -283,7 +283,11 @@ type RevenueAnalyticsResponse = {
     deltaPercentage: number | null;
   };
   summary: {
-    total: number; // cents
+    total: number; // cents; sales + tax + tip + deliveryFee
+    sales: number; // cents; discounted item subtotal
+    tax: number; // cents
+    tip: number; // cents
+    deliveryFee: number; // cents
     averagePerBucket: number; // cents
     maxBucketValue: number; // cents
   };
@@ -292,7 +296,12 @@ type RevenueAnalyticsResponse = {
     label: string;
     startDate: string;
     endDate: string;
-    value: number; // cents
+    value: number; // cents; same as total, used for the chart
+    sales: number; // cents; discounted item subtotal
+    tax: number; // cents
+    tip: number; // cents
+    deliveryFee: number; // cents
+    total: number; // cents; sales + tax + tip + deliveryFee
     compareValue?: number | null; // cents
     delta?: number | null; // cents
     deltaPercentage?: number | null;
@@ -321,6 +330,10 @@ Sample response:
   },
   "summary": {
     "total": 167000,
+    "sales": 145000,
+    "tax": 9425,
+    "tip": 7600,
+    "deliveryFee": 4975,
     "averagePerBucket": 23857.14,
     "maxBucketValue": 34100
   },
@@ -331,6 +344,11 @@ Sample response:
       "startDate": "2026-08-01T04:00:00.000Z",
       "endDate": "2026-08-02T03:59:59.999Z",
       "value": 21800,
+      "sales": 18500,
+      "tax": 1203,
+      "tip": 1000,
+      "deliveryFee": 1097,
+      "total": 21800,
       "compareValue": 19500,
       "delta": 2300,
       "deltaPercentage": 11.79
@@ -342,7 +360,9 @@ Sample response:
 ### Notes
 
 - Values are returned in **cents**.
-- Revenue totals use discounted item subtotal and delivery fee, and exclude collected tips.
+- `sales` is the discounted item subtotal. `tax` is calculated as 6.5% of that subtotal, and `tip` is calculated from the order's stored tip percentage.
+- `total`, `summary.total`, and each bucket's `value` equal `sales + tax + tip + deliveryFee`.
+- The optional comparison remains a total-only comparison (`compareValue` / `comparison.total`).
 - Canceled orders are excluded.
 
 ### Validation Errors (`400`)
