@@ -64,16 +64,9 @@ const getProgressiveDiscount =
           createdAt: "desc",
         },
       });
-    const fallbackProgressiveDiscount = prismaProgressiveDiscount
-      ? null
-      : await prisma.progressiveDiscount.findFirst({
-          include: discountInclude,
-          orderBy: {
-            createdAt: "desc",
-          },
-        });
-    const resolvedProgressiveDiscount =
-      prismaProgressiveDiscount || fallbackProgressiveDiscount;
+    // No fallback to the newest completed ladder: when every ladder is completed
+    // the menu simply has no progressive discount attached.
+    const resolvedProgressiveDiscount = prismaProgressiveDiscount;
     if (!resolvedProgressiveDiscount) return null;
 
     const prizeIds = resolvedProgressiveDiscount.steps.flatMap((step) =>

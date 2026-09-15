@@ -753,6 +753,29 @@ model FeedbackWhatsAppJob {
   language            String?
 }
 
+enum DispatchWhatsAppJobStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+model DispatchWhatsAppJob {
+  id                  String                    @id
+  createdAt           DateTime                  @default(now())
+  status              DispatchWhatsAppJobStatus @default(PENDING)
+  attempts            Int                       @default(0)
+  availableAt         DateTime                  @default(now())
+  processingStartedAt DateTime?
+  completedAt         DateTime?
+  lastError           String?
+  orderId             String
+  kind                String
+
+  @@unique([orderId, kind])
+  @@index([status, availableAt, createdAt])
+}
+
 model Address {
   id            String   @id
   createdAt     DateTime @default(now())

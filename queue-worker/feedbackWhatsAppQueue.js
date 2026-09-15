@@ -2,7 +2,11 @@ import { Pool } from "pg";
 
 const DEFAULT_MAX_JOBS_PER_RUN = 10;
 const DEFAULT_MAX_FEEDBACK_RETRIES = 2;
-const ORDER_MESSAGE_MAX_AGE_MS = 5 * 60 * 60 * 1000;
+const ORDER_MESSAGE_MAX_AGE_MS = 3 * 60 * 60 * 1000;
+const CHATWOOT_BASE_URL = (
+  process.env.CHATWOOT_BASE_URL ||
+  "https://chatwoot-production-487ab.up.railway.app"
+).replace(/\/$/, "");
 
 const DEFAULT_TWILIO_FEEDBACK_TEMPLATE_SID_EN =
   "HXa1728d7711e5ea52947eed912d6ec611";
@@ -154,6 +158,76 @@ function isWhatsAppMessagingDisabled() {
   );
 }
 
+async function recordFeedbackDeliveryInChatwoot(job) {
+  const token = process.env.CHATWOOT_API_ACCESS_TOKEN?.trim();
+  const accountId = job.chatwootAccountId?.trim();
+  const inboxId = Number(job.chatwootSourceId);
+  const phone = normalizeInternationalPhoneDigits(job.customerPhone);
+  if (!token || !accountId || !Number.isInteger(inboxId) || !phone) return;
+
+  const request = async (method, endpoint, body) => {
+    const response = await fetch(endpoint, {
+      method,
+      headers: {
+        api_access_token: token,
+        Accept: "application/json",
+        ...(body ? { "Content-Type": "application/json" } : {}),
+      },
+      ...(body ? { body: JSON.stringify(body) } : {}),
+      signal: AbortSignal.timeout(15_000),
+    });
+    const text = await response.text();
+    let payload = null;
+    try {
+      payload = text ? JSON.parse(text) : null;
+    } catch {
+      payload = text;
+    }
+    return { ok: response.ok, status: response.status, payload };
+  };
+
+  try {
+    const root = `${CHATWOOT_BASE_URL}/api/v1/accounts/${encodeURIComponent(accountId)}`;
+    const listed = await request(
+      "GET",
+      `${root}/conversations?status=all&inbox_id=${inboxId}&per_page=50&page=1`,
+    );
+    const payload = listed.payload && typeof listed.payload === "object" ? listed.payload : {};
+    const rows = Array.isArray(payload?.data?.payload)
+      ? payload.data.payload
+      : Array.isArray(payload?.payload)
+        ? payload.payload
+        : [];
+    const conversation = rows.find((row) => {
+      const senderPhone =
+        row?.meta?.sender?.phone_number ||
+        row?.sender?.phone_number ||
+        row?.contact?.phone_number;
+      return normalizeInternationalPhoneDigits(senderPhone) === phone;
+    });
+    const conversationId = Number(conversation?.id);
+    if (!listed.ok || !Number.isInteger(conversationId)) {
+      console.info(`[feedback-whatsapp] chatwoot-note-skipped order=${job.orderId} reason=CONVERSATION_NOT_FOUND`);
+      return;
+    }
+    const note = await request("POST", `${root}/conversations/${conversationId}/messages`, {
+      content: "Feedback WhatsApp template sent via Twilio.",
+      content_type: "text",
+      message_type: "outgoing",
+      private: true,
+      content_attributes: {
+        order_id: job.orderId,
+        template: "feedback",
+        twilio_delivery: true,
+      },
+    });
+    if (!note.ok) throw new Error(`CREATE_NOTE_${note.status}`);
+    console.info(`[feedback-whatsapp] chatwoot-note-recorded order=${job.orderId}`);
+  } catch (error) {
+    console.error(`[feedback-whatsapp] chatwoot-note-failed order=${job.orderId} reason=${error instanceof Error ? error.message : String(error)}`);
+  }
+}
+
 function getTwilioConfig() {
   const accountSid = process.env.TWILIO_ACCOUNT_SID?.trim();
   const authToken = process.env.TWILIO_AUTH_TOKEN?.trim();
@@ -247,6 +321,7 @@ async function sendFeedbackTemplateWhatsAppMessage(input) {
       Authorization: authorization,
     },
     body: params.toString(),
+    signal: AbortSignal.timeout(15_000),
   });
 
   if (!response.ok) {
@@ -356,6 +431,7 @@ async function claimFeedbackWhatsAppJobs(limit, maxAttempts) {
           "attempts" = job."attempts" + 1,
           "processingStartedAt" = NOW()
         FROM candidate_jobs, "Order" orders
+        LEFT JOIN "Branch" branch ON branch."id" = orders."branchId"
         WHERE job."id" = candidate_jobs."id"
           AND orders."id" = job."orderId"
         RETURNING
@@ -364,7 +440,9 @@ async function claimFeedbackWhatsAppJobs(limit, maxAttempts) {
           job."customerPhone",
           job."language",
           job."attempts",
-          orders."createdAt" AS "orderCreatedAt"
+          orders."createdAt" AS "orderCreatedAt",
+          branch."chatwootAccountId" AS "chatwootAccountId",
+          branch."chatwootSourceId" AS "chatwootSourceId"
       `,
       [limit, maxAttempts],
     );
@@ -480,6 +558,8 @@ export async function processFeedbackWhatsAppJobs(limit = DEFAULT_MAX_JOBS_PER_R
         contentSid: templateSid,
         orderId: job.orderId,
       });
+
+      await recordFeedbackDeliveryInChatwoot(job);
 
       await markFeedbackWhatsAppJobCompleted(job.id);
       console.log(

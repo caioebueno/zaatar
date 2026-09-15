@@ -61,6 +61,16 @@ function areModifiersEqual(
   });
 }
 
+/** Stable fingerprint of a selection, including the modifiers chosen for it. */
+function comboSelectionKey(selection: TSelectedComboSlotOption) {
+  const modifiersKey = [...(selection.modifiers ?? [])]
+    .map((modifier) => `${modifier.modifierId}:${modifier.modifierItemId}`)
+    .sort()
+    .join("|");
+
+  return `${selection.slotId}:${selection.optionProductId}:${selection.quantity}:${selection.extraPrice ?? 0}:${modifiersKey}`;
+}
+
 function sortComboSelections(comboSelections?: TSelectedComboSlotOption[]) {
   return [...(comboSelections ?? [])]
     .map((selection) => ({
@@ -70,11 +80,7 @@ function sortComboSelections(comboSelections?: TSelectedComboSlotOption[]) {
           ? selection.quantity
           : 1,
     }))
-    .sort((a, b) => {
-      const aKey = `${a.slotId}:${a.optionProductId}:${a.quantity}:${a.extraPrice ?? 0}`;
-      const bKey = `${b.slotId}:${b.optionProductId}:${b.quantity}:${b.extraPrice ?? 0}`;
-      return aKey.localeCompare(bKey);
-    });
+    .sort((a, b) => comboSelectionKey(a).localeCompare(comboSelectionKey(b)));
 }
 
 function areComboSelectionsEqual(
@@ -86,15 +92,9 @@ function areComboSelectionsEqual(
 
   if (sortedA.length !== sortedB.length) return false;
 
-  return sortedA.every((item, index) => {
-    const other = sortedB[index];
-    return (
-      item.slotId === other.slotId &&
-      item.optionProductId === other.optionProductId &&
-      item.quantity === other.quantity &&
-      (item.extraPrice ?? 0) === (other.extraPrice ?? 0)
-    );
-  });
+  return sortedA.every(
+    (item, index) => comboSelectionKey(item) === comboSelectionKey(sortedB[index]),
+  );
 }
 
 function areCartItemsMergeable(a: TCartItem, b: TCartItem): boolean {
@@ -129,6 +129,14 @@ function ensureCartItemId(item: TCartItem): TCartItem {
           selection.quantity > 0
             ? selection.quantity
             : 1,
+        modifiers: (selection.modifiers ?? []).filter(
+          (modifier) =>
+            modifier &&
+            typeof modifier.modifierId === "string" &&
+            modifier.modifierId.trim().length > 0 &&
+            typeof modifier.modifierItemId === "string" &&
+            modifier.modifierItemId.trim().length > 0,
+        ),
       })),
     description: normalizeDescription(item.description) || undefined,
   };

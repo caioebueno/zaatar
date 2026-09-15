@@ -98,7 +98,7 @@ Description:
 - Sets or clears `completedAt` manually.
 - `dispatchedAt` is the accepted request field for the legacy `Dispatch.dispatchAt` column.
 - `dispatchAt` is rejected in request payloads.
-- When `dispatched` is set to `true` and resulting `dispatchAt` is non-null, API triggers `out_for_delivery` WhatsApp notification via Chatwoot for delivery orders with customer phone.
+- When the resulting `dispatchAt` is non-null, API sends a Chatwoot WhatsApp notification: `out_for_delivery` for delivery-only dispatches, or `ready_for_pickup` for dispatches containing takeaway orders. This is independent of whether the request includes `dispatched: true`.
 
 Authentication:
 
@@ -166,6 +166,17 @@ Out-for-delivery Chatwoot template envs (optional overrides):
 - `CHATWOOT_OUT_FOR_DELIVERY_TEMPLATE_PREVIEW_EN`
 - `CHATWOOT_OUT_FOR_DELIVERY_TEMPLATE_PREVIEW_PT`
 - `CHATWOOT_OUT_FOR_DELIVERY_TEMPLATE_PREVIEW_ES`
+
+Ready-for-pickup Chatwoot template envs (optional overrides):
+
+- `CHATWOOT_READY_FOR_PICKUP_TEMPLATE_NAME_EN`
+- `CHATWOOT_READY_FOR_PICKUP_TEMPLATE_NAME_PT`
+- `CHATWOOT_READY_FOR_PICKUP_TEMPLATE_NAME_ES`
+- `CHATWOOT_READY_FOR_PICKUP_TEMPLATE_NAME` (fallback; default `ready_for_pickup`)
+- `CHATWOOT_READY_FOR_PICKUP_TEMPLATE_CATEGORY` (default `UTILITY`)
+- `CHATWOOT_READY_FOR_PICKUP_TEMPLATE_PREVIEW_EN`
+- `CHATWOOT_READY_FOR_PICKUP_TEMPLATE_PREVIEW_PT`
+- `CHATWOOT_READY_FOR_PICKUP_TEMPLATE_PREVIEW_ES`
 
 Preview placeholders:
 
@@ -256,6 +267,10 @@ type DispatchEntity = {
     scheduleFor: string | null; // ISO datetime
     language: string | null;
     paidAt: string | null; // ISO datetime
+    // Stored as-is from checkout, except that every
+    // `selectedPrize.availableProducts[]` entry is enriched at read time with
+    // the product's current `alertDriver` flag, so drivers see handling alerts
+    // for free prize items too.
     progressiveDiscountSnapshot?: unknown;
     deliveredAt?: string; // ISO datetime
     leftAtDropOffAt?: string; // ISO datetime (per order)

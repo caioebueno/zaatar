@@ -188,6 +188,8 @@ model Business {
   members                     BusinessMember[]
   integrations                ExternalIntegrationConnection[]
   squareConnections           SquareConnection[]
+  squareCatalogSyncTasks      SquareCatalogSyncTask[]
+  squareWebhookRuns           SquareWebhookRun[]
   pushDevices                 UserPushDevice[]
 }
 
@@ -259,6 +261,27 @@ enum ExternalIntegrationEnvironment {
   PRODUCTION
 }
 
+enum SquareCatalogSyncTaskStatus {
+  PENDING
+  PROCESSING
+  SUCCESS
+  FAILED
+  SKIPPED
+}
+
+enum SquareCatalogSyncTaskType {
+  PRODUCT_UPDATE
+  MENU_UPDATE
+}
+
+enum SquareWebhookRunStatus {
+  PROCESSING
+  SUCCESS
+  FAILED
+  IGNORED
+  DUPLICATE_SKIPPED
+}
+
 enum ExternalMenuSyncStatus {
   PENDING
   SUCCESS
@@ -319,6 +342,92 @@ model SquareConnection {
 
   @@index([userId, environment])
   @@index([merchantId])
+}
+
+model SquareCatalogSyncTask {
+  id                  String                      @id
+  createdAt           DateTime                    @default(now())
+  updatedAt           DateTime                    @updatedAt
+  business            Business                    @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  businessId          String
+  product             Product?                    @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId           String?
+  menu                Menu?                       @relation(fields: [menuId], references: [id], onDelete: Cascade)
+  menuId              String?
+  taskType            SquareCatalogSyncTaskType   @default(PRODUCT_UPDATE)
+  status              SquareCatalogSyncTaskStatus @default(PENDING)
+  attempts            Int                         @default(0)
+  availableAt         DateTime                    @default(now())
+  processingStartedAt DateTime?
+  finishedAt          DateTime?
+  errorMessage        String?
+  requestPayload      Json?
+  responsePayload     Json?
+
+  @@index([businessId, productId, createdAt])
+  @@index([businessId, menuId, createdAt])
+  @@index([status, availableAt, createdAt])
+  @@index([productId, createdAt])
+  @@index([menuId, createdAt])
+}
+
+model SquareWebhookRun {
+  id                   String                    @id
+  createdAt            DateTime                  @default(now())
+  updatedAt            DateTime                  @updatedAt
+  business             Business?                 @relation(fields: [businessId], references: [id], onDelete: SetNull)
+  businessId           String?
+  eventId              String?                   @unique
+  eventType            String?
+  merchantId           String?
+  squareOrderId        String?
+  locationId           String?
+  squareOrderState     String?
+  signatureVerified    Boolean?
+  status               SquareWebhookRunStatus    @default(PROCESSING)
+  action               String?
+  reason               String?
+  foodyOrderId         String?
+  firstReceivedAt      DateTime                  @default(now())
+  lastReceivedAt       DateTime                  @default(now())
+  processedAt          DateTime?
+  processingDurationMs Int?
+  attemptsCount        Int                       @default(0)
+  httpStatusCode       Int?
+  errorMessage         String?
+  webhookPayload       Json?
+  squareOrderPayload   Json?
+  responsePayload      Json?
+  attempts             SquareWebhookRunAttempt[]
+
+  @@index([businessId, createdAt])
+  @@index([businessId, status, createdAt])
+  @@index([eventType, createdAt])
+  @@index([squareOrderId, createdAt])
+}
+
+model SquareWebhookRunAttempt {
+  id                   String                 @id
+  createdAt            DateTime               @default(now())
+  run                  SquareWebhookRun       @relation(fields: [runId], references: [id], onDelete: Cascade)
+  runId                String
+  attemptNumber        Int
+  receivedAt           DateTime               @default(now())
+  finishedAt           DateTime?
+  processingDurationMs Int?
+  httpStatusCode       Int?
+  status               SquareWebhookRunStatus @default(PROCESSING)
+  action               String?
+  reason               String?
+  signatureVerified    Boolean?
+  errorMessage         String?
+  requestHeaders       Json?
+  webhookPayload       Json?
+  squareOrderPayload   Json?
+  responsePayload      Json?
+
+  @@unique([runId, attemptNumber])
+  @@index([runId, receivedAt])
 }
 
 model ExternalMenuEntityMap {
@@ -644,6 +753,29 @@ model FeedbackWhatsAppJob {
   language            String?
 }
 
+enum DispatchWhatsAppJobStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+model DispatchWhatsAppJob {
+  id                  String                    @id
+  createdAt           DateTime                  @default(now())
+  status              DispatchWhatsAppJobStatus @default(PENDING)
+  attempts            Int                       @default(0)
+  availableAt         DateTime                  @default(now())
+  processingStartedAt DateTime?
+  completedAt         DateTime?
+  lastError           String?
+  orderId             String
+  kind                String
+
+  @@unique([orderId, kind])
+  @@index([status, availableAt, createdAt])
+}
+
 model Address {
   id               String   @id
   createdAt        DateTime @default(now())
@@ -690,6 +822,7 @@ model Product {
   customerRewards            CustomerReward[]
   translations               Json?
   preparationSteps           PreparationStep[]
+  squareCatalogSyncTasks     SquareCatalogSyncTask[]
   squareItemId               String?                           @unique
   squareItemVersion          String?
   squareVariationId          String?                           @unique
@@ -751,17 +884,18 @@ enum ProductItemType {
 }
 
 model Menu {
-  id                String         @id
-  createdAt         DateTime       @default(now())
-  updatedAt         DateTime       @updatedAt
-  name              String
-  active            Boolean        @default(true)
-  isDefault         Boolean        @default(false)
-  squareMenuId      String?        @unique
-  squareMenuVersion String?
-  categories        Category[]
-  menuCategories    MenuCategory[]
-  menuVisits        MenuVisit[]
+  id                     String                  @id
+  createdAt              DateTime                @default(now())
+  updatedAt              DateTime                @updatedAt
+  name                   String
+  active                 Boolean                 @default(true)
+  isDefault              Boolean                 @default(false)
+  squareMenuId           String?                 @unique
+  squareMenuVersion      String?
+  categories             Category[]
+  menuCategories         MenuCategory[]
+  menuVisits             MenuVisit[]
+  squareCatalogSyncTasks SquareCatalogSyncTask[]
 
   @@index([isDefault])
 }

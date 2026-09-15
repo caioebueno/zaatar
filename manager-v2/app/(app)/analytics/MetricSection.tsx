@@ -2,8 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { APP_TIMEZONE, ApiError, getAverageTicket, getNewCustomers, getOrderQuantity, getRevenue } from "../../lib/api";
-import type { BarChartAnalytics, BarChartParams } from "../../lib/api";
+import { APP_TIMEZONE, ApiError, getAverageTicket, getNewCustomers, getOrderQuantity, getRevenue, hasRevenueBreakdown } from "../../lib/api";
+import type { BarChartAnalytics, BarChartParams, RevenueBreakdown } from "../../lib/api";
 import { clearManagerSession, getManagerBusinessId, getManagerToken } from "../../lib/auth";
 import { METRICS, addDays, buckets, deltaPill, fmt, labelFor, resolveCompare, resolveRange, series, startOfDay } from "./data";
 import type { CompareValue, MetricFormat } from "./data";
@@ -24,7 +24,24 @@ const API_METRICS: Record<string, { fetch: (token: string, params: BarChartParam
   ticket: { fetch: getAverageTicket, format: "currency", unit: 1 / 100 },
 };
 
-type Bar = { label: string; value: number; compare: number | null };
+/**
+ * Revenue splits each bar into the parts the API reports. Listed base-first —
+ * Sales sits at the bottom of the stack — and rendered top-down by reversing.
+ * Colors come from the Zappy design (`Home.dc.html`); Tax is deliberately the
+ * neutral gray so the three earning parts keep the brand hues.
+ */
+const REVENUE_PARTS: { color: string; hoverColor: string; id: keyof RevenueBreakdown; label: string }[] = [
+  { id: "sales", label: "Sales", color: "#FF5C1A", hoverColor: "#FF7B42" },
+  { id: "tax", label: "Tax", color: "#8A8B90", hoverColor: "#A2A3A8" },
+  { id: "tip", label: "Tips", color: "#FFD600", hoverColor: "#FFE24D" },
+  { id: "deliveryFee", label: "Delivery fee", color: "#FF9E6B", hoverColor: "#FFB58C" },
+];
+
+type Segment = { color: string; hoverColor: string; id: string; label: string; value: number };
+
+const nonEmpty = (segments: Segment[]): Segment[] | null => (segments.length > 0 ? segments : null);
+type PartTotal = { color: string; id: string; label: string; share: number; total: number };
+type Bar = { label: string; value: number; compare: number | null; segments: Segment[] | null };
 type ChartModel = {
   bars: Bar[];
   total: number;
@@ -35,6 +52,8 @@ type ChartModel = {
   goodUp: boolean;
   hasCompare: boolean;
   labelStep: number;
+  /** Per-part totals for the legend summary — revenue only, null for every other metric. */
+  parts: PartTotal[] | null;
 };
 
 function dayStartISO(d: Date): string {
@@ -122,9 +141,31 @@ export function MetricSection() {
     } else {
       const u = apiMeta.unit;
       const cmpVals = hasCompare ? data.buckets.map((b) => (b.compareValue ?? 0) * u) : [];
+      const revenue = hasRevenueBreakdown(data) ? data : null;
+      const grandTotal = data.summary.total * u;
       model = {
-        bars: data.buckets.map((b) => ({ label: b.label, value: b.value * u, compare: hasCompare ? (b.compareValue ?? 0) * u : null })),
-        total: data.summary.total * u,
+        bars: data.buckets.map((b, i) => {
+          const row = revenue?.buckets[i];
+          return {
+            label: b.label,
+            value: b.value * u,
+            compare: hasCompare ? (b.compareValue ?? 0) * u : null,
+            // Zero parts are dropped rather than floored to 1px — a day with no
+            // tips must not show a tip sliver. A day with no revenue at all keeps
+            // `null` so it falls back to the plain 2px stub like every other metric.
+            segments: row ? nonEmpty(REVENUE_PARTS.map((p) => ({ ...p, value: row[p.id] * u })).filter((seg) => seg.value > 0)) : null,
+          };
+        }),
+        parts: revenue
+          ? REVENUE_PARTS.map((p) => ({
+              id: p.id,
+              label: p.label,
+              color: p.color,
+              total: revenue.summary[p.id] * u,
+              share: grandTotal > 0 ? (revenue.summary[p.id] * u) / grandTotal : 0,
+            }))
+          : null,
+        total: grandTotal,
         compareTotal: hasCompare && data.comparison ? data.comparison.total * u : null,
         deltaPct: hasCompare ? data.comparison?.deltaPercentage ?? null : null,
         max: Math.max(data.summary.maxBucketValue * u, ...cmpVals, 0) * 1.08 || 1,
@@ -142,7 +183,8 @@ export function MetricSection() {
     const total = agg(cur);
     const compareTotal = hasCompare ? agg(cmp) : null;
     model = {
-      bars: cur.map((v, i) => ({ label: labelFor(i, count, span, end), value: v, compare: hasCompare ? cmp[i] : null })),
+      bars: cur.map((v, i) => ({ label: labelFor(i, count, span, end), value: v, compare: hasCompare ? cmp[i] : null, segments: null })),
+      parts: null,
       total,
       compareTotal,
       deltaPct: hasCompare && compareTotal ? ((total - compareTotal) / compareTotal) * 100 : null,
@@ -225,7 +267,12 @@ export function MetricSection() {
                     <div key={i} onMouseEnter={() => setHover(i)} onMouseLeave={() => setHover(null)}
                       style={{ flex: 1, minWidth: 0, height: H, display: "flex", alignItems: "flex-end", justifyContent: "center", gap: 3, borderRadius: 4, background: hovered ? "rgba(255,255,255,0.04)" : "transparent" }}>
                       {model!.hasCompare && <div style={{ width: barW, maxWidth: "45%", height: ch, background: "#3D3E42", borderRadius: "3px 3px 0 0" }} />}
-                      <div style={{ width: barW, maxWidth: model!.hasCompare ? "45%" : "80%", height: h, background: hovered ? "#FF7B42" : "#FF5C1A", borderRadius: "3px 3px 0 0", transition: "background 120ms cubic-bezier(0.16,1,0.3,1)" }} />
+                      <div style={{ width: barW, maxWidth: model!.hasCompare ? "45%" : "80%", height: h, background: b.segments ? "transparent" : hovered ? "#FF7B42" : "#FF5C1A", borderRadius: "3px 3px 0 0", overflow: "hidden", display: b.segments ? "flex" : "block", flexDirection: "column", transition: "background 120ms cubic-bezier(0.16,1,0.3,1)" }}>
+                        {/* Reversed so the first part (Sales) lands at the base of the stack. */}
+                        {b.segments?.slice().reverse().map((seg) => (
+                          <div key={seg.id} style={{ height: Math.max(1, h * (seg.value / (b.value || 1))), background: hovered ? seg.hoverColor : seg.color, transition: "background 120ms cubic-bezier(0.16,1,0.3,1)" }} />
+                        ))}
+                      </div>
                     </div>
                   );
                 })}
@@ -241,9 +288,21 @@ export function MetricSection() {
               {hover != null && model.bars[hover] && (
                 <div style={{ position: "absolute", bottom: H + 12, left: ((hover + 0.5) / count) * 100 + "%", transform: "translateX(-50%)", background: "#0D0D0F", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, padding: "10px 12px", boxShadow: "0 8px 24px rgba(0,0,0,0.5)", pointerEvents: "none", whiteSpace: "nowrap", zIndex: 10 }}>
                   <div style={{ fontSize: 10.5, color: "#9B9B9B", fontFamily: "var(--font-mono)", marginBottom: 6 }}>{model.bars[hover].label || "Day " + (hover + 1)}</div>
-                  <div style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 12.5, color: "#F1F1F2" }}>
-                    <span style={{ width: 7, height: 7, borderRadius: 2, background: "#FF5C1A" }} />{fmt(model.bars[hover].value, model.format)}
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 14, fontSize: 12.5, color: "#F1F1F2" }}>
+                    <span style={{ display: "flex", alignItems: "center", gap: 7 }}>
+                      <span style={{ width: 7, height: 7, borderRadius: 2, background: "#FF5C1A" }} />
+                      {model.bars[hover].segments ? "Total revenue" : metric.label}
+                    </span>
+                    <span style={{ fontFamily: "var(--font-mono)" }}>{fmt(model.bars[hover].value, model.format)}</span>
                   </div>
+                  {model.bars[hover].segments?.map((seg) => (
+                    <div key={seg.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 14, fontSize: 11.5, color: "#B4B5BA", marginTop: 4 }}>
+                      <span style={{ display: "flex", alignItems: "center", gap: 7 }}>
+                        <span style={{ width: 7, height: 7, borderRadius: 2, background: seg.color }} />{seg.label}
+                      </span>
+                      <span style={{ fontFamily: "var(--font-mono)", color: "#F1F1F2" }}>{fmt(seg.value, model!.format)}</span>
+                    </div>
+                  ))}
                   {model.hasCompare && model.bars[hover].compare != null && (
                     <div style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 11.5, color: "#9A9BA1", marginTop: 4 }}>
                       <span style={{ width: 7, height: 7, borderRadius: 2, background: "#3D3E42" }} />{fmt(model.bars[hover].compare ?? 0, model.format) + " · " + rc.label}
@@ -254,10 +313,21 @@ export function MetricSection() {
             </div>
           </div>
 
-          <div style={{ display: "flex", alignItems: "center", gap: 18, marginTop: 16, paddingLeft: 68 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 12.5, color: "#E8E8E8" }}>
-              <span style={{ width: 8, height: 8, borderRadius: 2, background: "#FF5C1A" }} />{range.label}
-            </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 18, flexWrap: "wrap", marginTop: 16, paddingLeft: 68 }}>
+            {model.parts ? (
+              model.parts.map((part) => (
+                <div key={part.id} style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 12.5, color: "#E8E8E8" }}>
+                  <span style={{ width: 8, height: 8, borderRadius: 2, background: part.color }} />{part.label}
+                  <span style={{ fontFamily: "var(--font-mono)", fontSize: 11.5, color: "#9B9B9B" }}>
+                    {fmt(part.total, model!.format)} · {(part.share * 100).toFixed(1)}%
+                  </span>
+                </div>
+              ))
+            ) : (
+              <div style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 12.5, color: "#E8E8E8" }}>
+                <span style={{ width: 8, height: 8, borderRadius: 2, background: "#FF5C1A" }} />{range.label}
+              </div>
+            )}
             {model.hasCompare && (
               <div style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 11.5, color: "#9B9B9B" }}>
                 <span style={{ width: 8, height: 8, borderRadius: 2, background: "#3D3E42" }} />{rc.label}

@@ -15,8 +15,12 @@ export type OrderQuantityBucketPoint = AnalyticsBucketPointBase & {
 };
 
 export type RevenueBucketPoint = AnalyticsBucketPointBase & {
+  deliveryFee: number;
   orders: number;
   sales: number;
+  tax: number;
+  tip: number;
+  total: number;
 };
 
 export type NewCustomersBucketPoint = AnalyticsBucketPointBase & {

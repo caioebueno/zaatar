@@ -232,6 +232,15 @@ export const getProductsFresh = async (
                   },
                   take: 1,
                 },
+                modifierGroups: {
+                  include: {
+                    items: {
+                      include: {
+                        photo: true,
+                      },
+                    },
+                  },
+                },
               },
             },
           },
@@ -414,32 +423,10 @@ export const getProductsFresh = async (
     comboProductsByComboId.set(row.comboId, current);
   }
 
-  type LoadedProduct = (typeof prismaProducts)[number];
+  type LoadedModifierGroup = (typeof prismaProducts)[number]["modifierGroups"][number];
 
-  const mapLoadedProduct = (
-    product: LoadedProduct,
-    categoryIndex?: number | null,
-  ): TProduct => {
-    const directComboProducts = comboProductsByComboId.get(product.id) ?? [];
-
-    return {
-    visible:
-      visibleByProductId.get(product.id) ??
-      (product as typeof product & { visible?: boolean }).visible ??
-      true,
-    id: product.id,
-    itemType: product.itemType,
-    name: product.name,
-    translations: product.translations as {
-      [key: string]: {
-        [key: string]: string;
-      };
-    },
-    description: product.description || undefined,
-    price: product.price || undefined,
-    categoryIndex: categoryIndex ?? undefined,
-    comparedAtPrice: product.comparedAtPrice || undefined,
-    modifierGroups: product.modifierGroups.map((item) => {
+  const mapModifierGroups = (modifierGroups: LoadedModifierGroup[]) =>
+    modifierGroups.map((item) => {
       const modifierGroupTranslations = modifierGroupTranslationsById.get(item.id);
 
       return {
@@ -488,7 +475,34 @@ export const getProductsFresh = async (
           };
         }),
       };
-    }),
+    });
+
+  type LoadedProduct = (typeof prismaProducts)[number];
+
+  const mapLoadedProduct = (
+    product: LoadedProduct,
+    categoryIndex?: number | null,
+  ): TProduct => {
+    const directComboProducts = comboProductsByComboId.get(product.id) ?? [];
+
+    return {
+    visible:
+      visibleByProductId.get(product.id) ??
+      (product as typeof product & { visible?: boolean }).visible ??
+      true,
+    id: product.id,
+    itemType: product.itemType,
+    name: product.name,
+    translations: product.translations as {
+      [key: string]: {
+        [key: string]: string;
+      };
+    },
+    description: product.description || undefined,
+    price: product.price || undefined,
+    categoryIndex: categoryIndex ?? undefined,
+    comparedAtPrice: product.comparedAtPrice || undefined,
+    modifierGroups: mapModifierGroups(product.modifierGroups),
     photos: product.photos?.map((photo) => ({
       id: photo.id,
       url: photo.url,
@@ -524,6 +538,7 @@ export const getProductsFresh = async (
         productPhotoUrl: option.product.photos[0]?.url,
         extraPrice: option.extraPrice,
         sortIndex: option.sortIndex,
+        modifierGroups: mapModifierGroups(option.product.modifierGroups),
       })),
     })),
     products: directComboProducts.map((directProduct) => ({

@@ -4,6 +4,7 @@ import TProgressiveDiscount, {
   TProgressiveDiscountStep,
 } from "../src/types/progressiveDiscount";
 import TProduct from "../src/types/product";
+import { calculateComboSelectionsUnitPrice } from "./comboSelectionPricing";
 
 type TResult = {
   fullPrice: number;
@@ -43,41 +44,11 @@ export function calculateProductPriceWithProgressiveDiscount(
     );
   };
 
-  const getComboSelectionUnitPrice = (product: TProduct, cartItem?: TCartItem) => {
-    if (!cartItem?.comboSelections?.length || !product.comboSlots?.length) {
-      return 0;
-    }
-
-    const slotOptionExtraPriceByKey = new Map<string, number>();
-
-    for (const slot of product.comboSlots) {
-      for (const option of slot.options) {
-        slotOptionExtraPriceByKey.set(
-          `${slot.id}:${option.productId}`,
-          option.extraPrice,
-        );
-      }
-    }
-
-    return cartItem.comboSelections.reduce((sum, selection) => {
-      const key = `${selection.slotId}:${selection.optionProductId}`;
-      const optionExtraPrice = slotOptionExtraPriceByKey.get(key);
-      const resolvedExtraPrice =
-        typeof optionExtraPrice === "number"
-          ? optionExtraPrice
-          : typeof selection.extraPrice === "number"
-            ? selection.extraPrice
-            : 0;
-      const quantity =
-        typeof selection.quantity === "number" &&
-        Number.isInteger(selection.quantity) &&
-        selection.quantity > 0
-          ? selection.quantity
-          : 1;
-
-      return sum + resolvedExtraPrice * quantity;
-    }, 0);
-  };
+  const getComboSelectionUnitPrice = (product: TProduct, cartItem?: TCartItem) =>
+    calculateComboSelectionsUnitPrice(
+      product.comboSlots,
+      cartItem?.comboSelections,
+    );
 
   const productMap = new Map<string, TProduct>();
 

@@ -225,7 +225,7 @@ const buildSelectedComboGroupsFromCartItem = (
     .map((slot) => {
       const selectedItems = cartItem.comboSelections
         ?.filter((selection) => selection.slotId === slot.id && selection.quantity > 0)
-        .map((selection) => {
+        .map((selection, selectionIndex) => {
           const option = slot.options.find(
             (slotOption) => slotOption.productId === selection.optionProductId,
           );
@@ -244,13 +244,40 @@ const buildSelectedComboGroupsFromCartItem = (
               ? selection.quantity
               : 1;
 
+          // Fold the seat's modifiers into its label and price, so each seat
+          // stays one line in the summary.
+          const selectedModifierItems = (option?.modifierGroups ?? []).flatMap(
+            (modifierGroup) =>
+              modifierGroup.items.filter((modifierItem) =>
+                (selection.modifiers ?? []).some(
+                  (modifier) =>
+                    modifier.modifierId === modifierGroup.id &&
+                    modifier.modifierItemId === modifierItem.id,
+                ),
+              ),
+          );
+          const modifiersPrice = selectedModifierItems.reduce(
+            (sum, modifierItem) => sum + modifierItem.price,
+            0,
+          );
+          const modifierLabels = selectedModifierItems.map((modifierItem) =>
+            resolveModifierItemTitle(modifierItem, lg),
+          );
+
+          const quantityLabel =
+            normalizedQuantity > 1
+              ? `${optionLabel} x${normalizedQuantity}`
+              : optionLabel;
+
           return {
-            id: `${selection.slotId}:${selection.optionProductId}`,
+            id: `${selection.slotId}:${selection.optionProductId}:${
+              selection.seatIndex ?? selectionIndex
+            }`,
             title:
-              normalizedQuantity > 1
-                ? `${optionLabel} x${normalizedQuantity}`
-                : optionLabel,
-            price: optionPrice * normalizedQuantity,
+              modifierLabels.length > 0
+                ? `${quantityLabel} (${modifierLabels.join(", ")})`
+                : quantityLabel,
+            price: (optionPrice + modifiersPrice) * normalizedQuantity,
           };
         })
         .filter((item): item is TSummaryModifierItem => Boolean(item));

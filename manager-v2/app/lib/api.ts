@@ -835,6 +835,92 @@ export type BarChartBucket = {
   deltaPercentage?: number | null;
 };
 
+// ── Progressive discount (`/progressive-discount`) ──────────────────────────
+// The API stores one ladder: spend thresholds that unlock a % discount or a gift.
+// `amount` is in CENTS — the storefront compares it against the cart total built
+// from product prices, which are cents (`web/utils/calculatePrice.ts`). The
+// manager edits dollars, so convert at the boundary.
+
+export type ProgressiveDiscountStepType = "GIFT" | "PERCENTAGEDISCOUNT";
+
+export type ProgressiveDiscountPrize = {
+  createdAt: string;
+  id: string;
+  imageUrl: string | null;
+  name: string;
+  products: {
+    comparedAtPrice: number | null;
+    id: string;
+    name: string;
+    photos: { id: string; url: string }[];
+    price: number | null;
+  }[];
+  progressiveDiscountStepId: string;
+  quantity: number;
+  translations?: Record<string, unknown>;
+};
+
+export type ProgressiveDiscountStep = {
+  amount: number;
+  discount: number | null;
+  id: string;
+  prizes: ProgressiveDiscountPrize[];
+  type: ProgressiveDiscountStepType;
+};
+
+export type ProgressiveDiscount = {
+  completed: boolean;
+  createdAt: string;
+  id: string;
+  steps: ProgressiveDiscountStep[];
+};
+
+/** Write shape — note the API rejects a `discount` on GIFT steps and requires integers. */
+export type ProgressiveDiscountStepInput = {
+  amount: number;
+  discount?: number | null;
+  type: ProgressiveDiscountStepType;
+};
+
+/** GET /progressive-discount — the running ladder, or null when none exists yet. */
+export function getProgressiveDiscount(token: string, businessId?: string | null): Promise<ProgressiveDiscount | null> {
+  return authGet<ProgressiveDiscount | null>("/progressive-discount", token, businessId);
+}
+
+/**
+ * GET /progressive-discount/all — every ladder, newest first. The storefront only
+ * ever sees the active one (`getProgressiveDiscount`); this is the manager's view.
+ */
+export function listProgressiveDiscounts(token: string, businessId?: string | null): Promise<ProgressiveDiscount[]> {
+  return authGet<ProgressiveDiscount[]>("/progressive-discount/all", token, businessId);
+}
+
+export function createProgressiveDiscount(
+  token: string,
+  body: { completed?: boolean; steps: ProgressiveDiscountStepInput[] },
+  businessId?: string | null,
+): Promise<ProgressiveDiscount> {
+  return authJson<ProgressiveDiscount>("POST", "/progressive-discount", token, businessId, body);
+}
+
+/**
+ * PATCH /progressive-discount/:id. Sending `steps` makes the API delete and
+ * recreate every step — and prizes cascade off steps, so a step edit destroys the
+ * ladder's prizes. Send `completed` alone when only the state changes.
+ */
+export function updateProgressiveDiscount(
+  token: string,
+  id: string,
+  body: { completed?: boolean; steps?: ProgressiveDiscountStepInput[] },
+  businessId?: string | null,
+): Promise<ProgressiveDiscount> {
+  return authJson<ProgressiveDiscount>("PATCH", `/progressive-discount/${encodeURIComponent(id)}`, token, businessId, body);
+}
+
+export function deleteProgressiveDiscount(token: string, id: string, businessId?: string | null): Promise<void> {
+  return authJson<void>("DELETE", `/progressive-discount/${encodeURIComponent(id)}`, token, businessId);
+}
+
 /** Shared bar-chart analytics shape (order-quantity uses counts; revenue uses cents). */
 export type BarChartAnalytics = {
   metric: string;
@@ -852,6 +938,28 @@ export type BarChartAnalytics = {
   summary: { total: number; averagePerBucket: number; maxBucketValue: number };
   buckets: BarChartBucket[];
 };
+
+/**
+ * Revenue is the one metric the API breaks down: every bucket (and the summary)
+ * carries the parts that make up `total`, in cents — `total` is exactly
+ * `sales + tax + tip + deliveryFee`, so they stack without normalizing.
+ */
+export type RevenueBreakdown = {
+  deliveryFee: number;
+  sales: number;
+  tax: number;
+  tip: number;
+};
+
+export type RevenueAnalytics = Omit<BarChartAnalytics, "buckets" | "summary"> & {
+  buckets: (BarChartBucket & RevenueBreakdown & { total: number })[];
+  summary: BarChartAnalytics["summary"] & RevenueBreakdown;
+};
+
+/** True when the payload carries the revenue breakdown (an older API deploy may not). */
+export function hasRevenueBreakdown(data: BarChartAnalytics): data is RevenueAnalytics {
+  return data.metric === "revenue" && "sales" in data.summary;
+}
 
 export type BarChartParams = {
   startDate: string;
@@ -876,8 +984,8 @@ export function getOrderQuantity(token: string, params: BarChartParams): Promise
 }
 
 /** GET /v1/analytics/revenue — bar-chart-ready daily revenue (in cents) by day. */
-export function getRevenue(token: string, params: BarChartParams): Promise<BarChartAnalytics> {
-  return authGet<BarChartAnalytics>(`/v1/analytics/revenue?${barChartQuery(params)}`, token, params.businessId);
+export function getRevenue(token: string, params: BarChartParams): Promise<RevenueAnalytics> {
+  return authGet<RevenueAnalytics>(`/v1/analytics/revenue?${barChartQuery(params)}`, token, params.businessId);
 }
 
 /** GET /v1/analytics/new-customers — bar-chart-ready daily new-customer counts by day. */

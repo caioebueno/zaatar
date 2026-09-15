@@ -54,16 +54,12 @@ export class UpdateDispatchUseCase {
       queueIndex,
     } satisfies UpdateDispatchStatusInput);
 
-    if (
-      dispatched === true &&
-      updatedDispatch.dispatchAt &&
-      this.outForDeliveryNotifier
-    ) {
+    if (updatedDispatch.dispatchAt && this.outForDeliveryNotifier) {
       void this.outForDeliveryNotifier
         .sendForDispatch(updatedDispatch)
         .catch((error: unknown) => {
           console.error(
-            "Failed to send out_for_delivery WhatsApp notifications:",
+            `Failed to send dispatch WhatsApp notification for dispatch=${updatedDispatch.id}:`,
             error,
           );
         });

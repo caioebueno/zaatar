@@ -130,8 +130,29 @@ export class NativeCatalogController implements HttpController {
       return bucketUploadRoute.POST(nextRequest);
     }
 
+    if (request.method === "GET" && pathname === "/progressive-discount/all") {
+      return progressiveDiscountRoute.LIST();
+    }
+
     if (request.method === "GET" && pathname === "/progressive-discount") {
       return progressiveDiscountRoute.GET();
+    }
+
+    if (request.method === "POST" && pathname === "/progressive-discount") {
+      return progressiveDiscountRoute.POST(nextRequest);
+    }
+
+    if (request.method === "PATCH" && pathname.startsWith("/progressive-discount/")) {
+      return progressiveDiscountRoute.PATCH(
+        nextRequest,
+        decodeURIComponent(pathname.slice("/progressive-discount/".length)),
+      );
+    }
+
+    if (request.method === "DELETE" && pathname.startsWith("/progressive-discount/")) {
+      return progressiveDiscountRoute.DELETE(
+        decodeURIComponent(pathname.slice("/progressive-discount/".length)),
+      );
     }
 
     if (request.method === "GET" && pathname === "/pos/exclusive-promotions") {

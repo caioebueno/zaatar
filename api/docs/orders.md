@@ -277,16 +277,14 @@ Auth: manager access token required.
 
 Creates an order for POS/manager flows and returns the created order with products, modifiers, customer, address, and dispatch relation when present.
 
-After successful creation, the API also attempts to send an order-confirmation WhatsApp message via Chatwoot when:
+After successful creation, the API enqueues an order-confirmation WhatsApp template job for the queue worker when:
 
 - the order has a customer with a phone number
 - the order is attached to a branch with `chatwootAccountId` and `chatwootSourceId` configured
-- `CHATWOOT_API_ACCESS_TOKEN` is configured
-- `DISABLE_WHATSAPP_MESSAGING` is not enabled
 
-This notification is non-blocking: order creation still returns `201` even if message send fails.
+The job is written in the same database transaction as the order, so the worker only sees it after the order commits. Order creation still returns `201` if the worker later cannot send the message.
 
-Order confirmation is sent as a Chatwoot WhatsApp template (`template_params`) using `order_confirmation` by default, with 4 body variables:
+The worker sends the Chatwoot WhatsApp template (`template_params`) using `order_confirmation` by default, with 4 body variables:
 
 1. Customer name
 2. Order number

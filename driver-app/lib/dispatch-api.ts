@@ -51,7 +51,9 @@ export type DispatchOrder = {
       prizeName: string;
       quantity: number;
       selectedProductCounts: Array<{ productId: string; quantity: number }>;
-      availableProducts: Array<{ id: string; name: string }>;
+      // `alertDriver` is resolved from the live catalog by the API (the stored
+      // snapshot itself has no such flag).
+      availableProducts: Array<{ id: string; name: string; alertDriver?: boolean }>;
     } | null;
   } | null;
   // Loyalty rewards redeemed on this order. FREE_PRODUCT rewards add a free item

@@ -26,6 +26,10 @@ type TSelectedComboSlotOption = {
   extraPrice?: number;
   slotName?: string;
   optionProductName?: string;
+  /** Which seat of the slot this selection fills (0-based). */
+  seatIndex?: number;
+  /** Modifiers chosen for this seat's option product. */
+  modifiers?: TSelectedModifier[];
 };
 
 type TCart = {
