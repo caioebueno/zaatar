@@ -16,7 +16,15 @@ export type CreatorDraft = {
   active: boolean;
 };
 
-export function ProductCreator({ initial, sections, onCancel, onSave }: { initial: CreatorDraft; sections: string[]; onCancel: () => void; onSave: (c: CreatorDraft) => void }) {
+export function ProductCreator({ initial, sections, busy = false, error = "", onCancel, onSave }: {
+  initial: CreatorDraft;
+  sections: string[];
+  /** True while `POST /products` is in flight. */
+  busy?: boolean;
+  error?: string;
+  onCancel: () => void;
+  onSave: (c: CreatorDraft) => void;
+}) {
   const [names, setNames] = useState<I18n>(initial.names);
   const [descriptions, setDescriptions] = useState<I18n>(initial.descriptions);
   const [type, setType] = useState<"single" | "combo">(initial.type);
@@ -30,7 +38,7 @@ export function ProductCreator({ initial, sections, onCancel, onSave }: { initia
   const canSave = (names.en || "").trim().length > 0;
   const money = (v: string) => (v ? (parseFloat(v.replace(/[^0-9.]/g, "")) || 0).toFixed(2) : "");
 
-  const save = () => canSave && onSave({ section, names, descriptions, type, price, comparedAt, active });
+  const save = () => canSave && !busy && onSave({ section, names, descriptions, type, price, comparedAt, active });
 
   return (
     <Drawer
@@ -41,9 +49,10 @@ export function ProductCreator({ initial, sections, onCancel, onSave }: { initia
       headerRight={<LangTabs langs={LANGUAGES} current={lang} onSelect={(l) => setLang(l as Lang)} />}
       footer={
         <>
+          {error && <span style={{ flex: 1, minWidth: 0, fontSize: 11.5, color: "#F87171" }}>{error}</span>}
           <CancelButton onClick={onCancel} />
-          <button type="button" onClick={save} style={primarySaveStyle(canSave)}>
-            Create product
+          <button type="button" onClick={save} style={{ ...primarySaveStyle(canSave && !busy), cursor: busy ? "default" : undefined }}>
+            {busy ? "Creating…" : "Create product"}
           </button>
         </>
       }

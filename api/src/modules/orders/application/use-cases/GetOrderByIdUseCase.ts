@@ -1,4 +1,5 @@
 import type {
+  OrderDetail,
   OrderPaymentSummary,
   OrdersRepository,
 } from "../ports/OrdersRepository.js";
@@ -17,13 +18,7 @@ export type GetOrderByIdOutput = {
   deliveryFeeCents: number;
   discountedSubtotalCents: number;
   id: string;
-  items: Array<{
-    lineTotalCents: number;
-    productId: string;
-    productName: string;
-    quantity: number;
-    unitAmountCents: number;
-  }>;
+  items: OrderDetail["items"];
   number: string | null;
   orderType: string;
   paymentMethod: string;

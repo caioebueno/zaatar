@@ -21,6 +21,20 @@ type ParsedOrderProductUpdate = {
   quantity?: number;
   comments?: string | null;
   selectedModifierGroupItemIds?: string[];
+  comboSelections?: ParsedComboSelection[];
+};
+
+type ParsedComboSelection = {
+  modifiers: Array<{ modifierId: string; modifierItemId: string }>;
+  optionProductId: string;
+  quantity: number;
+  slotId: string;
+};
+
+type ParsedOrderAdjustment = {
+  amount: number;
+  description: string;
+  type: "DISCOUNT" | "EXTRA_CHARGE";
 };
 
 type ParsedOrderProductDelete = {
@@ -80,6 +94,7 @@ export class ManageOrdersController implements HttpController {
       const deliveryAddressId = parseOptionalNullableId(body.addressId, "addressId");
       const orderIntentId = parseOptionalNullableId(body.orderIntentId, "orderIntentId");
       const tipAmount = parseOptionalInt(body.tipAmount, "tipAmount");
+      const adjustments = parseOrderAdjustments(body.adjustments, "adjustments") ?? [];
       const branchId = await resolveBranchId({
         explicitBranchId: parseOptionalNullableId(body.branchId, "branchId"),
         businessId: request.auth?.businessId ?? null,
@@ -110,7 +125,14 @@ export class ManageOrdersController implements HttpController {
         }
       }
 
-      const productIds = Array.from(new Set(cart.items.map((item) => item.productId)));
+      const productIds = Array.from(
+        new Set(
+          cart.items.flatMap((item) => [
+            item.productId,
+            ...item.comboSelections.map((selection) => selection.optionProductId),
+          ]),
+        ),
+      );
       const products = await prisma.product.findMany({
         where: {
           id: {
@@ -149,6 +171,7 @@ export class ManageOrdersController implements HttpController {
       const productById = new Map(products.map((product) => [product.id, product]));
       const createdOrderProducts: Array<{
         amount: number;
+        comboProductId: string | null;
         comments: string | null;
         fullAmount: number;
         id: string;
@@ -196,7 +219,30 @@ export class ManageOrdersController implements HttpController {
             throw invalidField("cart.items.comboSelections");
           }
 
-          return sum + extraPrice * selection.quantity;
+          const selectedProduct = productById.get(selection.optionProductId);
+          if (!selectedProduct) {
+            throw invalidField("cart.items.comboSelections.optionProductId");
+          }
+          const selectedModifierPriceById = new Map<string, number>();
+          for (const group of selectedProduct.modifierGroups) {
+            for (const modifierItem of group.items) {
+              selectedModifierPriceById.set(modifierItem.id, modifierItem.price);
+            }
+          }
+          const selectedModifiersAmount = selection.modifiers.reduce(
+            (modifierSum, modifier) => {
+              const modifierPrice = selectedModifierPriceById.get(
+                modifier.modifierItemId,
+              );
+              if (modifierPrice === undefined) {
+                throw invalidField("cart.items.comboSelections.modifiers");
+              }
+              return modifierSum + modifierPrice;
+            },
+            0,
+          );
+
+          return sum + (extraPrice + selectedModifiersAmount) * selection.quantity;
         }, 0);
 
         const baseAmount = product.price ?? 0;
@@ -205,15 +251,33 @@ export class ManageOrdersController implements HttpController {
         const fullAmount = baseFullAmount + modifiersAmount + comboSelectionAmount;
         orderAmount += amount * item.quantity;
 
+        const comboOrderProductId = randomUUID();
         createdOrderProducts.push({
-          id: randomUUID(),
+          id: comboOrderProductId,
           productId: item.productId,
           quantity: item.quantity,
           comments: item.description ?? null,
           amount,
           fullAmount,
+          comboProductId: null,
           modifierGroupItemIds,
         });
+
+        for (const selection of item.comboSelections) {
+          if (selection.quantity <= 0) continue;
+          createdOrderProducts.push({
+            id: randomUUID(),
+            productId: selection.optionProductId,
+            quantity: item.quantity * selection.quantity,
+            comments: null,
+            amount: 0,
+            fullAmount: 0,
+            comboProductId: comboOrderProductId,
+            modifierGroupItemIds: selection.modifiers.map(
+              (modifier) => modifier.modifierItemId,
+            ),
+          });
+        }
       }
 
       const orderId = randomUUID();
@@ -240,6 +304,18 @@ export class ManageOrdersController implements HttpController {
           data: orderCreateData,
         });
 
+        if (adjustments.length > 0) {
+          await tx.orderAdjustment.createMany({
+            data: adjustments.map((adjustment) => ({
+              id: randomUUID(),
+              orderId,
+              type: adjustment.type,
+              amount: adjustment.amount,
+              description: adjustment.description,
+            })),
+          });
+        }
+
         if (branchId !== undefined) {
           await tx.$executeRaw`
             UPDATE "Order"
@@ -264,6 +340,7 @@ export class ManageOrdersController implements HttpController {
               comments: item.comments,
               amount: item.amount,
               fullAmount: item.fullAmount,
+              comboProductId: item.comboProductId,
               ...(item.modifierGroupItemIds.length > 0
                 ? {
                     modifierGroupItems: {
@@ -396,6 +473,7 @@ export class ManageOrdersController implements HttpController {
       }
 
       const orderProductChanges = parseOrderProductUpdates(body.orderProducts) || [];
+      const parsedAdjustments = parseOrderAdjustments(body.adjustments, "adjustments");
       const parsedPaidAt = parseOptionalDate(body.paidAt, "paidAt");
       const parsedDeliveredAt = parseOptionalDate(body.deliveredAt, "deliveredAt");
       const parsedPaymentMethod =
@@ -451,6 +529,7 @@ export class ManageOrdersController implements HttpController {
         parsedOrderType === undefined &&
         parsedCustomerId === undefined &&
         parsedAddressId === undefined &&
+        parsedAdjustments === undefined &&
         orderProductChanges.length === 0
       ) {
         throw invalidField("body");
@@ -523,57 +602,32 @@ export class ManageOrdersController implements HttpController {
           `;
         }
 
-        const addedOrderProducts = await applyOrderProductChanges(
+        if (parsedAdjustments !== undefined) {
+          await tx.orderAdjustment.deleteMany({ where: { orderId } });
+          if (parsedAdjustments.length > 0) {
+            await tx.orderAdjustment.createMany({
+              data: parsedAdjustments.map((adjustment) => ({
+                id: randomUUID(),
+                orderId,
+                type: adjustment.type,
+                amount: adjustment.amount,
+                description: adjustment.description,
+              })),
+            });
+          }
+        }
+
+        await applyOrderProductChanges(
           tx,
           orderId,
           orderProductChanges,
         );
 
-        if (addedOrderProducts.length > 0) {
-          const productIds = Array.from(
-            new Set(addedOrderProducts.map((item) => item.productId)),
-          );
-          const products = await tx.product.findMany({
-            where: {
-              id: {
-                in: productIds,
-              },
-            },
-            select: {
-              id: true,
-              itemType: true,
-            },
+        if (orderProductChanges.length > 0) {
+          await rebuildPreparationTasksForOrderTx(tx, {
+            orderId,
+            orderCreatedAt: existingOrder.createdAt,
           });
-
-          const productById = new Map(
-            products.map((product) => [
-              product.id,
-              {
-                id: product.id,
-                itemType: product.itemType as ProductItemType,
-              },
-            ]),
-          );
-          const preparationStepDefinitions =
-            await getPreparationStepDefinitions(tx);
-
-          await createPreparationStepCategoriesForOrderTx(
-            tx,
-            {
-              orderId,
-              orderCreatedAt: existingOrder.createdAt,
-              cartItems: addedOrderProducts.map((item) => ({
-                cartId: randomUUID(),
-                productId: item.productId,
-                quantity: item.quantity,
-                modifiers: [],
-                comboSelections: [],
-              })),
-              orderProducts: addedOrderProducts,
-              productById,
-            },
-            preparationStepDefinitions,
-          );
         }
       });
 
@@ -599,6 +653,7 @@ type ParsedCart = {
   items: Array<{
     cartId: string;
     comboSelections: Array<{
+      modifiers: Array<{ modifierId: string; modifierItemId: string }>;
       optionProductId: string;
       quantity: number;
       slotId: string;
@@ -701,6 +756,7 @@ function parseCart(value: unknown): ParsedCart {
 
     const comboSelectionsRaw = row.comboSelections;
     let comboSelections: Array<{
+      modifiers: Array<{ modifierId: string; modifierItemId: string }>;
       optionProductId: string;
       quantity: number;
       slotId: string;
@@ -718,6 +774,26 @@ function parseCart(value: unknown): ParsedCart {
           throw invalidField("cart.items.comboSelections");
         }
         const parsed = selection as Record<string, unknown>;
+        const selectionModifiersRaw = parsed.modifiers ?? [];
+        if (!Array.isArray(selectionModifiersRaw)) {
+          throw invalidField("cart.items.comboSelections.modifiers");
+        }
+        const modifiers = selectionModifiersRaw.map((modifier) => {
+          if (!modifier || typeof modifier !== "object" || Array.isArray(modifier)) {
+            throw invalidField("cart.items.comboSelections.modifiers");
+          }
+          const parsedModifier = modifier as Record<string, unknown>;
+          return {
+            modifierId: parseRequiredString(
+              parsedModifier.modifierId,
+              "cart.items.comboSelections.modifiers.modifierId",
+            ),
+            modifierItemId: parseRequiredString(
+              parsedModifier.modifierItemId,
+              "cart.items.comboSelections.modifiers.modifierItemId",
+            ),
+          };
+        });
         return {
           slotId: parseRequiredString(
             parsed.slotId,
@@ -731,6 +807,7 @@ function parseCart(value: unknown): ParsedCart {
             parsed.quantity,
             "cart.items.comboSelections.quantity",
           ),
+          modifiers,
         };
       });
     }
@@ -785,6 +862,10 @@ function parseOrderProductUpdates(value: unknown): ParsedOrderProductChange[] | 
             row.selectedModifierGroupItemIds,
             "orderProducts.selectedModifierGroupItemIds",
           );
+    const comboSelections =
+      row.comboSelections === undefined
+        ? undefined
+        : parseOrderProductComboSelections(row.comboSelections);
 
     if (hasId) {
       const id = parseRequiredString(row.id, "orderProducts.id");
@@ -795,7 +876,8 @@ function parseOrderProductUpdates(value: unknown): ParsedOrderProductChange[] | 
       if (
         quantity === undefined &&
         comments === undefined &&
-        selectedModifierGroupItemIds === undefined
+        selectedModifierGroupItemIds === undefined &&
+        comboSelections === undefined
       ) {
         throw invalidField("orderProducts");
       }
@@ -808,6 +890,7 @@ function parseOrderProductUpdates(value: unknown): ParsedOrderProductChange[] | 
         ...(selectedModifierGroupItemIds !== undefined
           ? { selectedModifierGroupItemIds }
           : {}),
+        ...(comboSelections !== undefined ? { comboSelections } : {}),
       };
     }
 
@@ -821,6 +904,76 @@ function parseOrderProductUpdates(value: unknown): ParsedOrderProductChange[] | 
       quantity: quantity ?? 1,
       comments,
       selectedModifierGroupItemIds: selectedModifierGroupItemIds ?? [],
+    };
+  });
+}
+
+function parseOrderAdjustments(
+  value: unknown,
+  field: string,
+): ParsedOrderAdjustment[] | undefined {
+  if (value === undefined) return undefined;
+  if (!Array.isArray(value)) throw invalidField(field);
+
+  return value.map((adjustment) => {
+    if (!adjustment || typeof adjustment !== "object" || Array.isArray(adjustment)) {
+      throw invalidField(field);
+    }
+    const row = adjustment as Record<string, unknown>;
+    const type = parseRequiredString(row.type, `${field}.type`);
+    if (type !== "DISCOUNT" && type !== "EXTRA_CHARGE") {
+      throw invalidField(`${field}.type`);
+    }
+    return {
+      type,
+      amount: parseRequiredInt(row.amount, `${field}.amount`),
+      description: parseRequiredString(row.description, `${field}.description`),
+    };
+  });
+}
+
+function parseOrderProductComboSelections(value: unknown): ParsedComboSelection[] {
+  if (!Array.isArray(value)) {
+    throw invalidField("orderProducts.comboSelections");
+  }
+
+  return value.map((selection) => {
+    if (!selection || typeof selection !== "object" || Array.isArray(selection)) {
+      throw invalidField("orderProducts.comboSelections");
+    }
+
+    const row = selection as Record<string, unknown>;
+    const modifiersRaw = row.modifiers ?? [];
+    if (!Array.isArray(modifiersRaw)) {
+      throw invalidField("orderProducts.comboSelections.modifiers");
+    }
+
+    return {
+      slotId: parseRequiredString(row.slotId, "orderProducts.comboSelections.slotId"),
+      optionProductId: parseRequiredString(
+        row.optionProductId,
+        "orderProducts.comboSelections.optionProductId",
+      ),
+      quantity: parseRequiredInt(
+        row.quantity,
+        "orderProducts.comboSelections.quantity",
+      ),
+      modifiers: modifiersRaw.map((modifier) => {
+        if (!modifier || typeof modifier !== "object" || Array.isArray(modifier)) {
+          throw invalidField("orderProducts.comboSelections.modifiers");
+        }
+        const modifierRow = modifier as Record<string, unknown>;
+        return {
+          modifierId: parseRequiredString(
+            modifierRow.modifierId,
+            "orderProducts.comboSelections.modifiers.modifierId",
+          ),
+          modifierItemId: parseRequiredString(
+            modifierRow.modifierItemId,
+            "orderProducts.comboSelections.modifiers.modifierItemId",
+          ),
+        };
+      }),
     };
   });
 }
@@ -839,15 +992,33 @@ async function applyOrderProductChanges(
     .filter((item): item is ParsedOrderProductUpdate => item.kind === "update")
     .map((item) => item.id);
   const touchIds = Array.from(new Set([...deleteIds, ...updateIds]));
+  let existingOrderProductById = new Map<
+    string,
+    {
+      id: string;
+      productId: string;
+      quantity: number;
+      modifierGroupItems: Array<{ id: string; price: number }>;
+    }
+  >();
 
   if (touchIds.length > 0) {
     const existingRows = await tx.orderProducts.findMany({
       where: { orderId, id: { in: touchIds } },
-      select: { id: true },
+      select: {
+        id: true,
+        productId: true,
+        quantity: true,
+        modifierGroupItems: {
+          select: { id: true, price: true },
+        },
+      },
     });
     if (existingRows.length !== touchIds.length) {
       throw invalidField("orderProducts.id");
     }
+
+    existingOrderProductById = new Map(existingRows.map((row) => [row.id, row]));
   }
 
   const createChanges = changes.filter(
@@ -903,6 +1074,44 @@ async function applyOrderProductChanges(
   }
   const modifierPriceById = new Map(modifierRows.map((row) => [row.id, row.price]));
 
+  const comboUpdates = changes.filter(
+    (item): item is ParsedOrderProductUpdate & { comboSelections: ParsedComboSelection[] } =>
+      item.kind === "update" && item.comboSelections !== undefined,
+  );
+  const comboOptionProductIds = comboUpdates.flatMap((item) =>
+    item.comboSelections.map((selection) => selection.optionProductId),
+  );
+  const comboProductIds = comboUpdates.map((item) => {
+    const orderProduct = existingOrderProductById.get(item.id);
+    if (!orderProduct) throw invalidField("orderProducts.id");
+    return orderProduct.productId;
+  });
+  const comboDefinitionIds = Array.from(
+    new Set([...comboProductIds, ...comboOptionProductIds]),
+  );
+  const comboProducts = comboDefinitionIds.length
+    ? await tx.product.findMany({
+        where: { id: { in: comboDefinitionIds } },
+        include: {
+          modifierGroups: {
+            include: {
+              items: { select: { id: true, price: true } },
+            },
+          },
+          comboSlots: {
+            select: {
+              id: true,
+              options: { select: { productId: true, extraPrice: true } },
+            },
+          },
+        },
+      })
+    : [];
+  if (comboProducts.length !== comboDefinitionIds.length) {
+    throw invalidField("orderProducts.comboSelections.optionProductId");
+  }
+  const comboProductById = new Map(comboProducts.map((product) => [product.id, product]));
+
   for (const change of changes) {
     if (change.kind === "delete") {
       await tx.orderProducts.delete({ where: { id: change.id } });
@@ -921,6 +1130,100 @@ async function applyOrderProductChanges(
         data.modifierGroupItems = {
           set: change.selectedModifierGroupItemIds.map((id) => ({ id })),
         };
+      }
+
+      if (change.comboSelections !== undefined) {
+        const existingOrderProduct = existingOrderProductById.get(change.id);
+        if (!existingOrderProduct) {
+          throw invalidField("orderProducts.id");
+        }
+        const comboProduct = comboProductById.get(existingOrderProduct.productId);
+        if (!comboProduct || comboProduct.comboSlots.length === 0) {
+          throw invalidField("orderProducts.comboSelections");
+        }
+
+        const nextParentQuantity = change.quantity ?? existingOrderProduct.quantity;
+        let selectionsAmount = 0;
+        const selectedOrderProducts: Prisma.OrderProductsCreateManyInput[] = [];
+        for (const selection of change.comboSelections) {
+          const slot = comboProduct.comboSlots.find((item) => item.id === selection.slotId);
+          const option = slot?.options.find(
+            (item) => item.productId === selection.optionProductId,
+          );
+          if (!slot || !option) {
+            throw invalidField("orderProducts.comboSelections");
+          }
+
+          const selectedProduct = comboProductById.get(selection.optionProductId);
+          if (!selectedProduct) {
+            throw invalidField("orderProducts.comboSelections.optionProductId");
+          }
+          const selectedModifierPriceById = new Map<string, number>();
+          for (const group of selectedProduct.modifierGroups) {
+            for (const modifierItem of group.items) {
+              selectedModifierPriceById.set(modifierItem.id, modifierItem.price);
+            }
+          }
+          const selectedModifierIds = selection.modifiers.map(
+            (modifier) => modifier.modifierItemId,
+          );
+          const selectedModifiersAmount = selectedModifierIds.reduce((sum, id) => {
+            const price = selectedModifierPriceById.get(id);
+            if (price === undefined) {
+              throw invalidField("orderProducts.comboSelections.modifiers");
+            }
+            return sum + price;
+          }, 0);
+
+          selectionsAmount +=
+            (option.extraPrice + selectedModifiersAmount) * selection.quantity;
+          selectedOrderProducts.push({
+            id: randomUUID(),
+            orderId,
+            productId: selection.optionProductId,
+            quantity: nextParentQuantity * selection.quantity,
+            comments: null,
+            amount: 0,
+            fullAmount: 0,
+            comboProductId: change.id,
+          });
+        }
+
+        const parentModifierIds =
+          change.selectedModifierGroupItemIds ??
+          existingOrderProduct.modifierGroupItems.map((item) => item.id);
+        const existingParentModifierPriceById = new Map(
+          existingOrderProduct.modifierGroupItems.map((item) => [item.id, item.price]),
+        );
+        const parentModifierAmount = parentModifierIds.reduce((sum, id) => {
+          const price =
+            modifierPriceById.get(id) ?? existingParentModifierPriceById.get(id);
+          if (price === undefined) {
+            throw invalidField("orderProducts.selectedModifierGroupItemIds");
+          }
+          return sum + price;
+        }, 0);
+        data.amount = (comboProduct.price ?? 0) + parentModifierAmount + selectionsAmount;
+        data.fullAmount =
+          (comboProduct.comparedAtPrice ?? comboProduct.price ?? 0) +
+          parentModifierAmount +
+          selectionsAmount;
+
+        await tx.orderProducts.deleteMany({ where: { comboProductId: change.id } });
+        if (selectedOrderProducts.length > 0) {
+          await tx.orderProducts.createMany({ data: selectedOrderProducts });
+          for (let index = 0; index < selectedOrderProducts.length; index += 1) {
+            const modifierIds = change.comboSelections[index].modifiers.map(
+              (modifier) => modifier.modifierItemId,
+            );
+            if (modifierIds.length > 0) {
+              await tx.orderProducts.update({
+                where: { id: selectedOrderProducts[index].id },
+                data: { modifierGroupItems: { connect: modifierIds.map((id) => ({ id })) } },
+              });
+            }
+          }
+        }
       }
 
       await tx.orderProducts.update({
@@ -1069,10 +1372,19 @@ async function loadOrderWithRelations(orderId: string): Promise<unknown> {
     include: {
       customer: true,
       deliveryAddress: true,
+      adjustments: {
+        orderBy: { createdAt: "asc" },
+      },
       orderProducts: {
         include: {
           product: true,
           modifierGroupItems: true,
+          selectedProducts: {
+            include: {
+              product: true,
+              modifierGroupItems: true,
+            },
+          },
         },
       },
       dispatch: {
@@ -1092,6 +1404,12 @@ async function loadOrderWithRelations(orderId: string): Promise<unknown> {
     throw new Error("ORDER_NOT_FOUND");
   }
 
+  const adjustmentTotal = order.adjustments.reduce(
+    (sum, adjustment) =>
+      sum + (adjustment.type === "EXTRA_CHARGE" ? adjustment.amount : -adjustment.amount),
+    0,
+  );
+
   return {
     ...order,
     createdAt: order.createdAt.toISOString(),
@@ -1100,19 +1418,33 @@ async function loadOrderWithRelations(orderId: string): Promise<unknown> {
     deliveredAt: order.deliveredAt ? order.deliveredAt.toISOString() : null,
     payments: [
       {
-        amount: order.amount,
+        amount: Math.max(0, order.amount + adjustmentTotal),
         paidAt: order.paidAt ? order.paidAt.toISOString() : null,
         paymentType: order.paymentMethod,
       },
     ],
-    orderProducts: order.orderProducts.map((item) => ({
+    adjustments: order.adjustments.map((adjustment) => ({
+      ...adjustment,
+      createdAt: adjustment.createdAt.toISOString(),
+    })),
+    orderProducts: order.orderProducts
+      .filter((item) => item.comboProductId === null)
+      .map((item) => ({
       ...item,
       createdAt: item.createdAt.toISOString(),
       modifierGroupItems: item.modifierGroupItems.map((modifierItem) => ({
         ...modifierItem,
         createdAt: modifierItem.createdAt.toISOString(),
       })),
-    })),
+      selectedProducts: item.selectedProducts.map((selectedProduct) => ({
+        ...selectedProduct,
+        createdAt: selectedProduct.createdAt.toISOString(),
+        modifierGroupItems: selectedProduct.modifierGroupItems.map((modifierItem) => ({
+          ...modifierItem,
+          createdAt: modifierItem.createdAt.toISOString(),
+        })),
+      })),
+      })),
   };
 }
 
@@ -1215,13 +1547,93 @@ async function ensureDeliveryOrderHasDispatch(input: {
   });
 }
 
+async function rebuildPreparationTasksForOrderTx(
+  tx: Prisma.TransactionClient,
+  input: { orderId: string; orderCreatedAt: Date },
+): Promise<void> {
+  const orderProducts = await tx.orderProducts.findMany({
+    where: { orderId: input.orderId },
+    select: {
+      id: true,
+      productId: true,
+      quantity: true,
+      comments: true,
+      comboProductId: true,
+      modifierGroupItems: { select: { id: true } },
+    },
+  });
+
+  const productIds = Array.from(
+    new Set(orderProducts.map((item) => item.productId)),
+  );
+  const products = productIds.length
+    ? await tx.product.findMany({
+        where: { id: { in: productIds } },
+        select: { id: true, itemType: true },
+      })
+    : [];
+  const productById = new Map(
+    products.map((product) => [
+      product.id,
+      { id: product.id, itemType: product.itemType as ProductItemType },
+    ]),
+  );
+  const selectedComboParentIds = new Set(
+    orderProducts.flatMap((item) =>
+      item.comboProductId ? [item.comboProductId] : [],
+    ),
+  );
+
+  // Preparation tracks are derived data. Rebuilding from the final persisted
+  // order keeps quantities, comments, modifiers, and combo selections aligned.
+  await tx.preparationStepCategory.deleteMany({
+    where: { orderId: input.orderId },
+  });
+
+  if (orderProducts.length === 0) return;
+
+  await createPreparationStepCategoriesForOrderTx(
+    tx,
+    {
+      orderId: input.orderId,
+      orderCreatedAt: input.orderCreatedAt,
+      cartItems: orderProducts
+        .filter((item) => item.comboProductId === null)
+        .map((item) => ({
+          cartId: randomUUID(),
+          productId: item.productId,
+          quantity: item.quantity,
+          modifiers: [],
+          comboSelections: [],
+          hasPersistedComboSelections: selectedComboParentIds.has(item.id),
+        })),
+      orderProducts: orderProducts.map((item) => ({
+        comboProductId: item.comboProductId ?? undefined,
+        comments: item.comments,
+        productId: item.productId,
+        quantity: item.quantity,
+        selectedModifierGroupItemIds: item.modifierGroupItems.map(
+          (modifierItem) => modifierItem.id,
+        ),
+      })),
+      productById,
+    },
+    await getPreparationStepDefinitions(tx),
+  );
+}
+
 async function createPreparationStepCategoriesForOrderTx(
   tx: Prisma.TransactionClient,
   input: {
-    cartItems: ParsedCart["items"];
+    cartItems: Array<
+      ParsedCart["items"][number] & {
+        hasPersistedComboSelections?: boolean;
+      }
+    >;
     orderCreatedAt: Date;
     orderId: string;
     orderProducts: Array<{
+      comboProductId?: string;
       comments: string | null;
       productId: string;
       quantity: number;
@@ -1255,7 +1667,8 @@ async function createPreparationStepCategoriesForOrderTx(
         .filter((cartItem) => {
           const product = input.productById.get(cartItem.productId);
           return (
-            product?.itemType === "COMBO" &&
+              product?.itemType === "COMBO" &&
+            !cartItem.hasPersistedComboSelections &&
             (!Array.isArray(cartItem.comboSelections) ||
               cartItem.comboSelections.length === 0)
           );
@@ -1306,15 +1719,8 @@ async function createPreparationStepCategoriesForOrderTx(
     const parentQuantity = cartItem.quantity;
 
     if (Array.isArray(cartItem.comboSelections) && cartItem.comboSelections.length > 0) {
-      for (const selection of cartItem.comboSelections) {
-        if (selection.quantity <= 0) continue;
-
-        preparationOrderProducts.push({
-          productId: selection.optionProductId,
-          quantity: parentQuantity * selection.quantity,
-          selectedModifierGroupItemIds: [],
-        });
-      }
+      // Selected slot products are already persisted as zero-priced order lines,
+      // including their modifiers, and were copied into preparationOrderProducts above.
       continue;
     }
 

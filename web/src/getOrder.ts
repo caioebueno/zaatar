@@ -37,6 +37,23 @@ type OrderRow = {
 const toNumber = (value: number | bigint | null | undefined): number =>
   typeof value === "bigint" ? Number(value) : value ?? 0;
 
+/**
+ * Combo selections are persisted as separate, zero-priced order lines pointing
+ * at their combo through `comboProductId` (see `createOrder`). Nest them under
+ * that combo so the purchase summary shows one line per item bought, with its
+ * selections attached, instead of a run of loose $0.00 rows.
+ */
+function nestComboSelections<T extends { comboProductId?: string | null; id: string }>(
+  items: T[],
+): (T & { selectedProducts: T[] })[] {
+  return items
+    .filter((item) => !item.comboProductId)
+    .map((item) => ({
+      ...item,
+      selectedProducts: items.filter((child) => child.comboProductId === item.id),
+    }));
+}
+
 const getOrder = async (orderId: string): Promise<TOrder> => {
   const [order] = await prisma.$queryRaw<OrderRow[]>`
     SELECT
@@ -133,7 +150,21 @@ const getOrder = async (orderId: string): Promise<TOrder> => {
       orderId,
     },
     include: {
-      product: true,
+      // Combo parents need their slots (and each slot's option prices) so the
+      // summary can group the selected products the same way the cart does.
+      product: {
+        include: {
+          comboSlots: {
+            orderBy: { sortIndex: "asc" },
+            include: {
+              options: {
+                orderBy: { sortIndex: "asc" },
+                include: { product: { select: { name: true } } },
+              },
+            },
+          },
+        },
+      },
       modifierGroupItems: true,
     },
     orderBy: {
@@ -179,7 +210,8 @@ const getOrder = async (orderId: string): Promise<TOrder> => {
     paymentMethod: order.paymentMethod,
     paymentProvider: order.paymentProvider,
     redeemedRewards,
-    orderProducts: orderProductsWithTranslations.map((item) => ({
+    orderProducts: nestComboSelections(
+      orderProductsWithTranslations.map((item) => ({
       id: item.id,
       productId: item.productId,
       product: {
@@ -198,7 +230,31 @@ const getOrder = async (orderId: string): Promise<TOrder> => {
                 };
               })
             : undefined,
+        comboSlots: item.product.comboSlots.map((slot) => ({
+          id: slot.id,
+          name: slot.name,
+          translations:
+            slot.translations && typeof slot.translations === "object"
+              ? (slot.translations as {
+                  [key: string]: {
+                    [key: string]: string;
+                  };
+                })
+              : undefined,
+          minSelect: slot.minSelect,
+          maxSelect: slot.maxSelect,
+          allowDuplicates: slot.allowDuplicates,
+          sortIndex: slot.sortIndex,
+          options: slot.options.map((option) => ({
+            id: option.id,
+            productId: option.productId,
+            productName: option.product.name,
+            extraPrice: option.extraPrice,
+            sortIndex: option.sortIndex,
+          })),
+        })),
       },
+      comboProductId: item.comboProductId,
       comments: item.comments || undefined,
       selectedModifierGroupItemIds: item.modifierGroupItems.map(
         (modifierItem) => modifierItem.id,
@@ -221,7 +277,8 @@ const getOrder = async (orderId: string): Promise<TOrder> => {
       amount: item.amount,
       fullAmount: item.fullAmount,
       quantity: item.quantity,
-    })),
+      })),
+    ),
     preparationTaskStation: [],
   };
 };

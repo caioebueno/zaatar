@@ -5,8 +5,17 @@ import { useState, useEffect, useRef, useMemo } from "react";
 
 // ── Date utilities ────────────────────────────────────────────
 function todayDate(): Date {
-  const d = new Date();
-  return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/New_York",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(new Date());
+  const getPart = (type: Intl.DateTimeFormatPartTypes) =>
+    Number(parts.find((part) => part.type === type)?.value ?? "0");
+  // This date is used as a calendar-only value by the picker, so construct it
+  // in the browser's local zone from the Orlando calendar components.
+  return new Date(getPart("year"), getPart("month") - 1, getPart("day"));
 }
 function addDays(d: Date, n: number): Date {
   const r = new Date(d); r.setDate(r.getDate() + n); return r;

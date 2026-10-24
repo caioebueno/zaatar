@@ -57,6 +57,20 @@ export type ListOrdersV1Output = {
       productId: string;
       productName: string;
       quantity: number;
+      selectedProducts?: Array<{
+        comments?: string;
+        lineTotalCents: number;
+        modifierGroupItems: Array<{
+          description?: string;
+          id: string;
+          name: string;
+          price: number;
+        }>;
+        productId: string;
+        productName: string;
+        quantity: number;
+        unitAmountCents: number;
+      }>;
       unitAmountCents: number;
     }>;
     language?: string | null;

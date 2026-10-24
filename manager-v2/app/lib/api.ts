@@ -246,6 +246,39 @@ export type ApiProduct = {
   modifierGroups?: ApiModifierGroup[];
   preparationStepIds?: string[];
   preparationSteps?: { id: string; goalMinutes: number }[];
+  comboSlots?: ApiComboSlot[];
+  /** Fixed combo products (the `ComboProductItem` rows), not the legacy `comboItems` projection. */
+  products?: ApiComboProduct[];
+};
+
+/**
+ * Combo composition. `extraPrice` is in CENTS like every other price here, and is
+ * the surcharge added when a customer picks that option in the slot.
+ */
+export type ApiComboSlotOption = {
+  extraPrice: number;
+  productId: string;
+  productName?: string;
+  sortIndex?: number | null;
+};
+
+export type ApiComboSlot = {
+  allowDuplicates: boolean;
+  id: string;
+  maxSelect: number;
+  minSelect: number;
+  name: string;
+  options: ApiComboSlotOption[];
+  sortIndex?: number | null;
+  translations?: Record<string, unknown> | null;
+};
+
+/** Fixed products every buyer of the combo gets, with no choice step. */
+export type ApiComboProduct = {
+  productId: string;
+  productName?: string;
+  quantity: number;
+  sortIndex?: number | null;
 };
 
 export type ApiCategory = { id: string; name: string; translations?: unknown | null; menuIndex?: number | null };
@@ -560,6 +593,42 @@ export function updatePreparationStep(token: string, stationId: string, stepId: 
   return authJson<ApiStationStep>("PATCH", `/stations/${encodeURIComponent(stationId)}/steps/${encodeURIComponent(stepId)}`, token, businessId, body);
 }
 
+/**
+ * POST /products body. Prices are CENTS. `translations` is stored verbatim, so
+ * the per-locale keys must be `title`/`description` — what the storefront and
+ * this manager read (`translations[lg].title`); a `name` key would be saved and
+ * never displayed.
+ */
+export type CreateProductBody = {
+  alertDriver?: boolean;
+  categoryId?: string | null;
+  categoryIds?: string[];
+  categoryIndex?: number | null;
+  comparedAtPrice?: number | null;
+  description?: string | null;
+  itemType?: "PRODUCT" | "COMBO";
+  modifierGroupIds?: string[];
+  name: string;
+  /** Mutually exclusive with `photoIds`; sending both is rejected. */
+  photoUrls?: string[];
+  preparationStepIds?: string[];
+  price?: number | null;
+  translations?: Record<string, { description?: string; title: string }>;
+  visible?: boolean;
+};
+
+/**
+ * POST /products — creates a product and returns it in the list shape, plus the
+ * Square sync task the API enqueues when a business is connected.
+ */
+export function createProduct(
+  token: string,
+  body: CreateProductBody,
+  businessId?: string | null,
+): Promise<ApiProduct & { squareSyncTask?: SquareCatalogSyncTask | null }> {
+  return authJson<ApiProduct & { squareSyncTask?: SquareCatalogSyncTask | null }>("POST", "/products", token, businessId, body);
+}
+
 export type UpdateProductBody = {
   name?: string;
   visible?: boolean;
@@ -575,6 +644,22 @@ export type UpdateProductBody = {
    */
   modifierGroupIds?: string[];
   translations?: Record<string, { title: string; description: string }>;
+  /**
+   * Combo composition — both REPLACE the whole current list. The API rejects a
+   * non-empty value unless the product's resolved `itemType` is COMBO. A slot
+   * needs a name, `maxSelect >= minSelect`, at least one option, and (when
+   * duplicates are off) `maxSelect <= options.length`. `extraPrice` is cents.
+   */
+  comboSlots?: {
+    allowDuplicates?: boolean;
+    maxSelect: number;
+    minSelect: number;
+    name: string;
+    options: { extraPrice?: number; productId: string; sortIndex?: number | null }[];
+    sortIndex?: number | null;
+    translations?: Record<string, { title: string }> | null;
+  }[];
+  products?: { productId: string; quantity: number; sortIndex?: number | null }[];
   /**
    * Product image list. Both fields REPLACE the entire current image list and
    * are mutually exclusive (sending both is rejected). `photoIds` references
@@ -940,9 +1025,9 @@ export type BarChartAnalytics = {
 };
 
 /**
- * Revenue is the one metric the API breaks down: every bucket (and the summary)
- * carries the parts that make up `total`, in cents — `total` is exactly
- * `sales + tax + tip + deliveryFee`, so they stack without normalizing.
+ * Revenue still reports the parts that make up `total` (cents, summing exactly).
+ * Kept on the type because the API returns them, though the chart now stacks by
+ * sales channel instead.
  */
 export type RevenueBreakdown = {
   deliveryFee: number;
@@ -951,14 +1036,36 @@ export type RevenueBreakdown = {
   tip: number;
 };
 
-export type RevenueAnalytics = Omit<BarChartAnalytics, "buckets" | "summary"> & {
-  buckets: (BarChartBucket & RevenueBreakdown & { total: number })[];
-  summary: BarChartAnalytics["summary"] & RevenueBreakdown;
+/**
+ * Where the order came from, derived from `Order.sourcePlatform`. `website`
+ * covers FOODY plus anything untagged, so the four values sum to the bucket's
+ * own value — revenue in cents, order quantity as counts.
+ */
+export type ChannelBreakdown = {
+  doordash: number;
+  square: number;
+  uberEats: number;
+  website: number;
 };
 
-/** True when the payload carries the revenue breakdown (an older API deploy may not). */
-export function hasRevenueBreakdown(data: BarChartAnalytics): data is RevenueAnalytics {
+export type ChannelAnalytics = Omit<BarChartAnalytics, "buckets" | "summary"> & {
+  buckets: (BarChartBucket & { channels: ChannelBreakdown })[];
+  summary: BarChartAnalytics["summary"] & { channels: ChannelBreakdown };
+};
+
+export type RevenueAnalytics = Omit<ChannelAnalytics, "buckets" | "summary"> & {
+  buckets: (BarChartBucket & RevenueBreakdown & { channels: ChannelBreakdown; total: number })[];
+  summary: BarChartAnalytics["summary"] & RevenueBreakdown & { channels: ChannelBreakdown };
+};
+
+/** True when the payload carries the revenue components (sales/tax/tip/fee). */
+export function hasRevenueComponents(data: BarChartAnalytics): data is RevenueAnalytics {
   return data.metric === "revenue" && "sales" in data.summary;
+}
+
+/** True when the payload carries the channel split (an older API deploy may not). */
+export function hasChannelBreakdown(data: BarChartAnalytics): data is ChannelAnalytics {
+  return "channels" in data.summary;
 }
 
 export type BarChartParams = {
@@ -979,8 +1086,8 @@ function barChartQuery(params: BarChartParams): string {
 }
 
 /** GET /v1/analytics/order-quantity — bar-chart-ready order counts by day. */
-export function getOrderQuantity(token: string, params: BarChartParams): Promise<BarChartAnalytics> {
-  return authGet<BarChartAnalytics>(`/v1/analytics/order-quantity?${barChartQuery(params)}`, token, params.businessId);
+export function getOrderQuantity(token: string, params: BarChartParams): Promise<ChannelAnalytics> {
+  return authGet<ChannelAnalytics>(`/v1/analytics/order-quantity?${barChartQuery(params)}`, token, params.businessId);
 }
 
 /** GET /v1/analytics/revenue — bar-chart-ready daily revenue (in cents) by day. */

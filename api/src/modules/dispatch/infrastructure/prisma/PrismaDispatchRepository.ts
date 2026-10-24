@@ -87,6 +87,7 @@ type DispatchOrderRow = {
 
 type DispatchOrderProductRow = {
   amount: number;
+  comboProductId: string | null;
   comments: string | null;
   fullAmount: number;
   id: string;
@@ -554,13 +555,12 @@ async function getDispatchOrderProducts(
 
   const rows = orderProducts as unknown as DispatchOrderProductRow[];
   const orderProductsByOrderId = new Map<string, unknown[]>();
+  const orderProductsById = new Map<string, Record<string, unknown>>();
 
   for (const row of rows) {
     if (!row.orderId) continue;
 
-    const current = orderProductsByOrderId.get(row.orderId) || [];
-
-    current.push({
+    orderProductsById.set(row.id, {
       id: row.id,
       productId: row.productId,
       product: {
@@ -596,7 +596,25 @@ async function getDispatchOrderProducts(
       fullAmount: row.fullAmount,
       quantity: row.quantity,
     });
+  }
 
+  for (const row of rows) {
+    if (!row.orderId) continue;
+    const item = orderProductsById.get(row.id);
+    if (!item) continue;
+
+    if (row.comboProductId) {
+      const comboProduct = orderProductsById.get(row.comboProductId);
+      if (comboProduct) {
+        const selectedProducts = (comboProduct.selectedProducts as unknown[]) ?? [];
+        selectedProducts.push(item);
+        comboProduct.selectedProducts = selectedProducts;
+      }
+      continue;
+    }
+
+    const current = orderProductsByOrderId.get(row.orderId) || [];
+    current.push(item);
     orderProductsByOrderId.set(row.orderId, current);
   }
 

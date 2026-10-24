@@ -225,26 +225,50 @@ function RetentionContent({ data, mixMode, setMixMode }: { data: CustomerRetenti
         {mixBars.length > 0 ? (
           <div style={{ display: "flex", gap: mixBars.length > 20 ? 4 : 10, alignItems: "flex-end", paddingTop: 18 }}>
             {mixBars.map((b, i) => {
-              const share = b.total ? b.newCount / b.total : 0;
-              const colH = mixMode === "share" ? MH : Math.max(6, (b.total / maxTot) * MH);
-              const newH = Math.max(2, colH * share);
-              const retH = Math.max(2, colH * (1 - share));
-              const show = i % barLabelStep === 0 || i === mixBars.length - 1;
+              // A day with no customers draws nothing: with a 0 total the share
+              // is 0, which used to paint a full-height "returning" bar.
+              const hasActivity = b.total > 0;
+              const share = hasActivity ? b.newCount / b.total : 0;
+              const colH = !hasActivity
+                ? 0
+                : mixMode === "share"
+                  ? MH
+                  : Math.max(6, (b.total / maxTot) * MH);
+              // A present-but-tiny segment is floored to 2px for visibility and
+              // the remainder goes to the other one, so the pair always sums to
+              // exactly colH. Flooring both independently made a column with an
+              // empty segment 2px taller than its neighbours — in share mode
+              // every bar is 100%, so that misalignment was plainly visible.
+              const newH =
+                b.newCount > 0 ? Math.min(colH, Math.max(2, Math.round(colH * share))) : 0;
+              const retH = colH - newH;
+              const show = (i % barLabelStep === 0 || i === mixBars.length - 1) && hasActivity;
               const pad = mixBars.length > 20 ? "0 4%" : "0 12%";
               return (
                 <div key={i} style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
                   <div style={{ position: "relative", width: "100%", height: MH }}>
                     {show && (
-                      <div style={{ position: "absolute", left: 0, right: 0, bottom: newH + retH + 4, textAlign: "center", fontSize: 11.5, color: "#E8E8E8", fontFamily: "var(--font-mono)", lineHeight: 1, whiteSpace: "nowrap" }}>
+                      <div style={{ position: "absolute", left: 0, right: 0, bottom: colH + 4, textAlign: "center", fontSize: 11.5, color: "#E8E8E8", fontFamily: "var(--font-mono)", lineHeight: 1, whiteSpace: "nowrap" }}>
                         {mixMode === "share" ? Math.round(share * 100) + "%" : nfmt(b.total)}
                       </div>
                     )}
                     <div style={{ position: "absolute", left: 0, right: 0, bottom: 0, display: "flex", flexDirection: "column", padding: pad, boxSizing: "border-box" }}>
-                      <div style={{ height: newH, background: "#FFD600", borderRadius: "3px 3px 0 0", transition: "height 220ms cubic-bezier(0.16,1,0.3,1)" }} />
-                      <div style={{ height: retH, background: "#FF5C1A", borderRadius: mixMode === "share" ? "0 0 3px 3px" : "0", transition: "height 220ms cubic-bezier(0.16,1,0.3,1)" }} />
+                      {hasActivity ? (
+                        <>
+                          <div style={{ height: newH, background: "#FFD600", borderRadius: "3px 3px 0 0", transition: "height 220ms cubic-bezier(0.16,1,0.3,1)" }} />
+                          <div style={{ height: retH, background: "#FF5C1A", borderRadius: mixMode === "share" ? "0 0 3px 3px" : "0", transition: "height 220ms cubic-bezier(0.16,1,0.3,1)" }} />
+                        </>
+                      ) : (
+                        // A day with no customers keeps a flat baseline stub: drawing
+                        // nothing left gaps that read as missing bars rather than zero.
+                        <div style={{ height: 2, background: "rgba(255,255,255,0.16)", borderRadius: 2 }} />
+                      )}
                     </div>
                   </div>
-                  <div style={{ fontSize: 11, color: "#9B9B9B", whiteSpace: "nowrap", overflow: "hidden" }}>{show ? b.label : ""}</div>
+                  {/* The row is bottom-aligned, so this slot keeps its height even
+                      when the label is thinned out — an empty div collapsed to 0
+                      and pushed that column's bar up above its neighbours. */}
+                  <div style={{ height: 15, lineHeight: "15px", fontSize: 11, color: "#9B9B9B", whiteSpace: "nowrap", overflow: "hidden" }}>{show ? b.label : ""}</div>
                 </div>
               );
             })}

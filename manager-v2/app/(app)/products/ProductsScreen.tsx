@@ -3,11 +3,11 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import { useRouter } from "next/navigation";
-import { ApiError, createProgressiveDiscount, listProducts, listProgressiveDiscounts, toAbsoluteImageUrl, updateCategory, updateProduct, updateProgressiveDiscount } from "../../lib/api";
-import type { ApiCategory, ApiProduct, ProgressiveDiscount, SquareCatalogSyncTask, UpdateProductBody } from "../../lib/api";
+import { ApiError, createProduct, createProgressiveDiscount, listProducts, listProgressiveDiscounts, toAbsoluteImageUrl, updateCategory, updateProduct, updateProgressiveDiscount } from "../../lib/api";
+import type { ApiCategory, ApiProduct, CreateProductBody, ProgressiveDiscount, SquareCatalogSyncTask, UpdateProductBody } from "../../lib/api";
 import { clearManagerSession, getManagerBusinessId, getManagerToken } from "../../lib/auth";
 import { INITIAL_MENUS, clone, initials, money, parseMoney, slug, statusChip, thumbStyle } from "./data";
-import type { CustomProduct, FlatProduct, Lang, MediaItem, Menu, ModifierGroup, PrepTask, ProductDraft } from "./data";
+import type { FlatProduct, Lang, MediaItem, Menu, ModifierGroup, PrepTask, ProductDraft } from "./data";
 import { categoryNameById, centsToDollars, deriveModifierLibrary, mapProductToDraft, prepLibraryFromLookup, sectionOf, sectionTitles } from "./mapping";
 import { ProductDetail } from "./ProductDetail";
 import { ProductCreator } from "./ProductCreator";
@@ -17,6 +17,7 @@ import { Menu as ActionMenu, MenuItem } from "../_components/Menu";
 import { SquareSyncToasts, useSquareSync } from "./SyncToast";
 import { ProgressiveDiscountPanel, draftFromDiscount, pdSummary, stepsToInput } from "./ProgressiveDiscountPanel";
 import { ProgressiveDiscountPicker } from "./ProgressiveDiscountPicker";
+import { comboIssues } from "./ComboComposition";
 import type { DiscountDraft } from "./ProgressiveDiscountPanel";
 
 function baseDraftFromFlat(p: FlatProduct): ProductDraft {
@@ -32,6 +33,8 @@ function baseDraftFromFlat(p: FlatProduct): ProductDraft {
     modifiers: [],
     tasks: [],
     taxes: [],
+    comboFixed: [],
+    comboSlots: [],
   };
 }
 
@@ -63,7 +66,6 @@ export function ProductsScreen() {
   const [draft, setDraft] = useState<ProductDraft | null>(null);
   const [baseline, setBaseline] = useState<ProductDraft | null>(null);
   const [lang, setLang] = useState<Lang>("en");
-  const [customProducts, setCustomProducts] = useState<CustomProduct[]>([]);
   const [sectionMoves, setSectionMoves] = useState<Record<string, string>>({});
   const [detached, setDetached] = useState<Record<string, boolean>>({});
   const [order, setOrder] = useState<string[] | null>(null);
@@ -149,9 +151,8 @@ export function ProductsScreen() {
       });
     };
     apiProducts.forEach((p) => overlay(p.id, p.name, centsToDollars(p.price), centsToDollars(p.comparedAtPrice), p.visible, p.alertDriver, p.description ?? "", sectionOf(p, catNames), p.photos?.[0]?.url ?? null));
-    customProducts.forEach((cp) => overlay(cp.id, cp.name, cp.price || 0, cp.comparedAt || 0, !!cp.active, false, cp.description || "", cp.section, null));
     return out;
-  }, [apiProducts, catNames, customProducts, edits, sectionMoves]);
+  }, [apiProducts, catNames, edits, sectionMoves]);
 
   const q = search.trim().toLowerCase();
   const visible = flat
@@ -160,9 +161,7 @@ export function ProductsScreen() {
   const selectedProduct = selected ? flat.find((p) => p.id === selected) ?? null : null;
   const split = !!(selectedProduct && draft);
 
-  const baseTitles = sectionTitles(categories, apiProducts);
-  const customTitles = customProducts.map((cp) => cp.section).filter((s) => !baseTitles.includes(s));
-  const titles = baseTitles.concat(Array.from(new Set(customTitles)));
+  const titles = sectionTitles(categories, apiProducts);
   const sectionOrder = order ? order.filter((t) => titles.includes(t)).concat(titles.filter((t) => !order.includes(t))) : titles;
 
   const productOrderFor = (title: string, ids: string[]) => {
@@ -206,6 +205,9 @@ export function ProductsScreen() {
   // The ladder the storefront serves is the newest one with `completed: false`
   // (see `web/src/getProgressiveDiscount.ts`), so "active" is a state on the
   // discount, not a per-menu attachment: activating one completes the others.
+  const [creating, setCreating] = useState(false);
+  const [createError, setCreateError] = useState("");
+
   const [pdPickerOpen, setPdPickerOpen] = useState(false);
   const [pdCatalog, setPdCatalog] = useState<ProgressiveDiscount[]>([]);
   const [pdOpenId, setPdOpenId] = useState<string | null>(null);
@@ -354,6 +356,15 @@ export function ProductsScreen() {
   };
 
   // Animate out, then unmount the panel + clear the draft once the transition finishes.
+  // Everything a combo can bundle: the live product list minus the combo itself.
+  const comboOptions = useMemo(
+    () =>
+      flat
+        .filter((p) => p.id !== selected)
+        .map((p) => ({ id: p.id, name: p.name, price: p.price, section: p.section })),
+    [flat, selected],
+  );
+
   const closeDetail = () => {
     setPanelPhase((ph) => (ph === "closed" ? ph : "exiting"));
     if (panelTimer.current) clearTimeout(panelTimer.current);
@@ -450,6 +461,40 @@ export function ProductsScreen() {
       // Full modifier-group list (attach/detach replaces the whole array).
       modifierGroupIds: draft.modifiers,
     };
+    if (draft.type === "combo") {
+      const problems = comboIssues(draft);
+      if (problems.length > 0) throw new Error(problems[0]);
+      // Both lists REPLACE what the product has; dollars become cents.
+      body.comboSlots = draft.comboSlots.map((slot, slotIndex) => {
+        const translations: Record<string, { title: string }> = {};
+        (["es", "pt"] as const).forEach((loc) => {
+          const title = slot.names[loc]?.trim();
+          if (title) translations[loc] = { title };
+        });
+        return {
+          name: (slot.names.en ?? "").trim(),
+          minSelect: Math.max(0, Math.round(parseMoney(slot.min))),
+          maxSelect: Math.max(1, Math.round(parseMoney(slot.max))),
+          allowDuplicates: slot.allowDuplicates,
+          sortIndex: slotIndex + 1,
+          ...(Object.keys(translations).length ? { translations } : {}),
+          options: slot.products.map((sp, optionIndex) => ({
+            productId: sp.productId,
+            extraPrice: Math.round(parseMoney(sp.extra) * 100),
+            sortIndex: optionIndex + 1,
+          })),
+        };
+      });
+      body.products = draft.comboFixed.map((f, i) => ({
+        productId: f.productId,
+        quantity: Math.max(1, f.quantity),
+        sortIndex: i + 1,
+      }));
+    } else if (baseline?.type === "combo") {
+      // Switching a combo back to a single item: clear what it used to bundle.
+      body.comboSlots = [];
+      body.products = [];
+    }
     if (Object.keys(translations).length) body.translations = translations;
     // Images are auto-saved on add/remove/reorder (see saveMedia), so the Save
     // button only persists text/price fields.
@@ -629,20 +674,76 @@ export function ProductsScreen() {
     closeDetail();
   };
 
-  const submitCreate = (c: CreatorDraft) => {
+  /**
+   * Creates the product through `POST /products` and opens it. The row only
+   * appears once the API confirms it, so nothing here is a local-only product.
+   */
+  const submitCreate = async (c: CreatorDraft) => {
     const name = (c.names.en || "").trim();
     if (!name) return;
-    const id = slug(name) + "-" + (++createSeq.current).toString(36);
+    const token = getManagerToken();
+    if (!token) {
+      router.replace("/login");
+      return;
+    }
+    const businessId = getManagerBusinessId();
     const price = parseMoney(c.price);
     const cmp = c.comparedAt ? parseMoney(c.comparedAt) : 0;
-    const d: ProductDraft = { names: clone(c.names), descriptions: clone(c.descriptions), active: c.active, alertDriver: false, type: c.type, media: [], price: price.toFixed(2), comparedAt: cmp ? cmp.toFixed(2) : "", modifiers: [], tasks: [], taxes: [] };
-    setCustomProducts((prev) => [...prev, { id, section: c.section, name, price, comparedAt: cmp, active: c.active, description: c.descriptions.en || "" }]);
-    setEdits((prev) => ({ ...prev, [id]: d }));
-    setProductOrder((prev) => ({ ...prev, [c.section]: [id, ...((prev[c.section] || []).filter((x) => x !== id))] }));
+    const categoryId = catIdForSection(c.section);
+
+    // Locale keys are `title`/`description` — what the storefront reads.
+    const translations: Record<string, { description?: string; title: string }> = {};
+    (["es", "pt"] as const).forEach((loc) => {
+      const title = (c.names[loc] || "").trim();
+      const description = (c.descriptions[loc] || "").trim();
+      if (title || description) translations[loc] = { title, ...(description ? { description } : {}) };
+    });
+
+    const body: CreateProductBody = {
+      name,
+      description: (c.descriptions.en || "").trim() || null,
+      price: Math.round(price * 100),
+      comparedAtPrice: cmp > 0 ? Math.round(cmp * 100) : null,
+      visible: c.active,
+      alertDriver: false,
+      itemType: c.type === "combo" ? "COMBO" : "PRODUCT",
+      ...(categoryId ? { categoryId, categoryIds: [categoryId] } : {}),
+      ...(Object.keys(translations).length ? { translations } : {}),
+    };
+
+    setCreateError("");
+    setCreating(true);
+    let created: ApiProduct & { squareSyncTask?: SquareCatalogSyncTask | null };
+    try {
+      created = await createProduct(token, body, businessId);
+    } catch (err) {
+      if (err instanceof ApiError && err.status === 401) {
+        clearManagerSession();
+        router.replace("/login");
+        return;
+      }
+      const field = err instanceof ApiError ? err.field : undefined;
+      setCreateError(
+        err instanceof ApiError && err.status === 0
+          ? "Can't reach the server."
+          : field
+            ? `The API rejected ${field}.`
+            : "Couldn't create the product.",
+      );
+      return;
+    } finally {
+      setCreating(false);
+    }
+
+    const d = mapProductToDraft(created);
+    setApiProducts((prev) => [...prev, created]);
+    // Square-connected businesses sync the new product in the background.
+    if (created.squareSyncTask) trackSquareSync(name, created.squareSyncTask);
+    setProductOrder((prev) => ({ ...prev, [c.section]: [created.id, ...((prev[c.section] || []).filter((x) => x !== created.id))] }));
     setCreator(null);
     setAddPicker(null);
     setAddSearch("");
-    setSelected(id);
+    setSelected(created.id);
     setDraft(clone(d));
     setBaseline(clone(d));
     setLang("en");
@@ -1007,6 +1108,7 @@ export function ProductsScreen() {
                 lang={lang}
                 modifierLibrary={modifierLibrary}
                 prepLibrary={prepLibrary}
+                comboOptions={comboOptions}
                 setLang={setLang}
                 patchDraft={patchDraft}
                 onMediaChange={saveMedia}
@@ -1023,7 +1125,7 @@ export function ProductsScreen() {
       </div>
 
       {creator && (
-        <ProductCreator initial={creator} sections={sectionOrder} onCancel={() => setCreator(null)} onSave={submitCreate} />
+        <ProductCreator busy={creating} error={createError} initial={creator} sections={sectionOrder} onCancel={() => setCreator(null)} onSave={submitCreate} />
       )}
 
       <SquareSyncToasts toasts={toasts} onRetry={retrySquareSync} onDismiss={dismissSquareSync} />

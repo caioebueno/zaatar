@@ -97,4 +97,6 @@ export type TOrderProduct = {
   amount: number;
   fullAmount: number;
   quantity: number;
+  comboProductId?: string | null;
+  selectedProducts?: TOrderProduct[];
 };

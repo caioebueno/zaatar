@@ -13,6 +13,8 @@ import {
   KNOB_STYLE, LANGUAGES, groupMeta, i18n, initials, money, parseMoney, pickerRowStyle,
   statusChip, switchStyle, taskMeta, typeOptionStyle,
 } from "./data";
+import { ComboComposition } from "./ComboComposition";
+import type { ComboOption } from "./ComboComposition";
 import { GroupEditor } from "./GroupEditor";
 import type { GroupDraft } from "./GroupEditor";
 import { TaskEditor } from "./TaskEditor";
@@ -64,7 +66,7 @@ const detachBtn: CSSProperties = { width: 22, height: 22, display: "flex", align
 
 
 export function ProductDetail({
-  product, draft, baseline, lang, modifierLibrary, prepLibrary,
+  product, draft, baseline, lang, modifierLibrary, prepLibrary, comboOptions,
   setLang, patchDraft, onMediaChange, onSave, onDiscard, onClose, upsertModifierGroup, upsertPrepTask, trackModifierSync,
 }: {
   product: FlatProduct;
@@ -73,6 +75,8 @@ export function ProductDetail({
   lang: Lang;
   modifierLibrary: ModifierGroup[];
   prepLibrary: PrepTask[];
+  /** Products attachable to a combo (everything but this product). */
+  comboOptions: ComboOption[];
   setLang: (l: Lang) => void;
   patchDraft: (patch: Partial<ProductDraft>) => void;
   onMediaChange: (media: MediaItem[]) => Promise<void>;
@@ -362,6 +366,10 @@ export function ProductDetail({
             ))}
           </div>
         </div>
+
+        {draft.type === "combo" && (
+          <ComboComposition draft={draft} options={comboOptions} lang={lang} patchDraft={patchDraft} />
+        )}
 
         {/* Pricing */}
         <div style={{ padding: "18px 0", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>

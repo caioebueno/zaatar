@@ -13,7 +13,8 @@ const PROGRESS_FILL_COLOR = "var(--color-brandBackground)";
 const PROGRESS_INACTIVE_BG_COLOR = "#ffffff";
 
 type TProgressiveDiscountBar = {
-  progressiveDiscount: TProgressiveDiscount;
+  /** Null/stepless is handled here, so callers don't each need their own guard. */
+  progressiveDiscount: TProgressiveDiscount | null | undefined;
   cart?: TCart;
   categories?: TCategory[];
   additionalProducts?: TProduct[];
@@ -33,6 +34,10 @@ const ProgressiveDiscountBar: React.FC<TProgressiveDiscountBar> = ({
   animateFill = false,
   demoFill = false,
 }) => {
+  // With no ladder — or one whose steps are gone — there is no progress to show.
+  // The bar used to still paint its leading brand dot, leaving a stray mark.
+  if (!progressiveDiscount?.steps?.length) return null;
+
   return (
     <div className="flex flex-row items-center gap-[-5px]">
       <style jsx global>{`

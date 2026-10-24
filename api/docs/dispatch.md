@@ -143,6 +143,16 @@ type DispatchEntity = {
       amount: number;
       fullAmount: number;
       quantity: number;
+      selectedProducts?: Array<{
+        id: string;
+        productId: string;
+        product: unknown;
+        selectedModifierGroupItemIds: string[];
+        selectedModifierGroupItems: Array<unknown>;
+        amount: number; // 0; price remains on the parent combo line
+        fullAmount: number; // 0
+        quantity: number;
+      }>;
     }>;
     preparationTaskStation: Array<{
       id: string;

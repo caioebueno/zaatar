@@ -52,6 +52,9 @@ Rules:
 
 - `startDate <= endDate`
 - max range: `367` days
+- Sales analytics uses Orlando time (`America/New_York`) for daily date
+  boundaries and buckets. The calendar-date portion of the supplied datetime
+  selects the Orlando day.
 
 ### Example request
 

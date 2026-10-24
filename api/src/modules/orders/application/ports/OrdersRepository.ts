@@ -16,6 +16,7 @@ export type PaginatedOrderListQuery = {
 };
 
 export type PaginatedOrderListItem = {
+  adjustments: OrderAdjustmentSummary[];
   branchId?: string | null;
   canceled: boolean;
   createdAt: Date;
@@ -57,6 +58,20 @@ export type PaginatedOrderListItem = {
     productId: string;
     productName: string;
     quantity: number;
+    selectedProducts?: Array<{
+      comments?: string;
+      lineTotalCents: number;
+      modifierGroupItems: Array<{
+        description?: string;
+        id: string;
+        name: string;
+        price: number;
+      }>;
+      productId: string;
+      productName: string;
+      quantity: number;
+      unitAmountCents: number;
+    }>;
     unitAmountCents: number;
   }>;
   language?: string | null;
@@ -110,15 +125,31 @@ export type OrderPaymentSummary = {
   paymentType: string;
 };
 
+export type OrderAdjustmentSummary = {
+  amount: number;
+  createdAt: string;
+  description: string;
+  id: string;
+  type: "DISCOUNT" | "EXTRA_CHARGE";
+};
+
 export type OrderDetailLineItem = {
   lineTotalCents: number;
+  modifierGroupItems?: Array<{
+    description?: string;
+    id: string;
+    name: string;
+    price: number;
+  }>;
   productId: string;
   productName: string;
   quantity: number;
+  selectedProducts?: OrderDetailLineItem[];
   unitAmountCents: number;
 };
 
 export type OrderDetail = {
+  adjustments: OrderAdjustmentSummary[];
   canceled: boolean;
   createdAt: Date;
   customer: {

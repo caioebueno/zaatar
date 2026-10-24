@@ -323,6 +323,10 @@ type CreateOrderBody = {
         slotId: string;
         optionProductId: string;
         quantity: number; // integer > 0
+        modifiers?: Array<{
+          modifierId: string;
+          modifierItemId: string;
+        }>;
       }>;
     }>;
   };
@@ -335,6 +339,11 @@ type CreateOrderBody = {
   addressId?: string | null; // required when orderType=DELIVERY
   orderIntentId?: string | null; // when provided, API sets this OrderIntent active=false after creating the order
   tipAmount?: number; // integer > 0
+  adjustments?: Array<{
+    type: "DISCOUNT" | "EXTRA_CHARGE";
+    amount: number; // integer cents > 0
+    description: string;
+  }>;
   branchId?: string | null;
 };
 ```
@@ -343,10 +352,13 @@ type CreateOrderBody = {
 
 - `cart.items` is required and must contain at least 1 item.
 - `modifiers` must be an array of objects (`{ modifierId, modifierItemId }`), not an array of strings.
-- If provided, every `comboSelections` item must match a valid `slotId + optionProductId` for that product.
+- If provided, every `comboSelections` item must match a valid `slotId + optionProductId` for that product. Its modifiers must belong to the selected option product.
 - `orderType="DELIVERY"` requires `addressId`.
 - `customerId` and `addressId` are validated against existing records when provided.
 - `paymentProvider` currently accepts only `"STRIPE"`.
+- `adjustments` stores manual discounts and extra charges. Each amount is in
+  cents and must be positive; a discount reduces the final payment total and
+  an extra charge increases it.
 
 ### Branch Assignment Rule
 
@@ -358,12 +370,23 @@ type CreateOrderBody = {
 
 For each cart item:
 
-- `amount = product.price + selected modifier items + combo extra prices`
-- `fullAmount = (product.comparedAtPrice ?? product.price) + selected modifier items + combo extra prices`
+- `amount = product.price + selected modifier items + combo extra prices + selected combo-option modifier items`
+- `fullAmount = (product.comparedAtPrice ?? product.price) + selected modifier items + combo extra prices + selected combo-option modifier items`
 
 Order amount:
 
 - `order.amount = Σ(item.amount * item.quantity)`
+- `payment total = discounted subtotal + tip + delivery fee + extra charges - discounts`
+
+For every combo slot selection, the API creates a zero-priced selected-product
+line linked to its parent combo line and connects its selected modifier items.
+The response exposes these under `orderProducts[].selectedProducts`, so they do
+not appear as independent top-level order products or increase `order.amount`.
+
+Each selected product has the normal order-product fields (`product`, `quantity`,
+`amount: 0`, `fullAmount: 0`) and its own `modifierGroupItems` collection.
+All order and dispatch responses omit these child rows from the top-level
+`orderProducts` array.
 
 ### Example Request (simple product)
 
@@ -406,7 +429,13 @@ Order amount:
           {
             "slotId": "0d41b12f-1dea-4336-91a0-7b42df0a8f52",
             "optionProductId": "9fdef81a-e487-4ba1-99bb-918b1b75ac95",
-            "quantity": 1
+            "quantity": 1,
+            "modifiers": [
+              {
+                "modifierId": "option-modifier-group-id",
+                "modifierItemId": "option-modifier-item-id"
+              }
+            ]
           }
         ]
       }
@@ -429,6 +458,7 @@ Returns the created order object with:
 - `orderProducts` including:
   - `product`
   - `modifierGroupItems`
+  - `selectedProducts` for combo lines; each selected product includes its own `product` and `modifierGroupItems`
 - `dispatch` (if already attached)
 
 Example (truncated):
@@ -479,6 +509,7 @@ Common `field` values:
 - `cart.items.comboSelections.slotId`
 - `cart.items.comboSelections.optionProductId`
 - `cart.items.comboSelections.quantity`
+- `cart.items.comboSelections.modifiers`
 - `addressId`
 - `customerId`
 - `paymentMethod`
@@ -521,6 +552,11 @@ type UpdateOrderRequest = {
   type?: "DELIVERY" | "TAKEAWAY";
   customerId?: string | null;
   addressId?: string | null;
+  adjustments?: Array<{
+    type: "DISCOUNT" | "EXTRA_CHARGE";
+    amount: number; // cents > 0
+    description: string;
+  }>;
   orderProducts?: OrderProductPatch[];
 };
 
@@ -531,6 +567,16 @@ type OrderProductPatch =
       quantity?: number;
       comments?: string | null;
       selectedModifierGroupItemIds?: string[];
+      // For a COMBO line, replaces all selected option products and their modifiers.
+      comboSelections?: Array<{
+        slotId: string;
+        optionProductId: string;
+        quantity: number;
+        modifiers?: Array<{
+          modifierId: string;
+          modifierItemId: string;
+        }>;
+      }>;
       remove?: false;
     }
   | {
@@ -553,6 +599,15 @@ type OrderProductPatch =
 - If order type is changed to `TAKEAWAY`, delivery address is cleared automatically.
 - `customerId` and `addressId` are validated to ensure records exist.
 - `orderProducts` updates will recalculate order subtotal (`amount`).
+- Sending `adjustments` replaces the order's complete adjustment list. Send
+  `[]` to remove all manual discounts and extra charges.
+- On a combo line, `comboSelections` replaces every existing selected product in
+  that combo. The API validates that each option belongs to its submitted slot,
+  stores the option modifiers on the selected child product, and recalculates
+  the combo line price from option and modifier prices.
+- Any `orderProducts` change rebuilds the order's preparation tasks from the
+  current saved lines, including combo selections, quantities, comments, and
+  modifiers. This removes preparation tasks for products removed from the order.
 
 ### Example: Update Address + Payment Method + Products
 
@@ -575,6 +630,31 @@ type OrderProductPatch =
       "quantity": 1,
       "selectedModifierGroupItemIds": [
         "3528e1a1-242c-4fa4-9b73-16ca4b94b40c"
+      ]
+    }
+  ]
+}
+```
+
+### Example: Replace a Combo Selection
+
+```json
+{
+  "orderProducts": [
+    {
+      "id": "combo-order-product-id",
+      "comboSelections": [
+        {
+          "slotId": "drink-slot-id",
+          "optionProductId": "juice-product-id",
+          "quantity": 1,
+          "modifiers": [
+            {
+              "modifierId": "ice-modifier-group-id",
+              "modifierItemId": "no-ice-modifier-item-id"
+            }
+          ]
+        }
       ]
     }
   ]

@@ -10,11 +10,25 @@ export type AnalyticsBucketPointBase = {
   key: string;
 };
 
+/**
+ * Split of a bucket across sales channels, from `Order.sourcePlatform`.
+ * `website` covers FOODY, UNKNOWN and rows predating the column, so the four
+ * values always sum to the bucket's own total.
+ */
+export type AnalyticsChannelBreakdown = {
+  doordash: number;
+  square: number;
+  uberEats: number;
+  website: number;
+};
+
 export type OrderQuantityBucketPoint = AnalyticsBucketPointBase & {
+  channels: AnalyticsChannelBreakdown;
   orders: number;
 };
 
 export type RevenueBucketPoint = AnalyticsBucketPointBase & {
+  channels: AnalyticsChannelBreakdown;
   deliveryFee: number;
   orders: number;
   sales: number;
@@ -44,6 +58,7 @@ export type OrderSalesRangeQuery = {
   businessId: string;
   from: string;
   to: string;
+  timezone: string;
 };
 
 export type AnalyticsDateRangeQuery = {

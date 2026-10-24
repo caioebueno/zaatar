@@ -2,8 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { APP_TIMEZONE, ApiError, getAverageTicket, getNewCustomers, getOrderQuantity, getRevenue, hasRevenueBreakdown } from "../../lib/api";
-import type { BarChartAnalytics, BarChartParams, RevenueBreakdown } from "../../lib/api";
+import { APP_TIMEZONE, ApiError, getAverageTicket, getNewCustomers, getOrderQuantity, getRevenue, hasChannelBreakdown, hasRevenueComponents } from "../../lib/api";
+import type { BarChartAnalytics, BarChartParams, ChannelBreakdown, RevenueBreakdown } from "../../lib/api";
 import { clearManagerSession, getManagerBusinessId, getManagerToken } from "../../lib/auth";
 import { METRICS, addDays, buckets, deltaPill, fmt, labelFor, resolveCompare, resolveRange, series, startOfDay } from "./data";
 import type { CompareValue, MetricFormat } from "./data";
@@ -17,31 +17,62 @@ const H = 240;
 const spinner = { width: 18, height: 18, borderRadius: "9999px", boxSizing: "border-box", border: "2px solid rgba(255,255,255,0.15)", borderTopColor: "#FF5C1A", animation: "zspin 0.7s linear infinite" } as const;
 
 /** Metrics backed by a real bar-chart analytics endpoint. `unit` scales the API value (cents→dollars). */
-const API_METRICS: Record<string, { fetch: (token: string, params: BarChartParams) => Promise<BarChartAnalytics>; format: MetricFormat; unit: number }> = {
-  orders: { fetch: getOrderQuantity, format: "count", unit: 1 },
-  revenue: { fetch: getRevenue, format: "currency", unit: 1 / 100 },
+const API_METRICS: Record<string, { fetch: (token: string, params: BarChartParams) => Promise<BarChartAnalytics>; format: MetricFormat; stackByChannel?: boolean; unit: number }> = {
+  orders: { fetch: getOrderQuantity, format: "count", unit: 1, stackByChannel: true },
+  revenue: { fetch: getRevenue, format: "currency", unit: 1 / 100, stackByChannel: true },
   customers: { fetch: getNewCustomers, format: "count", unit: 1 },
   ticket: { fetch: getAverageTicket, format: "currency", unit: 1 / 100 },
 };
 
 /**
- * Revenue splits each bar into the parts the API reports. Listed base-first —
- * Sales sits at the bottom of the stack — and rendered top-down by reversing.
- * Colors come from the Zappy design (`Home.dc.html`); Tax is deliberately the
- * neutral gray so the three earning parts keep the brand hues.
+ * Revenue and order quantity split each bar by where the order came from.
+ * Listed base-first — our own site sits at the bottom of the stack — and
+ * rendered top-down by reversing.
+ *
+ * Hues are fixed per channel and never cycled. Checked with the palette
+ * validator against this screen's dark surface: worst adjacent pair ΔE 14.4
+ * (deuteranopia), well above the 8 floor. Square keeps the neutral gray so the
+ * three ordering channels carry the saturated hues, and the teal avoids reusing
+ * the status green of the delta pills.
  */
-const REVENUE_PARTS: { color: string; hoverColor: string; id: keyof RevenueBreakdown; label: string }[] = [
-  { id: "sales", label: "Sales", color: "#FF5C1A", hoverColor: "#FF7B42" },
-  { id: "tax", label: "Tax", color: "#8A8B90", hoverColor: "#A2A3A8" },
-  { id: "tip", label: "Tips", color: "#FFD600", hoverColor: "#FFE24D" },
-  { id: "deliveryFee", label: "Delivery fee", color: "#FF9E6B", hoverColor: "#FFB58C" },
+const CHANNEL_PARTS: { color: string; hoverColor: string; id: keyof ChannelBreakdown; label: string }[] = [
+  { id: "website", label: "Website", color: "#FF5C1A", hoverColor: "#FF7B42" },
+  { id: "doordash", label: "DoorDash", color: "#FFD600", hoverColor: "#FFE24D" },
+  { id: "uberEats", label: "Uber Eats", color: "#2DD4BF", hoverColor: "#5FE0D1" },
+  { id: "square", label: "Square", color: "#8A8B90", hoverColor: "#A2A3A8" },
 ];
 
+/**
+ * Revenue still reports what makes up the total. The bars stack by channel, so
+ * these are surfaced in the hover tooltip only — and without colour dots, which
+ * would imply they were segments of the bar.
+ */
+const REVENUE_COMPONENTS: { id: keyof RevenueBreakdown; label: string }[] = [
+  { id: "sales", label: "Sales" },
+  { id: "tax", label: "Tax" },
+  { id: "tip", label: "Tips" },
+  { id: "deliveryFee", label: "Delivery fee" },
+];
+
+type Component = { label: string; value: number };
 type Segment = { color: string; hoverColor: string; id: string; label: string; value: number };
 
 const nonEmpty = (segments: Segment[]): Segment[] | null => (segments.length > 0 ? segments : null);
 type PartTotal = { color: string; id: string; label: string; share: number; total: number };
-type Bar = { label: string; value: number; compare: number | null; segments: Segment[] | null };
+type Bar = { label: string; value: number; compare: number | null; segments: Segment[] | null; components: Component[] | null; weekday: string | null };
+
+const WEEKDAY_INITIALS = ["S", "M", "T", "W", "T", "F", "S"];
+
+/**
+ * Weekday initial for a `YYYY-MM-DD` bucket key. Parsed from its parts rather
+ * than `new Date(key)`, which reads the string as UTC midnight and lands on the
+ * previous day in any western timezone.
+ */
+function weekdayInitial(key: string): string | null {
+  const [year, month, day] = key.split("-").map(Number);
+  if (!year || !month || !day) return null;
+  return WEEKDAY_INITIALS[new Date(year, month - 1, day).getDay()] ?? null;
+}
 type ChartModel = {
   bars: Bar[];
   total: number;
@@ -141,28 +172,37 @@ export function MetricSection() {
     } else {
       const u = apiMeta.unit;
       const cmpVals = hasCompare ? data.buckets.map((b) => (b.compareValue ?? 0) * u) : [];
-      const revenue = hasRevenueBreakdown(data) ? data : null;
+      // Only revenue and order quantity carry a channel split; the others fall
+      // back to the plain single-colour bar.
+      const channelData = apiMeta.stackByChannel && hasChannelBreakdown(data) ? data : null;
+      const revenueData = hasRevenueComponents(data) ? data : null;
       const grandTotal = data.summary.total * u;
       model = {
         bars: data.buckets.map((b, i) => {
-          const row = revenue?.buckets[i];
+          const row = channelData?.buckets[i];
           return {
             label: b.label,
+            weekday: weekdayInitial(b.key),
             value: b.value * u,
             compare: hasCompare ? (b.compareValue ?? 0) * u : null,
-            // Zero parts are dropped rather than floored to 1px — a day with no
-            // tips must not show a tip sliver. A day with no revenue at all keeps
-            // `null` so it falls back to the plain 2px stub like every other metric.
-            segments: row ? nonEmpty(REVENUE_PARTS.map((p) => ({ ...p, value: row[p.id] * u })).filter((seg) => seg.value > 0)) : null,
+            // Zero channels are dropped rather than floored to 1px — a day with
+            // no DoorDash orders must not show a DoorDash sliver. A day with no
+            // value at all keeps `null` so it falls back to the plain 2px stub.
+            segments: row
+              ? nonEmpty(CHANNEL_PARTS.map((p) => ({ ...p, value: row.channels[p.id] * u })).filter((seg) => seg.value > 0))
+              : null,
+            components: revenueData?.buckets[i]
+              ? REVENUE_COMPONENTS.map((c) => ({ label: c.label, value: revenueData.buckets[i]![c.id] * u }))
+              : null,
           };
         }),
-        parts: revenue
-          ? REVENUE_PARTS.map((p) => ({
+        parts: channelData
+          ? CHANNEL_PARTS.map((p) => ({
               id: p.id,
               label: p.label,
               color: p.color,
-              total: revenue.summary[p.id] * u,
-              share: grandTotal > 0 ? (revenue.summary[p.id] * u) / grandTotal : 0,
+              total: channelData.summary.channels[p.id] * u,
+              share: grandTotal > 0 ? (channelData.summary.channels[p.id] * u) / grandTotal : 0,
             }))
           : null,
         total: grandTotal,
@@ -183,7 +223,7 @@ export function MetricSection() {
     const total = agg(cur);
     const compareTotal = hasCompare ? agg(cmp) : null;
     model = {
-      bars: cur.map((v, i) => ({ label: labelFor(i, count, span, end), value: v, compare: hasCompare ? cmp[i] : null, segments: null })),
+      bars: cur.map((v, i) => ({ label: labelFor(i, count, span, end), weekday: null, value: v, compare: hasCompare ? cmp[i] : null, segments: null, components: null })),
       parts: null,
       total,
       compareTotal,
@@ -281,7 +321,14 @@ export function MetricSection() {
                 {model.bars.map((b, i) => {
                   const show = i % model!.labelStep === 0 || i === count - 1;
                   return (
-                    <div key={i} style={{ flex: 1, minWidth: 0, textAlign: "center", fontSize: 10.5, color: hover === i ? "#F1F1F1" : "#9B9B9B", fontFamily: "var(--font-mono)", whiteSpace: "nowrap", overflow: "hidden" }}>{show ? b.label : ""}</div>
+                    <div key={i} style={{ flex: 1, minWidth: 0, textAlign: "center", fontSize: 10.5, color: hover === i ? "#F1F1F1" : "#9B9B9B", fontFamily: "var(--font-mono)", whiteSpace: "nowrap", overflow: "hidden" }}>
+                      {/* Weekday sits above the date so it costs no horizontal
+                          room — these labels already thin out on long ranges. */}
+                      {show && b.weekday && (
+                        <div style={{ fontSize: 9.5, lineHeight: 1.4, color: hover === i ? "#C7C8CC" : "#6E6F75" }}>{b.weekday}</div>
+                      )}
+                      {show ? b.label : ""}
+                    </div>
                   );
                 })}
               </div>
@@ -291,7 +338,7 @@ export function MetricSection() {
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 14, fontSize: 12.5, color: "#F1F1F2" }}>
                     <span style={{ display: "flex", alignItems: "center", gap: 7 }}>
                       <span style={{ width: 7, height: 7, borderRadius: 2, background: "#FF5C1A" }} />
-                      {model.bars[hover].segments ? "Total revenue" : metric.label}
+                      {model.bars[hover].segments ? `Total ${metric.label.toLowerCase()}` : metric.label}
                     </span>
                     <span style={{ fontFamily: "var(--font-mono)" }}>{fmt(model.bars[hover].value, model.format)}</span>
                   </div>
@@ -303,8 +350,21 @@ export function MetricSection() {
                       <span style={{ fontFamily: "var(--font-mono)", color: "#F1F1F2" }}>{fmt(seg.value, model!.format)}</span>
                     </div>
                   ))}
+                  {/* What the revenue is made of, under a rule so it reads as a
+                      second cut of the same total rather than more channels. */}
+                  {model.bars[hover].components && (
+                    <>
+                      <div style={{ height: 1, background: "rgba(255,255,255,0.1)", margin: "8px 0 6px" }} />
+                      {model.bars[hover].components!.map((c) => (
+                        <div key={c.label} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 14, fontSize: 11.5, color: "#9A9BA1", marginTop: 3 }}>
+                          <span>{c.label}</span>
+                          <span style={{ fontFamily: "var(--font-mono)", color: "#C7C8CC" }}>{fmt(c.value, model!.format)}</span>
+                        </div>
+                      ))}
+                    </>
+                  )}
                   {model.hasCompare && model.bars[hover].compare != null && (
-                    <div style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 11.5, color: "#9A9BA1", marginTop: 4 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 11.5, color: "#9A9BA1", marginTop: model.bars[hover].components ? 8 : 4 }}>
                       <span style={{ width: 7, height: 7, borderRadius: 2, background: "#3D3E42" }} />{fmt(model.bars[hover].compare ?? 0, model.format) + " · " + rc.label}
                     </div>
                   )}

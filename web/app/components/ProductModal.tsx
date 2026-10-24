@@ -62,6 +62,21 @@ const resolveModifierGroupTitle = (
   return localizedTitle || englishTitle || modifierGroup?.title || "Select options";
 };
 
+/**
+ * Geometry shared by every modal in the product flow — the product page, the
+ * combo seat picker and the modifier sheet — so they are the same size instead
+ * of the picker shrinking to a narrower panel on top of a full-width product.
+ *
+ * Full-bleed, pinned to the top. Horizontal centring is inherited from
+ * `DialogContent` (`left-1/2` + `-translate-x-1/2`) and deliberately not
+ * overridden, so the modals stay centred if a max-width is reintroduced.
+ */
+const MODAL_SHELL =
+  "!top-0 !translate-y-0 !w-screen !max-w-none !h-[100svh] !max-h-[100svh] !p-0 !gap-0 bg-foreground transition-all overflow-hidden rounded-none";
+
+/** The two step sheets lay their header/body/footer out as a column. */
+const MODAL_SHELL_COLUMN = `${MODAL_SHELL} !min-h-0 !flex !flex-col`;
+
 const resolveComboSlotTitle = (
   comboSlot: TComboSlot | undefined,
   index: number,
@@ -646,7 +661,7 @@ const ProductModal: React.FC<TProductModal> = ({
     >
       <DialogContent
         showCloseButton={false}
-        className="!top-0 !left-0 !right-0 !bottom-0 !translate-x-0 !translate-y-0 !w-screen !max-w-none !h-[100svh] !max-h-[100svh] !p-0 !gap-0 bg-foreground transition-all overflow-hidden rounded-none"
+        className={MODAL_SHELL}
         style={fullscreenModalStyle}
       >
         <DialogTitle className="sr-only">
@@ -755,23 +770,19 @@ const ProductModal: React.FC<TProductModal> = ({
                           <div key={slot.id} className="flex flex-col gap-2.5">
                             <div className="flex items-start gap-2.5">
                               <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2">
-                                <span className="text-[15px] font-semibold text-text">
+                                <span className="text-[17px] font-semibold text-text">
                                   {slotTitle}
                                 </span>
-                                <span
-                                  className={`inline-flex h-5 items-center rounded-full px-2 text-[10.5px] font-bold ${
-                                    isSlotRequired
-                                      ? "bg-brandBackground/10 text-brandBackground"
-                                      : "bg-foreground text-lightText"
-                                  }`}
-                                >
-                                  {isSlotRequired
-                                    ? content["comboRequired"] || "Required"
-                                    : content["comboOptional"] || "Optional"}
-                                </span>
+                                {/* Required is the default, so only optional slots
+                                    are tagged — the counter carries progress. */}
+                                {!isSlotRequired && (
+                                  <span className="inline-flex h-6 items-center rounded-full bg-foreground px-2.5 text-[12px] font-bold text-lightText">
+                                    {content["comboOptional"] || "Optional"}
+                                  </span>
+                                )}
                               </div>
                               <span
-                                className={`inline-flex h-6 shrink-0 items-center rounded-full px-2.5 text-[11.5px] font-semibold ${
+                                className={`inline-flex h-6 shrink-0 items-center rounded-full px-2.5 text-[13px] font-semibold ${
                                   isSlotSatisfied
                                     ? "bg-[#DCFCE7] text-[#16A34A]"
                                     : "bg-foreground text-lightText"
@@ -807,24 +818,24 @@ const ProductModal: React.FC<TProductModal> = ({
                                           stage: "item",
                                         })
                                       }
-                                      className="flex w-full items-center gap-3 rounded-xl border border-dashed border-[#C9C9C9] px-3 py-3.5 text-left transition hover:border-brandBackground"
+                                      className="flex w-full items-center gap-3 rounded-xl border-2 border-dashed border-[#A5A5A5] px-3 py-3.5 text-left transition hover:border-brandBackground"
                                     >
-                                      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-foreground text-[12.5px] font-bold text-lightText">
+                                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-foreground text-[13.5px] font-bold text-lightText">
                                         {seatIndex + 1}
                                       </span>
                                       <span className="flex min-w-0 flex-1 flex-col gap-0.5">
-                                        <span className="truncate text-[13.5px] font-semibold text-text">
+                                        <span className="truncate text-[15px] font-semibold text-text">
                                           {formatTemplate(
                                             content["comboChoose"],
                                             { item: slotTitle.toLowerCase() },
                                             "Choose {item}",
                                           )}
                                         </span>
-                                        <span className="text-[11.5px] text-lightText">
-                                          {seatIndex < requiredCount
-                                            ? content["comboRequired"] || "Required"
-                                            : content["comboOptional"] || "Optional"}
-                                        </span>
+                                        {seatIndex >= requiredCount && (
+                                          <span className="text-[13px] text-lightText">
+                                            {content["comboOptional"] || "Optional"}
+                                          </span>
+                                        )}
                                       </span>
                                       <FiPlus
                                         size={18}
@@ -837,22 +848,25 @@ const ProductModal: React.FC<TProductModal> = ({
                                 return (
                                   <div
                                     key={`${slot.id}-${seatIndex}`}
-                                    className={`overflow-hidden rounded-xl border bg-background ${
+                                    className={`overflow-hidden rounded-xl border-2 bg-background ${
                                       seatIncomplete
                                         ? "border-brandBackground"
-                                        : "border-[#E4E4E4]"
+                                        : "border-[#CFCFCF]"
                                     }`}
                                   >
                                     <div className="flex items-center gap-3 px-3 py-3">
-                                      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brandBackground text-[12.5px] font-bold text-white">
+                                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brandBackground text-[13.5px] font-bold text-white">
                                         {seatIndex + 1}
                                       </span>
                                       <span className="flex min-w-0 flex-1 flex-col gap-0.5">
-                                        <span className="truncate text-[13.5px] font-semibold text-text">
+                                        <span className="truncate text-[15px] font-semibold text-text">
                                           {resolveComboOptionTitle(option, lg)}
                                         </span>
+                                        {/* Wraps instead of truncating: a seat with
+                                            several modifiers would otherwise run
+                                            off the side of the card. */}
                                         <span
-                                          className={`truncate text-[11.5px] ${
+                                          className={`break-words text-[13px] ${
                                             seatIncomplete
                                               ? "font-semibold text-brandBackground"
                                               : "text-lightText"
@@ -867,12 +881,11 @@ const ProductModal: React.FC<TProductModal> = ({
                                                 "No extras"}
                                         </span>
                                       </span>
-                                      <span className="shrink-0 text-[12px] text-lightText">
-                                        {seatExtraPrice > 0
-                                          ? `+${formatCurrency(seatExtraPrice)}`
-                                          : content["comboIncludedLabel"] ||
-                                            "Included"}
-                                      </span>
+                                      {seatExtraPrice > 0 && (
+                                        <span className="shrink-0 text-[13px] text-lightText">
+                                          {`+${formatCurrency(seatExtraPrice)}`}
+                                        </span>
+                                      )}
                                       <button
                                         type="button"
                                         title={content["comboRemove"] || "Remove"}
@@ -894,7 +907,7 @@ const ProductModal: React.FC<TProductModal> = ({
                                               stage: 0,
                                             })
                                           }
-                                          className={`h-11 rounded-full px-4 text-[12.5px] font-semibold transition ${
+                                          className={`h-11 rounded-full px-4 text-[13.5px] font-semibold transition ${
                                             seatIncomplete
                                               ? "bg-brandBackground text-white"
                                               : "border border-[#E4E4E4] bg-background text-text"
@@ -916,7 +929,7 @@ const ProductModal: React.FC<TProductModal> = ({
                                             stage: "item",
                                           })
                                         }
-                                        className="h-11 rounded-full border border-[#E4E4E4] bg-background px-4 text-[12.5px] font-semibold text-text transition"
+                                        className="h-11 rounded-full border border-[#E4E4E4] bg-background px-4 text-[13.5px] font-semibold text-text transition"
                                       >
                                         {content["comboSwap"] || "Swap item"}
                                       </button>
@@ -947,7 +960,7 @@ const ProductModal: React.FC<TProductModal> = ({
                 </div>
               </div>
             </div>
-            <div className="shrink-0 pt-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] px-4 bg-background w-full flex flex-row items-center justify-between lg:justify-end lg:gap-4">
+            <div className="shrink-0 pt-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] px-4 bg-background w-full flex flex-row items-center justify-between gap-4 lg:justify-end">
               <QuantitySelector
                 onChange={(value) => setQuantity(value)}
                 value={quantity}
@@ -1106,28 +1119,9 @@ const ComboSeatPickerModal: React.FC<TComboSeatPickerModal> = ({
   );
 
   const slotTitle = resolveComboSlotTitle(slot, seatIndex, lg);
-  const stepCount = 1 + modifierGroups.length;
-  const activeStepIndex = isItemStage ? 0 : groupIndex + 1;
-
   const title = isItemStage
     ? slotTitle
     : resolveModifierGroupTitle(modifierGroup, lg);
-  const subtitle = isItemStage
-    ? formatTemplate(
-        content["comboSeatOf"],
-        { current: seatIndex + 1, total: Math.max(1, slot.maxSelect ?? 1) },
-        "Slot {current} of {total}",
-      )
-    : `${resolveComboOptionTitle(selectedOption, lg)} \u00b7 ${
-        maxSelection === 1
-          ? content["comboChooseOne"] || "choose 1 option"
-          : formatTemplate(
-              content["comboChooseUpTo"],
-              { max: maxSelection },
-              "up to {max} options",
-            )
-      }`;
-
   const handleBack = () => {
     if (groupIndex <= 0) {
       onStageChange("item");
@@ -1162,7 +1156,7 @@ const ComboSeatPickerModal: React.FC<TComboSeatPickerModal> = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         showCloseButton={false}
-        className="!top-0 !left-0 !right-0 !bottom-0 !translate-x-0 !translate-y-0 !w-screen sm:!max-w-[900px] !h-[100svh] !max-h-[100svh] !min-h-0 !flex !flex-col !p-0 !gap-0 bg-foreground transition-all"
+        className={MODAL_SHELL_COLUMN}
         style={fullscreenModalStyle}
       >
         <DialogTitle className="sr-only">{title}</DialogTitle>
@@ -1177,11 +1171,8 @@ const ComboSeatPickerModal: React.FC<TComboSeatPickerModal> = ({
               <FiArrowLeft size={17} />
             </button>
           )}
-          <span className="text-center text-[21px] font-bold text-text">
+          <span className="text-center text-[26px] font-bold leading-tight text-text">
             {title}
-          </span>
-          <span className="text-center text-[12.5px] text-lightText">
-            {subtitle}
           </span>
           <DialogClose asChild>
             <button
@@ -1193,21 +1184,6 @@ const ComboSeatPickerModal: React.FC<TComboSeatPickerModal> = ({
             </button>
           </DialogClose>
         </div>
-
-        {stepCount > 1 && (
-          <div className="flex shrink-0 items-center gap-1.5 px-4 pb-3">
-            {Array.from({ length: stepCount }, (_, stepIndex) => (
-              <span
-                key={stepIndex}
-                className={`h-[3px] flex-1 rounded-full ${
-                  stepIndex <= activeStepIndex
-                    ? "bg-brandBackground"
-                    : "bg-[#DCDCDC]"
-                }`}
-              />
-            ))}
-          </div>
-        )}
 
         <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-4">
           <div className="grid grid-cols-2 gap-3 min-[600px]:grid-cols-3">
@@ -1222,9 +1198,6 @@ const ComboSeatPickerModal: React.FC<TComboSeatPickerModal> = ({
                       title={resolveComboOptionTitle(option, lg)}
                       photoUrl={option.productPhotoUrl}
                       price={option.extraPrice}
-                      includedLabel={
-                        content["comboIncludedLabel"] || "Included"
-                      }
                       onSelect={() =>
                         onChooseOption(slot, seatIndex, option.productId)
                       }
@@ -1244,9 +1217,6 @@ const ComboSeatPickerModal: React.FC<TComboSeatPickerModal> = ({
                       title={resolveModifierItemTitle(modifierItem, lg)}
                       photoUrl={modifierItem.photo?.url}
                       price={modifierItem.price}
-                      includedLabel={
-                        content["comboIncludedLabel"] || "Included"
-                      }
                       onSelect={() =>
                         onToggleModifier(
                           slot,
@@ -1281,7 +1251,6 @@ type TComboChoiceCardProps = {
   title: string;
   photoUrl?: string;
   price: number;
-  includedLabel: string;
   onSelect: () => void;
 };
 
@@ -1291,19 +1260,20 @@ const ComboChoiceCard: React.FC<TComboChoiceCardProps> = ({
   title,
   photoUrl,
   price,
-  includedLabel,
   onSelect,
 }) => (
   <button
     type="button"
     disabled={disabled}
     onClick={onSelect}
-    className={`relative flex flex-col items-center gap-2 rounded-2xl border-2 bg-background p-3 transition disabled:opacity-50 ${
+    // `justify-center` matters for the photo-less cards: grid rows stretch, so
+    // without it their label clings to the top of a tall empty card.
+    className={`relative flex flex-col items-center justify-center gap-2 rounded-2xl border-2 bg-background p-3 transition disabled:opacity-50 ${
       active ? "border-brandBackground" : "border-transparent"
     }`}
   >
-    <span className="block aspect-square w-full overflow-hidden rounded-lg bg-foreground">
-      {photoUrl ? (
+    {photoUrl ? (
+      <span className="block aspect-square w-full overflow-hidden rounded-lg bg-foreground">
         <ProductImage
           src={photoUrl}
           alt={`${title} photo`}
@@ -1311,18 +1281,16 @@ const ComboChoiceCard: React.FC<TComboChoiceCardProps> = ({
           quality={80}
           sizes="(max-width: 640px) 50vw, 200px"
         />
-      ) : null}
-    </span>
-    <span className="text-center text-[13.5px] font-bold text-text">{title}</span>
-    <span
-      className={
-        price > 0
-          ? "text-[16px] font-bold text-text"
-          : "text-[12.5px] font-medium text-lightText"
-      }
-    >
-      {price > 0 ? `+ ${formatCurrency(price)}` : includedLabel}
-    </span>
+      </span>
+    ) : null}
+    <span className="text-center text-[16px] font-bold text-text">{title}</span>
+    {/* Nothing is shown when the option costs nothing — "Included" was noise on
+        every card. Only a surcharge is worth calling out. */}
+    {price > 0 && (
+      <span className="text-[16px] font-bold text-text">
+        {`+ ${formatCurrency(price)}`}
+      </span>
+    )}
     {active && (
       <span className="absolute right-2 top-2 flex h-[22px] w-[22px] items-center justify-center rounded-full bg-brandBackground text-white">
         <FiCheck size={12} strokeWidth={3} />
@@ -1427,7 +1395,7 @@ const ModifierModal: React.FC<TModifierModal> = ({
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent
         showCloseButton={false}
-        className="!top-0 !left-0 !translate-x-0 !translate-y-0 !w-screen sm:!max-w-[900px] !h-[100svh] !max-h-[100svh] !min-h-0 !flex !flex-col !p-0 !gap-0 bg-foreground transition-all"
+        className={MODAL_SHELL_COLUMN}
         style={fullscreenModalStyle}
       >
         <DialogTitle className="sr-only">

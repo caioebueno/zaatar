@@ -1179,6 +1179,7 @@ model Order {
   branch                           Branch?                   @relation(fields: [branchId], references: [id])
   orderProducts                    OrderProducts[]
   payments                         OrderPayment[]
+  adjustments                      OrderAdjustment[]
   customerId                       String?
   externalId                       String?                   @unique
   dispatchId                       String?
@@ -1194,6 +1195,24 @@ model Order {
   @@index([dispatchId, dispatchOrderIndex])
   @@index([branchId])
   @@index([sourcePlatform])
+}
+
+enum OrderAdjustmentType {
+  DISCOUNT
+  EXTRA_CHARGE
+}
+
+model OrderAdjustment {
+  id          String              @id
+  createdAt   DateTime            @default(now())
+  type        OrderAdjustmentType
+  amount      Int
+  description String
+  order       Order               @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId     String
+
+  @@index([orderId])
+  @@index([type])
 }
 
 model OrderPayment {
@@ -1348,17 +1367,22 @@ enum OrderStatus {
 }
 
 model OrderProducts {
-  id                 String              @id
-  createdAt          DateTime            @default(now())
-  product            Product             @relation(fields: [productId], references: [id], onDelete: Cascade)
-  productId          String
-  quantity           Int
-  comments           String?
-  modifierGroupItems ModifierGroupItem[]
-  fullAmount         Int
-  amount             Int
-  order              Order?              @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  orderId            String?
+  id                       String              @id
+  createdAt                DateTime            @default(now())
+  product                  Product             @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId                String
+  quantity                 Int
+  comments                 String?
+  modifierGroupItems       ModifierGroupItem[]
+  fullAmount               Int
+  amount                   Int
+  order                    Order?              @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId                  String?
+  comboProduct             OrderProducts?      @relation("OrderProductComboSelections", fields: [comboProductId], references: [id], onDelete: Cascade)
+  comboProductId           String?
+  selectedProducts         OrderProducts[]     @relation("OrderProductComboSelections")
+
+  @@index([comboProductId])
 }
 
 model OrderIntentProduct {

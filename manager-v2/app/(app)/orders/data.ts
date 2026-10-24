@@ -3,10 +3,23 @@
  * The table is backed by the real `GET /v1/order` API (see app/lib/api.ts).
  */
 
+import { APP_TIMEZONE } from "../../lib/api";
 import type { OrderListItem, OrderListPayment } from "../../lib/api";
 
-const now = new Date();
-export const TODAY = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+/**
+ * Today's calendar day in APP_TIMEZONE (the zone the API filters by), as a
+ * local-midnight Date. Computed on every call so long-open tabs roll over.
+ */
+export function today(): Date {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: APP_TIMEZONE,
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+  }).formatToParts(new Date());
+  const get = (t: string) => Number(parts.find((p) => p.type === t)?.value);
+  return new Date(get("year"), get("month") - 1, get("day"));
+}
 export const DAY_MS = 86400000;
 
 export const RANGES = [
@@ -71,7 +84,7 @@ export function resolveRange(
     return { id: "custom", label: fmtDate(customStart) + " – " + fmtDate(customEnd), days, end: customEnd };
   }
   const r = RANGES.find((x) => x.id === rid) ?? RANGES[2];
-  return { id: r.id, label: r.label, days: r.days, end: TODAY };
+  return { id: r.id, label: r.label, days: r.days, end: today() };
 }
 
 // ── Order-status / type / payment presentation ──────────────

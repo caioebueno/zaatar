@@ -304,6 +304,11 @@ export type PromotialMessage = $Result.DefaultSelection<Prisma.$PromotialMessage
  */
 export type Order = $Result.DefaultSelection<Prisma.$OrderPayload>
 /**
+ * Model OrderAdjustment
+ * 
+ */
+export type OrderAdjustment = $Result.DefaultSelection<Prisma.$OrderAdjustmentPayload>
+/**
  * Model OrderPayment
  * 
  */
@@ -599,6 +604,14 @@ export const CustomerOtpChannel: {
 export type CustomerOtpChannel = (typeof CustomerOtpChannel)[keyof typeof CustomerOtpChannel]
 
 
+export const OrderAdjustmentType: {
+  DISCOUNT: 'DISCOUNT',
+  EXTRA_CHARGE: 'EXTRA_CHARGE'
+};
+
+export type OrderAdjustmentType = (typeof OrderAdjustmentType)[keyof typeof OrderAdjustmentType]
+
+
 export const CustomerFeedbackSentiment: {
   NEGATIVE: 'NEGATIVE',
   NEUTRAL: 'NEUTRAL',
@@ -828,6 +841,10 @@ export const ProductItemType: typeof $Enums.ProductItemType
 export type CustomerOtpChannel = $Enums.CustomerOtpChannel
 
 export const CustomerOtpChannel: typeof $Enums.CustomerOtpChannel
+
+export type OrderAdjustmentType = $Enums.OrderAdjustmentType
+
+export const OrderAdjustmentType: typeof $Enums.OrderAdjustmentType
 
 export type CustomerFeedbackSentiment = $Enums.CustomerFeedbackSentiment
 
@@ -1587,6 +1604,16 @@ export class PrismaClient<
   get order(): Prisma.OrderDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.orderAdjustment`: Exposes CRUD operations for the **OrderAdjustment** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more OrderAdjustments
+    * const orderAdjustments = await prisma.orderAdjustment.findMany()
+    * ```
+    */
+  get orderAdjustment(): Prisma.OrderAdjustmentDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.orderPayment`: Exposes CRUD operations for the **OrderPayment** model.
     * Example usage:
     * ```ts
@@ -2217,6 +2244,7 @@ export namespace Prisma {
     Message: 'Message',
     PromotialMessage: 'PromotialMessage',
     Order: 'Order',
+    OrderAdjustment: 'OrderAdjustment',
     OrderPayment: 'OrderPayment',
     OrderIntent: 'OrderIntent',
     CustomerFeedback: 'CustomerFeedback',
@@ -2246,7 +2274,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "station" | "preparationStep" | "preparationStepCategory" | "preparationStepTrack" | "preparationStepModifierTrack" | "progressiveDiscount" | "progressiveDiscountStep" | "progressiveDiscountPrize" | "progressiveDiscountPrizeProduct" | "file" | "modifierGroup" | "modifierGroupItem" | "business" | "user" | "userPushDevice" | "ownerOtpChallenge" | "externalIntegrationConnection" | "squareConnection" | "squareCatalogSyncTask" | "squareWebhookRun" | "squareWebhookRunAttempt" | "externalMenuEntityMap" | "externalMenuSyncRun" | "businessMember" | "branch" | "driver" | "driverActivationEvent" | "dispatch" | "dispatchRouteSession" | "dispatchRoutePoint" | "dispatchRouteMilestone" | "dispatchAssignmentJob" | "dispatchRouteMetricsRefreshJob" | "dispatchEtaRecalculationJob" | "feedbackWhatsAppJob" | "dispatchWhatsAppJob" | "address" | "product" | "comboProductItem" | "exclusivePromotion" | "exclusivePromotionProduct" | "menu" | "menuVisit" | "category" | "menuCategory" | "productCategory" | "comboSlot" | "comboSlotOption" | "campaign" | "customer" | "customerCard" | "customerOtpChallenge" | "customerAccessToken" | "deliveryAddress" | "externalAddress" | "message" | "promotialMessage" | "order" | "orderPayment" | "orderIntent" | "customerFeedback" | "customerReward" | "orderProducts" | "orderIntentProduct" | "inventoryPlace" | "inventoryProduct" | "inventoryStock" | "inventoryChecklist" | "inventoryChecklistItem" | "inventoryAlert" | "inventoryStockEvent" | "feedbackSettings"
+      modelProps: "station" | "preparationStep" | "preparationStepCategory" | "preparationStepTrack" | "preparationStepModifierTrack" | "progressiveDiscount" | "progressiveDiscountStep" | "progressiveDiscountPrize" | "progressiveDiscountPrizeProduct" | "file" | "modifierGroup" | "modifierGroupItem" | "business" | "user" | "userPushDevice" | "ownerOtpChallenge" | "externalIntegrationConnection" | "squareConnection" | "squareCatalogSyncTask" | "squareWebhookRun" | "squareWebhookRunAttempt" | "externalMenuEntityMap" | "externalMenuSyncRun" | "businessMember" | "branch" | "driver" | "driverActivationEvent" | "dispatch" | "dispatchRouteSession" | "dispatchRoutePoint" | "dispatchRouteMilestone" | "dispatchAssignmentJob" | "dispatchRouteMetricsRefreshJob" | "dispatchEtaRecalculationJob" | "feedbackWhatsAppJob" | "dispatchWhatsAppJob" | "address" | "product" | "comboProductItem" | "exclusivePromotion" | "exclusivePromotionProduct" | "menu" | "menuVisit" | "category" | "menuCategory" | "productCategory" | "comboSlot" | "comboSlotOption" | "campaign" | "customer" | "customerCard" | "customerOtpChallenge" | "customerAccessToken" | "deliveryAddress" | "externalAddress" | "message" | "promotialMessage" | "order" | "orderAdjustment" | "orderPayment" | "orderIntent" | "customerFeedback" | "customerReward" | "orderProducts" | "orderIntentProduct" | "inventoryPlace" | "inventoryProduct" | "inventoryStock" | "inventoryChecklist" | "inventoryChecklistItem" | "inventoryAlert" | "inventoryStockEvent" | "feedbackSettings"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -6542,6 +6570,80 @@ export namespace Prisma {
           }
         }
       }
+      OrderAdjustment: {
+        payload: Prisma.$OrderAdjustmentPayload<ExtArgs>
+        fields: Prisma.OrderAdjustmentFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.OrderAdjustmentFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderAdjustmentPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.OrderAdjustmentFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderAdjustmentPayload>
+          }
+          findFirst: {
+            args: Prisma.OrderAdjustmentFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderAdjustmentPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.OrderAdjustmentFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderAdjustmentPayload>
+          }
+          findMany: {
+            args: Prisma.OrderAdjustmentFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderAdjustmentPayload>[]
+          }
+          create: {
+            args: Prisma.OrderAdjustmentCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderAdjustmentPayload>
+          }
+          createMany: {
+            args: Prisma.OrderAdjustmentCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.OrderAdjustmentCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderAdjustmentPayload>[]
+          }
+          delete: {
+            args: Prisma.OrderAdjustmentDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderAdjustmentPayload>
+          }
+          update: {
+            args: Prisma.OrderAdjustmentUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderAdjustmentPayload>
+          }
+          deleteMany: {
+            args: Prisma.OrderAdjustmentDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.OrderAdjustmentUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.OrderAdjustmentUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderAdjustmentPayload>[]
+          }
+          upsert: {
+            args: Prisma.OrderAdjustmentUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderAdjustmentPayload>
+          }
+          aggregate: {
+            args: Prisma.OrderAdjustmentAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateOrderAdjustment>
+          }
+          groupBy: {
+            args: Prisma.OrderAdjustmentGroupByArgs<ExtArgs>
+            result: $Utils.Optional<OrderAdjustmentGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.OrderAdjustmentCountArgs<ExtArgs>
+            result: $Utils.Optional<OrderAdjustmentCountAggregateOutputType> | number
+          }
+        }
+      }
       OrderPayment: {
         payload: Prisma.$OrderPaymentPayload<ExtArgs>
         fields: Prisma.OrderPaymentFieldRefs
@@ -7744,6 +7846,7 @@ export namespace Prisma {
     message?: MessageOmit
     promotialMessage?: PromotialMessageOmit
     order?: OrderOmit
+    orderAdjustment?: OrderAdjustmentOmit
     orderPayment?: OrderPaymentOmit
     orderIntent?: OrderIntentOmit
     customerFeedback?: CustomerFeedbackOmit
@@ -9225,6 +9328,7 @@ export namespace Prisma {
   export type OrderCountOutputType = {
     orderProducts: number
     payments: number
+    adjustments: number
     preparationStepCategories: number
     issuedRewards: number
     redeemedRewards: number
@@ -9233,6 +9337,7 @@ export namespace Prisma {
   export type OrderCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     orderProducts?: boolean | OrderCountOutputTypeCountOrderProductsArgs
     payments?: boolean | OrderCountOutputTypeCountPaymentsArgs
+    adjustments?: boolean | OrderCountOutputTypeCountAdjustmentsArgs
     preparationStepCategories?: boolean | OrderCountOutputTypeCountPreparationStepCategoriesArgs
     issuedRewards?: boolean | OrderCountOutputTypeCountIssuedRewardsArgs
     redeemedRewards?: boolean | OrderCountOutputTypeCountRedeemedRewardsArgs
@@ -9261,6 +9366,13 @@ export namespace Prisma {
    */
   export type OrderCountOutputTypeCountPaymentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: OrderPaymentWhereInput
+  }
+
+  /**
+   * OrderCountOutputType without action
+   */
+  export type OrderCountOutputTypeCountAdjustmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OrderAdjustmentWhereInput
   }
 
   /**
@@ -9322,10 +9434,12 @@ export namespace Prisma {
 
   export type OrderProductsCountOutputType = {
     modifierGroupItems: number
+    selectedProducts: number
   }
 
   export type OrderProductsCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     modifierGroupItems?: boolean | OrderProductsCountOutputTypeCountModifierGroupItemsArgs
+    selectedProducts?: boolean | OrderProductsCountOutputTypeCountSelectedProductsArgs
   }
 
   // Custom InputTypes
@@ -9344,6 +9458,13 @@ export namespace Prisma {
    */
   export type OrderProductsCountOutputTypeCountModifierGroupItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ModifierGroupItemWhereInput
+  }
+
+  /**
+   * OrderProductsCountOutputType without action
+   */
+  export type OrderProductsCountOutputTypeCountSelectedProductsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OrderProductsWhereInput
   }
 
 
@@ -77797,6 +77918,7 @@ export namespace Prisma {
     branch?: boolean | Order$branchArgs<ExtArgs>
     orderProducts?: boolean | Order$orderProductsArgs<ExtArgs>
     payments?: boolean | Order$paymentsArgs<ExtArgs>
+    adjustments?: boolean | Order$adjustmentsArgs<ExtArgs>
     preparationStepCategories?: boolean | Order$preparationStepCategoriesArgs<ExtArgs>
     feedback?: boolean | Order$feedbackArgs<ExtArgs>
     issuedRewards?: boolean | Order$issuedRewardsArgs<ExtArgs>
@@ -77928,6 +78050,7 @@ export namespace Prisma {
     branch?: boolean | Order$branchArgs<ExtArgs>
     orderProducts?: boolean | Order$orderProductsArgs<ExtArgs>
     payments?: boolean | Order$paymentsArgs<ExtArgs>
+    adjustments?: boolean | Order$adjustmentsArgs<ExtArgs>
     preparationStepCategories?: boolean | Order$preparationStepCategoriesArgs<ExtArgs>
     feedback?: boolean | Order$feedbackArgs<ExtArgs>
     issuedRewards?: boolean | Order$issuedRewardsArgs<ExtArgs>
@@ -77962,6 +78085,7 @@ export namespace Prisma {
       branch: Prisma.$BranchPayload<ExtArgs> | null
       orderProducts: Prisma.$OrderProductsPayload<ExtArgs>[]
       payments: Prisma.$OrderPaymentPayload<ExtArgs>[]
+      adjustments: Prisma.$OrderAdjustmentPayload<ExtArgs>[]
       preparationStepCategories: Prisma.$PreparationStepCategoryPayload<ExtArgs>[]
       feedback: Prisma.$CustomerFeedbackPayload<ExtArgs> | null
       issuedRewards: Prisma.$CustomerRewardPayload<ExtArgs>[]
@@ -78401,6 +78525,7 @@ export namespace Prisma {
     branch<T extends Order$branchArgs<ExtArgs> = {}>(args?: Subset<T, Order$branchArgs<ExtArgs>>): Prisma__BranchClient<$Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     orderProducts<T extends Order$orderProductsArgs<ExtArgs> = {}>(args?: Subset<T, Order$orderProductsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderProductsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     payments<T extends Order$paymentsArgs<ExtArgs> = {}>(args?: Subset<T, Order$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderPaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    adjustments<T extends Order$adjustmentsArgs<ExtArgs> = {}>(args?: Subset<T, Order$adjustmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderAdjustmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     preparationStepCategories<T extends Order$preparationStepCategoriesArgs<ExtArgs> = {}>(args?: Subset<T, Order$preparationStepCategoriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PreparationStepCategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     feedback<T extends Order$feedbackArgs<ExtArgs> = {}>(args?: Subset<T, Order$feedbackArgs<ExtArgs>>): Prisma__CustomerFeedbackClient<$Result.GetResult<Prisma.$CustomerFeedbackPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     issuedRewards<T extends Order$issuedRewardsArgs<ExtArgs> = {}>(args?: Subset<T, Order$issuedRewardsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomerRewardPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -79028,6 +79153,30 @@ export namespace Prisma {
   }
 
   /**
+   * Order.adjustments
+   */
+  export type Order$adjustmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderAdjustment
+     */
+    select?: OrderAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderAdjustment
+     */
+    omit?: OrderAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderAdjustmentInclude<ExtArgs> | null
+    where?: OrderAdjustmentWhereInput
+    orderBy?: OrderAdjustmentOrderByWithRelationInput | OrderAdjustmentOrderByWithRelationInput[]
+    cursor?: OrderAdjustmentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: OrderAdjustmentScalarFieldEnum | OrderAdjustmentScalarFieldEnum[]
+  }
+
+  /**
    * Order.preparationStepCategories
    */
   export type Order$preparationStepCategoriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -79134,6 +79283,1116 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: OrderInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model OrderAdjustment
+   */
+
+  export type AggregateOrderAdjustment = {
+    _count: OrderAdjustmentCountAggregateOutputType | null
+    _avg: OrderAdjustmentAvgAggregateOutputType | null
+    _sum: OrderAdjustmentSumAggregateOutputType | null
+    _min: OrderAdjustmentMinAggregateOutputType | null
+    _max: OrderAdjustmentMaxAggregateOutputType | null
+  }
+
+  export type OrderAdjustmentAvgAggregateOutputType = {
+    amount: number | null
+  }
+
+  export type OrderAdjustmentSumAggregateOutputType = {
+    amount: number | null
+  }
+
+  export type OrderAdjustmentMinAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    type: $Enums.OrderAdjustmentType | null
+    amount: number | null
+    description: string | null
+    orderId: string | null
+  }
+
+  export type OrderAdjustmentMaxAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    type: $Enums.OrderAdjustmentType | null
+    amount: number | null
+    description: string | null
+    orderId: string | null
+  }
+
+  export type OrderAdjustmentCountAggregateOutputType = {
+    id: number
+    createdAt: number
+    type: number
+    amount: number
+    description: number
+    orderId: number
+    _all: number
+  }
+
+
+  export type OrderAdjustmentAvgAggregateInputType = {
+    amount?: true
+  }
+
+  export type OrderAdjustmentSumAggregateInputType = {
+    amount?: true
+  }
+
+  export type OrderAdjustmentMinAggregateInputType = {
+    id?: true
+    createdAt?: true
+    type?: true
+    amount?: true
+    description?: true
+    orderId?: true
+  }
+
+  export type OrderAdjustmentMaxAggregateInputType = {
+    id?: true
+    createdAt?: true
+    type?: true
+    amount?: true
+    description?: true
+    orderId?: true
+  }
+
+  export type OrderAdjustmentCountAggregateInputType = {
+    id?: true
+    createdAt?: true
+    type?: true
+    amount?: true
+    description?: true
+    orderId?: true
+    _all?: true
+  }
+
+  export type OrderAdjustmentAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which OrderAdjustment to aggregate.
+     */
+    where?: OrderAdjustmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OrderAdjustments to fetch.
+     */
+    orderBy?: OrderAdjustmentOrderByWithRelationInput | OrderAdjustmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: OrderAdjustmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OrderAdjustments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OrderAdjustments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned OrderAdjustments
+    **/
+    _count?: true | OrderAdjustmentCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: OrderAdjustmentAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: OrderAdjustmentSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: OrderAdjustmentMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: OrderAdjustmentMaxAggregateInputType
+  }
+
+  export type GetOrderAdjustmentAggregateType<T extends OrderAdjustmentAggregateArgs> = {
+        [P in keyof T & keyof AggregateOrderAdjustment]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateOrderAdjustment[P]>
+      : GetScalarType<T[P], AggregateOrderAdjustment[P]>
+  }
+
+
+
+
+  export type OrderAdjustmentGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OrderAdjustmentWhereInput
+    orderBy?: OrderAdjustmentOrderByWithAggregationInput | OrderAdjustmentOrderByWithAggregationInput[]
+    by: OrderAdjustmentScalarFieldEnum[] | OrderAdjustmentScalarFieldEnum
+    having?: OrderAdjustmentScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: OrderAdjustmentCountAggregateInputType | true
+    _avg?: OrderAdjustmentAvgAggregateInputType
+    _sum?: OrderAdjustmentSumAggregateInputType
+    _min?: OrderAdjustmentMinAggregateInputType
+    _max?: OrderAdjustmentMaxAggregateInputType
+  }
+
+  export type OrderAdjustmentGroupByOutputType = {
+    id: string
+    createdAt: Date
+    type: $Enums.OrderAdjustmentType
+    amount: number
+    description: string
+    orderId: string
+    _count: OrderAdjustmentCountAggregateOutputType | null
+    _avg: OrderAdjustmentAvgAggregateOutputType | null
+    _sum: OrderAdjustmentSumAggregateOutputType | null
+    _min: OrderAdjustmentMinAggregateOutputType | null
+    _max: OrderAdjustmentMaxAggregateOutputType | null
+  }
+
+  type GetOrderAdjustmentGroupByPayload<T extends OrderAdjustmentGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<OrderAdjustmentGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof OrderAdjustmentGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], OrderAdjustmentGroupByOutputType[P]>
+            : GetScalarType<T[P], OrderAdjustmentGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type OrderAdjustmentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    type?: boolean
+    amount?: boolean
+    description?: boolean
+    orderId?: boolean
+    order?: boolean | OrderDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["orderAdjustment"]>
+
+  export type OrderAdjustmentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    type?: boolean
+    amount?: boolean
+    description?: boolean
+    orderId?: boolean
+    order?: boolean | OrderDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["orderAdjustment"]>
+
+  export type OrderAdjustmentSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    type?: boolean
+    amount?: boolean
+    description?: boolean
+    orderId?: boolean
+    order?: boolean | OrderDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["orderAdjustment"]>
+
+  export type OrderAdjustmentSelectScalar = {
+    id?: boolean
+    createdAt?: boolean
+    type?: boolean
+    amount?: boolean
+    description?: boolean
+    orderId?: boolean
+  }
+
+  export type OrderAdjustmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "type" | "amount" | "description" | "orderId", ExtArgs["result"]["orderAdjustment"]>
+  export type OrderAdjustmentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    order?: boolean | OrderDefaultArgs<ExtArgs>
+  }
+  export type OrderAdjustmentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    order?: boolean | OrderDefaultArgs<ExtArgs>
+  }
+  export type OrderAdjustmentIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    order?: boolean | OrderDefaultArgs<ExtArgs>
+  }
+
+  export type $OrderAdjustmentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "OrderAdjustment"
+    objects: {
+      order: Prisma.$OrderPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      createdAt: Date
+      type: $Enums.OrderAdjustmentType
+      amount: number
+      description: string
+      orderId: string
+    }, ExtArgs["result"]["orderAdjustment"]>
+    composites: {}
+  }
+
+  type OrderAdjustmentGetPayload<S extends boolean | null | undefined | OrderAdjustmentDefaultArgs> = $Result.GetResult<Prisma.$OrderAdjustmentPayload, S>
+
+  type OrderAdjustmentCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<OrderAdjustmentFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: OrderAdjustmentCountAggregateInputType | true
+    }
+
+  export interface OrderAdjustmentDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['OrderAdjustment'], meta: { name: 'OrderAdjustment' } }
+    /**
+     * Find zero or one OrderAdjustment that matches the filter.
+     * @param {OrderAdjustmentFindUniqueArgs} args - Arguments to find a OrderAdjustment
+     * @example
+     * // Get one OrderAdjustment
+     * const orderAdjustment = await prisma.orderAdjustment.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends OrderAdjustmentFindUniqueArgs>(args: SelectSubset<T, OrderAdjustmentFindUniqueArgs<ExtArgs>>): Prisma__OrderAdjustmentClient<$Result.GetResult<Prisma.$OrderAdjustmentPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one OrderAdjustment that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {OrderAdjustmentFindUniqueOrThrowArgs} args - Arguments to find a OrderAdjustment
+     * @example
+     * // Get one OrderAdjustment
+     * const orderAdjustment = await prisma.orderAdjustment.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends OrderAdjustmentFindUniqueOrThrowArgs>(args: SelectSubset<T, OrderAdjustmentFindUniqueOrThrowArgs<ExtArgs>>): Prisma__OrderAdjustmentClient<$Result.GetResult<Prisma.$OrderAdjustmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first OrderAdjustment that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrderAdjustmentFindFirstArgs} args - Arguments to find a OrderAdjustment
+     * @example
+     * // Get one OrderAdjustment
+     * const orderAdjustment = await prisma.orderAdjustment.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends OrderAdjustmentFindFirstArgs>(args?: SelectSubset<T, OrderAdjustmentFindFirstArgs<ExtArgs>>): Prisma__OrderAdjustmentClient<$Result.GetResult<Prisma.$OrderAdjustmentPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first OrderAdjustment that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrderAdjustmentFindFirstOrThrowArgs} args - Arguments to find a OrderAdjustment
+     * @example
+     * // Get one OrderAdjustment
+     * const orderAdjustment = await prisma.orderAdjustment.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends OrderAdjustmentFindFirstOrThrowArgs>(args?: SelectSubset<T, OrderAdjustmentFindFirstOrThrowArgs<ExtArgs>>): Prisma__OrderAdjustmentClient<$Result.GetResult<Prisma.$OrderAdjustmentPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more OrderAdjustments that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrderAdjustmentFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all OrderAdjustments
+     * const orderAdjustments = await prisma.orderAdjustment.findMany()
+     * 
+     * // Get first 10 OrderAdjustments
+     * const orderAdjustments = await prisma.orderAdjustment.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const orderAdjustmentWithIdOnly = await prisma.orderAdjustment.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends OrderAdjustmentFindManyArgs>(args?: SelectSubset<T, OrderAdjustmentFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderAdjustmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a OrderAdjustment.
+     * @param {OrderAdjustmentCreateArgs} args - Arguments to create a OrderAdjustment.
+     * @example
+     * // Create one OrderAdjustment
+     * const OrderAdjustment = await prisma.orderAdjustment.create({
+     *   data: {
+     *     // ... data to create a OrderAdjustment
+     *   }
+     * })
+     * 
+     */
+    create<T extends OrderAdjustmentCreateArgs>(args: SelectSubset<T, OrderAdjustmentCreateArgs<ExtArgs>>): Prisma__OrderAdjustmentClient<$Result.GetResult<Prisma.$OrderAdjustmentPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many OrderAdjustments.
+     * @param {OrderAdjustmentCreateManyArgs} args - Arguments to create many OrderAdjustments.
+     * @example
+     * // Create many OrderAdjustments
+     * const orderAdjustment = await prisma.orderAdjustment.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends OrderAdjustmentCreateManyArgs>(args?: SelectSubset<T, OrderAdjustmentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many OrderAdjustments and returns the data saved in the database.
+     * @param {OrderAdjustmentCreateManyAndReturnArgs} args - Arguments to create many OrderAdjustments.
+     * @example
+     * // Create many OrderAdjustments
+     * const orderAdjustment = await prisma.orderAdjustment.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many OrderAdjustments and only return the `id`
+     * const orderAdjustmentWithIdOnly = await prisma.orderAdjustment.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends OrderAdjustmentCreateManyAndReturnArgs>(args?: SelectSubset<T, OrderAdjustmentCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderAdjustmentPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a OrderAdjustment.
+     * @param {OrderAdjustmentDeleteArgs} args - Arguments to delete one OrderAdjustment.
+     * @example
+     * // Delete one OrderAdjustment
+     * const OrderAdjustment = await prisma.orderAdjustment.delete({
+     *   where: {
+     *     // ... filter to delete one OrderAdjustment
+     *   }
+     * })
+     * 
+     */
+    delete<T extends OrderAdjustmentDeleteArgs>(args: SelectSubset<T, OrderAdjustmentDeleteArgs<ExtArgs>>): Prisma__OrderAdjustmentClient<$Result.GetResult<Prisma.$OrderAdjustmentPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one OrderAdjustment.
+     * @param {OrderAdjustmentUpdateArgs} args - Arguments to update one OrderAdjustment.
+     * @example
+     * // Update one OrderAdjustment
+     * const orderAdjustment = await prisma.orderAdjustment.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends OrderAdjustmentUpdateArgs>(args: SelectSubset<T, OrderAdjustmentUpdateArgs<ExtArgs>>): Prisma__OrderAdjustmentClient<$Result.GetResult<Prisma.$OrderAdjustmentPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more OrderAdjustments.
+     * @param {OrderAdjustmentDeleteManyArgs} args - Arguments to filter OrderAdjustments to delete.
+     * @example
+     * // Delete a few OrderAdjustments
+     * const { count } = await prisma.orderAdjustment.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends OrderAdjustmentDeleteManyArgs>(args?: SelectSubset<T, OrderAdjustmentDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more OrderAdjustments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrderAdjustmentUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many OrderAdjustments
+     * const orderAdjustment = await prisma.orderAdjustment.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends OrderAdjustmentUpdateManyArgs>(args: SelectSubset<T, OrderAdjustmentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more OrderAdjustments and returns the data updated in the database.
+     * @param {OrderAdjustmentUpdateManyAndReturnArgs} args - Arguments to update many OrderAdjustments.
+     * @example
+     * // Update many OrderAdjustments
+     * const orderAdjustment = await prisma.orderAdjustment.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more OrderAdjustments and only return the `id`
+     * const orderAdjustmentWithIdOnly = await prisma.orderAdjustment.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends OrderAdjustmentUpdateManyAndReturnArgs>(args: SelectSubset<T, OrderAdjustmentUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderAdjustmentPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one OrderAdjustment.
+     * @param {OrderAdjustmentUpsertArgs} args - Arguments to update or create a OrderAdjustment.
+     * @example
+     * // Update or create a OrderAdjustment
+     * const orderAdjustment = await prisma.orderAdjustment.upsert({
+     *   create: {
+     *     // ... data to create a OrderAdjustment
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the OrderAdjustment we want to update
+     *   }
+     * })
+     */
+    upsert<T extends OrderAdjustmentUpsertArgs>(args: SelectSubset<T, OrderAdjustmentUpsertArgs<ExtArgs>>): Prisma__OrderAdjustmentClient<$Result.GetResult<Prisma.$OrderAdjustmentPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of OrderAdjustments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrderAdjustmentCountArgs} args - Arguments to filter OrderAdjustments to count.
+     * @example
+     * // Count the number of OrderAdjustments
+     * const count = await prisma.orderAdjustment.count({
+     *   where: {
+     *     // ... the filter for the OrderAdjustments we want to count
+     *   }
+     * })
+    **/
+    count<T extends OrderAdjustmentCountArgs>(
+      args?: Subset<T, OrderAdjustmentCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], OrderAdjustmentCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a OrderAdjustment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrderAdjustmentAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends OrderAdjustmentAggregateArgs>(args: Subset<T, OrderAdjustmentAggregateArgs>): Prisma.PrismaPromise<GetOrderAdjustmentAggregateType<T>>
+
+    /**
+     * Group by OrderAdjustment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrderAdjustmentGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends OrderAdjustmentGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: OrderAdjustmentGroupByArgs['orderBy'] }
+        : { orderBy?: OrderAdjustmentGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, OrderAdjustmentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetOrderAdjustmentGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the OrderAdjustment model
+   */
+  readonly fields: OrderAdjustmentFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for OrderAdjustment.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__OrderAdjustmentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    order<T extends OrderDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrderDefaultArgs<ExtArgs>>): Prisma__OrderClient<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the OrderAdjustment model
+   */
+  interface OrderAdjustmentFieldRefs {
+    readonly id: FieldRef<"OrderAdjustment", 'String'>
+    readonly createdAt: FieldRef<"OrderAdjustment", 'DateTime'>
+    readonly type: FieldRef<"OrderAdjustment", 'OrderAdjustmentType'>
+    readonly amount: FieldRef<"OrderAdjustment", 'Int'>
+    readonly description: FieldRef<"OrderAdjustment", 'String'>
+    readonly orderId: FieldRef<"OrderAdjustment", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * OrderAdjustment findUnique
+   */
+  export type OrderAdjustmentFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderAdjustment
+     */
+    select?: OrderAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderAdjustment
+     */
+    omit?: OrderAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderAdjustmentInclude<ExtArgs> | null
+    /**
+     * Filter, which OrderAdjustment to fetch.
+     */
+    where: OrderAdjustmentWhereUniqueInput
+  }
+
+  /**
+   * OrderAdjustment findUniqueOrThrow
+   */
+  export type OrderAdjustmentFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderAdjustment
+     */
+    select?: OrderAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderAdjustment
+     */
+    omit?: OrderAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderAdjustmentInclude<ExtArgs> | null
+    /**
+     * Filter, which OrderAdjustment to fetch.
+     */
+    where: OrderAdjustmentWhereUniqueInput
+  }
+
+  /**
+   * OrderAdjustment findFirst
+   */
+  export type OrderAdjustmentFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderAdjustment
+     */
+    select?: OrderAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderAdjustment
+     */
+    omit?: OrderAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderAdjustmentInclude<ExtArgs> | null
+    /**
+     * Filter, which OrderAdjustment to fetch.
+     */
+    where?: OrderAdjustmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OrderAdjustments to fetch.
+     */
+    orderBy?: OrderAdjustmentOrderByWithRelationInput | OrderAdjustmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for OrderAdjustments.
+     */
+    cursor?: OrderAdjustmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OrderAdjustments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OrderAdjustments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of OrderAdjustments.
+     */
+    distinct?: OrderAdjustmentScalarFieldEnum | OrderAdjustmentScalarFieldEnum[]
+  }
+
+  /**
+   * OrderAdjustment findFirstOrThrow
+   */
+  export type OrderAdjustmentFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderAdjustment
+     */
+    select?: OrderAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderAdjustment
+     */
+    omit?: OrderAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderAdjustmentInclude<ExtArgs> | null
+    /**
+     * Filter, which OrderAdjustment to fetch.
+     */
+    where?: OrderAdjustmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OrderAdjustments to fetch.
+     */
+    orderBy?: OrderAdjustmentOrderByWithRelationInput | OrderAdjustmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for OrderAdjustments.
+     */
+    cursor?: OrderAdjustmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OrderAdjustments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OrderAdjustments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of OrderAdjustments.
+     */
+    distinct?: OrderAdjustmentScalarFieldEnum | OrderAdjustmentScalarFieldEnum[]
+  }
+
+  /**
+   * OrderAdjustment findMany
+   */
+  export type OrderAdjustmentFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderAdjustment
+     */
+    select?: OrderAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderAdjustment
+     */
+    omit?: OrderAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderAdjustmentInclude<ExtArgs> | null
+    /**
+     * Filter, which OrderAdjustments to fetch.
+     */
+    where?: OrderAdjustmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OrderAdjustments to fetch.
+     */
+    orderBy?: OrderAdjustmentOrderByWithRelationInput | OrderAdjustmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing OrderAdjustments.
+     */
+    cursor?: OrderAdjustmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OrderAdjustments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OrderAdjustments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of OrderAdjustments.
+     */
+    distinct?: OrderAdjustmentScalarFieldEnum | OrderAdjustmentScalarFieldEnum[]
+  }
+
+  /**
+   * OrderAdjustment create
+   */
+  export type OrderAdjustmentCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderAdjustment
+     */
+    select?: OrderAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderAdjustment
+     */
+    omit?: OrderAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderAdjustmentInclude<ExtArgs> | null
+    /**
+     * The data needed to create a OrderAdjustment.
+     */
+    data: XOR<OrderAdjustmentCreateInput, OrderAdjustmentUncheckedCreateInput>
+  }
+
+  /**
+   * OrderAdjustment createMany
+   */
+  export type OrderAdjustmentCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many OrderAdjustments.
+     */
+    data: OrderAdjustmentCreateManyInput | OrderAdjustmentCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * OrderAdjustment createManyAndReturn
+   */
+  export type OrderAdjustmentCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderAdjustment
+     */
+    select?: OrderAdjustmentSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderAdjustment
+     */
+    omit?: OrderAdjustmentOmit<ExtArgs> | null
+    /**
+     * The data used to create many OrderAdjustments.
+     */
+    data: OrderAdjustmentCreateManyInput | OrderAdjustmentCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderAdjustmentIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * OrderAdjustment update
+   */
+  export type OrderAdjustmentUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderAdjustment
+     */
+    select?: OrderAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderAdjustment
+     */
+    omit?: OrderAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderAdjustmentInclude<ExtArgs> | null
+    /**
+     * The data needed to update a OrderAdjustment.
+     */
+    data: XOR<OrderAdjustmentUpdateInput, OrderAdjustmentUncheckedUpdateInput>
+    /**
+     * Choose, which OrderAdjustment to update.
+     */
+    where: OrderAdjustmentWhereUniqueInput
+  }
+
+  /**
+   * OrderAdjustment updateMany
+   */
+  export type OrderAdjustmentUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update OrderAdjustments.
+     */
+    data: XOR<OrderAdjustmentUpdateManyMutationInput, OrderAdjustmentUncheckedUpdateManyInput>
+    /**
+     * Filter which OrderAdjustments to update
+     */
+    where?: OrderAdjustmentWhereInput
+    /**
+     * Limit how many OrderAdjustments to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * OrderAdjustment updateManyAndReturn
+   */
+  export type OrderAdjustmentUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderAdjustment
+     */
+    select?: OrderAdjustmentSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderAdjustment
+     */
+    omit?: OrderAdjustmentOmit<ExtArgs> | null
+    /**
+     * The data used to update OrderAdjustments.
+     */
+    data: XOR<OrderAdjustmentUpdateManyMutationInput, OrderAdjustmentUncheckedUpdateManyInput>
+    /**
+     * Filter which OrderAdjustments to update
+     */
+    where?: OrderAdjustmentWhereInput
+    /**
+     * Limit how many OrderAdjustments to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderAdjustmentIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * OrderAdjustment upsert
+   */
+  export type OrderAdjustmentUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderAdjustment
+     */
+    select?: OrderAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderAdjustment
+     */
+    omit?: OrderAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderAdjustmentInclude<ExtArgs> | null
+    /**
+     * The filter to search for the OrderAdjustment to update in case it exists.
+     */
+    where: OrderAdjustmentWhereUniqueInput
+    /**
+     * In case the OrderAdjustment found by the `where` argument doesn't exist, create a new OrderAdjustment with this data.
+     */
+    create: XOR<OrderAdjustmentCreateInput, OrderAdjustmentUncheckedCreateInput>
+    /**
+     * In case the OrderAdjustment was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<OrderAdjustmentUpdateInput, OrderAdjustmentUncheckedUpdateInput>
+  }
+
+  /**
+   * OrderAdjustment delete
+   */
+  export type OrderAdjustmentDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderAdjustment
+     */
+    select?: OrderAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderAdjustment
+     */
+    omit?: OrderAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderAdjustmentInclude<ExtArgs> | null
+    /**
+     * Filter which OrderAdjustment to delete.
+     */
+    where: OrderAdjustmentWhereUniqueInput
+  }
+
+  /**
+   * OrderAdjustment deleteMany
+   */
+  export type OrderAdjustmentDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which OrderAdjustments to delete
+     */
+    where?: OrderAdjustmentWhereInput
+    /**
+     * Limit how many OrderAdjustments to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * OrderAdjustment without action
+   */
+  export type OrderAdjustmentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderAdjustment
+     */
+    select?: OrderAdjustmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderAdjustment
+     */
+    omit?: OrderAdjustmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderAdjustmentInclude<ExtArgs> | null
   }
 
 
@@ -84253,6 +85512,7 @@ export namespace Prisma {
     fullAmount: number | null
     amount: number | null
     orderId: string | null
+    comboProductId: string | null
   }
 
   export type OrderProductsMaxAggregateOutputType = {
@@ -84264,6 +85524,7 @@ export namespace Prisma {
     fullAmount: number | null
     amount: number | null
     orderId: string | null
+    comboProductId: string | null
   }
 
   export type OrderProductsCountAggregateOutputType = {
@@ -84275,6 +85536,7 @@ export namespace Prisma {
     fullAmount: number
     amount: number
     orderId: number
+    comboProductId: number
     _all: number
   }
 
@@ -84300,6 +85562,7 @@ export namespace Prisma {
     fullAmount?: true
     amount?: true
     orderId?: true
+    comboProductId?: true
   }
 
   export type OrderProductsMaxAggregateInputType = {
@@ -84311,6 +85574,7 @@ export namespace Prisma {
     fullAmount?: true
     amount?: true
     orderId?: true
+    comboProductId?: true
   }
 
   export type OrderProductsCountAggregateInputType = {
@@ -84322,6 +85586,7 @@ export namespace Prisma {
     fullAmount?: true
     amount?: true
     orderId?: true
+    comboProductId?: true
     _all?: true
   }
 
@@ -84420,6 +85685,7 @@ export namespace Prisma {
     fullAmount: number
     amount: number
     orderId: string | null
+    comboProductId: string | null
     _count: OrderProductsCountAggregateOutputType | null
     _avg: OrderProductsAvgAggregateOutputType | null
     _sum: OrderProductsSumAggregateOutputType | null
@@ -84450,9 +85716,12 @@ export namespace Prisma {
     fullAmount?: boolean
     amount?: boolean
     orderId?: boolean
+    comboProductId?: boolean
     product?: boolean | ProductDefaultArgs<ExtArgs>
     modifierGroupItems?: boolean | OrderProducts$modifierGroupItemsArgs<ExtArgs>
     order?: boolean | OrderProducts$orderArgs<ExtArgs>
+    comboProduct?: boolean | OrderProducts$comboProductArgs<ExtArgs>
+    selectedProducts?: boolean | OrderProducts$selectedProductsArgs<ExtArgs>
     _count?: boolean | OrderProductsCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["orderProducts"]>
 
@@ -84465,8 +85734,10 @@ export namespace Prisma {
     fullAmount?: boolean
     amount?: boolean
     orderId?: boolean
+    comboProductId?: boolean
     product?: boolean | ProductDefaultArgs<ExtArgs>
     order?: boolean | OrderProducts$orderArgs<ExtArgs>
+    comboProduct?: boolean | OrderProducts$comboProductArgs<ExtArgs>
   }, ExtArgs["result"]["orderProducts"]>
 
   export type OrderProductsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -84478,8 +85749,10 @@ export namespace Prisma {
     fullAmount?: boolean
     amount?: boolean
     orderId?: boolean
+    comboProductId?: boolean
     product?: boolean | ProductDefaultArgs<ExtArgs>
     order?: boolean | OrderProducts$orderArgs<ExtArgs>
+    comboProduct?: boolean | OrderProducts$comboProductArgs<ExtArgs>
   }, ExtArgs["result"]["orderProducts"]>
 
   export type OrderProductsSelectScalar = {
@@ -84491,22 +85764,27 @@ export namespace Prisma {
     fullAmount?: boolean
     amount?: boolean
     orderId?: boolean
+    comboProductId?: boolean
   }
 
-  export type OrderProductsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "productId" | "quantity" | "comments" | "fullAmount" | "amount" | "orderId", ExtArgs["result"]["orderProducts"]>
+  export type OrderProductsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "productId" | "quantity" | "comments" | "fullAmount" | "amount" | "orderId" | "comboProductId", ExtArgs["result"]["orderProducts"]>
   export type OrderProductsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     product?: boolean | ProductDefaultArgs<ExtArgs>
     modifierGroupItems?: boolean | OrderProducts$modifierGroupItemsArgs<ExtArgs>
     order?: boolean | OrderProducts$orderArgs<ExtArgs>
+    comboProduct?: boolean | OrderProducts$comboProductArgs<ExtArgs>
+    selectedProducts?: boolean | OrderProducts$selectedProductsArgs<ExtArgs>
     _count?: boolean | OrderProductsCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type OrderProductsIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     product?: boolean | ProductDefaultArgs<ExtArgs>
     order?: boolean | OrderProducts$orderArgs<ExtArgs>
+    comboProduct?: boolean | OrderProducts$comboProductArgs<ExtArgs>
   }
   export type OrderProductsIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     product?: boolean | ProductDefaultArgs<ExtArgs>
     order?: boolean | OrderProducts$orderArgs<ExtArgs>
+    comboProduct?: boolean | OrderProducts$comboProductArgs<ExtArgs>
   }
 
   export type $OrderProductsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -84515,6 +85793,8 @@ export namespace Prisma {
       product: Prisma.$ProductPayload<ExtArgs>
       modifierGroupItems: Prisma.$ModifierGroupItemPayload<ExtArgs>[]
       order: Prisma.$OrderPayload<ExtArgs> | null
+      comboProduct: Prisma.$OrderProductsPayload<ExtArgs> | null
+      selectedProducts: Prisma.$OrderProductsPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -84525,6 +85805,7 @@ export namespace Prisma {
       fullAmount: number
       amount: number
       orderId: string | null
+      comboProductId: string | null
     }, ExtArgs["result"]["orderProducts"]>
     composites: {}
   }
@@ -84922,6 +86203,8 @@ export namespace Prisma {
     product<T extends ProductDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProductDefaultArgs<ExtArgs>>): Prisma__ProductClient<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     modifierGroupItems<T extends OrderProducts$modifierGroupItemsArgs<ExtArgs> = {}>(args?: Subset<T, OrderProducts$modifierGroupItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ModifierGroupItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     order<T extends OrderProducts$orderArgs<ExtArgs> = {}>(args?: Subset<T, OrderProducts$orderArgs<ExtArgs>>): Prisma__OrderClient<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    comboProduct<T extends OrderProducts$comboProductArgs<ExtArgs> = {}>(args?: Subset<T, OrderProducts$comboProductArgs<ExtArgs>>): Prisma__OrderProductsClient<$Result.GetResult<Prisma.$OrderProductsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    selectedProducts<T extends OrderProducts$selectedProductsArgs<ExtArgs> = {}>(args?: Subset<T, OrderProducts$selectedProductsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderProductsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -84959,6 +86242,7 @@ export namespace Prisma {
     readonly fullAmount: FieldRef<"OrderProducts", 'Int'>
     readonly amount: FieldRef<"OrderProducts", 'Int'>
     readonly orderId: FieldRef<"OrderProducts", 'String'>
+    readonly comboProductId: FieldRef<"OrderProducts", 'String'>
   }
     
 
@@ -85400,6 +86684,49 @@ export namespace Prisma {
      */
     include?: OrderInclude<ExtArgs> | null
     where?: OrderWhereInput
+  }
+
+  /**
+   * OrderProducts.comboProduct
+   */
+  export type OrderProducts$comboProductArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderProducts
+     */
+    select?: OrderProductsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderProducts
+     */
+    omit?: OrderProductsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderProductsInclude<ExtArgs> | null
+    where?: OrderProductsWhereInput
+  }
+
+  /**
+   * OrderProducts.selectedProducts
+   */
+  export type OrderProducts$selectedProductsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderProducts
+     */
+    select?: OrderProductsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderProducts
+     */
+    omit?: OrderProductsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderProductsInclude<ExtArgs> | null
+    where?: OrderProductsWhereInput
+    orderBy?: OrderProductsOrderByWithRelationInput | OrderProductsOrderByWithRelationInput[]
+    cursor?: OrderProductsWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: OrderProductsScalarFieldEnum | OrderProductsScalarFieldEnum[]
   }
 
   /**
@@ -97103,6 +98430,18 @@ export namespace Prisma {
   export type OrderScalarFieldEnum = (typeof OrderScalarFieldEnum)[keyof typeof OrderScalarFieldEnum]
 
 
+  export const OrderAdjustmentScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    type: 'type',
+    amount: 'amount',
+    description: 'description',
+    orderId: 'orderId'
+  };
+
+  export type OrderAdjustmentScalarFieldEnum = (typeof OrderAdjustmentScalarFieldEnum)[keyof typeof OrderAdjustmentScalarFieldEnum]
+
+
   export const OrderPaymentScalarFieldEnum: {
     id: 'id',
     createdAt: 'createdAt',
@@ -97191,7 +98530,8 @@ export namespace Prisma {
     comments: 'comments',
     fullAmount: 'fullAmount',
     amount: 'amount',
-    orderId: 'orderId'
+    orderId: 'orderId',
+    comboProductId: 'comboProductId'
   };
 
   export type OrderProductsScalarFieldEnum = (typeof OrderProductsScalarFieldEnum)[keyof typeof OrderProductsScalarFieldEnum]
@@ -97867,6 +99207,20 @@ export namespace Prisma {
    * Reference to a field of type 'OrderSourcePlatform[]'
    */
   export type ListEnumOrderSourcePlatformFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OrderSourcePlatform[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'OrderAdjustmentType'
+   */
+  export type EnumOrderAdjustmentTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OrderAdjustmentType'>
+    
+
+
+  /**
+   * Reference to a field of type 'OrderAdjustmentType[]'
+   */
+  export type ListEnumOrderAdjustmentTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OrderAdjustmentType[]'>
     
 
 
@@ -102767,6 +104121,7 @@ export namespace Prisma {
     branch?: XOR<BranchNullableScalarRelationFilter, BranchWhereInput> | null
     orderProducts?: OrderProductsListRelationFilter
     payments?: OrderPaymentListRelationFilter
+    adjustments?: OrderAdjustmentListRelationFilter
     preparationStepCategories?: PreparationStepCategoryListRelationFilter
     feedback?: XOR<CustomerFeedbackNullableScalarRelationFilter, CustomerFeedbackWhereInput> | null
     issuedRewards?: CustomerRewardListRelationFilter
@@ -102813,6 +104168,7 @@ export namespace Prisma {
     branch?: BranchOrderByWithRelationInput
     orderProducts?: OrderProductsOrderByRelationAggregateInput
     payments?: OrderPaymentOrderByRelationAggregateInput
+    adjustments?: OrderAdjustmentOrderByRelationAggregateInput
     preparationStepCategories?: PreparationStepCategoryOrderByRelationAggregateInput
     feedback?: CustomerFeedbackOrderByWithRelationInput
     issuedRewards?: CustomerRewardOrderByRelationAggregateInput
@@ -102862,6 +104218,7 @@ export namespace Prisma {
     branch?: XOR<BranchNullableScalarRelationFilter, BranchWhereInput> | null
     orderProducts?: OrderProductsListRelationFilter
     payments?: OrderPaymentListRelationFilter
+    adjustments?: OrderAdjustmentListRelationFilter
     preparationStepCategories?: PreparationStepCategoryListRelationFilter
     feedback?: XOR<CustomerFeedbackNullableScalarRelationFilter, CustomerFeedbackWhereInput> | null
     issuedRewards?: CustomerRewardListRelationFilter
@@ -102942,6 +104299,68 @@ export namespace Prisma {
     deliveryAddressId?: StringNullableWithAggregatesFilter<"Order"> | string | null
     externalAddressId?: StringNullableWithAggregatesFilter<"Order"> | string | null
     branchId?: StringNullableWithAggregatesFilter<"Order"> | string | null
+  }
+
+  export type OrderAdjustmentWhereInput = {
+    AND?: OrderAdjustmentWhereInput | OrderAdjustmentWhereInput[]
+    OR?: OrderAdjustmentWhereInput[]
+    NOT?: OrderAdjustmentWhereInput | OrderAdjustmentWhereInput[]
+    id?: StringFilter<"OrderAdjustment"> | string
+    createdAt?: DateTimeFilter<"OrderAdjustment"> | Date | string
+    type?: EnumOrderAdjustmentTypeFilter<"OrderAdjustment"> | $Enums.OrderAdjustmentType
+    amount?: IntFilter<"OrderAdjustment"> | number
+    description?: StringFilter<"OrderAdjustment"> | string
+    orderId?: StringFilter<"OrderAdjustment"> | string
+    order?: XOR<OrderScalarRelationFilter, OrderWhereInput>
+  }
+
+  export type OrderAdjustmentOrderByWithRelationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    type?: SortOrder
+    amount?: SortOrder
+    description?: SortOrder
+    orderId?: SortOrder
+    order?: OrderOrderByWithRelationInput
+  }
+
+  export type OrderAdjustmentWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: OrderAdjustmentWhereInput | OrderAdjustmentWhereInput[]
+    OR?: OrderAdjustmentWhereInput[]
+    NOT?: OrderAdjustmentWhereInput | OrderAdjustmentWhereInput[]
+    createdAt?: DateTimeFilter<"OrderAdjustment"> | Date | string
+    type?: EnumOrderAdjustmentTypeFilter<"OrderAdjustment"> | $Enums.OrderAdjustmentType
+    amount?: IntFilter<"OrderAdjustment"> | number
+    description?: StringFilter<"OrderAdjustment"> | string
+    orderId?: StringFilter<"OrderAdjustment"> | string
+    order?: XOR<OrderScalarRelationFilter, OrderWhereInput>
+  }, "id">
+
+  export type OrderAdjustmentOrderByWithAggregationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    type?: SortOrder
+    amount?: SortOrder
+    description?: SortOrder
+    orderId?: SortOrder
+    _count?: OrderAdjustmentCountOrderByAggregateInput
+    _avg?: OrderAdjustmentAvgOrderByAggregateInput
+    _max?: OrderAdjustmentMaxOrderByAggregateInput
+    _min?: OrderAdjustmentMinOrderByAggregateInput
+    _sum?: OrderAdjustmentSumOrderByAggregateInput
+  }
+
+  export type OrderAdjustmentScalarWhereWithAggregatesInput = {
+    AND?: OrderAdjustmentScalarWhereWithAggregatesInput | OrderAdjustmentScalarWhereWithAggregatesInput[]
+    OR?: OrderAdjustmentScalarWhereWithAggregatesInput[]
+    NOT?: OrderAdjustmentScalarWhereWithAggregatesInput | OrderAdjustmentScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"OrderAdjustment"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"OrderAdjustment"> | Date | string
+    type?: EnumOrderAdjustmentTypeWithAggregatesFilter<"OrderAdjustment"> | $Enums.OrderAdjustmentType
+    amount?: IntWithAggregatesFilter<"OrderAdjustment"> | number
+    description?: StringWithAggregatesFilter<"OrderAdjustment"> | string
+    orderId?: StringWithAggregatesFilter<"OrderAdjustment"> | string
   }
 
   export type OrderPaymentWhereInput = {
@@ -103388,9 +104807,12 @@ export namespace Prisma {
     fullAmount?: IntFilter<"OrderProducts"> | number
     amount?: IntFilter<"OrderProducts"> | number
     orderId?: StringNullableFilter<"OrderProducts"> | string | null
+    comboProductId?: StringNullableFilter<"OrderProducts"> | string | null
     product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
     modifierGroupItems?: ModifierGroupItemListRelationFilter
     order?: XOR<OrderNullableScalarRelationFilter, OrderWhereInput> | null
+    comboProduct?: XOR<OrderProductsNullableScalarRelationFilter, OrderProductsWhereInput> | null
+    selectedProducts?: OrderProductsListRelationFilter
   }
 
   export type OrderProductsOrderByWithRelationInput = {
@@ -103402,9 +104824,12 @@ export namespace Prisma {
     fullAmount?: SortOrder
     amount?: SortOrder
     orderId?: SortOrderInput | SortOrder
+    comboProductId?: SortOrderInput | SortOrder
     product?: ProductOrderByWithRelationInput
     modifierGroupItems?: ModifierGroupItemOrderByRelationAggregateInput
     order?: OrderOrderByWithRelationInput
+    comboProduct?: OrderProductsOrderByWithRelationInput
+    selectedProducts?: OrderProductsOrderByRelationAggregateInput
   }
 
   export type OrderProductsWhereUniqueInput = Prisma.AtLeast<{
@@ -103419,9 +104844,12 @@ export namespace Prisma {
     fullAmount?: IntFilter<"OrderProducts"> | number
     amount?: IntFilter<"OrderProducts"> | number
     orderId?: StringNullableFilter<"OrderProducts"> | string | null
+    comboProductId?: StringNullableFilter<"OrderProducts"> | string | null
     product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
     modifierGroupItems?: ModifierGroupItemListRelationFilter
     order?: XOR<OrderNullableScalarRelationFilter, OrderWhereInput> | null
+    comboProduct?: XOR<OrderProductsNullableScalarRelationFilter, OrderProductsWhereInput> | null
+    selectedProducts?: OrderProductsListRelationFilter
   }, "id">
 
   export type OrderProductsOrderByWithAggregationInput = {
@@ -103433,6 +104861,7 @@ export namespace Prisma {
     fullAmount?: SortOrder
     amount?: SortOrder
     orderId?: SortOrderInput | SortOrder
+    comboProductId?: SortOrderInput | SortOrder
     _count?: OrderProductsCountOrderByAggregateInput
     _avg?: OrderProductsAvgOrderByAggregateInput
     _max?: OrderProductsMaxOrderByAggregateInput
@@ -103452,6 +104881,7 @@ export namespace Prisma {
     fullAmount?: IntWithAggregatesFilter<"OrderProducts"> | number
     amount?: IntWithAggregatesFilter<"OrderProducts"> | number
     orderId?: StringNullableWithAggregatesFilter<"OrderProducts"> | string | null
+    comboProductId?: StringNullableWithAggregatesFilter<"OrderProducts"> | string | null
   }
 
   export type OrderIntentProductWhereInput = {
@@ -109575,6 +111005,7 @@ export namespace Prisma {
     branch?: BranchCreateNestedOneWithoutOrdersInput
     orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
     payments?: OrderPaymentCreateNestedManyWithoutOrderInput
+    adjustments?: OrderAdjustmentCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryCreateNestedManyWithoutOrderInput
     feedback?: CustomerFeedbackCreateNestedOneWithoutOrderInput
     issuedRewards?: CustomerRewardCreateNestedManyWithoutIssuedForOrderInput
@@ -109615,6 +111046,7 @@ export namespace Prisma {
     branchId?: string | null
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
     payments?: OrderPaymentUncheckedCreateNestedManyWithoutOrderInput
+    adjustments?: OrderAdjustmentUncheckedCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryUncheckedCreateNestedManyWithoutOrderInput
     feedback?: CustomerFeedbackUncheckedCreateNestedOneWithoutOrderInput
     issuedRewards?: CustomerRewardUncheckedCreateNestedManyWithoutIssuedForOrderInput
@@ -109655,6 +111087,7 @@ export namespace Prisma {
     branch?: BranchUpdateOneWithoutOrdersNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
     payments?: OrderPaymentUpdateManyWithoutOrderNestedInput
+    adjustments?: OrderAdjustmentUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUpdateManyWithoutOrderNestedInput
     feedback?: CustomerFeedbackUpdateOneWithoutOrderNestedInput
     issuedRewards?: CustomerRewardUpdateManyWithoutIssuedForOrderNestedInput
@@ -109695,6 +111128,7 @@ export namespace Prisma {
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
     payments?: OrderPaymentUncheckedUpdateManyWithoutOrderNestedInput
+    adjustments?: OrderAdjustmentUncheckedUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUncheckedUpdateManyWithoutOrderNestedInput
     feedback?: CustomerFeedbackUncheckedUpdateOneWithoutOrderNestedInput
     issuedRewards?: CustomerRewardUncheckedUpdateManyWithoutIssuedForOrderNestedInput
@@ -109795,6 +111229,68 @@ export namespace Prisma {
     deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
     externalAddressId?: NullableStringFieldUpdateOperationsInput | string | null
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type OrderAdjustmentCreateInput = {
+    id: string
+    createdAt?: Date | string
+    type: $Enums.OrderAdjustmentType
+    amount: number
+    description: string
+    order: OrderCreateNestedOneWithoutAdjustmentsInput
+  }
+
+  export type OrderAdjustmentUncheckedCreateInput = {
+    id: string
+    createdAt?: Date | string
+    type: $Enums.OrderAdjustmentType
+    amount: number
+    description: string
+    orderId: string
+  }
+
+  export type OrderAdjustmentUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumOrderAdjustmentTypeFieldUpdateOperationsInput | $Enums.OrderAdjustmentType
+    amount?: IntFieldUpdateOperationsInput | number
+    description?: StringFieldUpdateOperationsInput | string
+    order?: OrderUpdateOneRequiredWithoutAdjustmentsNestedInput
+  }
+
+  export type OrderAdjustmentUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumOrderAdjustmentTypeFieldUpdateOperationsInput | $Enums.OrderAdjustmentType
+    amount?: IntFieldUpdateOperationsInput | number
+    description?: StringFieldUpdateOperationsInput | string
+    orderId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type OrderAdjustmentCreateManyInput = {
+    id: string
+    createdAt?: Date | string
+    type: $Enums.OrderAdjustmentType
+    amount: number
+    description: string
+    orderId: string
+  }
+
+  export type OrderAdjustmentUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumOrderAdjustmentTypeFieldUpdateOperationsInput | $Enums.OrderAdjustmentType
+    amount?: IntFieldUpdateOperationsInput | number
+    description?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type OrderAdjustmentUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumOrderAdjustmentTypeFieldUpdateOperationsInput | $Enums.OrderAdjustmentType
+    amount?: IntFieldUpdateOperationsInput | number
+    description?: StringFieldUpdateOperationsInput | string
+    orderId?: StringFieldUpdateOperationsInput | string
   }
 
   export type OrderPaymentCreateInput = {
@@ -110281,6 +111777,8 @@ export namespace Prisma {
     product: ProductCreateNestedOneWithoutOrderProductsInput
     modifierGroupItems?: ModifierGroupItemCreateNestedManyWithoutOrderProductsInput
     order?: OrderCreateNestedOneWithoutOrderProductsInput
+    comboProduct?: OrderProductsCreateNestedOneWithoutSelectedProductsInput
+    selectedProducts?: OrderProductsCreateNestedManyWithoutComboProductInput
   }
 
   export type OrderProductsUncheckedCreateInput = {
@@ -110292,7 +111790,9 @@ export namespace Prisma {
     fullAmount: number
     amount: number
     orderId?: string | null
+    comboProductId?: string | null
     modifierGroupItems?: ModifierGroupItemUncheckedCreateNestedManyWithoutOrderProductsInput
+    selectedProducts?: OrderProductsUncheckedCreateNestedManyWithoutComboProductInput
   }
 
   export type OrderProductsUpdateInput = {
@@ -110305,6 +111805,8 @@ export namespace Prisma {
     product?: ProductUpdateOneRequiredWithoutOrderProductsNestedInput
     modifierGroupItems?: ModifierGroupItemUpdateManyWithoutOrderProductsNestedInput
     order?: OrderUpdateOneWithoutOrderProductsNestedInput
+    comboProduct?: OrderProductsUpdateOneWithoutSelectedProductsNestedInput
+    selectedProducts?: OrderProductsUpdateManyWithoutComboProductNestedInput
   }
 
   export type OrderProductsUncheckedUpdateInput = {
@@ -110316,7 +111818,9 @@ export namespace Prisma {
     fullAmount?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
     orderId?: NullableStringFieldUpdateOperationsInput | string | null
+    comboProductId?: NullableStringFieldUpdateOperationsInput | string | null
     modifierGroupItems?: ModifierGroupItemUncheckedUpdateManyWithoutOrderProductsNestedInput
+    selectedProducts?: OrderProductsUncheckedUpdateManyWithoutComboProductNestedInput
   }
 
   export type OrderProductsCreateManyInput = {
@@ -110328,6 +111832,7 @@ export namespace Prisma {
     fullAmount: number
     amount: number
     orderId?: string | null
+    comboProductId?: string | null
   }
 
   export type OrderProductsUpdateManyMutationInput = {
@@ -110348,6 +111853,7 @@ export namespace Prisma {
     fullAmount?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
     orderId?: NullableStringFieldUpdateOperationsInput | string | null
+    comboProductId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type OrderIntentProductCreateInput = {
@@ -115162,12 +116668,22 @@ export namespace Prisma {
     none?: OrderPaymentWhereInput
   }
 
+  export type OrderAdjustmentListRelationFilter = {
+    every?: OrderAdjustmentWhereInput
+    some?: OrderAdjustmentWhereInput
+    none?: OrderAdjustmentWhereInput
+  }
+
   export type CustomerFeedbackNullableScalarRelationFilter = {
     is?: CustomerFeedbackWhereInput | null
     isNot?: CustomerFeedbackWhereInput | null
   }
 
   export type OrderPaymentOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type OrderAdjustmentOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -115337,6 +116853,58 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedEnumOrderSourcePlatformNullableFilter<$PrismaModel>
     _max?: NestedEnumOrderSourcePlatformNullableFilter<$PrismaModel>
+  }
+
+  export type EnumOrderAdjustmentTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.OrderAdjustmentType | EnumOrderAdjustmentTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.OrderAdjustmentType[] | ListEnumOrderAdjustmentTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.OrderAdjustmentType[] | ListEnumOrderAdjustmentTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumOrderAdjustmentTypeFilter<$PrismaModel> | $Enums.OrderAdjustmentType
+  }
+
+  export type OrderAdjustmentCountOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    type?: SortOrder
+    amount?: SortOrder
+    description?: SortOrder
+    orderId?: SortOrder
+  }
+
+  export type OrderAdjustmentAvgOrderByAggregateInput = {
+    amount?: SortOrder
+  }
+
+  export type OrderAdjustmentMaxOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    type?: SortOrder
+    amount?: SortOrder
+    description?: SortOrder
+    orderId?: SortOrder
+  }
+
+  export type OrderAdjustmentMinOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    type?: SortOrder
+    amount?: SortOrder
+    description?: SortOrder
+    orderId?: SortOrder
+  }
+
+  export type OrderAdjustmentSumOrderByAggregateInput = {
+    amount?: SortOrder
+  }
+
+  export type EnumOrderAdjustmentTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.OrderAdjustmentType | EnumOrderAdjustmentTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.OrderAdjustmentType[] | ListEnumOrderAdjustmentTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.OrderAdjustmentType[] | ListEnumOrderAdjustmentTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumOrderAdjustmentTypeWithAggregatesFilter<$PrismaModel> | $Enums.OrderAdjustmentType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumOrderAdjustmentTypeFilter<$PrismaModel>
+    _max?: NestedEnumOrderAdjustmentTypeFilter<$PrismaModel>
   }
 
   export type OrderPaymentCountOrderByAggregateInput = {
@@ -115659,6 +117227,11 @@ export namespace Prisma {
     _max?: NestedEnumCustomerRewardTypeFilter<$PrismaModel>
   }
 
+  export type OrderProductsNullableScalarRelationFilter = {
+    is?: OrderProductsWhereInput | null
+    isNot?: OrderProductsWhereInput | null
+  }
+
   export type OrderProductsCountOrderByAggregateInput = {
     id?: SortOrder
     createdAt?: SortOrder
@@ -115668,6 +117241,7 @@ export namespace Prisma {
     fullAmount?: SortOrder
     amount?: SortOrder
     orderId?: SortOrder
+    comboProductId?: SortOrder
   }
 
   export type OrderProductsAvgOrderByAggregateInput = {
@@ -115685,6 +117259,7 @@ export namespace Prisma {
     fullAmount?: SortOrder
     amount?: SortOrder
     orderId?: SortOrder
+    comboProductId?: SortOrder
   }
 
   export type OrderProductsMinOrderByAggregateInput = {
@@ -115696,6 +117271,7 @@ export namespace Prisma {
     fullAmount?: SortOrder
     amount?: SortOrder
     orderId?: SortOrder
+    comboProductId?: SortOrder
   }
 
   export type OrderProductsSumOrderByAggregateInput = {
@@ -120875,6 +122451,13 @@ export namespace Prisma {
     connect?: OrderPaymentWhereUniqueInput | OrderPaymentWhereUniqueInput[]
   }
 
+  export type OrderAdjustmentCreateNestedManyWithoutOrderInput = {
+    create?: XOR<OrderAdjustmentCreateWithoutOrderInput, OrderAdjustmentUncheckedCreateWithoutOrderInput> | OrderAdjustmentCreateWithoutOrderInput[] | OrderAdjustmentUncheckedCreateWithoutOrderInput[]
+    connectOrCreate?: OrderAdjustmentCreateOrConnectWithoutOrderInput | OrderAdjustmentCreateOrConnectWithoutOrderInput[]
+    createMany?: OrderAdjustmentCreateManyOrderInputEnvelope
+    connect?: OrderAdjustmentWhereUniqueInput | OrderAdjustmentWhereUniqueInput[]
+  }
+
   export type PreparationStepCategoryCreateNestedManyWithoutOrderInput = {
     create?: XOR<PreparationStepCategoryCreateWithoutOrderInput, PreparationStepCategoryUncheckedCreateWithoutOrderInput> | PreparationStepCategoryCreateWithoutOrderInput[] | PreparationStepCategoryUncheckedCreateWithoutOrderInput[]
     connectOrCreate?: PreparationStepCategoryCreateOrConnectWithoutOrderInput | PreparationStepCategoryCreateOrConnectWithoutOrderInput[]
@@ -120914,6 +122497,13 @@ export namespace Prisma {
     connectOrCreate?: OrderPaymentCreateOrConnectWithoutOrderInput | OrderPaymentCreateOrConnectWithoutOrderInput[]
     createMany?: OrderPaymentCreateManyOrderInputEnvelope
     connect?: OrderPaymentWhereUniqueInput | OrderPaymentWhereUniqueInput[]
+  }
+
+  export type OrderAdjustmentUncheckedCreateNestedManyWithoutOrderInput = {
+    create?: XOR<OrderAdjustmentCreateWithoutOrderInput, OrderAdjustmentUncheckedCreateWithoutOrderInput> | OrderAdjustmentCreateWithoutOrderInput[] | OrderAdjustmentUncheckedCreateWithoutOrderInput[]
+    connectOrCreate?: OrderAdjustmentCreateOrConnectWithoutOrderInput | OrderAdjustmentCreateOrConnectWithoutOrderInput[]
+    createMany?: OrderAdjustmentCreateManyOrderInputEnvelope
+    connect?: OrderAdjustmentWhereUniqueInput | OrderAdjustmentWhereUniqueInput[]
   }
 
   export type PreparationStepCategoryUncheckedCreateNestedManyWithoutOrderInput = {
@@ -121056,6 +122646,20 @@ export namespace Prisma {
     deleteMany?: OrderPaymentScalarWhereInput | OrderPaymentScalarWhereInput[]
   }
 
+  export type OrderAdjustmentUpdateManyWithoutOrderNestedInput = {
+    create?: XOR<OrderAdjustmentCreateWithoutOrderInput, OrderAdjustmentUncheckedCreateWithoutOrderInput> | OrderAdjustmentCreateWithoutOrderInput[] | OrderAdjustmentUncheckedCreateWithoutOrderInput[]
+    connectOrCreate?: OrderAdjustmentCreateOrConnectWithoutOrderInput | OrderAdjustmentCreateOrConnectWithoutOrderInput[]
+    upsert?: OrderAdjustmentUpsertWithWhereUniqueWithoutOrderInput | OrderAdjustmentUpsertWithWhereUniqueWithoutOrderInput[]
+    createMany?: OrderAdjustmentCreateManyOrderInputEnvelope
+    set?: OrderAdjustmentWhereUniqueInput | OrderAdjustmentWhereUniqueInput[]
+    disconnect?: OrderAdjustmentWhereUniqueInput | OrderAdjustmentWhereUniqueInput[]
+    delete?: OrderAdjustmentWhereUniqueInput | OrderAdjustmentWhereUniqueInput[]
+    connect?: OrderAdjustmentWhereUniqueInput | OrderAdjustmentWhereUniqueInput[]
+    update?: OrderAdjustmentUpdateWithWhereUniqueWithoutOrderInput | OrderAdjustmentUpdateWithWhereUniqueWithoutOrderInput[]
+    updateMany?: OrderAdjustmentUpdateManyWithWhereWithoutOrderInput | OrderAdjustmentUpdateManyWithWhereWithoutOrderInput[]
+    deleteMany?: OrderAdjustmentScalarWhereInput | OrderAdjustmentScalarWhereInput[]
+  }
+
   export type PreparationStepCategoryUpdateManyWithoutOrderNestedInput = {
     create?: XOR<PreparationStepCategoryCreateWithoutOrderInput, PreparationStepCategoryUncheckedCreateWithoutOrderInput> | PreparationStepCategoryCreateWithoutOrderInput[] | PreparationStepCategoryUncheckedCreateWithoutOrderInput[]
     connectOrCreate?: PreparationStepCategoryCreateOrConnectWithoutOrderInput | PreparationStepCategoryCreateOrConnectWithoutOrderInput[]
@@ -121136,6 +122740,20 @@ export namespace Prisma {
     deleteMany?: OrderPaymentScalarWhereInput | OrderPaymentScalarWhereInput[]
   }
 
+  export type OrderAdjustmentUncheckedUpdateManyWithoutOrderNestedInput = {
+    create?: XOR<OrderAdjustmentCreateWithoutOrderInput, OrderAdjustmentUncheckedCreateWithoutOrderInput> | OrderAdjustmentCreateWithoutOrderInput[] | OrderAdjustmentUncheckedCreateWithoutOrderInput[]
+    connectOrCreate?: OrderAdjustmentCreateOrConnectWithoutOrderInput | OrderAdjustmentCreateOrConnectWithoutOrderInput[]
+    upsert?: OrderAdjustmentUpsertWithWhereUniqueWithoutOrderInput | OrderAdjustmentUpsertWithWhereUniqueWithoutOrderInput[]
+    createMany?: OrderAdjustmentCreateManyOrderInputEnvelope
+    set?: OrderAdjustmentWhereUniqueInput | OrderAdjustmentWhereUniqueInput[]
+    disconnect?: OrderAdjustmentWhereUniqueInput | OrderAdjustmentWhereUniqueInput[]
+    delete?: OrderAdjustmentWhereUniqueInput | OrderAdjustmentWhereUniqueInput[]
+    connect?: OrderAdjustmentWhereUniqueInput | OrderAdjustmentWhereUniqueInput[]
+    update?: OrderAdjustmentUpdateWithWhereUniqueWithoutOrderInput | OrderAdjustmentUpdateWithWhereUniqueWithoutOrderInput[]
+    updateMany?: OrderAdjustmentUpdateManyWithWhereWithoutOrderInput | OrderAdjustmentUpdateManyWithWhereWithoutOrderInput[]
+    deleteMany?: OrderAdjustmentScalarWhereInput | OrderAdjustmentScalarWhereInput[]
+  }
+
   export type PreparationStepCategoryUncheckedUpdateManyWithoutOrderNestedInput = {
     create?: XOR<PreparationStepCategoryCreateWithoutOrderInput, PreparationStepCategoryUncheckedCreateWithoutOrderInput> | PreparationStepCategoryCreateWithoutOrderInput[] | PreparationStepCategoryUncheckedCreateWithoutOrderInput[]
     connectOrCreate?: PreparationStepCategoryCreateOrConnectWithoutOrderInput | PreparationStepCategoryCreateOrConnectWithoutOrderInput[]
@@ -121186,6 +122804,24 @@ export namespace Prisma {
     update?: CustomerRewardUpdateWithWhereUniqueWithoutRedeemedByOrderInput | CustomerRewardUpdateWithWhereUniqueWithoutRedeemedByOrderInput[]
     updateMany?: CustomerRewardUpdateManyWithWhereWithoutRedeemedByOrderInput | CustomerRewardUpdateManyWithWhereWithoutRedeemedByOrderInput[]
     deleteMany?: CustomerRewardScalarWhereInput | CustomerRewardScalarWhereInput[]
+  }
+
+  export type OrderCreateNestedOneWithoutAdjustmentsInput = {
+    create?: XOR<OrderCreateWithoutAdjustmentsInput, OrderUncheckedCreateWithoutAdjustmentsInput>
+    connectOrCreate?: OrderCreateOrConnectWithoutAdjustmentsInput
+    connect?: OrderWhereUniqueInput
+  }
+
+  export type EnumOrderAdjustmentTypeFieldUpdateOperationsInput = {
+    set?: $Enums.OrderAdjustmentType
+  }
+
+  export type OrderUpdateOneRequiredWithoutAdjustmentsNestedInput = {
+    create?: XOR<OrderCreateWithoutAdjustmentsInput, OrderUncheckedCreateWithoutAdjustmentsInput>
+    connectOrCreate?: OrderCreateOrConnectWithoutAdjustmentsInput
+    upsert?: OrderUpsertWithoutAdjustmentsInput
+    connect?: OrderWhereUniqueInput
+    update?: XOR<XOR<OrderUpdateToOneWithWhereWithoutAdjustmentsInput, OrderUpdateWithoutAdjustmentsInput>, OrderUncheckedUpdateWithoutAdjustmentsInput>
   }
 
   export type OrderCreateNestedOneWithoutPaymentsInput = {
@@ -121457,10 +123093,30 @@ export namespace Prisma {
     connect?: OrderWhereUniqueInput
   }
 
+  export type OrderProductsCreateNestedOneWithoutSelectedProductsInput = {
+    create?: XOR<OrderProductsCreateWithoutSelectedProductsInput, OrderProductsUncheckedCreateWithoutSelectedProductsInput>
+    connectOrCreate?: OrderProductsCreateOrConnectWithoutSelectedProductsInput
+    connect?: OrderProductsWhereUniqueInput
+  }
+
+  export type OrderProductsCreateNestedManyWithoutComboProductInput = {
+    create?: XOR<OrderProductsCreateWithoutComboProductInput, OrderProductsUncheckedCreateWithoutComboProductInput> | OrderProductsCreateWithoutComboProductInput[] | OrderProductsUncheckedCreateWithoutComboProductInput[]
+    connectOrCreate?: OrderProductsCreateOrConnectWithoutComboProductInput | OrderProductsCreateOrConnectWithoutComboProductInput[]
+    createMany?: OrderProductsCreateManyComboProductInputEnvelope
+    connect?: OrderProductsWhereUniqueInput | OrderProductsWhereUniqueInput[]
+  }
+
   export type ModifierGroupItemUncheckedCreateNestedManyWithoutOrderProductsInput = {
     create?: XOR<ModifierGroupItemCreateWithoutOrderProductsInput, ModifierGroupItemUncheckedCreateWithoutOrderProductsInput> | ModifierGroupItemCreateWithoutOrderProductsInput[] | ModifierGroupItemUncheckedCreateWithoutOrderProductsInput[]
     connectOrCreate?: ModifierGroupItemCreateOrConnectWithoutOrderProductsInput | ModifierGroupItemCreateOrConnectWithoutOrderProductsInput[]
     connect?: ModifierGroupItemWhereUniqueInput | ModifierGroupItemWhereUniqueInput[]
+  }
+
+  export type OrderProductsUncheckedCreateNestedManyWithoutComboProductInput = {
+    create?: XOR<OrderProductsCreateWithoutComboProductInput, OrderProductsUncheckedCreateWithoutComboProductInput> | OrderProductsCreateWithoutComboProductInput[] | OrderProductsUncheckedCreateWithoutComboProductInput[]
+    connectOrCreate?: OrderProductsCreateOrConnectWithoutComboProductInput | OrderProductsCreateOrConnectWithoutComboProductInput[]
+    createMany?: OrderProductsCreateManyComboProductInputEnvelope
+    connect?: OrderProductsWhereUniqueInput | OrderProductsWhereUniqueInput[]
   }
 
   export type ProductUpdateOneRequiredWithoutOrderProductsNestedInput = {
@@ -121494,6 +123150,30 @@ export namespace Prisma {
     update?: XOR<XOR<OrderUpdateToOneWithWhereWithoutOrderProductsInput, OrderUpdateWithoutOrderProductsInput>, OrderUncheckedUpdateWithoutOrderProductsInput>
   }
 
+  export type OrderProductsUpdateOneWithoutSelectedProductsNestedInput = {
+    create?: XOR<OrderProductsCreateWithoutSelectedProductsInput, OrderProductsUncheckedCreateWithoutSelectedProductsInput>
+    connectOrCreate?: OrderProductsCreateOrConnectWithoutSelectedProductsInput
+    upsert?: OrderProductsUpsertWithoutSelectedProductsInput
+    disconnect?: OrderProductsWhereInput | boolean
+    delete?: OrderProductsWhereInput | boolean
+    connect?: OrderProductsWhereUniqueInput
+    update?: XOR<XOR<OrderProductsUpdateToOneWithWhereWithoutSelectedProductsInput, OrderProductsUpdateWithoutSelectedProductsInput>, OrderProductsUncheckedUpdateWithoutSelectedProductsInput>
+  }
+
+  export type OrderProductsUpdateManyWithoutComboProductNestedInput = {
+    create?: XOR<OrderProductsCreateWithoutComboProductInput, OrderProductsUncheckedCreateWithoutComboProductInput> | OrderProductsCreateWithoutComboProductInput[] | OrderProductsUncheckedCreateWithoutComboProductInput[]
+    connectOrCreate?: OrderProductsCreateOrConnectWithoutComboProductInput | OrderProductsCreateOrConnectWithoutComboProductInput[]
+    upsert?: OrderProductsUpsertWithWhereUniqueWithoutComboProductInput | OrderProductsUpsertWithWhereUniqueWithoutComboProductInput[]
+    createMany?: OrderProductsCreateManyComboProductInputEnvelope
+    set?: OrderProductsWhereUniqueInput | OrderProductsWhereUniqueInput[]
+    disconnect?: OrderProductsWhereUniqueInput | OrderProductsWhereUniqueInput[]
+    delete?: OrderProductsWhereUniqueInput | OrderProductsWhereUniqueInput[]
+    connect?: OrderProductsWhereUniqueInput | OrderProductsWhereUniqueInput[]
+    update?: OrderProductsUpdateWithWhereUniqueWithoutComboProductInput | OrderProductsUpdateWithWhereUniqueWithoutComboProductInput[]
+    updateMany?: OrderProductsUpdateManyWithWhereWithoutComboProductInput | OrderProductsUpdateManyWithWhereWithoutComboProductInput[]
+    deleteMany?: OrderProductsScalarWhereInput | OrderProductsScalarWhereInput[]
+  }
+
   export type ModifierGroupItemUncheckedUpdateManyWithoutOrderProductsNestedInput = {
     create?: XOR<ModifierGroupItemCreateWithoutOrderProductsInput, ModifierGroupItemUncheckedCreateWithoutOrderProductsInput> | ModifierGroupItemCreateWithoutOrderProductsInput[] | ModifierGroupItemUncheckedCreateWithoutOrderProductsInput[]
     connectOrCreate?: ModifierGroupItemCreateOrConnectWithoutOrderProductsInput | ModifierGroupItemCreateOrConnectWithoutOrderProductsInput[]
@@ -121505,6 +123185,20 @@ export namespace Prisma {
     update?: ModifierGroupItemUpdateWithWhereUniqueWithoutOrderProductsInput | ModifierGroupItemUpdateWithWhereUniqueWithoutOrderProductsInput[]
     updateMany?: ModifierGroupItemUpdateManyWithWhereWithoutOrderProductsInput | ModifierGroupItemUpdateManyWithWhereWithoutOrderProductsInput[]
     deleteMany?: ModifierGroupItemScalarWhereInput | ModifierGroupItemScalarWhereInput[]
+  }
+
+  export type OrderProductsUncheckedUpdateManyWithoutComboProductNestedInput = {
+    create?: XOR<OrderProductsCreateWithoutComboProductInput, OrderProductsUncheckedCreateWithoutComboProductInput> | OrderProductsCreateWithoutComboProductInput[] | OrderProductsUncheckedCreateWithoutComboProductInput[]
+    connectOrCreate?: OrderProductsCreateOrConnectWithoutComboProductInput | OrderProductsCreateOrConnectWithoutComboProductInput[]
+    upsert?: OrderProductsUpsertWithWhereUniqueWithoutComboProductInput | OrderProductsUpsertWithWhereUniqueWithoutComboProductInput[]
+    createMany?: OrderProductsCreateManyComboProductInputEnvelope
+    set?: OrderProductsWhereUniqueInput | OrderProductsWhereUniqueInput[]
+    disconnect?: OrderProductsWhereUniqueInput | OrderProductsWhereUniqueInput[]
+    delete?: OrderProductsWhereUniqueInput | OrderProductsWhereUniqueInput[]
+    connect?: OrderProductsWhereUniqueInput | OrderProductsWhereUniqueInput[]
+    update?: OrderProductsUpdateWithWhereUniqueWithoutComboProductInput | OrderProductsUpdateWithWhereUniqueWithoutComboProductInput[]
+    updateMany?: OrderProductsUpdateManyWithWhereWithoutComboProductInput | OrderProductsUpdateManyWithWhereWithoutComboProductInput[]
+    deleteMany?: OrderProductsScalarWhereInput | OrderProductsScalarWhereInput[]
   }
 
   export type OrderIntentCreateNestedOneWithoutOrderProductsInput = {
@@ -122938,6 +124632,23 @@ export namespace Prisma {
     _max?: NestedEnumOrderSourcePlatformNullableFilter<$PrismaModel>
   }
 
+  export type NestedEnumOrderAdjustmentTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.OrderAdjustmentType | EnumOrderAdjustmentTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.OrderAdjustmentType[] | ListEnumOrderAdjustmentTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.OrderAdjustmentType[] | ListEnumOrderAdjustmentTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumOrderAdjustmentTypeFilter<$PrismaModel> | $Enums.OrderAdjustmentType
+  }
+
+  export type NestedEnumOrderAdjustmentTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.OrderAdjustmentType | EnumOrderAdjustmentTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.OrderAdjustmentType[] | ListEnumOrderAdjustmentTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.OrderAdjustmentType[] | ListEnumOrderAdjustmentTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumOrderAdjustmentTypeWithAggregatesFilter<$PrismaModel> | $Enums.OrderAdjustmentType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumOrderAdjustmentTypeFilter<$PrismaModel>
+    _max?: NestedEnumOrderAdjustmentTypeFilter<$PrismaModel>
+  }
+
   export type NestedEnumOrderTypeNullableFilter<$PrismaModel = never> = {
     equals?: $Enums.OrderType | EnumOrderTypeFieldRefInput<$PrismaModel> | null
     in?: $Enums.OrderType[] | ListEnumOrderTypeFieldRefInput<$PrismaModel> | null
@@ -123421,6 +125132,7 @@ export namespace Prisma {
     branch?: BranchCreateNestedOneWithoutOrdersInput
     orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
     payments?: OrderPaymentCreateNestedManyWithoutOrderInput
+    adjustments?: OrderAdjustmentCreateNestedManyWithoutOrderInput
     feedback?: CustomerFeedbackCreateNestedOneWithoutOrderInput
     issuedRewards?: CustomerRewardCreateNestedManyWithoutIssuedForOrderInput
     redeemedRewards?: CustomerRewardCreateNestedManyWithoutRedeemedByOrderInput
@@ -123460,6 +125172,7 @@ export namespace Prisma {
     branchId?: string | null
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
     payments?: OrderPaymentUncheckedCreateNestedManyWithoutOrderInput
+    adjustments?: OrderAdjustmentUncheckedCreateNestedManyWithoutOrderInput
     feedback?: CustomerFeedbackUncheckedCreateNestedOneWithoutOrderInput
     issuedRewards?: CustomerRewardUncheckedCreateNestedManyWithoutIssuedForOrderInput
     redeemedRewards?: CustomerRewardUncheckedCreateNestedManyWithoutRedeemedByOrderInput
@@ -123611,6 +125324,7 @@ export namespace Prisma {
     branch?: BranchUpdateOneWithoutOrdersNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
     payments?: OrderPaymentUpdateManyWithoutOrderNestedInput
+    adjustments?: OrderAdjustmentUpdateManyWithoutOrderNestedInput
     feedback?: CustomerFeedbackUpdateOneWithoutOrderNestedInput
     issuedRewards?: CustomerRewardUpdateManyWithoutIssuedForOrderNestedInput
     redeemedRewards?: CustomerRewardUpdateManyWithoutRedeemedByOrderNestedInput
@@ -123650,6 +125364,7 @@ export namespace Prisma {
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
     payments?: OrderPaymentUncheckedUpdateManyWithoutOrderNestedInput
+    adjustments?: OrderAdjustmentUncheckedUpdateManyWithoutOrderNestedInput
     feedback?: CustomerFeedbackUncheckedUpdateOneWithoutOrderNestedInput
     issuedRewards?: CustomerRewardUncheckedUpdateManyWithoutIssuedForOrderNestedInput
     redeemedRewards?: CustomerRewardUncheckedUpdateManyWithoutRedeemedByOrderNestedInput
@@ -124883,6 +126598,8 @@ export namespace Prisma {
     amount: number
     product: ProductCreateNestedOneWithoutOrderProductsInput
     order?: OrderCreateNestedOneWithoutOrderProductsInput
+    comboProduct?: OrderProductsCreateNestedOneWithoutSelectedProductsInput
+    selectedProducts?: OrderProductsCreateNestedManyWithoutComboProductInput
   }
 
   export type OrderProductsUncheckedCreateWithoutModifierGroupItemsInput = {
@@ -124894,6 +126611,8 @@ export namespace Prisma {
     fullAmount: number
     amount: number
     orderId?: string | null
+    comboProductId?: string | null
+    selectedProducts?: OrderProductsUncheckedCreateNestedManyWithoutComboProductInput
   }
 
   export type OrderProductsCreateOrConnectWithoutModifierGroupItemsInput = {
@@ -125040,6 +126759,7 @@ export namespace Prisma {
     fullAmount?: IntFilter<"OrderProducts"> | number
     amount?: IntFilter<"OrderProducts"> | number
     orderId?: StringNullableFilter<"OrderProducts"> | string | null
+    comboProductId?: StringNullableFilter<"OrderProducts"> | string | null
   }
 
   export type OrderIntentProductUpsertWithWhereUniqueWithoutModifierGroupItemsInput = {
@@ -127833,6 +129553,7 @@ export namespace Prisma {
     externalAddress?: ExternalAddressCreateNestedOneWithoutOrdersInput
     orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
     payments?: OrderPaymentCreateNestedManyWithoutOrderInput
+    adjustments?: OrderAdjustmentCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryCreateNestedManyWithoutOrderInput
     feedback?: CustomerFeedbackCreateNestedOneWithoutOrderInput
     issuedRewards?: CustomerRewardCreateNestedManyWithoutIssuedForOrderInput
@@ -127872,6 +129593,7 @@ export namespace Prisma {
     externalAddressId?: string | null
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
     payments?: OrderPaymentUncheckedCreateNestedManyWithoutOrderInput
+    adjustments?: OrderAdjustmentUncheckedCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryUncheckedCreateNestedManyWithoutOrderInput
     feedback?: CustomerFeedbackUncheckedCreateNestedOneWithoutOrderInput
     issuedRewards?: CustomerRewardUncheckedCreateNestedManyWithoutIssuedForOrderInput
@@ -128468,6 +130190,7 @@ export namespace Prisma {
     branch?: BranchCreateNestedOneWithoutOrdersInput
     orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
     payments?: OrderPaymentCreateNestedManyWithoutOrderInput
+    adjustments?: OrderAdjustmentCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryCreateNestedManyWithoutOrderInput
     feedback?: CustomerFeedbackCreateNestedOneWithoutOrderInput
     issuedRewards?: CustomerRewardCreateNestedManyWithoutIssuedForOrderInput
@@ -128507,6 +130230,7 @@ export namespace Prisma {
     branchId?: string | null
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
     payments?: OrderPaymentUncheckedCreateNestedManyWithoutOrderInput
+    adjustments?: OrderAdjustmentUncheckedCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryUncheckedCreateNestedManyWithoutOrderInput
     feedback?: CustomerFeedbackUncheckedCreateNestedOneWithoutOrderInput
     issuedRewards?: CustomerRewardUncheckedCreateNestedManyWithoutIssuedForOrderInput
@@ -129765,6 +131489,7 @@ export namespace Prisma {
     branch?: BranchCreateNestedOneWithoutOrdersInput
     orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
     payments?: OrderPaymentCreateNestedManyWithoutOrderInput
+    adjustments?: OrderAdjustmentCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryCreateNestedManyWithoutOrderInput
     feedback?: CustomerFeedbackCreateNestedOneWithoutOrderInput
     issuedRewards?: CustomerRewardCreateNestedManyWithoutIssuedForOrderInput
@@ -129804,6 +131529,7 @@ export namespace Prisma {
     branchId?: string | null
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
     payments?: OrderPaymentUncheckedCreateNestedManyWithoutOrderInput
+    adjustments?: OrderAdjustmentUncheckedCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryUncheckedCreateNestedManyWithoutOrderInput
     feedback?: CustomerFeedbackUncheckedCreateNestedOneWithoutOrderInput
     issuedRewards?: CustomerRewardUncheckedCreateNestedManyWithoutIssuedForOrderInput
@@ -130124,6 +131850,8 @@ export namespace Prisma {
     amount: number
     modifierGroupItems?: ModifierGroupItemCreateNestedManyWithoutOrderProductsInput
     order?: OrderCreateNestedOneWithoutOrderProductsInput
+    comboProduct?: OrderProductsCreateNestedOneWithoutSelectedProductsInput
+    selectedProducts?: OrderProductsCreateNestedManyWithoutComboProductInput
   }
 
   export type OrderProductsUncheckedCreateWithoutProductInput = {
@@ -130134,7 +131862,9 @@ export namespace Prisma {
     fullAmount: number
     amount: number
     orderId?: string | null
+    comboProductId?: string | null
     modifierGroupItems?: ModifierGroupItemUncheckedCreateNestedManyWithoutOrderProductsInput
+    selectedProducts?: OrderProductsUncheckedCreateNestedManyWithoutComboProductInput
   }
 
   export type OrderProductsCreateOrConnectWithoutProductInput = {
@@ -132773,6 +134503,7 @@ export namespace Prisma {
     branch?: BranchCreateNestedOneWithoutOrdersInput
     orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
     payments?: OrderPaymentCreateNestedManyWithoutOrderInput
+    adjustments?: OrderAdjustmentCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryCreateNestedManyWithoutOrderInput
     feedback?: CustomerFeedbackCreateNestedOneWithoutOrderInput
     issuedRewards?: CustomerRewardCreateNestedManyWithoutIssuedForOrderInput
@@ -132812,6 +134543,7 @@ export namespace Prisma {
     branchId?: string | null
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
     payments?: OrderPaymentUncheckedCreateNestedManyWithoutOrderInput
+    adjustments?: OrderAdjustmentUncheckedCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryUncheckedCreateNestedManyWithoutOrderInput
     feedback?: CustomerFeedbackUncheckedCreateNestedOneWithoutOrderInput
     issuedRewards?: CustomerRewardUncheckedCreateNestedManyWithoutIssuedForOrderInput
@@ -133838,6 +135570,7 @@ export namespace Prisma {
     branch?: BranchCreateNestedOneWithoutOrdersInput
     orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
     payments?: OrderPaymentCreateNestedManyWithoutOrderInput
+    adjustments?: OrderAdjustmentCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryCreateNestedManyWithoutOrderInput
     feedback?: CustomerFeedbackCreateNestedOneWithoutOrderInput
     issuedRewards?: CustomerRewardCreateNestedManyWithoutIssuedForOrderInput
@@ -133877,6 +135610,7 @@ export namespace Prisma {
     branchId?: string | null
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
     payments?: OrderPaymentUncheckedCreateNestedManyWithoutOrderInput
+    adjustments?: OrderAdjustmentUncheckedCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryUncheckedCreateNestedManyWithoutOrderInput
     feedback?: CustomerFeedbackUncheckedCreateNestedOneWithoutOrderInput
     issuedRewards?: CustomerRewardUncheckedCreateNestedManyWithoutIssuedForOrderInput
@@ -134100,6 +135834,7 @@ export namespace Prisma {
     branch?: BranchCreateNestedOneWithoutOrdersInput
     orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
     payments?: OrderPaymentCreateNestedManyWithoutOrderInput
+    adjustments?: OrderAdjustmentCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryCreateNestedManyWithoutOrderInput
     feedback?: CustomerFeedbackCreateNestedOneWithoutOrderInput
     issuedRewards?: CustomerRewardCreateNestedManyWithoutIssuedForOrderInput
@@ -134139,6 +135874,7 @@ export namespace Prisma {
     branchId?: string | null
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
     payments?: OrderPaymentUncheckedCreateNestedManyWithoutOrderInput
+    adjustments?: OrderAdjustmentUncheckedCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryUncheckedCreateNestedManyWithoutOrderInput
     feedback?: CustomerFeedbackUncheckedCreateNestedOneWithoutOrderInput
     issuedRewards?: CustomerRewardUncheckedCreateNestedManyWithoutIssuedForOrderInput
@@ -134693,6 +136429,8 @@ export namespace Prisma {
     amount: number
     product: ProductCreateNestedOneWithoutOrderProductsInput
     modifierGroupItems?: ModifierGroupItemCreateNestedManyWithoutOrderProductsInput
+    comboProduct?: OrderProductsCreateNestedOneWithoutSelectedProductsInput
+    selectedProducts?: OrderProductsCreateNestedManyWithoutComboProductInput
   }
 
   export type OrderProductsUncheckedCreateWithoutOrderInput = {
@@ -134703,7 +136441,9 @@ export namespace Prisma {
     comments?: string | null
     fullAmount: number
     amount: number
+    comboProductId?: string | null
     modifierGroupItems?: ModifierGroupItemUncheckedCreateNestedManyWithoutOrderProductsInput
+    selectedProducts?: OrderProductsUncheckedCreateNestedManyWithoutComboProductInput
   }
 
   export type OrderProductsCreateOrConnectWithoutOrderInput = {
@@ -134743,6 +136483,32 @@ export namespace Prisma {
 
   export type OrderPaymentCreateManyOrderInputEnvelope = {
     data: OrderPaymentCreateManyOrderInput | OrderPaymentCreateManyOrderInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type OrderAdjustmentCreateWithoutOrderInput = {
+    id: string
+    createdAt?: Date | string
+    type: $Enums.OrderAdjustmentType
+    amount: number
+    description: string
+  }
+
+  export type OrderAdjustmentUncheckedCreateWithoutOrderInput = {
+    id: string
+    createdAt?: Date | string
+    type: $Enums.OrderAdjustmentType
+    amount: number
+    description: string
+  }
+
+  export type OrderAdjustmentCreateOrConnectWithoutOrderInput = {
+    where: OrderAdjustmentWhereUniqueInput
+    create: XOR<OrderAdjustmentCreateWithoutOrderInput, OrderAdjustmentUncheckedCreateWithoutOrderInput>
+  }
+
+  export type OrderAdjustmentCreateManyOrderInputEnvelope = {
+    data: OrderAdjustmentCreateManyOrderInput | OrderAdjustmentCreateManyOrderInput[]
     skipDuplicates?: boolean
   }
 
@@ -135237,6 +137003,34 @@ export namespace Prisma {
     orderId?: StringFilter<"OrderPayment"> | string
   }
 
+  export type OrderAdjustmentUpsertWithWhereUniqueWithoutOrderInput = {
+    where: OrderAdjustmentWhereUniqueInput
+    update: XOR<OrderAdjustmentUpdateWithoutOrderInput, OrderAdjustmentUncheckedUpdateWithoutOrderInput>
+    create: XOR<OrderAdjustmentCreateWithoutOrderInput, OrderAdjustmentUncheckedCreateWithoutOrderInput>
+  }
+
+  export type OrderAdjustmentUpdateWithWhereUniqueWithoutOrderInput = {
+    where: OrderAdjustmentWhereUniqueInput
+    data: XOR<OrderAdjustmentUpdateWithoutOrderInput, OrderAdjustmentUncheckedUpdateWithoutOrderInput>
+  }
+
+  export type OrderAdjustmentUpdateManyWithWhereWithoutOrderInput = {
+    where: OrderAdjustmentScalarWhereInput
+    data: XOR<OrderAdjustmentUpdateManyMutationInput, OrderAdjustmentUncheckedUpdateManyWithoutOrderInput>
+  }
+
+  export type OrderAdjustmentScalarWhereInput = {
+    AND?: OrderAdjustmentScalarWhereInput | OrderAdjustmentScalarWhereInput[]
+    OR?: OrderAdjustmentScalarWhereInput[]
+    NOT?: OrderAdjustmentScalarWhereInput | OrderAdjustmentScalarWhereInput[]
+    id?: StringFilter<"OrderAdjustment"> | string
+    createdAt?: DateTimeFilter<"OrderAdjustment"> | Date | string
+    type?: EnumOrderAdjustmentTypeFilter<"OrderAdjustment"> | $Enums.OrderAdjustmentType
+    amount?: IntFilter<"OrderAdjustment"> | number
+    description?: StringFilter<"OrderAdjustment"> | string
+    orderId?: StringFilter<"OrderAdjustment"> | string
+  }
+
   export type PreparationStepCategoryUpsertWithWhereUniqueWithoutOrderInput = {
     where: PreparationStepCategoryWhereUniqueInput
     update: XOR<PreparationStepCategoryUpdateWithoutOrderInput, PreparationStepCategoryUncheckedUpdateWithoutOrderInput>
@@ -135330,6 +137124,182 @@ export namespace Prisma {
     data: XOR<CustomerRewardUpdateManyMutationInput, CustomerRewardUncheckedUpdateManyWithoutRedeemedByOrderInput>
   }
 
+  export type OrderCreateWithoutAdjustmentsInput = {
+    id: string
+    number?: string | null
+    createdAt?: Date | string
+    scheduleFor?: Date | string | null
+    language?: string | null
+    paidAt?: Date | string | null
+    deliveredAt?: Date | string | null
+    leftAtDropOffAt?: Date | string | null
+    leftAtDropOffLat?: number | null
+    leftAtDropOffLng?: number | null
+    estimatedDeliveryDurationMinutes?: number | null
+    currentEstimatedDeliveryDurationMinutes?: number | null
+    dispatchOrderIndex?: number | null
+    amount: number
+    canceled?: boolean
+    status?: $Enums.OrderStatus
+    type?: $Enums.OrderType
+    paymentMethod?: $Enums.PaymentType
+    paymentProvider?: $Enums.PaymentProvider | null
+    sourcePlatform?: $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: string | null
+    tipAmount?: number | null
+    tags?: OrderCreatetagsInput | string[]
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    externalId?: string | null
+    customer?: CustomerCreateNestedOneWithoutOrdersInput
+    dispatch?: DispatchCreateNestedOneWithoutOrdersInput
+    address?: AddressCreateNestedOneWithoutOrdersInput
+    deliveryAddress?: DeliveryAddressCreateNestedOneWithoutOrdersInput
+    externalAddress?: ExternalAddressCreateNestedOneWithoutOrdersInput
+    branch?: BranchCreateNestedOneWithoutOrdersInput
+    orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
+    payments?: OrderPaymentCreateNestedManyWithoutOrderInput
+    preparationStepCategories?: PreparationStepCategoryCreateNestedManyWithoutOrderInput
+    feedback?: CustomerFeedbackCreateNestedOneWithoutOrderInput
+    issuedRewards?: CustomerRewardCreateNestedManyWithoutIssuedForOrderInput
+    redeemedRewards?: CustomerRewardCreateNestedManyWithoutRedeemedByOrderInput
+  }
+
+  export type OrderUncheckedCreateWithoutAdjustmentsInput = {
+    id: string
+    number?: string | null
+    createdAt?: Date | string
+    scheduleFor?: Date | string | null
+    language?: string | null
+    paidAt?: Date | string | null
+    deliveredAt?: Date | string | null
+    leftAtDropOffAt?: Date | string | null
+    leftAtDropOffLat?: number | null
+    leftAtDropOffLng?: number | null
+    estimatedDeliveryDurationMinutes?: number | null
+    currentEstimatedDeliveryDurationMinutes?: number | null
+    dispatchOrderIndex?: number | null
+    amount: number
+    canceled?: boolean
+    status?: $Enums.OrderStatus
+    type?: $Enums.OrderType
+    paymentMethod?: $Enums.PaymentType
+    paymentProvider?: $Enums.PaymentProvider | null
+    sourcePlatform?: $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: string | null
+    tipAmount?: number | null
+    tags?: OrderCreatetagsInput | string[]
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    customerId?: string | null
+    externalId?: string | null
+    dispatchId?: string | null
+    addressId?: string | null
+    deliveryAddressId?: string | null
+    externalAddressId?: string | null
+    branchId?: string | null
+    orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
+    payments?: OrderPaymentUncheckedCreateNestedManyWithoutOrderInput
+    preparationStepCategories?: PreparationStepCategoryUncheckedCreateNestedManyWithoutOrderInput
+    feedback?: CustomerFeedbackUncheckedCreateNestedOneWithoutOrderInput
+    issuedRewards?: CustomerRewardUncheckedCreateNestedManyWithoutIssuedForOrderInput
+    redeemedRewards?: CustomerRewardUncheckedCreateNestedManyWithoutRedeemedByOrderInput
+  }
+
+  export type OrderCreateOrConnectWithoutAdjustmentsInput = {
+    where: OrderWhereUniqueInput
+    create: XOR<OrderCreateWithoutAdjustmentsInput, OrderUncheckedCreateWithoutAdjustmentsInput>
+  }
+
+  export type OrderUpsertWithoutAdjustmentsInput = {
+    update: XOR<OrderUpdateWithoutAdjustmentsInput, OrderUncheckedUpdateWithoutAdjustmentsInput>
+    create: XOR<OrderCreateWithoutAdjustmentsInput, OrderUncheckedCreateWithoutAdjustmentsInput>
+    where?: OrderWhereInput
+  }
+
+  export type OrderUpdateToOneWithWhereWithoutAdjustmentsInput = {
+    where?: OrderWhereInput
+    data: XOR<OrderUpdateWithoutAdjustmentsInput, OrderUncheckedUpdateWithoutAdjustmentsInput>
+  }
+
+  export type OrderUpdateWithoutAdjustmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    number?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    scheduleFor?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    leftAtDropOffLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
+    amount?: IntFieldUpdateOperationsInput | number
+    canceled?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+    paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
+    paymentProvider?: NullableEnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider | null
+    sourcePlatform?: NullableEnumOrderSourcePlatformFieldUpdateOperationsInput | $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
+    tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    tags?: OrderUpdatetagsInput | string[]
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    customer?: CustomerUpdateOneWithoutOrdersNestedInput
+    dispatch?: DispatchUpdateOneWithoutOrdersNestedInput
+    address?: AddressUpdateOneWithoutOrdersNestedInput
+    deliveryAddress?: DeliveryAddressUpdateOneWithoutOrdersNestedInput
+    externalAddress?: ExternalAddressUpdateOneWithoutOrdersNestedInput
+    branch?: BranchUpdateOneWithoutOrdersNestedInput
+    orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
+    payments?: OrderPaymentUpdateManyWithoutOrderNestedInput
+    preparationStepCategories?: PreparationStepCategoryUpdateManyWithoutOrderNestedInput
+    feedback?: CustomerFeedbackUpdateOneWithoutOrderNestedInput
+    issuedRewards?: CustomerRewardUpdateManyWithoutIssuedForOrderNestedInput
+    redeemedRewards?: CustomerRewardUpdateManyWithoutRedeemedByOrderNestedInput
+  }
+
+  export type OrderUncheckedUpdateWithoutAdjustmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    number?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    scheduleFor?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leftAtDropOffLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    leftAtDropOffLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    estimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    currentEstimatedDeliveryDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    dispatchOrderIndex?: NullableIntFieldUpdateOperationsInput | number | null
+    amount?: IntFieldUpdateOperationsInput | number
+    canceled?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
+    paymentMethod?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
+    paymentProvider?: NullableEnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider | null
+    sourcePlatform?: NullableEnumOrderSourcePlatformFieldUpdateOperationsInput | $Enums.OrderSourcePlatform | null
+    customerNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
+    tipAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    tags?: OrderUpdatetagsInput | string[]
+    progressiveDiscountSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    customerId?: NullableStringFieldUpdateOperationsInput | string | null
+    externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    dispatchId?: NullableStringFieldUpdateOperationsInput | string | null
+    addressId?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryAddressId?: NullableStringFieldUpdateOperationsInput | string | null
+    externalAddressId?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
+    orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
+    payments?: OrderPaymentUncheckedUpdateManyWithoutOrderNestedInput
+    preparationStepCategories?: PreparationStepCategoryUncheckedUpdateManyWithoutOrderNestedInput
+    feedback?: CustomerFeedbackUncheckedUpdateOneWithoutOrderNestedInput
+    issuedRewards?: CustomerRewardUncheckedUpdateManyWithoutIssuedForOrderNestedInput
+    redeemedRewards?: CustomerRewardUncheckedUpdateManyWithoutRedeemedByOrderNestedInput
+  }
+
   export type OrderCreateWithoutPaymentsInput = {
     id: string
     number?: string | null
@@ -135363,6 +137333,7 @@ export namespace Prisma {
     externalAddress?: ExternalAddressCreateNestedOneWithoutOrdersInput
     branch?: BranchCreateNestedOneWithoutOrdersInput
     orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
+    adjustments?: OrderAdjustmentCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryCreateNestedManyWithoutOrderInput
     feedback?: CustomerFeedbackCreateNestedOneWithoutOrderInput
     issuedRewards?: CustomerRewardCreateNestedManyWithoutIssuedForOrderInput
@@ -135402,6 +137373,7 @@ export namespace Prisma {
     externalAddressId?: string | null
     branchId?: string | null
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
+    adjustments?: OrderAdjustmentUncheckedCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryUncheckedCreateNestedManyWithoutOrderInput
     feedback?: CustomerFeedbackUncheckedCreateNestedOneWithoutOrderInput
     issuedRewards?: CustomerRewardUncheckedCreateNestedManyWithoutIssuedForOrderInput
@@ -135457,6 +137429,7 @@ export namespace Prisma {
     externalAddress?: ExternalAddressUpdateOneWithoutOrdersNestedInput
     branch?: BranchUpdateOneWithoutOrdersNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
+    adjustments?: OrderAdjustmentUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUpdateManyWithoutOrderNestedInput
     feedback?: CustomerFeedbackUpdateOneWithoutOrderNestedInput
     issuedRewards?: CustomerRewardUpdateManyWithoutIssuedForOrderNestedInput
@@ -135496,6 +137469,7 @@ export namespace Prisma {
     externalAddressId?: NullableStringFieldUpdateOperationsInput | string | null
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
+    adjustments?: OrderAdjustmentUncheckedUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUncheckedUpdateManyWithoutOrderNestedInput
     feedback?: CustomerFeedbackUncheckedUpdateOneWithoutOrderNestedInput
     issuedRewards?: CustomerRewardUncheckedUpdateManyWithoutIssuedForOrderNestedInput
@@ -135817,6 +137791,7 @@ export namespace Prisma {
     branch?: BranchCreateNestedOneWithoutOrdersInput
     orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
     payments?: OrderPaymentCreateNestedManyWithoutOrderInput
+    adjustments?: OrderAdjustmentCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryCreateNestedManyWithoutOrderInput
     issuedRewards?: CustomerRewardCreateNestedManyWithoutIssuedForOrderInput
     redeemedRewards?: CustomerRewardCreateNestedManyWithoutRedeemedByOrderInput
@@ -135856,6 +137831,7 @@ export namespace Prisma {
     branchId?: string | null
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
     payments?: OrderPaymentUncheckedCreateNestedManyWithoutOrderInput
+    adjustments?: OrderAdjustmentUncheckedCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryUncheckedCreateNestedManyWithoutOrderInput
     issuedRewards?: CustomerRewardUncheckedCreateNestedManyWithoutIssuedForOrderInput
     redeemedRewards?: CustomerRewardUncheckedCreateNestedManyWithoutRedeemedByOrderInput
@@ -136009,6 +137985,7 @@ export namespace Prisma {
     branch?: BranchUpdateOneWithoutOrdersNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
     payments?: OrderPaymentUpdateManyWithoutOrderNestedInput
+    adjustments?: OrderAdjustmentUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUpdateManyWithoutOrderNestedInput
     issuedRewards?: CustomerRewardUpdateManyWithoutIssuedForOrderNestedInput
     redeemedRewards?: CustomerRewardUpdateManyWithoutRedeemedByOrderNestedInput
@@ -136048,6 +138025,7 @@ export namespace Prisma {
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
     payments?: OrderPaymentUncheckedUpdateManyWithoutOrderNestedInput
+    adjustments?: OrderAdjustmentUncheckedUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUncheckedUpdateManyWithoutOrderNestedInput
     issuedRewards?: CustomerRewardUncheckedUpdateManyWithoutIssuedForOrderNestedInput
     redeemedRewards?: CustomerRewardUncheckedUpdateManyWithoutRedeemedByOrderNestedInput
@@ -136293,6 +138271,7 @@ export namespace Prisma {
     branch?: BranchCreateNestedOneWithoutOrdersInput
     orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
     payments?: OrderPaymentCreateNestedManyWithoutOrderInput
+    adjustments?: OrderAdjustmentCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryCreateNestedManyWithoutOrderInput
     feedback?: CustomerFeedbackCreateNestedOneWithoutOrderInput
     redeemedRewards?: CustomerRewardCreateNestedManyWithoutRedeemedByOrderInput
@@ -136332,6 +138311,7 @@ export namespace Prisma {
     branchId?: string | null
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
     payments?: OrderPaymentUncheckedCreateNestedManyWithoutOrderInput
+    adjustments?: OrderAdjustmentUncheckedCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryUncheckedCreateNestedManyWithoutOrderInput
     feedback?: CustomerFeedbackUncheckedCreateNestedOneWithoutOrderInput
     redeemedRewards?: CustomerRewardUncheckedCreateNestedManyWithoutRedeemedByOrderInput
@@ -136376,6 +138356,7 @@ export namespace Prisma {
     branch?: BranchCreateNestedOneWithoutOrdersInput
     orderProducts?: OrderProductsCreateNestedManyWithoutOrderInput
     payments?: OrderPaymentCreateNestedManyWithoutOrderInput
+    adjustments?: OrderAdjustmentCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryCreateNestedManyWithoutOrderInput
     feedback?: CustomerFeedbackCreateNestedOneWithoutOrderInput
     issuedRewards?: CustomerRewardCreateNestedManyWithoutIssuedForOrderInput
@@ -136415,6 +138396,7 @@ export namespace Prisma {
     branchId?: string | null
     orderProducts?: OrderProductsUncheckedCreateNestedManyWithoutOrderInput
     payments?: OrderPaymentUncheckedCreateNestedManyWithoutOrderInput
+    adjustments?: OrderAdjustmentUncheckedCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryUncheckedCreateNestedManyWithoutOrderInput
     feedback?: CustomerFeedbackUncheckedCreateNestedOneWithoutOrderInput
     issuedRewards?: CustomerRewardUncheckedCreateNestedManyWithoutIssuedForOrderInput
@@ -136641,6 +138623,7 @@ export namespace Prisma {
     branch?: BranchUpdateOneWithoutOrdersNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
     payments?: OrderPaymentUpdateManyWithoutOrderNestedInput
+    adjustments?: OrderAdjustmentUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUpdateManyWithoutOrderNestedInput
     feedback?: CustomerFeedbackUpdateOneWithoutOrderNestedInput
     redeemedRewards?: CustomerRewardUpdateManyWithoutRedeemedByOrderNestedInput
@@ -136680,6 +138663,7 @@ export namespace Prisma {
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
     payments?: OrderPaymentUncheckedUpdateManyWithoutOrderNestedInput
+    adjustments?: OrderAdjustmentUncheckedUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUncheckedUpdateManyWithoutOrderNestedInput
     feedback?: CustomerFeedbackUncheckedUpdateOneWithoutOrderNestedInput
     redeemedRewards?: CustomerRewardUncheckedUpdateManyWithoutRedeemedByOrderNestedInput
@@ -136730,6 +138714,7 @@ export namespace Prisma {
     branch?: BranchUpdateOneWithoutOrdersNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
     payments?: OrderPaymentUpdateManyWithoutOrderNestedInput
+    adjustments?: OrderAdjustmentUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUpdateManyWithoutOrderNestedInput
     feedback?: CustomerFeedbackUpdateOneWithoutOrderNestedInput
     issuedRewards?: CustomerRewardUpdateManyWithoutIssuedForOrderNestedInput
@@ -136769,6 +138754,7 @@ export namespace Prisma {
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
     payments?: OrderPaymentUncheckedUpdateManyWithoutOrderNestedInput
+    adjustments?: OrderAdjustmentUncheckedUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUncheckedUpdateManyWithoutOrderNestedInput
     feedback?: CustomerFeedbackUncheckedUpdateOneWithoutOrderNestedInput
     issuedRewards?: CustomerRewardUncheckedUpdateManyWithoutIssuedForOrderNestedInput
@@ -136911,6 +138897,7 @@ export namespace Prisma {
     externalAddress?: ExternalAddressCreateNestedOneWithoutOrdersInput
     branch?: BranchCreateNestedOneWithoutOrdersInput
     payments?: OrderPaymentCreateNestedManyWithoutOrderInput
+    adjustments?: OrderAdjustmentCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryCreateNestedManyWithoutOrderInput
     feedback?: CustomerFeedbackCreateNestedOneWithoutOrderInput
     issuedRewards?: CustomerRewardCreateNestedManyWithoutIssuedForOrderInput
@@ -136950,6 +138937,7 @@ export namespace Prisma {
     externalAddressId?: string | null
     branchId?: string | null
     payments?: OrderPaymentUncheckedCreateNestedManyWithoutOrderInput
+    adjustments?: OrderAdjustmentUncheckedCreateNestedManyWithoutOrderInput
     preparationStepCategories?: PreparationStepCategoryUncheckedCreateNestedManyWithoutOrderInput
     feedback?: CustomerFeedbackUncheckedCreateNestedOneWithoutOrderInput
     issuedRewards?: CustomerRewardUncheckedCreateNestedManyWithoutIssuedForOrderInput
@@ -136959,6 +138947,73 @@ export namespace Prisma {
   export type OrderCreateOrConnectWithoutOrderProductsInput = {
     where: OrderWhereUniqueInput
     create: XOR<OrderCreateWithoutOrderProductsInput, OrderUncheckedCreateWithoutOrderProductsInput>
+  }
+
+  export type OrderProductsCreateWithoutSelectedProductsInput = {
+    id: string
+    createdAt?: Date | string
+    quantity: number
+    comments?: string | null
+    fullAmount: number
+    amount: number
+    product: ProductCreateNestedOneWithoutOrderProductsInput
+    modifierGroupItems?: ModifierGroupItemCreateNestedManyWithoutOrderProductsInput
+    order?: OrderCreateNestedOneWithoutOrderProductsInput
+    comboProduct?: OrderProductsCreateNestedOneWithoutSelectedProductsInput
+  }
+
+  export type OrderProductsUncheckedCreateWithoutSelectedProductsInput = {
+    id: string
+    createdAt?: Date | string
+    productId: string
+    quantity: number
+    comments?: string | null
+    fullAmount: number
+    amount: number
+    orderId?: string | null
+    comboProductId?: string | null
+    modifierGroupItems?: ModifierGroupItemUncheckedCreateNestedManyWithoutOrderProductsInput
+  }
+
+  export type OrderProductsCreateOrConnectWithoutSelectedProductsInput = {
+    where: OrderProductsWhereUniqueInput
+    create: XOR<OrderProductsCreateWithoutSelectedProductsInput, OrderProductsUncheckedCreateWithoutSelectedProductsInput>
+  }
+
+  export type OrderProductsCreateWithoutComboProductInput = {
+    id: string
+    createdAt?: Date | string
+    quantity: number
+    comments?: string | null
+    fullAmount: number
+    amount: number
+    product: ProductCreateNestedOneWithoutOrderProductsInput
+    modifierGroupItems?: ModifierGroupItemCreateNestedManyWithoutOrderProductsInput
+    order?: OrderCreateNestedOneWithoutOrderProductsInput
+    selectedProducts?: OrderProductsCreateNestedManyWithoutComboProductInput
+  }
+
+  export type OrderProductsUncheckedCreateWithoutComboProductInput = {
+    id: string
+    createdAt?: Date | string
+    productId: string
+    quantity: number
+    comments?: string | null
+    fullAmount: number
+    amount: number
+    orderId?: string | null
+    modifierGroupItems?: ModifierGroupItemUncheckedCreateNestedManyWithoutOrderProductsInput
+    selectedProducts?: OrderProductsUncheckedCreateNestedManyWithoutComboProductInput
+  }
+
+  export type OrderProductsCreateOrConnectWithoutComboProductInput = {
+    where: OrderProductsWhereUniqueInput
+    create: XOR<OrderProductsCreateWithoutComboProductInput, OrderProductsUncheckedCreateWithoutComboProductInput>
+  }
+
+  export type OrderProductsCreateManyComboProductInputEnvelope = {
+    data: OrderProductsCreateManyComboProductInput | OrderProductsCreateManyComboProductInput[]
+    skipDuplicates?: boolean
   }
 
   export type ProductUpsertWithoutOrderProductsInput = {
@@ -137096,6 +139151,7 @@ export namespace Prisma {
     externalAddress?: ExternalAddressUpdateOneWithoutOrdersNestedInput
     branch?: BranchUpdateOneWithoutOrdersNestedInput
     payments?: OrderPaymentUpdateManyWithoutOrderNestedInput
+    adjustments?: OrderAdjustmentUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUpdateManyWithoutOrderNestedInput
     feedback?: CustomerFeedbackUpdateOneWithoutOrderNestedInput
     issuedRewards?: CustomerRewardUpdateManyWithoutIssuedForOrderNestedInput
@@ -137135,10 +139191,64 @@ export namespace Prisma {
     externalAddressId?: NullableStringFieldUpdateOperationsInput | string | null
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
     payments?: OrderPaymentUncheckedUpdateManyWithoutOrderNestedInput
+    adjustments?: OrderAdjustmentUncheckedUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUncheckedUpdateManyWithoutOrderNestedInput
     feedback?: CustomerFeedbackUncheckedUpdateOneWithoutOrderNestedInput
     issuedRewards?: CustomerRewardUncheckedUpdateManyWithoutIssuedForOrderNestedInput
     redeemedRewards?: CustomerRewardUncheckedUpdateManyWithoutRedeemedByOrderNestedInput
+  }
+
+  export type OrderProductsUpsertWithoutSelectedProductsInput = {
+    update: XOR<OrderProductsUpdateWithoutSelectedProductsInput, OrderProductsUncheckedUpdateWithoutSelectedProductsInput>
+    create: XOR<OrderProductsCreateWithoutSelectedProductsInput, OrderProductsUncheckedCreateWithoutSelectedProductsInput>
+    where?: OrderProductsWhereInput
+  }
+
+  export type OrderProductsUpdateToOneWithWhereWithoutSelectedProductsInput = {
+    where?: OrderProductsWhereInput
+    data: XOR<OrderProductsUpdateWithoutSelectedProductsInput, OrderProductsUncheckedUpdateWithoutSelectedProductsInput>
+  }
+
+  export type OrderProductsUpdateWithoutSelectedProductsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    comments?: NullableStringFieldUpdateOperationsInput | string | null
+    fullAmount?: IntFieldUpdateOperationsInput | number
+    amount?: IntFieldUpdateOperationsInput | number
+    product?: ProductUpdateOneRequiredWithoutOrderProductsNestedInput
+    modifierGroupItems?: ModifierGroupItemUpdateManyWithoutOrderProductsNestedInput
+    order?: OrderUpdateOneWithoutOrderProductsNestedInput
+    comboProduct?: OrderProductsUpdateOneWithoutSelectedProductsNestedInput
+  }
+
+  export type OrderProductsUncheckedUpdateWithoutSelectedProductsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    productId?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    comments?: NullableStringFieldUpdateOperationsInput | string | null
+    fullAmount?: IntFieldUpdateOperationsInput | number
+    amount?: IntFieldUpdateOperationsInput | number
+    orderId?: NullableStringFieldUpdateOperationsInput | string | null
+    comboProductId?: NullableStringFieldUpdateOperationsInput | string | null
+    modifierGroupItems?: ModifierGroupItemUncheckedUpdateManyWithoutOrderProductsNestedInput
+  }
+
+  export type OrderProductsUpsertWithWhereUniqueWithoutComboProductInput = {
+    where: OrderProductsWhereUniqueInput
+    update: XOR<OrderProductsUpdateWithoutComboProductInput, OrderProductsUncheckedUpdateWithoutComboProductInput>
+    create: XOR<OrderProductsCreateWithoutComboProductInput, OrderProductsUncheckedCreateWithoutComboProductInput>
+  }
+
+  export type OrderProductsUpdateWithWhereUniqueWithoutComboProductInput = {
+    where: OrderProductsWhereUniqueInput
+    data: XOR<OrderProductsUpdateWithoutComboProductInput, OrderProductsUncheckedUpdateWithoutComboProductInput>
+  }
+
+  export type OrderProductsUpdateManyWithWhereWithoutComboProductInput = {
+    where: OrderProductsScalarWhereInput
+    data: XOR<OrderProductsUpdateManyMutationInput, OrderProductsUncheckedUpdateManyWithoutComboProductInput>
   }
 
   export type OrderIntentCreateWithoutOrderProductsInput = {
@@ -139557,6 +141667,8 @@ export namespace Prisma {
     amount?: IntFieldUpdateOperationsInput | number
     product?: ProductUpdateOneRequiredWithoutOrderProductsNestedInput
     order?: OrderUpdateOneWithoutOrderProductsNestedInput
+    comboProduct?: OrderProductsUpdateOneWithoutSelectedProductsNestedInput
+    selectedProducts?: OrderProductsUpdateManyWithoutComboProductNestedInput
   }
 
   export type OrderProductsUncheckedUpdateWithoutModifierGroupItemsInput = {
@@ -139568,6 +141680,8 @@ export namespace Prisma {
     fullAmount?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
     orderId?: NullableStringFieldUpdateOperationsInput | string | null
+    comboProductId?: NullableStringFieldUpdateOperationsInput | string | null
+    selectedProducts?: OrderProductsUncheckedUpdateManyWithoutComboProductNestedInput
   }
 
   export type OrderProductsUncheckedUpdateManyWithoutModifierGroupItemsInput = {
@@ -139579,6 +141693,7 @@ export namespace Prisma {
     fullAmount?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
     orderId?: NullableStringFieldUpdateOperationsInput | string | null
+    comboProductId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type OrderIntentProductUpdateWithoutModifierGroupItemsInput = {
@@ -140628,6 +142743,7 @@ export namespace Prisma {
     externalAddress?: ExternalAddressUpdateOneWithoutOrdersNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
     payments?: OrderPaymentUpdateManyWithoutOrderNestedInput
+    adjustments?: OrderAdjustmentUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUpdateManyWithoutOrderNestedInput
     feedback?: CustomerFeedbackUpdateOneWithoutOrderNestedInput
     issuedRewards?: CustomerRewardUpdateManyWithoutIssuedForOrderNestedInput
@@ -140667,6 +142783,7 @@ export namespace Prisma {
     externalAddressId?: NullableStringFieldUpdateOperationsInput | string | null
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
     payments?: OrderPaymentUncheckedUpdateManyWithoutOrderNestedInput
+    adjustments?: OrderAdjustmentUncheckedUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUncheckedUpdateManyWithoutOrderNestedInput
     feedback?: CustomerFeedbackUncheckedUpdateOneWithoutOrderNestedInput
     issuedRewards?: CustomerRewardUncheckedUpdateManyWithoutIssuedForOrderNestedInput
@@ -141039,6 +143156,7 @@ export namespace Prisma {
     branch?: BranchUpdateOneWithoutOrdersNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
     payments?: OrderPaymentUpdateManyWithoutOrderNestedInput
+    adjustments?: OrderAdjustmentUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUpdateManyWithoutOrderNestedInput
     feedback?: CustomerFeedbackUpdateOneWithoutOrderNestedInput
     issuedRewards?: CustomerRewardUpdateManyWithoutIssuedForOrderNestedInput
@@ -141078,6 +143196,7 @@ export namespace Prisma {
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
     payments?: OrderPaymentUncheckedUpdateManyWithoutOrderNestedInput
+    adjustments?: OrderAdjustmentUncheckedUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUncheckedUpdateManyWithoutOrderNestedInput
     feedback?: CustomerFeedbackUncheckedUpdateOneWithoutOrderNestedInput
     issuedRewards?: CustomerRewardUncheckedUpdateManyWithoutIssuedForOrderNestedInput
@@ -141442,6 +143561,7 @@ export namespace Prisma {
     branch?: BranchUpdateOneWithoutOrdersNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
     payments?: OrderPaymentUpdateManyWithoutOrderNestedInput
+    adjustments?: OrderAdjustmentUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUpdateManyWithoutOrderNestedInput
     feedback?: CustomerFeedbackUpdateOneWithoutOrderNestedInput
     issuedRewards?: CustomerRewardUpdateManyWithoutIssuedForOrderNestedInput
@@ -141481,6 +143601,7 @@ export namespace Prisma {
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
     payments?: OrderPaymentUncheckedUpdateManyWithoutOrderNestedInput
+    adjustments?: OrderAdjustmentUncheckedUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUncheckedUpdateManyWithoutOrderNestedInput
     feedback?: CustomerFeedbackUncheckedUpdateOneWithoutOrderNestedInput
     issuedRewards?: CustomerRewardUncheckedUpdateManyWithoutIssuedForOrderNestedInput
@@ -141581,6 +143702,7 @@ export namespace Prisma {
     fullAmount: number
     amount: number
     orderId?: string | null
+    comboProductId?: string | null
   }
 
   export type OrderIntentProductCreateManyProductInput = {
@@ -141850,6 +143972,8 @@ export namespace Prisma {
     amount?: IntFieldUpdateOperationsInput | number
     modifierGroupItems?: ModifierGroupItemUpdateManyWithoutOrderProductsNestedInput
     order?: OrderUpdateOneWithoutOrderProductsNestedInput
+    comboProduct?: OrderProductsUpdateOneWithoutSelectedProductsNestedInput
+    selectedProducts?: OrderProductsUpdateManyWithoutComboProductNestedInput
   }
 
   export type OrderProductsUncheckedUpdateWithoutProductInput = {
@@ -141860,7 +143984,9 @@ export namespace Prisma {
     fullAmount?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
     orderId?: NullableStringFieldUpdateOperationsInput | string | null
+    comboProductId?: NullableStringFieldUpdateOperationsInput | string | null
     modifierGroupItems?: ModifierGroupItemUncheckedUpdateManyWithoutOrderProductsNestedInput
+    selectedProducts?: OrderProductsUncheckedUpdateManyWithoutComboProductNestedInput
   }
 
   export type OrderProductsUncheckedUpdateManyWithoutProductInput = {
@@ -141871,6 +143997,7 @@ export namespace Prisma {
     fullAmount?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
     orderId?: NullableStringFieldUpdateOperationsInput | string | null
+    comboProductId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type OrderIntentProductUpdateWithoutProductInput = {
@@ -142793,6 +144920,7 @@ export namespace Prisma {
     branch?: BranchUpdateOneWithoutOrdersNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
     payments?: OrderPaymentUpdateManyWithoutOrderNestedInput
+    adjustments?: OrderAdjustmentUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUpdateManyWithoutOrderNestedInput
     feedback?: CustomerFeedbackUpdateOneWithoutOrderNestedInput
     issuedRewards?: CustomerRewardUpdateManyWithoutIssuedForOrderNestedInput
@@ -142832,6 +144960,7 @@ export namespace Prisma {
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
     payments?: OrderPaymentUncheckedUpdateManyWithoutOrderNestedInput
+    adjustments?: OrderAdjustmentUncheckedUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUncheckedUpdateManyWithoutOrderNestedInput
     feedback?: CustomerFeedbackUncheckedUpdateOneWithoutOrderNestedInput
     issuedRewards?: CustomerRewardUncheckedUpdateManyWithoutIssuedForOrderNestedInput
@@ -143348,6 +145477,7 @@ export namespace Prisma {
     branch?: BranchUpdateOneWithoutOrdersNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
     payments?: OrderPaymentUpdateManyWithoutOrderNestedInput
+    adjustments?: OrderAdjustmentUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUpdateManyWithoutOrderNestedInput
     feedback?: CustomerFeedbackUpdateOneWithoutOrderNestedInput
     issuedRewards?: CustomerRewardUpdateManyWithoutIssuedForOrderNestedInput
@@ -143387,6 +145517,7 @@ export namespace Prisma {
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
     payments?: OrderPaymentUncheckedUpdateManyWithoutOrderNestedInput
+    adjustments?: OrderAdjustmentUncheckedUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUncheckedUpdateManyWithoutOrderNestedInput
     feedback?: CustomerFeedbackUncheckedUpdateOneWithoutOrderNestedInput
     issuedRewards?: CustomerRewardUncheckedUpdateManyWithoutIssuedForOrderNestedInput
@@ -143545,6 +145676,7 @@ export namespace Prisma {
     branch?: BranchUpdateOneWithoutOrdersNestedInput
     orderProducts?: OrderProductsUpdateManyWithoutOrderNestedInput
     payments?: OrderPaymentUpdateManyWithoutOrderNestedInput
+    adjustments?: OrderAdjustmentUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUpdateManyWithoutOrderNestedInput
     feedback?: CustomerFeedbackUpdateOneWithoutOrderNestedInput
     issuedRewards?: CustomerRewardUpdateManyWithoutIssuedForOrderNestedInput
@@ -143584,6 +145716,7 @@ export namespace Prisma {
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
     orderProducts?: OrderProductsUncheckedUpdateManyWithoutOrderNestedInput
     payments?: OrderPaymentUncheckedUpdateManyWithoutOrderNestedInput
+    adjustments?: OrderAdjustmentUncheckedUpdateManyWithoutOrderNestedInput
     preparationStepCategories?: PreparationStepCategoryUncheckedUpdateManyWithoutOrderNestedInput
     feedback?: CustomerFeedbackUncheckedUpdateOneWithoutOrderNestedInput
     issuedRewards?: CustomerRewardUncheckedUpdateManyWithoutIssuedForOrderNestedInput
@@ -143659,6 +145792,7 @@ export namespace Prisma {
     comments?: string | null
     fullAmount: number
     amount: number
+    comboProductId?: string | null
   }
 
   export type OrderPaymentCreateManyOrderInput = {
@@ -143669,6 +145803,14 @@ export namespace Prisma {
     paymentType: $Enums.PaymentType
     paymentProvider?: $Enums.PaymentProvider | null
     externalId?: string | null
+  }
+
+  export type OrderAdjustmentCreateManyOrderInput = {
+    id: string
+    createdAt?: Date | string
+    type: $Enums.OrderAdjustmentType
+    amount: number
+    description: string
   }
 
   export type PreparationStepCategoryCreateManyOrderInput = {
@@ -143730,6 +145872,8 @@ export namespace Prisma {
     amount?: IntFieldUpdateOperationsInput | number
     product?: ProductUpdateOneRequiredWithoutOrderProductsNestedInput
     modifierGroupItems?: ModifierGroupItemUpdateManyWithoutOrderProductsNestedInput
+    comboProduct?: OrderProductsUpdateOneWithoutSelectedProductsNestedInput
+    selectedProducts?: OrderProductsUpdateManyWithoutComboProductNestedInput
   }
 
   export type OrderProductsUncheckedUpdateWithoutOrderInput = {
@@ -143740,7 +145884,9 @@ export namespace Prisma {
     comments?: NullableStringFieldUpdateOperationsInput | string | null
     fullAmount?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
+    comboProductId?: NullableStringFieldUpdateOperationsInput | string | null
     modifierGroupItems?: ModifierGroupItemUncheckedUpdateManyWithoutOrderProductsNestedInput
+    selectedProducts?: OrderProductsUncheckedUpdateManyWithoutComboProductNestedInput
   }
 
   export type OrderProductsUncheckedUpdateManyWithoutOrderInput = {
@@ -143751,6 +145897,7 @@ export namespace Prisma {
     comments?: NullableStringFieldUpdateOperationsInput | string | null
     fullAmount?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
+    comboProductId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type OrderPaymentUpdateWithoutOrderInput = {
@@ -143781,6 +145928,30 @@ export namespace Prisma {
     paymentType?: EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
     paymentProvider?: NullableEnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider | null
     externalId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type OrderAdjustmentUpdateWithoutOrderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumOrderAdjustmentTypeFieldUpdateOperationsInput | $Enums.OrderAdjustmentType
+    amount?: IntFieldUpdateOperationsInput | number
+    description?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type OrderAdjustmentUncheckedUpdateWithoutOrderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumOrderAdjustmentTypeFieldUpdateOperationsInput | $Enums.OrderAdjustmentType
+    amount?: IntFieldUpdateOperationsInput | number
+    description?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type OrderAdjustmentUncheckedUpdateManyWithoutOrderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumOrderAdjustmentTypeFieldUpdateOperationsInput | $Enums.OrderAdjustmentType
+    amount?: IntFieldUpdateOperationsInput | number
+    description?: StringFieldUpdateOperationsInput | string
   }
 
   export type PreparationStepCategoryUpdateWithoutOrderInput = {
@@ -143977,6 +146148,17 @@ export namespace Prisma {
     amount?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
+  export type OrderProductsCreateManyComboProductInput = {
+    id: string
+    createdAt?: Date | string
+    productId: string
+    quantity: number
+    comments?: string | null
+    fullAmount: number
+    amount: number
+    orderId?: string | null
+  }
+
   export type ModifierGroupItemUpdateWithoutOrderProductsInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -144018,6 +146200,43 @@ export namespace Prisma {
     fileId?: NullableStringFieldUpdateOperationsInput | string | null
     squareModifierId?: NullableStringFieldUpdateOperationsInput | string | null
     squareModifierVersion?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type OrderProductsUpdateWithoutComboProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    comments?: NullableStringFieldUpdateOperationsInput | string | null
+    fullAmount?: IntFieldUpdateOperationsInput | number
+    amount?: IntFieldUpdateOperationsInput | number
+    product?: ProductUpdateOneRequiredWithoutOrderProductsNestedInput
+    modifierGroupItems?: ModifierGroupItemUpdateManyWithoutOrderProductsNestedInput
+    order?: OrderUpdateOneWithoutOrderProductsNestedInput
+    selectedProducts?: OrderProductsUpdateManyWithoutComboProductNestedInput
+  }
+
+  export type OrderProductsUncheckedUpdateWithoutComboProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    productId?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    comments?: NullableStringFieldUpdateOperationsInput | string | null
+    fullAmount?: IntFieldUpdateOperationsInput | number
+    amount?: IntFieldUpdateOperationsInput | number
+    orderId?: NullableStringFieldUpdateOperationsInput | string | null
+    modifierGroupItems?: ModifierGroupItemUncheckedUpdateManyWithoutOrderProductsNestedInput
+    selectedProducts?: OrderProductsUncheckedUpdateManyWithoutComboProductNestedInput
+  }
+
+  export type OrderProductsUncheckedUpdateManyWithoutComboProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    productId?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    comments?: NullableStringFieldUpdateOperationsInput | string | null
+    fullAmount?: IntFieldUpdateOperationsInput | number
+    amount?: IntFieldUpdateOperationsInput | number
+    orderId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ModifierGroupItemUpdateWithoutOrderIntentProductsInput = {
