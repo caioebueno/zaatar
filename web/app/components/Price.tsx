@@ -341,6 +341,80 @@ const buildSelectedModifierGroupsFromOrderProduct = (
     .filter((group): group is TSummaryModifierGroup => Boolean(group));
 };
 
+/**
+ * Order-mode twin of `buildSelectedComboGroupsFromCartItem`. A saved order keeps
+ * each combo selection as a zero-priced child line, so the slot it belonged to is
+ * recovered by matching the child's product against the combo's slot options.
+ * Presentation matches the cart: one group per slot, each seat folding its own
+ * modifiers into the label.
+ */
+const buildSelectedComboGroupsFromOrderProduct = (
+  orderProduct: TOrder["orderProducts"][number],
+  lg: string,
+): TSummaryModifierGroup[] => {
+  const selectedProducts = orderProduct.selectedProducts || [];
+  const comboSlots = orderProduct.product?.comboSlots || [];
+  if (selectedProducts.length === 0 || comboSlots.length === 0) return [];
+
+  // Child quantities are stored multiplied by the combo's own quantity.
+  const comboQuantity =
+    typeof orderProduct.quantity === "number" && orderProduct.quantity > 0
+      ? orderProduct.quantity
+      : 1;
+  const claimed = new Set<string>();
+
+  return comboSlots
+    .map((slot) => {
+      const optionByProductId = new Map(
+        slot.options.map((option) => [option.productId, option]),
+      );
+
+      const items = selectedProducts
+        .filter(
+          (child) => !claimed.has(child.id) && optionByProductId.has(child.productId),
+        )
+        .map((child) => {
+          claimed.add(child.id);
+
+          const option = optionByProductId.get(child.productId);
+          const label =
+            child.product?.translations?.[lg]?.title ||
+            child.product?.name ||
+            "Selected option";
+
+          const modifierItems = child.selectedModifierGroupItems || [];
+          const modifierLabels = modifierItems.map((modifierItem) =>
+            resolveModifierItemTitle(modifierItem, lg),
+          );
+          const modifiersPrice = modifierItems.reduce(
+            (sum, modifierItem) => sum + modifierItem.price,
+            0,
+          );
+
+          const perCombo = Math.max(1, Math.round(child.quantity / comboQuantity));
+          const quantityLabel = perCombo > 1 ? `${label} x${perCombo}` : label;
+
+          return {
+            id: child.id,
+            title:
+              modifierLabels.length > 0
+                ? `${quantityLabel} (${modifierLabels.join(", ")})`
+                : quantityLabel,
+            price: ((option?.extraPrice ?? 0) + modifiersPrice) * perCombo,
+          };
+        });
+
+      if (items.length === 0) return null;
+
+      return {
+        id: slot.id,
+        title: resolveComboSlotTitle(slot, lg),
+        items,
+      };
+    })
+    .filter((group): group is TSummaryModifierGroup => Boolean(group));
+};
+
 const getPrizeImageUrl = (prize: TProgressiveDiscountPrize): string | null => {
   if (prize.imageUrl) return prize.imageUrl;
   return prize.products[0]?.photos?.[0]?.url || null;
@@ -455,12 +529,11 @@ const ModifierGroupsList: React.FC<{
           {modifierGroup.items.map((modifierItem) => (
             <div
               key={modifierItem.id}
-              className="flex w-full min-w-0 items-center justify-between gap-2"
+              className="flex w-full min-w-0 items-start justify-between gap-2"
             >
-              <span
-                title={modifierItem.title}
-                className="block min-w-0 flex-1 truncate text-xs font-medium text-lightText"
-              >
+              {/* Wraps rather than truncating — the full modifier name matters on
+                  an order summary. `items-start` keeps the price on the first line. */}
+              <span className="block min-w-0 flex-1 break-words text-xs font-medium text-lightText">
                 {modifierItem.title}
               </span>
               <span className="shrink-0 text-xs font-medium text-lightText">
@@ -2133,11 +2206,14 @@ export const OrderSummaryModal: React.FC<TOrderSummaryModal> = ({
                         item.product?.name ||
                         "";
                       const lineTotal = item.fullAmount * item.quantity;
-                      const modifierGroups = buildSelectedModifierGroupsFromOrderProduct(
-                        item,
-                        lg,
-                        content["modifiers"] || "Modifiers",
-                      );
+                      const modifierGroups = [
+                        ...buildSelectedComboGroupsFromOrderProduct(item, lg),
+                        ...buildSelectedModifierGroupsFromOrderProduct(
+                          item,
+                          lg,
+                          content["modifiers"] || "Modifiers",
+                        ),
+                      ];
                       const totalOrderSummaryLines =
                         (order?.orderProducts.length || 0) +
                         orderPrizeSummaryLineItems.length;
@@ -3229,9 +3305,12 @@ const OrderSummaryLineItem: React.FC<TOrderSummaryLineItem> = ({
       className={`py-3 ${showDivider ? "border-b border-dashed border-[#D8D8D8]" : ""}`}
     >
       <div className="flex items-start justify-between gap-4">
-        <div className="flex flex-col gap-1">
+        {/* `min-w-0` is what lets this column shrink — without it the flex item
+            keeps its content's intrinsic width, the modifier titles never
+            truncate, and the row overflows the summary. */}
+        <div className="flex min-w-0 flex-1 flex-col gap-1">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="font-semibold text-base text-text leading-tight">
+            <span className="min-w-0 font-semibold text-base text-text leading-tight">
               {quantity} {name}
             </span>
             {badgeLabel && (

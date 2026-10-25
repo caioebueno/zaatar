@@ -1,4 +1,7 @@
-import type { AnalyticsRepository } from "../ports/AnalyticsRepository.js";
+import type {
+  AnalyticsChannelBreakdown,
+  AnalyticsRepository,
+} from "../ports/AnalyticsRepository.js";
 import type {
   AnalyticsMetricBucket,
   AnalyticsMetricBarChartOutput,
@@ -12,6 +15,7 @@ import {
 
 export type GetRevenueAnalyticsInput = AnalyticsV1Input;
 type RevenueAnalyticsBucket = AnalyticsMetricBucket & {
+  channels: AnalyticsChannelBreakdown;
   deliveryFee: number;
   sales: number;
   tax: number;
@@ -25,6 +29,7 @@ export type GetRevenueAnalyticsOutput = Omit<
 > & {
   buckets: RevenueAnalyticsBucket[];
   summary: AnalyticsMetricBarChartOutput<"revenue">["summary"] & {
+    channels: AnalyticsChannelBreakdown;
     deliveryFee: number;
     sales: number;
     tax: number;
@@ -71,6 +76,15 @@ export class GetRevenueAnalyticsUseCase {
       }),
       { sales: 0, tax: 0, tip: 0, deliveryFee: 0 },
     );
+    const channelTotals = currentRows.reduce<AnalyticsChannelBreakdown>(
+      (sum, row) => ({
+        website: sum.website + row.channels.website,
+        doordash: sum.doordash + row.channels.doordash,
+        uberEats: sum.uberEats + row.channels.uberEats,
+        square: sum.square + row.channels.square,
+      }),
+      { website: 0, doordash: 0, uberEats: 0, square: 0 },
+    );
     const output = buildAnalyticsMetricOutput({
       metric: "revenue",
       timezone: validated.timezone,
@@ -92,9 +106,10 @@ export class GetRevenueAnalyticsUseCase {
           tip: row.tip,
           deliveryFee: row.deliveryFee,
           total: row.total,
+          channels: row.channels,
         };
       }),
-      summary: { ...output.summary, ...totals },
+      summary: { ...output.summary, ...totals, channels: channelTotals },
     };
   }
 }

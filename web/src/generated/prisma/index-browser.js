@@ -873,6 +873,15 @@ exports.Prisma.OrderScalarFieldEnum = {
   branchId: 'branchId'
 };
 
+exports.Prisma.OrderAdjustmentScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  type: 'type',
+  amount: 'amount',
+  description: 'description',
+  orderId: 'orderId'
+};
+
 exports.Prisma.OrderPaymentScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
@@ -949,7 +958,8 @@ exports.Prisma.OrderProductsScalarFieldEnum = {
   comments: 'comments',
   fullAmount: 'fullAmount',
   amount: 'amount',
-  orderId: 'orderId'
+  orderId: 'orderId',
+  comboProductId: 'comboProductId'
 };
 
 exports.Prisma.OrderIntentProductScalarFieldEnum = {
@@ -1273,6 +1283,11 @@ exports.OrderSourcePlatform = exports.$Enums.OrderSourcePlatform = {
   UNKNOWN: 'UNKNOWN'
 };
 
+exports.OrderAdjustmentType = exports.$Enums.OrderAdjustmentType = {
+  DISCOUNT: 'DISCOUNT',
+  EXTRA_CHARGE: 'EXTRA_CHARGE'
+};
+
 exports.CustomerFeedbackSentiment = exports.$Enums.CustomerFeedbackSentiment = {
   NEGATIVE: 'NEGATIVE',
   NEUTRAL: 'NEUTRAL',
@@ -1352,6 +1367,7 @@ exports.Prisma.ModelName = {
   Message: 'Message',
   PromotialMessage: 'PromotialMessage',
   Order: 'Order',
+  OrderAdjustment: 'OrderAdjustment',
   OrderPayment: 'OrderPayment',
   OrderIntent: 'OrderIntent',
   CustomerFeedback: 'CustomerFeedback',

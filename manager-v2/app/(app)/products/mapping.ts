@@ -99,5 +99,30 @@ export function mapProductToDraft(p: ApiProduct): ProductDraft {
     modifiers: (p.modifierGroups ?? []).map((mg) => mg.id),
     tasks: (p.preparationSteps ?? []).map((s) => s.id),
     taxes: [],
+    comboFixed: (p.products ?? []).map((item, i) => ({
+      id: `cf_${item.productId}_${i}`,
+      productId: item.productId,
+      quantity: item.quantity,
+    })),
+    comboSlots: [...(p.comboSlots ?? [])]
+      .sort((a, b) => (a.sortIndex ?? 0) - (b.sortIndex ?? 0))
+      .map((slot) => ({
+        id: slot.id,
+        names: {
+          en: slot.name,
+          es: translated(slot.translations, "es", "title"),
+          pt: translated(slot.translations, "pt", "title"),
+        },
+        min: String(slot.minSelect),
+        max: String(slot.maxSelect),
+        allowDuplicates: slot.allowDuplicates,
+        products: [...(slot.options ?? [])]
+          .sort((a, b) => (a.sortIndex ?? 0) - (b.sortIndex ?? 0))
+          .map((option, i) => ({
+            id: `so_${slot.id}_${option.productId}_${i}`,
+            productId: option.productId,
+            extra: centsToDollars(option.extraPrice).toFixed(2),
+          })),
+      })),
   };
 }

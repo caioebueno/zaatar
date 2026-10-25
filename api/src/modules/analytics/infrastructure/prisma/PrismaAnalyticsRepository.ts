@@ -21,21 +21,36 @@ type DailyRow = {
 type OrderQuantityRow = {
   bucketEndAt: Date;
   bucketStartAt: Date;
+  doordash: number;
   key: string;
   orders: number;
+  square: number;
+  uberEats: number;
+  website: number;
 };
 
 type RevenueRow = {
   bucketEndAt: Date;
   bucketStartAt: Date;
   deliveryFee: string;
+  doordash: string;
   key: string;
   orders: number;
   sales: string;
+  square: string;
   tax: string;
   tip: string;
   total: string;
+  uberEats: string;
+  website: string;
 };
+
+/**
+ * Orders are attributed to a sales channel through `Order.sourcePlatform`.
+ * Rows predating that column are null and count as the website, matching the
+ * backfill — so the channel segments always sum to the bucket total.
+ */
+const WEBSITE_SOURCES = "('FOODY','UNKNOWN')";
 
 type NewCustomersRow = {
   bucketEndAt: Date;
@@ -70,14 +85,14 @@ export class PrismaAnalyticsRepository implements AnalyticsRepository {
         MIN(orders."createdAt") AS "firstOrderAt",
         MAX(orders."createdAt") AS "lastOrderAt",
         COUNT(*) FILTER (
-          WHERE orders."createdAt" >= ${query.startDate}::timestamptz
-            AND orders."createdAt" <= ${query.endDate}::timestamptz
+          WHERE orders."createdAt" >= (${query.startDate}::timestamptz AT TIME ZONE 'UTC')
+            AND orders."createdAt" <= (${query.endDate}::timestamptz AT TIME ZONE 'UTC')
         )::int AS "currentOrders",
         COUNT(*) FILTER (
           WHERE ${query.compareStartDate}::timestamptz IS NOT NULL
             AND ${query.compareEndDate}::timestamptz IS NOT NULL
-            AND orders."createdAt" >= ${query.compareStartDate}::timestamptz
-            AND orders."createdAt" <= ${query.compareEndDate}::timestamptz
+            AND orders."createdAt" >= (${query.compareStartDate}::timestamptz AT TIME ZONE 'UTC')
+            AND orders."createdAt" <= (${query.compareEndDate}::timestamptz AT TIME ZONE 'UTC')
         )::int AS "compareOrders"
       FROM "Order" orders
       INNER JOIN "Branch" branch
@@ -85,12 +100,14 @@ export class PrismaAnalyticsRepository implements AnalyticsRepository {
       WHERE orders."canceled" = false
         AND orders."customerId" IS NOT NULL
         AND branch."businessId" = ${query.businessId}
-        AND orders."createdAt" <= COALESCE(
+        AND orders."createdAt" <= (
+          COALESCE(
           GREATEST(
             ${query.endDate}::timestamptz,
             ${query.compareEndDate}::timestamptz
           ),
           ${query.endDate}::timestamptz
+          ) AT TIME ZONE 'UTC'
         )
       GROUP BY orders."customerId"
     `;
@@ -134,7 +151,7 @@ export class PrismaAnalyticsRepository implements AnalyticsRepository {
       ),
       daily_customer_activity AS (
         SELECT
-          timezone(${query.timezone}, orders."createdAt")::date AS local_day,
+          ((orders."createdAt" AT TIME ZONE 'UTC') AT TIME ZONE ${query.timezone})::date AS local_day,
           orders."customerId" AS "customerId"
         FROM "Order" orders
         INNER JOIN "Branch" branch
@@ -142,18 +159,18 @@ export class PrismaAnalyticsRepository implements AnalyticsRepository {
         WHERE orders."canceled" = false
           AND orders."customerId" IS NOT NULL
           AND branch."businessId" = ${query.businessId}
-          AND orders."createdAt" >= ${query.startDate}::timestamptz
-          AND orders."createdAt" <= ${query.endDate}::timestamptz
+          AND orders."createdAt" >= (${query.startDate}::timestamptz AT TIME ZONE 'UTC')
+          AND orders."createdAt" <= (${query.endDate}::timestamptz AT TIME ZONE 'UTC')
         GROUP BY 1, 2
       ),
       daily_counts AS (
         SELECT
           daily_customer_activity.local_day,
           COUNT(*) FILTER (
-            WHERE timezone(${query.timezone}, first_orders."firstOrderAt")::date = daily_customer_activity.local_day
+            WHERE ((first_orders."firstOrderAt" AT TIME ZONE 'UTC') AT TIME ZONE ${query.timezone})::date = daily_customer_activity.local_day
           )::int AS "newCustomers",
           COUNT(*) FILTER (
-            WHERE timezone(${query.timezone}, first_orders."firstOrderAt")::date < daily_customer_activity.local_day
+            WHERE ((first_orders."firstOrderAt" AT TIME ZONE 'UTC') AT TIME ZONE ${query.timezone})::date < daily_customer_activity.local_day
           )::int AS "returningCustomers"
         FROM daily_customer_activity
         INNER JOIN first_orders
@@ -211,11 +228,11 @@ export class PrismaAnalyticsRepository implements AnalyticsRepository {
       ),
       customers_agg AS (
         SELECT
-          timezone(${query.timezone}, first_orders."firstOrderAt")::date AS local_day,
+          ((first_orders."firstOrderAt" AT TIME ZONE 'UTC') AT TIME ZONE ${query.timezone})::date AS local_day,
           COUNT(*)::int AS customers
         FROM first_orders
-        WHERE first_orders."firstOrderAt" >= ${query.startDate}::timestamptz
-          AND first_orders."firstOrderAt" <= ${query.endDate}::timestamptz
+        WHERE first_orders."firstOrderAt" >= (${query.startDate}::timestamptz AT TIME ZONE 'UTC')
+          AND first_orders."firstOrderAt" <= (${query.endDate}::timestamptz AT TIME ZONE 'UTC')
         GROUP BY 1
       )
       SELECT
@@ -255,22 +272,32 @@ export class PrismaAnalyticsRepository implements AnalyticsRepository {
       ),
       orders_agg AS (
         SELECT
-          timezone(${query.timezone}, orders."createdAt")::date AS local_day,
-          COUNT(*)::int AS orders
+          ((orders."createdAt" AT TIME ZONE 'UTC') AT TIME ZONE ${query.timezone})::date AS local_day,
+          COUNT(*)::int AS orders,
+          COUNT(*) FILTER (
+            WHERE COALESCE(orders."sourcePlatform"::text, 'FOODY') IN ('FOODY', 'UNKNOWN')
+          )::int AS website,
+          COUNT(*) FILTER (WHERE orders."sourcePlatform"::text = 'DOORDASH')::int AS doordash,
+          COUNT(*) FILTER (WHERE orders."sourcePlatform"::text = 'UBER_EATS')::int AS "uberEats",
+          COUNT(*) FILTER (WHERE orders."sourcePlatform"::text = 'SQUARE')::int AS square
         FROM "Order" orders
         INNER JOIN "Branch" branch
           ON branch."id" = orders."branchId"
         WHERE orders."canceled" = false
           AND branch."businessId" = ${query.businessId}
-          AND orders."createdAt" >= ${query.startDate}::timestamptz
-          AND orders."createdAt" <= ${query.endDate}::timestamptz
+          AND orders."createdAt" >= (${query.startDate}::timestamptz AT TIME ZONE 'UTC')
+          AND orders."createdAt" <= (${query.endDate}::timestamptz AT TIME ZONE 'UTC')
         GROUP BY 1
       )
       SELECT
         to_char(days.local_day, 'YYYY-MM-DD') AS key,
         (days.local_day::timestamp AT TIME ZONE ${query.timezone}) AS "bucketStartAt",
         (((days.local_day + 1)::timestamp - interval '1 millisecond') AT TIME ZONE ${query.timezone}) AS "bucketEndAt",
-        COALESCE(orders_agg.orders, 0)::int AS orders
+        COALESCE(orders_agg.orders, 0)::int AS orders,
+        COALESCE(orders_agg.website, 0)::int AS website,
+        COALESCE(orders_agg.doordash, 0)::int AS doordash,
+        COALESCE(orders_agg."uberEats", 0)::int AS "uberEats",
+        COALESCE(orders_agg.square, 0)::int AS square
       FROM days
       LEFT JOIN orders_agg
         ON orders_agg.local_day = days.local_day
@@ -282,6 +309,12 @@ export class PrismaAnalyticsRepository implements AnalyticsRepository {
       bucketStartAt: row.bucketStartAt,
       bucketEndAt: row.bucketEndAt,
       orders: Number(row.orders || 0),
+      channels: {
+        website: Number(row.website || 0),
+        doordash: Number(row.doordash || 0),
+        uberEats: Number(row.uberEats || 0),
+        square: Number(row.square || 0),
+      },
     }));
   }
 
@@ -304,7 +337,7 @@ export class PrismaAnalyticsRepository implements AnalyticsRepository {
       order_totals_base AS (
         SELECT
           orders."id" AS "orderId",
-          timezone(${query.timezone}, orders."createdAt")::date AS local_day,
+          ((orders."createdAt" AT TIME ZONE 'UTC') AT TIME ZONE ${query.timezone})::date AS local_day,
           CASE
             WHEN orders."type"::text = 'DELIVERY'
             THEN COALESCE(MAX(delivery_address."deliveryFee"), 0)::numeric
@@ -319,7 +352,8 @@ export class PrismaAnalyticsRepository implements AnalyticsRepository {
               (orders."progressiveDiscountSnapshot"::jsonb ->> 'discountedPrice')::numeric
             ELSE COALESCE(SUM(op."amount" * op."quantity"), 0)::numeric
           END AS discounted_subtotal_cents,
-          COALESCE(orders."tipAmount", 0)::numeric AS tip_percentage
+          COALESCE(orders."tipAmount", 0)::numeric AS tip_percentage,
+          COALESCE(orders."sourcePlatform"::text, 'FOODY') AS source_platform
         FROM "Order" orders
         INNER JOIN "Branch" branch
           ON branch."id" = orders."branchId"
@@ -329,17 +363,18 @@ export class PrismaAnalyticsRepository implements AnalyticsRepository {
           ON op."orderId" = orders."id"
         WHERE orders."canceled" = false
           AND branch."businessId" = ${query.businessId}
-          AND orders."createdAt" >= ${query.startDate}::timestamptz
-          AND orders."createdAt" <= ${query.endDate}::timestamptz
+          AND orders."createdAt" >= (${query.startDate}::timestamptz AT TIME ZONE 'UTC')
+          AND orders."createdAt" <= (${query.endDate}::timestamptz AT TIME ZONE 'UTC')
         GROUP BY
           orders."id",
-          timezone(${query.timezone}, orders."createdAt")::date,
+          ((orders."createdAt" AT TIME ZONE 'UTC') AT TIME ZONE ${query.timezone})::date,
           orders."progressiveDiscountSnapshot",
           orders."tipAmount"
       ),
       order_totals AS (
         SELECT
           local_day,
+          source_platform,
           GREATEST(0, discounted_subtotal_cents) AS sales_cents,
           GREATEST(0, delivery_fee_cents) AS delivery_fee_cents,
           ROUND(GREATEST(0, discounted_subtotal_cents) * 0.065)::numeric AS tax_cents,
@@ -354,7 +389,15 @@ export class PrismaAnalyticsRepository implements AnalyticsRepository {
           COALESCE(SUM(order_totals.tax_cents), 0)::bigint::text AS tax,
           COALESCE(SUM(order_totals.tip_cents), 0)::bigint::text AS tip,
           COALESCE(SUM(order_totals.delivery_fee_cents), 0)::bigint::text AS "deliveryFee",
-          COALESCE(SUM(order_totals.sales_cents + order_totals.tax_cents + order_totals.tip_cents + order_totals.delivery_fee_cents), 0)::bigint::text AS total
+          COALESCE(SUM(order_totals.sales_cents + order_totals.tax_cents + order_totals.tip_cents + order_totals.delivery_fee_cents), 0)::bigint::text AS total,
+          COALESCE(SUM(order_totals.sales_cents + order_totals.tax_cents + order_totals.tip_cents + order_totals.delivery_fee_cents)
+            FILTER (WHERE order_totals.source_platform IN ('FOODY', 'UNKNOWN')), 0)::bigint::text AS website,
+          COALESCE(SUM(order_totals.sales_cents + order_totals.tax_cents + order_totals.tip_cents + order_totals.delivery_fee_cents)
+            FILTER (WHERE order_totals.source_platform = 'DOORDASH'), 0)::bigint::text AS doordash,
+          COALESCE(SUM(order_totals.sales_cents + order_totals.tax_cents + order_totals.tip_cents + order_totals.delivery_fee_cents)
+            FILTER (WHERE order_totals.source_platform = 'UBER_EATS'), 0)::bigint::text AS "uberEats",
+          COALESCE(SUM(order_totals.sales_cents + order_totals.tax_cents + order_totals.tip_cents + order_totals.delivery_fee_cents)
+            FILTER (WHERE order_totals.source_platform = 'SQUARE'), 0)::bigint::text AS square
         FROM order_totals
         GROUP BY order_totals.local_day
       )
@@ -367,7 +410,11 @@ export class PrismaAnalyticsRepository implements AnalyticsRepository {
         COALESCE(orders_agg.tax, '0') AS tax,
         COALESCE(orders_agg.tip, '0') AS tip,
         COALESCE(orders_agg."deliveryFee", '0') AS "deliveryFee",
-        COALESCE(orders_agg.total, '0') AS total
+        COALESCE(orders_agg.total, '0') AS total,
+        COALESCE(orders_agg.website, '0') AS website,
+        COALESCE(orders_agg.doordash, '0') AS doordash,
+        COALESCE(orders_agg."uberEats", '0') AS "uberEats",
+        COALESCE(orders_agg.square, '0') AS square
       FROM days
       LEFT JOIN orders_agg
         ON orders_agg.local_day = days.local_day
@@ -384,6 +431,12 @@ export class PrismaAnalyticsRepository implements AnalyticsRepository {
       tip: Number(row.tip || "0"),
       deliveryFee: Number(row.deliveryFee || "0"),
       total: Number(row.total || "0"),
+      channels: {
+        website: Number(row.website || "0"),
+        doordash: Number(row.doordash || "0"),
+        uberEats: Number(row.uberEats || "0"),
+        square: Number(row.square || "0"),
+      },
     }));
   }
 
@@ -393,15 +446,15 @@ export class PrismaAnalyticsRepository implements AnalyticsRepository {
     const rows = await prisma.$queryRaw<DailyRow[]>`
       WITH days AS (
         SELECT generate_series(
-          date_trunc('day', ${query.from}::timestamptz)::date,
-          date_trunc('day', ${query.to}::timestamptz)::date,
+          date_trunc('day', timezone(${query.timezone}, ${query.from}::timestamptz))::date,
+          date_trunc('day', timezone(${query.timezone}, ${query.to}::timestamptz))::date,
           interval '1 day'
         )::date AS day
       ),
       order_totals AS (
         SELECT
           orders."id" AS "orderId",
-          date_trunc('day', orders."createdAt" AT TIME ZONE 'UTC')::date AS day,
+          ((orders."createdAt" AT TIME ZONE 'UTC') AT TIME ZONE ${query.timezone})::date AS day,
           CASE
             WHEN orders."type"::text = 'DELIVERY'
             THEN COALESCE(MAX(delivery_address."deliveryFee"), 0)::numeric
@@ -425,11 +478,11 @@ export class PrismaAnalyticsRepository implements AnalyticsRepository {
           ON op."orderId" = orders."id"
         WHERE orders."canceled" = false
           AND branch."businessId" = ${query.businessId}
-          AND orders."createdAt" >= ${query.from}::timestamptz
-          AND orders."createdAt" <= ${query.to}::timestamptz
+          AND orders."createdAt" >= (${query.from}::timestamptz AT TIME ZONE 'UTC')
+          AND orders."createdAt" <= (${query.to}::timestamptz AT TIME ZONE 'UTC')
         GROUP BY
           orders."id",
-          date_trunc('day', orders."createdAt" AT TIME ZONE 'UTC')::date,
+          ((orders."createdAt" AT TIME ZONE 'UTC') AT TIME ZONE ${query.timezone})::date,
           orders."progressiveDiscountSnapshot"
       ),
       orders_agg AS (

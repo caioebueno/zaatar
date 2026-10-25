@@ -24,6 +24,9 @@ Rules:
 
 - `startDate <= endDate`
 - Max range: 367 days
+- Daily grouping and date boundaries always use Orlando time (`America/New_York`).
+  The calendar-date portion of each supplied datetime selects the Orlando day;
+  UTC offsets in the input do not move orders into a different local day.
 
 Example request:
 
@@ -174,6 +177,15 @@ type OrderQuantityAnalyticsResponse = {
     total: number;
     averagePerBucket: number;
     maxBucketValue: number;
+    channels: {
+      // Sales channel from `Order.sourcePlatform`. `website` covers FOODY,
+      // UNKNOWN and rows predating the column, so the four values always sum
+      // to the bucket's own value.
+      website: number;
+      doordash: number;
+      uberEats: number;
+      square: number;
+    };
   };
   buckets: Array<{
     key: string; // YYYY-MM-DD
@@ -181,6 +193,12 @@ type OrderQuantityAnalyticsResponse = {
     startDate: string; // bucket start ISO datetime
     endDate: string; // bucket end ISO datetime
     value: number;
+    channels: {
+      website: number;
+      doordash: number;
+      uberEats: number;
+      square: number;
+    };
     compareValue?: number | null;
     delta?: number | null;
     deltaPercentage?: number | null;
@@ -290,6 +308,15 @@ type RevenueAnalyticsResponse = {
     deliveryFee: number; // cents
     averagePerBucket: number; // cents
     maxBucketValue: number; // cents
+    channels: {
+      // Sales channel from `Order.sourcePlatform`. `website` covers FOODY,
+      // UNKNOWN and rows predating the column, so the four values always sum
+      // to the bucket's own value.
+      website: number;
+      doordash: number;
+      uberEats: number;
+      square: number;
+    };
   };
   buckets: Array<{
     key: string;
@@ -302,6 +329,12 @@ type RevenueAnalyticsResponse = {
     tip: number; // cents
     deliveryFee: number; // cents
     total: number; // cents; sales + tax + tip + deliveryFee
+    channels: {
+      website: number;
+      doordash: number;
+      uberEats: number;
+      square: number;
+    };
     compareValue?: number | null; // cents
     delta?: number | null; // cents
     deltaPercentage?: number | null;

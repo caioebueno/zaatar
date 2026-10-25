@@ -515,12 +515,36 @@ export class PrismaOrdersRepository implements OrdersRepository {
             deliveryFee: true,
           },
         },
+        adjustments: {
+          orderBy: { createdAt: "asc" },
+        },
         orderProducts: {
           include: {
             product: {
               select: {
                 id: true,
                 name: true,
+              },
+            },
+            selectedProducts: {
+              include: {
+                product: {
+                  select: {
+                    id: true,
+                    name: true,
+                  },
+                },
+                modifierGroupItems: {
+                  select: {
+                    id: true,
+                    name: true,
+                    description: true,
+                    price: true,
+                  },
+                },
+              },
+              orderBy: {
+                createdAt: "asc",
               },
             },
           },
@@ -534,7 +558,9 @@ export class PrismaOrdersRepository implements OrdersRepository {
     if (!order) return null;
     const storedPaymentsByOrderId = await loadOrderPaymentsByOrderIds([orderId]);
 
-    const items: OrderDetailLineItem[] = order.orderProducts.map((item) => {
+    const items: OrderDetailLineItem[] = order.orderProducts
+      .filter((item) => item.comboProductId === null)
+      .map((item) => {
       const lineTotalCents = item.amount * item.quantity;
       return {
         productId: item.productId,
@@ -542,8 +568,29 @@ export class PrismaOrdersRepository implements OrdersRepository {
         quantity: item.quantity,
         unitAmountCents: item.amount,
         lineTotalCents,
+        ...(item.selectedProducts.length > 0
+          ? {
+              selectedProducts: item.selectedProducts.map((selectedProduct) => ({
+                productId: selectedProduct.productId,
+                productName: selectedProduct.product?.name ?? "Unknown product",
+                quantity: selectedProduct.quantity,
+                unitAmountCents: selectedProduct.amount,
+                lineTotalCents: selectedProduct.amount * selectedProduct.quantity,
+                modifierGroupItems: selectedProduct.modifierGroupItems.map(
+                  (modifierItem) => ({
+                    id: modifierItem.id,
+                    name: modifierItem.name,
+                    price: modifierItem.price,
+                    ...(modifierItem.description
+                      ? { description: modifierItem.description }
+                      : {}),
+                  }),
+                ),
+              })),
+            }
+          : {}),
       };
-    });
+      });
 
     const subtotalCents = items.reduce((sum, item) => sum + item.lineTotalCents, 0);
     const discountedFromSnapshot = extractDiscountedSubtotalFromSnapshot(
@@ -561,7 +608,16 @@ export class PrismaOrdersRepository implements OrdersRepository {
       order.type === "DELIVERY"
         ? Math.max(order.deliveryAddress?.deliveryFee ?? 0, 0)
         : 0;
-    const totalCents = safeDiscountedSubtotal + tipAmountCents + deliveryFeeCents;
+    const adjustments = mapOrderAdjustments(order.adjustments);
+    const adjustmentTotalCents = adjustments.reduce(
+      (sum, adjustment) =>
+        sum + (adjustment.type === "EXTRA_CHARGE" ? adjustment.amount : -adjustment.amount),
+      0,
+    );
+    const totalCents = Math.max(
+      0,
+      safeDiscountedSubtotal + tipAmountCents + deliveryFeeCents + adjustmentTotalCents,
+    );
 
     return {
       id: order.id,
@@ -594,6 +650,7 @@ export class PrismaOrdersRepository implements OrdersRepository {
         phone: order.customer?.phone ?? null,
       },
       items,
+      adjustments,
       subtotalCents,
       discountedSubtotalCents: safeDiscountedSubtotal,
       tipPercent,
@@ -655,6 +712,24 @@ function extractDiscountedSubtotalFromSnapshot(value: unknown): number | null {
   return Math.round(discountedPrice);
 }
 
+function mapOrderAdjustments(
+  adjustments: Array<{
+    amount: number;
+    createdAt: Date;
+    description: string;
+    id: string;
+    type: string;
+  }>,
+) {
+  return adjustments.map((adjustment) => ({
+    id: adjustment.id,
+    type: adjustment.type as "DISCOUNT" | "EXTRA_CHARGE",
+    amount: adjustment.amount,
+    description: adjustment.description,
+    createdAt: adjustment.createdAt.toISOString(),
+  }));
+}
+
 type OrderPaymentRow = {
   amount: number | string;
   externalId: string | null;
@@ -691,6 +766,11 @@ type DetailedOrderRow = Awaited<
             expectedHandoffDuration: true;
           };
         };
+        adjustments: {
+          orderBy: {
+            createdAt: "asc";
+          };
+        };
         orderProducts: {
           include: {
             product: {
@@ -705,6 +785,27 @@ type DetailedOrderRow = Awaited<
                 name: true;
                 description: true;
                 price: true;
+              };
+            };
+            selectedProducts: {
+              include: {
+                product: {
+                  select: {
+                    id: true;
+                    name: true;
+                  };
+                };
+                modifierGroupItems: {
+                  select: {
+                    id: true;
+                    name: true;
+                    description: true;
+                    price: true;
+                  };
+                };
+              };
+              orderBy: {
+                createdAt: "asc";
               };
             };
           };
@@ -735,8 +836,8 @@ function buildOrderListWhereClause(query: OrderListFilterInput): Prisma.Sql {
 
   return Prisma.sql`
     (${query.includeCanceled} = true OR o."canceled" = false)
-    AND (${from}::text IS NULL OR timezone(${query.timezone}, o."createdAt")::date >= ${from}::date)
-    AND (${to}::text IS NULL OR timezone(${query.timezone}, o."createdAt")::date <= ${to}::date)
+    AND (${from}::text IS NULL OR ((o."createdAt" AT TIME ZONE 'UTC') AT TIME ZONE ${query.timezone})::date >= ${from}::date)
+    AND (${to}::text IS NULL OR ((o."createdAt" AT TIME ZONE 'UTC') AT TIME ZONE ${query.timezone})::date <= ${to}::date)
   `;
 }
 
@@ -761,6 +862,18 @@ async function loadOrderListRows(query: OrderListRowsInput): Promise<OrderRow[]>
         COALESCE(SUM(op."amount" * op."quantity"), 0)::numeric AS subtotal_cents
       FROM "OrderProducts" op
       GROUP BY op."orderId"
+    ),
+    order_adjustments AS (
+      SELECT
+        adjustment."orderId" AS "orderId",
+        COALESCE(SUM(
+          CASE
+            WHEN adjustment."type"::text = 'EXTRA_CHARGE' THEN adjustment."amount"
+            ELSE -adjustment."amount"
+          END
+        ), 0)::numeric AS adjustment_cents
+      FROM "OrderAdjustment" adjustment
+      GROUP BY adjustment."orderId"
     )
     SELECT
       o."id",
@@ -774,7 +887,7 @@ async function loadOrderListRows(query: OrderListRowsInput): Promise<OrderRow[]>
       o."canceled",
       COALESCE(customer."name", o."customerNameSnapshot") AS "customerName",
       customer."phone" AS "customerPhone",
-      (
+      GREATEST(0,
         GREATEST(
           0,
           CASE
@@ -799,10 +912,12 @@ async function loadOrderListRows(query: OrderListRowsInput): Promise<OrderRow[]>
               END
             ) * COALESCE(o."tipAmount", 0)::numeric) / 100.0
           )
+        + COALESCE(oa.adjustment_cents, 0)
       )::bigint::text AS "totalCents"
     FROM "Order" o
     LEFT JOIN "Customer" customer ON customer."id" = o."customerId"
     LEFT JOIN order_subtotals os ON os."orderId" = o."id"
+    LEFT JOIN order_adjustments oa ON oa."orderId" = o."id"
     WHERE ${whereClause}
     ORDER BY o."createdAt" DESC
     LIMIT ${query.limit}
@@ -876,6 +991,9 @@ async function mapPaginatedOrderListItems(
             expectedHandoffDuration: true,
           },
         },
+        adjustments: {
+          orderBy: { createdAt: "asc" },
+        },
         orderProducts: {
           include: {
             product: {
@@ -891,6 +1009,17 @@ async function mapPaginatedOrderListItems(
                 description: true,
                 price: true,
               },
+            },
+            selectedProducts: {
+              include: {
+                product: {
+                  select: { id: true, name: true },
+                },
+                modifierGroupItems: {
+                  select: { id: true, name: true, description: true, price: true },
+                },
+              },
+              orderBy: { createdAt: "asc" },
             },
           },
           orderBy: {
@@ -922,7 +1051,7 @@ function mapPaginatedOrderItem(
         sourcePlatform?: string | null;
       }
     ).sourcePlatform ?? null;
-  const items = order.orderProducts.map((item) => {
+  const mapItem = (item: (typeof order.orderProducts)[number]) => {
     const lineTotalCents = item.amount * item.quantity;
 
     return {
@@ -938,8 +1067,25 @@ function mapPaginatedOrderItem(
         price: modifierItem.price,
         ...(modifierItem.description ? { description: modifierItem.description } : {}),
       })),
+      selectedProducts: item.selectedProducts.map((selectedProduct) => ({
+        productId: selectedProduct.productId,
+        productName: selectedProduct.product?.name ?? "Unknown product",
+        quantity: selectedProduct.quantity,
+        unitAmountCents: selectedProduct.amount,
+        lineTotalCents: selectedProduct.amount * selectedProduct.quantity,
+        ...(selectedProduct.comments ? { comments: selectedProduct.comments } : {}),
+        modifierGroupItems: selectedProduct.modifierGroupItems.map((modifierItem) => ({
+          id: modifierItem.id,
+          name: modifierItem.name,
+          price: modifierItem.price,
+          ...(modifierItem.description ? { description: modifierItem.description } : {}),
+        })),
+      })),
     };
-  });
+  };
+  const items = order.orderProducts
+    .filter((item) => item.comboProductId === null)
+    .map(mapItem);
 
   const subtotalCents = items.reduce((sum, item) => sum + item.lineTotalCents, 0);
   const discountedFromSnapshot = extractDiscountedSubtotalFromSnapshot(
@@ -957,7 +1103,16 @@ function mapPaginatedOrderItem(
     order.type === "DELIVERY"
       ? Math.max(order.deliveryAddress?.deliveryFee ?? 0, 0)
       : 0;
-  const totalCents = safeDiscountedSubtotal + tipAmountCents + deliveryFeeCents;
+  const adjustments = mapOrderAdjustments(order.adjustments);
+  const adjustmentTotalCents = adjustments.reduce(
+    (sum, adjustment) =>
+      sum + (adjustment.type === "EXTRA_CHARGE" ? adjustment.amount : -adjustment.amount),
+    0,
+  );
+  const totalCents = Math.max(
+    0,
+    safeDiscountedSubtotal + tipAmountCents + deliveryFeeCents + adjustmentTotalCents,
+  );
   const customerNameSnapshot =
     (
       order as DetailedOrderRow & {
@@ -1030,6 +1185,7 @@ function mapPaginatedOrderItem(
       ? { progressiveDiscountSnapshot: order.progressiveDiscountSnapshot }
       : {}),
     items,
+    adjustments,
     subtotalCents,
     discountedSubtotalCents: safeDiscountedSubtotal,
     tipPercent,

@@ -106,8 +106,8 @@ export class PrismaFeedbackRepository implements FeedbackRepository {
       LEFT JOIN "CustomerReward" cr ON cr."feedbackId" = cf."id"
       LEFT JOIN "Product" p ON p."id" = cr."productId"
       WHERE (${query.sentiment}::text IS NULL OR cf."sentiment"::text = ${query.sentiment}::text)
-        AND (${query.from}::text IS NULL OR timezone(${query.timezone}, cf."createdAt")::date >= ${query.from}::date)
-        AND (${query.to}::text IS NULL OR timezone(${query.timezone}, cf."createdAt")::date <= ${query.to}::date)
+        AND (${query.from}::text IS NULL OR ((cf."createdAt" AT TIME ZONE 'UTC') AT TIME ZONE ${query.timezone})::date >= ${query.from}::date)
+        AND (${query.to}::text IS NULL OR ((cf."createdAt" AT TIME ZONE 'UTC') AT TIME ZONE ${query.timezone})::date <= ${query.to}::date)
       ORDER BY cf."createdAt" DESC
       LIMIT ${query.limit}
     `;

@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { APP_TIMEZONE, ApiError, listOrdersV1 } from "../../lib/api";
 import type { OrderListItem } from "../../lib/api";
 import { clearManagerSession, getManagerBusinessId, getManagerToken } from "../../lib/auth";
-import { addDays, formatCreatedAt, isoDate, moneyFromCents, orderLabel, paymentStatus, resolveRange, startOfDay, typeLabel } from "./data";
+import { addDays, formatCreatedAt, isoDate, moneyFromCents, orderLabel, paymentStatus, resolveRange, startOfDay, today, typeLabel } from "./data";
 import { paymentBadge, typeBadge } from "./badges";
 import { DateRangePicker } from "./DateRangePicker";
 import type { RangeValue } from "./DateRangePicker";
@@ -73,6 +73,14 @@ export function OrdersScreen() {
   const reqId = useRef(0);
   const fetchingRef = useRef(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Re-render when the calendar day rolls over so preset ranges (which end
+  // "today") pick up the new date and refetch in long-open tabs.
+  const [, setDayKey] = useState(() => isoDate(today()));
+  useEffect(() => {
+    const id = setInterval(() => setDayKey(isoDate(today())), 60_000);
+    return () => clearInterval(id);
+  }, []);
 
   const range = resolveRange(rangeValue.rangeId, rangeValue.customStart, rangeValue.customEnd);
   const end = startOfDay(range.end);

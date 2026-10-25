@@ -1096,10 +1096,7 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
 
       const itemDescription =
         typeof cartItem.description === "string" ? cartItem.description.trim() : "";
-      const comboSelectionDescription = buildComboSelectionComments(cartItem);
-      const comments = [itemDescription, comboSelectionDescription]
-        .filter((value): value is string => Boolean(value))
-        .join("\n");
+      const comments = itemDescription;
       const catalogProductLookup = getCatalogProductById(cartItem.productId);
       const catalogProduct = catalogProductLookup?.product;
       const posProduct = posPricingProductsById.get(cartItem.productId);
@@ -1111,6 +1108,7 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
         productId: cartItem.productId,
         quantity: cartItem.quantity,
         comments: comments.length > 0 ? comments : null,
+        comboProductId: null,
         modifierItemIds: cartItem.modifiers.map((modItem) => modItem.modifierItemId),
         productName: catalogProduct?.name ?? posProduct?.name ?? "Product",
         productCategoryId:
@@ -1121,6 +1119,43 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
       };
     },
   );
+
+  // Persist each selected combo-slot product as its own zero-priced order line.
+  // The combo line keeps the charged price; these lines preserve the kitchen's
+  // actual selections and their modifiers without changing the order total.
+  const comboSelectionOrderProducts = resolvedCartItemPrices.flatMap(
+    ({ cartItem }, index) =>
+      (cartItem.comboSelections ?? [])
+        .filter((selection) => selection.quantity > 0)
+        .map((selection) => {
+          const catalogLookup = getCatalogProductById(selection.optionProductId);
+          const catalogProduct = catalogLookup?.product;
+          const posProduct = posPricingProductsById.get(selection.optionProductId);
+
+          return {
+            id: randomUUID(),
+            amount: 0,
+            fullAmount: 0,
+            productId: selection.optionProductId,
+            quantity: cartItem.quantity * selection.quantity,
+            comments: null,
+            comboProductId: preparedOrderProducts[index]!.id,
+            modifierItemIds: (selection.modifiers ?? []).map(
+              (modifier) => modifier.modifierItemId,
+            ),
+            productName: catalogProduct?.name ?? posProduct?.name ?? "Selected option",
+            productCategoryId:
+              catalogLookup?.categoryId ??
+              posProduct?.categoryId ??
+              catalogProduct?.categoryId ??
+              undefined,
+          };
+        }),
+  );
+  const persistedOrderProducts = [
+    ...preparedOrderProducts,
+    ...comboSelectionOrderProducts,
+  ];
 
   markCheckoutTimingStep("prepare-order-products");
 
@@ -1514,7 +1549,7 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
         }
 
         await tx.orderProducts.createMany({
-          data: preparedOrderProducts.map((item) => ({
+          data: persistedOrderProducts.map((item) => ({
             id: item.id,
             amount: item.amount,
             productId: item.productId,
@@ -1522,10 +1557,11 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
             fullAmount: item.fullAmount,
             quantity: item.quantity,
             comments: item.comments,
+            comboProductId: item.comboProductId,
           })),
         });
 
-        for (const item of preparedOrderProducts) {
+        for (const item of persistedOrderProducts) {
           if (item.modifierItemIds.length === 0) continue;
           await tx.orderProducts.update({
             where: {
@@ -1541,13 +1577,14 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
           });
         }
 
-        const orderProducts: TOrderProduct[] = preparedOrderProducts.map((item) => ({
+        const orderProducts: TOrderProduct[] = persistedOrderProducts.map((item) => ({
           id: item.id,
           amount: item.amount,
           fullAmount: item.fullAmount,
           productId: item.productId,
           quantity: item.quantity,
           comments: item.comments || undefined,
+          comboProductId: item.comboProductId,
           selectedModifierGroupItemIds: item.modifierItemIds,
           product: {
             id: item.productId,
@@ -1556,6 +1593,14 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
             preparationStep: [],
           },
         }));
+        const topLevelOrderProducts = orderProducts
+          .filter((item) => item.comboProductId === null)
+          .map((item) => ({
+            ...item,
+            selectedProducts: orderProducts.filter(
+              (selectedProduct) => selectedProduct.comboProductId === item.id,
+            ),
+          }));
 
         const preparationLookupProductIds = new Set<string>();
         for (const cartItem of data.cart.items) {
@@ -1746,45 +1791,8 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
             continue;
           }
 
-          for (const selection of cartItem.comboSelections) {
-            const selectionQuantity =
-              typeof selection.quantity === "number" &&
-              Number.isInteger(selection.quantity) &&
-              selection.quantity > 0
-                ? selection.quantity
-                : 0;
-            if (selectionQuantity <= 0) continue;
-
-            const selectedProductCatalog = getCatalogProductById(
-              selection.optionProductId,
-            );
-            const selectedProduct =
-              selectedProductCatalog?.product ??
-              preparationLookupProductById.get(selection.optionProductId);
-            if (!selectedProduct) continue;
-
-            const selectedProductCategoryId = resolvePreparationCategoryId(
-              selectedProduct.id,
-              selectedProduct.categoryId,
-              selectedProductCatalog?.categoryId,
-            );
-            if (!selectedProductCategoryId) continue;
-
-            comboPreparationOrderProducts.push({
-              id: randomUUID(),
-              amount: 0,
-              fullAmount: 0,
-              productId: selectedProduct.id,
-              quantity: parentQuantity * selectionQuantity,
-              selectedModifierGroupItemIds: [],
-              product: {
-                id: selectedProduct.id,
-                name: selectedProduct.name,
-                categoryId: selectedProductCategoryId,
-                preparationStep: [],
-              },
-            });
-          }
+          // Selected slot products are already included in orderProducts above,
+          // with their selected modifiers, so preparation must not add them twice.
         }
         const prizePreparationOrderProducts: TOrderProduct[] = [];
         if (selectedPrizeSnapshot) {
@@ -1861,26 +1869,21 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
           status: "ACCEPTED",
           tip: sanitizedTipPercentage,
           tipAmount: sanitizedTipPercentage,
-          orderProducts,
+          orderProducts: topLevelOrderProducts,
           paymentMethod: createdOrder.paymentMethod,
           ...(paymentProvider ? { paymentProvider } : {}),
           type: createdOrder.type,
           preparationTaskStation: [],
         };
-        const orderForPreparationSteps =
-          comboPreparationOrderProducts.length > 0 ||
-          prizePreparationOrderProducts.length > 0 ||
-          rewardPreparationOrderProducts.length > 0
-            ? {
-                ...order,
-                orderProducts: [
-                  ...order.orderProducts,
-                  ...comboPreparationOrderProducts,
-                  ...prizePreparationOrderProducts,
-                  ...rewardPreparationOrderProducts,
-                ],
-              }
-            : order;
+        const orderForPreparationSteps = {
+          ...order,
+          orderProducts: [
+            ...orderProducts,
+            ...comboPreparationOrderProducts,
+            ...prizePreparationOrderProducts,
+            ...rewardPreparationOrderProducts,
+          ],
+        };
 
         await createPreparationStepCategoriesForOrderTx(
           tx,

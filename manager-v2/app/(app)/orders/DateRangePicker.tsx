@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import type { CSSProperties } from "react";
-import { RANGES, TODAY, addDays, fmtDate, resolveRange, sameDay } from "./data";
+import { RANGES, addDays, today, fmtDate, resolveRange, sameDay } from "./data";
 import { Popover } from "../_components/Popover";
 
 const DOW = ["S", "M", "T", "W", "T", "F", "S"];
@@ -37,6 +37,7 @@ function monthCells(base: Date, offset: number, selStart: Date | null, selEnd: D
   const first = new Date(base.getFullYear(), base.getMonth() + offset, 1);
   const lead = first.getDay();
   const dim = new Date(first.getFullYear(), first.getMonth() + 1, 0).getDate();
+  const todayDate = today();
   const cells: Cell[] = [];
   for (let i = 0; i < 42; i++) {
     const dayNum = i - lead + 1;
@@ -45,7 +46,7 @@ function monthCells(base: Date, offset: number, selStart: Date | null, selEnd: D
       continue;
     }
     const d = new Date(first.getFullYear(), first.getMonth(), dayNum);
-    const future = d > TODAY;
+    const future = d > todayDate;
     const isStart = sameDay(d, selStart);
     const isEnd = sameDay(d, selEnd);
     const inRange = !!selStart && !!selEnd && d > selStart && d < selEnd;
@@ -107,13 +108,13 @@ export function DateRangePicker({ value, onChange }: { value: RangeValue; onChan
   // Seed the visible selection from the active range when the panel opens.
   const onOpenChange = (o: boolean) => {
     if (o) {
-      setSelStart(selStart ?? addDays(TODAY, -(range.days - 1)));
-      setSelEnd(selEnd ?? TODAY);
+      setSelStart(selStart ?? addDays(today(), -(range.days - 1)));
+      setSelEnd(selEnd ?? today());
     }
     setOpen(o);
   };
 
-  const anchorBase = anchor ?? value.customEnd ?? TODAY;
+  const anchorBase = anchor ?? value.customEnd ?? today();
   const monthBase = new Date(anchorBase.getFullYear(), anchorBase.getMonth() - 1, 1);
   const months = [
     monthCells(monthBase, 1, selStart, selEnd, pickDay),
@@ -171,8 +172,8 @@ export function DateRangePicker({ value, onChange }: { value: RangeValue; onChan
                   type="button"
                   onClick={() => {
                     onChange({ rangeId: r.id, customStart: null, customEnd: null });
-                    setSelStart(addDays(TODAY, -(r.days - 1)));
-                    setSelEnd(TODAY);
+                    setSelStart(addDays(today(), -(r.days - 1)));
+                    setSelEnd(today());
                     setOpen(false);
                   }}
                   className="zp-quick"

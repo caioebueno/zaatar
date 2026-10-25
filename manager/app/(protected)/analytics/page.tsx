@@ -72,10 +72,20 @@ function toShortDateLabel(value: string): string {
 }
 
 function getDefaultDates(): { from: string; to: string } {
-  const now = new Date();
-  const to = now.toISOString().slice(0, 10);
-  const fromDate = new Date(now);
-  fromDate.setDate(fromDate.getDate() - 6);
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/New_York",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(new Date());
+  const getPart = (type: Intl.DateTimeFormatPartTypes) =>
+    Number(parts.find((part) => part.type === type)?.value ?? "0");
+  const today = new Date(
+    Date.UTC(getPart("year"), getPart("month") - 1, getPart("day")),
+  );
+  const fromDate = new Date(today);
+  fromDate.setUTCDate(fromDate.getUTCDate() - 6);
+  const to = today.toISOString().slice(0, 10);
   const from = fromDate.toISOString().slice(0, 10);
   return { from, to };
 }

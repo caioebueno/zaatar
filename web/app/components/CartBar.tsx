@@ -35,6 +35,9 @@ const CartBar: React.FC<TCartBar> = ({
     data.promotionProductIds,
   );
 
+  /** A ladder with at least one step — otherwise there is no progress to show. */
+  const hasProgressiveDiscount = Boolean(data.progressiveDiscount?.steps?.length);
+
   const [animate, setAnimate] = useState(false);
 
   useLayoutEffect(() => {
@@ -49,18 +52,22 @@ const CartBar: React.FC<TCartBar> = ({
 
   return (
     <div className="p-4 bg-foreground fixed bottom-0 w-full flex flex-col box-shadow max-w-150 lg:bottom-6 lg:border-gray-300 lg:rounded-xl lg:border">
-      <div className="flex flex-row justify-between">
-        <span className="text-sm font-bold">
-          {content["progressiveDiscount"]}
-        </span>
-        <span
-          onClick={onLearnMoreClick}
-          className="text- font-semibold underline text-sm text-lightText cursor-pointer"
-        >
-          {content["learnMore"]}
-        </span>
-      </div>
-      {data.progressiveDiscount && (
+      {/* The heading and "learn more" used to render even with no ladder, leaving
+          a progressive-discount title above empty space. The whole block now
+          appears only when there are steps to progress through. */}
+      {hasProgressiveDiscount && (
+        <>
+        <div className="flex flex-row justify-between">
+          <span className="text-sm font-bold">
+            {content["progressiveDiscount"]}
+          </span>
+          <span
+            onClick={onLearnMoreClick}
+            className="text- font-semibold underline text-sm text-lightText cursor-pointer"
+          >
+            {content["learnMore"]}
+          </span>
+        </div>
         <div className="pb-6 pt-4">
           <ProgressiveDiscountBar
             progressiveDiscount={data.progressiveDiscount}
@@ -71,6 +78,7 @@ const CartBar: React.FC<TCartBar> = ({
             countPrice={price.progressiveDiscountBaseFullPrice}
           />
         </div>
+        </>
       )}
       <div className="flex flex-row items-center justify-between">
         <div

@@ -4,6 +4,8 @@ import type {
   OrderSalesDailyPoint,
 } from "../ports/AnalyticsRepository.js";
 
+const ORLANDO_TIMEZONE = "America/New_York";
+
 export type GetOrderSalesAnalyticsInput = {
   businessId?: string;
   endDate?: string;
@@ -90,10 +92,16 @@ export class GetOrderSalesAnalyticsUseCase {
       );
     }
 
+    // Analytics date pickers send calendar dates. Treat their YYYY-MM-DD parts
+    // as Orlando calendar days rather than UTC days, including DST changes.
+    const normalizedFrom = getOrlandoDayBoundary(from, "start");
+    const normalizedTo = getOrlandoDayBoundary(to, "end");
+
     const rows = await this.repository.getOrderSalesByDateRange({
       businessId,
-      from,
-      to,
+      from: normalizedFrom,
+      to: normalizedTo,
+      timezone: ORLANDO_TIMEZONE,
     });
 
     const daily = rows.map((row: OrderSalesDailyPoint) => ({
@@ -108,10 +116,10 @@ export class GetOrderSalesAnalyticsUseCase {
     const averageTicket = totalOrders > 0 ? Math.round(totalSales / totalOrders) : 0;
 
     return {
-      startDate: from,
-      endDate: to,
-      from,
-      to,
+      startDate: normalizedFrom,
+      endDate: normalizedTo,
+      from: normalizedFrom,
+      to: normalizedTo,
       summary: {
         totalSales,
         totalOrders,
@@ -133,6 +141,55 @@ export class GetOrderSalesAnalyticsUseCase {
   }
 }
 
+function getOrlandoDayBoundary(
+  value: string,
+  boundary: "start" | "end",
+): string {
+  const matched = /^(\d{4})-(\d{2})-(\d{2})T/.exec(value);
+  if (!matched) {
+    throw new InvalidAnalyticsRangeError("dateRange", "Invalid date range");
+  }
+
+  const year = Number(matched[1]);
+  const month = Number(matched[2]);
+  const day = Number(matched[3]);
+  const hour = boundary === "start" ? 0 : 23;
+  const minute = boundary === "start" ? 0 : 59;
+  const second = boundary === "start" ? 0 : 59;
+  const millisecond = boundary === "start" ? 0 : 999;
+  const targetUtc = Date.UTC(year, month - 1, day, hour, minute, second, millisecond);
+  let instant = targetUtc;
+  const formatter = new Intl.DateTimeFormat("en-US", {
+    timeZone: ORLANDO_TIMEZONE,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hourCycle: "h23",
+  });
+
+  // Two passes cover both daylight-saving offsets and ordinary dates.
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    const parts = formatter.formatToParts(new Date(instant));
+    const part = (type: Intl.DateTimeFormatPartTypes) =>
+      Number(parts.find((item) => item.type === type)?.value ?? "0");
+    const localAsUtc = Date.UTC(
+      part("year"),
+      part("month") - 1,
+      part("day"),
+      part("hour"),
+      part("minute"),
+      part("second"),
+      new Date(instant).getUTCMilliseconds(),
+    );
+    instant = targetUtc - (localAsUtc - instant);
+  }
+
+  return new Date(instant).toISOString();
+}
+
 function isValidDateTime(value: string): boolean {
   if (!value.includes("T")) {
     return false;
@@ -145,14 +202,22 @@ function isValidDateTime(value: string): boolean {
 }
 
 function getDefaultDateRange(): { from: string; to: string } {
-  const now = new Date();
-  const to = new Date(now);
-  to.setUTCHours(23, 59, 59, 999);
-  const from = new Date(now);
-  from.setDate(from.getDate() - 6);
-  from.setUTCHours(0, 0, 0, 0);
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: ORLANDO_TIMEZONE,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(new Date());
+  const getPart = (type: Intl.DateTimeFormatPartTypes) =>
+    Number(parts.find((part) => part.type === type)?.value ?? "0");
+  const year = getPart("year");
+  const month = getPart("month");
+  const day = getPart("day");
+  const lastDay = new Date(Date.UTC(year, month - 1, day));
+  const firstDay = new Date(lastDay);
+  firstDay.setUTCDate(firstDay.getUTCDate() - 6);
   return {
-    from: from.toISOString(),
-    to: to.toISOString(),
+    from: getOrlandoDayBoundary(firstDay.toISOString(), "start"),
+    to: getOrlandoDayBoundary(lastDay.toISOString(), "end"),
   };
 }

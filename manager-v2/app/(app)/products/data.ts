@@ -29,6 +29,23 @@ export type TaxGroup = { id: string; name: string; rate: number };
 export type PrepTask = { id: string; name: string; station: string; goal: number; comments: boolean; modifiers: boolean };
 export type MediaItem = { id: string; kind: "image" | "video"; name: string; url: string | null };
 
+/** A fixed product included in every combo, with no choice step. */
+export type ComboFixedDraft = { id: string; productId: string; quantity: number };
+
+/**
+ * One choice step of a combo. Numbers stay strings while editing so half-typed
+ * values don't snap; they are normalized on blur and converted on save.
+ */
+export type ComboSlotDraft = {
+  allowDuplicates: boolean;
+  id: string;
+  max: string;
+  min: string;
+  names: I18n;
+  /** `extra` is the surcharge in DOLLARS — the API stores cents. */
+  products: { extra: string; id: string; productId: string }[];
+};
+
 export type ProductDraft = {
   names: I18n;
   descriptions: I18n;
@@ -41,6 +58,8 @@ export type ProductDraft = {
   modifiers: string[];
   tasks: string[];
   taxes: string[];
+  comboFixed: ComboFixedDraft[];
+  comboSlots: ComboSlotDraft[];
 };
 
 export type FlatProduct = {

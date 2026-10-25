@@ -1,4 +1,5 @@
 import type {
+  AnalyticsChannelBreakdown,
   AnalyticsRepository,
 } from "../ports/AnalyticsRepository.js";
 import type { AnalyticsV1Input, AnalyticsMetricBarChartOutput } from "./shared/v1BarChartAnalytics.js";
@@ -9,8 +10,20 @@ import {
 } from "./shared/v1BarChartAnalytics.js";
 
 export type GetOrderQuantityAnalyticsInput = AnalyticsV1Input;
-export type GetOrderQuantityAnalyticsOutput =
-  AnalyticsMetricBarChartOutput<"orderQuantity">;
+type OrderQuantityAnalyticsBucket =
+  AnalyticsMetricBarChartOutput<"orderQuantity">["buckets"][number] & {
+    channels: AnalyticsChannelBreakdown;
+  };
+
+export type GetOrderQuantityAnalyticsOutput = Omit<
+  AnalyticsMetricBarChartOutput<"orderQuantity">,
+  "buckets" | "summary"
+> & {
+  buckets: OrderQuantityAnalyticsBucket[];
+  summary: AnalyticsMetricBarChartOutput<"orderQuantity">["summary"] & {
+    channels: AnalyticsChannelBreakdown;
+  };
+};
 
 export class GetOrderQuantityAnalyticsUseCase {
   constructor(private readonly repository: AnalyticsRepository) {}
@@ -44,8 +57,17 @@ export class GetOrderQuantityAnalyticsUseCase {
       getValue: (row) => row.orders,
     });
     const comparisonTotal = compareRows?.reduce((sum, row) => sum + row.orders, 0);
+    const channelTotals = currentRows.reduce<AnalyticsChannelBreakdown>(
+      (sum, row) => ({
+        website: sum.website + row.channels.website,
+        doordash: sum.doordash + row.channels.doordash,
+        uberEats: sum.uberEats + row.channels.uberEats,
+        square: sum.square + row.channels.square,
+      }),
+      { website: 0, doordash: 0, uberEats: 0, square: 0 },
+    );
 
-    return buildAnalyticsMetricOutput({
+    const output = buildAnalyticsMetricOutput({
       metric: "orderQuantity",
       timezone: validated.timezone,
       startDate: validated.startDate,
@@ -54,5 +76,14 @@ export class GetOrderQuantityAnalyticsUseCase {
       compareTotal: comparisonTotal,
       buckets,
     });
+
+    return {
+      ...output,
+      buckets: output.buckets.map((bucket, index) => ({
+        ...bucket,
+        channels: currentRows[index]!.channels,
+      })),
+      summary: { ...output.summary, channels: channelTotals },
+    };
   }
 }
