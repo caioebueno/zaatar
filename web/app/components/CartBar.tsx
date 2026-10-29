@@ -6,6 +6,7 @@ import { useCart } from "./CartContext";
 import formatCurrency from "@/utils/formatCurrecy";
 import { useState } from "react";
 import Link from "next/link";
+import { useMenuHref } from "@/utils/menuHref";
 import { useLayoutEffect } from "radix-ui/internal";
 import { getCartTotalQuantity } from "@/utils/getCartTotalQuantity";
 
@@ -26,6 +27,7 @@ const CartBar: React.FC<TCartBar> = ({
   content,
   lg,
 }) => {
+  const menuHref = useMenuHref();
   const { cart } = useCart();
   const price = calculateCartWithProgressiveDiscount(
     data.categories,
@@ -114,7 +116,7 @@ const CartBar: React.FC<TCartBar> = ({
               {cart.items.length > 0 ? `(${getCartTotalQuantity(cart)})` : null}
             </Button>
           ) : (
-            <Link href={`/menu/${lg}/cart`}>
+            <Link href={menuHref(`/menu/${lg}/cart`)}>
               <Button className="py-3 px-8 bg-brandBackground text-[16px]">
                 {content["myCart"]}{" "}
                 {cart.items.length > 0 ? `(${getCartTotalQuantity(cart)})` : null}

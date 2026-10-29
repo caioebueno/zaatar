@@ -37,8 +37,13 @@ function parsePrizeTranslations(
   return undefined;
 }
 
+/**
+ * The ladder attached to `menuId` (`Menu.progressiveDiscountId`), or null when
+ * that menu has none. A completed ladder is never offered, even while attached.
+ * No menu id means the default menu, as everywhere else on the storefront.
+ */
 const getProgressiveDiscount =
-  async (): Promise<TProgressiveDiscount | null> => {
+  async (menuId?: string | null): Promise<TProgressiveDiscount | null> => {
     const discountInclude = {
       steps: {
         orderBy: {
@@ -54,20 +59,12 @@ const getProgressiveDiscount =
         },
       },
     };
-    const prismaProgressiveDiscount =
-      await prisma.progressiveDiscount.findFirst({
-        where: {
-          completed: false,
-        },
-        include: discountInclude,
-        orderBy: {
-          createdAt: "desc",
-        },
-      });
-    // No fallback to the newest completed ladder: when every ladder is completed
-    // the menu simply has no progressive discount attached.
-    const resolvedProgressiveDiscount = prismaProgressiveDiscount;
-    if (!resolvedProgressiveDiscount) return null;
+    const menu = await prisma.menu.findFirst({
+      where: menuId ? { id: menuId } : { isDefault: true },
+      select: { progressiveDiscount: { include: discountInclude } },
+    });
+    const resolvedProgressiveDiscount = menu?.progressiveDiscount ?? null;
+    if (!resolvedProgressiveDiscount || resolvedProgressiveDiscount.completed) return null;
 
     const prizeIds = resolvedProgressiveDiscount.steps.flatMap((step) =>
       step.prizes.map((prize) => prize.id),

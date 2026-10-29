@@ -317,6 +317,14 @@ type RevenueAnalyticsResponse = {
       uberEats: number;
       square: number;
     };
+    websitePayments: {
+      // `channels.website` split by `Order.paymentMethod`; sums to it. Orders
+      // with no OrderPayment rows count as `unknown` (Stripe orders as `card`).
+      card: number;
+      cash: number;
+      zelle: number;
+      unknown: number;
+    };
   };
   buckets: Array<{
     key: string;
@@ -334,6 +342,12 @@ type RevenueAnalyticsResponse = {
       doordash: number;
       uberEats: number;
       square: number;
+    };
+    websitePayments: {
+      card: number;
+      cash: number;
+      zelle: number;
+      unknown: number;
     };
     compareValue?: number | null; // cents
     delta?: number | null; // cents

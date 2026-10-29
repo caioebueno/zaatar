@@ -3,7 +3,7 @@ import { NextResponse } from "../shared/http.js";
 import type { NextRequestLike } from "../shared/http.js";
 import {
   createBucketObjectKey,
-  getBucketProxyPath,
+  getBucketPublicUrl,
   uploadImageToBucket,
 } from "../lib/railwayBucket.js";
 
@@ -64,7 +64,8 @@ export async function POST(request: NextRequestLike) {
     return NextResponse.json(
       {
         key,
-        url: getBucketProxyPath(key),
+        // Saved as-is on products/photos, so it must be the public file URL.
+        url: getBucketPublicUrl(key),
       },
       { status: 201 },
     );

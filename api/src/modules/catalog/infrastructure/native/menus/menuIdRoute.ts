@@ -14,7 +14,19 @@ type PatchBody = {
   name?: unknown;
   active?: unknown;
   isDefault?: unknown;
+  progressiveDiscountId?: unknown;
 };
+
+/** undefined = leave as is, null = detach, string = attach that ladder. */
+function parseOptionalDiscountId(value: unknown, field: string): string | null | undefined {
+  if (value === undefined) return undefined;
+  if (value === null) return null;
+  if (typeof value !== "string" || !value.trim()) {
+    throw new Error(field);
+  }
+
+  return value.trim();
+}
 
 function parseOptionalString(value: unknown, field: string): string | undefined {
   if (value === undefined || value === null) return undefined;
@@ -56,12 +68,26 @@ export async function PATCH(request: NextRequestLike, context: RouteContext) {
     const name = parseOptionalString(body.name, "name");
     const active = parseOptionalBoolean(body.active, "active");
     const isDefault = parseOptionalBoolean(body.isDefault, "isDefault");
+    const progressiveDiscountId = parseOptionalDiscountId(body.progressiveDiscountId, "progressiveDiscountId");
 
-    if (name === undefined && active === undefined && isDefault === undefined) {
+    if (name === undefined && active === undefined && isDefault === undefined && progressiveDiscountId === undefined) {
       return NextResponse.json(
-        { error: "Invalid payload", field: "name|active|isDefault" },
+        { error: "Invalid payload", field: "name|active|isDefault|progressiveDiscountId" },
         { status: 400 },
       );
+    }
+
+    if (progressiveDiscountId) {
+      const discount = await prisma.progressiveDiscount.findUnique({
+        where: { id: progressiveDiscountId },
+        select: { id: true },
+      });
+      if (!discount) {
+        return NextResponse.json(
+          { error: "Invalid payload", field: "progressiveDiscountId" },
+          { status: 400 },
+        );
+      }
     }
 
     const updated = await prisma.$transaction(async (tx) => {
@@ -81,11 +107,15 @@ export async function PATCH(request: NextRequestLike, context: RouteContext) {
           ...(name !== undefined ? { name } : {}),
           ...(active !== undefined ? { active } : {}),
           ...(isDefault !== undefined ? { isDefault } : {}),
+          ...(progressiveDiscountId !== undefined ? { progressiveDiscountId } : {}),
         },
       });
     });
 
-    await enqueueSquareMenuSyncTasks({
+    // Square has no notion of progressive discounts: a discount-only change
+    // leaves the catalog as it was.
+    const touchesCatalog = name !== undefined || active !== undefined || isDefault !== undefined;
+    if (touchesCatalog) await enqueueSquareMenuSyncTasks({
       businessId,
       menuIds: [normalizedMenuId],
       requestPayload: {

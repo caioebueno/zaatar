@@ -1,10 +1,11 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import { initials, money, parseMoney, thumbStyle } from "./data";
 import type { ComboFixedDraft, ComboSlotDraft, Lang, ProductDraft } from "./data";
-import { Popover } from "../_components/Popover";
+import { SlotProductPicker } from "./SlotProductPicker";
+import { CurrencyInput } from "../_components/CurrencyInput";
 
 /** A product that can be attached to a combo (everything but the combo itself). */
 export type ComboOption = { id: string; name: string; price: number; section: string };
@@ -29,6 +30,7 @@ const numStyle: CSSProperties = { ...inputStyle, fontFamily: "var(--font-mono)",
 const rowStyle: CSSProperties = { display: "flex", alignItems: "center", gap: 9, padding: "7px 9px", minWidth: 0, background: "#252525", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 6 };
 const stepperStyle: CSSProperties = { width: 20, height: 20, display: "flex", alignItems: "center", justifyContent: "center", background: "transparent", border: "none", borderRadius: 5, cursor: "pointer", color: "#C7C8CC", fontSize: 12 };
 const iconBtnStyle: CSSProperties = { width: 24, height: 24, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, background: "transparent", border: "none", borderRadius: 5, cursor: "pointer", color: "#75767C" };
+const arrowStyle = (disabled: boolean): CSSProperties => ({ width: 22, height: 14, display: "flex", alignItems: "center", justifyContent: "center", padding: 0, border: "none", background: "transparent", borderRadius: 3, cursor: disabled ? "default" : "pointer", color: disabled ? "#3F3F3F" : "#9B9B9B" });
 const subLabel: CSSProperties = { fontSize: 10, fontWeight: 600, color: "#75767C", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 8 };
 const fieldLabel: CSSProperties = { fontSize: 11, color: "#9B9B9B", marginBottom: 5 };
 
@@ -75,9 +77,14 @@ export function ComboComposition({
 }) {
   const [fixedPick, setFixedPick] = useState("");
   const [fixedQty, setFixedQty] = useState("1");
+  // Slot whose "Choose products" modal is open.
   const [openPicker, setOpenPicker] = useState<string | null>(null);
-  const [slotSearch, setSlotSearch] = useState("");
+  const closePicker = useCallback(() => setOpenPicker(null), []);
   const [pickPrice, setPickPrice] = useState<Record<string, string>>({});
+  // Slot product being dragged (and the row it hovers). Rows only become
+  // draggable while their grip is held, so the "+$" input keeps text selection.
+  const [grab, setGrab] = useState<string | null>(null);
+  const [spDrag, setSpDrag] = useState<{ slot: string; from: number; over: number } | null>(null);
   // Draft-only ids for rows the API has not seen yet; it assigns real ones on save.
   const nextId = useRef(0);
   const newId = (prefix: string) => {
@@ -106,15 +113,21 @@ export function ComboComposition({
     setFixedQty("1");
   };
 
+  const moveSlotProduct = (slot: ComboSlotDraft, from: number, to: number) => {
+    if (to < 0 || to >= slot.products.length || to === from) return;
+    const products = slot.products.slice();
+    const [moved] = products.splice(from, 1);
+    products.splice(to, 0, moved);
+    patchSlot(slot.id, { products });
+  };
+
+  const endDrag = () => {
+    setSpDrag(null);
+    setGrab(null);
+  };
+
   const patchFixed = (id: string, patch: Partial<ComboFixedDraft>) =>
     patchDraft({ comboFixed: fixed.map((f) => (f.id === id ? { ...f, ...patch } : f)) });
-
-  const attachable = (slot: ComboSlotDraft) => {
-    const q = slotSearch.trim().toLowerCase();
-    return options
-      .filter((o) => !slot.products.some((sp) => sp.productId === o.id))
-      .filter((o) => !q || o.name.toLowerCase().includes(q) || o.section.toLowerCase().includes(q));
-  };
 
   return (
     <div style={{ padding: "18px 0", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
@@ -188,7 +201,6 @@ export function ComboComposition({
       <div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 10 }}>
         {slots.map((slot, slotIndex) => {
           const title = (slot.names.en ?? "").trim() || `Slot ${slotIndex + 1}`;
-          const candidates = attachable(slot);
           const priceForPick = pickPrice[slot.id] ?? "0.00";
           return (
             <div key={slot.id} style={{ padding: 12, background: "#191919", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 8 }}>
@@ -251,81 +263,96 @@ export function ComboComposition({
                 <div style={subLabel}>Attach products</div>
                 <div style={{ display: "flex", gap: 8 }}>
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <Popover
-                      open={openPicker === slot.id}
-                      onOpenChange={(o) => { setOpenPicker(o ? slot.id : null); setSlotSearch(""); }}
-                      align="start"
-                      sideOffset={6}
-                      contentStyle={{ width: 296, padding: 0 }}
-                      trigger={
-                        <button type="button" style={{ ...inputStyle, display: "flex", alignItems: "center", gap: 8, cursor: "pointer", color: "#9B9B9B" }}>
-                          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style={{ flexShrink: 0 }}><circle cx="5.2" cy="5.2" r="3.6" stroke="#75767C" strokeWidth="1.3" /><path d="M8 8l2.4 2.4" stroke="#75767C" strokeWidth="1.3" strokeLinecap="round" /></svg>
-                          <span style={{ flex: 1, minWidth: 0, textAlign: "left", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>Search products to attach</span>
-                          <svg width="10" height="6" viewBox="0 0 10 6" fill="none" style={{ flexShrink: 0 }}><path d="M1 1l4 4 4-4" stroke="#75767C" strokeWidth="1.4" strokeLinecap="round" /></svg>
-                        </button>
-                      }
-                    >
-                      <div style={{ padding: "12px 14px 10px", borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
-                        <div style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 13, color: "#F1F1F1" }}>Attach to {title}</div>
-                        <div style={{ marginTop: 8, display: "flex", alignItems: "center", gap: 8, height: 32, padding: "0 10px", background: "#252525", border: "1px solid rgba(255,255,255,0.09)", borderRadius: 7 }}>
-                          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style={{ flexShrink: 0 }}><circle cx="5.2" cy="5.2" r="3.6" stroke="#75767C" strokeWidth="1.3" /><path d="M8 8l2.4 2.4" stroke="#75767C" strokeWidth="1.3" strokeLinecap="round" /></svg>
-                          <input value={slotSearch} onChange={(e) => setSlotSearch(e.target.value)} placeholder="Search products to attach" style={{ flex: 1, minWidth: 0, background: "transparent", border: "none", outline: "none", fontFamily: "var(--font-body)", fontSize: 12.5, color: "#E8E8E8" }} />
-                        </div>
-                      </div>
-                      <div style={{ maxHeight: 236, overflow: "auto", padding: 6 }}>
-                        {candidates.map((o) => (
-                          <button
-                            key={o.id}
-                            type="button"
-                            className="zp-attachrow"
-                            onClick={() => {
-                              patchSlot(slot.id, {
-                                products: slot.products.concat([{ id: newId("so"), productId: o.id, extra: parseMoney(priceForPick).toFixed(2) }]),
-                              });
-                              setOpenPicker(null);
-                              setSlotSearch("");
-                            }}
-                            style={{ width: "100%", display: "flex", alignItems: "center", gap: 9, padding: "7px 8px", borderRadius: 7, background: "transparent", border: "none", cursor: "pointer" }}
-                          >
-                            <span style={thumbStyle(26, 5)}>{initials(o.name)}</span>
-                            <span style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: 2, textAlign: "left" }}>
-                              <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontSize: 12.5, color: "#F1F1F1" }}>{o.name}</span>
-                              <span style={{ fontSize: 11, color: "#75767C" }}>{o.section} · {money(o.price)}</span>
-                            </span>
-                            <span style={{ flexShrink: 0, fontSize: 11, color: "#75767C" }}>Attach</span>
-                          </button>
-                        ))}
-                        {candidates.length === 0 && <div style={{ padding: "14px 8px", textAlign: "center", fontSize: 11.5, color: "#75767C" }}>No other products match.</div>}
-                      </div>
-                    </Popover>
+                    <button type="button" onClick={() => setOpenPicker(slot.id)} style={{ ...inputStyle, display: "flex", alignItems: "center", gap: 8, cursor: "pointer", color: "#9B9B9B" }}>
+                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style={{ flexShrink: 0 }}><circle cx="5.2" cy="5.2" r="3.6" stroke="#75767C" strokeWidth="1.3" /><path d="M8 8l2.4 2.4" stroke="#75767C" strokeWidth="1.3" strokeLinecap="round" /></svg>
+                      <span style={{ flex: 1, minWidth: 0, textAlign: "left", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>Choose products</span>
+                      {slot.products.length > 0 && <span style={{ flexShrink: 0, fontSize: 11, color: "#75767C", fontFamily: "var(--font-mono)" }}>{slot.products.length} attached</span>}
+                    </button>
+                    {openPicker === slot.id && (
+                      <SlotProductPicker
+                        slotTitle={(slot.names.en ?? "").trim() || "Untitled"}
+                        options={options}
+                        initialSelected={slot.products.map((sp) => sp.productId)}
+                        onClose={closePicker}
+                        onSave={(ids) => {
+                          // Keep rows still checked (with their extra price); new ones get the
+                          // slot's "+$" default; unchecked ones are dropped.
+                          const keep = new Set(ids);
+                          const kept = slot.products.filter((sp) => keep.has(sp.productId));
+                          const added = ids
+                            .filter((id) => !kept.some((sp) => sp.productId === id))
+                            .map((id) => ({ id: newId("so"), productId: id, extra: parseMoney(priceForPick).toFixed(2) }));
+                          patchSlot(slot.id, { products: kept.concat(added) });
+                          closePicker();
+                        }}
+                      />
+                    )}
                   </div>
-                  <div title="Extra price applied to the next product you attach" style={{ display: "flex", alignItems: "center", gap: 5, width: 104, flexShrink: 0, height: 34, padding: "0 10px", background: "#191919", border: "1px solid rgba(255,255,255,0.09)", borderRadius: 6, boxSizing: "border-box" }}>
+                  <div title="Extra price given to products newly added through Choose products" style={{ display: "flex", alignItems: "center", gap: 5, width: 104, flexShrink: 0, height: 34, padding: "0 10px", background: "#191919", border: "1px solid rgba(255,255,255,0.09)", borderRadius: 6, boxSizing: "border-box" }}>
                     <span style={{ fontSize: 12, color: "#75767C", fontFamily: "var(--font-mono)" }}>+$</span>
-                    <input value={priceForPick} inputMode="decimal" aria-label="Extra price for the next attached product" onChange={(e) => setPickPrice((prev) => ({ ...prev, [slot.id]: e.target.value }))} style={{ flex: 1, minWidth: 0, background: "transparent", border: "none", outline: "none", fontFamily: "var(--font-mono)", fontSize: 12.5, color: "#F1F1F1" }} />
+                    <CurrencyInput className="zp-bare" value={priceForPick} ariaLabel="Extra price for newly added products" onChange={(v) => setPickPrice((prev) => ({ ...prev, [slot.id]: v }))} style={{ flex: 1, minWidth: 0, background: "transparent", border: "none", outline: "none", fontFamily: "var(--font-mono)", fontSize: 12.5, color: "#F1F1F1" }} />
                   </div>
                 </div>
 
                 <div style={{ display: "flex", flexDirection: "column", gap: 6, marginTop: 10 }}>
-                  {slot.products.map((sp) => {
+                  {slot.products.map((sp, pi) => {
                     const p = byId(sp.productId);
+                    const dragging = spDrag?.slot === slot.id;
+                    const last = pi === slot.products.length - 1;
                     return (
-                      <div key={sp.id} style={rowStyle}>
+                      <div
+                        key={sp.id}
+                        draggable={grab === sp.id}
+                        onDragStart={(e) => {
+                          e.dataTransfer.effectAllowed = "move";
+                          setSpDrag({ slot: slot.id, from: pi, over: pi });
+                        }}
+                        onDragOver={(e) => {
+                          if (!dragging) return;
+                          e.preventDefault();
+                          if (spDrag.over !== pi) setSpDrag({ ...spDrag, over: pi });
+                        }}
+                        onDrop={(e) => {
+                          e.preventDefault();
+                          if (dragging) moveSlotProduct(slot, spDrag.from, pi);
+                          endDrag();
+                        }}
+                        onDragEnd={endDrag}
+                        style={{ borderRadius: 6, outline: dragging && spDrag.over === pi && spDrag.from !== pi ? "1px solid #FF5C1A" : "none", opacity: dragging && spDrag.from === pi ? 0.4 : 1 }}
+                      >
+                      <div style={rowStyle}>
+                        <span
+                          title="Drag to reorder"
+                          onPointerDown={() => setGrab(sp.id)}
+                          onPointerUp={() => setGrab(null)}
+                          style={{ display: "flex", alignItems: "center", color: "#75767C", cursor: "grab", flexShrink: 0 }}
+                        >
+                          <svg width="10" height="14" viewBox="0 0 10 14" fill="currentColor"><circle cx="3" cy="3" r="1.2" /><circle cx="7" cy="3" r="1.2" /><circle cx="3" cy="7" r="1.2" /><circle cx="7" cy="7" r="1.2" /><circle cx="3" cy="11" r="1.2" /><circle cx="7" cy="11" r="1.2" /></svg>
+                        </span>
+                        <span style={{ width: 16, flexShrink: 0, textAlign: "center", fontFamily: "var(--font-mono)", fontSize: 11, color: "#75767C" }}>{pi + 1}</span>
                         <span style={thumbStyle(26, 5)}>{initials(p?.name ?? sp.productId)}</span>
                         <span style={{ flex: 1, minWidth: 0, fontSize: 12.5, color: "#F1F1F1", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p?.name ?? sp.productId}</span>
+                        <div style={{ display: "flex", flexDirection: "column", flexShrink: 0 }}>
+                          <button type="button" title="Move up" disabled={pi === 0} onClick={() => moveSlotProduct(slot, pi, pi - 1)} style={arrowStyle(pi === 0)}>
+                            <svg width="9" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 5l4-4 4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                          </button>
+                          <button type="button" title="Move down" disabled={last} onClick={() => moveSlotProduct(slot, pi, pi + 1)} style={arrowStyle(last)}>
+                            <svg width="9" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                          </button>
+                        </div>
                         <div style={{ display: "flex", alignItems: "center", gap: 5, width: 88, flexShrink: 0, height: 28, padding: "0 9px", background: "#252525", border: "1px solid rgba(255,255,255,0.09)", borderRadius: 6, boxSizing: "border-box" }}>
                           <span style={{ fontSize: 11, color: "#75767C", fontFamily: "var(--font-mono)" }}>+$</span>
-                          <input
+                          <CurrencyInput className="zp-bare"
                             value={sp.extra}
-                            inputMode="decimal"
-                            aria-label={`Extra price for ${p?.name ?? sp.productId}`}
-                            onChange={(e) => patchSlot(slot.id, { products: slot.products.map((x) => (x.id === sp.id ? { ...x, extra: e.target.value } : x)) })}
-                            onBlur={() => patchSlot(slot.id, { products: slot.products.map((x) => (x.id === sp.id ? { ...x, extra: parseMoney(x.extra).toFixed(2) } : x)) })}
+                            ariaLabel={`Extra price for ${p?.name ?? sp.productId}`}
+                            onChange={(v) => patchSlot(slot.id, { products: slot.products.map((x) => (x.id === sp.id ? { ...x, extra: v } : x)) })}
                             style={{ flex: 1, minWidth: 0, background: "transparent", border: "none", outline: "none", fontFamily: "var(--font-mono)", fontSize: 12, color: "#F1F1F1" }}
                           />
                         </div>
                         <button type="button" title="Remove" onClick={() => patchSlot(slot.id, { products: slot.products.filter((x) => x.id !== sp.id) })} style={iconBtnStyle}>
                           <svg width="9" height="9" viewBox="0 0 10 10" fill="none"><path d="M1 1L9 9M9 1L1 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
                         </button>
+                      </div>
                       </div>
                     );
                   })}

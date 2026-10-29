@@ -1,6 +1,7 @@
 import type {
   AnalyticsChannelBreakdown,
   AnalyticsRepository,
+  AnalyticsWebsitePaymentBreakdown,
 } from "../ports/AnalyticsRepository.js";
 import type {
   AnalyticsMetricBucket,
@@ -21,6 +22,7 @@ type RevenueAnalyticsBucket = AnalyticsMetricBucket & {
   tax: number;
   tip: number;
   total: number;
+  websitePayments: AnalyticsWebsitePaymentBreakdown;
 };
 
 export type GetRevenueAnalyticsOutput = Omit<
@@ -34,6 +36,7 @@ export type GetRevenueAnalyticsOutput = Omit<
     sales: number;
     tax: number;
     tip: number;
+    websitePayments: AnalyticsWebsitePaymentBreakdown;
   };
 };
 
@@ -85,6 +88,15 @@ export class GetRevenueAnalyticsUseCase {
       }),
       { website: 0, doordash: 0, uberEats: 0, square: 0 },
     );
+    const websitePaymentTotals = currentRows.reduce<AnalyticsWebsitePaymentBreakdown>(
+      (sum, row) => ({
+        card: sum.card + row.websitePayments.card,
+        cash: sum.cash + row.websitePayments.cash,
+        zelle: sum.zelle + row.websitePayments.zelle,
+        unknown: sum.unknown + row.websitePayments.unknown,
+      }),
+      { card: 0, cash: 0, zelle: 0, unknown: 0 },
+    );
     const output = buildAnalyticsMetricOutput({
       metric: "revenue",
       timezone: validated.timezone,
@@ -107,9 +119,10 @@ export class GetRevenueAnalyticsUseCase {
           deliveryFee: row.deliveryFee,
           total: row.total,
           channels: row.channels,
+          websitePayments: row.websitePayments,
         };
       }),
-      summary: { ...output.summary, ...totals, channels: channelTotals },
+      summary: { ...output.summary, ...totals, channels: channelTotals, websitePayments: websitePaymentTotals },
     };
   }
 }

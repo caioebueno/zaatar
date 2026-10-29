@@ -6,6 +6,7 @@ import formatCurrency from "@/utils/formatCurrecy";
 import { NextPage } from "next";
 import { Montserrat } from "next/font/google";
 import Link from "next/link";
+import { withMenuId } from "@/utils/withMenuId";
 import { FiArrowLeft, FiCheck } from "react-icons/fi";
 import { FaWhatsapp } from "react-icons/fa6";
 import text from "@/constants/text";
@@ -33,8 +34,10 @@ const Confirmation: NextPage<{
     orderId: string;
     lg: string;
   }>;
-}> = async ({ params }) => {
+  searchParams: Promise<{ menuId?: string | string[] }>;
+}> = async ({ params, searchParams }) => {
   const resultParams = await params;
+  const { menuId } = await searchParams;
   const orderId = resultParams.orderId;
   const lg = resultParams.lg;
 
@@ -56,7 +59,7 @@ const Confirmation: NextPage<{
     <div className={`${montserrat.className} flex flex-col items-center`}>
       <div className="bg-foreground p-4 border-[#B9BFBF] border-b flex flex-row justify-between w-full">
         <Link
-          href={`/menu/${lg}`}
+          href={withMenuId(`/menu/${lg}`, Array.isArray(menuId) ? menuId[0] : menuId)}
           className="p-0! text-[16px] font-semibold text-text! bg-transparent flex flex-row gap-2 items-center"
         >
           <FiArrowLeft size={18} />

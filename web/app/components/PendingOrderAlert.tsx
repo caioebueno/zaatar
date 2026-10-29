@@ -7,6 +7,7 @@ import {
   getStoredCustomerSession,
 } from "@/utils/customerSession";
 import Link from "next/link";
+import { useMenuHref } from "@/utils/menuHref";
 import { Montserrat } from "next/font/google";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -27,6 +28,7 @@ type TPendingOrderAlert = {
 };
 
 const PendingOrderAlert: React.FC<TPendingOrderAlert> = ({ lg }) => {
+  const menuHref = useMenuHref();
   const [pendingOrder, setPendingOrder] = useState<TPendingOrder | null>(null);
   const pathname = usePathname();
   const content = text[lg] || text["en"];
@@ -168,7 +170,7 @@ const PendingOrderAlert: React.FC<TPendingOrderAlert> = ({ lg }) => {
       className="sticky top-0 z-40 w-full bg-[#E8EFEE] border-b border-[#A9BBB8]"
     >
       <Link
-        href={confirmationHref}
+        href={menuHref(confirmationHref)}
         className={`mx-auto flex w-full max-w-[900px] items-center justify-between gap-3 px-4 py-4 text-text ${montserrat.className}`}
       >
         <div className="flex items-center gap-3">

@@ -9,7 +9,7 @@ import {
   mapSquareSyncTask,
   type ProductSquareSyncTaskResponse,
 } from "./squareSyncTask.js";
-import { enqueueSquareProductSyncTask } from "../shared/squareCatalogSync.js";
+import { enqueueSquareProductSyncTask, isProductOnActiveMenu } from "../shared/squareCatalogSync.js";
 
 type RouteContext = {
   params: Promise<{
@@ -658,6 +658,10 @@ export async function PATCH(request: NextRequestLike, context: RouteContext) {
     if (!existingProduct) {
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
     }
+
+    // Captured before the update: a PATCH that moves the product off the
+    // active menu must still sync it to Square (see enqueueSquareProductSyncTask).
+    const wasOnActiveMenu = businessId ? await isProductOnActiveMenu(normalizedProductId) : false;
 
     const body = (await request.json()) as PatchBody;
     const data: Prisma.ProductUpdateInput = {};
@@ -1334,6 +1338,7 @@ export async function PATCH(request: NextRequestLike, context: RouteContext) {
           source: "PRODUCT_PATCH",
           triggeredAt: new Date().toISOString(),
         },
+        wasOnActiveMenu,
       });
 
       if (createdTask) {

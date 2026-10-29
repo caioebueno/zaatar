@@ -18,19 +18,29 @@ export function categoryNameById(categories: ApiCategory[]): Record<string, stri
   return out;
 }
 
-/** Section (category) a product belongs to, by name. */
-export function sectionOf(p: ApiProduct, names: Record<string, string>): string {
-  const id = p.categoryId ?? (p.categoryIds && p.categoryIds[0]) ?? null;
-  return (id && names[id]) || UNCATEGORIZED;
+/**
+ * Section (category) a product belongs to in the current menu, by name.
+ * `names` holds only that menu's categories, so a product is placed under the
+ * first of its categories that is in the menu. A product with no category at
+ * all is Uncategorized; one whose categories all belong to other menus is not
+ * in this menu and yields null.
+ */
+export function sectionOf(p: ApiProduct, names: Record<string, string>): string | null {
+  const ids = [p.categoryId, ...(p.categoryIds ?? [])].filter((id): id is string => !!id);
+  if (ids.length === 0) return UNCATEGORIZED;
+  const inMenu = ids.find((id) => names[id]);
+  return inMenu ? names[inMenu] : null;
 }
 
-/** Ordered section titles: categories in API order, then any Uncategorized bucket. */
+/**
+ * Ordered section titles: every section on the menu in API order — empty ones
+ * included, so a freshly created or attached section shows up — then the
+ * Uncategorized bucket when any product has no category.
+ */
 export function sectionTitles(categories: ApiCategory[], products: ApiProduct[]): string[] {
   const names = categoryNameById(categories);
-  const ordered = categories.map((c) => c.name);
-  const present = new Set(products.map((p) => sectionOf(p, names)));
-  const titles = ordered.filter((t) => present.has(t));
-  if (present.has(UNCATEGORIZED)) titles.push(UNCATEGORIZED);
+  const titles = categories.map((c) => c.name);
+  if (products.some((p) => sectionOf(p, names) === UNCATEGORIZED)) titles.push(UNCATEGORIZED);
   return titles;
 }
 

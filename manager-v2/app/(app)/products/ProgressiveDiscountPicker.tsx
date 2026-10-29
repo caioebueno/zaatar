@@ -4,17 +4,18 @@ import type { ProgressiveDiscount } from "../../lib/api";
 import { pdSummary } from "./ProgressiveDiscountPanel";
 
 /**
- * Body of the toolbar's progressive-discount dropdown: the live ladder, the other
- * ladders on file, and a way to start a new one.
+ * Body of the toolbar's progressive-discount dropdown: the ladder attached to the
+ * current menu, the other ladders on file, and a way to start a new one.
  *
- * The design attaches a discount to a menu, which the API has no concept of — the
- * storefront serves the newest ladder with `completed: false`. So "active" is a
- * state here: activating one ladder completes the others, and completing them all
- * leaves the menu with no discount attached.
+ * Attaching sets `Menu.progressiveDiscountId` for this menu only; a ladder can run
+ * on several menus at once, and a menu can run none. A completed ladder stays
+ * attached but isn't offered to customers.
  */
 export function ProgressiveDiscountPicker({
   catalog,
   active,
+  currentMenuId,
+  menuName,
   loading,
   error,
   busy,
@@ -27,15 +28,19 @@ export function ProgressiveDiscountPicker({
   active: ProgressiveDiscount | null;
   busy: boolean;
   catalog: ProgressiveDiscount[];
+  currentMenuId: string;
   error: string;
   loading: boolean;
+  menuName: (menuId: string) => string;
   onActivate: (id: string) => void;
   onCreate: () => void;
-  onDeactivate: (id: string) => void;
+  onDeactivate: () => void;
   onEdit: (id: string) => void;
   onRetry: () => void;
 }) {
   const others = catalog.filter((d) => d.id !== active?.id);
+  // Where else a ladder runs, so attaching/editing a shared one isn't a surprise.
+  const otherMenus = (d: ProgressiveDiscount) => (d.menuIds ?? []).filter((id) => id !== currentMenuId).map(menuName);
 
   return (
     <>
@@ -56,21 +61,27 @@ export function ProgressiveDiscountPicker({
             <div style={{ padding: 10, background: "#252525", border: "1px solid rgba(255,92,26,0.28)", borderRadius: 8 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                 <span style={{ flex: 1, minWidth: 0, fontFamily: "var(--font-mono)", fontSize: 11.5, color: "#F1F1F1", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{active.id}</span>
-                <span style={{ flexShrink: 0, padding: "2px 8px", borderRadius: 9999, fontSize: 10.5, fontWeight: 600, whiteSpace: "nowrap", background: "rgba(255,214,0,0.14)", color: "#FFD600" }}>Running</span>
+                {active.completed ? (
+                  <span style={{ flexShrink: 0, padding: "2px 8px", borderRadius: 9999, fontSize: 10.5, fontWeight: 600, whiteSpace: "nowrap", background: "rgba(34,197,94,0.14)", color: "#22C55E" }}>Completed</span>
+                ) : (
+                  <span style={{ flexShrink: 0, padding: "2px 8px", borderRadius: 9999, fontSize: 10.5, fontWeight: 600, whiteSpace: "nowrap", background: "rgba(255,214,0,0.14)", color: "#FFD600" }}>Running</span>
+                )}
               </div>
               <div style={{ marginTop: 6, fontSize: 11.5, color: "#9B9B9B" }}>{pdSummary(active)}</div>
+              {active.completed && <div style={{ marginTop: 4, fontSize: 11.5, color: "#75767C", lineHeight: 1.45 }}>Completed ladders aren&apos;t offered. Reopen it in Edit steps.</div>}
+              {otherMenus(active).length > 0 && <div style={{ marginTop: 4, fontSize: 11, color: "#75767C" }}>Also on {otherMenus(active).join(", ")}</div>}
               <div style={{ display: "flex", gap: 6, marginTop: 10 }}>
                 <button type="button" onClick={() => onEdit(active.id)} style={{ height: 28, padding: "0 11px", borderRadius: 6, cursor: "pointer", border: "none", background: "#FF5C1A", color: "#171717", fontFamily: "var(--font-body)", fontSize: 12, fontWeight: 600 }}>Edit steps</button>
-                <button type="button" disabled={busy} onClick={() => onDeactivate(active.id)} style={{ height: 28, padding: "0 11px", borderRadius: 6, cursor: busy ? "default" : "pointer", border: "1px solid rgba(239,68,68,0.4)", background: "transparent", color: "#EF4444", fontFamily: "var(--font-body)", fontSize: 12, fontWeight: 600, opacity: busy ? 0.6 : 1 }}>Detach</button>
+                <button type="button" disabled={busy} onClick={onDeactivate} style={{ height: 28, padding: "0 11px", borderRadius: 6, cursor: busy ? "default" : "pointer", border: "1px solid rgba(239,68,68,0.4)", background: "transparent", color: "#EF4444", fontFamily: "var(--font-body)", fontSize: 12, fontWeight: 600, opacity: busy ? 0.6 : 1 }}>Detach</button>
               </div>
             </div>
           )}
 
-          {/* No open ladder — the menu runs without a progressive discount. */}
+          {/* Nothing attached — the menu runs without a progressive discount. */}
           {!active && catalog.length > 0 && (
             <div style={{ padding: 10, background: "#252525", border: "1px dashed rgba(255,255,255,0.14)", borderRadius: 8 }}>
               <div style={{ fontSize: 12, color: "#E8E8E8" }}>No discount attached</div>
-              <div style={{ marginTop: 4, fontSize: 11.5, color: "#75767C", lineHeight: 1.45 }}>Customers order at full price. Activate one below to start a ladder.</div>
+              <div style={{ marginTop: 4, fontSize: 11.5, color: "#75767C", lineHeight: 1.45 }}>Customers on this menu order at full price. Attach one below to run a ladder here.</div>
             </div>
           )}
 
@@ -86,9 +97,10 @@ export function ProgressiveDiscountPicker({
                     {d.completed && <span style={{ flexShrink: 0, padding: "1px 7px", borderRadius: 9999, background: "rgba(34,197,94,0.14)", color: "#22C55E", fontSize: 10.5, fontWeight: 600 }}>Completed</span>}
                   </div>
                   <div style={{ marginTop: 3, fontSize: 11, color: "#9B9B9B", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{pdSummary(d)}</div>
+                  {otherMenus(d).length > 0 && <div style={{ marginTop: 2, fontSize: 10.5, color: "#75767C", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>On {otherMenus(d).join(", ")}</div>}
                 </div>
                 <button type="button" onClick={() => onEdit(d.id)} style={{ flexShrink: 0, height: 24, padding: "0 9px", borderRadius: 6, cursor: "pointer", background: "transparent", border: "1px solid rgba(255,255,255,0.14)", fontFamily: "var(--font-body)", fontSize: 11, color: "#C7C8CC" }}>Edit</button>
-                <button type="button" disabled={busy} onClick={() => onActivate(d.id)} style={{ flexShrink: 0, height: 24, padding: "0 10px", borderRadius: 6, cursor: busy ? "default" : "pointer", border: "none", background: "rgba(255,92,26,0.16)", color: "#FF5C1A", fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 600, opacity: busy ? 0.6 : 1 }}>Activate</button>
+                <button type="button" disabled={busy} onClick={() => onActivate(d.id)} style={{ flexShrink: 0, height: 24, padding: "0 10px", borderRadius: 6, cursor: busy ? "default" : "pointer", border: "none", background: "rgba(255,92,26,0.16)", color: "#FF5C1A", fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 600, opacity: busy ? 0.6 : 1 }}>Attach</button>
               </div>
             ))}
             {others.length === 0 && (

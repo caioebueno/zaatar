@@ -80,6 +80,7 @@ model ProgressiveDiscount {
   createdAt DateTime                  @default(now())
   completed Boolean                   @default(false)
   steps     ProgressiveDiscountStep[]
+  menus     Menu[]
 }
 
 enum ProgressiveDiscountStepType {
@@ -892,12 +893,16 @@ model Menu {
   isDefault      Boolean        @default(false)
   squareMenuId   String?        @unique
   squareMenuVersion String?
+  // Ladder this menu runs; null = the menu has no progressive discount.
+  progressiveDiscount   ProgressiveDiscount? @relation(fields: [progressiveDiscountId], references: [id], onDelete: SetNull)
+  progressiveDiscountId String?
   categories     Category[]
   menuCategories MenuCategory[]
   menuVisits     MenuVisit[]
   squareCatalogSyncTasks SquareCatalogSyncTask[]
 
   @@index([isDefault])
+  @@index([progressiveDiscountId])
 }
 
 model MenuVisit {

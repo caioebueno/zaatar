@@ -43,6 +43,10 @@ type RevenueRow = {
   total: string;
   uberEats: string;
   website: string;
+  websiteCard: string;
+  websiteCash: string;
+  websiteZelle: string;
+  websiteUnknown: string;
 };
 
 /**
@@ -353,7 +357,16 @@ export class PrismaAnalyticsRepository implements AnalyticsRepository {
             ELSE COALESCE(SUM(op."amount" * op."quantity"), 0)::numeric
           END AS discounted_subtotal_cents,
           COALESCE(orders."tipAmount", 0)::numeric AS tip_percentage,
-          COALESCE(orders."sourcePlatform"::text, 'FOODY') AS source_platform
+          COALESCE(orders."sourcePlatform"::text, 'FOODY') AS source_platform,
+          -- Orders with no payment recorded have an unknown method: Order.paymentMethod
+          -- defaults to CARD, so trusting it inflates card revenue. Stripe orders
+          -- count as card even without rows (older ones predate OrderPayment).
+          CASE
+            WHEN EXISTS (SELECT 1 FROM "OrderPayment" payment WHERE payment."orderId" = orders."id")
+              THEN orders."paymentMethod"::text
+            WHEN orders."paymentProvider"::text = 'STRIPE' THEN 'CARD'
+            ELSE 'UNKNOWN'
+          END AS payment_method
         FROM "Order" orders
         INNER JOIN "Branch" branch
           ON branch."id" = orders."branchId"
@@ -375,6 +388,7 @@ export class PrismaAnalyticsRepository implements AnalyticsRepository {
         SELECT
           local_day,
           source_platform,
+          payment_method,
           GREATEST(0, discounted_subtotal_cents) AS sales_cents,
           GREATEST(0, delivery_fee_cents) AS delivery_fee_cents,
           ROUND(GREATEST(0, discounted_subtotal_cents) * 0.065)::numeric AS tax_cents,
@@ -392,6 +406,14 @@ export class PrismaAnalyticsRepository implements AnalyticsRepository {
           COALESCE(SUM(order_totals.sales_cents + order_totals.tax_cents + order_totals.tip_cents + order_totals.delivery_fee_cents), 0)::bigint::text AS total,
           COALESCE(SUM(order_totals.sales_cents + order_totals.tax_cents + order_totals.tip_cents + order_totals.delivery_fee_cents)
             FILTER (WHERE order_totals.source_platform IN ('FOODY', 'UNKNOWN')), 0)::bigint::text AS website,
+          COALESCE(SUM(order_totals.sales_cents + order_totals.tax_cents + order_totals.tip_cents + order_totals.delivery_fee_cents)
+            FILTER (WHERE order_totals.source_platform IN ('FOODY', 'UNKNOWN') AND order_totals.payment_method = 'CARD'), 0)::bigint::text AS "websiteCard",
+          COALESCE(SUM(order_totals.sales_cents + order_totals.tax_cents + order_totals.tip_cents + order_totals.delivery_fee_cents)
+            FILTER (WHERE order_totals.source_platform IN ('FOODY', 'UNKNOWN') AND order_totals.payment_method = 'CASH'), 0)::bigint::text AS "websiteCash",
+          COALESCE(SUM(order_totals.sales_cents + order_totals.tax_cents + order_totals.tip_cents + order_totals.delivery_fee_cents)
+            FILTER (WHERE order_totals.source_platform IN ('FOODY', 'UNKNOWN') AND order_totals.payment_method = 'ZELLE'), 0)::bigint::text AS "websiteZelle",
+          COALESCE(SUM(order_totals.sales_cents + order_totals.tax_cents + order_totals.tip_cents + order_totals.delivery_fee_cents)
+            FILTER (WHERE order_totals.source_platform IN ('FOODY', 'UNKNOWN') AND order_totals.payment_method = 'UNKNOWN'), 0)::bigint::text AS "websiteUnknown",
           COALESCE(SUM(order_totals.sales_cents + order_totals.tax_cents + order_totals.tip_cents + order_totals.delivery_fee_cents)
             FILTER (WHERE order_totals.source_platform = 'DOORDASH'), 0)::bigint::text AS doordash,
           COALESCE(SUM(order_totals.sales_cents + order_totals.tax_cents + order_totals.tip_cents + order_totals.delivery_fee_cents)
@@ -412,6 +434,10 @@ export class PrismaAnalyticsRepository implements AnalyticsRepository {
         COALESCE(orders_agg."deliveryFee", '0') AS "deliveryFee",
         COALESCE(orders_agg.total, '0') AS total,
         COALESCE(orders_agg.website, '0') AS website,
+        COALESCE(orders_agg."websiteCard", '0') AS "websiteCard",
+        COALESCE(orders_agg."websiteCash", '0') AS "websiteCash",
+        COALESCE(orders_agg."websiteZelle", '0') AS "websiteZelle",
+        COALESCE(orders_agg."websiteUnknown", '0') AS "websiteUnknown",
         COALESCE(orders_agg.doordash, '0') AS doordash,
         COALESCE(orders_agg."uberEats", '0') AS "uberEats",
         COALESCE(orders_agg.square, '0') AS square
@@ -436,6 +462,12 @@ export class PrismaAnalyticsRepository implements AnalyticsRepository {
         doordash: Number(row.doordash || "0"),
         uberEats: Number(row.uberEats || "0"),
         square: Number(row.square || "0"),
+      },
+      websitePayments: {
+        card: Number(row.websiteCard || "0"),
+        cash: Number(row.websiteCash || "0"),
+        zelle: Number(row.websiteZelle || "0"),
+        unknown: Number(row.websiteUnknown || "0"),
       },
     }));
   }

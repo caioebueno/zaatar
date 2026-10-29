@@ -167,6 +167,7 @@ body {
 .zp-prow button:hover { border-color: currentColor !important; }
 .zp-secbtn:hover { color: #F1F1F1 !important; background: rgba(255, 255, 255, 0.05) !important; }
 .zp-attachrow:hover { background: rgba(255, 255, 255, 0.06) !important; }
+.zp-menuitem:hover:not(:disabled) { background: rgba(255, 255, 255, 0.06) !important; }
 .zp-rowmenu:hover,
 .zp-rowmenu[data-state="open"] { color: #F1F1F1 !important; background: rgba(255, 255, 255, 0.07) !important; }
 
@@ -266,3 +267,23 @@ body {
   box-shadow: 0 0 0 3px rgba(255, 92, 26, 0.18);
   outline: none;
 }
+
+/* ── Default input focus (every screen) ─────────────────────── */
+/* The same orange border + soft ring as .zp-input, applied to every text-like
+   field. `:where()` keeps specificity at zero so a screen can still restyle.
+   Borderless inputs that sit inside a bordered box (search boxes with an icon,
+   "+$" price boxes) carry `.zp-bare`: they get no ring themselves and the box
+   around them lights up instead. */
+:where(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not(.zp-bare), select, textarea:not(.zp-bare)),
+:where(:has(> .zp-bare)) {
+  transition:
+    border-color 150ms var(--ease-out-expo),
+    box-shadow 150ms var(--ease-out-expo);
+}
+:where(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not(.zp-bare), select, textarea:not(.zp-bare)):focus,
+:where(:has(> .zp-bare:focus)) {
+  border-color: #FF5C1A !important;
+  box-shadow: 0 0 0 3px rgba(255, 92, 26, 0.18);
+  outline: none;
+}
+.zp-bare:focus { outline: none; }

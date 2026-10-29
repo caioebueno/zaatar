@@ -3,12 +3,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import { useRouter } from "next/navigation";
-import { ApiError, createProduct, createProgressiveDiscount, listProducts, listProgressiveDiscounts, toAbsoluteImageUrl, updateCategory, updateProduct, updateProgressiveDiscount } from "../../lib/api";
+import { ApiError, createCategory, detachCategoryFromMenu, createMenu as apiCreateMenu, createProduct, listMenus, updateMenu, createProgressiveDiscount, listProducts, listProgressiveDiscounts, menuPreviewUrl, toAbsoluteImageUrl, updateCategory, updateProduct, updateProgressiveDiscount } from "../../lib/api";
 import type { ApiCategory, ApiProduct, CreateProductBody, ProgressiveDiscount, SquareCatalogSyncTask, UpdateProductBody } from "../../lib/api";
 import { clearManagerSession, getManagerBusinessId, getManagerToken } from "../../lib/auth";
-import { INITIAL_MENUS, clone, initials, money, parseMoney, slug, statusChip, thumbStyle } from "./data";
+import { clone, initials, money, parseMoney, statusChip, thumbStyle } from "./data";
 import type { FlatProduct, Lang, MediaItem, Menu, ModifierGroup, PrepTask, ProductDraft } from "./data";
-import { categoryNameById, centsToDollars, deriveModifierLibrary, mapProductToDraft, prepLibraryFromLookup, sectionOf, sectionTitles } from "./mapping";
+import { UNCATEGORIZED, categoryNameById, centsToDollars, deriveModifierLibrary, mapProductToDraft, prepLibraryFromLookup, sectionOf, sectionTitles } from "./mapping";
 import { ProductDetail } from "./ProductDetail";
 import { ProductCreator } from "./ProductCreator";
 import type { CreatorDraft } from "./ProductCreator";
@@ -50,7 +50,6 @@ export function ProductsScreen() {
   const reqId = useRef(0);
   const panelTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const enterTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const createSeq = useRef(0);
   const sectionReorderDirty = useRef(false);
   const latestSectionOrder = useRef<string[] | null>(null);
   const draggedSectionTitle = useRef<string | null>(null);
@@ -71,11 +70,23 @@ export function ProductsScreen() {
   const [order, setOrder] = useState<string[] | null>(null);
   const [productOrder, setProductOrder] = useState<Record<string, string[]>>({});
 
-  const [menus, setMenus] = useState<Menu[]>(INITIAL_MENUS);
-  const [currentMenu, setCurrentMenu] = useState("main");
-  const [activeMenu, setActiveMenu] = useState("main");
+  // Real menus from GET /menus. "Active" is the API's `isDefault` — the menu the
+  // storefront serves. `currentMenu` is the one being viewed/edited here; empty
+  // until the menus load, which makes the first product fetch use the default.
+  const [menus, setMenus] = useState<Menu[]>([]);
+  const [currentMenu, setCurrentMenu] = useState("");
+  const [activeMenu, setActiveMenu] = useState("");
   const [menuPickerOpen, setMenuPickerOpen] = useState(false);
   const [newMenuName, setNewMenuName] = useState("");
+  const [menuBusy, setMenuBusy] = useState(false);
+  const [menuError, setMenuError] = useState("");
+
+  // "Add section": attach a section from another menu, or create a new one.
+  const [allCategories, setAllCategories] = useState<ApiCategory[]>([]);
+  const [secPickerOpen, setSecPickerOpen] = useState(false);
+  const [newSectionName, setNewSectionName] = useState("");
+  const [sectionBusy, setSectionBusy] = useState(false);
+  const [sectionError, setSectionError] = useState("");
 
   const [reorderOpen, setReorderOpen] = useState(false);
   const [dragIndex, setDragIndex] = useState<number | null>(null);
@@ -102,12 +113,13 @@ export function ProductsScreen() {
     const my = ++reqId.current;
     setLoading(true);
     setError("");
-    listProducts(token, businessId)
+    listProducts(token, businessId, currentMenu || null)
       .then((res) => {
         if (my !== reqId.current) return;
         const products = Array.isArray(res?.products) ? res.products : [];
         setApiProducts(products);
         setCategories(res?.lookup?.categories ?? []);
+        setAllCategories(res?.lookup?.allCategories ?? res?.lookup?.categories ?? []);
         setModifierLibrary(deriveModifierLibrary(products));
         setPrepLibrary(prepLibraryFromLookup(res?.lookup?.preparationSteps ?? []));
       })
@@ -122,6 +134,28 @@ export function ProductsScreen() {
       })
       .finally(() => {
         if (my === reqId.current) setLoading(false);
+      });
+  }, [router, currentMenu]);
+
+  // ── Fetch menus once; start on the storefront's (default) menu ──
+  useEffect(() => {
+    const token = getManagerToken();
+    if (!token) return;
+    listMenus(token, getManagerBusinessId())
+      .then((list) => {
+        const items = Array.isArray(list) ? list : [];
+        setMenus(items.map((m) => ({ id: m.id, name: m.name, progressiveDiscountId: m.progressiveDiscountId ?? null })));
+        const def = items.find((m) => m.isDefault) ?? items[0];
+        if (def) {
+          setActiveMenu(def.id);
+          setCurrentMenu((cur) => cur || def.id);
+        }
+      })
+      .catch((err) => {
+        if (err instanceof ApiError && err.status === 401) {
+          clearManagerSession();
+          router.replace("/login");
+        }
       });
   }, [router]);
 
@@ -150,13 +184,18 @@ export function ProductsScreen() {
         photoUrl: e ? e.media.find((m) => m.url)?.url ?? null : basePhotoUrl,
       });
     };
-    apiProducts.forEach((p) => overlay(p.id, p.name, centsToDollars(p.price), centsToDollars(p.comparedAtPrice), p.visible, p.alertDriver, p.description ?? "", sectionOf(p, catNames), p.photos?.[0]?.url ?? null));
+    apiProducts.forEach((p) => {
+      // Products whose categories all belong to other menus get an empty
+      // section: hidden from the list, but still offered by "Add product".
+      const section = sectionOf(p, catNames) ?? "";
+      overlay(p.id, p.name, centsToDollars(p.price), centsToDollars(p.comparedAtPrice), p.visible, p.alertDriver, p.description ?? "", section, p.photos?.[0]?.url ?? null);
+    });
     return out;
   }, [apiProducts, catNames, edits, sectionMoves]);
 
   const q = search.trim().toLowerCase();
   const visible = flat
-    .filter((p) => !detached[p.id])
+    .filter((p) => p.section !== "" && !detached[p.id])
     .filter((p) => !q || p.name.toLowerCase().includes(q) || p.section.toLowerCase().includes(q));
   const selectedProduct = selected ? flat.find((p) => p.id === selected) ?? null : null;
   const split = !!(selectedProduct && draft);
@@ -171,8 +210,17 @@ export function ProductsScreen() {
     return kept.concat(ids.filter((id) => !kept.includes(id)));
   };
 
+  // Sections on other menus, with how many products each holds (any menu).
+  const attachableSections = useMemo(() => {
+    const onMenu = new Set(categories.map((c) => c.id));
+    const perCategory = new Map<string, number>();
+    apiProducts.forEach((p) => {
+      new Set([p.categoryId, ...(p.categoryIds ?? [])].filter((id): id is string => !!id)).forEach((id) => perCategory.set(id, (perCategory.get(id) ?? 0) + 1));
+    });
+    return allCategories.filter((c) => !onMenu.has(c.id)).map((cat) => ({ cat, count: perCategory.get(cat.id) ?? 0 }));
+  }, [allCategories, categories, apiProducts]);
   const counts: Record<string, number> = {};
-  flat.forEach((p) => (counts[p.section] = (counts[p.section] || 0) + 1));
+  flat.forEach((p) => { if (p.section) counts[p.section] = (counts[p.section] || 0) + 1; });
 
   // ── Mutations ────────────────────────────────────────────
   const draftForProduct = (p: FlatProduct): ProductDraft => {
@@ -202,9 +250,9 @@ export function ProductsScreen() {
     beginPanelEnter();
   };
   // ── Progressive discount ───────────────────────────────────────────────────
-  // The ladder the storefront serves is the newest one with `completed: false`
-  // (see `web/src/getProgressiveDiscount.ts`), so "active" is a state on the
-  // discount, not a per-menu attachment: activating one completes the others.
+  // Each menu points at zero or one ladder (`Menu.progressiveDiscountId`), and
+  // the storefront offers it unless the ladder is completed (see
+  // `web/src/getProgressiveDiscount.ts`). Several menus may share a ladder.
   const [creating, setCreating] = useState(false);
   const [createError, setCreateError] = useState("");
 
@@ -219,9 +267,11 @@ export function ProductsScreen() {
   const [pdSaveError, setPdSaveError] = useState("");
   const [pdReload, setPdReload] = useState(0);
 
-  // Mirrors the server's pick: the newest open ladder, or none at all when every
-  // ladder is completed — a menu is allowed to have no discount attached.
-  const pdActive = pdCatalog.find((d) => !d.completed) ?? null;
+  // The ladder attached to the menu being edited (none is allowed). It may be
+  // completed, in which case customers aren't offered it.
+  const pdAttachedId = menus.find((m) => m.id === currentMenu)?.progressiveDiscountId ?? null;
+  const pdActive = pdAttachedId ? pdCatalog.find((d) => d.id === pdAttachedId) ?? null : null;
+  const pdLive = !!pdActive && !pdActive.completed;
   const pdEditing = pdOpenId ? pdCatalog.find((d) => d.id === pdOpenId) ?? null : null;
 
   const pdAuth = (): { businessId: string | null; token: string } | null => {
@@ -244,9 +294,9 @@ export function ProductsScreen() {
     return field ? `The API rejected ${field}.` : fallback;
   };
 
-  // The catalog loads once the ladder is actually asked for, and again on retry.
+  // Loads on mount (the toolbar button shows this menu's ladder), and again
+  // whenever the picker opens or on retry.
   useEffect(() => {
-    if (!pdPickerOpen && pdReload === 0) return;
     const token = getManagerToken();
     if (!token) {
       router.replace("/login");
@@ -275,60 +325,66 @@ export function ProductsScreen() {
     setPdPickerOpen(false);
   };
 
-  /** Make one ladder the live one: open it, and close every other open ladder. */
+  /** Point the current menu at `id` (or nothing), then refresh menus' attachments. */
+  const attachPd = (auth: { businessId: string | null; token: string }, id: string | null) =>
+    updateMenu(auth.token, currentMenu, { progressiveDiscountId: id }, auth.businessId).then((m) => {
+      setMenus((prev) => prev.map((x) => (x.id === m.id ? { ...x, progressiveDiscountId: m.progressiveDiscountId ?? null } : x)));
+    });
+
+  const refreshPd = (auth: { businessId: string | null; token: string }) =>
+    listProgressiveDiscounts(auth.token, auth.businessId).then((res) => {
+      setPdCatalog(res);
+      const refreshed = res.find((d) => d.id === pdOpenId);
+      if (refreshed) setPdDraft(draftFromDiscount(refreshed));
+      return res;
+    });
+
+  /** Run `id` on this menu. A completed ladder is reopened, or it would stay hidden. */
   const activatePd = (id: string) => {
     const auth = pdAuth();
-    if (!auth) return;
+    if (!auth || !currentMenu) return;
     setPdBusy(true);
     setPdError("");
-    const others = pdCatalog.filter((d) => d.id !== id && !d.completed);
+    const target = pdCatalog.find((d) => d.id === id);
     Promise.all([
-      updateProgressiveDiscount(auth.token, id, { completed: false }, auth.businessId),
-      ...others.map((d) => updateProgressiveDiscount(auth.token, d.id, { completed: true }, auth.businessId)),
+      attachPd(auth, id),
+      ...(target?.completed ? [updateProgressiveDiscount(auth.token, id, { completed: false }, auth.businessId)] : []),
     ])
-      .then(() => listProgressiveDiscounts(auth.token, auth.businessId))
-      .then((res) => {
-        setPdCatalog(res);
-        const refreshed = res.find((d) => d.id === pdOpenId);
-        if (refreshed) setPdDraft(draftFromDiscount(refreshed));
-      })
-      .catch((err) => setPdError(pdOnError(err, "Couldn't activate that discount.")))
+      .then(() => refreshPd(auth))
+      .catch((err) => setPdError(pdOnError(err, "Couldn't attach that discount.")))
       .finally(() => setPdBusy(false));
   };
 
-  /** Stop offering a ladder. Note the storefront falls back to the newest record
-   *  when nothing is open, so completing the only ladder does not disable it. */
-  const deactivatePd = (id: string) => {
+  /** This menu stops running a ladder; other menus keep theirs. */
+  const deactivatePd = () => {
     const auth = pdAuth();
-    if (!auth) return;
+    if (!auth || !currentMenu) return;
     setPdBusy(true);
     setPdError("");
-    updateProgressiveDiscount(auth.token, id, { completed: true }, auth.businessId)
-      .then(() => listProgressiveDiscounts(auth.token, auth.businessId))
-      .then((res) => {
-        setPdCatalog(res);
-        const refreshed = res.find((d) => d.id === pdOpenId);
-        if (refreshed) setPdDraft(draftFromDiscount(refreshed));
-      })
-      .catch((err) => setPdError(pdOnError(err, "Couldn't deactivate that discount.")))
+    attachPd(auth, null)
+      .then(() => refreshPd(auth))
+      .catch((err) => setPdError(pdOnError(err, "Couldn't detach the discount.")))
       .finally(() => setPdBusy(false));
   };
 
   const createPd = () => {
     const auth = pdAuth();
-    if (!auth) return;
+    if (!auth || !currentMenu) return;
     setPdBusy(true);
     setPdError("");
-    // Same starting ladder the design seeds a new discount with ($25 → 5% off).
+    // Same starting ladder the design seeds a new discount with ($25 → 5% off),
+    // attached to the menu it was created from.
     createProgressiveDiscount(auth.token, { completed: false, steps: [{ type: "PERCENTAGEDISCOUNT", amount: 2500, discount: 5 }] }, auth.businessId)
       .then((created) =>
-        listProgressiveDiscounts(auth.token, auth.businessId).then((res) => {
-          setPdCatalog(res);
-          closeDetail();
-          setPdOpenId(created.id);
-          setPdDraft(draftFromDiscount(res.find((d) => d.id === created.id) ?? created));
-          setPdPickerOpen(false);
-        }),
+        attachPd(auth, created.id)
+          .then(() => listProgressiveDiscounts(auth.token, auth.businessId))
+          .then((res) => {
+            setPdCatalog(res);
+            closeDetail();
+            setPdOpenId(created.id);
+            setPdDraft(draftFromDiscount(res.find((d) => d.id === created.id) ?? created));
+            setPdPickerOpen(false);
+          }),
       )
       .catch((err) => setPdError(pdOnError(err, "Couldn't create a progressive discount.")))
       .finally(() => setPdBusy(false));
@@ -572,16 +628,118 @@ export function ProductsScreen() {
     });
   };
   // "Add product to section" = move the product into that section's category.
+  // A product can sit in sections on several menus. Edits here only replace
+  // its section on the current menu; links to other menus' sections are kept.
+  const otherMenuCategoryIds = (productId: string): string[] => {
+    const real = productById.get(productId);
+    const ids = [real?.categoryId, ...(real?.categoryIds ?? [])].filter((id): id is string => !!id && !catNames[id]);
+    return Array.from(new Set(ids));
+  };
   const attachProductToSection = (productId: string, sectionTitle: string) => {
     const catId = catIdForSection(sectionTitle);
     if (!catId) return; // Uncategorized/custom sections have no category.
-    patchProductCategory(productId, { categoryId: catId, categoryIds: [catId] });
+    patchProductCategory(productId, { categoryId: catId, categoryIds: [catId, ...otherMenuCategoryIds(productId)] });
   };
-  // "Detach from section" removes the product's category links (→ Uncategorized).
+  // "Detach from section" removes the product from this menu's sections; with
+  // no other menu holding it, it ends up Uncategorized.
   const detachProduct = (p: FlatProduct) => {
     setDetached((prev) => ({ ...prev, [p.id]: true }));
     if (selected === p.id) closeDetail();
-    patchProductCategory(p.id, { categoryId: null, categoryIds: [] });
+    const others = otherMenuCategoryIds(p.id);
+    patchProductCategory(p.id, { categoryId: others[0] ?? null, categoryIds: others });
+  };
+
+  /** PATCH /categories/:id { menuId } — append an existing section to this menu. */
+  const attachSection = (cat: ApiCategory) => {
+    const token = getManagerToken();
+    if (!token || !currentMenu || sectionBusy) return;
+    setSectionBusy(true);
+    setSectionError("");
+    updateCategory(token, cat.id, { menuId: currentMenu }, getManagerBusinessId())
+      .then(() => {
+        setCategories((prev) => (prev.some((c) => c.id === cat.id) ? prev : [...prev, cat]));
+        setSecPickerOpen(false);
+      })
+      .catch((err) => {
+        if (err instanceof ApiError && err.status === 401) {
+          clearManagerSession();
+          router.replace("/login");
+          return;
+        }
+        setSectionError("Couldn't attach the section.");
+      })
+      .finally(() => setSectionBusy(false));
+  };
+
+  /**
+   * Takes a section off the current menu. Its products leave this menu's list
+   * too (unless another section here also holds them) but stay on any other
+   * menu, and the section shows up under "Attach existing" again.
+   */
+  const detachSection = (title: string) => {
+    const cat = categories.find((c) => c.name === title);
+    const token = getManagerToken();
+    if (!cat || !token || !currentMenu || sectionBusy) return;
+    setSectionBusy(true);
+    setSectionError("");
+    setAddPicker(null);
+    detachCategoryFromMenu(token, cat.id, currentMenu, getManagerBusinessId())
+      .then(() => {
+        setCategories((prev) => prev.filter((c) => c.id !== cat.id));
+        // Local "moved into this section" overrides would otherwise keep those
+        // products listed under a section that is gone.
+        setSectionMoves((prev) => Object.fromEntries(Object.entries(prev).filter(([, t]) => t !== title)));
+        if (selectedProduct?.section === title) closeDetail();
+      })
+      .catch((err) => {
+        if (err instanceof ApiError && err.status === 401) {
+          clearManagerSession();
+          router.replace("/login");
+          return;
+        }
+        setSectionError(`Couldn't detach "${title}".`);
+      })
+      .finally(() => setSectionBusy(false));
+  };
+
+  /**
+   * POST /categories on this menu. A name matching an existing section (any
+   * menu, case-insensitive) attaches that one instead of creating a duplicate.
+   */
+  const createSection = () => {
+    const name = newSectionName.trim();
+    const token = getManagerToken();
+    if (!name || !token || !currentMenu || sectionBusy) return;
+    const lower = name.toLowerCase();
+    if (categories.some((c) => c.name.toLowerCase() === lower)) {
+      setSectionError("That section is already on this menu.");
+      return;
+    }
+    const existing = allCategories.find((c) => c.name.toLowerCase() === lower);
+    if (existing) {
+      setNewSectionName("");
+      attachSection(existing);
+      return;
+    }
+    setSectionBusy(true);
+    setSectionError("");
+    createCategory(token, { name, menuId: currentMenu }, getManagerBusinessId())
+      .then((created) => {
+        const cat: ApiCategory = { id: created.id, name: created.name, menuIndex: created.menuIndex ?? null };
+        setCategories((prev) => [...prev, cat]);
+        setAllCategories((prev) => [...prev, cat]);
+        setNewSectionName("");
+        setSecPickerOpen(false);
+      })
+      .catch((err) => {
+        if (err instanceof ApiError && err.status === 401) {
+          clearManagerSession();
+          router.replace("/login");
+          return;
+        }
+        setSectionError("Couldn't create the section.");
+      })
+      .finally(() => setSectionBusy(false));
   };
 
   const upsertModifierGroup = (g: ModifierGroup) => setModifierLibrary((prev) => (prev.some((x) => x.id === g.id) ? prev.map((x) => (x.id === g.id ? g : x)) : [...prev, g]));
@@ -610,7 +768,7 @@ export function ProductsScreen() {
     if (!cat) return;
     const pos = orderTitles.filter((t) => catByName.has(t)).indexOf(movedTitle);
     if (pos < 0) return;
-    updateCategory(token, cat.id, { menuIndex: pos + 1 }, businessId).catch((err) => {
+    updateCategory(token, cat.id, { menuIndex: pos + 1, ...(currentMenu ? { menuId: currentMenu } : {}) }, businessId).catch((err) => {
       if (err instanceof ApiError && err.status === 401) {
         clearManagerSession();
         router.replace("/login");
@@ -663,15 +821,58 @@ export function ProductsScreen() {
     }
   };
 
+  // Switching menus refetches the catalog scoped to it (see `load`). Local
+  // section/product order is per-menu, so it is dropped.
+  const switchMenu = (id: string) => {
+    setMenuPickerOpen(false);
+    if (id === currentMenu) return;
+    closeDetail();
+    setOrder(null);
+    setProductOrder({});
+    setCurrentMenu(id);
+  };
+
+  /** POST /menus, then switch to the new (empty) menu. */
   const createMenu = () => {
     const name = newMenuName.trim();
-    if (!name) return;
-    const id = slug(name) + "-" + (++createSeq.current).toString(36);
-    setMenus((prev) => [...prev, { id, name }]);
-    setCurrentMenu(id);
-    setNewMenuName("");
-    setMenuPickerOpen(false);
-    closeDetail();
+    const token = getManagerToken();
+    if (!name || menuBusy || !token) return;
+    setMenuBusy(true);
+    setMenuError("");
+    apiCreateMenu(token, name, getManagerBusinessId())
+      .then((m) => {
+        setMenus((prev) => [...prev, { id: m.id, name: m.name, progressiveDiscountId: m.progressiveDiscountId ?? null }]);
+        setNewMenuName("");
+        switchMenu(m.id);
+      })
+      .catch((err) => {
+        if (err instanceof ApiError && err.status === 401) {
+          clearManagerSession();
+          router.replace("/login");
+          return;
+        }
+        setMenuError(err instanceof ApiError && err.status === 409 ? "A menu with that id already exists." : "Couldn't create the menu.");
+      })
+      .finally(() => setMenuBusy(false));
+  };
+
+  /** PATCH /menus/:id { isDefault: true } — the storefront then serves this menu. */
+  const makeActive = (id: string) => {
+    const token = getManagerToken();
+    if (!token || menuBusy) return;
+    setMenuBusy(true);
+    setMenuError("");
+    updateMenu(token, id, { isDefault: true }, getManagerBusinessId())
+      .then(() => setActiveMenu(id))
+      .catch((err) => {
+        if (err instanceof ApiError && err.status === 401) {
+          clearManagerSession();
+          router.replace("/login");
+          return;
+        }
+        setMenuError("Couldn't change the active menu.");
+      })
+      .finally(() => setMenuBusy(false));
   };
 
   /**
@@ -751,6 +952,7 @@ export function ProductsScreen() {
   };
 
   const currentMenuObj = menus.find((m) => m.id === currentMenu) || menus[0];
+  const previewUrl = currentMenu ? menuPreviewUrl(currentMenu) : null;
   const grid = split ? "minmax(0,1fr) 76px 84px 30px" : "minmax(0,1fr) 96px 88px 96px 30px";
   const headerCells = split ? ["Product", "Price", "Status"] : ["Product", "Compared at", "Price", "Status"];
   const rightCols = split ? [1, 2] : [2, 3];
@@ -762,7 +964,8 @@ export function ProductsScreen() {
       const ordered = secOrder.map((id) => inSec.find((p) => p.id === id)).filter((p): p is FlatProduct => !!p);
       return { title: t, products: ordered };
     })
-    .filter((s) => s.products.length > 0);
+    // Empty sections stay visible (so new/attached ones show) except while searching.
+    .filter((s) => s.products.length > 0 || !q);
 
   return (
     <>
@@ -791,14 +994,14 @@ export function ProductsScreen() {
             <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
               {menus.map((m) => (
                 <div key={m.id} style={{ display: "flex", alignItems: "center", gap: 8, padding: "0 8px 0 4px", height: 34, borderRadius: 6, background: m.id === currentMenu ? "rgba(255,255,255,0.06)" : "transparent" }}>
-                  <button type="button" onClick={() => { setCurrentMenu(m.id); setMenuPickerOpen(false); closeDetail(); }} style={{ flex: 1, minWidth: 0, display: "flex", alignItems: "center", gap: 8, height: 34, background: "transparent", border: "none", padding: "0 6px", cursor: "pointer", fontFamily: "var(--font-body)" }}>
+                  <button type="button" onClick={() => switchMenu(m.id)} style={{ flex: 1, minWidth: 0, display: "flex", alignItems: "center", gap: 8, height: 34, background: "transparent", border: "none", padding: "0 6px", cursor: "pointer", fontFamily: "var(--font-body)" }}>
                     <span style={{ width: 5, height: 5, borderRadius: 9999, flexShrink: 0, background: m.id === activeMenu ? "#22C55E" : "rgba(255,255,255,0.18)" }} />
                     <span style={{ flex: 1, minWidth: 0, textAlign: "left", fontSize: 12.5, color: "#F1F1F1", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{m.name}</span>
                   </button>
                   {m.id === activeMenu ? (
                     <span style={{ flexShrink: 0, fontSize: 11, fontWeight: 600, color: "#22C55E" }}>Active</span>
                   ) : (
-                    <button type="button" onClick={() => setActiveMenu(m.id)} style={{ flexShrink: 0, height: 22, padding: "0 8px", background: "transparent", border: "1px solid rgba(255,255,255,0.14)", borderRadius: 9999, cursor: "pointer", fontFamily: "var(--font-body)", fontSize: 11, color: "#C7C8CC" }}>Set active</button>
+                    <button type="button" disabled={menuBusy} onClick={() => makeActive(m.id)} style={{ flexShrink: 0, height: 22, padding: "0 8px", background: "transparent", border: "1px solid rgba(255,255,255,0.14)", borderRadius: 9999, cursor: "pointer", fontFamily: "var(--font-body)", fontSize: 11, color: "#C7C8CC" }}>Set active</button>
                   )}
                 </div>
               ))}
@@ -806,8 +1009,9 @@ export function ProductsScreen() {
             <div style={{ height: 1, background: "rgba(255,255,255,0.08)", margin: "8px 0" }} />
             <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "0 2px 2px" }}>
               <input value={newMenuName} onChange={(e) => setNewMenuName(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") createMenu(); }} placeholder="New menu name" style={{ flex: 1, minWidth: 0, height: 30, padding: "0 10px", background: "#252525", border: "1px solid rgba(255,255,255,0.09)", borderRadius: 6, fontFamily: "var(--font-body)", fontSize: 12.5, color: "#E8E8E8", outline: "none" }} />
-              <button type="button" onClick={createMenu} style={{ flexShrink: 0, height: 30, padding: "0 12px", borderRadius: 6, border: "none", cursor: "pointer", fontFamily: "var(--font-body)", fontSize: 12.5, fontWeight: 600, background: newMenuName.trim() ? "#FF5C1A" : "rgba(255,255,255,0.07)", color: newMenuName.trim() ? "#171717" : "#75767C" }}>Create</button>
+              <button type="button" disabled={menuBusy} onClick={createMenu} style={{ flexShrink: 0, height: 30, padding: "0 12px", borderRadius: 6, border: "none", cursor: menuBusy ? "default" : "pointer", fontFamily: "var(--font-body)", fontSize: 12.5, fontWeight: 600, background: newMenuName.trim() ? "#FF5C1A" : "rgba(255,255,255,0.07)", color: newMenuName.trim() ? "#171717" : "#75767C", opacity: menuBusy ? 0.6 : 1 }}>{menuBusy ? "Saving…" : "Create"}</button>
             </div>
+            {menuError && <div style={{ padding: "6px 4px 2px", fontSize: 11.5, color: "#F87171" }}>{menuError}</div>}
           </Popover>
         </div>
 
@@ -821,18 +1025,19 @@ export function ProductsScreen() {
             trigger={
               <button
                 type="button"
-                title={pdActive ? `Progressive discount ${pdActive.id} · ${pdSummary(pdActive)}` : "No progressive discount attached to this menu"}
+                title={pdActive ? `Progressive discount ${pdActive.id} · ${pdSummary(pdActive)}${pdActive.completed ? " · completed, not offered" : ""}` : "No progressive discount attached to this menu"}
                 style={{
                   height: 30, maxWidth: 200, display: "inline-flex", alignItems: "center", gap: 7, padding: "0 10px", borderRadius: 6, cursor: "pointer",
-                  border: "1px solid " + (pdActive ? "rgba(255,92,26,0.4)" : "rgba(255,255,255,0.09)"),
-                  background: pdActive ? "rgba(255,92,26,0.12)" : "#252525",
-                  color: pdActive ? "#FF5C1A" : "#C7C8CC",
+                  border: "1px solid " + (pdLive ? "rgba(255,92,26,0.4)" : "rgba(255,255,255,0.09)"),
+                  background: pdLive ? "rgba(255,92,26,0.12)" : "#252525",
+                  color: pdLive ? "#FF5C1A" : "#C7C8CC",
                   fontFamily: "var(--font-body)", fontSize: 12.5, whiteSpace: "nowrap",
                 }}
               >
                 <svg width="12" height="13" viewBox="0 0 12 13" fill="none" style={{ flexShrink: 0 }}><path d="M7 1L2 7.4h3L4.6 12 10 5.4H6.7L7 1z" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" /></svg>
                 {!pdActive && <span>{pdCatalog.length > 0 ? "No discount" : "Add discount"}</span>}
-                {pdActive && (
+                {pdActive?.completed && <span>Completed</span>}
+                {pdLive && pdActive && (
                   <span style={{ padding: "1px 7px", borderRadius: 9999, background: "rgba(255,92,26,0.18)", color: "#FF5C1A", fontSize: 10.5, fontWeight: 600, fontFamily: "var(--font-mono)" }}>{pdActive.steps.length}</span>
                 )}
                 <svg width="10" height="6" viewBox="0 0 10 6" fill="none" style={{ flexShrink: 0 }}><path d="M1 1l4 4 4-4" stroke="#9B9B9B" strokeWidth="1.4" strokeLinecap="round" /></svg>
@@ -842,6 +1047,8 @@ export function ProductsScreen() {
             <ProgressiveDiscountPicker
               catalog={pdCatalog}
               active={pdActive}
+              currentMenuId={currentMenu}
+              menuName={(id) => menus.find((m) => m.id === id)?.name ?? id}
               loading={pdLoading}
               error={pdError}
               busy={pdBusy}
@@ -855,6 +1062,54 @@ export function ProductsScreen() {
         </div>
 
         <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search products" style={{ width: 200, height: 30, padding: "0 10px", background: "#252525", border: "1px solid rgba(255,255,255,0.09)", borderRadius: 6, fontFamily: "var(--font-body)", fontSize: 12.5, color: "#E8E8E8", flexShrink: 0, outline: "none" }} />
+        {/* Opens the customer menu (web project) on this menu, in a new tab. */}
+        <button
+          type="button"
+          title={previewUrl ? "Preview menu" : "Set NEXT_PUBLIC_MENU_BASE_URL to preview the menu"}
+          aria-label="Preview menu"
+          disabled={!previewUrl}
+          onClick={() => previewUrl && window.open(previewUrl, "_blank", "noopener")}
+          style={{ flexShrink: 0, display: "inline-flex", alignItems: "center", justifyContent: "center", width: 30, height: 30, padding: 0, background: "transparent", border: "1px solid rgba(255,255,255,0.14)", borderRadius: 6, cursor: previewUrl ? "pointer" : "default", opacity: previewUrl ? 1 : 0.5, color: "#E8E8E8" }}
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z" /><circle cx="12" cy="12" r="3" /></svg>
+        </button>
+
+        <div style={{ flexShrink: 0 }}>
+          <Popover
+            open={secPickerOpen}
+            onOpenChange={(o) => { setSecPickerOpen(o); setSectionError(""); if (o) { setReorderOpen(false); setMenuPickerOpen(false); } }}
+            align="end"
+            sideOffset={8}
+            contentStyle={{ width: 272, padding: 8 }}
+            trigger={
+              <button type="button" disabled={!currentMenu} style={{ display: "inline-flex", alignItems: "center", gap: 7, height: 30, padding: "0 11px", background: secPickerOpen ? "#2F2F2F" : "#252525", border: "1px solid rgba(255,255,255,0.09)", borderRadius: 6, fontFamily: "var(--font-body)", fontSize: 12.5, color: "#E8E8E8", cursor: currentMenu ? "pointer" : "default", opacity: currentMenu ? 1 : 0.5 }}>
+                <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M5.5 1v9M1 5.5h9" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" /></svg>
+                <span>Add section</span>
+              </button>
+            }
+          >
+            <div style={{ padding: "4px 6px 8px", fontSize: 10, fontWeight: 600, color: "#9B9B9B", textTransform: "uppercase", letterSpacing: "0.06em" }}>Attach existing</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 2, maxHeight: 220, overflow: "auto" }}>
+              {attachableSections.map(({ cat, count }) => (
+                <button key={cat.id} type="button" className="zp-menuitem" disabled={sectionBusy} onClick={() => attachSection(cat)} style={{ display: "flex", alignItems: "center", gap: 8, width: "100%", height: 34, padding: "0 8px", borderRadius: 6, border: "none", background: "transparent", cursor: sectionBusy ? "default" : "pointer", fontFamily: "var(--font-body)", textAlign: "left" }}>
+                  <span style={{ flex: 1, minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontSize: 12.5, color: "#F1F1F1" }}>{cat.name}</span>
+                  <span style={{ flexShrink: 0, fontSize: 10.5, color: "#75767C", fontFamily: "var(--font-mono)" }}>{count} products</span>
+                  <span style={{ flexShrink: 0, fontSize: 11, color: "#FF7A44", fontWeight: 600 }}>Attach</span>
+                </button>
+              ))}
+              {attachableSections.length === 0 && (
+                <div style={{ padding: "6px 8px 4px", fontSize: 12, color: "#75767C" }}>All sections are on this menu.</div>
+              )}
+            </div>
+            <div style={{ height: 1, background: "rgba(255,255,255,0.08)", margin: "8px 0" }} />
+            <div style={{ padding: "0 6px 8px", fontSize: 10, fontWeight: 600, color: "#9B9B9B", textTransform: "uppercase", letterSpacing: "0.06em" }}>New section</div>
+            <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "0 2px 2px" }}>
+              <input value={newSectionName} onChange={(e) => { setNewSectionName(e.target.value); setSectionError(""); }} onKeyDown={(e) => { if (e.key === "Enter") createSection(); }} placeholder="Section name" style={{ flex: 1, minWidth: 0, height: 30, padding: "0 10px", background: "#191919", border: "1px solid rgba(255,255,255,0.09)", borderRadius: 6, fontFamily: "var(--font-body)", fontSize: 12.5, color: "#F1F1F1", outline: "none" }} />
+              <button type="button" disabled={sectionBusy} onClick={createSection} style={{ flexShrink: 0, height: 30, padding: "0 12px", borderRadius: 6, border: "none", cursor: sectionBusy ? "default" : "pointer", fontFamily: "var(--font-body)", fontSize: 12.5, fontWeight: 600, background: newSectionName.trim() ? "#FF5C1A" : "rgba(255,255,255,0.07)", color: newSectionName.trim() ? "#FFFFFF" : "#75767C", opacity: sectionBusy ? 0.6 : 1 }}>{sectionBusy ? "Saving…" : "Create"}</button>
+            </div>
+            {sectionError && <div style={{ padding: "6px 4px 2px", fontSize: 11.5, color: "#F87171" }}>{sectionError}</div>}
+          </Popover>
+        </div>
 
         <div style={{ flexShrink: 0 }}>
           <Popover
@@ -917,6 +1172,13 @@ export function ProductsScreen() {
                 <button type="button" onClick={load} style={{ height: 32, padding: "0 14px", background: "#FF5C1A", border: "none", borderRadius: 6, fontFamily: "var(--font-body)", fontSize: 12.5, fontWeight: 600, color: "#171717", cursor: "pointer" }}>Try again</button>
               </div>
             )}
+            {/* Detach failures surface here; the Add-section popover shows its own. */}
+            {!loading && !error && sectionError && !secPickerOpen && (
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, padding: "8px 14px", background: "rgba(248,113,113,0.08)", borderBottom: "1px solid rgba(248,113,113,0.2)", fontSize: 12, color: "#F87171" }}>
+                <span>{sectionError}</span>
+                <button type="button" onClick={() => setSectionError("")} style={{ background: "transparent", border: "none", padding: 0, cursor: "pointer", fontFamily: "var(--font-body)", fontSize: 11.5, color: "#9B9B9B" }}>Dismiss</button>
+              </div>
+            )}
             {!loading && !error && orderedSections.map((sec) => {
               const ids = sec.products.map((p) => p.id);
               const aq = addSearch.trim().toLowerCase();
@@ -926,6 +1188,15 @@ export function ProductsScreen() {
                   <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "0 14px", height: 46, background: "#1C1C1C", borderBottom: "1px solid rgba(255,255,255,0.06)", position: "sticky", top: 0, zIndex: addPicker === sec.title || prodReorder === sec.title ? 30 : 2 }}>
                     <span style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 12, color: "#F1F1F1", letterSpacing: "0.01em" }}>{sec.title}</span>
                     <span style={{ flex: 1, minWidth: 0, fontSize: 10.5, color: "#75767C", fontFamily: "var(--font-mono)" }}>{sec.products.length} {sec.products.length === 1 ? "item" : "items"}</span>
+
+                    {/* Detach section from this menu — last in the row (order 2), per the design.
+                        Uncategorized is not a real section, so it has none. */}
+                    {sec.title !== UNCATEGORIZED && (
+                      <button type="button" className="zp-secbtn" title="Detach section from menu" disabled={sectionBusy} onClick={() => detachSection(sec.title)} style={{ order: 2, flexShrink: 0, display: "inline-flex", alignItems: "center", gap: 6, height: 26, padding: "0 8px", borderRadius: 6, border: "none", background: "transparent", cursor: sectionBusy ? "default" : "pointer", fontFamily: "var(--font-body)", fontSize: 11.5, color: "#75767C" }}>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m18.84 12.25 1.72-1.71a5 5 0 0 0-7.07-7.07l-1.72 1.71" /><path d="m5.17 11.75-1.71 1.71a5 5 0 0 0 7.07 7.07l1.71-1.71" /><path d="M8 2v3" /><path d="M2 8h3" /><path d="M16 22v-3" /><path d="M22 16h-3" /></svg>
+                        <span>Detach</span>
+                      </button>
+                    )}
 
                     {/* Add product */}
                     <div style={{ flexShrink: 0, marginRight: 2 }}>
@@ -946,7 +1217,7 @@ export function ProductsScreen() {
                           <div style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 13, color: "#F1F1F1" }}>Add to {sec.title}</div>
                           <div style={{ marginTop: 8, display: "flex", alignItems: "center", gap: 8, height: 32, padding: "0 10px", background: "#252525", border: "1px solid rgba(255,255,255,0.09)", borderRadius: 7 }}>
                             <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style={{ flexShrink: 0 }}><circle cx="5.2" cy="5.2" r="3.6" stroke="#75767C" strokeWidth="1.3" /><path d="M8 8l2.4 2.4" stroke="#75767C" strokeWidth="1.3" strokeLinecap="round" /></svg>
-                            <input value={addSearch} onChange={(e) => setAddSearch(e.target.value)} placeholder="Search products to attach" style={{ flex: 1, minWidth: 0, background: "transparent", border: "none", outline: "none", fontFamily: "var(--font-body)", fontSize: 12.5, color: "#E8E8E8" }} />
+                            <input className="zp-bare" value={addSearch} onChange={(e) => setAddSearch(e.target.value)} placeholder="Search products to attach" style={{ flex: 1, minWidth: 0, background: "transparent", border: "none", outline: "none", fontFamily: "var(--font-body)", fontSize: 12.5, color: "#E8E8E8" }} />
                           </div>
                         </div>
                         <div style={{ maxHeight: 236, overflow: "auto", padding: 6 }}>
@@ -1056,7 +1327,7 @@ export function ProductsScreen() {
             })}
             {!loading && !error && orderedSections.length === 0 && (
               <div style={{ padding: 40, textAlign: "center", fontSize: 11.5, color: "#75767C" }}>
-                {flat.length === 0 ? "No products yet." : "No products match this search."}
+                {q ? "No products match this search." : sectionOrder.length === 0 ? "This menu has no sections yet. Use Add section to create or attach one." : "No products yet."}
               </div>
             )}
           </div>

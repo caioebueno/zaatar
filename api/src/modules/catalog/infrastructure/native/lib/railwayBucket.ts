@@ -4,6 +4,7 @@ import {
   S3Client,
   type PutObjectCommandInput,
 } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 const bucketName =
   process.env.RAILWAY_BUCKET_NAME?.trim() || process.env.BUCKET?.trim() || "";
@@ -153,6 +154,16 @@ export async function getImageFromBucket(key: string) {
   );
 }
 
+/**
+ * Short-lived GET link for a private object. Railway buckets can't serve public
+ * objects (public-read ACLs are ignored), so every read goes through one of these.
+ */
+export async function getSignedBucketUrl(key: string, expiresInSeconds: number): Promise<string> {
+  return getSignedUrl(getBucketClient(), new GetObjectCommand({ Bucket: bucketName, Key: key }), {
+    expiresIn: expiresInSeconds,
+  });
+}
+
 export function getBucketProxyUrl(origin: string, key: string): string {
   return `${origin}${getBucketProxyPath(key)}`;
 }
@@ -166,19 +177,22 @@ export function getBucketProxyPath(key: string): string {
   return `/api/bucket/${encodedKey}`;
 }
 
-export function getBucketEndpointUrl(key: string): string {
-  if (!bucketName || (!bucketEndpoint && !bucketPublicBaseUrl)) {
-    throw new Error(
-      "Bucket endpoint is not configured. Set BUCKET plus ENDPOINT or BUCKET_PUBLIC_BASE_URL.",
-    );
+/**
+ * Public URL of an object: BUCKET_PUBLIC_BASE_URL plus the object key as the
+ * path. BUCKET_PUBLIC_BASE_URL is this API's `GET /files` route (e.g.
+ * `https://api.example.com/files`), which maps the path straight onto the key,
+ * presigns it and redirects — so nothing else goes in the path.
+ */
+export function getBucketPublicUrl(key: string): string {
+  if (!bucketPublicBaseUrl) {
+    throw new Error("Bucket public URL is not configured. Set BUCKET_PUBLIC_BASE_URL.");
   }
 
-  const baseUrl = bucketPublicBaseUrl || bucketEndpoint;
-  const endpoint = baseUrl.endsWith("/") ? baseUrl.slice(0, -1) : baseUrl;
+  const baseUrl = bucketPublicBaseUrl.replace(/\/+$/, "");
   const encodedKey = key
     .split("/")
     .map((segment) => encodeURIComponent(segment))
     .join("/");
 
-  return `${endpoint}/${bucketName}/${encodedKey}`;
+  return `${baseUrl}/${encodedKey}`;
 }

@@ -191,7 +191,7 @@ export function OrdersScreen() {
             <circle cx="6.2" cy="6.2" r="4.4" stroke="#9B9B9B" strokeWidth="1.4" />
             <path d="M9.6 9.6L12.2 12.2" stroke="#9B9B9B" strokeWidth="1.4" strokeLinecap="round" />
           </svg>
-          <input
+          <input className="zp-bare"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search order, customer"

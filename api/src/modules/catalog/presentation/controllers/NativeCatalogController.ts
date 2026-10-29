@@ -11,6 +11,7 @@ import * as modifierGroupIdRoute from "../../infrastructure/native/modifier-grou
 import * as modifierGroupItemsRoute from "../../infrastructure/native/modifier-group-items/route.js";
 import * as modifierGroupItemIdRoute from "../../infrastructure/native/modifier-group-items/itemIdRoute.js";
 import * as bucketUploadRoute from "../../infrastructure/native/bucket/uploadRoute.js";
+import * as bucketFileRoute from "../../infrastructure/native/bucket/fileRoute.js";
 import * as progressiveDiscountRoute from "../../infrastructure/native/progressive-discount/route.js";
 import * as posExclusivePromotionsRoute from "../../infrastructure/native/pos-exclusive-promotions/route.js";
 import * as customerSearchRoute from "../../infrastructure/native/customers/searchRoute.js";
@@ -126,6 +127,10 @@ export class NativeCatalogController implements HttpController {
       });
     }
 
+    if (request.method === "GET" && pathname.startsWith("/files/")) {
+      return bucketFileRoute.GET(pathname.slice("/files/".length));
+    }
+
     if (request.method === "POST" && pathname === "/bucket/upload") {
       return bucketUploadRoute.POST(nextRequest);
     }
@@ -135,7 +140,7 @@ export class NativeCatalogController implements HttpController {
     }
 
     if (request.method === "GET" && pathname === "/progressive-discount") {
-      return progressiveDiscountRoute.GET();
+      return progressiveDiscountRoute.GET(nextRequest);
     }
 
     if (request.method === "POST" && pathname === "/progressive-discount") {

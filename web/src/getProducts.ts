@@ -325,7 +325,7 @@ export const getProductsFresh = async (
           },
         })
       : Promise.resolve(null),
-    getProgressiveDiscount(),
+    getProgressiveDiscount(selectedMenuId),
   ]);
 
   const visibleByProductId = new Map(

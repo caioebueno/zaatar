@@ -30,6 +30,7 @@ import text from "@/constants/text";
 import clsx from "clsx";
 import Link from "next/link";
 import { trackFacebookPixelEvent } from "@/app/lib/facebookPixel";
+import { useMenuHref } from "@/utils/menuHref";
 
 const ADDRESS_MAPS_URL = "https://maps.app.goo.gl/daqTiXJTTGwVeH4Z6";
 
@@ -87,6 +88,7 @@ function normalizeBrandImageSrc(src: string | null | undefined): string | null {
 }
 
 const MenuPage: React.FC<TMenuPage> = ({ data, lg }) => {
+  const menuHref = useMenuHref();
   console.log(data)
   const [openDiscountModal, setOpenDiscountModal] = useState(false);
   const [openInfoModal, setOpenInfoModal] = useState(false);
@@ -362,7 +364,7 @@ const MenuPage: React.FC<TMenuPage> = ({ data, lg }) => {
               return (
                 <Link
                   key={language.code}
-                  href={`/menu/${language.code}`}
+                  href={menuHref(`/menu/${language.code}`)}
                   aria-current={active ? "page" : undefined}
                   className={clsx(
                     "flex items-center gap-1 rounded-full px-2 py-1 text-[11px] font-semibold transition-colors",
@@ -552,7 +554,7 @@ const MenuPage: React.FC<TMenuPage> = ({ data, lg }) => {
             onOpenChange={setOpenUpsellModal}
             onGoToCart={() => {
               setOpenUpsellModal(false);
-              window.location.href = `/menu/${lg}/cart`;
+              window.location.href = menuHref(`/menu/${lg}/cart`);
             }}
             content={content}
             lg={lg}
@@ -583,7 +585,7 @@ const MenuPage: React.FC<TMenuPage> = ({ data, lg }) => {
               return;
             }
           }
-          window.location.href = `/menu/${lg}/cart`;
+          window.location.href = menuHref(`/menu/${lg}/cart`);
         }}
         content={content}
         lg={lg}

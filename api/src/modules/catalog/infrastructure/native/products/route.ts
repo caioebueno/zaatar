@@ -1223,12 +1223,18 @@ export async function GET(request?: NextRequestLike) {
   try {
     await ensureComboProductItemTable(prisma);
     const businessId = request?.headers?.["x-business-id"]?.trim() || null;
+    // `lookup.categories` lists the sections of one menu: `?menuId=` when
+    // given, the default menu otherwise. Products are not filtered — callers
+    // group them by the returned categories.
+    const lookupMenuId =
+      request?.nextUrl?.searchParams.get("menuId")?.trim() || DEFAULT_MENU_ID;
 
     const [
       products,
       productVisibilityRows,
       productAlertDriverRows,
       categories,
+      allCategories,
       files,
       modifierGroups,
       preparationSteps,
@@ -1322,12 +1328,18 @@ export async function GET(request?: NextRequestLike) {
             c."translations"
           FROM "MenuCategory" mc
           INNER JOIN "Category" c ON c."id" = mc."categoryId"
-          WHERE mc."menuId" = ${DEFAULT_MENU_ID}
+          WHERE mc."menuId" = ${lookupMenuId}
           ORDER BY
             COALESCE(mc."menuIndex", 2147483647) ASC,
             mc."createdAt" ASC,
             c."createdAt" ASC
         `,
+        // Every section regardless of menu, so a menu editor can attach
+        // sections that live on other menus.
+        prisma.category.findMany({
+          select: { id: true, name: true },
+          orderBy: { createdAt: "asc" },
+        }),
         prisma.file.findMany({
           select: {
             id: true,
@@ -1467,6 +1479,7 @@ export async function GET(request?: NextRequestLike) {
       ),
       lookup: {
         categories,
+        allCategories,
         files,
         modifierGroups: modifierGroups.map((modifierGroup) => ({
           id: modifierGroup.id,

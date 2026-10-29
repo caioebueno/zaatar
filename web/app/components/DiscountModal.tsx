@@ -6,6 +6,7 @@ import formatCurrency from "@/utils/formatCurrecy";
 import { TGetProductsResponse } from "../../src/getProducts";
 import { calculateCartWithProgressiveDiscount } from "@/utils/calculatePrice";
 import { useCart } from "./CartContext";
+import { useMenuHref } from "@/utils/menuHref";
 import ProductImage from "./ProductImage";
 import { TProgressiveDiscountStep } from "../../src/types/progressiveDiscount";
 
@@ -235,6 +236,7 @@ type TDiscountModal = {
 };
 
 const DiscountModal: React.FC<TDiscountModal> = ({ data, open, onOpenChange, content, lg }) => {
+  const menuHref = useMenuHref();
   const { cart, addItem } = useCart();
   const price = calculateCartWithProgressiveDiscount(
     data.categories, cart, data.progressiveDiscount,
@@ -259,7 +261,7 @@ const DiscountModal: React.FC<TDiscountModal> = ({ data, open, onOpenChange, con
 
   const goToCart = () => {
     onOpenChange(false);
-    window.location.href = `/menu/${lg}/cart`;
+    window.location.href = menuHref(`/menu/${lg}/cart`);
   };
 
 
