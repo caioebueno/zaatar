@@ -10,24 +10,24 @@ Auth: manager access token required.
 
 `GET /progressive-discount`
 
-Returns the current progressive discount configuration used by ordering flows.
+Returns the progressive discount of one menu, as used by ordering flows.
+
+Query: optional `menuId` (the default menu when omitted).
 
 Selection behavior:
 
-1. API returns the most recent discount where `completed = false`.
-2. If no discount is open, API returns `null` — a menu can have no discount
-   attached, so completing every discount switches the promotion off. (There is
-   no fallback to the most recent completed record; that behavior was removed
-   because it made "no discount" unreachable.)
+1. Each menu points at zero or one discount (`Menu.progressiveDiscountId`,
+   set with `PATCH /menus/:menuId`). Several menus may share one discount.
+2. Returns `null` when that menu has no discount attached, or when its discount
+   is `completed` — completing a discount retires it on every menu.
 
 ## List Progressive Discounts
 
 `GET /progressive-discount/all`
 
 Returns every progressive discount, newest first, each with the same shape as
-`GET /progressive-discount`. Use it for management UIs that let an operator pick
-which ladder runs; ordering flows should keep using `GET /progressive-discount`,
-which applies the selection behavior above.
+`GET /progressive-discount` plus `menuIds` — the menus it is attached to. Use it
+for management UIs; ordering flows should keep using `GET /progressive-discount`.
 
 Returns `[]` when no discount exists (never `null`).
 

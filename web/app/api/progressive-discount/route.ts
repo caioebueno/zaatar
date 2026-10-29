@@ -1,9 +1,11 @@
 import getProgressiveDiscount from "@/src/getProgressiveDiscount";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET() {
+/** GET /api/progressive-discount?menuId= — that menu's ladder (default menu when omitted). */
+export async function GET(request: NextRequest) {
   try {
-    const progressiveDiscount = await getProgressiveDiscount();
+    const menuId = request.nextUrl.searchParams.get("menuId")?.trim() || null;
+    const progressiveDiscount = await getProgressiveDiscount(menuId);
 
     return NextResponse.json(progressiveDiscount);
   } catch (error) {

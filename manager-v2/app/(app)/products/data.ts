@@ -89,7 +89,7 @@ export type CustomProduct = {
   description: string;
 };
 
-export type Menu = { id: string; name: string };
+export type Menu = { id: string; name: string; progressiveDiscountId: string | null };
 
 type CatalogItem = [string, number, number, boolean, string];
 export const CATALOG: { title: string; items: CatalogItem[] }[] = [
@@ -169,12 +169,6 @@ export const INITIAL_PREP_LIBRARY: PrepTask[] = [
   { id: "assemble", name: "Assemble & plate", station: "Assembly", goal: 3, comments: true, modifiers: true },
   { id: "fry-basket", name: "Drop fry basket", station: "Fry", goal: 4, comments: false, modifiers: false },
   { id: "pack-bag", name: "Pack for delivery", station: "Pass", goal: 2, comments: true, modifiers: false },
-];
-
-export const INITIAL_MENUS: Menu[] = [
-  { id: "main", name: "Main menu" },
-  { id: "late-night", name: "Late night" },
-  { id: "catering", name: "Catering" },
 ];
 
 // ── Helpers ────────────────────────────────────────────────

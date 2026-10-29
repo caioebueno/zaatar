@@ -208,7 +208,7 @@ export function GroupEditor({ initial, onCancel, onSave }: { initial: GroupDraft
                   />
                   <div className="zp-field" style={{ display: "flex", alignItems: "center", gap: 5, width: 96, height: 30, padding: "0 9px", background: "#252525", border: "1px solid rgba(255,255,255,0.09)", borderRadius: 6, boxSizing: "border-box" }}>
                     <span style={{ fontSize: 12, color: "#75767C", fontFamily: "var(--font-mono)" }}>$</span>
-                    <input
+                    <input className="zp-bare"
                       value={typeof o.price === "number" ? o.price.toFixed(2) : o.price}
                       onChange={(e) => patchOption(i, { price: e.target.value })}
                       onBlur={() => patchOption(i, { price: parseMoney(o.price) })}

@@ -903,6 +903,13 @@ const routes: Route[] = [
   },
 
   {
+    // Public: image URLs saved on products point here (redirects to a signed link).
+    method: "GET",
+    matcher: /^\/files\/.+$/,
+    controller: nativeCatalogController,
+    requiresAuth: false,
+  },
+  {
     method: "POST",
     matcher: /^\/bucket\/upload$/,
     controller: nativeCatalogController,

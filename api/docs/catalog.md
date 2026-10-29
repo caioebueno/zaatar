@@ -359,6 +359,11 @@ Common `400` cases:
 
 `PATCH /menus/:menuId`
 
+Body (any of): `name`, `active`, `isDefault`, `progressiveDiscountId`.
+`progressiveDiscountId` attaches a progressive discount to the menu (`400` with
+`field: "progressiveDiscountId"` if it doesn't exist); `null` detaches it. A
+discount-only change does not queue a Square sync.
+
 ---
 
 ## Categories
@@ -755,7 +760,20 @@ Detailed schemas: see [address-search.md](./address-search.md).
 
 Content-Type: `multipart/form-data`
 
-Upload a file (e.g. product photo or logo). Returns an upload result with the stored URL.
+Upload a file (e.g. product photo or logo). Returns `201` with `{ key, url }`:
+`key` is the object key (`dashboard/<timestamp>-<uuid>-<name>.<ext>`) and `url`
+is the public URL to save, `BUCKET_PUBLIC_BASE_URL/<key>`.
+
+### Serve File
+
+`GET /files/<key>` — public (no auth). The bucket is private (Railway ignores
+`public-read`), so this answers `302` to a signed GET link valid for 1 hour,
+with `Cache-Control: public, max-age=3000`. Missing objects surface as the
+storage's `404` after the redirect.
+
+Set `BUCKET_PUBLIC_BASE_URL` to this route on the API's own public URL, e.g.
+`https://api.example.com/files` (locally `http://localhost:4000/files`), so
+uploaded files get URLs that never expire.
 
 ---
 

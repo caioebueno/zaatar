@@ -7,11 +7,27 @@
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:4000";
 
 /**
- * Public host that serves bucket files. Uploads return a proxy path like
- * `/api/bucket/<key>`; this host turns it into a renderable public URL.
+ * Public base for bucket files — the API's `GET /files` route (same value as the
+ * API's BUCKET_PUBLIC_BASE_URL). It reads the rest of the path as the object
+ * key: `<base>/<key>`.
  */
-export const FILE_API_BASE_URL =
-  process.env.NEXT_PUBLIC_FILE_API_BASE_URL ?? "https://s3-public-presigner-production-83b6.up.railway.app";
+export const FILE_API_BASE_URL = (process.env.NEXT_PUBLIC_FILE_API_BASE_URL?.trim() || `${API_BASE_URL}/files`).replace(/\/+$/, "");
+
+/** Retired file host (signed with stale keys); URLs saved on it are moved to FILE_API_BASE_URL. */
+const LEGACY_FILE_HOST = "https://s3-public-presigner-production-83b6.up.railway.app";
+
+/** Customer menu host (the `web` project). No default: it shares port 3000 with this app in dev. */
+const MENU_BASE_URL = process.env.NEXT_PUBLIC_MENU_BASE_URL?.trim().replace(/\/+$/, "") || "";
+
+/**
+ * Customer menu URL forced to one menu. The storefront middleware only reads
+ * `menuId` on `/menu…` paths; `/menu` itself is the language picker, so go
+ * straight to English. Null when NEXT_PUBLIC_MENU_BASE_URL is unset.
+ */
+export function menuPreviewUrl(menuId: string): string | null {
+  if (!MENU_BASE_URL) return null;
+  return `${MENU_BASE_URL}/menu/en?menuId=${encodeURIComponent(menuId)}`;
+}
 
 /** Business timezone — Orlando, FL (Eastern Time). Used for date-range analytics/order queries. */
 export const APP_TIMEZONE = "America/New_York";
@@ -309,7 +325,10 @@ export type ApiStation = {
 };
 
 export type ProductsLookup = {
+  /** Sections of the requested menu, in menu order. */
   categories: ApiCategory[];
+  /** Every section on any menu (absent on an older API deploy). */
+  allCategories?: ApiCategory[];
   modifierGroups?: ApiModifierGroup[];
   preparationSteps?: ApiPrepStepDef[];
   stations?: ApiStation[];
@@ -355,12 +374,52 @@ export type UpdateCategoryBody = {
  * by sending one call per section with its new `menuIndex` (there is no bulk
  * reorder endpoint).
  */
+/** POST /categories — create a section and place it on `menuId` (appended when `menuIndex` is omitted). */
+export function createCategory(token: string, body: { name: string; menuId: string; menuIndex?: number }, businessId?: string | null): Promise<ApiCategory & { menuId: string }> {
+  return authJson<ApiCategory & { menuId: string }>("POST", "/categories", token, businessId, body);
+}
+
+/**
+ * DELETE /categories/:id?menuId= — take a section off a menu. Only the menu
+ * link is removed (the API renumbers the rest); the section and its products
+ * stay, so it can be attached again.
+ */
+export function detachCategoryFromMenu(token: string, categoryId: string, menuId: string, businessId?: string | null): Promise<{ id: string; menuId: string; detached: boolean }> {
+  return authJson("DELETE", `/categories/${encodeURIComponent(categoryId)}?menuId=${encodeURIComponent(menuId)}`, token, businessId);
+}
+
 export function updateCategory(token: string, categoryId: string, body: UpdateCategoryBody, businessId?: string | null): Promise<ApiCategory> {
   return authJson<ApiCategory>("PATCH", `/categories/${encodeURIComponent(categoryId)}`, token, businessId, body);
 }
 
-export function listProducts(token: string, businessId?: string | null): Promise<ListProductsResponse> {
-  return authGet<ListProductsResponse>("/products", token, businessId);
+/** `menuId` scopes `lookup.categories` to that menu's sections (API default: the default menu). */
+export function listProducts(token: string, businessId?: string | null, menuId?: string | null): Promise<ListProductsResponse> {
+  const qs = menuId ? `?menuId=${encodeURIComponent(menuId)}` : "";
+  return authGet<ListProductsResponse>(`/products${qs}`, token, businessId);
+}
+
+/**
+ * A storefront menu. `isDefault` is the one the storefront serves when no menu
+ * is pinned by link/cookie — the screen calls it the "active" menu.
+ */
+export type ApiMenu = { id: string; name: string; active: boolean; isDefault: boolean; createdAt: string; updatedAt: string; progressiveDiscountId?: string | null };
+
+/** GET /menus — every menu, default first (the API creates the default if missing). */
+export function listMenus(token: string, businessId?: string | null): Promise<ApiMenu[]> {
+  return authGet<ApiMenu[]>("/menus", token, businessId);
+}
+
+/** POST /menus — create an (empty) menu. */
+export function createMenu(token: string, name: string, businessId?: string | null): Promise<ApiMenu> {
+  return authJson<ApiMenu>("POST", "/menus", token, businessId, { name });
+}
+
+/**
+ * PATCH /menus/:id — `isDefault: true` makes it the storefront menu and clears the flag on the others.
+ * `progressiveDiscountId` attaches a ladder to this menu; `null` detaches it.
+ */
+export function updateMenu(token: string, menuId: string, body: { name?: string; active?: boolean; isDefault?: boolean; progressiveDiscountId?: string | null }, businessId?: string | null): Promise<ApiMenu> {
+  return authJson<ApiMenu>("PATCH", `/menus/${encodeURIComponent(menuId)}`, token, businessId, body);
 }
 
 /** GET /stations — business kitchen stations (with their preparation steps). */
@@ -683,23 +742,28 @@ export type UpdateProductBody = {
   categoryIndex?: number | null;
 };
 
+/** Older uploads were saved as the storefront proxy path `/api/bucket/<key>`. */
+const LEGACY_PROXY_PREFIX = "/api/bucket/";
+
 /**
- * Resolves a stored image *path* to a renderable public URL for the browser.
- * We store and send paths (e.g. `/api/bucket/<key>`); the file host is only
- * applied here, at render time, so the stored value stays host-independent.
- * Already-absolute URLs are returned unchanged.
+ * Resolves a stored image URL to one the browser can load. New uploads are
+ * already `<FILE_API_BASE_URL>/<key>` and pass through. Older ones are mapped
+ * onto it: `/api/bucket/<key>` (bare, or on the retired file host) and
+ * `<retired host>/<key>`. Any other absolute URL is returned unchanged. Saving a
+ * product sends these resolved URLs, so old rows heal as they're edited.
  */
 export function toAbsoluteImageUrl(path: string): string {
-  if (/^https?:\/\//i.test(path)) return path;
-  if (path.startsWith("/")) return `${FILE_API_BASE_URL}${path}`;
-  return `${FILE_API_BASE_URL}/${path}`;
+  let rest = path;
+  if (rest.startsWith(LEGACY_FILE_HOST + "/")) rest = rest.slice(LEGACY_FILE_HOST.length);
+  else if (/^https?:\/\//i.test(rest)) return rest;
+  if (rest.startsWith(LEGACY_PROXY_PREFIX)) rest = rest.slice(LEGACY_PROXY_PREFIX.length);
+  return `${FILE_API_BASE_URL}/${rest.replace(/^\/+/, "")}`;
 }
 
 /**
  * POST /bucket/upload — uploads a single image (multipart `file`) and returns
- * its storage key and the bucket proxy *path* (e.g. `/api/bucket/<key>`). We
- * persist the path, not a host-qualified URL; rendering prepends the file host.
- * Only images are supported by the bucket (jpeg/png/webp/gif/svg, ≤10MB).
+ * its storage key and public URL (`<BUCKET_PUBLIC_BASE_URL>/<key>`), which is
+ * what gets saved. Only images are supported (jpeg/png/webp/gif/svg, ≤10MB).
  */
 export async function uploadBucketImage(
   token: string,
@@ -726,7 +790,6 @@ export async function uploadBucketImage(
     throw new ApiError(res.status, data);
   }
   const data = (await res.json()) as { key: string; url: string };
-  // Return the raw proxy path — we persist the path, not a host-qualified URL.
   return { key: data.key, url: data.url };
 }
 
@@ -957,6 +1020,8 @@ export type ProgressiveDiscount = {
   completed: boolean;
   createdAt: string;
   id: string;
+  /** Menus running this ladder (`Menu.progressiveDiscountId`). */
+  menuIds?: string[];
   steps: ProgressiveDiscountStep[];
 };
 
@@ -1053,9 +1118,19 @@ export type ChannelAnalytics = Omit<BarChartAnalytics, "buckets" | "summary"> & 
   summary: BarChartAnalytics["summary"] & { channels: ChannelBreakdown };
 };
 
+/** Website revenue split by how the order was paid (cents). Sums to `channels.website`. */
+export type WebsitePaymentBreakdown = {
+  card: number;
+  cash: number;
+  zelle: number;
+  /** Website orders with no payment recorded. Optional: older API deploys omit it. */
+  unknown?: number;
+};
+
 export type RevenueAnalytics = Omit<ChannelAnalytics, "buckets" | "summary"> & {
-  buckets: (BarChartBucket & RevenueBreakdown & { channels: ChannelBreakdown; total: number })[];
-  summary: BarChartAnalytics["summary"] & RevenueBreakdown & { channels: ChannelBreakdown };
+  buckets: (BarChartBucket & RevenueBreakdown & { channels: ChannelBreakdown; total: number; websitePayments?: WebsitePaymentBreakdown })[];
+  // `websitePayments` is optional: an older API deploy does not send it.
+  summary: BarChartAnalytics["summary"] & RevenueBreakdown & { channels: ChannelBreakdown; websitePayments?: WebsitePaymentBreakdown };
 };
 
 /** True when the payload carries the revenue components (sales/tax/tip/fee). */

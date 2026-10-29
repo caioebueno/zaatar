@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { APP_TIMEZONE, ApiError, getAverageTicket, getNewCustomers, getOrderQuantity, getRevenue, hasChannelBreakdown, hasRevenueComponents } from "../../lib/api";
-import type { BarChartAnalytics, BarChartParams, ChannelBreakdown, RevenueBreakdown } from "../../lib/api";
+import type { BarChartAnalytics, BarChartParams, ChannelBreakdown, RevenueBreakdown, WebsitePaymentBreakdown } from "../../lib/api";
 import { clearManagerSession, getManagerBusinessId, getManagerToken } from "../../lib/auth";
 import { METRICS, addDays, buckets, deltaPill, fmt, labelFor, resolveCompare, resolveRange, series, startOfDay } from "./data";
 import type { CompareValue, MetricFormat } from "./data";
@@ -43,6 +43,18 @@ const CHANNEL_PARTS: { color: string; hoverColor: string; id: keyof ChannelBreak
 ];
 
 /**
+ * On revenue, the Website channel is split further by how the order was paid.
+ * Card keeps the Website orange so the channel still reads as one block; cash
+ * is its lighter tint. Zelle is not in the design and only shows when non-zero.
+ */
+const WEBSITE_PAYMENT_PARTS: { color: string; hoverColor: string; id: keyof WebsitePaymentBreakdown; label: string }[] = [
+  { id: "card", label: "Card", color: "#FF5C1A", hoverColor: "#FF7B42" },
+  { id: "cash", label: "Cash", color: "#FF9E6B", hoverColor: "#FFB58C" },
+  { id: "zelle", label: "Zelle", color: "#C2410C", hoverColor: "#DC5A1F" },
+  { id: "unknown", label: "Unknown", color: "#6B6B6B", hoverColor: "#8A8A8A" },
+];
+
+/**
  * Revenue still reports what makes up the total. The bars stack by channel, so
  * these are surfaced in the hover tooltip only — and without colour dots, which
  * would imply they were segments of the bar.
@@ -55,10 +67,11 @@ const REVENUE_COMPONENTS: { id: keyof RevenueBreakdown; label: string }[] = [
 ];
 
 type Component = { label: string; value: number };
-type Segment = { color: string; hoverColor: string; id: string; label: string; value: number };
+/** A channel slice of a bar. `sub` (revenue Website only) replaces it in the stack with its payment split. */
+type Segment = { color: string; hoverColor: string; id: string; label: string; value: number; sub?: Segment[] | null };
 
 const nonEmpty = (segments: Segment[]): Segment[] | null => (segments.length > 0 ? segments : null);
-type PartTotal = { color: string; id: string; label: string; share: number; total: number };
+type PartTotal = { color: string; id: string; label: string; share: number; total: number; sub?: { id: string; label: string; color: string; total: number }[] | null };
 type Bar = { label: string; value: number; compare: number | null; segments: Segment[] | null; components: Component[] | null; weekday: string | null };
 
 const WEEKDAY_INITIALS = ["S", "M", "T", "W", "T", "F", "S"];
@@ -176,6 +189,9 @@ export function MetricSection() {
       // back to the plain single-colour bar.
       const channelData = apiMeta.stackByChannel && hasChannelBreakdown(data) ? data : null;
       const revenueData = hasRevenueComponents(data) ? data : null;
+      // Payment sub-split of the Website channel, revenue only.
+      const paymentSplit = (wp: WebsitePaymentBreakdown | undefined): Segment[] | null =>
+        wp ? nonEmpty(WEBSITE_PAYMENT_PARTS.map((p) => ({ ...p, value: (wp[p.id] ?? 0) * u })).filter((seg) => seg.value > 0)) : null;
       const grandTotal = data.summary.total * u;
       model = {
         bars: data.buckets.map((b, i) => {
@@ -189,7 +205,13 @@ export function MetricSection() {
             // no DoorDash orders must not show a DoorDash sliver. A day with no
             // value at all keeps `null` so it falls back to the plain 2px stub.
             segments: row
-              ? nonEmpty(CHANNEL_PARTS.map((p) => ({ ...p, value: row.channels[p.id] * u })).filter((seg) => seg.value > 0))
+              ? nonEmpty(
+                  CHANNEL_PARTS.map((p) => ({
+                    ...p,
+                    value: row.channels[p.id] * u,
+                    sub: p.id === "website" ? paymentSplit(revenueData?.buckets[i]?.websitePayments) : null,
+                  })).filter((seg) => seg.value > 0),
+                )
               : null,
             components: revenueData?.buckets[i]
               ? REVENUE_COMPONENTS.map((c) => ({ label: c.label, value: revenueData.buckets[i]![c.id] * u }))
@@ -203,6 +225,10 @@ export function MetricSection() {
               color: p.color,
               total: channelData.summary.channels[p.id] * u,
               share: grandTotal > 0 ? (channelData.summary.channels[p.id] * u) / grandTotal : 0,
+              sub:
+                p.id === "website"
+                  ? paymentSplit(revenueData?.summary.websitePayments)?.map((seg) => ({ id: seg.id, label: seg.label, color: seg.color, total: seg.value })) ?? null
+                  : null,
             }))
           : null,
         total: grandTotal,
@@ -308,8 +334,9 @@ export function MetricSection() {
                       style={{ flex: 1, minWidth: 0, height: H, display: "flex", alignItems: "flex-end", justifyContent: "center", gap: 3, borderRadius: 4, background: hovered ? "rgba(255,255,255,0.04)" : "transparent" }}>
                       {model!.hasCompare && <div style={{ width: barW, maxWidth: "45%", height: ch, background: "#3D3E42", borderRadius: "3px 3px 0 0" }} />}
                       <div style={{ width: barW, maxWidth: model!.hasCompare ? "45%" : "80%", height: h, background: b.segments ? "transparent" : hovered ? "#FF7B42" : "#FF5C1A", borderRadius: "3px 3px 0 0", overflow: "hidden", display: b.segments ? "flex" : "block", flexDirection: "column", transition: "background 120ms cubic-bezier(0.16,1,0.3,1)" }}>
-                        {/* Reversed so the first part (Sales) lands at the base of the stack. */}
-                        {b.segments?.slice().reverse().map((seg) => (
+                        {/* Reversed so the first part (Website) lands at the base of the stack;
+                            a channel with a payment split is drawn as its sub-segments. */}
+                        {b.segments?.flatMap((seg) => seg.sub ?? [seg]).reverse().map((seg) => (
                           <div key={seg.id} style={{ height: Math.max(1, h * (seg.value / (b.value || 1))), background: hovered ? seg.hoverColor : seg.color, transition: "background 120ms cubic-bezier(0.16,1,0.3,1)" }} />
                         ))}
                       </div>
@@ -343,11 +370,22 @@ export function MetricSection() {
                     <span style={{ fontFamily: "var(--font-mono)" }}>{fmt(model.bars[hover].value, model.format)}</span>
                   </div>
                   {model.bars[hover].segments?.map((seg) => (
-                    <div key={seg.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 14, fontSize: 11.5, color: "#B4B5BA", marginTop: 4 }}>
-                      <span style={{ display: "flex", alignItems: "center", gap: 7 }}>
-                        <span style={{ width: 7, height: 7, borderRadius: 2, background: seg.color }} />{seg.label}
-                      </span>
-                      <span style={{ fontFamily: "var(--font-mono)", color: "#F1F1F2" }}>{fmt(seg.value, model!.format)}</span>
+                    <div key={seg.id}>
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 14, fontSize: 11.5, color: "#B4B5BA", marginTop: 4 }}>
+                        <span style={{ display: "flex", alignItems: "center", gap: 7 }}>
+                          {/* A split channel has no colour of its own — its sub-rows carry it. */}
+                          <span style={{ width: 7, height: 7, borderRadius: 2, background: seg.sub ? "transparent" : seg.color }} />{seg.label}
+                        </span>
+                        <span style={{ fontFamily: "var(--font-mono)", color: "#F1F1F2" }}>{fmt(seg.value, model!.format)}</span>
+                      </div>
+                      {seg.sub?.map((sub) => (
+                        <div key={sub.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 14, fontSize: 11, color: "#9B9B9B", marginTop: 3, paddingLeft: 14 }}>
+                          <span style={{ display: "flex", alignItems: "center", gap: 7 }}>
+                            <span style={{ width: 6, height: 6, borderRadius: 2, background: sub.color }} />{sub.label}
+                          </span>
+                          <span style={{ fontFamily: "var(--font-mono)", color: "#C9C9C9" }}>{fmt(sub.value, model!.format)}</span>
+                        </div>
+                      ))}
                     </div>
                   ))}
                   {/* What the revenue is made of, under a rule so it reads as a
@@ -377,10 +415,16 @@ export function MetricSection() {
             {model.parts ? (
               model.parts.map((part) => (
                 <div key={part.id} style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 12.5, color: "#E8E8E8" }}>
-                  <span style={{ width: 8, height: 8, borderRadius: 2, background: part.color }} />{part.label}
+                  <span style={{ width: 8, height: 8, borderRadius: 2, background: part.sub ? "transparent" : part.color }} />{part.label}
                   <span style={{ fontFamily: "var(--font-mono)", fontSize: 11.5, color: "#9B9B9B" }}>
                     {fmt(part.total, model!.format)} · {(part.share * 100).toFixed(1)}%
                   </span>
+                  {part.sub?.map((sub) => (
+                    <span key={sub.id} style={{ display: "flex", alignItems: "center", gap: 6, marginLeft: 6, fontSize: 11.5, color: "#9B9B9B" }}>
+                      <span style={{ width: 7, height: 7, borderRadius: 2, background: sub.color }} />{sub.label}
+                      <span style={{ fontFamily: "var(--font-mono)", color: "#C9C9C9" }}>{fmt(sub.total, model!.format)}</span>
+                    </span>
+                  ))}
                 </div>
               ))
             ) : (

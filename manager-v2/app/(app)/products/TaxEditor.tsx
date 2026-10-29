@@ -34,7 +34,7 @@ export function TaxEditor({ initial, onCancel, onSave }: { initial: TaxDraft; on
       <div>
         <div style={{ fontSize: 11, color: "#B4B5BA", marginBottom: 5 }}>Rate</div>
         <div className="zp-field" style={{ display: "flex", alignItems: "center", gap: 6, width: 120, height: 32, padding: "0 11px", background: "#191919", border: "1px solid rgba(255,255,255,0.09)", borderRadius: 6, boxSizing: "border-box" }}>
-          <input
+          <input className="zp-bare"
             value={rate}
             onChange={(e) => setRate(e.target.value.replace(/[^0-9.]/g, ""))}
             inputMode="decimal"

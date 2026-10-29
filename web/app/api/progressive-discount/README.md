@@ -4,9 +4,9 @@
 
 `GET /api/progressive-discount`
 
-Returns the active progressive discount (`completed = false`) with steps and prizes.
+Optional `?menuId=` (default menu when omitted). Returns the progressive discount attached to that menu (`Menu.progressiveDiscountId`) with steps and prizes, unless it is `completed`.
 If there is no non-completed discount it returns `null` — a menu can have no discount attached, so completing every discount switches the promotion off.
-Returns `null` when there are no progressive discounts.
+Returns `null` when the menu has no discount attached, or its discount is completed.
 
 `GET /api/progressive-discount/prizes?progressiveDiscountStepId=:stepId`
 

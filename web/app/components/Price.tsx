@@ -59,6 +59,7 @@ import text from "@/constants/text";
 import type { TProgressiveDiscountPrize } from "@/src/types/progressiveDiscount";
 import { calculateSalesTaxInCents } from "@/src/constants/pricing";
 import { trackFacebookPixelEvent } from "@/app/lib/facebookPixel";
+import { useMenuHref } from "@/utils/menuHref";
 
 const montserrat = Montserrat({
   variable: "--font-geist-mono",
@@ -873,6 +874,7 @@ function resolveCheckoutErrorMessage(
 }
 
 const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
+  const menuHref = useMenuHref();
   const { cart, clearCart, setSelectedPrize } = useCart();
   const [step, setStep] = useQueryState("step", parseAsInteger.withDefault(1));
   const [orderType, setOrderType] = useQueryState(
@@ -1162,7 +1164,7 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
       });
 
       clearCart();
-      router.push(`/menu/${lg}/confirmation/${order.id}`);
+      router.push(menuHref(`/menu/${lg}/confirmation/${order.id}`));
     } catch (err) {
       console.error("Checkout failed:", err);
       setCheckoutError(resolveCheckoutErrorMessage(err, content));
@@ -1462,7 +1464,7 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
         ) : (
           <div className="flex flex-col gap-4 items-center py-12">
             <span className="text-lg font-semibold">{content["yourCart"]}</span>
-            <Link href="/menu/en">
+            <Link href={menuHref("/menu/en")}>
               <Button className="w-fit bg-brandBackground">
                 {content["backToMenu"]}
               </Button>

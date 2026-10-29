@@ -8,10 +8,24 @@ import { triggerSquareCatalogSyncTaskProcessing } from "../../../../integrations
 const squareCatalogSyncTaskRepository = new PrismaSquareCatalogSyncTaskRepository();
 const squareConnectionRepository = new PrismaSquareConnectionRepository();
 
+/*
+ * Square mirrors only the ACTIVE menu — the `isDefault` one the storefront
+ * serves. Edits to any other menu (its sections, its products) are not synced;
+ * making a menu active goes through PATCH/POST /menus, which enqueues that menu
+ * after the flag is saved, so the newly active menu is pushed then. The manual
+ * "publish all" integration endpoint does not go through here.
+ */
+
 export async function enqueueSquareProductSyncTask(input: {
   businessId: string | null | undefined;
   productId: string;
   requestPayload?: unknown;
+  /**
+   * Whether the product was on the active menu BEFORE the change (from
+   * `isProductOnActiveMenu`). A product just removed from the active menu must
+   * still sync so Square drops it; without this it would be skipped.
+   */
+  wasOnActiveMenu?: boolean;
 }): Promise<SquareCatalogSyncTaskView | null> {
   const businessId = normalizeId(input.businessId);
   const productId = normalizeId(input.productId);
@@ -21,6 +35,11 @@ export async function enqueueSquareProductSyncTask(input: {
   }
 
   if (!(await hasSquareConnection(businessId))) {
+    return null;
+  }
+
+  // Only products on (or just taken off) the active menu reach Square.
+  if (!input.wasOnActiveMenu && !(await isProductOnActiveMenu(productId))) {
     return null;
   }
 
@@ -40,15 +59,22 @@ export async function enqueueSquareMenuSyncTasks(input: {
   requestPayload?: unknown;
 }): Promise<SquareCatalogSyncTaskView[]> {
   const businessId = normalizeId(input.businessId);
-  const menuIds = Array.from(
+  const requestedMenuIds = Array.from(
     new Set(input.menuIds.map((menuId) => normalizeId(menuId)).filter((menuId): menuId is string => Boolean(menuId))),
   );
 
-  if (!businessId || menuIds.length === 0) {
+  if (!businessId || requestedMenuIds.length === 0) {
     return [];
   }
 
   if (!(await hasSquareConnection(businessId))) {
+    return [];
+  }
+
+  // Drop every menu but the active one (see the note at the top).
+  const activeMenuId = await loadActiveMenuId();
+  const menuIds = activeMenuId && requestedMenuIds.includes(activeMenuId) ? [activeMenuId] : [];
+  if (menuIds.length === 0) {
     return [];
   }
 
@@ -102,6 +128,23 @@ export async function enqueueSquareModifierGroupSync(input: {
     menuIds,
     requestPayload: input.requestPayload,
   });
+}
+
+/** True when the product sits in any section of the active menu. */
+export async function isProductOnActiveMenu(productId: string): Promise<boolean> {
+  const activeMenuId = await loadActiveMenuId();
+  if (!activeMenuId) return false;
+  return (await loadRelatedMenuIdsForProducts([productId])).includes(activeMenuId);
+}
+
+/** The storefront's menu. Menus are global, so there is at most one. */
+async function loadActiveMenuId(): Promise<string | null> {
+  const menu = await prisma.menu.findFirst({
+    where: { isDefault: true },
+    orderBy: { createdAt: "asc" },
+    select: { id: true },
+  });
+  return normalizeId(menu?.id);
 }
 
 async function hasSquareConnection(businessId: string): Promise<boolean> {

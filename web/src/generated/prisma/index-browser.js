@@ -668,7 +668,8 @@ exports.Prisma.MenuScalarFieldEnum = {
   active: 'active',
   isDefault: 'isDefault',
   squareMenuId: 'squareMenuId',
-  squareMenuVersion: 'squareMenuVersion'
+  squareMenuVersion: 'squareMenuVersion',
+  progressiveDiscountId: 'progressiveDiscountId'
 };
 
 exports.Prisma.MenuVisitScalarFieldEnum = {

@@ -8084,10 +8084,12 @@ export namespace Prisma {
 
   export type ProgressiveDiscountCountOutputType = {
     steps: number
+    menus: number
   }
 
   export type ProgressiveDiscountCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     steps?: boolean | ProgressiveDiscountCountOutputTypeCountStepsArgs
+    menus?: boolean | ProgressiveDiscountCountOutputTypeCountMenusArgs
   }
 
   // Custom InputTypes
@@ -8106,6 +8108,13 @@ export namespace Prisma {
    */
   export type ProgressiveDiscountCountOutputTypeCountStepsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ProgressiveDiscountStepWhereInput
+  }
+
+  /**
+   * ProgressiveDiscountCountOutputType without action
+   */
+  export type ProgressiveDiscountCountOutputTypeCountMenusArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MenuWhereInput
   }
 
 
@@ -15532,6 +15541,7 @@ export namespace Prisma {
     createdAt?: boolean
     completed?: boolean
     steps?: boolean | ProgressiveDiscount$stepsArgs<ExtArgs>
+    menus?: boolean | ProgressiveDiscount$menusArgs<ExtArgs>
     _count?: boolean | ProgressiveDiscountCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["progressiveDiscount"]>
 
@@ -15556,6 +15566,7 @@ export namespace Prisma {
   export type ProgressiveDiscountOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "completed", ExtArgs["result"]["progressiveDiscount"]>
   export type ProgressiveDiscountInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     steps?: boolean | ProgressiveDiscount$stepsArgs<ExtArgs>
+    menus?: boolean | ProgressiveDiscount$menusArgs<ExtArgs>
     _count?: boolean | ProgressiveDiscountCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ProgressiveDiscountIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -15565,6 +15576,7 @@ export namespace Prisma {
     name: "ProgressiveDiscount"
     objects: {
       steps: Prisma.$ProgressiveDiscountStepPayload<ExtArgs>[]
+      menus: Prisma.$MenuPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -15965,6 +15977,7 @@ export namespace Prisma {
   export interface Prisma__ProgressiveDiscountClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     steps<T extends ProgressiveDiscount$stepsArgs<ExtArgs> = {}>(args?: Subset<T, ProgressiveDiscount$stepsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProgressiveDiscountStepPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    menus<T extends ProgressiveDiscount$menusArgs<ExtArgs> = {}>(args?: Subset<T, ProgressiveDiscount$menusArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MenuPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -16411,6 +16424,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ProgressiveDiscountStepScalarFieldEnum | ProgressiveDiscountStepScalarFieldEnum[]
+  }
+
+  /**
+   * ProgressiveDiscount.menus
+   */
+  export type ProgressiveDiscount$menusArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Menu
+     */
+    select?: MenuSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Menu
+     */
+    omit?: MenuOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MenuInclude<ExtArgs> | null
+    where?: MenuWhereInput
+    orderBy?: MenuOrderByWithRelationInput | MenuOrderByWithRelationInput[]
+    cursor?: MenuWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MenuScalarFieldEnum | MenuScalarFieldEnum[]
   }
 
   /**
@@ -58770,6 +58807,7 @@ export namespace Prisma {
     isDefault: boolean | null
     squareMenuId: string | null
     squareMenuVersion: string | null
+    progressiveDiscountId: string | null
   }
 
   export type MenuMaxAggregateOutputType = {
@@ -58781,6 +58819,7 @@ export namespace Prisma {
     isDefault: boolean | null
     squareMenuId: string | null
     squareMenuVersion: string | null
+    progressiveDiscountId: string | null
   }
 
   export type MenuCountAggregateOutputType = {
@@ -58792,6 +58831,7 @@ export namespace Prisma {
     isDefault: number
     squareMenuId: number
     squareMenuVersion: number
+    progressiveDiscountId: number
     _all: number
   }
 
@@ -58805,6 +58845,7 @@ export namespace Prisma {
     isDefault?: true
     squareMenuId?: true
     squareMenuVersion?: true
+    progressiveDiscountId?: true
   }
 
   export type MenuMaxAggregateInputType = {
@@ -58816,6 +58857,7 @@ export namespace Prisma {
     isDefault?: true
     squareMenuId?: true
     squareMenuVersion?: true
+    progressiveDiscountId?: true
   }
 
   export type MenuCountAggregateInputType = {
@@ -58827,6 +58869,7 @@ export namespace Prisma {
     isDefault?: true
     squareMenuId?: true
     squareMenuVersion?: true
+    progressiveDiscountId?: true
     _all?: true
   }
 
@@ -58911,6 +58954,7 @@ export namespace Prisma {
     isDefault: boolean
     squareMenuId: string | null
     squareMenuVersion: string | null
+    progressiveDiscountId: string | null
     _count: MenuCountAggregateOutputType | null
     _min: MenuMinAggregateOutputType | null
     _max: MenuMaxAggregateOutputType | null
@@ -58939,6 +58983,8 @@ export namespace Prisma {
     isDefault?: boolean
     squareMenuId?: boolean
     squareMenuVersion?: boolean
+    progressiveDiscountId?: boolean
+    progressiveDiscount?: boolean | Menu$progressiveDiscountArgs<ExtArgs>
     categories?: boolean | Menu$categoriesArgs<ExtArgs>
     menuCategories?: boolean | Menu$menuCategoriesArgs<ExtArgs>
     menuVisits?: boolean | Menu$menuVisitsArgs<ExtArgs>
@@ -58955,6 +59001,8 @@ export namespace Prisma {
     isDefault?: boolean
     squareMenuId?: boolean
     squareMenuVersion?: boolean
+    progressiveDiscountId?: boolean
+    progressiveDiscount?: boolean | Menu$progressiveDiscountArgs<ExtArgs>
   }, ExtArgs["result"]["menu"]>
 
   export type MenuSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -58966,6 +59014,8 @@ export namespace Prisma {
     isDefault?: boolean
     squareMenuId?: boolean
     squareMenuVersion?: boolean
+    progressiveDiscountId?: boolean
+    progressiveDiscount?: boolean | Menu$progressiveDiscountArgs<ExtArgs>
   }, ExtArgs["result"]["menu"]>
 
   export type MenuSelectScalar = {
@@ -58977,22 +59027,29 @@ export namespace Prisma {
     isDefault?: boolean
     squareMenuId?: boolean
     squareMenuVersion?: boolean
+    progressiveDiscountId?: boolean
   }
 
-  export type MenuOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "name" | "active" | "isDefault" | "squareMenuId" | "squareMenuVersion", ExtArgs["result"]["menu"]>
+  export type MenuOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "name" | "active" | "isDefault" | "squareMenuId" | "squareMenuVersion" | "progressiveDiscountId", ExtArgs["result"]["menu"]>
   export type MenuInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    progressiveDiscount?: boolean | Menu$progressiveDiscountArgs<ExtArgs>
     categories?: boolean | Menu$categoriesArgs<ExtArgs>
     menuCategories?: boolean | Menu$menuCategoriesArgs<ExtArgs>
     menuVisits?: boolean | Menu$menuVisitsArgs<ExtArgs>
     squareCatalogSyncTasks?: boolean | Menu$squareCatalogSyncTasksArgs<ExtArgs>
     _count?: boolean | MenuCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type MenuIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-  export type MenuIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type MenuIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    progressiveDiscount?: boolean | Menu$progressiveDiscountArgs<ExtArgs>
+  }
+  export type MenuIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    progressiveDiscount?: boolean | Menu$progressiveDiscountArgs<ExtArgs>
+  }
 
   export type $MenuPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Menu"
     objects: {
+      progressiveDiscount: Prisma.$ProgressiveDiscountPayload<ExtArgs> | null
       categories: Prisma.$CategoryPayload<ExtArgs>[]
       menuCategories: Prisma.$MenuCategoryPayload<ExtArgs>[]
       menuVisits: Prisma.$MenuVisitPayload<ExtArgs>[]
@@ -59007,6 +59064,7 @@ export namespace Prisma {
       isDefault: boolean
       squareMenuId: string | null
       squareMenuVersion: string | null
+      progressiveDiscountId: string | null
     }, ExtArgs["result"]["menu"]>
     composites: {}
   }
@@ -59401,6 +59459,7 @@ export namespace Prisma {
    */
   export interface Prisma__MenuClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    progressiveDiscount<T extends Menu$progressiveDiscountArgs<ExtArgs> = {}>(args?: Subset<T, Menu$progressiveDiscountArgs<ExtArgs>>): Prisma__ProgressiveDiscountClient<$Result.GetResult<Prisma.$ProgressiveDiscountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     categories<T extends Menu$categoriesArgs<ExtArgs> = {}>(args?: Subset<T, Menu$categoriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     menuCategories<T extends Menu$menuCategoriesArgs<ExtArgs> = {}>(args?: Subset<T, Menu$menuCategoriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MenuCategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     menuVisits<T extends Menu$menuVisitsArgs<ExtArgs> = {}>(args?: Subset<T, Menu$menuVisitsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MenuVisitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -59442,6 +59501,7 @@ export namespace Prisma {
     readonly isDefault: FieldRef<"Menu", 'Boolean'>
     readonly squareMenuId: FieldRef<"Menu", 'String'>
     readonly squareMenuVersion: FieldRef<"Menu", 'String'>
+    readonly progressiveDiscountId: FieldRef<"Menu", 'String'>
   }
     
 
@@ -59696,6 +59756,10 @@ export namespace Prisma {
      */
     data: MenuCreateManyInput | MenuCreateManyInput[]
     skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MenuIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -59766,6 +59830,10 @@ export namespace Prisma {
      * Limit how many Menus to update.
      */
     limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MenuIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -59832,6 +59900,25 @@ export namespace Prisma {
      * Limit how many Menus to delete.
      */
     limit?: number
+  }
+
+  /**
+   * Menu.progressiveDiscount
+   */
+  export type Menu$progressiveDiscountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProgressiveDiscount
+     */
+    select?: ProgressiveDiscountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProgressiveDiscount
+     */
+    omit?: ProgressiveDiscountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProgressiveDiscountInclude<ExtArgs> | null
+    where?: ProgressiveDiscountWhereInput
   }
 
   /**
@@ -98174,7 +98261,8 @@ export namespace Prisma {
     active: 'active',
     isDefault: 'isDefault',
     squareMenuId: 'squareMenuId',
-    squareMenuVersion: 'squareMenuVersion'
+    squareMenuVersion: 'squareMenuVersion',
+    progressiveDiscountId: 'progressiveDiscountId'
   };
 
   export type MenuScalarFieldEnum = (typeof MenuScalarFieldEnum)[keyof typeof MenuScalarFieldEnum]
@@ -99613,6 +99701,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"ProgressiveDiscount"> | Date | string
     completed?: BoolFilter<"ProgressiveDiscount"> | boolean
     steps?: ProgressiveDiscountStepListRelationFilter
+    menus?: MenuListRelationFilter
   }
 
   export type ProgressiveDiscountOrderByWithRelationInput = {
@@ -99620,6 +99709,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     completed?: SortOrder
     steps?: ProgressiveDiscountStepOrderByRelationAggregateInput
+    menus?: MenuOrderByRelationAggregateInput
   }
 
   export type ProgressiveDiscountWhereUniqueInput = Prisma.AtLeast<{
@@ -99630,6 +99720,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"ProgressiveDiscount"> | Date | string
     completed?: BoolFilter<"ProgressiveDiscount"> | boolean
     steps?: ProgressiveDiscountStepListRelationFilter
+    menus?: MenuListRelationFilter
   }, "id">
 
   export type ProgressiveDiscountOrderByWithAggregationInput = {
@@ -102857,6 +102948,8 @@ export namespace Prisma {
     isDefault?: BoolFilter<"Menu"> | boolean
     squareMenuId?: StringNullableFilter<"Menu"> | string | null
     squareMenuVersion?: StringNullableFilter<"Menu"> | string | null
+    progressiveDiscountId?: StringNullableFilter<"Menu"> | string | null
+    progressiveDiscount?: XOR<ProgressiveDiscountNullableScalarRelationFilter, ProgressiveDiscountWhereInput> | null
     categories?: CategoryListRelationFilter
     menuCategories?: MenuCategoryListRelationFilter
     menuVisits?: MenuVisitListRelationFilter
@@ -102872,6 +102965,8 @@ export namespace Prisma {
     isDefault?: SortOrder
     squareMenuId?: SortOrderInput | SortOrder
     squareMenuVersion?: SortOrderInput | SortOrder
+    progressiveDiscountId?: SortOrderInput | SortOrder
+    progressiveDiscount?: ProgressiveDiscountOrderByWithRelationInput
     categories?: CategoryOrderByRelationAggregateInput
     menuCategories?: MenuCategoryOrderByRelationAggregateInput
     menuVisits?: MenuVisitOrderByRelationAggregateInput
@@ -102890,6 +102985,8 @@ export namespace Prisma {
     active?: BoolFilter<"Menu"> | boolean
     isDefault?: BoolFilter<"Menu"> | boolean
     squareMenuVersion?: StringNullableFilter<"Menu"> | string | null
+    progressiveDiscountId?: StringNullableFilter<"Menu"> | string | null
+    progressiveDiscount?: XOR<ProgressiveDiscountNullableScalarRelationFilter, ProgressiveDiscountWhereInput> | null
     categories?: CategoryListRelationFilter
     menuCategories?: MenuCategoryListRelationFilter
     menuVisits?: MenuVisitListRelationFilter
@@ -102905,6 +103002,7 @@ export namespace Prisma {
     isDefault?: SortOrder
     squareMenuId?: SortOrderInput | SortOrder
     squareMenuVersion?: SortOrderInput | SortOrder
+    progressiveDiscountId?: SortOrderInput | SortOrder
     _count?: MenuCountOrderByAggregateInput
     _max?: MenuMaxOrderByAggregateInput
     _min?: MenuMinOrderByAggregateInput
@@ -102922,6 +103020,7 @@ export namespace Prisma {
     isDefault?: BoolWithAggregatesFilter<"Menu"> | boolean
     squareMenuId?: StringNullableWithAggregatesFilter<"Menu"> | string | null
     squareMenuVersion?: StringNullableWithAggregatesFilter<"Menu"> | string | null
+    progressiveDiscountId?: StringNullableWithAggregatesFilter<"Menu"> | string | null
   }
 
   export type MenuVisitWhereInput = {
@@ -106011,6 +106110,7 @@ export namespace Prisma {
     createdAt?: Date | string
     completed?: boolean
     steps?: ProgressiveDiscountStepCreateNestedManyWithoutProgressiveDiscountInput
+    menus?: MenuCreateNestedManyWithoutProgressiveDiscountInput
   }
 
   export type ProgressiveDiscountUncheckedCreateInput = {
@@ -106018,6 +106118,7 @@ export namespace Prisma {
     createdAt?: Date | string
     completed?: boolean
     steps?: ProgressiveDiscountStepUncheckedCreateNestedManyWithoutProgressiveDiscountInput
+    menus?: MenuUncheckedCreateNestedManyWithoutProgressiveDiscountInput
   }
 
   export type ProgressiveDiscountUpdateInput = {
@@ -106025,6 +106126,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     completed?: BoolFieldUpdateOperationsInput | boolean
     steps?: ProgressiveDiscountStepUpdateManyWithoutProgressiveDiscountNestedInput
+    menus?: MenuUpdateManyWithoutProgressiveDiscountNestedInput
   }
 
   export type ProgressiveDiscountUncheckedUpdateInput = {
@@ -106032,6 +106134,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     completed?: BoolFieldUpdateOperationsInput | boolean
     steps?: ProgressiveDiscountStepUncheckedUpdateManyWithoutProgressiveDiscountNestedInput
+    menus?: MenuUncheckedUpdateManyWithoutProgressiveDiscountNestedInput
   }
 
   export type ProgressiveDiscountCreateManyInput = {
@@ -109649,6 +109752,7 @@ export namespace Prisma {
     isDefault?: boolean
     squareMenuId?: string | null
     squareMenuVersion?: string | null
+    progressiveDiscount?: ProgressiveDiscountCreateNestedOneWithoutMenusInput
     categories?: CategoryCreateNestedManyWithoutMenuInput
     menuCategories?: MenuCategoryCreateNestedManyWithoutMenuInput
     menuVisits?: MenuVisitCreateNestedManyWithoutMenuInput
@@ -109664,6 +109768,7 @@ export namespace Prisma {
     isDefault?: boolean
     squareMenuId?: string | null
     squareMenuVersion?: string | null
+    progressiveDiscountId?: string | null
     categories?: CategoryUncheckedCreateNestedManyWithoutMenuInput
     menuCategories?: MenuCategoryUncheckedCreateNestedManyWithoutMenuInput
     menuVisits?: MenuVisitUncheckedCreateNestedManyWithoutMenuInput
@@ -109679,6 +109784,7 @@ export namespace Prisma {
     isDefault?: BoolFieldUpdateOperationsInput | boolean
     squareMenuId?: NullableStringFieldUpdateOperationsInput | string | null
     squareMenuVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    progressiveDiscount?: ProgressiveDiscountUpdateOneWithoutMenusNestedInput
     categories?: CategoryUpdateManyWithoutMenuNestedInput
     menuCategories?: MenuCategoryUpdateManyWithoutMenuNestedInput
     menuVisits?: MenuVisitUpdateManyWithoutMenuNestedInput
@@ -109694,6 +109800,7 @@ export namespace Prisma {
     isDefault?: BoolFieldUpdateOperationsInput | boolean
     squareMenuId?: NullableStringFieldUpdateOperationsInput | string | null
     squareMenuVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    progressiveDiscountId?: NullableStringFieldUpdateOperationsInput | string | null
     categories?: CategoryUncheckedUpdateManyWithoutMenuNestedInput
     menuCategories?: MenuCategoryUncheckedUpdateManyWithoutMenuNestedInput
     menuVisits?: MenuVisitUncheckedUpdateManyWithoutMenuNestedInput
@@ -109709,6 +109816,7 @@ export namespace Prisma {
     isDefault?: boolean
     squareMenuId?: string | null
     squareMenuVersion?: string | null
+    progressiveDiscountId?: string | null
   }
 
   export type MenuUpdateManyMutationInput = {
@@ -109731,6 +109839,7 @@ export namespace Prisma {
     isDefault?: BoolFieldUpdateOperationsInput | boolean
     squareMenuId?: NullableStringFieldUpdateOperationsInput | string | null
     squareMenuVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    progressiveDiscountId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type MenuVisitCreateInput = {
@@ -113150,7 +113259,17 @@ export namespace Prisma {
     none?: ProgressiveDiscountStepWhereInput
   }
 
+  export type MenuListRelationFilter = {
+    every?: MenuWhereInput
+    some?: MenuWhereInput
+    none?: MenuWhereInput
+  }
+
   export type ProgressiveDiscountStepOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type MenuOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -115818,6 +115937,11 @@ export namespace Prisma {
     createdAt?: SortOrder
   }
 
+  export type ProgressiveDiscountNullableScalarRelationFilter = {
+    is?: ProgressiveDiscountWhereInput | null
+    isNot?: ProgressiveDiscountWhereInput | null
+  }
+
   export type CategoryListRelationFilter = {
     every?: CategoryWhereInput
     some?: CategoryWhereInput
@@ -115847,6 +115971,7 @@ export namespace Prisma {
     isDefault?: SortOrder
     squareMenuId?: SortOrder
     squareMenuVersion?: SortOrder
+    progressiveDiscountId?: SortOrder
   }
 
   export type MenuMaxOrderByAggregateInput = {
@@ -115858,6 +115983,7 @@ export namespace Prisma {
     isDefault?: SortOrder
     squareMenuId?: SortOrder
     squareMenuVersion?: SortOrder
+    progressiveDiscountId?: SortOrder
   }
 
   export type MenuMinOrderByAggregateInput = {
@@ -115869,6 +115995,7 @@ export namespace Prisma {
     isDefault?: SortOrder
     squareMenuId?: SortOrder
     squareMenuVersion?: SortOrder
+    progressiveDiscountId?: SortOrder
   }
 
   export type ExclusivePromotionNullableScalarRelationFilter = {
@@ -118185,11 +118312,25 @@ export namespace Prisma {
     connect?: ProgressiveDiscountStepWhereUniqueInput | ProgressiveDiscountStepWhereUniqueInput[]
   }
 
+  export type MenuCreateNestedManyWithoutProgressiveDiscountInput = {
+    create?: XOR<MenuCreateWithoutProgressiveDiscountInput, MenuUncheckedCreateWithoutProgressiveDiscountInput> | MenuCreateWithoutProgressiveDiscountInput[] | MenuUncheckedCreateWithoutProgressiveDiscountInput[]
+    connectOrCreate?: MenuCreateOrConnectWithoutProgressiveDiscountInput | MenuCreateOrConnectWithoutProgressiveDiscountInput[]
+    createMany?: MenuCreateManyProgressiveDiscountInputEnvelope
+    connect?: MenuWhereUniqueInput | MenuWhereUniqueInput[]
+  }
+
   export type ProgressiveDiscountStepUncheckedCreateNestedManyWithoutProgressiveDiscountInput = {
     create?: XOR<ProgressiveDiscountStepCreateWithoutProgressiveDiscountInput, ProgressiveDiscountStepUncheckedCreateWithoutProgressiveDiscountInput> | ProgressiveDiscountStepCreateWithoutProgressiveDiscountInput[] | ProgressiveDiscountStepUncheckedCreateWithoutProgressiveDiscountInput[]
     connectOrCreate?: ProgressiveDiscountStepCreateOrConnectWithoutProgressiveDiscountInput | ProgressiveDiscountStepCreateOrConnectWithoutProgressiveDiscountInput[]
     createMany?: ProgressiveDiscountStepCreateManyProgressiveDiscountInputEnvelope
     connect?: ProgressiveDiscountStepWhereUniqueInput | ProgressiveDiscountStepWhereUniqueInput[]
+  }
+
+  export type MenuUncheckedCreateNestedManyWithoutProgressiveDiscountInput = {
+    create?: XOR<MenuCreateWithoutProgressiveDiscountInput, MenuUncheckedCreateWithoutProgressiveDiscountInput> | MenuCreateWithoutProgressiveDiscountInput[] | MenuUncheckedCreateWithoutProgressiveDiscountInput[]
+    connectOrCreate?: MenuCreateOrConnectWithoutProgressiveDiscountInput | MenuCreateOrConnectWithoutProgressiveDiscountInput[]
+    createMany?: MenuCreateManyProgressiveDiscountInputEnvelope
+    connect?: MenuWhereUniqueInput | MenuWhereUniqueInput[]
   }
 
   export type ProgressiveDiscountStepUpdateManyWithoutProgressiveDiscountNestedInput = {
@@ -118206,6 +118347,20 @@ export namespace Prisma {
     deleteMany?: ProgressiveDiscountStepScalarWhereInput | ProgressiveDiscountStepScalarWhereInput[]
   }
 
+  export type MenuUpdateManyWithoutProgressiveDiscountNestedInput = {
+    create?: XOR<MenuCreateWithoutProgressiveDiscountInput, MenuUncheckedCreateWithoutProgressiveDiscountInput> | MenuCreateWithoutProgressiveDiscountInput[] | MenuUncheckedCreateWithoutProgressiveDiscountInput[]
+    connectOrCreate?: MenuCreateOrConnectWithoutProgressiveDiscountInput | MenuCreateOrConnectWithoutProgressiveDiscountInput[]
+    upsert?: MenuUpsertWithWhereUniqueWithoutProgressiveDiscountInput | MenuUpsertWithWhereUniqueWithoutProgressiveDiscountInput[]
+    createMany?: MenuCreateManyProgressiveDiscountInputEnvelope
+    set?: MenuWhereUniqueInput | MenuWhereUniqueInput[]
+    disconnect?: MenuWhereUniqueInput | MenuWhereUniqueInput[]
+    delete?: MenuWhereUniqueInput | MenuWhereUniqueInput[]
+    connect?: MenuWhereUniqueInput | MenuWhereUniqueInput[]
+    update?: MenuUpdateWithWhereUniqueWithoutProgressiveDiscountInput | MenuUpdateWithWhereUniqueWithoutProgressiveDiscountInput[]
+    updateMany?: MenuUpdateManyWithWhereWithoutProgressiveDiscountInput | MenuUpdateManyWithWhereWithoutProgressiveDiscountInput[]
+    deleteMany?: MenuScalarWhereInput | MenuScalarWhereInput[]
+  }
+
   export type ProgressiveDiscountStepUncheckedUpdateManyWithoutProgressiveDiscountNestedInput = {
     create?: XOR<ProgressiveDiscountStepCreateWithoutProgressiveDiscountInput, ProgressiveDiscountStepUncheckedCreateWithoutProgressiveDiscountInput> | ProgressiveDiscountStepCreateWithoutProgressiveDiscountInput[] | ProgressiveDiscountStepUncheckedCreateWithoutProgressiveDiscountInput[]
     connectOrCreate?: ProgressiveDiscountStepCreateOrConnectWithoutProgressiveDiscountInput | ProgressiveDiscountStepCreateOrConnectWithoutProgressiveDiscountInput[]
@@ -118218,6 +118373,20 @@ export namespace Prisma {
     update?: ProgressiveDiscountStepUpdateWithWhereUniqueWithoutProgressiveDiscountInput | ProgressiveDiscountStepUpdateWithWhereUniqueWithoutProgressiveDiscountInput[]
     updateMany?: ProgressiveDiscountStepUpdateManyWithWhereWithoutProgressiveDiscountInput | ProgressiveDiscountStepUpdateManyWithWhereWithoutProgressiveDiscountInput[]
     deleteMany?: ProgressiveDiscountStepScalarWhereInput | ProgressiveDiscountStepScalarWhereInput[]
+  }
+
+  export type MenuUncheckedUpdateManyWithoutProgressiveDiscountNestedInput = {
+    create?: XOR<MenuCreateWithoutProgressiveDiscountInput, MenuUncheckedCreateWithoutProgressiveDiscountInput> | MenuCreateWithoutProgressiveDiscountInput[] | MenuUncheckedCreateWithoutProgressiveDiscountInput[]
+    connectOrCreate?: MenuCreateOrConnectWithoutProgressiveDiscountInput | MenuCreateOrConnectWithoutProgressiveDiscountInput[]
+    upsert?: MenuUpsertWithWhereUniqueWithoutProgressiveDiscountInput | MenuUpsertWithWhereUniqueWithoutProgressiveDiscountInput[]
+    createMany?: MenuCreateManyProgressiveDiscountInputEnvelope
+    set?: MenuWhereUniqueInput | MenuWhereUniqueInput[]
+    disconnect?: MenuWhereUniqueInput | MenuWhereUniqueInput[]
+    delete?: MenuWhereUniqueInput | MenuWhereUniqueInput[]
+    connect?: MenuWhereUniqueInput | MenuWhereUniqueInput[]
+    update?: MenuUpdateWithWhereUniqueWithoutProgressiveDiscountInput | MenuUpdateWithWhereUniqueWithoutProgressiveDiscountInput[]
+    updateMany?: MenuUpdateManyWithWhereWithoutProgressiveDiscountInput | MenuUpdateManyWithWhereWithoutProgressiveDiscountInput[]
+    deleteMany?: MenuScalarWhereInput | MenuScalarWhereInput[]
   }
 
   export type ProgressiveDiscountCreateNestedOneWithoutStepsInput = {
@@ -121121,6 +121290,12 @@ export namespace Prisma {
     update?: XOR<XOR<ProductUpdateToOneWithWhereWithoutExclusivePromotionProductsInput, ProductUpdateWithoutExclusivePromotionProductsInput>, ProductUncheckedUpdateWithoutExclusivePromotionProductsInput>
   }
 
+  export type ProgressiveDiscountCreateNestedOneWithoutMenusInput = {
+    create?: XOR<ProgressiveDiscountCreateWithoutMenusInput, ProgressiveDiscountUncheckedCreateWithoutMenusInput>
+    connectOrCreate?: ProgressiveDiscountCreateOrConnectWithoutMenusInput
+    connect?: ProgressiveDiscountWhereUniqueInput
+  }
+
   export type CategoryCreateNestedManyWithoutMenuInput = {
     create?: XOR<CategoryCreateWithoutMenuInput, CategoryUncheckedCreateWithoutMenuInput> | CategoryCreateWithoutMenuInput[] | CategoryUncheckedCreateWithoutMenuInput[]
     connectOrCreate?: CategoryCreateOrConnectWithoutMenuInput | CategoryCreateOrConnectWithoutMenuInput[]
@@ -121175,6 +121350,16 @@ export namespace Prisma {
     connectOrCreate?: SquareCatalogSyncTaskCreateOrConnectWithoutMenuInput | SquareCatalogSyncTaskCreateOrConnectWithoutMenuInput[]
     createMany?: SquareCatalogSyncTaskCreateManyMenuInputEnvelope
     connect?: SquareCatalogSyncTaskWhereUniqueInput | SquareCatalogSyncTaskWhereUniqueInput[]
+  }
+
+  export type ProgressiveDiscountUpdateOneWithoutMenusNestedInput = {
+    create?: XOR<ProgressiveDiscountCreateWithoutMenusInput, ProgressiveDiscountUncheckedCreateWithoutMenusInput>
+    connectOrCreate?: ProgressiveDiscountCreateOrConnectWithoutMenusInput
+    upsert?: ProgressiveDiscountUpsertWithoutMenusInput
+    disconnect?: ProgressiveDiscountWhereInput | boolean
+    delete?: ProgressiveDiscountWhereInput | boolean
+    connect?: ProgressiveDiscountWhereUniqueInput
+    update?: XOR<XOR<ProgressiveDiscountUpdateToOneWithWhereWithoutMenusInput, ProgressiveDiscountUpdateWithoutMenusInput>, ProgressiveDiscountUncheckedUpdateWithoutMenusInput>
   }
 
   export type CategoryUpdateManyWithoutMenuNestedInput = {
@@ -125725,6 +125910,46 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type MenuCreateWithoutProgressiveDiscountInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    active?: boolean
+    isDefault?: boolean
+    squareMenuId?: string | null
+    squareMenuVersion?: string | null
+    categories?: CategoryCreateNestedManyWithoutMenuInput
+    menuCategories?: MenuCategoryCreateNestedManyWithoutMenuInput
+    menuVisits?: MenuVisitCreateNestedManyWithoutMenuInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskCreateNestedManyWithoutMenuInput
+  }
+
+  export type MenuUncheckedCreateWithoutProgressiveDiscountInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    active?: boolean
+    isDefault?: boolean
+    squareMenuId?: string | null
+    squareMenuVersion?: string | null
+    categories?: CategoryUncheckedCreateNestedManyWithoutMenuInput
+    menuCategories?: MenuCategoryUncheckedCreateNestedManyWithoutMenuInput
+    menuVisits?: MenuVisitUncheckedCreateNestedManyWithoutMenuInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedCreateNestedManyWithoutMenuInput
+  }
+
+  export type MenuCreateOrConnectWithoutProgressiveDiscountInput = {
+    where: MenuWhereUniqueInput
+    create: XOR<MenuCreateWithoutProgressiveDiscountInput, MenuUncheckedCreateWithoutProgressiveDiscountInput>
+  }
+
+  export type MenuCreateManyProgressiveDiscountInputEnvelope = {
+    data: MenuCreateManyProgressiveDiscountInput | MenuCreateManyProgressiveDiscountInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ProgressiveDiscountStepUpsertWithWhereUniqueWithoutProgressiveDiscountInput = {
     where: ProgressiveDiscountStepWhereUniqueInput
     update: XOR<ProgressiveDiscountStepUpdateWithoutProgressiveDiscountInput, ProgressiveDiscountStepUncheckedUpdateWithoutProgressiveDiscountInput>
@@ -125753,16 +125978,49 @@ export namespace Prisma {
     progressiveDiscountId?: StringFilter<"ProgressiveDiscountStep"> | string
   }
 
+  export type MenuUpsertWithWhereUniqueWithoutProgressiveDiscountInput = {
+    where: MenuWhereUniqueInput
+    update: XOR<MenuUpdateWithoutProgressiveDiscountInput, MenuUncheckedUpdateWithoutProgressiveDiscountInput>
+    create: XOR<MenuCreateWithoutProgressiveDiscountInput, MenuUncheckedCreateWithoutProgressiveDiscountInput>
+  }
+
+  export type MenuUpdateWithWhereUniqueWithoutProgressiveDiscountInput = {
+    where: MenuWhereUniqueInput
+    data: XOR<MenuUpdateWithoutProgressiveDiscountInput, MenuUncheckedUpdateWithoutProgressiveDiscountInput>
+  }
+
+  export type MenuUpdateManyWithWhereWithoutProgressiveDiscountInput = {
+    where: MenuScalarWhereInput
+    data: XOR<MenuUpdateManyMutationInput, MenuUncheckedUpdateManyWithoutProgressiveDiscountInput>
+  }
+
+  export type MenuScalarWhereInput = {
+    AND?: MenuScalarWhereInput | MenuScalarWhereInput[]
+    OR?: MenuScalarWhereInput[]
+    NOT?: MenuScalarWhereInput | MenuScalarWhereInput[]
+    id?: StringFilter<"Menu"> | string
+    createdAt?: DateTimeFilter<"Menu"> | Date | string
+    updatedAt?: DateTimeFilter<"Menu"> | Date | string
+    name?: StringFilter<"Menu"> | string
+    active?: BoolFilter<"Menu"> | boolean
+    isDefault?: BoolFilter<"Menu"> | boolean
+    squareMenuId?: StringNullableFilter<"Menu"> | string | null
+    squareMenuVersion?: StringNullableFilter<"Menu"> | string | null
+    progressiveDiscountId?: StringNullableFilter<"Menu"> | string | null
+  }
+
   export type ProgressiveDiscountCreateWithoutStepsInput = {
     id: string
     createdAt?: Date | string
     completed?: boolean
+    menus?: MenuCreateNestedManyWithoutProgressiveDiscountInput
   }
 
   export type ProgressiveDiscountUncheckedCreateWithoutStepsInput = {
     id: string
     createdAt?: Date | string
     completed?: boolean
+    menus?: MenuUncheckedCreateNestedManyWithoutProgressiveDiscountInput
   }
 
   export type ProgressiveDiscountCreateOrConnectWithoutStepsInput = {
@@ -125815,12 +126073,14 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     completed?: BoolFieldUpdateOperationsInput | boolean
+    menus?: MenuUpdateManyWithoutProgressiveDiscountNestedInput
   }
 
   export type ProgressiveDiscountUncheckedUpdateWithoutStepsInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     completed?: BoolFieldUpdateOperationsInput | boolean
+    menus?: MenuUncheckedUpdateManyWithoutProgressiveDiscountNestedInput
   }
 
   export type ProgressiveDiscountPrizeUpsertWithWhereUniqueWithoutProgressiveDiscountStepInput = {
@@ -128558,6 +128818,7 @@ export namespace Prisma {
     isDefault?: boolean
     squareMenuId?: string | null
     squareMenuVersion?: string | null
+    progressiveDiscount?: ProgressiveDiscountCreateNestedOneWithoutMenusInput
     categories?: CategoryCreateNestedManyWithoutMenuInput
     menuCategories?: MenuCategoryCreateNestedManyWithoutMenuInput
     menuVisits?: MenuVisitCreateNestedManyWithoutMenuInput
@@ -128572,6 +128833,7 @@ export namespace Prisma {
     isDefault?: boolean
     squareMenuId?: string | null
     squareMenuVersion?: string | null
+    progressiveDiscountId?: string | null
     categories?: CategoryUncheckedCreateNestedManyWithoutMenuInput
     menuCategories?: MenuCategoryUncheckedCreateNestedManyWithoutMenuInput
     menuVisits?: MenuVisitUncheckedCreateNestedManyWithoutMenuInput
@@ -128732,6 +128994,7 @@ export namespace Prisma {
     isDefault?: BoolFieldUpdateOperationsInput | boolean
     squareMenuId?: NullableStringFieldUpdateOperationsInput | string | null
     squareMenuVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    progressiveDiscount?: ProgressiveDiscountUpdateOneWithoutMenusNestedInput
     categories?: CategoryUpdateManyWithoutMenuNestedInput
     menuCategories?: MenuCategoryUpdateManyWithoutMenuNestedInput
     menuVisits?: MenuVisitUpdateManyWithoutMenuNestedInput
@@ -128746,6 +129009,7 @@ export namespace Prisma {
     isDefault?: BoolFieldUpdateOperationsInput | boolean
     squareMenuId?: NullableStringFieldUpdateOperationsInput | string | null
     squareMenuVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    progressiveDiscountId?: NullableStringFieldUpdateOperationsInput | string | null
     categories?: CategoryUncheckedUpdateManyWithoutMenuNestedInput
     menuCategories?: MenuCategoryUncheckedUpdateManyWithoutMenuNestedInput
     menuVisits?: MenuVisitUncheckedUpdateManyWithoutMenuNestedInput
@@ -133021,6 +133285,25 @@ export namespace Prisma {
     squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedUpdateManyWithoutProductNestedInput
   }
 
+  export type ProgressiveDiscountCreateWithoutMenusInput = {
+    id: string
+    createdAt?: Date | string
+    completed?: boolean
+    steps?: ProgressiveDiscountStepCreateNestedManyWithoutProgressiveDiscountInput
+  }
+
+  export type ProgressiveDiscountUncheckedCreateWithoutMenusInput = {
+    id: string
+    createdAt?: Date | string
+    completed?: boolean
+    steps?: ProgressiveDiscountStepUncheckedCreateNestedManyWithoutProgressiveDiscountInput
+  }
+
+  export type ProgressiveDiscountCreateOrConnectWithoutMenusInput = {
+    where: ProgressiveDiscountWhereUniqueInput
+    create: XOR<ProgressiveDiscountCreateWithoutMenusInput, ProgressiveDiscountUncheckedCreateWithoutMenusInput>
+  }
+
   export type CategoryCreateWithoutMenuInput = {
     id: string
     createdAt?: Date | string
@@ -133165,6 +133448,31 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ProgressiveDiscountUpsertWithoutMenusInput = {
+    update: XOR<ProgressiveDiscountUpdateWithoutMenusInput, ProgressiveDiscountUncheckedUpdateWithoutMenusInput>
+    create: XOR<ProgressiveDiscountCreateWithoutMenusInput, ProgressiveDiscountUncheckedCreateWithoutMenusInput>
+    where?: ProgressiveDiscountWhereInput
+  }
+
+  export type ProgressiveDiscountUpdateToOneWithWhereWithoutMenusInput = {
+    where?: ProgressiveDiscountWhereInput
+    data: XOR<ProgressiveDiscountUpdateWithoutMenusInput, ProgressiveDiscountUncheckedUpdateWithoutMenusInput>
+  }
+
+  export type ProgressiveDiscountUpdateWithoutMenusInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completed?: BoolFieldUpdateOperationsInput | boolean
+    steps?: ProgressiveDiscountStepUpdateManyWithoutProgressiveDiscountNestedInput
+  }
+
+  export type ProgressiveDiscountUncheckedUpdateWithoutMenusInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completed?: BoolFieldUpdateOperationsInput | boolean
+    steps?: ProgressiveDiscountStepUncheckedUpdateManyWithoutProgressiveDiscountNestedInput
+  }
+
   export type CategoryUpsertWithWhereUniqueWithoutMenuInput = {
     where: CategoryWhereUniqueInput
     update: XOR<CategoryUpdateWithoutMenuInput, CategoryUncheckedUpdateWithoutMenuInput>
@@ -133264,6 +133572,7 @@ export namespace Prisma {
     isDefault?: boolean
     squareMenuId?: string | null
     squareMenuVersion?: string | null
+    progressiveDiscount?: ProgressiveDiscountCreateNestedOneWithoutMenusInput
     categories?: CategoryCreateNestedManyWithoutMenuInput
     menuCategories?: MenuCategoryCreateNestedManyWithoutMenuInput
     squareCatalogSyncTasks?: SquareCatalogSyncTaskCreateNestedManyWithoutMenuInput
@@ -133278,6 +133587,7 @@ export namespace Prisma {
     isDefault?: boolean
     squareMenuId?: string | null
     squareMenuVersion?: string | null
+    progressiveDiscountId?: string | null
     categories?: CategoryUncheckedCreateNestedManyWithoutMenuInput
     menuCategories?: MenuCategoryUncheckedCreateNestedManyWithoutMenuInput
     squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedCreateNestedManyWithoutMenuInput
@@ -133335,6 +133645,7 @@ export namespace Prisma {
     isDefault?: BoolFieldUpdateOperationsInput | boolean
     squareMenuId?: NullableStringFieldUpdateOperationsInput | string | null
     squareMenuVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    progressiveDiscount?: ProgressiveDiscountUpdateOneWithoutMenusNestedInput
     categories?: CategoryUpdateManyWithoutMenuNestedInput
     menuCategories?: MenuCategoryUpdateManyWithoutMenuNestedInput
     squareCatalogSyncTasks?: SquareCatalogSyncTaskUpdateManyWithoutMenuNestedInput
@@ -133349,6 +133660,7 @@ export namespace Prisma {
     isDefault?: BoolFieldUpdateOperationsInput | boolean
     squareMenuId?: NullableStringFieldUpdateOperationsInput | string | null
     squareMenuVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    progressiveDiscountId?: NullableStringFieldUpdateOperationsInput | string | null
     categories?: CategoryUncheckedUpdateManyWithoutMenuNestedInput
     menuCategories?: MenuCategoryUncheckedUpdateManyWithoutMenuNestedInput
     squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedUpdateManyWithoutMenuNestedInput
@@ -133396,6 +133708,7 @@ export namespace Prisma {
     isDefault?: boolean
     squareMenuId?: string | null
     squareMenuVersion?: string | null
+    progressiveDiscount?: ProgressiveDiscountCreateNestedOneWithoutMenusInput
     menuCategories?: MenuCategoryCreateNestedManyWithoutMenuInput
     menuVisits?: MenuVisitCreateNestedManyWithoutMenuInput
     squareCatalogSyncTasks?: SquareCatalogSyncTaskCreateNestedManyWithoutMenuInput
@@ -133410,6 +133723,7 @@ export namespace Prisma {
     isDefault?: boolean
     squareMenuId?: string | null
     squareMenuVersion?: string | null
+    progressiveDiscountId?: string | null
     menuCategories?: MenuCategoryUncheckedCreateNestedManyWithoutMenuInput
     menuVisits?: MenuVisitUncheckedCreateNestedManyWithoutMenuInput
     squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedCreateNestedManyWithoutMenuInput
@@ -133594,6 +133908,7 @@ export namespace Prisma {
     isDefault?: BoolFieldUpdateOperationsInput | boolean
     squareMenuId?: NullableStringFieldUpdateOperationsInput | string | null
     squareMenuVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    progressiveDiscount?: ProgressiveDiscountUpdateOneWithoutMenusNestedInput
     menuCategories?: MenuCategoryUpdateManyWithoutMenuNestedInput
     menuVisits?: MenuVisitUpdateManyWithoutMenuNestedInput
     squareCatalogSyncTasks?: SquareCatalogSyncTaskUpdateManyWithoutMenuNestedInput
@@ -133608,6 +133923,7 @@ export namespace Prisma {
     isDefault?: BoolFieldUpdateOperationsInput | boolean
     squareMenuId?: NullableStringFieldUpdateOperationsInput | string | null
     squareMenuVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    progressiveDiscountId?: NullableStringFieldUpdateOperationsInput | string | null
     menuCategories?: MenuCategoryUncheckedUpdateManyWithoutMenuNestedInput
     menuVisits?: MenuVisitUncheckedUpdateManyWithoutMenuNestedInput
     squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedUpdateManyWithoutMenuNestedInput
@@ -133686,6 +134002,7 @@ export namespace Prisma {
     isDefault?: boolean
     squareMenuId?: string | null
     squareMenuVersion?: string | null
+    progressiveDiscount?: ProgressiveDiscountCreateNestedOneWithoutMenusInput
     categories?: CategoryCreateNestedManyWithoutMenuInput
     menuVisits?: MenuVisitCreateNestedManyWithoutMenuInput
     squareCatalogSyncTasks?: SquareCatalogSyncTaskCreateNestedManyWithoutMenuInput
@@ -133700,6 +134017,7 @@ export namespace Prisma {
     isDefault?: boolean
     squareMenuId?: string | null
     squareMenuVersion?: string | null
+    progressiveDiscountId?: string | null
     categories?: CategoryUncheckedCreateNestedManyWithoutMenuInput
     menuVisits?: MenuVisitUncheckedCreateNestedManyWithoutMenuInput
     squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedCreateNestedManyWithoutMenuInput
@@ -133759,6 +134077,7 @@ export namespace Prisma {
     isDefault?: BoolFieldUpdateOperationsInput | boolean
     squareMenuId?: NullableStringFieldUpdateOperationsInput | string | null
     squareMenuVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    progressiveDiscount?: ProgressiveDiscountUpdateOneWithoutMenusNestedInput
     categories?: CategoryUpdateManyWithoutMenuNestedInput
     menuVisits?: MenuVisitUpdateManyWithoutMenuNestedInput
     squareCatalogSyncTasks?: SquareCatalogSyncTaskUpdateManyWithoutMenuNestedInput
@@ -133773,6 +134092,7 @@ export namespace Prisma {
     isDefault?: BoolFieldUpdateOperationsInput | boolean
     squareMenuId?: NullableStringFieldUpdateOperationsInput | string | null
     squareMenuVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    progressiveDiscountId?: NullableStringFieldUpdateOperationsInput | string | null
     categories?: CategoryUncheckedUpdateManyWithoutMenuNestedInput
     menuVisits?: MenuVisitUncheckedUpdateManyWithoutMenuNestedInput
     squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedUpdateManyWithoutMenuNestedInput
@@ -141351,6 +141671,17 @@ export namespace Prisma {
     discountType: $Enums.ProgressiveDiscountStepType
   }
 
+  export type MenuCreateManyProgressiveDiscountInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    active?: boolean
+    isDefault?: boolean
+    squareMenuId?: string | null
+    squareMenuVersion?: string | null
+  }
+
   export type ProgressiveDiscountStepUpdateWithoutProgressiveDiscountInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -141375,6 +141706,47 @@ export namespace Prisma {
     amount?: IntFieldUpdateOperationsInput | number
     discount?: NullableIntFieldUpdateOperationsInput | number | null
     discountType?: EnumProgressiveDiscountStepTypeFieldUpdateOperationsInput | $Enums.ProgressiveDiscountStepType
+  }
+
+  export type MenuUpdateWithoutProgressiveDiscountInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    squareMenuId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareMenuVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    categories?: CategoryUpdateManyWithoutMenuNestedInput
+    menuCategories?: MenuCategoryUpdateManyWithoutMenuNestedInput
+    menuVisits?: MenuVisitUpdateManyWithoutMenuNestedInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUpdateManyWithoutMenuNestedInput
+  }
+
+  export type MenuUncheckedUpdateWithoutProgressiveDiscountInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    squareMenuId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareMenuVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    categories?: CategoryUncheckedUpdateManyWithoutMenuNestedInput
+    menuCategories?: MenuCategoryUncheckedUpdateManyWithoutMenuNestedInput
+    menuVisits?: MenuVisitUncheckedUpdateManyWithoutMenuNestedInput
+    squareCatalogSyncTasks?: SquareCatalogSyncTaskUncheckedUpdateManyWithoutMenuNestedInput
+  }
+
+  export type MenuUncheckedUpdateManyWithoutProgressiveDiscountInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    squareMenuId?: NullableStringFieldUpdateOperationsInput | string | null
+    squareMenuVersion?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ProgressiveDiscountPrizeCreateManyProgressiveDiscountStepInput = {

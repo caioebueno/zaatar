@@ -22,6 +22,17 @@ export type AnalyticsChannelBreakdown = {
   website: number;
 };
 
+/**
+ * Website revenue split by `Order.paymentMethod`. Sums to `channels.website`.
+ */
+export type AnalyticsWebsitePaymentBreakdown = {
+  card: number;
+  cash: number;
+  zelle: number;
+  /** Website orders with no payment recorded. */
+  unknown: number;
+};
+
 export type OrderQuantityBucketPoint = AnalyticsBucketPointBase & {
   channels: AnalyticsChannelBreakdown;
   orders: number;
@@ -29,6 +40,7 @@ export type OrderQuantityBucketPoint = AnalyticsBucketPointBase & {
 
 export type RevenueBucketPoint = AnalyticsBucketPointBase & {
   channels: AnalyticsChannelBreakdown;
+  websitePayments: AnalyticsWebsitePaymentBreakdown;
   deliveryFee: number;
   orders: number;
   sales: number;

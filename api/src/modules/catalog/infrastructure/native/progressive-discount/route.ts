@@ -1,6 +1,7 @@
 import { Prisma } from "../../../../../../../web/src/generated/prisma/index.js";
 import prisma from "../../../../../prisma.js";
 import { NextResponse } from "../shared/http.js";
+import type { NextRequestLike } from "../shared/http.js";
 
 type PrizeTranslationsRow = {
   id: string;
@@ -19,6 +20,8 @@ type DiscountBody = {
 };
 
 const discountInclude = {
+  // Menus running this ladder (`Menu.progressiveDiscountId`).
+  menus: { select: { id: true }, orderBy: { createdAt: "asc" as const } },
   steps: {
     orderBy: { amount: "asc" as const },
     include: {
@@ -118,6 +121,7 @@ async function serializeDiscount(discount: DiscountWithRelations) {
     id: discount.id,
     createdAt: discount.createdAt.toISOString(),
     completed: discount.completed,
+    menuIds: discount.menus.map((menu) => menu.id),
     steps: discount.steps.map((step) => ({
       id: step.id,
       type: step.discountType,
@@ -148,18 +152,21 @@ async function findDiscount(id: string) {
   return prisma.progressiveDiscount.findUnique({ where: { id }, include: discountInclude });
 }
 
-export async function GET() {
+/**
+ * GET /progressive-discount?menuId= — the ladder a menu runs (the default menu
+ * when omitted), or null when it has none. A completed ladder is never offered,
+ * even while attached: completing it is how a ladder is retired everywhere.
+ */
+export async function GET(request?: NextRequestLike) {
   try {
-    // Only an open ladder is offered. There is deliberately no fallback to the
-    // newest completed one: completing every ladder must mean "no discount",
-    // otherwise an operator cannot switch the promotion off.
-    const activeDiscount = await prisma.progressiveDiscount.findFirst({
-      where: { completed: false },
-      include: discountInclude,
-      orderBy: { createdAt: "desc" },
+    const menuId = request?.nextUrl?.searchParams.get("menuId")?.trim() || null;
+    const menu = await prisma.menu.findFirst({
+      where: menuId ? { id: menuId } : { isDefault: true },
+      select: { progressiveDiscount: { include: discountInclude } },
     });
+    const activeDiscount = menu?.progressiveDiscount ?? null;
 
-    if (!activeDiscount) {
+    if (!activeDiscount || activeDiscount.completed) {
       return NextResponse.json(null);
     }
 
@@ -172,8 +179,7 @@ export async function GET() {
 
 /**
  * GET /progressive-discount/all — every ladder, newest first, so the manager can
- * pick which one runs. `GET /progressive-discount` stays the storefront's view
- * (the single active ladder).
+ * attach one to each menu. `menuIds` on each says which menus run it.
  */
 export async function LIST() {
   try {

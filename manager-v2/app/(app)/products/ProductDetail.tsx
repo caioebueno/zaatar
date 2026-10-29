@@ -500,7 +500,7 @@ function MoneyField({ label, value, onChange, onBlur }: { label: string; value: 
       <div style={fieldLabel}>{label}</div>
       <div className="zp-field" style={{ display: "flex", alignItems: "center", gap: 6, height: 34, padding: "0 11px", background: "#191919", border: "1px solid rgba(255,255,255,0.09)", borderRadius: 6, boxSizing: "border-box" }}>
         <span style={{ fontSize: 12.5, color: "#75767C", fontFamily: "var(--font-mono)" }}>$</span>
-        <input value={value} onChange={(e) => onChange(e.target.value)} onBlur={onBlur} inputMode="decimal" style={{ flex: 1, minWidth: 0, background: "transparent", border: "none", outline: "none", fontFamily: "var(--font-mono)", fontSize: 13, color: "#F1F1F1" }} />
+        <input className="zp-bare" value={value} onChange={(e) => onChange(e.target.value)} onBlur={onBlur} inputMode="decimal" style={{ flex: 1, minWidth: 0, background: "transparent", border: "none", outline: "none", fontFamily: "var(--font-mono)", fontSize: 13, color: "#F1F1F1" }} />
       </div>
     </div>
   );

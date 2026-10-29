@@ -4,7 +4,6 @@ import { after } from "next/server";
 import { MAX_DELIVERY_FEE_CENTS } from "@/utils/calculateDeliveryFee";
 import prisma from "../prisma";
 import TCart, { TCartItem } from "../types/cart";
-import getProgressiveDiscount from "./getProgressiveDiscount";
 import { randomUUID } from "crypto";
 import { Prisma } from "@/src/generated/prisma";
 import {
@@ -668,7 +667,6 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
   }
   markCheckoutTimingStep("delivery-fee");
   const now = new Date();
-  const progressiveDiscount = await getProgressiveDiscount();
   const normalizedMenuId =
     typeof data.menuId === "string" && data.menuId.trim().length > 0
       ? data.menuId.trim()
@@ -722,6 +720,8 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
     normalizedPromotionId ?? promotionIdFromCookie,
   );
   markCheckoutTimingStep("catalog-load");
+  // Priced with the ladder of the menu the order came from (null = none).
+  const progressiveDiscount = productData.progressiveDiscount;
   const language = normalizeOrderLanguage(data.language);
   const paymentProvider = normalizeOrderPaymentProvider(data.paymentProvider);
   if (paymentProvider && data.paymentMethod !== "CARD") {
