@@ -338,6 +338,19 @@ export class PrismaAnalyticsRepository implements AnalyticsRepository {
           interval '1 day'
         )::date AS local_day
       ),
+      -- Manual discounts and extra charges, signed like the order's own total.
+      order_adjustments AS (
+        SELECT
+          adjustment."orderId",
+          SUM(
+            CASE
+              WHEN adjustment."type"::text = 'EXTRA_CHARGE' THEN adjustment."amount"
+              ELSE -adjustment."amount"
+            END
+          )::numeric AS adjustment_cents
+        FROM "OrderAdjustment" adjustment
+        GROUP BY adjustment."orderId"
+      ),
       order_totals_base AS (
         SELECT
           orders."id" AS "orderId",
@@ -356,6 +369,7 @@ export class PrismaAnalyticsRepository implements AnalyticsRepository {
               (orders."progressiveDiscountSnapshot"::jsonb ->> 'discountedPrice')::numeric
             ELSE COALESCE(SUM(op."amount" * op."quantity"), 0)::numeric
           END AS discounted_subtotal_cents,
+          COALESCE(MAX(order_adjustments.adjustment_cents), 0)::numeric AS adjustment_cents,
           COALESCE(orders."tipAmount", 0)::numeric AS tip_percentage,
           COALESCE(orders."sourcePlatform"::text, 'FOODY') AS source_platform,
           -- Orders with no payment recorded have an unknown method: Order.paymentMethod
@@ -374,6 +388,8 @@ export class PrismaAnalyticsRepository implements AnalyticsRepository {
           ON delivery_address."id" = orders."deliveryAddressId"
         LEFT JOIN "OrderProducts" op
           ON op."orderId" = orders."id"
+        LEFT JOIN order_adjustments
+          ON order_adjustments."orderId" = orders."id"
         WHERE orders."canceled" = false
           AND branch."businessId" = ${query.businessId}
           AND orders."createdAt" >= (${query.startDate}::timestamptz AT TIME ZONE 'UTC')
@@ -389,7 +405,9 @@ export class PrismaAnalyticsRepository implements AnalyticsRepository {
           local_day,
           source_platform,
           payment_method,
-          GREATEST(0, discounted_subtotal_cents) AS sales_cents,
+          -- Adjustments land in sales only: as on the order, tip and tax are worked
+          -- out from the subtotal before them.
+          GREATEST(0, GREATEST(0, discounted_subtotal_cents) + adjustment_cents) AS sales_cents,
           GREATEST(0, delivery_fee_cents) AS delivery_fee_cents,
           ROUND(GREATEST(0, discounted_subtotal_cents) * 0.065)::numeric AS tax_cents,
           ROUND(GREATEST(0, discounted_subtotal_cents) * GREATEST(0, tip_percentage) / 100)::numeric AS tip_cents

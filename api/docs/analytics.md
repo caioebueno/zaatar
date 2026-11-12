@@ -302,7 +302,7 @@ type RevenueAnalyticsResponse = {
   };
   summary: {
     total: number; // cents; sales + tax + tip + deliveryFee
-    sales: number; // cents; discounted item subtotal
+    sales: number; // cents; discounted item subtotal plus order adjustments (never payments)
     tax: number; // cents
     tip: number; // cents
     deliveryFee: number; // cents
