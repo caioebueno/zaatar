@@ -150,6 +150,16 @@ export type OrderLineItem = {
   unitAmountCents: number;
   lineTotalCents: number;
   modifierGroupItems?: OrderModifierItem[];
+  /** Products picked for a combo's slots; priced into the combo line, so their amounts are 0. */
+  selectedProducts?: OrderComboSelectedProduct[];
+};
+
+export type OrderComboSelectedProduct = {
+  productId: string;
+  productName: string;
+  /** Total across the order (combo quantity × per-combo quantity). */
+  quantity: number;
+  modifierGroupItems?: OrderModifierItem[];
 };
 
 export type OrderListItem = {

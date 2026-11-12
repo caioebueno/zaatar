@@ -1,7 +1,7 @@
 "use client";
 
 import type { CSSProperties } from "react";
-import type { OrderListItem } from "../../lib/api";
+import type { OrderListItem, OrderModifierItem } from "../../lib/api";
 import { parsePhone } from "../../lib/phone";
 import { formatCreatedAt, moneyFromCents, orderLabel, paymentStatus, paymentTypeLabel, typeLabel } from "./data";
 import { paymentBadge, statusBadge, typeBadge } from "./badges";
@@ -17,6 +17,27 @@ const labelStyle: CSSProperties = {
 const sectionStyle: CSSProperties = { padding: "16px 0", borderBottom: "1px solid rgba(255,255,255,0.06)" };
 
 const PAY_ICONS: Record<string, string> = { Card: "▭", Cash: "$", Zelle: "⇄" };
+
+/** Combo picks are stored as combo qty × per-combo qty; show the per-combo count when it divides evenly. */
+function perComboQuantity(selectedQuantity: number, comboQuantity: number): number {
+  return comboQuantity > 0 && selectedQuantity % comboQuantity === 0 ? selectedQuantity / comboQuantity : selectedQuantity;
+}
+
+function ModifierList({ items, indent = 36 }: { items?: OrderModifierItem[]; indent?: number }) {
+  if (!items || items.length === 0) return null;
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 3, margin: `5px 0 0 ${indent}px` }}>
+      {items.map((m) => (
+        <div key={m.id} style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
+          <span style={{ flex: 1, minWidth: 0, fontSize: 11.5, color: "#9B9B9B" }}>+ {m.name}</span>
+          {m.price > 0 && (
+            <span style={{ fontSize: 11.5, color: "#9B9B9B", fontFamily: "var(--font-mono)" }}>+{moneyFromCents(m.price)}</span>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
 
 export function OrderDetail({ order, onClose }: { order: OrderListItem; onClose: () => void }) {
   const b = statusBadge(order.status, order.canceled, "lg");
@@ -146,14 +167,18 @@ export function OrderDetail({ order, onClose }: { order: OrderListItem; onClose:
                     </span>
                     <span style={{ fontSize: 12.5, color: "#E8E8E8", fontFamily: "var(--font-mono)" }}>{moneyFromCents(it.lineTotalCents)}</span>
                   </div>
-                  {it.modifierGroupItems && it.modifierGroupItems.length > 0 && (
-                    <div style={{ display: "flex", flexDirection: "column", gap: 3, margin: "5px 0 0 36px" }}>
-                      {it.modifierGroupItems.map((m) => (
-                        <div key={m.id} style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
-                          <span style={{ flex: 1, minWidth: 0, fontSize: 11.5, color: "#9B9B9B" }}>+ {m.name}</span>
-                          {m.price > 0 && (
-                            <span style={{ fontSize: 11.5, color: "#9B9B9B", fontFamily: "var(--font-mono)" }}>+{moneyFromCents(m.price)}</span>
-                          )}
+                  <ModifierList items={it.modifierGroupItems} />
+                  {it.selectedProducts && it.selectedProducts.length > 0 && (
+                    <div style={{ display: "flex", flexDirection: "column", gap: 6, margin: "6px 0 0 36px" }}>
+                      {it.selectedProducts.map((sp, j) => (
+                        <div key={sp.productId + ":" + j}>
+                          <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
+                            <span style={{ fontSize: 11, color: "#75767C", fontFamily: "var(--font-mono)", flexShrink: 0 }}>
+                              {perComboQuantity(sp.quantity, it.quantity)}×
+                            </span>
+                            <span style={{ flex: 1, minWidth: 0, fontSize: 12, color: "#C8C8C8" }}>{sp.productName}</span>
+                          </div>
+                          <ModifierList items={sp.modifierGroupItems} indent={18} />
                         </div>
                       ))}
                     </div>
