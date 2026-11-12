@@ -37,6 +37,7 @@ import {
 import { getStripeClient } from "@/src/stripe";
 import { getConfiguredBusinessId } from "@/src/constants/business";
 import { calculateComboSelectionsUnitPrice } from "../utils/comboSelectionPricing";
+import { assertCartItemSelectionsInCatalog } from "./assertCartItemSelectionsInCatalog";
 
 type TCreateOrder = {
   cart: TCart;
@@ -910,6 +911,13 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
 
     return comboSelectionLines.join("\n");
   };
+  // Prices come only from the catalog, so every selected ID must belong to it.
+  for (const cartItem of data.cart.items) {
+    const catalogProduct = getCatalogProductById(cartItem.productId)?.product;
+    if (catalogProduct) {
+      assertCartItemSelectionsInCatalog(catalogProduct, cartItem);
+    }
+  }
   const cartPricingSummary = calculateCartWithProgressiveDiscount(
     productData.categories,
     data.cart,
@@ -947,6 +955,9 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
     price: number | null;
     comparedAtPrice: number | null;
     modifierGroups: Array<{
+      id: string;
+      type: "MULTI" | "SINGLE" | null;
+      maxSelection: number | null;
       items: Array<{
         id: string;
         price: number;
@@ -954,10 +965,15 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
     }>;
     comboSlots: Array<{
       id: string;
+      maxSelect: number;
+      allowDuplicates: boolean;
       options: Array<{
         productId: string;
         extraPrice: number;
         modifierGroups?: Array<{
+          id: string;
+          type: "MULTI" | "SINGLE" | null;
+          maxSelection: number | null;
           items: Array<{
             id: string;
             price: number;
@@ -1006,6 +1022,9 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
             comparedAtPrice: true,
             modifierGroups: {
               select: {
+                id: true,
+                type: true,
+                maxSelection: true,
                 items: {
                   select: {
                     id: true,
@@ -1017,6 +1036,8 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
             comboSlots: {
               select: {
                 id: true,
+                maxSelect: true,
+                allowDuplicates: true,
                 options: {
                   select: {
                     productId: true,
@@ -1025,6 +1046,9 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
                       select: {
                         modifierGroups: {
                           select: {
+                            id: true,
+                            type: true,
+                            maxSelection: true,
                             items: {
                               select: {
                                 id: true,
@@ -1050,6 +1074,8 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
         // Lift each combo option's modifier prices up beside its extraPrice.
         comboSlots: product.comboSlots.map((slot) => ({
           id: slot.id,
+          maxSelect: slot.maxSelect,
+          allowDuplicates: slot.allowDuplicates,
           options: slot.options.map((option) => ({
             productId: option.productId,
             extraPrice: option.extraPrice,
@@ -1066,6 +1092,7 @@ const createOrder = async (data: TCreateOrder): Promise<TOrder> => {
       if (!resolvedPrice && data.source === "POS") {
         const posProduct = posPricingProductsById.get(cartItem.productId);
         if (posProduct) {
+          assertCartItemSelectionsInCatalog(posProduct, cartItem);
           const posUnitPrice = calculatePosItemUnitPrice({
             product: posProduct,
             cartItem,
