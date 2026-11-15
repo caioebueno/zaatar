@@ -16,6 +16,7 @@ import ProductImage from "./ProductImage";
 import { FiArrowLeft, FiCheck, FiMinus, FiPlus, FiTrash2, FiX } from "react-icons/fi";
 import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import { TSelectedComboSlotOption, TSelectedModifier } from "@/types/cart";
+import { useMenuProducts } from "./MenuProductsContext";
 import { FiAlertCircle } from "react-icons/fi";
 
 type TProductModal = {
@@ -151,6 +152,13 @@ type TComboPickerTarget = {
   seatIndex: number;
   stage: "item" | number;
 };
+
+/**
+ * Slots with this many seats or more (and repeats allowed, like "12 sfihas")
+ * render as one list with a stepper per option instead of one card per seat.
+ * Picking 12 to 30 items one seat at a time took 3 taps each.
+ */
+const QUICK_PICK_MIN_SEATS = 4;
 
 const ProductModal: React.FC<TProductModal> = ({
   product,
@@ -574,6 +582,47 @@ const ProductModal: React.FC<TProductModal> = ({
   };
 
 
+  const menuData = useMenuProducts();
+
+  /** Menu category of each product, so quick-pick lists can be grouped. */
+  const categoryByProductId = useMemo(() => {
+    const map = new Map<string, { id: string; title: string; index: number }>();
+    menuData.categories.forEach((category, index) => {
+      const title =
+        category.translations?.[lg]?.title ||
+        category.translations?.["en"]?.title ||
+        category.title;
+      for (const categoryProduct of category.products) {
+        if (!map.has(categoryProduct.id)) {
+          map.set(categoryProduct.id, { id: category.id, title, index });
+        }
+      }
+    });
+    return map;
+  }, [menuData.categories, lg]);
+
+  const isQuickPickSlot = (slot: TComboSlot) =>
+    Boolean(slot.allowDuplicates) &&
+    Math.max(1, slot.maxSelect ?? 1) >= QUICK_PICK_MIN_SEATS;
+
+  /** Puts the option in the first empty seat, then asks for its options if any. */
+  const handleQuickPickAdd = (slot: TComboSlot, optionProductId: string) => {
+    const emptySeatIndex = getSeatsForSlot(slot).findIndex((seat) => !seat);
+    if (emptySeatIndex === -1) return;
+    handleChooseSeatOption(slot, emptySeatIndex, optionProductId);
+  };
+
+  /** Frees the last seat holding the option. */
+  const handleQuickPickRemove = (slot: TComboSlot, optionProductId: string) => {
+    const seats = getSeatsForSlot(slot);
+    for (let seatIndex = seats.length - 1; seatIndex >= 0; seatIndex -= 1) {
+      if (seats[seatIndex]?.optionProductId === optionProductId) {
+        writeSeat(slot, seatIndex, null);
+        return;
+      }
+    }
+  };
+
   const productImageUrl = product?.photos?.[0]?.url ?? null;
   const productDescription = product
     ? product.translations
@@ -792,6 +841,21 @@ const ProductModal: React.FC<TProductModal> = ({
                               </span>
                             </div>
 
+                            {isQuickPickSlot(slot) ? (
+                              <ComboQuickPickList
+                                slot={slot}
+                                seats={seats}
+                                lg={lg}
+                                content={content}
+                                categoryByProductId={categoryByProductId}
+                                onAdd={(optionProductId) =>
+                                  handleQuickPickAdd(slot, optionProductId)
+                                }
+                                onRemove={(optionProductId) =>
+                                  handleQuickPickRemove(slot, optionProductId)
+                                }
+                              />
+                            ) : (
                             <div className="flex flex-col gap-2.5">
                               {seats.map((seat, seatIndex) => {
                                 const option = seat
@@ -938,6 +1002,7 @@ const ProductModal: React.FC<TProductModal> = ({
                                 );
                               })}
                             </div>
+                            )}
                           </div>
                         );
                       })}
@@ -1242,6 +1307,159 @@ const ComboSeatPickerModal: React.FC<TComboSeatPickerModal> = ({
         </div>
       </DialogContent>
     </Dialog>
+  );
+};
+
+type TComboQuickPickListProps = {
+  slot: TComboSlot;
+  seats: (TComboSeat | null)[];
+  lg: string;
+  content: {
+    [key: string]: string;
+  };
+  categoryByProductId: Map<string, { id: string; title: string; index: number }>;
+  onAdd: (optionProductId: string) => void;
+  onRemove: (optionProductId: string) => void;
+};
+
+/**
+ * Every option of a many-seat slot on one screen, grouped by menu category,
+ * with a stepper per option and a running "how many left" line. One tap adds
+ * one item, instead of opening a full-screen picker for each seat.
+ */
+const ComboQuickPickList: React.FC<TComboQuickPickListProps> = ({
+  slot,
+  seats,
+  lg,
+  content,
+  categoryByProductId,
+  onAdd,
+  onRemove,
+}) => {
+  const filledCount = seats.filter(Boolean).length;
+  const remaining = seats.length - filledCount;
+  const isFull = remaining <= 0;
+
+  const countByProductId = new Map<string, number>();
+  for (const seat of seats) {
+    if (!seat) continue;
+    countByProductId.set(
+      seat.optionProductId,
+      (countByProductId.get(seat.optionProductId) ?? 0) + 1,
+    );
+  }
+
+  type TOptionGroup = { id: string; title: string; index: number; options: TComboSlotOption[] };
+  const groups: TOptionGroup[] = [];
+  const groupById = new Map<string, TOptionGroup>();
+  for (const option of sortComboSlotOptions(slot.options)) {
+    const category = categoryByProductId.get(option.productId);
+    const groupId = category?.id ?? "other";
+    let group = groupById.get(groupId);
+    if (!group) {
+      group = {
+        id: groupId,
+        title: category?.title ?? (content["comboOtherOptions"] || "More options"),
+        index: category?.index ?? Number.MAX_SAFE_INTEGER,
+        options: [],
+      };
+      groupById.set(groupId, group);
+      groups.push(group);
+    }
+    group.options.push(option);
+  }
+  groups.sort((left, right) => left.index - right.index);
+  const showGroupTitles = groups.length > 1;
+
+  return (
+    <div className="flex flex-col gap-3">
+      <span
+        className={`text-[14px] font-semibold ${
+          isFull ? "text-[#16A34A]" : "text-brandBackground"
+        }`}
+        aria-live="polite"
+      >
+        {isFull
+          ? content["comboPickDone"] || "All set"
+          : formatTemplate(
+              content["comboPickLeft"],
+              { count: String(remaining) },
+              "Pick {count} more",
+            )}
+      </span>
+      {groups.map((group) => (
+        <div key={group.id} className="flex flex-col gap-1.5">
+          {showGroupTitles && (
+            <span className="pt-1 text-[11px] font-bold uppercase tracking-[0.07em] text-lightText">
+              {group.title}
+            </span>
+          )}
+          <div className="overflow-hidden rounded-xl border border-[#E4E4E4] bg-background">
+            {group.options.map((option, optionIndex) => {
+              const count = countByProductId.get(option.productId) ?? 0;
+              const title = resolveComboOptionTitle(option, lg);
+
+              return (
+                <div
+                  key={option.id}
+                  className={`flex items-center gap-3 px-3 py-2 ${
+                    optionIndex === 0 ? "" : "border-t border-[#F1F1F1]"
+                  } ${count > 0 ? "bg-brandBackground/5" : ""}`}
+                >
+                  <span className="block h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-foreground">
+                    {option.productPhotoUrl ? (
+                      <ProductImage
+                        src={option.productPhotoUrl}
+                        alt=""
+                        className="h-full w-full object-cover"
+                        quality={70}
+                        sizes="48px"
+                      />
+                    ) : null}
+                  </span>
+                  <span className="flex min-w-0 flex-1 flex-col gap-0.5">
+                    <span className="text-[15px] font-semibold leading-tight text-text">
+                      {title}
+                    </span>
+                    {option.extraPrice > 0 && (
+                      <span className="text-[13px] text-lightText">
+                        {`+ ${formatCurrency(option.extraPrice)}`}
+                      </span>
+                    )}
+                  </span>
+                  <div className="flex shrink-0 items-center gap-1">
+                    {count > 0 && (
+                      <>
+                        <button
+                          type="button"
+                          onClick={() => onRemove(option.productId)}
+                          aria-label={`${content["comboRemove"] || "Remove"} ${title}`}
+                          className="flex h-10 w-10 items-center justify-center rounded-full border border-[#E4E4E4] text-text"
+                        >
+                          <FiMinus size={18} />
+                        </button>
+                        <span className="min-w-6 text-center text-[16px] font-bold">
+                          {count}
+                        </span>
+                      </>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => onAdd(option.productId)}
+                      disabled={isFull}
+                      aria-label={`${content["add"] || "Add"} ${title}`}
+                      className="flex h-10 w-10 items-center justify-center rounded-full bg-brandBackground text-white disabled:opacity-30"
+                    >
+                      <FiPlus size={18} />
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      ))}
+    </div>
   );
 };
 
