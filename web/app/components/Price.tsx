@@ -213,87 +213,150 @@ const buildSelectedModifierGroupsFromCartItem = (
     })
     .filter((group): group is TSummaryModifierGroup => Boolean(group)) || [];
 
+/**
+ * Combo picks for the cart and order summary, one line per distinct pick
+ * ("Beef Sfiha x6") so a 30-sfiha combo stays short. Picks whose slot or option
+ * is no longer in the catalog (the combo was edited after the cart was saved)
+ * still show, from the names stored on the cart item.
+ */
 const buildSelectedComboGroupsFromCartItem = (
   product: TProduct | null | undefined,
   cartItem: TCartItem,
   lg: string,
 ): TSummaryModifierGroup[] => {
-  if (!product?.comboSlots?.length || !cartItem.comboSelections?.length) {
+  if (!cartItem.comboSelections?.length) {
     return [];
   }
 
-  return product.comboSlots
-    .map((slot) => {
-      const selectedItems = cartItem.comboSelections
-        ?.filter((selection) => selection.slotId === slot.id && selection.quantity > 0)
-        .map((selection, selectionIndex) => {
-          const option = slot.options.find(
-            (slotOption) => slotOption.productId === selection.optionProductId,
-          );
-          const optionLabel =
-            resolveComboOptionTitle(option, lg) ||
-            selection.optionProductName ||
-            "Selected option";
-          const optionPrice =
-            typeof option?.extraPrice === "number"
-              ? option.extraPrice
-              : selection.extraPrice ?? 0;
-          const normalizedQuantity =
-            typeof selection.quantity === "number" &&
-              Number.isInteger(selection.quantity) &&
-              selection.quantity > 0
-              ? selection.quantity
-              : 1;
+  const slots = product?.comboSlots ?? [];
+  type TComboSummaryGroup = {
+    id: string;
+    title: string;
+    sortIndex: number;
+    items: (TSummaryModifierItem & { count: number })[];
+  };
+  const groups: TComboSummaryGroup[] = [];
+  const groupById = new Map<string, TComboSummaryGroup>();
+  const itemByKey = new Map<string, TSummaryModifierItem & { count: number }>();
 
-          // Fold the seat's modifiers into its label and price, so each seat
-          // stays one line in the summary.
-          const selectedModifierItems = (option?.modifierGroups ?? []).flatMap(
-            (modifierGroup) =>
-              modifierGroup.items.filter((modifierItem) =>
-                (selection.modifiers ?? []).some(
-                  (modifier) =>
-                    modifier.modifierId === modifierGroup.id &&
-                    modifier.modifierItemId === modifierItem.id,
-                ),
-              ),
-          );
-          const modifiersPrice = selectedModifierItems.reduce(
-            (sum, modifierItem) => sum + modifierItem.price,
-            0,
-          );
-          const modifierLabels = selectedModifierItems.map((modifierItem) =>
-            resolveModifierItemTitle(modifierItem, lg),
-          );
+  for (const selection of cartItem.comboSelections) {
+    if (!(selection.quantity > 0)) continue;
 
-          const quantityLabel =
-            normalizedQuantity > 1
-              ? `${optionLabel} x${normalizedQuantity}`
-              : optionLabel;
+    const slotIndex = slots.findIndex((slot) => slot.id === selection.slotId);
+    const slot = slotIndex >= 0 ? slots[slotIndex] : undefined;
+    const option = slot?.options.find(
+      (slotOption) => slotOption.productId === selection.optionProductId,
+    );
+    const optionLabel = option
+      ? resolveComboOptionTitle(option, lg)
+      : selection.optionProductName || "Selected option";
+    const optionPrice =
+      typeof option?.extraPrice === "number"
+        ? option.extraPrice
+        : selection.extraPrice ?? 0;
+    const quantity = Number.isInteger(selection.quantity) ? selection.quantity : 1;
 
-          return {
-            id: `${selection.slotId}:${selection.optionProductId}:${
-              selection.seatIndex ?? selectionIndex
-            }`,
-            title:
-              modifierLabels.length > 0
-                ? `${quantityLabel} (${modifierLabels.join(", ")})`
-                : quantityLabel,
-            price: (optionPrice + modifiersPrice) * normalizedQuantity,
-          };
-        })
-        .filter((item): item is TSummaryModifierItem => Boolean(item));
+    // Fold the seat's modifiers into its label and price.
+    const selectedModifierItems = (option?.modifierGroups ?? []).flatMap(
+      (modifierGroup) =>
+        modifierGroup.items.filter((modifierItem) =>
+          (selection.modifiers ?? []).some(
+            (modifier) =>
+              modifier.modifierId === modifierGroup.id &&
+              modifier.modifierItemId === modifierItem.id,
+          ),
+        ),
+    );
+    const modifiersPrice = selectedModifierItems.reduce(
+      (sum, modifierItem) => sum + modifierItem.price,
+      0,
+    );
+    const modifierLabels = selectedModifierItems.map((modifierItem) =>
+      resolveModifierItemTitle(modifierItem, lg),
+    );
+    const baseLabel =
+      modifierLabels.length > 0
+        ? `${optionLabel} (${modifierLabels.join(", ")})`
+        : optionLabel;
 
-      if (!selectedItems || selectedItems.length === 0) {
-        return null;
-      }
-
-      return {
-        id: slot.id,
-        title: resolveComboSlotTitle(slot, lg),
-        items: selectedItems,
+    const groupId = slot ? slot.id : `stale:${selection.slotName ?? selection.slotId}`;
+    let group = groupById.get(groupId);
+    if (!group) {
+      group = {
+        id: groupId,
+        title: slot
+          ? resolveComboSlotTitle(slot, lg)
+          : selection.slotName || "Combo selection",
+        items: [],
+        sortIndex: slotIndex >= 0 ? slotIndex : Number.MAX_SAFE_INTEGER,
       };
-    })
-    .filter((group): group is TSummaryModifierGroup => Boolean(group));
+      groupById.set(groupId, group);
+      groups.push(group);
+    }
+
+    const itemKey = `${groupId}|${selection.optionProductId}|${[
+      ...(selection.modifiers ?? []).map((modifier) => modifier.modifierItemId),
+    ]
+      .sort()
+      .join(",")}`;
+    const existingItem = itemByKey.get(itemKey);
+    const linePrice = (optionPrice + modifiersPrice) * quantity;
+
+    if (existingItem) {
+      existingItem.count += quantity;
+      existingItem.title = `${baseLabel} x${existingItem.count}`;
+      existingItem.price += linePrice;
+      continue;
+    }
+
+    const item = {
+      id: itemKey,
+      title: quantity > 1 ? `${baseLabel} x${quantity}` : baseLabel,
+      price: linePrice,
+      count: quantity,
+    };
+    itemByKey.set(itemKey, item);
+    group.items.push(item);
+  }
+
+  return groups
+    .filter((group) => group.items.length > 0)
+    .sort((left, right) => left.sortIndex - right.sortIndex)
+    .map(({ id, title, items }) => ({
+      id,
+      title,
+      items: items.map(({ id: itemId, title: itemTitle, price }) => ({
+        id: itemId,
+        title: itemTitle,
+        price,
+      })),
+    }));
+};
+
+/**
+ * True when a combo in the cart points at a slot or option that is no longer in
+ * the catalog. Checkout rejects such an item, so the cart asks the customer to
+ * add it again before they reach that step.
+ */
+const hasStaleComboSelections = (
+  product: TProduct | null | undefined,
+  cartItem: TCartItem,
+): boolean => {
+  if (!product || !cartItem.comboSelections?.length) return false;
+
+  return cartItem.comboSelections.some((selection) => {
+    const slot = product.comboSlots?.find((comboSlot) => comboSlot.id === selection.slotId);
+    return (
+      !slot ||
+      !slot.options.some((option) => option.productId === selection.optionProductId)
+    );
+  });
+};
+
+const STALE_COMBO_MESSAGE_BY_LOCALE: Record<string, string> = {
+  en: "This combo was updated since you added it. Remove it and add it again to check out.",
+  pt: "Este combo foi atualizado depois que você o adicionou. Remova e adicione de novo para finalizar.",
+  es: "Este combo se actualizó después de que lo agregaste. Quítalo y agrégalo de nuevo para finalizar.",
 };
 
 const buildSelectedModifierGroupsFromOrderProduct = (
@@ -537,9 +600,13 @@ const ModifierGroupsList: React.FC<{
               <span className="block min-w-0 flex-1 break-words text-xs font-medium text-lightText">
                 {modifierItem.title}
               </span>
-              <span className="shrink-0 text-xs font-medium text-lightText">
-                {formatCurrency(modifierItem.price)}
-              </span>
+              {/* An included pick costs nothing extra, so "$0.00" on every
+                  line of a combo is noise. Only surcharges are shown. */}
+              {modifierItem.price !== 0 && (
+                <span className="shrink-0 text-xs font-medium text-lightText">
+                  {`+${formatCurrency(modifierItem.price)}`}
+                </span>
+              )}
             </div>
           ))}
         </div>
@@ -1454,7 +1521,7 @@ const CartList: React.FC<TCartProduct> = ({ data, lg }) => {
           cart.items.map((item) => (
             <CartListItem
               quantity={item.quantity}
-              key={item.productId}
+              key={item.cartId ?? item.productId}
               data={data}
               cart={cart}
               cartItem={item}
@@ -3383,6 +3450,7 @@ const CartListItem: React.FC<TCartListItem> = ({
     lg,
   );
   const selectedGroups = [...selectedModifierGroups, ...selectedComboGroups];
+  const isStaleCombo = hasStaleComboSelections(findProduct, cartItem);
 
   return (
     <div className="flex w-full flex-row items-center gap-2">
@@ -3405,6 +3473,11 @@ const CartListItem: React.FC<TCartListItem> = ({
             )}
           </div>
           <ModifierGroupsList modifierGroups={selectedGroups} />
+          {isStaleCombo && (
+            <p className="text-sm font-semibold text-red-600">
+              {STALE_COMBO_MESSAGE_BY_LOCALE[lg] ?? STALE_COMBO_MESSAGE_BY_LOCALE.en}
+            </p>
+          )}
           {cartItem.description && (
             <p className="text-sm text-lightText font-medium">
               {cartItem.description}

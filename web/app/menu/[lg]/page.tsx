@@ -1,6 +1,23 @@
 import { Montserrat } from "next/font/google";
-import { NextPage } from "next";
+import type { Metadata, NextPage } from "next";
 import MenuPageContent from "./MenuPageContent";
+import { getOrderLinkSettings } from "@/src/getOrderLinkSettings";
+import { buildMenuMetadata } from "@/app/lib/seo";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ lg: string }>;
+}): Promise<Metadata> {
+  const { lg } = await params;
+  const settings = await getOrderLinkSettings();
+
+  return buildMenuMetadata({
+    lg,
+    businessName: settings.businessName,
+    imageUrl: settings.bannerPhotoUrl || settings.logoUrl || "/logo.png",
+  });
+}
 
 const montserrat = Montserrat({
   variable: "--font-geist-mono",

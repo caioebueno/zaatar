@@ -4,6 +4,22 @@ import Button from "../components/Button";
 import Link from "next/link";
 import { getOrderLinkSettings } from "@/src/getOrderLinkSettings";
 import type { CSSProperties } from "react";
+import type { Metadata } from "next";
+import { SITE_URL, buildMenuMetadata, menuLanguageAlternates } from "@/app/lib/seo";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getOrderLinkSettings();
+  const menuMetadata = buildMenuMetadata({
+    lg: "en",
+    businessName: settings.businessName,
+    imageUrl: settings.bannerPhotoUrl || settings.logoUrl || "/logo.png",
+  });
+
+  return {
+    ...menuMetadata,
+    alternates: { canonical: `${SITE_URL}/`, languages: menuLanguageAlternates() },
+  };
+}
 
 const montserrat = Montserrat({
   variable: "--font-geist-mono",
@@ -73,19 +89,19 @@ const Menu = async ({ searchParams }: MenuLandingPageProps) => {
       <div className="flex flex-col items-center gap-4">
         <Link href={`/menu/en${querySuffix}`}>
           <Button variant="secondary" className="gap-2">
-          <Image src="/us.svg" width="32" height="24" alt="United States Flags" />
+          <Image src="/us.svg" width="32" height="24" alt="" />
           English
         </Button>
         </Link>
           <Link href={`/menu/pt${querySuffix}`}>
         <Button variant="secondary" className="gap-2">
-          <Image src="/portuguese.svg" width="32" height="24" alt="United States Flags" />
+          <Image src="/portuguese.svg" width="32" height="24" alt="" />
           Português
         </Button>
         </Link>
          <Link href={`/menu/es${querySuffix}`}>
         <Button variant="secondary" className="gap-2">
-          <Image src="/spanish.svg" width="32" height="24" alt="United States Flags" />
+          <Image src="/spanish.svg" width="32" height="24" alt="" />
           Español
         </Button>
         </Link>
