@@ -1,1 +1,1 @@
-export { default } from "./menu/page"
+export { default, generateMetadata } from "./menu/page"
